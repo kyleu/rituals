@@ -1,0 +1,30 @@
+<%: func Settings(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+  <div class="uk-section uk-section-small">
+    <div class="uk-container">
+      <div>
+        <h1 class="uk-heading-hero">System Settings</h1>
+        <div class="uk-text-lead">Not a thing yet...</div>
+        <div class="uk-margin-top">
+          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+            <table class="uk-table uk-table-divider uk-text-left">
+              <tbody>
+              <tr>
+                <th>Version</th>
+                <td><%= ctx.AppInfo.Version %></td>
+              </tr>
+              <tr>
+                <th>Commit Hash</th>
+                <td><%= ctx.AppInfo.CommitHash %></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>

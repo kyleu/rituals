@@ -1,0 +1,7 @@
+/.vscode
+/.idea
+/build
+/project
+/tmp
+/vendor
+/internal/gen

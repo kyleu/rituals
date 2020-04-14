@@ -1,0 +1,18 @@
+<%: func Index(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+  <div class="uk-section uk-section-small">
+    <div class="uk-container">
+      <div class="uk-grid-small uk-grid-match uk-child-width-1-3@s uk-margin-medium" uk-grid>
+        <div>
+          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route("about") %>">About</a></h3>
+            <p>Details about the running instance of <%= util.AppName %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>

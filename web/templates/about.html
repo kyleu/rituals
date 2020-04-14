@@ -1,0 +1,35 @@
+<%: func About(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+  <div class="uk-section uk-section-small">
+    <div class="uk-container">
+      <div>
+        <h1 class="uk-heading-hero">About <%= util.AppName %></h1>
+      </div>
+      <div class="uk-margin-top">
+        <div class="uk-grid-small uk-grid-match uk-child-width-expand@s" uk-grid>
+          <div>
+            <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+              <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route("sandbox") %>">Sandboxes</a></h3>
+              <p>Custom one-off tasks to test various aspect of the application</p>
+            </div>
+          </div>
+          <div>
+            <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+              <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route("routes") %>">Routes</a></h3>
+              <p>Shows a list of all available HTTP routes</p>
+            </div>
+          </div>
+          <div>
+            <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+              <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route("modules") %>">Modules</a></h3>
+              <p>View a listing of installed go modules used by <%= util.AppName %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>

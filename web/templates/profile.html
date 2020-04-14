@@ -1,0 +1,105 @@
+<%: func Profile(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+  <div class="uk-section uk-section-small">
+    <div class="uk-container">
+      <div>
+        <h1 class="uk-heading-hero">User Profile</h1>
+      </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <form action="" method="post">
+          <fieldset class="uk-fieldset">
+            <div class="uk-margin">
+              <label for="username">Username</label>
+              <input class="uk-input" id="username" name="username" type="text" value="<%= ctx.Profile.Name %>" />
+            </div>
+            <div class="uk-margin">
+              <div><label>Theme</label></div>
+              <% for _, t := range util.AllThemes { %>
+                <label for="theme-<%= t.String() %>">
+                  <% if t == ctx.Profile.Theme { %>
+                  <input class="uk-radio" id="theme-<%= t.String() %>" checked="checked" name="theme" type="radio" value="<%= t.String() %>" />
+                  <% } else { %>
+                  <input class="uk-radio" id="theme-<%= t.String() %>" name="theme" type="radio" value="<%= t.String() %>" />
+                  <% } %>
+                  <%= t.String() %>
+                </label>
+              <% } %>
+            </div>
+
+            <input id="navbar-color" name="navbar-color" type="hidden" value="<%= ctx.Profile.NavColor %>" />
+            <div class="uk-margin">
+              <label>Navbar Color</label>
+              <div id="colors">
+                <% for _, c := range util.AllColors { %>
+                  <%
+                    navCls := ""
+                    if ctx.Profile.NavColor == c {
+                      navCls = "active "
+                    }
+                  %>
+                  <div class="swatch nav_swatch <%= navCls %> <%= c %>-bg uk-text-center" title="<%= c %>" onclick="nav_color(this, '<%= c %>')">
+                    <div class="icon" data-uk-icon="icon: check"></div>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+
+            <input id="link-color" name="link-color" type="hidden" value="<%= ctx.Profile.LinkColor %>" />
+            <div class="uk-margin">
+              <label>
+                <a class="<%= ctx.Profile.LinkColor %>-fg" id="link-example" href="" onclick="return false;">Link</a>
+                Color
+              </label>
+              <div id="colors">
+                <% for _, c := range util.AllColors { %>
+                  <%
+                    linkCls := ""
+                    if ctx.Profile.LinkColor == c {
+                      linkCls = "active "
+                    }
+                  %>
+                  <div class="swatch link_swatch <%= linkCls %> <%= c %>-bg uk-text-center" title="<%= c %>" onclick="link_color(this, '<%= c %>')">
+                    <div class="icon" data-uk-icon="icon: check"></div>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+
+            <div>
+              <button class="uk-button uk-button-default" type="submit">Save Changes</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function nav_color(el, c) {
+      let input = document.getElementById("navbar-color");
+      input.value = c;
+      let nb = document.getElementById("navbar");
+      nb.className = (c + "-bg uk-navbar-container uk-navbar");
+      let colors = document.querySelectorAll(".nav_swatch");
+      colors.forEach(function(i) {
+        i.classList.remove("active");
+      })
+      el.classList.add("active");
+    }
+
+    function link_color(el, c) {
+      let input = document.getElementById("link-color");
+      input.value = c;
+      let l = document.getElementById("link-example");
+      l.className = (c + "-fg");
+      let colors = document.querySelectorAll(".link_swatch");
+      colors.forEach(function(i) {
+        i.classList.remove("active");
+      })
+      el.classList.add("active");
+    }
+  </script>
+<% } %>

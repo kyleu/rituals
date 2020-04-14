@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "listFiles": false,
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "outFile": "../web/assets/rituals.js",
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "strict": true,
+    "target": "ES3"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

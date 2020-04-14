@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" class="<%= ctx.Profile.Theme.BackgroundClass %>">
+<% Head(ctx, _buffer) %>
+<body class="<%= ctx.Profile.Theme.BackgroundClass %>">
+<% Navbar(ctx, _buffer) %>
+<div id="content" data-uk-height-viewport="expand: true">
+<% for _, flash := range ctx.Flashes { %>
+  <% cls, content := web.ParseFlash(flash) %>
+  <div class="alert-top <%= cls %>" data-uk-alert>
+    <a class="uk-alert-close" href="#" data-uk-close=""></a>
+    <p><%= content %></p>
+  </div>
+<% } %>
+<%@ body { %><% } %>
+</div>
+</body>
+</html>

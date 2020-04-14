@@ -1,0 +1,34 @@
+<%: func ModulesList(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div>
+      <h1 class="uk-heading-hero">System Modules</h1>
+      <div class="uk-margin-top">
+        <% bi := util.ExtractModules() %>
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <table class="uk-table uk-table-divider uk-table-small">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Version</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for _, m := range bi.Deps { %>
+              <tr>
+                <td><a target="_blank" class="<%= ctx.Profile.LinkClass() %>" href="https://<%= m.Path %>"><%= m.Path %></a></td>
+                <td title="<%= m.Sum %>"><%= m.Version %></td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
