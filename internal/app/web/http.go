@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/gofrs/uuid"
 	"net/http"
 	"os"
 	"strings"
@@ -35,9 +36,9 @@ func BreadcrumbsSimple(path string, title string) Breadcrumbs {
 }
 
 type RequestContext struct {
-	AppInfo     *config.AppInfo
+	App         *config.AppInfo
 	Logger      logur.LoggerFacade
-	Profile     util.UserProfile
+	Profile     *util.UserProfile
 	Routes      *mux.Router
 	Title       string
 	Breadcrumbs Breadcrumbs
@@ -48,12 +49,12 @@ type RequestContext struct {
 func (r *RequestContext) Route(act string, pairs ...string) string {
 	route := r.Routes.Get(act)
 	if route == nil {
-		r.AppInfo.Logger.Warn("Cannot find route at path [" + act + "]")
+		r.App.Logger.Warn("Cannot find route at path [" + act + "]")
 		return "/routenotfound"
 	}
 	url, err := route.URL(pairs...)
 	if err != nil {
-		r.AppInfo.Logger.Warn("Cannot bind route at path [" + act + "]")
+		r.App.Logger.Warn("Cannot bind route at path [" + act + "]")
 		return "/routeerror"
 	}
 	return url.Path
@@ -71,13 +72,45 @@ var store = sessions.NewCookieStore([]byte(sessionKey))
 
 const sessionName = util.AppName + "-session"
 
-func ExtractContext(r *http.Request) RequestContext {
+func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 	ai := r.Context().Value("info").(*config.AppInfo)
 	routes := r.Context().Value("routes").(*mux.Router)
-	prof := util.SystemProfile
 	session, err := store.Get(r, sessionName)
 	if err != nil {
 		session = sessions.NewSession(store, sessionName)
+	}
+
+	var userID uuid.UUID
+	userIDValue, ok := session.Values["user"]
+	if ok {
+		userID, err = uuid.FromString(userIDValue.(string))
+		if err != nil {
+			ai.Logger.Warn(fmt.Sprint("cannot parse uuid [%s]: %+v", userIDValue, err))
+		}
+	} else {
+		userID = util.UUID()
+		_, err := ai.User.CreateNewUser(userID)
+		if err != nil {
+			ai.Logger.Warn(fmt.Sprint("cannot save user: %+v", err))
+		}
+		session.Values["user"] = userID.String()
+		err = session.Save(r, w)
+		if err != nil {
+			ai.Logger.Warn(fmt.Sprint("cannot save session: %+v", err))
+		}
+	}
+
+	user, err := ai.User.GetByID(userID, true)
+	if err != nil {
+		ai.Logger.Warn(fmt.Sprintf("unable to load user profile: %v", err))
+	}
+	var prof *util.UserProfile
+	if user == nil {
+		fallback := util.NewUserProfile(userID)
+		prof = &fallback
+	} else {
+		fallback := user.ToProfile()
+		prof = &fallback
 	}
 
 	flashes := make([]string, 0)
@@ -88,7 +121,7 @@ func ExtractContext(r *http.Request) RequestContext {
 	logger := logur.WithFields(ai.Logger, map[string]interface{}{"path": r.URL.Path, "method": r.Method})
 
 	return RequestContext{
-		AppInfo:     ai,
+		App:         ai,
 		Logger:      logger,
 		Profile:     prof,
 		Routes:      routes,
@@ -100,6 +133,9 @@ func ExtractContext(r *http.Request) RequestContext {
 }
 
 func ParseFlash(s string) (string, string) {
+	println("[[")
+	println(s)
+	println("]]")
 	split := strings.SplitN(s, ":", 2)
 	severity := split[0]
 	content := split[1]

@@ -20,7 +20,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 var upgrader = websocket.Upgrader{}
 
 func Socket(w http.ResponseWriter, r *http.Request) {
-	ctx := web.ExtractContext(r)
+	ctx := web.ExtractContext(w, r)
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		ctx.Logger.Info("Unable to upgrade connection to websocket")

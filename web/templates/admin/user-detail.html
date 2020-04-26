@@ -1,0 +1,68 @@
+<%: func AdminUserDetail(user *user.SystemUser, estimates []estimate.Session, standups []standup.Session, retros []retro.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">User Detail</h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%=v user.UserID %></td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <td><%=v user.Name %></td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td><%=v user.Role %></td>
+          </tr>
+          <tr>
+            <th>Theme</th>
+            <td><%=v user.Theme %></td>
+          </tr>
+          <tr>
+            <th>Nav Color</th>
+            <td><%=v user.NavColor %></td>
+          </tr>
+          <tr>
+            <th>Link Color</th>
+            <td><%=v user.LinkColor %></td>
+          </tr>
+          <tr>
+            <th>Locale</th>
+            <td><%=v user.Locale %></td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td><%=v user.Created %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <% if len(estimates) > 0 { %>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Estimate Sessions</h3>
+      <% AdminEstimateTable(estimates, ctx, _buffer) %>
+    </div>
+    <% } %>
+    <% if len(standups) > 0 { %>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Daily Standups</h3>
+      <% AdminStandupTable(standups, ctx, _buffer) %>
+    </div>
+    <% } %>
+    <% if len(retros) > 0 { %>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Retrospectives</h3>
+      <% AdminRetroTable(retros, ctx, _buffer) %>
+    </div>
+    <% } %>
+  </div>
+</div>
+<% } %>

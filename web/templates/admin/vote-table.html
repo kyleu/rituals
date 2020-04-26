@@ -1,0 +1,24 @@
+<%: func AdminVoteTable(votes []estimate.Vote, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <th>Poll</th>
+      <th>User</th>
+      <th>Choice</th>
+      <th>Updated</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range votes { %>
+    <tr>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.poll.detail`, `id`, model.PollID.String()) %>"><% ComponentUUID(&model.PollID, buffer) %></a></td>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td><%=v model.Choice %></td>
+      <td><%=v model.Updated %></td>
+      <td><%=v model.Created %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

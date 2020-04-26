@@ -1,0 +1,14 @@
+<%: func AdminStandupList(standups []standup.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">Daily Standups</h3>
+      <% AdminStandupTable(standups, ctx, _buffer) %>
+    </div>
+  </div>
+</div>
+<% } %>

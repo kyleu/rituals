@@ -9,15 +9,15 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
 
-  <% if ctx.AppInfo.Debug { %>
+  <% if ctx.App.Debug { %>
   <link rel="stylesheet" media="screen" href="/assets/vendor/style.css">
   <script src="/assets/vendor/uikit.js"></script>
   <script src="/assets/vendor/uikit-icons.js"></script>
-  <script src="/assets/<%= util.AppName %>.js"></script>
+  <script src="/assets/rituals.js"></script>
   <% } else { %>
   <link rel="stylesheet" media="screen" href="/assets/vendor/style.min.css")>
   <script src="/assets/vendor/uikit.min.js"></script>
   <script src="/assets/vendor/uikit-icons.min.js"></script>
-  <script src="/assets/<%= util.AppName %>.js"></script>
+  <script src="/assets/rituals.js"></script>
   <% } %>
 </head>

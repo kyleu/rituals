@@ -1,0 +1,6 @@
+<%: func ComponentUUID(u *uuid.UUID, buffer *bytes.Buffer) %>
+<% if u == nil { %>
+&lt;nil&gt;
+<% } else { %>
+<%= u.String()[0:8] %>
+<% } %>

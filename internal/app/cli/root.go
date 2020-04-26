@@ -5,6 +5,11 @@ import (
 	"emperror.dev/errors"
 	logurhandler "emperror.dev/handler/logur"
 	"github.com/kyleu/rituals.dev/internal/app/config"
+	"github.com/kyleu/rituals.dev/internal/app/estimate"
+	"github.com/kyleu/rituals.dev/internal/app/invite"
+	"github.com/kyleu/rituals.dev/internal/app/retro"
+	"github.com/kyleu/rituals.dev/internal/app/standup"
+	"github.com/kyleu/rituals.dev/internal/app/user"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"github.com/spf13/cobra"
 	"logur.dev/logur"
@@ -40,18 +45,22 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 
 	handler := emperror.WithDetails(util.AppErrorHandler{Logger: logger}, "key", "value")
 
-	cfg, err := config.NewService(logger)
+	db, err := config.OpenDatabase(logger)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating config service"))
 	}
 
 	ai := config.AppInfo{
-		Debug:         verbose,
-		Version:       version,
-		CommitHash:    commitHash,
-		Logger:        logger,
-		ErrorHandler:  handler,
-		ConfigService: cfg,
+		Debug:    verbose,
+		Version:  version,
+		Commit:   commitHash,
+		Logger:   logger,
+		Errors:   handler,
+		User:     user.NewUserService(db, logger),
+		Invite:   invite.NewInviteService(db, logger),
+		Estimate: estimate.NewEstimateService(db, logger),
+		Standup:  standup.NewStandupService(db, logger),
+		Retro:    retro.NewRetroService(db, logger),
 	}
 
 	return &ai, nil

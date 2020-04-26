@@ -8,7 +8,30 @@
       <div class="uk-grid-small uk-grid-match uk-child-width-1-3@s uk-margin-medium" uk-grid>
         <div>
           <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route("about") %>">About</a></h3>
+            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`session.new`) %>">New</a></h3>
+            <p>
+              <div><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`estimate.new.form`) %>">Estimation Session</a></div>
+              <div><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`standup.new.form`) %>">Daily Standup</a></div>
+              <div><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro.new.form`) %>">Retrospective</a></div>
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`join.form`) %>">Join</a></h3>
+            <div class="uk-margin">
+              <form method="post" action="<%= ctx.Route(`join.post`) %>">
+              <div class="uk-inline">
+                <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: forward"></button>
+                <input class="uk-input uk-form-large" type="text" name="i" placeholder="Invite Code" />
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`about`) %>">About</a></h3>
             <p>Details about the running instance of <%= util.AppName %></p>
           </div>
         </div>

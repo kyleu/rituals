@@ -13,7 +13,7 @@
             <% for _, s := range sandboxes { %>
               <div>
                 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-                  <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route("sandbox.run", "key", s) %>"><%= s %></a></h3>
+                  <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sandbox.run`, `key`, s) %>"><%= s %></a></h3>
                   <p>TODO</p>
                 </div>
               </div>

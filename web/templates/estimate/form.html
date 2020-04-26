@@ -1,0 +1,30 @@
+<%: func EstimateForm(model *estimate.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+  <div class="uk-section uk-section-small">
+    <div class="uk-container">
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <h3 class="uk-card-title">New Estimation Session</h3>
+        <form class="uk-form-stacked" action="<%= ctx.Route(`estimate.new`) %>" method="post">
+          <fieldset class="uk-fieldset">
+            <div class="uk-margin-small">
+              <label class="uk-form-label" for="title">Title</label>
+              <input class="uk-input" name="title" type="text" placeholder="Name your session" value="<%= model.Title %>" />
+            </div>
+
+            <div class="uk-margin">
+              <label class="uk-form-label" for="title">Password (optional)</label>
+              <input class="uk-input" name="password" type="text" placeholder="Leave blank for none" value="<%= model.Password %>" />
+            </div>
+
+            <div class="uk-margin-top">
+              <button class="uk-button uk-button-default" type="submit">Start</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+<% } %>

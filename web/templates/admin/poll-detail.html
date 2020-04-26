@@ -1,0 +1,53 @@
+<%: func AdminPollDetail(model *estimate.Poll, votes []estimate.Vote, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title"><%= ctx.Title %></h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%=v model.ID %></td>
+          </tr>
+          <tr>
+            <th>Estimate</th>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate.detail`, `id`, model.EstimateID.String()) %>"><%=v model.EstimateID %></a></td>
+          </tr>
+          <tr>
+            <th>Index</th>
+            <td><%=v model.Idx %></td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td><%=v model.Status %></td>
+          </tr>
+          <tr>
+            <th>Title</th>
+            <td><%=v model.Title %></td>
+          </tr>
+          <tr>
+            <th>Author</th>
+            <td><%=v model.Author %></td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td><%=v model.Created %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Votes</h3>
+      <% if len(votes) == 0 { %>
+        <p>No votes available</p>
+      <% } else { %>
+        <% AdminVoteTable(votes, ctx, _buffer) %>
+      <% } %>
+    </div>
+  </div>
+</div>
+<% } %>

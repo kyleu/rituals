@@ -1,6 +1,11 @@
 package util
 
-import "golang.org/x/text/language"
+import (
+	"github.com/gofrs/uuid"
+	"golang.org/x/text/language"
+)
+
+var AllColors = []string{"clear", "grey", "bluegrey", "red", "orange", "yellow", "green", "blue", "purple"}
 
 type Theme struct {
 	Name            string
@@ -39,6 +44,7 @@ func ThemeFromString(s string) Theme {
 }
 
 type UserProfile struct {
+	UserID    uuid.UUID
 	Name      string
 	Theme     Theme
 	NavColor  string
@@ -50,11 +56,12 @@ func (p *UserProfile) LinkClass() string {
 	return p.LinkColor + "-fg"
 }
 
-var SystemProfile = NewUserProfile()
+var SystemProfile = NewUserProfile(uuid.UUID{})
 
-func NewUserProfile() UserProfile {
+func NewUserProfile(id uuid.UUID) UserProfile {
 	return UserProfile{
-		Name:      "System",
+		UserID:    id,
+		Name:      "Guest",
 		Theme:     ThemeLight,
 		NavColor:  "bluegrey",
 		LinkColor: "bluegrey",

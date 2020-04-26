@@ -7,4 +7,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/kyleu/rituals/compare/v0.0.0...HEAD
+[Unreleased]: https://github.com/kyleu/rituals.dev/compare/v0.0.0...HEAD

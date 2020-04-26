@@ -1,0 +1,22 @@
+<%: func AdminMemberTable(members []member.Entry, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range members { %>
+    <tr>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td><%=v model.Name %></td>
+      <td><%=v model.Role %></td>
+      <td><%=v model.Created %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

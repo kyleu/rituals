@@ -46,7 +46,7 @@ ifeq (${VERBOSE}, 1)
 	go env
 endif
 
-	CGO_ENABLED=1 go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/$* ./cmd/$*
+	go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/$* ./cmd/$*
 
 .PHONY: build
 build: goversion compile-templates ## Build all binaries
@@ -55,7 +55,7 @@ ifeq (${VERBOSE}, 1)
 endif
 
 	@mkdir -p ${BUILD_DIR}
-	CGO_ENABLED=1 go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./cmd/...
+	go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./cmd/...
 
 .PHONY: build-release
 build-release: ## Build all binaries without debug information

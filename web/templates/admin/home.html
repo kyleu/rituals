@@ -1,0 +1,21 @@
+<%: func AdminHome(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">Administration</h3>
+      <p>Privileged actions for <%= util.AppName %></p>
+      <ul>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user`) %>">Users</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invite`) %>">Invitations</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate`) %>">Estimates</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.standup`) %>">Daily Standups</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.retro`) %>">Retrospectives</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<% } %>

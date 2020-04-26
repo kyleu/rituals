@@ -16,7 +16,7 @@ import (
 
 func act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (int, error)) {
 	startNanos := time.Now().UnixNano()
-	ctx := web.ExtractContext(r)
+	ctx := web.ExtractContext(w, r)
 
 	if len(ctx.Flashes) > 0 {
 		saveSession(w, r, ctx)
@@ -35,9 +35,13 @@ func act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (int
 
 func redir(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
 	startNanos := time.Now().UnixNano()
-	ctx := web.ExtractContext(r)
+	ctx := web.ExtractContext(w, r)
 	url, err := f(ctx)
 	if err == nil {
+		if len(ctx.Flashes) > 0 {
+			println("!!!!!!!!!!!!!!!!!!!!!!!")
+			saveSession(w, r, ctx)
+		}
 		w.Header().Set("Location", url)
 		w.WriteHeader(http.StatusFound)
 		logComplete(startNanos, ctx, http.StatusFound, r)

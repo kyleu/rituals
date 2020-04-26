@@ -20,10 +20,14 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 func ProfileSave(w http.ResponseWriter, r *http.Request) {
 	redir(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		util.SystemProfile.Name = r.Form.Get("username")
-		util.SystemProfile.Theme = util.ThemeFromString(r.Form.Get("theme"))
-		util.SystemProfile.NavColor = r.Form.Get("navbar-color")
-		util.SystemProfile.LinkColor = r.Form.Get("link-color")
+		ctx.Profile.Name = r.Form.Get("username")
+		ctx.Profile.Theme = util.ThemeFromString(r.Form.Get("theme"))
+		ctx.Profile.NavColor = r.Form.Get("navbar-color")
+		ctx.Profile.LinkColor = r.Form.Get("link-color")
+		_, err := ctx.App.User.SaveProfile(ctx.Profile)
+		if err != nil {
+			return "", err
+		}
 		ctx.Session.AddFlash("success:Profile saved")
 		saveSession(w, r, ctx)
 		return ctx.Route("home"), nil

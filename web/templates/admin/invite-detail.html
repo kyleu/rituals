@@ -1,0 +1,55 @@
+<%: func AdminInviteDetail(model *invite.Invitation, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">Invitation</h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= model.Key %></td>
+          </tr>
+          <tr>
+            <th>Relation</th>
+            <td><%= model.K.String() %>:<%= model.V %></td>
+          </tr>
+          <tr>
+            <th>Source</th>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Src.String()) %>"><%=v model.Src %></a></td>
+          </tr>
+          <tr>
+            <th>Target</th>
+            <td>
+              <% if model.Tgt == nil { %>
+                <%=v model.Tgt %>
+              <% } else { %>
+                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Tgt.String()) %>"><%=v model.Tgt %></a>
+              <% } %>
+            </td>
+          </tr>
+          <tr>
+            <th>Note</th>
+            <td><%= model.Note %></td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td><%= model.Status.String() %></td>
+          </tr>
+          <tr>
+            <th>Redeemed</th>
+            <td><%=v model.Redeemed %></td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td><%=v model.Created %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% } %>

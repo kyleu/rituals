@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kyleu/rituals/internal/app/cli"
+	"github.com/kyleu/rituals.dev/internal/app/cli"
 )
 
 // Provisioned by ldflags

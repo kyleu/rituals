@@ -9,4 +9,4 @@ project_dir=${dir}/..
 cd $project_dir
 
 mkdir -p build/android/
-gomobile bind -o build/android/rituals.aar -target=android github.com/kyleu/rituals/lib
+gomobile bind -o build/android/rituals.aar -target=android github.com/kyleu/rituals.dev/lib
