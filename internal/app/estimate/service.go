@@ -70,7 +70,7 @@ func (s *Service) GetByOwner(id uuid.UUID) ([]Session, error) {
 
 func (s *Service) GetBySlug(slug string) (*Session, error) {
 	var dto = &sessionDTO{}
-	err := s.db.Get(&dto, "select * from estimate where slug = $1", slug)
+	err := s.db.Get(dto, "select * from estimate where slug = $1", slug)
 	if err != nil {
 		return nil, err
 	}

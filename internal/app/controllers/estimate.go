@@ -43,10 +43,15 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		key := mux.Vars(r)["key"]
-		ctx.Title = "estimate [" + key + "]"
+		est, err := ctx.App.Estimate.GetBySlug(key)
+		if err != nil {
+			return 0, errors.WithStack(errors.Wrap(err, "cannot load session"))
+		}
+
+		ctx.Title = est.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), "estimates")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate", "key", key), key)...)
-		return templates.EstimateWorkspace(ctx, w)
+		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate", "key", key), est.Title)...)
+		return templates.EstimateWorkspace(est, ctx, w)
 	})
 }
 

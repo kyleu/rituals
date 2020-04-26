@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/rituals.dev/internal/app/estimate"
 	"github.com/kyleu/rituals.dev/internal/app/invite"
 	"github.com/kyleu/rituals.dev/internal/app/retro"
+	"github.com/kyleu/rituals.dev/internal/app/socket"
 	"github.com/kyleu/rituals.dev/internal/app/standup"
 	"github.com/kyleu/rituals.dev/internal/app/user"
 	"github.com/kyleu/rituals.dev/internal/app/util"
@@ -61,6 +62,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Estimate: estimate.NewEstimateService(db, logger),
 		Standup:  standup.NewStandupService(db, logger),
 		Retro:    retro.NewRetroService(db, logger),
+		Socket:   socket.NewSocketService(logger),
 	}
 
 	return &ai, nil

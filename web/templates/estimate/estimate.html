@@ -1,4 +1,4 @@
-<%: func EstimateWorkspace(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func EstimateWorkspace(model *estimate.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -6,15 +6,28 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div>
-      <h1 class="uk-heading-hero">Estimate Detail</h1>
-      <div class="uk-text-lead">TODO</div>
+      <h1 class="uk-heading-hero"><%= model.Title %></h1>
+      <div class="uk-text-lead">Estimation Session</div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`estimate.list`) %>">Back to listing</a></h3>
+          <h3 class="uk-card-title">Actions</h3>
+          <p><a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="sandbox(); return false;">Sandbox</a></p>
+        </div>
+      </div>
+      <div class="uk-margin-top">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <h3 class="uk-card-title">Polls</h3>
+          <p>TODO</p>
+        </div>
+      </div>
+      <div class="uk-margin-top">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <h3 class="uk-card-title">Members</h3>
           <p>TODO</p>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>window.onload = function() { connect("estimate", "<%=v model.ID %>") }</script>
 <% } %>

@@ -5,6 +5,7 @@ import (
 	"github.com/kyleu/rituals.dev/internal/app/estimate"
 	"github.com/kyleu/rituals.dev/internal/app/invite"
 	"github.com/kyleu/rituals.dev/internal/app/retro"
+	"github.com/kyleu/rituals.dev/internal/app/socket"
 	"github.com/kyleu/rituals.dev/internal/app/standup"
 	"github.com/kyleu/rituals.dev/internal/app/user"
 	"logur.dev/logur"
@@ -21,6 +22,7 @@ type AppInfo struct {
 	Estimate estimate.Service
 	Standup  standup.Service
 	Retro    retro.Service
+	Socket   socket.Service
 }
 
 func (a *AppInfo) Valid() bool {
