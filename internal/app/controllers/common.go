@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"emperror.dev/errors"
 	"fmt"
 	"net/http"
 	"time"
+
+	"emperror.dev/errors"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
 

@@ -2,8 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/internal/app/util"
 
 	"github.com/kyleu/rituals.dev/internal/app/config"
 

@@ -28,8 +28,10 @@ func SandboxForm(w http.ResponseWriter, r *http.Request) {
 			return 0, errors.WithStack(errors.New("error!"))
 		}
 		ctx.Title = "[" + key + "] Sandbox"
-		bc := web.Breadcrumb{Path: ctx.Route("sandbox.run", "key", key), Title: key}
-		ctx.Breadcrumbs = append(web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox"), bc)
+		bc := web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")
+		bc = append(bc, web.Breadcrumb{Path: ctx.Route("sandbox.run", "key", key), Title: key})
+		ctx.Breadcrumbs = bc
+
 		return templates.SandboxForm(key, ctx, w)
 	})
 }

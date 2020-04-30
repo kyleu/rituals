@@ -1,16 +1,17 @@
 package config
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+	"time"
+
+	"emperror.dev/errors"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"github.com/kyleu/rituals.dev/internal/gen/queries"
 	"golang.org/x/text/language"
 	"logur.dev/logur"
-	"strings"
-	"time"
 )
 
 func OpenDatabase(logger logur.LoggerFacade) (*sqlx.DB, error) {
@@ -70,7 +71,7 @@ func exec(name string, db *sqlx.DB, logger logur.LoggerFacade, f func(*strings.B
 	for _, sql := range sqls {
 		_, err := db.Exec(sql)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "cannot execute [" + name + "]"))
+			return errors.WithStack(errors.Wrap(err, "cannot execute ["+name+"]"))
 		}
 	}
 	elapsed := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)

@@ -2,12 +2,13 @@ package member
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/internal/app/util"
-	"strings"
 )
 
 type Service struct {
@@ -25,45 +26,55 @@ func NewMemberService(db *sqlx.DB, table string, col string) Service {
 }
 
 func (s *Service) GetByModelID(id uuid.UUID) ([]Entry, error) {
-	var dtos []Entry
+	var dtos []entryDTO
 	q := fmt.Sprintf("select user_id, name, role, created from %s where %s = $1", s.tableName, s.colName)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
 		return nil, err
 	}
-	return dtos, nil
+	ret := make([]Entry, 0)
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToEntry())
+	}
+	return ret, nil
 }
 
 func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
-	dto := &Entry{}
+	dto := entryDTO{}
 	q := fmt.Sprintf("select user_id, name, role, created from %s where %s = $1 and user_id = $2", s.tableName, s.colName)
-	err := s.db.Select(&dto, q, modelID, userID)
+	err := s.db.Get(&dto, q, modelID, userID)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}
-	return dto, nil
+	ret := dto.ToEntry()
+	return &ret, nil
 }
 
-func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, name string, role string) (*Entry, error) {
-	_, err := s.Get(modelID, userID)
-	if err == nil {
-		q := fmt.Sprintf("update %s set name = $1, role = $2 where %s = $3 and user_id = $4)", s.tableName, s.colName)
-		_, err = s.db.Exec(q, modelID, userID, name, role)
+func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
+	dto, err := s.Get(modelID, userID)
+	if err != nil {
+		return nil, err
+	}
+	if dto == nil {
+		q := fmt.Sprintf(strings.TrimSpace(`
+			insert into %s (%s, user_id, name, role) 
+			values ($1, $2, (select name from system_user where id = $2), 'member')
+		`), s.tableName, s.colName)
+		_, err = s.db.Exec(q, modelID, userID)
 		if err != nil {
 			return nil, err
 		}
 		return s.Get(modelID, userID)
 	} else {
-		if err == sql.ErrNoRows {
-			q := fmt.Sprintf("insert into %s (%s, user_id, name, role) values ($1, $2, $3, $4)", s.tableName, s.colName)
-			_, err = s.db.Exec(q, modelID, userID, name, role)
-			if err != nil {
-			  return nil, err
-			}
-			return s.Get(modelID, userID)
-		} else {
-			return nil, err
-		}
+		// q := fmt.Sprintf("update %s set name = $1, role = $2 where %s = $3 and user_id = $4)", s.tableName, s.colName)
+		// _, err = s.db.Exec(q, modelID, userID, name, role)
+		// if err != nil {
+		// 	return nil, err
+		// }
+		return dto, nil
 	}
 }
 

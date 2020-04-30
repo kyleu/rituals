@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
@@ -20,9 +21,13 @@ func Socket(w http.ResponseWriter, r *http.Request) {
 
 	connID, err := ctx.App.Socket.Register(ctx.Profile.UserID, c)
 	if err != nil {
-		ctx.Logger.Info("unable to register websocket connection")
+		ctx.Logger.Warn("unable to register websocket connection")
 		return
 	}
 
-	ctx.App.Socket.ReadLoop(connID)
+	err = ctx.App.Socket.ReadLoop(connID)
+	if err != nil {
+		ctx.Logger.Warn(fmt.Sprintf("error processing socket read loop: %+v", err))
+		return
+	}
 }

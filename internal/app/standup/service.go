@@ -13,7 +13,7 @@ type Service struct {
 	logger  logur.Logger
 }
 
-func NewStandupService(db *sqlx.DB, logger logur.LoggerFacade) Service {
+func NewStandupService(db *sqlx.DB, logger logur.Logger) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "standup"})
 
 	return Service{

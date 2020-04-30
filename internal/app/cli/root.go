@@ -51,18 +51,25 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating config service"))
 	}
 
+	userSvc := user.NewUserService(db, logger)
+	inviteSvc := invite.NewInviteService(db, logger)
+	estimateSvc := estimate.NewEstimateService(db, logger)
+	standupSvc := standup.NewStandupService(db, logger)
+	retroSvc := retro.NewRetroService(db, logger)
+	socketSvc := socket.NewSocketService(logger, &estimateSvc)
+
 	ai := config.AppInfo{
 		Debug:    verbose,
 		Version:  version,
 		Commit:   commitHash,
 		Logger:   logger,
 		Errors:   handler,
-		User:     user.NewUserService(db, logger),
-		Invite:   invite.NewInviteService(db, logger),
-		Estimate: estimate.NewEstimateService(db, logger),
-		Standup:  standup.NewStandupService(db, logger),
-		Retro:    retro.NewRetroService(db, logger),
-		Socket:   socket.NewSocketService(logger),
+		User:     userSvc,
+		Invite:   inviteSvc,
+		Estimate: estimateSvc,
+		Standup:  standupSvc,
+		Retro:    retroSvc,
+		Socket:   socketSvc,
 	}
 
 	return &ai, nil

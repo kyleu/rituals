@@ -1,10 +1,11 @@
 package user
 
 import (
+	"time"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"golang.org/x/text/language"
-	"time"
 )
 
 type SystemUser struct {
@@ -26,6 +27,7 @@ func (su *SystemUser) ToProfile() util.UserProfile {
 	return util.UserProfile{
 		UserID:    su.UserID,
 		Name:      su.Name,
+		Role:      su.Role,
 		Theme:     util.ThemeFromString(su.Theme),
 		NavColor:  su.NavColor,
 		LinkColor: su.LinkColor,

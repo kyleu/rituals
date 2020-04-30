@@ -13,7 +13,7 @@ type Service struct {
 	logger  logur.Logger
 }
 
-func NewRetroService(db *sqlx.DB, logger logur.LoggerFacade) Service {
+func NewRetroService(db *sqlx.DB, logger logur.Logger) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "retro"})
 
 	return Service{

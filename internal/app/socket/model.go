@@ -12,7 +12,7 @@ type connection struct {
 }
 
 type Message struct {
-	T string `json:"t"`
-	K string `json:"k"`
-	V string `json:"v"`
+	Svc   string      `json:"svc"`
+	Cmd   string      `json:"cmd"`
+	Param interface{} `json:"param"`
 }

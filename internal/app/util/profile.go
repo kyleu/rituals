@@ -46,6 +46,7 @@ func ThemeFromString(s string) Theme {
 type UserProfile struct {
 	UserID    uuid.UUID
 	Name      string
+	Role      string
 	Theme     Theme
 	NavColor  string
 	LinkColor string
@@ -62,6 +63,7 @@ func NewUserProfile(id uuid.UUID) UserProfile {
 	return UserProfile{
 		UserID:    id,
 		Name:      "Guest",
+		Role:      "user",
 		Theme:     ThemeLight,
 		NavColor:  "bluegrey",
 		LinkColor: "bluegrey",

@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"net/http"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
-	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
 
@@ -16,7 +17,9 @@ func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		ctx.Title = "Estimate List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimates")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimates")...)
+		ctx.Breadcrumbs = bc
+
 		estimates, err := ctx.App.Estimate.List()
 		if err != nil {
 			return 0, err
@@ -48,7 +51,9 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = estimate.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimates")...)
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
+		ctx.Breadcrumbs = bc
+
 		return templates.AdminEstimateDetail(estimate, polls, members, ctx, w)
 	})
 }
@@ -76,7 +81,8 @@ func AdminPollDetail(w http.ResponseWriter, r *http.Request) {
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimates")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", poll.EstimateID.String()), estimate.Slug)...)
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.poll.detail", "id", pollIDString), fmt.Sprintf("poll %v", poll.Idx))...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.poll.detail", "id", pollIDString), fmt.Sprintf("poll %v", poll.Idx))...)
+		ctx.Breadcrumbs = bc
 		return templates.AdminPollDetail(poll, votes, ctx, w)
 	})
 }

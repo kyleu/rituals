@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/internal/app/estimate"
 	"github.com/kyleu/rituals.dev/internal/app/web"
-	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/gen/templates"
 )
@@ -22,7 +23,9 @@ func EstimateNewForm(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		ctx.Title = "New Estimation Session"
 		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), "estimates")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate.new.form"), "new")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate.new.form"), "new")...)
+		ctx.Breadcrumbs = bc
+
 		model := estimate.NewSession("", "", ctx.Profile.UserID)
 		return templates.EstimateForm(&model, ctx, w)
 	})
@@ -50,8 +53,9 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = est.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), "estimates")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate", "key", key), est.Title)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate", "key", key), est.Title)...)
+		ctx.Breadcrumbs = bc
+
 		return templates.EstimateWorkspace(est, ctx, w)
 	})
 }
-

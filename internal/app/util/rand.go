@@ -1,10 +1,11 @@
 package util
 
 import (
-	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"math/rand"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/gofrs/uuid"
 )
 
 func UUID() uuid.UUID {

@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
-	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
 
@@ -15,7 +16,9 @@ func AdminUserList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		ctx.Title = "User List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
+		ctx.Breadcrumbs = bc
+
 		users, err := ctx.App.User.List()
 		if err != nil {
 			return 0, err
@@ -51,7 +54,9 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = user.Name
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user.detail", "id", userIDString), user.Name)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user.detail", "id", userIDString), user.Name)...)
+		ctx.Breadcrumbs = bc
+
 		return templates.AdminUserDetail(user, estimates, standups, retros, ctx, w)
 	})
 }

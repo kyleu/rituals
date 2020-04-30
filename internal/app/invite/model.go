@@ -1,8 +1,9 @@
 package invite
 
 import (
-	"github.com/gofrs/uuid"
 	"time"
+
+	"github.com/gofrs/uuid"
 )
 
 type invitationDTO struct {

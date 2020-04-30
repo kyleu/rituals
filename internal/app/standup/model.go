@@ -1,12 +1,13 @@
 package standup
 
 import (
-	"github.com/gofrs/uuid"
 	"time"
+
+	"github.com/gofrs/uuid"
 )
 
 type Status struct {
-	Key string
+	Key string `json:"key"`
 }
 
 var StatusPending = Status{Key: "pending"}
@@ -29,13 +30,13 @@ func (t Status) String() string {
 }
 
 type Session struct {
-	ID       uuid.UUID
-	Slug     string
-	Password string
-	Title    string
-	Owner    uuid.UUID
-	Status   Status
-	Created  time.Time
+	ID       uuid.UUID `json:"id"`
+	Slug     string    `json:"slug"`
+	Password string    `json:"password"`
+	Title    string    `json:"title"`
+	Owner    uuid.UUID `json:"owner"`
+	Status   Status    `json:"status"`
+	Created  time.Time `json:"created"`
 }
 
 type sessionDTO struct {

@@ -2,24 +2,25 @@ package user
 
 import (
 	"database/sql"
+	"time"
+
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"logur.dev/logur"
-	"time"
 )
 
 type Service struct {
-	db      *sqlx.DB
-	logger  logur.Logger
+	db     *sqlx.DB
+	logger logur.Logger
 }
 
-func NewUserService(db *sqlx.DB, logger logur.LoggerFacade) Service {
+func NewUserService(db *sqlx.DB, logger logur.Logger) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
 
 	return Service{
-		db:      db,
-		logger:  logger,
+		db:     db,
+		logger: logger,
 	}
 }
 

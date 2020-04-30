@@ -3,14 +3,13 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"io"
 	"net/http"
 
+	"github.com/kyleu/rituals.dev/internal/app/util"
+
 	"github.com/kyleu/rituals.dev/internal/app/config"
 	"github.com/kyleu/rituals.dev/internal/app/web"
-
-	"emperror.dev/errors"
 
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/internal/gen/templates"
@@ -27,10 +26,6 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	_, _ = templates.NotFound(r, ctx, w)
 }
 
-type stackTracer interface {
-	StackTrace() errors.StackTrace
-}
-
 func InternalServerError(router *mux.Router, info *config.AppInfo, w http.ResponseWriter, r *http.Request) {
 	defer lastChanceError(w)
 
@@ -42,7 +37,7 @@ func InternalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 		ctx := web.ExtractContext(w, r.WithContext(rc))
 		ctx.Title = "Server Error"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(r.URL.Path, "error")
-			_, _ = templates.InternalServerError(util.GetErrorDetail(err.(error)), r, ctx, w)
+		_, _ = templates.InternalServerError(util.GetErrorDetail(err.(error)), r, ctx, w)
 		args := map[string]interface{}{"status": 500}
 		st := http.StatusInternalServerError
 		ctx.Logger.Warn(fmt.Sprintf("[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, err), args)

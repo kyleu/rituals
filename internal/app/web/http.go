@@ -2,10 +2,11 @@ package web
 
 import (
 	"fmt"
-	"github.com/gofrs/uuid"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/gofrs/uuid"
 
 	"github.com/kyleu/rituals.dev/internal/app/config"
 	"github.com/kyleu/rituals.dev/internal/app/util"
@@ -85,18 +86,18 @@ func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 	if ok {
 		userID, err = uuid.FromString(userIDValue.(string))
 		if err != nil {
-			ai.Logger.Warn(fmt.Sprint("cannot parse uuid [%s]: %+v", userIDValue, err))
+			ai.Logger.Warn(fmt.Sprintf("cannot parse uuid [%v]: %+v", userIDValue, err))
 		}
 	} else {
 		userID = util.UUID()
 		_, err := ai.User.CreateNewUser(userID)
 		if err != nil {
-			ai.Logger.Warn(fmt.Sprint("cannot save user: %+v", err))
+			ai.Logger.Warn(fmt.Sprintf("cannot save user: %+v", err))
 		}
 		session.Values["user"] = userID.String()
 		err = session.Save(r, w)
 		if err != nil {
-			ai.Logger.Warn(fmt.Sprint("cannot save session: %+v", err))
+			ai.Logger.Warn(fmt.Sprintf("cannot save session: %+v", err))
 		}
 	}
 

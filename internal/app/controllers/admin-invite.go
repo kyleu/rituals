@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
 
@@ -13,7 +14,9 @@ func AdminInviteList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		ctx.Title = "Invitation List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite"), "invites")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite"), "invites")...)
+		ctx.Breadcrumbs = bc
+
 		invites, err := ctx.App.Invite.List()
 		if err != nil {
 			return 0, err
@@ -32,7 +35,9 @@ func AdminInviteDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = invite.Key
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite"), "invites")...)
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite.detail", "key", key), key)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite.detail", "key", key), key)...)
+		ctx.Breadcrumbs = bc
+
 		return templates.AdminInviteDetail(invite, ctx, w)
 	})
 }

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "listFiles": false,
     "module": "system",
     "noImplicitAny": true,
@@ -18,5 +19,8 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
+  ],
+  "types": [
+    "uikit"
   ]
 }

@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
-	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
 
@@ -15,7 +16,9 @@ func AdminRetroList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		ctx.Title = "Retrospective List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retros")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retros")...)
+		ctx.Breadcrumbs = bc
+
 		retros, err := ctx.App.Retro.List()
 		if err != nil {
 			return 0, err
@@ -38,7 +41,9 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = retro.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retros")...)
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroIDString), retro.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroIDString), retro.Slug)...)
+		ctx.Breadcrumbs = bc
+
 		return templates.AdminRetroDetail(retro, ctx, w)
 	})
 }

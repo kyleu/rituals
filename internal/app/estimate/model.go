@@ -2,14 +2,15 @@ package estimate
 
 import (
 	"encoding/json"
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"strings"
 	"time"
+
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/internal/app/util"
 )
 
 type Status struct {
-	Key string
+	Key string `json:"key"`
 }
 
 var StatusNew = Status{Key: "new"}
@@ -33,10 +34,10 @@ func (t Status) String() string {
 }
 
 type SessionOptions struct {
-	Foo string
+	Foo string `json:"foo"`
 }
 
-func (o SessionOptions) ToJson() string {
+func (o SessionOptions) ToJSON() string {
 	b, _ := json.Marshal(o)
 	return string(b)
 }
@@ -53,15 +54,15 @@ func choicesFromDB(s string) []string {
 }
 
 type Session struct {
-	ID       uuid.UUID
-	Slug     string
-	Password string
-	Title    string
-	Owner    uuid.UUID
-	Status   Status
-	Choices  []string
-	Options  SessionOptions
-	Created  time.Time
+	ID       uuid.UUID      `json:"id"`
+	Slug     string         `json:"slug"`
+	Password string         `json:"password"`
+	Title    string         `json:"title"`
+	Owner    uuid.UUID      `json:"owner"`
+	Status   Status         `json:"status"`
+	Choices  []string       `json:"choices"`
+	Options  SessionOptions `json:"options"`
+	Created  time.Time      `json:"created"`
 }
 
 func NewSession(title string, slug string, userID uuid.UUID) Session {
@@ -104,7 +105,7 @@ func (dto sessionDTO) ToSession() Session {
 }
 
 type PollStatus struct {
-	Key string
+	Key string `json:"key"`
 }
 
 var PollStatusPending = PollStatus{Key: "pending"}
@@ -126,14 +127,14 @@ func (t PollStatus) String() string {
 }
 
 type Poll struct {
-	ID         uuid.UUID
-	EstimateID uuid.UUID
-	Idx        uint
-	Author     uuid.UUID
-	Title      string
-	Status     PollStatus
-	FinalVote  string
-	Created    time.Time
+	ID         uuid.UUID  `json:"id"`
+	EstimateID uuid.UUID  `json:"estimateID"`
+	Idx        uint       `json:"idx"`
+	Author     uuid.UUID  `json:"author"`
+	Title      string     `json:"title"`
+	Status     PollStatus `json:"status"`
+	FinalVote  string     `json:"finalVote"`
+	Created    time.Time  `json:"created"`
 }
 
 type pollDTO struct {
@@ -161,7 +162,6 @@ func (dto pollDTO) ToPoll() Poll {
 }
 
 type Vote struct {
-	PollID  uuid.UUID
 	UserID  uuid.UUID
 	Choice  string
 	Updated time.Time
@@ -178,7 +178,6 @@ type voteDTO struct {
 
 func (dto voteDTO) ToVote() Vote {
 	return Vote{
-		PollID:  dto.PollID,
 		UserID:  dto.UserID,
 		Choice:  dto.Choice,
 		Updated: dto.Updated,

@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
-	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
 
@@ -15,7 +16,9 @@ func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
 		ctx.Title = "Daily Standup List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standups")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standups")...)
+		ctx.Breadcrumbs = bc
+
 		standups, err := ctx.App.Standup.List()
 		if err != nil {
 			return 0, err
@@ -38,7 +41,9 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = standup.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standups")...)
-		ctx.Breadcrumbs = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
+		ctx.Breadcrumbs = bc
+
 		return templates.AdminStandupDetail(standup, ctx, w)
 	})
 }
