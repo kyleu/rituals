@@ -6,7 +6,7 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div>
-      <h1 class="uk-heading-hero"><%= model.Title %></h1>
+      <h1 class="uk-heading-hero" id="model-title"><%= model.Title %></h1>
       <div class="uk-text-lead">Estimation Session</div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
@@ -17,13 +17,13 @@
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
           <h3 class="uk-card-title">Polls</h3>
-          <p>TODO</p>
+          <p id="poll-detail">TODO</p>
         </div>
       </div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
           <h3 class="uk-card-title">Members</h3>
-          <p>TODO</p>
+          <p id="member-detail">TODO</p>
         </div>
       </div>
     </div>

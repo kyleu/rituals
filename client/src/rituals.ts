@@ -3,12 +3,20 @@ declare var UIkit: any;
 let socket: WebSocket;
 let debug = true;
 
-let $: (selector: string, context?: any) => [HTMLElement] = UIkit.util.$$;
-
 interface Message {
-  svc: String;
-  cmd: String;
+  svc: string;
+  cmd: string;
   param: any;
+}
+
+interface Detail {
+  id: string;
+  slug: string;
+  password: string;
+  title: string;
+  owner: string;
+  status: { key: string; };
+  created: string;
 }
 
 function onMessage(msg: Message) {
@@ -23,31 +31,8 @@ function onMessage(msg: Message) {
   }
 }
 
-function socketUrl() {
-  let l = document.location;
-  let protocol = "ws";
-  if(l.protocol === "https:") {
-    protocol = "wss";
-  }
-  return protocol + "://" + l.host + "/s";
-}
-
-function connect(svc: String, value: any) {
-  socket = new WebSocket(socketUrl());
-  socket.onopen = function () {
-    const msg = {"svc": svc, "cmd": "connect", "param": value};
-    send(msg);
-  };
-  socket.onmessage = function (event) {
-    const msg = JSON.parse(event.data)
-    onMessage(msg)
-  }
-}
-
-function send(msg: Message) {
-  console.log("sending message");
-  console.log(msg);
-  socket.send(JSON.stringify(msg));
+function setDetail(param: Detail) {
+  $id("model-title").innerText = param.title + "!!!!";
 }
 
 function sandbox() {

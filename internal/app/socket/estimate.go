@@ -28,7 +28,7 @@ func onEstimateMessage(s *Service, connID uuid.UUID, userID uuid.UUID, cmd strin
 			return errors.WithStack(errors.Wrap(err, "error sending estimate"))
 		}
 
-		err = s.estimates.Join(estimateID, userID)
+		joined, err := s.estimates.Join(estimateID, userID)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error joining estimate as member"))
 		}
@@ -37,9 +37,16 @@ func onEstimateMessage(s *Service, connID uuid.UUID, userID uuid.UUID, cmd strin
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error finding members"))
 		}
-		err = s.WriteChannel(estimateID, Message{Svc: "estimate", Cmd: "members", Param: members})
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending members"))
+		if joined {
+			err = s.WriteChannel(estimateID, Message{Svc: "estimate", Cmd: "members", Param: members})
+			if err != nil {
+				return errors.WithStack(errors.Wrap(err, "error sending members to channel"))
+			}
+		} else {
+			err = s.WriteMessage(connID, Message{Svc: "estimate", Cmd: "members", Param: members})
+			if err != nil {
+				return errors.WithStack(errors.Wrap(err, "error sending members to socket"))
+			}
 		}
 
 		polls, err := s.estimates.GetPolls(estimateID)

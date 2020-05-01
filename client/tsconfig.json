@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "jsx": "react",
+    "jsxFactory": "JSX",
     "listFiles": false,
     "module": "system",
     "noImplicitAny": true,

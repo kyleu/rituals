@@ -53,10 +53,10 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	return &ret, nil
 }
 
-func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
+func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, error) {
 	dto, err := s.Get(modelID, userID)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	if dto == nil {
 		q := fmt.Sprintf(strings.TrimSpace(`
@@ -65,16 +65,17 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) 
 		`), s.tableName, s.colName)
 		_, err = s.db.Exec(q, modelID, userID)
 		if err != nil {
-			return nil, err
+			return nil, false, err
 		}
-		return s.Get(modelID, userID)
+		entry, err := s.Get(modelID, userID)
+		return entry, true, err
 	} else {
 		// q := fmt.Sprintf("update %s set name = $1, role = $2 where %s = $3 and user_id = $4)", s.tableName, s.colName)
 		// _, err = s.db.Exec(q, modelID, userID, name, role)
 		// if err != nil {
 		// 	return nil, err
 		// }
-		return dto, nil
+		return dto, false, nil
 	}
 }
 

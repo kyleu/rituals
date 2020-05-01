@@ -42,9 +42,9 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 	return &e, nil
 }
 
-func (s *Service) Join(estimateID uuid.UUID, userID uuid.UUID) error {
-	_, err := s.members.Register(estimateID, userID)
-	return errors.WithStack(errors.Wrap(err, fmt.Sprintf("error registering member [%v::%v]", estimateID, userID)))
+func (s *Service) Join(estimateID uuid.UUID, userID uuid.UUID) (bool, error) {
+	_, joined, err := s.members.Register(estimateID, userID)
+	return joined, errors.WithStack(errors.Wrap(err, fmt.Sprintf("error registering member [%v::%v]", estimateID, userID)))
 }
 
 func (s *Service) List() ([]Session, error) {
