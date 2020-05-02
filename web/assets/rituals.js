@@ -66,7 +66,7 @@ function setMembers(members) {
 }
 var socket;
 var debug = true;
-function onMessage(msg) {
+function onSocketMessage(msg) {
     console.log("message received");
     console.log(msg);
     switch (msg.svc) {
@@ -87,10 +87,16 @@ var activeProfile = null;
 function setProfile(profile) {
     activeProfile = profile;
 }
+function onError(err) {
+    console.error("server error: " + err);
+}
 function onSystemMessage(cmd, param) {
     switch (cmd) {
         case "profile":
             setProfile(param);
+            break;
+        case "error":
+            onError(param);
             break;
         default:
             console.warn("Unhandled system message for command [" + cmd + "]");
@@ -104,11 +110,13 @@ function socketUrl() {
     }
     return protocol + "://" + l.host + "/s";
 }
-var currentService = null;
-var currentId = null;
-function connect(svc, id) {
+var currentService = "";
+var currentId = "";
+var connectTime = 0;
+function socketConnect(svc, id) {
     currentService = svc;
     currentId = id;
+    connectTime = Date.now();
     socket = new WebSocket(socketUrl());
     socket.onopen = function () {
         var msg = { "svc": svc, "cmd": "connect", "param": id };
@@ -116,13 +124,33 @@ function connect(svc, id) {
     };
     socket.onmessage = function (event) {
         var msg = JSON.parse(event.data);
-        onMessage(msg);
+        onSocketMessage(msg);
+    };
+    socket.onerror = function (event) {
+        onSocketError(event.type);
+    };
+    socket.onclose = function (event) {
+        onSocketClose();
     };
 }
 function send(msg) {
     console.log("sending message");
     console.log(msg);
     socket.send(JSON.stringify(msg));
+}
+function onSocketError(err) {
+    console.error("socket error: " + err);
+}
+function onSocketClose() {
+    var delta = Date.now() - connectTime;
+    if (delta < 2000) {
+        console.warn("socket closed immediately, reconnecting in 10 seconds");
+        setTimeout(function () { socketConnect(currentService, currentId); }, 10000);
+    }
+    else {
+        console.warn("socket closed, reconnecting in 2 seconds");
+        setTimeout(function () { socketConnect(currentService, currentId); }, 2000);
+    }
 }
 function renderMember(member) {
     return JSX("div", null,

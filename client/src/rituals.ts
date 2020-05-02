@@ -29,7 +29,7 @@ interface Detail {
   created: string;
 }
 
-function onMessage(msg: Message) {
+function onSocketMessage(msg: Message) {
   console.log("message received");
   console.log(msg);
   switch(msg.svc) {
@@ -54,10 +54,17 @@ function setProfile(profile: Profile) {
   activeProfile = profile
 }
 
+function onError(err: string) {
+  console.error("server error: " + err)
+}
+
 function onSystemMessage(cmd: string, param: any) {
   switch(cmd) {
     case "profile":
       setProfile(param);
+      break;
+    case "error":
+      onError(param);
       break;
     default:
       console.warn("Unhandled system message for command [" + cmd + "]");

@@ -69,7 +69,11 @@ func AdminPollDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return 0, err
 		}
-		estimate, err := ctx.App.Estimate.GetByID(poll.EstimateID)
+		estimateID, err := ctx.App.Estimate.GetPollEstimateID(pollID)
+		if err != nil {
+			return 0, err
+		}
+		estimate, err := ctx.App.Estimate.GetByID(*estimateID)
 		if err != nil {
 			return 0, err
 		}

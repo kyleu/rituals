@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"
 )
@@ -22,6 +23,10 @@ type Message struct {
 	Svc   string      `json:"svc"`
 	Cmd   string      `json:"cmd"`
 	Param interface{} `json:"param"`
+}
+
+func (m Message) String() string {
+	return fmt.Sprintf("%s/%s", m.Svc, m.Cmd)
 }
 
 func (m *Message) ParamJson() string {

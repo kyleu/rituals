@@ -63,7 +63,7 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	case "estimate":
 		err = onEstimateMessage(s, connID, c.UserID, message.Cmd, message.Param)
 	default:
-		s.logger.Warn("unhandled message of type [" + message.Svc + "]")
+		return errors.WithStack(errors.New("invalid service [" + message.Svc + "]"))
 	}
-	return errors.WithStack(errors.Wrap(err, fmt.Sprintf("error handling message [%s] %s / %s", message.Svc, message.Cmd, message.Param)))
+	return errors.WithStack(errors.Wrap(err, "error handling message [" + message.String() + "]"))
 }

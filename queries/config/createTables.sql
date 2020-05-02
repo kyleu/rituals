@@ -39,7 +39,7 @@ create table "poll" (
   "author_id" uuid not null references "system_user"("id"),
   "title" varchar(2048),
   "status" poll_status not null,
-  "final_vote" varchar(2048),
+  "final_vote" varchar(2048) not null,
   "created" timestamp not null default now()
 );
 

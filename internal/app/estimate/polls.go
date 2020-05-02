@@ -15,13 +15,22 @@ func (s *Service) GetPolls(id uuid.UUID) ([]Poll, error) {
 	return ret, nil
 }
 
-func (s *Service) GetPollByID(id uuid.UUID) (*Poll, error) {
+func (s *Service) GetPollByID(pollID uuid.UUID) (*Poll, error) {
 	dto := &pollDTO{}
-	err := s.db.Get(dto, "select * from poll where id = $1", id)
+	err := s.db.Get(dto, "select * from poll where id = $1", pollID)
 	if err != nil {
 		return nil, err
 	}
 	ret := dto.ToPoll()
+	return &ret, nil
+}
+
+func (s *Service) GetPollEstimateID(pollID uuid.UUID) (*uuid.UUID, error) {
+	ret := uuid.UUID{}
+	err := s.db.Get(&ret, "select estimate_id from poll where id = $1", pollID)
+	if err != nil {
+		return nil, err
+	}
 	return &ret, nil
 }
 
