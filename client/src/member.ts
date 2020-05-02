@@ -8,8 +8,5 @@ interface Member {
 function setMembers(members: [Member]) {
   const detail = $id("member-detail");
   detail.innerHTML = "";
-  for(const member of members) {
-    console.log(member);
-    detail.appendChild(renderMember(member));
-  }
+  detail.appendChild(renderMembers(members));
 }

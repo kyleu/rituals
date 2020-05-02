@@ -23,7 +23,7 @@ func onEstimateMessage(s *Service, connID uuid.UUID, userID uuid.UUID, cmd strin
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error finding session"))
 		}
-		err = s.WriteMessage(connID, Message{Svc: "estimate", Cmd: "detail", Param: est})
+		err = s.WriteMessage(connID, &Message{Svc: "estimate", Cmd: "detail", Param: est})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending estimate"))
 		}
@@ -37,13 +37,14 @@ func onEstimateMessage(s *Service, connID uuid.UUID, userID uuid.UUID, cmd strin
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error finding members"))
 		}
+		msg := Message{Svc: "estimate", Cmd: "members", Param: members}
 		if joined {
-			err = s.WriteChannel(estimateID, Message{Svc: "estimate", Cmd: "members", Param: members})
+			err = s.WriteChannel(estimateID, &msg)
 			if err != nil {
 				return errors.WithStack(errors.Wrap(err, "error sending members to channel"))
 			}
 		} else {
-			err = s.WriteMessage(connID, Message{Svc: "estimate", Cmd: "members", Param: members})
+			err = s.WriteMessage(connID, &msg)
 			if err != nil {
 				return errors.WithStack(errors.Wrap(err, "error sending members to socket"))
 			}
@@ -53,7 +54,7 @@ func onEstimateMessage(s *Service, connID uuid.UUID, userID uuid.UUID, cmd strin
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error finding polls"))
 		}
-		err = s.WriteMessage(connID, Message{Svc: "estimate", Cmd: "polls", Param: polls})
+		err = s.WriteMessage(connID, &Message{Svc: "estimate", Cmd: "polls", Param: polls})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending polls"))
 		}

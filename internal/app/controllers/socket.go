@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/internal/app/socket"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/web"
@@ -23,6 +24,12 @@ func Socket(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ctx.Logger.Warn("unable to register websocket connection")
 		return
+	}
+
+	msg := socket.Message{Svc: "system", Cmd: "profile", Param: ctx.Profile.ToProfile()}
+	err = ctx.App.Socket.WriteMessage(connID, &msg)
+	if err != nil {
+		ctx.Logger.Warn("unable to send initial profile")
 	}
 
 	err = ctx.App.Socket.ReadLoop(connID)

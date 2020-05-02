@@ -27,7 +27,7 @@ func (su *SystemUser) ToProfile() util.UserProfile {
 	return util.UserProfile{
 		UserID:    su.UserID,
 		Name:      su.Name,
-		Role:      su.Role,
+		Role:      util.RoleFromString(su.Role),
 		Theme:     util.ThemeFromString(su.Theme),
 		NavColor:  su.NavColor,
 		LinkColor: su.LinkColor,

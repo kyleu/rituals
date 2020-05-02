@@ -1,0 +1,16 @@
+<%: func AdminConnectionTable(connections []*socket.Status, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <th>ID</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range connections { %>
+    <tr>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.connection.detail`, `id`, model.ID.String()) %>"><%=v model.ID.String() %></a></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

@@ -5,48 +5,41 @@ import (
 	"golang.org/x/text/language"
 )
 
-var AllColors = []string{"clear", "grey", "bluegrey", "red", "orange", "yellow", "green", "blue", "purple"}
-
-type Theme struct {
-	Name            string
-	BackgroundClass string
-	CardClass       string
-	LogoPath        string
+type Role struct {
+	Key string
 }
 
-var ThemeLight = Theme{
-	Name:            "light",
-	BackgroundClass: "uk-dark",
-	CardClass:       "uk-card-default",
-	LogoPath:        "/assets/logo.png",
+var RoleGuest = Role{
+	Key: "guest",
 }
 
-var ThemeDark = Theme{
-	Name:            "dark",
-	BackgroundClass: "uk-light",
-	CardClass:       "uk-card-secondary",
-	LogoPath:        "/assets/logo-white.png",
+var RoleUser = Role{
+	Key: "user",
 }
 
-var AllThemes = []Theme{ThemeLight, ThemeDark}
-
-func (t Theme) String() string {
-	return t.Name
+var RoleAdmin = Role{
+	Key: "admin",
 }
 
-func ThemeFromString(s string) Theme {
-	for _, t := range AllThemes {
+var AllRoles = []Role{RoleGuest, RoleUser, RoleAdmin}
+
+func (t Role) String() string {
+	return t.Key
+}
+
+func RoleFromString(s string) Role {
+	for _, t := range AllRoles {
 		if t.String() == s {
 			return t
 		}
 	}
-	return ThemeLight
+	return RoleGuest
 }
 
 type UserProfile struct {
 	UserID    uuid.UUID
 	Name      string
-	Role      string
+	Role      Role
 	Theme     Theme
 	NavColor  string
 	LinkColor string
@@ -57,16 +50,36 @@ func (p *UserProfile) LinkClass() string {
 	return p.LinkColor + "-fg"
 }
 
-var SystemProfile = NewUserProfile(uuid.UUID{})
-
 func NewUserProfile(id uuid.UUID) UserProfile {
 	return UserProfile{
 		UserID:    id,
 		Name:      "Guest",
-		Role:      "user",
+		Role:      RoleGuest,
 		Theme:     ThemeLight,
 		NavColor:  "bluegrey",
 		LinkColor: "bluegrey",
 		Locale:    language.AmericanEnglish,
+	}
+}
+
+type Profile struct {
+	UserID    uuid.UUID `json:"userID"`
+	Name      string    `json:"name"`
+	Role      string    `json:"role"`
+	Theme     string    `json:"theme"`
+	NavColor  string    `json:"navColor"`
+	LinkColor string    `json:"linkColor"`
+	Locale    string    `json:"locale"`
+}
+
+func (u *UserProfile) ToProfile() Profile {
+	return Profile{
+		UserID:    u.UserID,
+		Name:      u.Name,
+		Role:      u.Role.String(),
+		Theme:     u.Theme.String(),
+		NavColor:  u.NavColor,
+		LinkColor: u.LinkColor,
+		Locale:    u.Locale.String(),
 	}
 }

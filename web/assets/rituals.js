@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 function onEstimateMessage(cmd, param) {
     switch (cmd) {
         case "detail":
@@ -34,60 +23,46 @@ function setEstimateDetail(param) {
 function setPolls(polls) {
     var detail = $id("poll-detail");
     detail.innerHTML = "";
-    for (var _i = 0, polls_1 = polls; _i < polls_1.length; _i++) {
-        var poll = polls_1[_i];
-        console.log(poll);
-        detail.appendChild(renderPoll(poll));
-    }
+    detail.appendChild(renderPolls(polls));
 }
 function setVotes(votes) {
     var detail = $id("vote-detail");
     detail.innerHTML = "";
-    for (var _i = 0, votes_1 = votes; _i < votes_1.length; _i++) {
-        var vote = votes_1[_i];
-        console.log(vote);
-        detail.appendChild(renderVote(vote));
-    }
+    detail.appendChild(renderVotes(votes));
 }
-function nonNull(val, fallback) {
-    return Boolean(val) ? val : fallback;
-}
-function JSXparseChildren(children) {
-    return children.map(function (child) {
-        if (typeof child === 'string') {
-            return document.createTextNode(child);
+function JSX(tag, attrs, children) {
+    var e = document.createElement(tag);
+    for (var name_1 in attrs) {
+        if (name_1 && attrs.hasOwnProperty(name_1)) {
+            var v = attrs[name_1];
+            if (v === true) {
+                e.setAttribute(name_1, name_1);
+            }
+            else if (v !== false && v != null) {
+                e.setAttribute(name_1, v.toString());
+            }
         }
-        return child;
-    });
-}
-function JSXparseNode(element, properties, children) {
-    var el = document.createElement(element);
-    Object.keys(nonNull(properties, {})).forEach(function (key) {
-        el[key] = properties[key];
-    });
-    JSXparseChildren(children).forEach(function (child) {
-        el.appendChild(child);
-    });
-    return el;
-}
-function JSX(element, properties) {
-    var children = [];
-    for (var _i = 2; _i < arguments.length; _i++) {
-        children[_i - 2] = arguments[_i];
     }
-    if (typeof element === 'function') {
-        return element(__assign({}, nonNull(properties, {}), { children: children }));
+    for (var i = 2; i < arguments.length; i++) {
+        var child = arguments[i];
+        if (Array.isArray(child)) {
+            child.forEach(function (c) {
+                e.appendChild(c);
+            });
+        }
+        else {
+            if (child.nodeType == null) {
+                child = document.createTextNode(child.toString());
+            }
+            e.appendChild(child);
+        }
     }
-    return JSXparseNode(element, properties, children);
+    return e;
 }
 function setMembers(members) {
     var detail = $id("member-detail");
     detail.innerHTML = "";
-    for (var _i = 0, members_1 = members; _i < members_1.length; _i++) {
-        var member = members_1[_i];
-        console.log(member);
-        detail.appendChild(renderMember(member));
-    }
+    detail.appendChild(renderMembers(members));
 }
 var socket;
 var debug = true;
@@ -95,6 +70,9 @@ function onMessage(msg) {
     console.log("message received");
     console.log(msg);
     switch (msg.svc) {
+        case "system":
+            onSystemMessage(msg.cmd, msg.param);
+            break;
         case "estimate":
             onEstimateMessage(msg.cmd, msg.param);
             break;
@@ -103,10 +81,20 @@ function onMessage(msg) {
     }
 }
 function setDetail(param) {
-    $id("model-title").innerText = param.title + "!!!!";
+    $id("model-title").innerText = param.title;
 }
-function sandbox() {
-    send({ svc: "estimate", cmd: "sandbox", param: null });
+var activeProfile = null;
+function setProfile(profile) {
+    activeProfile = profile;
+}
+function onSystemMessage(cmd, param) {
+    switch (cmd) {
+        case "profile":
+            setProfile(param);
+            break;
+        default:
+            console.warn("Unhandled system message for command [" + cmd + "]");
+    }
 }
 function socketUrl() {
     var l = document.location;
@@ -116,10 +104,14 @@ function socketUrl() {
     }
     return protocol + "://" + l.host + "/s";
 }
-function connect(svc, value) {
+var currentService = null;
+var currentId = null;
+function connect(svc, id) {
+    currentService = svc;
+    currentId = id;
     socket = new WebSocket(socketUrl());
     socket.onopen = function () {
-        var msg = { "svc": svc, "cmd": "connect", "param": value };
+        var msg = { "svc": svc, "cmd": "connect", "param": id };
         send(msg);
     };
     socket.onmessage = function (event) {
@@ -133,13 +125,56 @@ function send(msg) {
     socket.send(JSON.stringify(msg));
 }
 function renderMember(member) {
-    return JSX("pre", null, JSON.stringify(member, null, 2));
+    return JSX("div", null,
+        JSX("hr", null),
+        JSX("div", null,
+            "user: ",
+            member.userID),
+        JSX("div", null,
+            "name: ",
+            member.name),
+        JSX("div", null,
+            "role: ",
+            member.role.key),
+        JSX("div", null,
+            "created: ",
+            member.created),
+        JSX("pre", null, JSON.stringify(member, null, 2)));
+}
+function renderMembers(members) {
+    return JSX("div", null, members.map(function (m) { return renderMember(m); }));
 }
 function renderPoll(poll) {
-    return JSX("pre", null, JSON.stringify(poll, null, 2));
+    return JSX("div", null,
+        JSX("hr", null),
+        JSX("div", null,
+            "id: ",
+            poll.id),
+        JSX("div", null,
+            "idx: ",
+            poll.idx),
+        JSX("div", null,
+            "author: ",
+            poll.author),
+        JSX("div", null,
+            "title: ",
+            poll.title),
+        JSX("div", null,
+            "status: ",
+            poll.status.key),
+        JSX("div", null,
+            "finalVote: ",
+            poll.finalVote),
+        JSX("pre", null, JSON.stringify(poll, null, 2)));
+}
+function renderPolls(polls) {
+    return JSX("div", null, polls.map(function (p) { return renderPoll(p); }));
 }
 function renderVote(vote) {
     return JSX("pre", null, JSON.stringify(vote, null, 2));
+}
+function renderVotes(votes) {
+    return JSX("div", null, votes.map(function (v) { return renderVote(v); }));
 }
 var $ = UIkit.util.$$;
 function $id(id) {

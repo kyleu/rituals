@@ -76,6 +76,9 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	r.Path("/admin/standup/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminStandupDetail))).Name("admin.standup.detail")
 	r.Path("/admin/retro").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminRetroList))).Name("admin.retro")
 	r.Path("/admin/retro/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminRetroDetail))).Name("admin.retro.detail")
+	r.Path("/admin/connection").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminConnectionList))).Name("admin.connection")
+	r.Path("/admin/connection").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(AdminConnectionPost))).Name("admin.connection.post")
+	r.Path("/admin/connection/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminConnectionDetail))).Name("admin.connection.detail")
 
 	// Utils
 	_ = r.Path("/utils").Subrouter()

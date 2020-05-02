@@ -7,10 +7,15 @@ function socketUrl() {
   return protocol + "://" + l.host + "/s";
 }
 
-function connect(svc: string, value: any) {
+let currentService: string | null = null;
+let currentId: string | null = null;
+
+function connect(svc: string, id: any) {
+  currentService = svc;
+  currentId = id;
   socket = new WebSocket(socketUrl());
   socket.onopen = function () {
-    const msg = {"svc": svc, "cmd": "connect", "param": value};
+    const msg = {"svc": svc, "cmd": "connect", "param": id};
     send(msg);
   };
   socket.onmessage = function (event) {

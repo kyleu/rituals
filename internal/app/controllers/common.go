@@ -40,7 +40,6 @@ func redir(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (s
 	url, err := f(ctx)
 	if err == nil {
 		if len(ctx.Flashes) > 0 {
-			println("!!!!!!!!!!!!!!!!!!!!!!!")
 			saveSession(w, r, ctx)
 		}
 		w.Header().Set("Location", url)

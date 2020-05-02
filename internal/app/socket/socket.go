@@ -10,6 +10,12 @@ import (
 )
 
 func (s *Service) Write(connID uuid.UUID, message string) error {
+	if connID == systemID {
+		s.logger.Warn("--- admin message sent ---")
+		s.logger.Warn(fmt.Sprintf("%v", message))
+		return nil
+	}
+
 	c, ok := s.connections[connID]
 	if !ok {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
@@ -21,7 +27,7 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 	return nil
 }
 
-func (s *Service) WriteMessage(connID uuid.UUID, message Message) error {
+func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
 	data, err := json.Marshal(message)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error marshalling websocket message"))
@@ -29,7 +35,7 @@ func (s *Service) WriteMessage(connID uuid.UUID, message Message) error {
 	return s.Write(connID, string(data))
 }
 
-func (s *Service) WriteChannel(channelID uuid.UUID, message Message) error {
+func (s *Service) WriteChannel(channelID uuid.UUID, message *Message) error {
 	data, err := json.Marshal(message)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error marshalling websocket message"))
@@ -57,8 +63,9 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
 	}
 	defer func() {
-		s.logger.Debug("closing websocket [" + connID.String() + "]")
 		_ = c.socket.Close()
+		size, _ := s.Disconnect(connID)
+		s.logger.Debug(fmt.Sprintf("closed websocket [%v] (%v channels)", connID.String(), size))
 	}()
 
 	for {

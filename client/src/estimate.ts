@@ -46,17 +46,11 @@ function setEstimateDetail(param: EstimateDetail) {
 function setPolls(polls: [Poll]) {
   const detail = $id("poll-detail");
   detail.innerHTML = "";
-  for(const poll of polls) {
-    console.log(poll);
-    detail.appendChild(renderPoll(poll));
-  }
+  detail.appendChild(renderPolls(polls));
 }
 
 function setVotes(votes: [Vote]) {
   const detail = $id("vote-detail");
   detail.innerHTML = "";
-  for(const vote of votes) {
-    console.log(vote);
-    detail.appendChild(renderVote(vote));
-  }
+  detail.appendChild(renderVotes(votes));
 }

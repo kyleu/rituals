@@ -1,7 +1,3 @@
-function nonNull(val: any, fallback: any) {
-  return Boolean(val) ? val : fallback;
-}
-
 declare namespace JSX {
   interface Element { }
   interface IntrinsicElements {
@@ -9,32 +5,30 @@ declare namespace JSX {
   }
 }
 
-function JSXparseChildren(children: any[]) {
-  return children.map(child => {
-    if(typeof child === 'string') {
-      return document.createTextNode(child);
+function JSX(tag: string, attrs: any, children: any) {
+  var e = document.createElement(tag);
+  for (const name in attrs) {
+    if (name && attrs.hasOwnProperty(name)) {
+      const v = attrs[name];
+      if (v === true) {
+        e.setAttribute(name, name);
+      } else if (v !== false && v != null) {
+        e.setAttribute(name, v.toString());
+      }
     }
-    return child;
-  })
-}
-
-function JSXparseNode(element: any, properties: any, children: any[]) {
-  const el = document.createElement(element);
-  Object.keys(nonNull(properties, {})).forEach(key => {
-    el[key] = properties[key];
-  })
-  JSXparseChildren(children).forEach(child => {
-    el.appendChild(child);
-  });
-  return el;
-}
-
-function JSX(element: any, properties: any, ...children: any[][]) {
-  if(typeof element === 'function') {
-    return element({
-      ...nonNull(properties, {}),
-      children
-    });
   }
-  return JSXparseNode(element, properties, children);
+  for (let i = 2; i < arguments.length; i++) {
+    let child = arguments[i];
+    if (Array.isArray(child)) {
+      child.forEach(c => {
+        e.appendChild(c);
+      })
+    } else {
+      if(child.nodeType == null) {
+        child = document.createTextNode(child.toString())
+      }
+      e.appendChild(child);
+    }
+  }
+  return e;
 }

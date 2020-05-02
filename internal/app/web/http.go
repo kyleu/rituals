@@ -134,9 +134,6 @@ func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 }
 
 func ParseFlash(s string) (string, string) {
-	println("[[")
-	println(s)
-	println("]]")
 	split := strings.SplitN(s, ":", 2)
 	severity := split[0]
 	content := split[1]

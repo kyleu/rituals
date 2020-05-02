@@ -5,14 +5,12 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/gorilla/websocket"
 	"github.com/kyleu/rituals.dev/internal/app/estimate"
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"logur.dev/logur"
 )
 
 type Service struct {
-	connections map[uuid.UUID]connection
+	connections map[uuid.UUID]*connection
 	channels    map[uuid.UUID][]uuid.UUID
 	logger      logur.LoggerFacade
 	estimates   *estimate.Service
@@ -21,59 +19,41 @@ type Service struct {
 func NewSocketService(logger logur.LoggerFacade, estimates *estimate.Service) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "socket"})
 	return Service{
-		connections: make(map[uuid.UUID]connection),
+		connections: make(map[uuid.UUID]*connection),
 		channels:    make(map[uuid.UUID][]uuid.UUID),
 		logger:      logger,
 		estimates:   estimates,
 	}
 }
 
-func (s *Service) Register(userID uuid.UUID, c *websocket.Conn) (uuid.UUID, error) {
-	conn := connection{
-		ID:     util.UUID(),
-		UserID: userID,
-		socket: c,
+var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
+
+func (s *Service) List() ([]*Status, error) {
+	ret := make([]*Status, 0)
+	ret = append(ret, &Status{ID: systemID, UserID: systemID})
+	for _, conn := range s.connections {
+		ret = append(ret, &Status{ID: conn.ID, UserID: conn.UserID})
 	}
-	s.connections[conn.ID] = conn
-	return conn.ID, nil
+	return ret, nil
 }
 
-func contains(s []uuid.UUID, e uuid.UUID) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
+func (s *Service) GetById(id uuid.UUID) (*Status, error) {
+	if id == systemID {
+		return &Status{ID: systemID, UserID: systemID}, nil
 	}
-	return false
-}
-
-func (s *Service) Join(connID uuid.UUID, channelID uuid.UUID) error {
-	curr, ok := s.channels[channelID]
+	conn, ok := s.connections[id]
 	if !ok {
-		curr = make([]uuid.UUID, 0)
+		return nil, nil
 	}
-	if !contains(curr, connID) {
-		s.channels[channelID] = append(curr, connID)
-	}
-	return nil
-}
-
-func (s *Service) Leave(connID uuid.UUID, channelID uuid.UUID) error {
-	curr, ok := s.channels[channelID]
-	if !ok {
-		curr = make([]uuid.UUID, 0)
-	}
-	filtered := make([]uuid.UUID, 0)
-	for _, i := range curr {
-		if i != connID {
-			filtered = append(filtered, i)
-		}
-	}
-	s.channels[channelID] = filtered
-	return nil
+	return &Status{ID: conn.ID, UserID: conn.UserID}, nil
 }
 
 func onMessage(s *Service, connID uuid.UUID, message Message) error {
+	if connID == systemID {
+		s.logger.Warn("--- admin message received ---")
+		s.logger.Warn(fmt.Sprintf("%v", message))
+		return nil
+	}
 	c, ok := s.connections[connID]
 	if !ok {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))

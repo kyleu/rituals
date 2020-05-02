@@ -1,0 +1,50 @@
+<%: func AdminConnectionDetail(model *socket.Status, msg socket.Message, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">Socket Connection</h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+        <tr>
+          <th>ID</th>
+          <td><%=v model.ID %></td>
+        </tr>
+        <tr>
+          <th>User ID</th>
+          <td><%=v model.UserID %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <form class="uk-form-stacked" action="<%= ctx.Route(`admin.connection.post`) %>" method="post">
+        <input name="id" type="hidden" value="<%=v model.ID %>" />
+        <fieldset class="uk-fieldset">
+          <div class="uk-margin-small">
+            <label class="uk-form-label" for="svc">Service</label>
+            <% ComponentSelect("svc", []string{"system", "estimate", "standup", "retro"}, msg.Svc, _buffer) %>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label" for="cmd">Command</label>
+            <input class="uk-input" name="cmd" type="text" value="<%= msg.Cmd %>" />
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label" for="param">Param</label>
+            <textarea class="uk-textarea" name="param"><%= msg.ParamJson() %></textarea>
+          </div>
+
+          <div class="uk-margin-top">
+            <button class="uk-button uk-button-default" type="submit">Send</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+<% } %>
