@@ -55,7 +55,12 @@ function setProfile(profile: Profile) {
 }
 
 function onError(err: string) {
-  console.error("server error: " + err)
+  console.warn(err);
+  let idx = err.lastIndexOf(":");
+  if(idx > -1) {
+    err = err.substr(idx + 1);
+  }
+  UIkit.notification(err, {status:'danger', pos: 'top-right'});
 }
 
 function onSystemMessage(cmd: string, param: any) {
@@ -64,7 +69,7 @@ function onSystemMessage(cmd: string, param: any) {
       setProfile(param);
       break;
     case "error":
-      onError(param);
+      onError("server error: " + param);
       break;
     default:
       console.warn("Unhandled system message for command [" + cmd + "]");

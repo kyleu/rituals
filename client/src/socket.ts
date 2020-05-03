@@ -27,7 +27,7 @@ function socketConnect(svc: string, id: any) {
     onSocketMessage(msg);
   }
   socket.onerror = function (event) {
-    onSocketError(event.type);
+    onError("socket error: " + event.type);
   }
   socket.onclose = function (event) {
     onSocketClose();
@@ -40,17 +40,15 @@ function send(msg: Message) {
   socket.send(JSON.stringify(msg));
 }
 
-function onSocketError(err: string) {
-  console.error("socket error: " + err);
-}
-
 function onSocketClose() {
-  let delta = Date.now() - connectTime;
-  if(delta < 2000) {
-    console.warn("socket closed immediately, reconnecting in 10 seconds");
-    setTimeout(() => { socketConnect(currentService, currentId) }, 10000)
-  } else {
-    console.warn("socket closed, reconnecting in 2 seconds");
-    setTimeout(() => { socketConnect(currentService, currentId) }, 2000)
+  if(!appUnloading) {
+    let delta = Date.now() - connectTime;
+    if(delta < 2000) {
+      console.warn("socket closed immediately, reconnecting in 10 seconds");
+      setTimeout(() => { socketConnect(currentService, currentId) }, 10000)
+    } else {
+      console.warn("socket closed, reconnecting in 2 seconds");
+      setTimeout(() => { socketConnect(currentService, currentId) }, 2000)
+    }
   }
 }

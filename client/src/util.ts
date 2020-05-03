@@ -6,3 +6,16 @@ function $id(id: string): HTMLElement {
   }
   return $(id)[0]
 }
+
+let appInitialized = false;
+let appUnloading = false;
+
+function init(svc: string, id: any) {
+  appInitialized = true;
+
+  window.onbeforeunload = function() {
+    appUnloading = true;
+  };
+
+  socketConnect(svc, id);
+}

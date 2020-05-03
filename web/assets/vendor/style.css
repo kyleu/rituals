@@ -12160,6 +12160,14 @@ html.uk-dark, body.uk-dark {
   color: transparent;
 }
 
+#navbar {
+  max-height: 54px;
+  overflow: hidden;
+}
+#navbar svg {
+  max-width: none;
+}
+
 .alert-top {
   margin: 12px;
 }

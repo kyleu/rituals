@@ -88,7 +88,12 @@ function setProfile(profile) {
     activeProfile = profile;
 }
 function onError(err) {
-    console.error("server error: " + err);
+    console.warn(err);
+    var idx = err.lastIndexOf(":");
+    if (idx > -1) {
+        err = err.substr(idx + 1);
+    }
+    UIkit.notification(err, { status: 'danger', pos: 'top-right' });
 }
 function onSystemMessage(cmd, param) {
     switch (cmd) {
@@ -96,7 +101,7 @@ function onSystemMessage(cmd, param) {
             setProfile(param);
             break;
         case "error":
-            onError(param);
+            onError("server error: " + param);
             break;
         default:
             console.warn("Unhandled system message for command [" + cmd + "]");
@@ -127,7 +132,7 @@ function socketConnect(svc, id) {
         onSocketMessage(msg);
     };
     socket.onerror = function (event) {
-        onSocketError(event.type);
+        onError("socket error: " + event.type);
     };
     socket.onclose = function (event) {
         onSocketClose();
@@ -138,18 +143,17 @@ function send(msg) {
     console.log(msg);
     socket.send(JSON.stringify(msg));
 }
-function onSocketError(err) {
-    console.error("socket error: " + err);
-}
 function onSocketClose() {
-    var delta = Date.now() - connectTime;
-    if (delta < 2000) {
-        console.warn("socket closed immediately, reconnecting in 10 seconds");
-        setTimeout(function () { socketConnect(currentService, currentId); }, 10000);
-    }
-    else {
-        console.warn("socket closed, reconnecting in 2 seconds");
-        setTimeout(function () { socketConnect(currentService, currentId); }, 2000);
+    if (!appUnloading) {
+        var delta = Date.now() - connectTime;
+        if (delta < 2000) {
+            console.warn("socket closed immediately, reconnecting in 10 seconds");
+            setTimeout(function () { socketConnect(currentService, currentId); }, 10000);
+        }
+        else {
+            console.warn("socket closed, reconnecting in 2 seconds");
+            setTimeout(function () { socketConnect(currentService, currentId); }, 2000);
+        }
     }
 }
 function renderMember(member) {
@@ -210,4 +214,13 @@ function $id(id) {
         id = "#" + id;
     }
     return $(id)[0];
+}
+var appInitialized = false;
+var appUnloading = false;
+function init(svc, id) {
+    appInitialized = true;
+    window.onbeforeunload = function () {
+        appUnloading = true;
+    };
+    socketConnect(svc, id);
 }

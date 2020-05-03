@@ -45,6 +45,7 @@ html.uk-dark, body.uk-dark {
   color: #999
 }
 
+
 // Sidebar
 .sidebar-left {
   position: fixed;
@@ -118,6 +119,16 @@ html.uk-dark, body.uk-dark {
   .icon {
     margin-top: 6px;
     color: transparent;
+  }
+}
+
+// Navbar
+#navbar {
+  max-height: 54px;
+  overflow: hidden;
+
+  svg {
+    max-width: none;
   }
 }
 
