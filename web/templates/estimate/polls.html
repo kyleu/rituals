@@ -1,0 +1,29 @@
+<%: func EstimatePolls(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+  <h3 class="uk-card-title">
+    <span class="right">
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" data-uk-toggle="target: #modal-poll" title="add poll"></a>
+    </span>
+    Polls
+  </h3>
+  <p id="poll-detail">Loading...</p>
+</div>
+<div id="modal-poll" data-uk-modal onshow="modalShow('poll')">
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Add New Poll</h2>
+    </div>
+    <div class="uk-modal-body" data-uk-overflow-auto>
+      <p>Body</p>
+      <p>Body</p>
+      <p>Body</p>
+      <p>Body</p>
+      <p>Body</p>
+      <p>Body</p>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-primary" type="button">Save</button>
+    </div>
+  </div>
+</div>

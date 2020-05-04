@@ -30,6 +30,26 @@ function setVotes(votes) {
     detail.innerHTML = "";
     detail.appendChild(renderVotes(votes));
 }
+function delay(f) {
+    setTimeout(f, 250);
+}
+function modalShow(key) {
+    switch (key) {
+        case "self":
+            var input_1 = $req("#self-name-input");
+            input_1.value = $req("#member-self .member-name").innerText;
+            delay(function () { return input_1.focus(); });
+            break;
+        case "session":
+            break;
+        case "invite":
+            break;
+        case "poll":
+            break;
+        default:
+            console.debug("unhandled modal [" + key + "]");
+    }
+}
 function JSX(tag, attrs, children) {
     var e = document.createElement(tag);
     for (var name_1 in attrs) {
@@ -60,9 +80,44 @@ function JSX(tag, attrs, children) {
     return e;
 }
 function setMembers(members) {
+    function isSelf(x) {
+        if (activeProfile == null) {
+            return false;
+        }
+        return x.userID == activeProfile.userID;
+    }
+    var self = members.filter(isSelf);
+    if (self.length == 1) {
+        $req("#member-self .member-name").innerText = self[0].name;
+        $req("#self-name-input").value = self[0].name;
+        $req("#member-self .member-role").innerText = self[0].role.key;
+    }
+    else if (self.length == 0) {
+        console.warn("self not found among members");
+    }
+    else {
+        console.warn("multiple self entries found among members");
+    }
+    var others = members.filter(function (x) { return !isSelf(x); });
     var detail = $id("member-detail");
     detail.innerHTML = "";
-    detail.appendChild(renderMembers(members));
+    detail.appendChild(renderMembers(others));
+}
+function onSubmitSelf() {
+    var name = $req("#self-name-input").value;
+    var choice = $req("#self-name-choice-global").checked ? "global" : "local";
+    // UIkit.modal("#modal-self").hide();
+    var msg = {
+        svc: "system",
+        cmd: "member-name-save",
+        param: {
+            svc: currentService,
+            id: currentId,
+            name: name,
+            choice: choice
+        }
+    };
+    send(msg);
 }
 var socket;
 var debug = true;
@@ -156,25 +211,31 @@ function onSocketClose() {
         }
     }
 }
-function renderMember(member) {
-    return JSX("div", null,
-        JSX("hr", null),
-        JSX("div", null,
-            "user: ",
-            member.userID),
-        JSX("div", null,
-            "name: ",
-            member.name),
-        JSX("div", null,
-            "role: ",
-            member.role.key),
-        JSX("div", null,
-            "created: ",
-            member.created),
-        JSX("pre", null, JSON.stringify(member, null, 2)));
+function $(selector, context) {
+    return UIkit.util.$$(selector, context);
 }
-function renderMembers(members) {
-    return JSX("div", null, members.map(function (m) { return renderMember(m); }));
+;
+function $req(selector) {
+    var res = $(selector);
+    if (res.length == 0) {
+        console.error("no element found for selector [" + selector + "]");
+    }
+    return res[0];
+}
+function $id(id) {
+    if (id.length > 0 && !(id[0] === '#')) {
+        id = "#" + id;
+    }
+    return $req(id);
+}
+var appInitialized = false;
+var appUnloading = false;
+function init(svc, id) {
+    appInitialized = true;
+    window.onbeforeunload = function () {
+        appUnloading = true;
+    };
+    socketConnect(svc, id);
 }
 function renderPoll(poll) {
     return JSX("div", null,
@@ -208,19 +269,26 @@ function renderVote(vote) {
 function renderVotes(votes) {
     return JSX("div", null, votes.map(function (v) { return renderVote(v); }));
 }
-var $ = UIkit.util.$$;
-function $id(id) {
-    if (id.length > 0 && !(id[0] === '#')) {
-        id = "#" + id;
-    }
-    return $(id)[0];
+function renderMember(member) {
+    return JSX("div", null,
+        JSX("hr", null),
+        JSX("div", null,
+            "user: ",
+            member.userID),
+        JSX("div", null,
+            "name: ",
+            member.name),
+        JSX("div", null,
+            "role: ",
+            member.role.key),
+        JSX("div", null,
+            "created: ",
+            member.created),
+        JSX("pre", null, JSON.stringify(member, null, 2)));
 }
-var appInitialized = false;
-var appUnloading = false;
-function init(svc, id) {
-    appInitialized = true;
-    window.onbeforeunload = function () {
-        appUnloading = true;
-    };
-    socketConnect(svc, id);
+function renderSelf(self) {
+    return JSX("div", null, renderMember(self));
+}
+function renderMembers(members) {
+    return JSX("div", null, members.map(function (m) { return renderMember(m); }));
 }

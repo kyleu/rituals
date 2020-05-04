@@ -1,5 +1,5 @@
 interface EstimateDetail extends Detail{
-  choices: [string];
+  choices: string[];
   options: object;
 }
 
@@ -43,13 +43,13 @@ function setEstimateDetail(param: EstimateDetail) {
   setDetail(param);
 }
 
-function setPolls(polls: [Poll]) {
+function setPolls(polls: Poll[]) {
   const detail = $id("poll-detail");
   detail.innerHTML = "";
   detail.appendChild(renderPolls(polls));
 }
 
-function setVotes(votes: [Vote]) {
+function setVotes(votes: Vote[]) {
   const detail = $id("vote-detail");
   detail.innerHTML = "";
   detail.appendChild(renderVotes(votes));

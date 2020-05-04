@@ -60,6 +60,8 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	}
 	var err error = nil
 	switch message.Svc {
+	case "system":
+		err = onSystemMessage(s, connID, c.UserID, message.Cmd, message.Param)
 	case "estimate":
 		err = onEstimateMessage(s, connID, c.UserID, message.Cmd, message.Param)
 	default:

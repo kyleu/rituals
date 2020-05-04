@@ -1,20 +1,3 @@
-function renderMember(member: Member): any {
-  return <div>
-    <hr />
-    <div>user: { member.userID }</div>
-    <div>name: { member.name }</div>
-    <div>role: { member.role.key }</div>
-    <div>created: { member.created }</div>
-    <pre>{ JSON.stringify(member, null, 2) }</pre>
-  </div>
-}
-
-function renderMembers(members: [Member]): any {
-  return <div>
-    {members.map(m => renderMember(m))}
-  </div>;
-}
-
 function renderPoll(poll: Poll): any {
   return <div>
     <hr />
@@ -28,7 +11,7 @@ function renderPoll(poll: Poll): any {
   </div>
 }
 
-function renderPolls(polls: [Poll]): any {
+function renderPolls(polls: Poll[]): any {
   return <div>
     {polls.map(p => renderPoll(p))}
   </div>;
@@ -38,7 +21,7 @@ function renderVote(vote: Vote): any {
   return <pre>{ JSON.stringify(vote, null, 2) }</pre>
 }
 
-function renderVotes(votes: [Vote]): any {
+function renderVotes(votes: Vote[]): any {
   return <div>
     {votes.map(v => renderVote(v))}
   </div>;
