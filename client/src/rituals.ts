@@ -22,7 +22,6 @@ interface Profile {
 interface Detail {
   id: string;
   slug: string;
-  password: string;
   title: string;
   owner: string;
   status: { key: string; };
@@ -40,12 +39,15 @@ function onSocketMessage(msg: Message) {
       onEstimateMessage(msg.cmd, msg.param);
       break;
     default:
-      console.warn("Unhandled message for service [" + msg.svc + "]");
+      console.warn("unhandled message for service [" + msg.svc + "]");
   }
 }
 
 function setDetail(param: Detail) {
   $id("model-title").innerText = param.title;
+  $id<HTMLInputElement>("model-title-input").value = param.title;
+
+  UIkit.modal("#modal-session").hide();
 }
 
 let activeProfile: Profile | null = null;
@@ -68,10 +70,16 @@ function onSystemMessage(cmd: string, param: any) {
     case "profile":
       setProfile(param);
       break;
+    case "online":
+      setOnline(param);
+      break;
+    case "members":
+      setMembers(param);
+      break;
     case "error":
       onError("server error: " + param);
       break;
     default:
-      console.warn("Unhandled system message for command [" + cmd + "]");
+      console.warn("unhandled system message for command [" + cmd + "]");
   }
 }

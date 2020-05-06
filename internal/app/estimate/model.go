@@ -20,6 +20,8 @@ var StatusDeleted = Status{Key: "deleted"}
 
 var AllStatuses = []Status{StatusNew, StatusActive, StatusComplete, StatusDeleted}
 
+var DefaultChoices = []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", "?"}
+
 func statusFromString(s string) Status {
 	for _, t := range AllStatuses {
 		if t.String() == s {
@@ -45,10 +47,11 @@ func (o SessionOptions) ToJSON() string {
 func optionsFromDB(x string) SessionOptions {
 	return SessionOptions{Foo: x}
 }
+
 func choicesFromDB(s string) []string {
 	ret := util.StringToArray(s)
 	if len(ret) == 0 {
-		return []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", "?"}
+		return DefaultChoices
 	}
 	return ret
 }
@@ -56,7 +59,6 @@ func choicesFromDB(s string) []string {
 type Session struct {
 	ID       uuid.UUID      `json:"id"`
 	Slug     string         `json:"slug"`
-	Password string         `json:"password"`
 	Title    string         `json:"title"`
 	Owner    uuid.UUID      `json:"owner"`
 	Status   Status         `json:"status"`
@@ -81,7 +83,6 @@ func NewSession(title string, slug string, userID uuid.UUID) Session {
 type sessionDTO struct {
 	ID       uuid.UUID `db:"id"`
 	Slug     string    `db:"slug"`
-	Password string    `db:"password"`
 	Title    string    `db:"title"`
 	Owner    uuid.UUID `db:"owner"`
 	Status   string    `db:"status"`
@@ -94,7 +95,6 @@ func (dto sessionDTO) ToSession() Session {
 	return Session{
 		ID:       dto.ID,
 		Slug:     dto.Slug,
-		Password: dto.Password,
 		Title:    dto.Title,
 		Owner:    dto.Owner,
 		Status:   statusFromString(dto.Status),

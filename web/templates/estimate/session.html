@@ -4,7 +4,7 @@
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" data-uk-toggle="target: #modal-session" title="edit session"></a>
     </span>
-    <span id="model-title"><%= model.Title %></span>
+    <span id="model-title" data-uk-toggle="target: #modal-session"><%= model.Title %></span>
   </h3>
   <p>Estimation Session</p>
 </div>
@@ -12,18 +12,24 @@
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
-      <h2 class="uk-modal-title">Edit Session</h2>
+      <h2 class="uk-modal-title">Edit Estimate Session</h2>
     </div>
-    <div class="uk-modal-body" data-uk-overflow-auto>
-      <p>Body</p>
-      <p>Body</p>
-      <p>Body</p>
-      <p>Body</p>
-      <p>Body</p>
-      <p>Body</p>
-    </div>
-    <div class="uk-modal-footer uk-text-right">
-      <button class="uk-button uk-button-primary" type="button">Save</button>
-    </div>
+    <form class="uk-form-stacked" id="form-detail" onsubmit="onSubmitEstimateSession();return false;">
+      <div class="uk-modal-body" data-uk-overflow-auto>
+        <fieldset class="uk-fieldset">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="model-title-input">Title</label>
+            <input class="uk-input" id="model-title-input" type="text" />
+          </div>
+          <div class="uk-margin">
+            <label class="uk-form-label" for="model-choices-input">Choices</label>
+            <input class="uk-input" id="model-choices-input" type="text" />
+          </div>
+        </fieldset>
+      </div>
+      <div class="uk-modal-footer uk-text-right">
+        <button class="uk-button uk-button-default" type="submit">Save</button>
+      </div>
+    </form>
   </div>
 </div>

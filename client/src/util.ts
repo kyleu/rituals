@@ -1,6 +1,6 @@
 function $<T extends HTMLElement>(selector: string, context?: any): T[] {
   return UIkit.util.$$(selector, context) as T[];
-};
+}
 
 function $req<T extends HTMLElement>(selector: string): T {
   let res = $<T>(selector)
@@ -10,7 +10,7 @@ function $req<T extends HTMLElement>(selector: string): T {
   return res[0];
 }
 
-function $id(id: string): HTMLElement {
+function $id<T extends HTMLElement>(id: string): T {
   if (id.length > 0 && !(id[0] === '#')) {
     id = "#" + id;
   }

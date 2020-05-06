@@ -4,10 +4,6 @@ import (
 	"strings"
 )
 
-func ArrayToString(a []string) string {
-	return "{" + strings.Join(a, ",") + "}"
-}
-
 func StringToArray(s string) []string {
 	split := strings.Split(strings.TrimPrefix(strings.TrimSuffix(s, "}"), "{"), ",")
 	ret := make([]string, 0)

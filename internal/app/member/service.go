@@ -27,7 +27,7 @@ func NewMemberService(db *sqlx.DB, table string, col string) Service {
 
 func (s *Service) GetByModelID(id uuid.UUID) ([]Entry, error) {
 	var dtos []entryDTO
-	q := fmt.Sprintf("select user_id, name, role, created from %s where %s = $1", s.tableName, s.colName)
+	q := fmt.Sprintf("select user_id, case when name = '' then (select name from system_user su where su.id = user_id) else name end, role, created from %s where %s = $1 order by lower(name)", s.tableName, s.colName)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, e
 	if dto == nil {
 		q := fmt.Sprintf(strings.TrimSpace(`
 			insert into %s (%s, user_id, name, role) 
-			values ($1, $2, (select name from system_user where id = $2), 'member')
+			values ($1, $2, '', 'member')
 		`), s.tableName, s.colName)
 		_, err = s.db.Exec(q, modelID, userID)
 		if err != nil {
@@ -84,16 +84,22 @@ func (s *Service) NewSlugFor(str string) (string, error) {
 		str = util.RandomString(4)
 	}
 	slug := strings.ReplaceAll(strings.ToLower(str), " ", "-")
-	q := "select id from estimate where slug = $1"
+	q := "select id from " + s.tableName + " where slug = $1"
 	x, err := s.db.Queryx(q, slug)
 	if err != nil {
-		return slug, errors.WithStack(errors.Wrap(err, "error fetching existing session"))
+		return slug, errors.WithStack(errors.Wrap(err, "error fetching existing slug"))
 	}
 	if x.Next() {
 		slug, err = s.NewSlugFor(slug + "-" + util.RandomString(4))
 		if err != nil {
-			return slug, errors.WithStack(errors.Wrap(err, "error recursing for new session"))
+			return slug, errors.WithStack(errors.Wrap(err, "error finding slug for new session"))
 		}
 	}
 	return slug, nil
+}
+
+func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) error {
+	q := fmt.Sprintf("update %s set name = $1 where %s = $2 and user_id = $3", s.tableName, s.colName)
+	_, err := s.db.Exec(q, name, modelID, userID)
+	return err
 }

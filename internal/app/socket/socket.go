@@ -20,6 +20,9 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 	if !ok {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
 	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	err := c.socket.WriteMessage(websocket.TextMessage, []byte(message))
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "unable to write to websocket"))
@@ -35,15 +38,15 @@ func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
 	return s.Write(connID, string(data))
 }
 
-func (s *Service) WriteChannel(channelID uuid.UUID, message *Message) error {
+func (s *Service) WriteChannel(channel channel, message *Message) error {
 	data, err := json.Marshal(message)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error marshalling websocket message"))
 	}
 
-	conns, ok := s.channels[channelID]
+	conns, ok := s.channels[channel]
 	if !ok {
-		s.logger.Warn("unable to load missing channel [" + channelID.String() + "]")
+		s.logger.Warn("unable to load missing channel [" + channel.String() + "]")
 		return nil
 	}
 

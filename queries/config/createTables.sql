@@ -14,7 +14,6 @@ create table if not exists "system_user" (
 create table if not exists "estimate" (
   "id" uuid not null primary key,
   "slug" varchar(128) not null unique,
-  "password" varchar(2048) not null default '',
   "title" varchar(2048) not null,
   "owner" uuid references "system_user"("id"),
   "status" estimate_status not null,

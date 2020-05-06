@@ -8,8 +8,7 @@ $grey: #dddddd;
 $grey-dark: #2c3531;
 
 $bluegrey: #89b6cc;
-$bluegrey-dark: #263238;
-$bluegrey_text: #546e7a;
+$bluegrey-dark: #30444e;
 
 $red: #c1301c;
 $red-dark: #44110a;
@@ -34,64 +33,96 @@ $x-dark: #000000;
 
 .uk-dark {
   .clear-fg {
-    color: $clear_dark;
-  }
-  .clear-bg {
-    background: $clear !important;
+    color: $clear-dark;
   }
   .grey-fg {
-    color: $grey_dark;
+    color: $grey-dark;
+  }
+  .bluegrey-fg {
+    color: $bluegrey-dark;
+  }
+  .red-fg {
+    color: $red-dark;
+  }
+  .orange-fg {
+    color: $orange-dark;
+  }
+  .yellow-fg {
+    color: $yellow-dark;
+  }
+  .green-fg {
+    color: $green-dark;
+  }
+  .blue-fg {
+    color: $blue-dark;
+  }
+  .purple-fg {
+    color: $purple-dark;
+  }
+  .x-fg {
+    color: $x-dark;
+  }
+
+  .clear-bg {
+    background: $clear !important;
   }
   .grey-bg {
     background: $grey !important;
   }
-  .bluegrey-fg {
-    color: $bluegrey_text;
-  }
   .bluegrey-bg {
     background: $bluegrey !important;
-  }
-  .red-fg {
-    color: $red;
   }
   .red-bg {
     background: $red !important;
   }
-  .orange-fg {
-    color: $orange;
-  }
   .orange-bg {
     background: $orange !important;
-  }
-  .yellow-fg {
-    color: $yellow;
   }
   .yellow-bg {
     background: $yellow !important;
   }
-  .green-fg {
-    color: $green;
-  }
   .green-bg {
     background: $green !important;
-  }
-  .blue-fg {
-    color: $blue;
   }
   .blue-bg {
     background: $blue !important;
   }
-  .purple-fg {
-    color: $purple;
-  }
   .purple-bg {
     background: $purple !important;
   }
-  .x-fg {
-    color: $x;
-  }
   .x-bg {
     background: $x !important;
+  }
+
+  .clear-border {
+    border-color: $clear-dark !important;
+  }
+  .grey-border {
+    border-color: $grey-dark !important;
+  }
+  .bluegrey-border {
+    border-color: $bluegrey-dark !important;
+  }
+  .red-border {
+    border-color: $red-dark !important;
+  }
+  .orange-border {
+    border-color: $orange-dark !important;
+  }
+  .yellow-border {
+    border-color: $yellow-dark !important;
+  }
+  .green-border {
+    border-color: $green-dark !important;
+  }
+  .blue-border {
+    border-color: $blue-dark !important;
+  }
+  .purple-border {
+    border-color: $purple-dark !important;
+  }
+  .x-border {
+    border-color: $x-dark !important;
   }
 }
 
@@ -99,61 +130,93 @@ $x-dark: #000000;
   .clear-fg {
     color: $clear;
   }
-  .clear-bg {
-    background: $clear_dark !important;
-  }
   .grey-fg {
     color: $grey;
-  }
-  .grey-bg {
-    background: $grey_dark !important;
   }
   .bluegrey-fg {
     color: $bluegrey;
   }
-  .bluegrey-bg {
-    background: $bluegrey_dark !important;
-  }
   .red-fg {
     color: $red;
-  }
-  .red-bg {
-    background: $red_dark !important;
   }
   .orange-fg {
     color: $orange;
   }
-  .orange-bg {
-    background: $orange_dark !important;
-  }
   .yellow-fg {
     color: $yellow;
-  }
-  .yellow-bg {
-    background: $yellow_dark !important;
   }
   .green-fg {
     color: $green;
   }
-  .green-bg {
-    background: $green_dark !important;
-  }
   .blue-fg {
     color: $blue;
-  }
-  .blue-bg {
-    background: $blue_dark !important;
   }
   .purple-fg {
     color: $purple;
   }
-  .purple-bg {
-    background: $purple_dark !important;
-  }
   .x-fg {
     color: $x;
   }
+
+  .clear-bg {
+    background: $clear-dark !important;
+  }
+  .grey-bg {
+    background: $grey-dark !important;
+  }
+  .bluegrey-bg {
+    background: $bluegrey-dark !important;
+  }
+  .red-bg {
+    background: $red-dark !important;
+  }
+  .orange-bg {
+    background: $orange-dark !important;
+  }
+  .yellow-bg {
+    background: $yellow-dark !important;
+  }
+  .green-bg {
+    background: $green-dark !important;
+  }
+  .blue-bg {
+    background: $blue-dark !important;
+  }
+  .purple-bg {
+    background: $purple-dark !important;
+  }
   .x-bg {
-    background: $x_dark !important;
+    background: $x-dark !important;
+  }
+
+  .clear-border {
+    border-color: $clear !important;
+  }
+  .grey-border {
+    border-color: $grey !important;
+  }
+  .bluegrey-border {
+    border-color: $bluegrey !important;
+  }
+  .red-border {
+    border-color: $red !important;
+  }
+  .orange-border {
+    border-color: $orange !important;
+  }
+  .yellow-border {
+    border-color: $yellow !important;
+  }
+  .green-border {
+    border-color: $green !important;
+  }
+  .blue-border {
+    border-color: $blue !important;
+  }
+  .purple-border {
+    border-color: $purple !important;
+  }
+  .x-border {
+    border-color: $x !important;
   }
 }

@@ -4,21 +4,22 @@ import (
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/internal/app/member"
+	"github.com/kyleu/rituals.dev/internal/app/util"
 	"logur.dev/logur"
 )
 
 type Service struct {
 	db      *sqlx.DB
-	members member.Service
+	Members member.Service
 	logger  logur.Logger
 }
 
 func NewStandupService(db *sqlx.DB, logger logur.Logger) Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "standup"})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcStandup})
 
 	return Service{
 		db:      db,
-		members: member.NewMemberService(db, "standup_member", "standup_id"),
+		Members: member.NewMemberService(db, "standup_member", "standup_id"),
 		logger:  logger,
 	}
 }
@@ -73,5 +74,5 @@ func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 }
 
 func (s *Service) GetMembers(id uuid.UUID) ([]member.Entry, error) {
-	return s.members.GetByModelID(id)
+	return s.Members.GetByModelID(id)
 }

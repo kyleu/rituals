@@ -56,7 +56,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	estimateSvc := estimate.NewEstimateService(db, logger)
 	standupSvc := standup.NewStandupService(db, logger)
 	retroSvc := retro.NewRetroService(db, logger)
-	socketSvc := socket.NewSocketService(logger, &estimateSvc)
+	socketSvc := socket.NewSocketService(logger, &userSvc, &estimateSvc)
 
 	ai := config.AppInfo{
 		Debug:    verbose,

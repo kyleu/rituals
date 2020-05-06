@@ -8,26 +8,27 @@ import (
 	"github.com/kyleu/rituals.dev/internal/app/member"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"logur.dev/logur"
+	"strings"
 )
 
 type Service struct {
 	db      *sqlx.DB
-	members member.Service
+	Members member.Service
 	logger  logur.Logger
 }
 
 func NewEstimateService(db *sqlx.DB, logger logur.Logger) Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "estimate"})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcEstimate})
 
 	return Service{
 		db:      db,
-		members: member.NewMemberService(db, "estimate_member", "estimate_id"),
+		Members: member.NewMemberService(db, "estimate_member", "estimate_id"),
 		logger:  logger,
 	}
 }
 
 func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
-	slug, err := s.members.NewSlugFor(title)
+	slug, err := s.Members.NewSlugFor(title)
 	e := NewSession(title, slug, userID)
 
 	if err != nil {
@@ -35,7 +36,8 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 	}
 
 	q := "insert into estimate (id, slug, title, owner, status, choices, options) values ($1, $2, $3, $4, $5, $6, $7)"
-	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String(), util.ArrayToString(e.Choices), e.Options.ToJSON())
+	choiceString := "{" + strings.Join(e.Choices, ",") + "}"
+	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String(), choiceString, e.Options.ToJSON())
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new session"))
 	}
@@ -43,7 +45,7 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 }
 
 func (s *Service) Join(estimateID uuid.UUID, userID uuid.UUID) (bool, error) {
-	_, joined, err := s.members.Register(estimateID, userID)
+	_, joined, err := s.Members.Register(estimateID, userID)
 	return joined, errors.WithStack(errors.Wrap(err, fmt.Sprintf("error registering member [%v::%v]", estimateID, userID)))
 }
 
@@ -104,8 +106,4 @@ func (s *Service) GetByMember(userID uuid.UUID) ([]Session, error) {
 		ret = append(ret, dto.ToSession())
 	}
 	return ret, nil
-}
-
-func (s *Service) GetMembers(id uuid.UUID) ([]member.Entry, error) {
-	return s.members.GetByModelID(id)
 }

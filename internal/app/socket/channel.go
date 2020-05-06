@@ -2,73 +2,94 @@ package socket
 
 import (
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/kyleu/rituals.dev/internal/app/util"
+	"sync"
 )
+
+type channel struct {
+	Svc string
+	ID  uuid.UUID
+}
+
+func (c channel) String() string {
+	return fmt.Sprintf("%s:%s", c.Svc, c.ID)
+}
 
 func (s *Service) Register(userID uuid.UUID, c *websocket.Conn) (uuid.UUID, error) {
 	conn := connection{
-		ID:       util.UUID(),
-		UserID:   userID,
-		Channels: make([]uuid.UUID, 0),
-		socket:   c,
+		ID:      util.UUID(),
+		UserID:  userID,
+		Svc:     "",
+		ModelID: nil,
+		Channel: nil,
+		socket:  c,
+		mu:      sync.Mutex{},
 	}
+	s.connectionsMu.Lock()
+	defer s.connectionsMu.Unlock()
+
 	s.connections[conn.ID] = &conn
 	return conn.ID, nil
 }
 
-func (s *Service) Join(connID uuid.UUID, channelID uuid.UUID) error {
+func (s *Service) Join(connID uuid.UUID, ch channel) error {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return errors.WithStack(errors.New("invalid connection [" + connID.String() + "]"))
 	}
-	if !contains(conn.Channels, channelID) {
-		conn.Channels = append(conn.Channels, channelID)
+	if conn.Channel != &ch {
+		conn.Channel = &ch
 	}
 
-	curr, ok := s.channels[channelID]
+	s.channelsMu.Lock()
+	defer s.channelsMu.Unlock()
+
+	curr, ok := s.channels[ch]
 	if !ok {
 		curr = make([]uuid.UUID, 0)
 	}
 	if !contains(curr, connID) {
-		s.channels[channelID] = append(curr, connID)
+		s.channels[ch] = append(curr, connID)
 	}
 	return nil
 }
 
-func (s *Service) Disconnect(connID uuid.UUID) (int, error) {
+func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
-		return 0, errors.WithStack(errors.New("invalid connection [" + connID.String() + "]"))
+		return false, errors.WithStack(errors.New("invalid connection [" + connID.String() + "]"))
 	}
-	size := len(conn.Channels)
-	for _, c := range conn.Channels {
-		err := s.Leave(connID, c)
+	left := false
+
+	if conn.Channel != nil {
+		left = true
+		err := s.Leave(connID, *conn.Channel)
 		if err != nil {
-			return size, errors.WithStack(errors.Wrap(err, "error leaving channel [" + c.String() + "]"))
+			return left, errors.WithStack(errors.Wrap(err, "error leaving channel ["+conn.Channel.String()+"]"))
 		}
 	}
+
+	s.connectionsMu.Lock()
+	defer s.connectionsMu.Unlock()
+
 	delete(s.connections, connID)
-	return size, nil
+	return left, nil
 }
 
-func (s *Service) Leave(connID uuid.UUID, channelID uuid.UUID) error {
+func (s *Service) Leave(connID uuid.UUID, ch channel) error {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return errors.WithStack(errors.New("invalid connection [" + connID.String() + "]"))
 	}
-	if contains(conn.Channels, channelID) {
-		chans := make([]uuid.UUID, 0)
-		for _, c := range conn.Channels {
-			if c != channelID {
-				chans = append(chans, c)
-			}
-		}
-		conn.Channels = chans
-	}
+	conn.Channel = nil
 
-	curr, ok := s.channels[channelID]
+	s.channelsMu.Lock()
+	defer s.channelsMu.Unlock()
+
+	curr, ok := s.channels[ch]
 	if !ok {
 		curr = make([]uuid.UUID, 0)
 	}
@@ -78,8 +99,14 @@ func (s *Service) Leave(connID uuid.UUID, channelID uuid.UUID) error {
 			filtered = append(filtered, i)
 		}
 	}
-	s.channels[channelID] = filtered
-	return nil
+
+	if len(filtered) == 0 {
+		delete(s.channels, ch)
+		return nil
+	} else {
+		s.channels[ch] = filtered
+		return s.SendOnline(ch)
+	}
 }
 
 func contains(s []uuid.UUID, e uuid.UUID) bool {

@@ -64,6 +64,6 @@ func logComplete(startNanos int64, ctx web.RequestContext, status int, r *http.R
 func saveSession(w http.ResponseWriter, r *http.Request, ctx web.RequestContext) {
 	err := ctx.Session.Save(r, w)
 	if err != nil {
-		ctx.Logger.Warn("Unable to save session to response")
+		ctx.Logger.Warn("unable to save session to response")
 	}
 }

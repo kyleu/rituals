@@ -25,7 +25,7 @@ func NewUserService(db *sqlx.DB, logger logur.Logger) Service {
 }
 
 func (s *Service) List() ([]SystemUser, error) {
-	ret := []SystemUser{}
+	var ret []SystemUser
 	err := s.db.Select(&ret, "select * from system_user")
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
 }
 
 func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error) {
-	s.logger.Info("updating user [" + prof.UserID.String() + "]")
+	s.logger.Info("updating user [" + prof.UserID.String() + "] from profile")
 	q := "update system_user set name = $1, role = $2, theme = $3, nav_color = $4, link_color = $5, locale = $6 where id = $7"
 	role := "guest"
 	_, err := s.db.Exec(q, prof.Name, role, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Locale.String(), prof.UserID)
@@ -70,4 +70,11 @@ func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error)
 		return nil, err
 	}
 	return prof, nil
+}
+
+func (s *Service) UpdateUserName(id uuid.UUID, name string) error {
+	s.logger.Info("updating user [" + id.String() + "]")
+	q := "update system_user set name = $1 where id = $2"
+	_, err := s.db.Exec(q, name, id)
+	return err
 }

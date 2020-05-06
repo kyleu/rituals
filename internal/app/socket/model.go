@@ -5,13 +5,17 @@ import (
 	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"
+	"sync"
 )
 
 type connection struct {
-	ID       uuid.UUID
-	UserID   uuid.UUID
-	Channels []uuid.UUID
-	socket   *websocket.Conn
+	ID      uuid.UUID
+	UserID  uuid.UUID
+	Svc     string
+	ModelID *uuid.UUID
+	Channel *channel
+	socket  *websocket.Conn
+	mu      sync.Mutex
 }
 
 type Status struct {

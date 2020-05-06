@@ -1,0 +1,16 @@
+.online-indicator {
+  display: none;
+  cursor: default;
+
+  &.offline {
+    display: block;
+  }
+}
+
+.member-name {
+  cursor: default;
+}
+
+#model-title {
+  cursor: default;
+}

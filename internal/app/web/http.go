@@ -50,12 +50,12 @@ type RequestContext struct {
 func (r *RequestContext) Route(act string, pairs ...string) string {
 	route := r.Routes.Get(act)
 	if route == nil {
-		r.App.Logger.Warn("Cannot find route at path [" + act + "]")
+		r.App.Logger.Warn("cannot find route at path [" + act + "]")
 		return "/routenotfound"
 	}
 	url, err := route.URL(pairs...)
 	if err != nil {
-		r.App.Logger.Warn("Cannot bind route at path [" + act + "]")
+		r.App.Logger.Warn("cannot bind route at path [" + act + "]")
 		return "/routeerror"
 	}
 	return url.Path

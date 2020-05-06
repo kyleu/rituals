@@ -32,7 +32,6 @@ func (t Status) String() string {
 type Session struct {
 	ID       uuid.UUID `json:"id"`
 	Slug     string    `json:"slug"`
-	Password string    `json:"password"`
 	Title    string    `json:"title"`
 	Owner    uuid.UUID `json:"owner"`
 	Status   Status    `json:"status"`
@@ -42,7 +41,6 @@ type Session struct {
 type sessionDTO struct {
 	ID       uuid.UUID `db:"id"`
 	Slug     string    `db:"slug"`
-	Password string    `db:"password"`
 	Title    string    `db:"title"`
 	Owner    uuid.UUID `db:"owner"`
 	Status   string    `db:"status"`
@@ -53,7 +51,6 @@ func (dto sessionDTO) ToSession() Session {
 	return Session{
 		ID:       dto.ID,
 		Slug:     dto.Slug,
-		Password: dto.Password,
 		Title:    dto.Title,
 		Owner:    dto.Owner,
 		Status:   statusFromString(dto.Status),

@@ -1,4 +1,4 @@
-function renderPoll(poll: Poll): any {
+function debugPoll(poll: Poll): any {
   return <div>
     <hr />
     <div>id: { poll.id }</div>
@@ -11,18 +11,35 @@ function renderPoll(poll: Poll): any {
   </div>
 }
 
-function renderPolls(polls: Poll[]): any {
-  return <div>
-    {polls.map(p => renderPoll(p))}
-  </div>;
+function renderPoll(poll: Poll): any {
+  let profile = activeProfile
+  if(profile == null) {
+    return <li>error</li>
+  } else {
+    return <li>
+      <a class={profile.linkColor + "-fg"} href="">{poll.title}</a>
+    </li>
+  }
 }
 
-function renderVote(vote: Vote): any {
+function renderPolls(polls: Poll[]): any {
+  return <ul class="uk-list uk-list-divider">
+    {polls.map(p => renderPoll(p))}
+  </ul>;
+}
+
+function debugVote(vote: Vote): any {
   return <pre>{ JSON.stringify(vote, null, 2) }</pre>
 }
 
+function renderVote(vote: Vote): any {
+  return <li>
+    { vote.userID }: { vote.choice }
+  </li>
+}
+
 function renderVotes(votes: Vote[]): any {
-  return <div>
+  return <ul class="uk-list uk-list-divider">
     {votes.map(v => renderVote(v))}
-  </div>;
+  </ul>;
 }

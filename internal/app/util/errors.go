@@ -21,7 +21,7 @@ type AppErrorHandler struct {
 
 func (a AppErrorHandler) Handle(err error) {
 	if err != nil {
-		a.Logger.Error(fmt.Sprintf("Error: %+v", err))
+		a.Logger.Error(fmt.Sprintf("general error: %+v", err))
 	}
 }
 func (AppErrorHandler) HandleContext(_ context.Context, _ error) {}

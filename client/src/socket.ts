@@ -19,6 +19,7 @@ function socketConnect(svc: string, id: any) {
 
   socket = new WebSocket(socketUrl());
   socket.onopen = function () {
+    console.debug("socket connected")
     const msg = {"svc": svc, "cmd": "connect", "param": id};
     send(msg);
   };
@@ -44,11 +45,11 @@ function onSocketClose() {
   if(!appUnloading) {
     let delta = Date.now() - connectTime;
     if(delta < 2000) {
-      console.warn("socket closed immediately, reconnecting in 10 seconds");
-      setTimeout(() => { socketConnect(currentService, currentId) }, 10000)
+      console.warn("socket closed immediately, reconnecting in 4 seconds");
+      setTimeout(() => { socketConnect(currentService, currentId) }, 4000)
     } else {
-      console.warn("socket closed, reconnecting in 2 seconds");
-      setTimeout(() => { socketConnect(currentService, currentId) }, 2000)
+      console.warn("socket closed, reconnecting in a second");
+      setTimeout(() => { socketConnect(currentService, currentId) }, 1000)
     }
   }
 }

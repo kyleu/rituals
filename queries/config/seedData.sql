@@ -1,7 +1,7 @@
 insert into system_user
   (id, name, role, theme, nav_color, link_color, locale)
 values
-  ('00000000-0000-0000-0000-000000000000', 'Guest', 'guest', 'light', 'bluegrey', 'bluegrey', 'en-US'),
+  ('00000000-0000-0000-0000-000000000000', 'Default User', 'guest', 'light', 'bluegrey', 'bluegrey', 'en-US'),
   ('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'System Admin', 'admin', 'light', 'bluegrey', 'bluegrey', 'en-US')
 ;
 
@@ -15,8 +15,8 @@ values
 insert into estimate_member
   (estimate_id, user_id, name, role)
 values
-  ('10000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'AliasA', 'owner'),
-  ('10000000-0000-0000-0000-000000000000', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'AliasB', 'owner')
+  ('10000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '', 'owner'),
+  ('10000000-0000-0000-0000-000000000000', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', '', 'member')
 ;
 
 insert into poll

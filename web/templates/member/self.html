@@ -4,7 +4,7 @@
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" data-uk-toggle="target: #modal-self" title="edit name"></a>
     </span>
-    <span class="member-name"><%= ctx.Profile.Name %></span>
+    <span class="member-name" data-uk-toggle="target: #modal-self"><%= ctx.Profile.Name %></span>
   </h3>
   <p class="member-role"></p>
 </div>
@@ -32,14 +32,14 @@
               <div>
                 <label for="self-name-choice-global">
                   <input class="uk-radio" id="self-name-choice-global" type="radio" name="self-name-choice" value="global" />
-                  Change globally
+                  Change global default
                 </label>
               </div>
             </div>
           </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-primary" type="submit">Save</button>
+        <button class="uk-button uk-button-default" type="submit">Save</button>
       </div>
     </form>
   </div>

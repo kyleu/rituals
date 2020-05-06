@@ -1,6 +1,7 @@
 package invite
 
 import (
+	"github.com/kyleu/rituals.dev/internal/app/util"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -22,9 +23,9 @@ type InvitationType struct {
 	Key string
 }
 
-var InvitationTypeEstimate = InvitationType{Key: "estimate"}
-var InvitationTypeStandup = InvitationType{Key: "standup"}
-var InvitationTypeRetro = InvitationType{Key: "retro"}
+var InvitationTypeEstimate = InvitationType{Key: util.SvcEstimate}
+var InvitationTypeStandup = InvitationType{Key: util.SvcStandup}
+var InvitationTypeRetro = InvitationType{Key: util.SvcRetro}
 
 var AllInvitationTypes = []InvitationType{InvitationTypeEstimate, InvitationTypeStandup, InvitationTypeRetro}
 

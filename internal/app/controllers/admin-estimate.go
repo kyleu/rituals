@@ -43,7 +43,7 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return 0, err
 		}
-		members, err := ctx.App.Estimate.GetMembers(estimateID)
+		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID)
 		if err != nil {
 			return 0, err
 		}

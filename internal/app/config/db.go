@@ -75,6 +75,6 @@ func exec(name string, db *sqlx.DB, logger logur.LoggerFacade, f func(*strings.B
 		}
 	}
 	elapsed := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
-	logger.Debug(fmt.Sprintf("Ran initial query [%s] in [%v]", name, util.MicrosToMillis(language.AmericanEnglish, int(elapsed))))
+	logger.Debug(fmt.Sprintf("ran initial query [%s] in [%v]", name, util.MicrosToMillis(language.AmericanEnglish, int(elapsed))))
 	return nil
 }
