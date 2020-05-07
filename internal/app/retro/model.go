@@ -10,11 +10,10 @@ type Status struct {
 	Key string `json:"key"`
 }
 
-var StatusPending = Status{Key: "pending"}
-var StatusRedeemed = Status{Key: "redeemed"}
+var StatusNew = Status{Key: "new"}
 var StatusDeleted = Status{Key: "deleted"}
 
-var AllStatuses = []Status{StatusPending, StatusRedeemed, StatusDeleted}
+var AllStatuses = []Status{StatusNew, StatusDeleted}
 
 func statusFromString(s string) Status {
 	for _, t := range AllStatuses {
@@ -22,7 +21,7 @@ func statusFromString(s string) Status {
 			return t
 		}
 	}
-	return StatusPending
+	return StatusNew
 }
 
 func (t Status) String() string {

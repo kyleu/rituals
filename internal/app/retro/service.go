@@ -19,7 +19,7 @@ func NewRetroService(db *sqlx.DB, logger logur.Logger) Service {
 
 	return Service{
 		db:      db,
-		Members: member.NewMemberService(db, "retro_member", "retro_id"),
+		Members: member.NewMemberService(db, util.SvcRetro, "retro_member", "retro_id"),
 		logger:  logger,
 	}
 }

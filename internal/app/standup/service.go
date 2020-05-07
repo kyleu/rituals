@@ -19,7 +19,7 @@ func NewStandupService(db *sqlx.DB, logger logur.Logger) Service {
 
 	return Service{
 		db:      db,
-		Members: member.NewMemberService(db, "standup_member", "standup_id"),
+		Members: member.NewMemberService(db, util.SvcStandup, "standup_member", "standup_id"),
 		logger:  logger,
 	}
 }

@@ -1,66 +1,50 @@
-interface EstimateDetail extends Detail{
+interface EstimateDetail extends Session{
   choices: string[];
   options: object;
 }
 
-interface Poll {
-  id: string;
-  idx: number;
-  author: string;
-  title: string;
-  status: { key: string; };
-  finalVote: string;
-  created: string;
+class EstimateCache {
+  activePoll?: string;
+
+  detail?: EstimateDetail;
+
+  polls: Poll[] = [];
+  votes: Vote[] = [];
 }
 
-interface Vote {
-  userID:  string;
-  choice:  string;
-  updated: string;
-  created: string;
-}
+const estimateCache = new EstimateCache();
 
 function onEstimateMessage(cmd: string, param: any) {
   switch(cmd) {
-    case "detail":
-      setEstimateDetail(param);
+    case serverCmd.sessionJoined:
+      onSessionJoin(param);
+      setEstimateDetail(param.session);
+      setPolls(param.polls);
+      setVotes(param.votes);
       break;
-    case "polls":
-      setPolls(param)
+    case serverCmd.sessionUpdate:
+      setEstimateDetail(param.session);
       break;
-    case "votes":
-      setVotes(param)
+    case serverCmd.pollUpdate:
+      onPollUpdate(param);
       break;
     default:
       console.warn("unhandled command [" + cmd + "] for estimate")
   }
 }
 
-function setEstimateDetail(param: EstimateDetail) {
-  $id<HTMLInputElement>("model-choices-input").value = param.choices.join(", ");
-  setDetail(param);
-}
-
-function setPolls(polls: Poll[]) {
-  const detail = $id("poll-detail");
-  detail.innerHTML = "";
-  detail.appendChild(renderPolls(polls));
-
-  UIkit.modal("#modal-poll").hide();
-}
-
-function setVotes(votes: Vote[]) {
-  const detail = $id("vote-detail");
-  detail.innerHTML = "";
-  detail.appendChild(renderVotes(votes));
+function setEstimateDetail(detail: EstimateDetail) {
+  estimateCache.detail = detail;
+  $id<HTMLInputElement>("model-choices-input").value = detail.choices.join(", ");
+  setDetail(detail);
 }
 
 function onSubmitEstimateSession() {
-  let title = $req<HTMLInputElement>("#model-title-input").value;
-  let choices = $req<HTMLInputElement>("#model-choices-input").value;
-  let msg = {
-    svc: "estimate",
-    cmd: "session-save",
+  const title = $req<HTMLInputElement>("#model-title-input").value;
+  const choices = $req<HTMLInputElement>("#model-choices-input").value;
+  const msg = {
+    svc: services.estimate,
+    cmd: clientCmd.updateSession,
     param: {
       title: title,
       choices: choices
@@ -69,14 +53,13 @@ function onSubmitEstimateSession() {
   send(msg);
 }
 
-function onSubmitPoll() {
-  let title = $req<HTMLInputElement>("#poll-title-input").value;
-  let msg = {
-    svc: "estimate",
-    cmd: "new-poll-save",
-    param: {
-      title: title
-    }
-  }
-  send(msg);
+function onPollUpdate(poll: Poll) {
+  let x = estimateCache.polls;
+
+  x = x.filter(p => p.id != poll.id);
+  x.push(poll);
+  x = x.sort((l, r) => (l.idx > r.idx) ? 1 : -1);
+
+  setPolls(x);
 }
+

@@ -1,23 +1,11 @@
-function debugPoll(poll: Poll): any {
-  return <div>
-    <hr />
-    <div>id: { poll.id }</div>
-    <div>idx: { poll.idx }</div>
-    <div>author: { poll.author }</div>
-    <div>title: { poll.title }</div>
-    <div>status: { poll.status.key }</div>
-    <div>finalVote: { poll.finalVote }</div>
-    <pre>{ JSON.stringify(poll, null, 2) }</pre>
-  </div>
-}
-
 function renderPoll(poll: Poll): any {
-  let profile = activeProfile
+  let profile = systemCache.profile
   if(profile == null) {
-    return <li>error</li>
+    return <li>profile error</li>
   } else {
     return <li>
-      <a class={profile.linkColor + "-fg"} href="">{poll.title}</a>
+      <div id={"poll-status-" + poll.id} class="right uk-article-meta poll-status">{poll.status.key}</div>
+      <a class={profile.linkColor + "-fg"} href="" onclick={"estimateCache.activePoll = '" + poll.id + "';"} data-uk-toggle="target: #modal-poll">{poll.title}</a>
     </li>
   }
 }
@@ -26,10 +14,6 @@ function renderPolls(polls: Poll[]): any {
   return <ul class="uk-list uk-list-divider">
     {polls.map(p => renderPoll(p))}
   </ul>;
-}
-
-function debugVote(vote: Vote): any {
-  return <pre>{ JSON.stringify(vote, null, 2) }</pre>
 }
 
 function renderVote(vote: Vote): any {

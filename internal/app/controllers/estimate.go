@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/internal/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -35,11 +36,11 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	redir(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := r.Form.Get("title")
-		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID)
+		sess, err := ctx.App.Estimate.NewSession(title, ctx.Profile.UserID)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating session"))
 		}
-		return ctx.Route("estimate", "key", sess.Slug), nil
+		return ctx.Route(util.SvcEstimate, "key", sess.Slug), nil
 	})
 }
 
@@ -53,7 +54,7 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = est.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), "estimates")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("estimate", "key", key), est.Title)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate, "key", key), est.Title)...)
 		ctx.Breadcrumbs = bc
 
 		return templates.EstimateWorkspace(est, ctx, w)

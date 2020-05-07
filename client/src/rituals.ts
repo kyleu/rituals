@@ -1,8 +1,3 @@
-declare var UIkit: any;
-
-let socket: WebSocket;
-let debug = true;
-
 interface Message {
   svc: string;
   cmd: string;
@@ -19,7 +14,7 @@ interface Profile {
   locale:    string;
 }
 
-interface Detail {
+interface Session {
   id: string;
   slug: string;
   title: string;
@@ -32,10 +27,10 @@ function onSocketMessage(msg: Message) {
   console.log("message received");
   console.log(msg);
   switch(msg.svc) {
-    case "system":
+    case services.system:
       onSystemMessage(msg.cmd, msg.param);
       break;
-    case "estimate":
+    case services.estimate:
       onEstimateMessage(msg.cmd, msg.param);
       break;
     default:
@@ -43,22 +38,21 @@ function onSocketMessage(msg: Message) {
   }
 }
 
-function setDetail(param: Detail) {
-  $id("model-title").innerText = param.title;
-  $id<HTMLInputElement>("model-title-input").value = param.title;
+function setDetail(session: Session) {
+  systemCache.session = session
+  $id("model-title").innerText = session.title;
+  $id<HTMLInputElement>("model-title-input").value = session.title;
+  let items = $("#navbar .uk-navbar-item")
+  if (items.length > 0) {
+    items[items.length - 1].innerText = session.title
+  }
 
   UIkit.modal("#modal-session").hide();
 }
 
-let activeProfile: Profile | null = null;
-
-function setProfile(profile: Profile) {
-  activeProfile = profile
-}
-
 function onError(err: string) {
   console.warn(err);
-  let idx = err.lastIndexOf(":");
+  const idx = err.lastIndexOf(":");
   if(idx > -1) {
     err = err.substr(idx + 1);
   }
@@ -67,19 +61,27 @@ function onError(err: string) {
 
 function onSystemMessage(cmd: string, param: any) {
   switch(cmd) {
-    case "profile":
-      setProfile(param);
-      break;
-    case "online":
-      setOnline(param);
-      break;
-    case "members":
-      setMembers(param);
-      break;
-    case "error":
+    case serverCmd.error:
       onError("server error: " + param);
+      break;
+    case serverCmd.memberUpdate:
+      onMemberUpdate(param);
+      break;
+    case serverCmd.onlineUpdate:
+      onOnlineUpdate(param);
       break;
     default:
       console.warn("unhandled system message for command [" + cmd + "]");
   }
+}
+function onSessionJoin(param: any) {
+  console.log("joined");
+
+  systemCache.session = param.session;
+  systemCache.profile = param.profile;
+
+  systemCache.members = param.members;
+  systemCache.online = param.online;
+
+  setMembers();
 }

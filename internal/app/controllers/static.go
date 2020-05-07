@@ -32,7 +32,7 @@ func zipResponse(w http.ResponseWriter, r *http.Request, data []byte, hash strin
 	if err == nil {
 		w.Header().Set("Content-Encoding", "gzip")
 		w.Header().Set("Content-Type", contentType)
-		w.Header().Add("Cache-Control", "public, max-age=31536000")
+		// w.Header().Add("Cache-Control", "public, max-age=31536000")
 		w.Header().Add("ETag", hash)
 		if r.Header.Get("If-None-Match") == hash {
 			w.WriteHeader(http.StatusNotModified)

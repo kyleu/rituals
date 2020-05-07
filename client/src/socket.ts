@@ -1,5 +1,7 @@
+let socket: WebSocket;
+
 function socketUrl() {
-  let l = document.location;
+  const l = document.location;
   let protocol = "ws";
   if(l.protocol === "https:") {
     protocol = "wss";
@@ -7,20 +9,15 @@ function socketUrl() {
   return protocol + "://" + l.host + "/s";
 }
 
-let currentService = "";
-let currentId = "";
-
-let connectTime = 0;
-
 function socketConnect(svc: string, id: any) {
-  currentService = svc;
-  currentId = id;
-  connectTime = Date.now()
+  systemCache.currentService = svc;
+  systemCache.currentID = id;
+  systemCache.connectTime = Date.now()
 
   socket = new WebSocket(socketUrl());
   socket.onopen = function () {
     console.debug("socket connected")
-    const msg = {"svc": svc, "cmd": "connect", "param": id};
+    const msg = {"svc": svc, "cmd": clientCmd.connect, "param": id};
     send(msg);
   };
   socket.onmessage = function (event) {
@@ -30,7 +27,7 @@ function socketConnect(svc: string, id: any) {
   socket.onerror = function (event) {
     onError("socket error: " + event.type);
   }
-  socket.onclose = function (event) {
+  socket.onclose = function () {
     onSocketClose();
   }
 }
@@ -42,14 +39,20 @@ function send(msg: Message) {
 }
 
 function onSocketClose() {
-  if(!appUnloading) {
-    let delta = Date.now() - connectTime;
-    if(delta < 2000) {
-      console.warn("socket closed immediately, reconnecting in 4 seconds");
-      setTimeout(() => { socketConnect(currentService, currentId) }, 4000)
-    } else {
+  function disconnect(seconds: number) {
+    if(seconds === 1) {
       console.warn("socket closed, reconnecting in a second");
-      setTimeout(() => { socketConnect(currentService, currentId) }, 1000)
+    } else {
+      console.warn("socket closed, reconnecting in " + seconds + " seconds");
+    }
+    setTimeout(() => { socketConnect(systemCache.currentService, systemCache.currentID) }, 4000)
+  }
+  if(!appUnloading) {
+    const delta = Date.now() - systemCache.connectTime;
+    if(delta < 2000) {
+      disconnect(5)
+    } else {
+      disconnect(1)
     }
   }
 }

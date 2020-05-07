@@ -37,8 +37,8 @@ create table "poll" (
   "idx" int not null default 0,
   "author_id" uuid not null references "system_user"("id"),
   "title" varchar(2048),
-  "status" poll_status not null,
-  "final_vote" varchar(2048) not null,
+  "status" poll_status not null default 'pending',
+  "final_vote" varchar(2048) not null default '',
   "created" timestamp not null default now()
 );
 

@@ -5,49 +5,68 @@ interface Member {
   created: string;
 }
 
-let currentMembers: Member[] = [];
-let currentOnline: string[] = [];
-let activeMember: string | null = null;
+interface OnlineUpdate {
+  userID: string;
+  connected: boolean;
+}
 
-function setMembers(members: Member[]) {
-  currentMembers = members;
-  UIkit.modal("#modal-self").hide();
-
-  function isSelf(x: Member) {
-    if (activeProfile == null) {
-      return false;
-    }
-    return x.userID == activeProfile.userID;
+function isSelf(x: Member) {
+  if (systemCache.profile === null) {
+    return false;
   }
+  return x.userID === systemCache.profile.userID;
+}
 
-  let self = members.filter(isSelf);
-  if (self.length == 1) {
+function setMembers() {
+  const self = systemCache.members.filter(isSelf);
+  if (self.length === 1) {
     $req("#member-self .member-name").innerText = self[0].name;
     $req<HTMLInputElement>("#self-name-input").value = self[0].name;
     $req("#member-self .member-role").innerText = self[0].role.key;
-  } else if (self.length == 0) {
+  } else if (self.length === 0) {
     console.warn("self not found among members");
   } else {
     console.warn("multiple self entries found among members");
   }
 
-  let others = members.filter(x => !isSelf(x));
+  const others = systemCache.members.filter(x => !isSelf(x));
   const detail = $id("member-detail");
   detail.innerHTML = "";
   detail.appendChild(renderMembers(others));
+
   renderOnline();
 }
 
-function setOnline(users: string[]) {
-  currentOnline = users;
+function onMemberUpdate(member: Member) {
+  if(isSelf(member)) {
+    UIkit.modal("#modal-self").hide();
+  }
+  let x = systemCache.members;
+
+  x = x.filter(m => m.userID != member.userID);
+  x.push(member);
+  x = x.sort((l, r) => (l.name > r.name) ? 1 : -1);
+
+  systemCache.members = x;
+  setMembers();
+}
+
+function onOnlineUpdate(update: OnlineUpdate) {
+  if (update.connected) {
+    if (systemCache.online.indexOf(update.userID) == -1) {
+      systemCache.online.push(update.userID)
+    }
+  } else {
+    systemCache.online = systemCache.online.filter(x => x != update.userID)
+  }
   renderOnline();
 }
 
 function renderOnline() {
-  for (const member of currentMembers) {
-    let els = $("#online-status-" + member.userID);
-    if(els.length == 1) {
-      if (currentOnline.indexOf(member.userID) == -1) {
+  for (const member of systemCache.members) {
+    const els = $("#member-" + member.userID + " .online-indicator");
+    if (els.length === 1) {
+      if (systemCache.online.indexOf(member.userID) === -1) {
         els[0].classList.add("offline");
       } else {
         els[0].classList.remove("offline");
@@ -57,12 +76,11 @@ function renderOnline() {
 }
 
 function onSubmitSelf() {
-  let name = $req<HTMLInputElement>("#self-name-input").value;
-  let choice = $req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
-
-  let msg = {
-    svc: "system",
-    cmd: "member-name-save",
+  const name = $req<HTMLInputElement>("#self-name-input").value;
+  const choice = $req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
+  const msg = {
+    svc: services.system,
+    cmd: clientCmd.updateProfile,
     param: {
       name: name,
       choice: choice
@@ -71,18 +89,24 @@ function onSubmitSelf() {
   send(msg);
 }
 
-function viewActiveMember() {
-  if (activeMember == null) {
+function getActiveMember() {
+  if (systemCache.activeMember === null) {
     console.warn("no active member")
-    return;
+    return null;
   }
-  let curr = currentMembers.filter(x => x.userID == activeMember);
-  if (curr.length != 1) {
-    console.log("cannot load member [" + activeMember + "]");
-    return;
+  const curr = systemCache.members.filter(x => x.userID === systemCache.activeMember);
+  if (curr.length !== 1) {
+    console.log("cannot load active member [" + systemCache.activeMember + "]");
+    return null;
   }
-  let member = curr[0];
+  return curr[0];
+}
 
+function viewActiveMember() {
+  const member = getActiveMember();
+  if (member === null) {
+    return;
+  }
   $req("#member-modal-name").innerText = member.name;
   $req("#member-modal-role").innerText = member.role.key;
 }

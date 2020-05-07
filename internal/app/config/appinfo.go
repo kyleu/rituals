@@ -17,12 +17,12 @@ type AppInfo struct {
 	Commit   string
 	Logger   logur.LoggerFacade
 	Errors   emperror.ErrorHandlerFacade
-	User     user.Service
-	Invite   invite.Service
-	Estimate estimate.Service
-	Standup  standup.Service
-	Retro    retro.Service
-	Socket   socket.Service
+	User     *user.Service
+	Invite   *invite.Service
+	Estimate *estimate.Service
+	Standup  *standup.Service
+	Retro    *retro.Service
+	Socket   *socket.Service
 }
 
 func (a *AppInfo) Valid() bool {

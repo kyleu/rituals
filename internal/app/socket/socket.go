@@ -3,6 +3,7 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kyleu/rituals.dev/internal/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -38,7 +39,7 @@ func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
 	return s.Write(connID, string(data))
 }
 
-func (s *Service) WriteChannel(channel channel, message *Message) error {
+func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid.UUID) error {
 	data, err := json.Marshal(message)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error marshalling websocket message"))
@@ -52,10 +53,12 @@ func (s *Service) WriteChannel(channel channel, message *Message) error {
 
 	s.logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Svc, message.Cmd, len(conns)))
 	for _, conn := range conns {
-		connID := conn
-		go func() {
-			_ = s.Write(connID, string(data))
-		}()
+		if !contains(except, conn) {
+			connID := conn
+			go func() {
+				_ = s.Write(connID, string(data))
+			}()
+		}
 	}
 	return nil
 }
@@ -67,8 +70,8 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 	}
 	defer func() {
 		_ = c.socket.Close()
-		size, _ := s.Disconnect(connID)
-		s.logger.Debug(fmt.Sprintf("closed websocket [%v] (%v channels)", connID.String(), size))
+		_, _ = s.Disconnect(connID)
+		s.logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
 	}()
 
 	for {
@@ -85,7 +88,7 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 
 		err = onMessage(s, connID, m)
 		if err != nil {
-			_ = s.WriteMessage(c.ID, &Message{Svc: "system", Cmd: "error", Param: err.Error()})
+			_ = s.WriteMessage(c.ID, &Message{Svc: util.SvcSystem, Cmd: util.ServerCmdError, Param: err.Error()})
 			s.logger.Warn(fmt.Sprintf("error handling websocket message", err))
 			return errors.WithStack(errors.Wrap(err, "error handling websocket message"))
 		}

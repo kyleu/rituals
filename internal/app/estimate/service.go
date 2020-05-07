@@ -2,7 +2,6 @@ package estimate
 
 import (
 	"emperror.dev/errors"
-	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/internal/app/member"
@@ -22,18 +21,18 @@ func NewEstimateService(db *sqlx.DB, logger logur.Logger) Service {
 
 	return Service{
 		db:      db,
-		Members: member.NewMemberService(db, "estimate_member", "estimate_id"),
+		Members: member.NewMemberService(db, util.SvcEstimate, "estimate_member", "estimate_id"),
 		logger:  logger,
 	}
 }
 
-func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
-	slug, err := s.Members.NewSlugFor(title)
-	e := NewSession(title, slug, userID)
-
+func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
+	slug, err := member.NewSlugFor(s.db, util.SvcEstimate, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating slug"))
 	}
+
+	e := NewSession(title, slug, userID)
 
 	q := "insert into estimate (id, slug, title, owner, status, choices, options) values ($1, $2, $3, $4, $5, $6, $7)"
 	choiceString := "{" + strings.Join(e.Choices, ",") + "}"
@@ -42,11 +41,6 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new session"))
 	}
 	return &e, nil
-}
-
-func (s *Service) Join(estimateID uuid.UUID, userID uuid.UUID) (bool, error) {
-	_, joined, err := s.Members.Register(estimateID, userID)
-	return joined, errors.WithStack(errors.Wrap(err, fmt.Sprintf("error registering member [%v::%v]", estimateID, userID)))
 }
 
 func (s *Service) List() ([]Session, error) {
@@ -106,4 +100,11 @@ func (s *Service) GetByMember(userID uuid.UUID) ([]Session, error) {
 		ret = append(ret, dto.ToSession())
 	}
 	return ret, nil
+}
+
+func (s *Service) UpdateSession(sessionID uuid.UUID, title string, choices []string) error {
+	q := "update estimate set title = $1, choices = $2 where id = $3"
+	choiceString := "{" + strings.Join(choices, ",") + "}"
+	_, err := s.db.Exec(q, title, choiceString, sessionID)
+	return errors.WithStack(errors.Wrap(err, "error updating session"))
 }

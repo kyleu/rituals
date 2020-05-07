@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"github.com/kyleu/rituals.dev/internal/app/util"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/internal/app/config"
@@ -43,24 +44,24 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 
 	// Estimate
 	estimate := r.Path("/estimate").Subrouter()
-	estimate.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateList))).Name("estimate.list")
-	r.Path("/estimate/new").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateNewForm))).Name("estimate.new.form")
-	r.Path("/estimate/new").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(EstimateNew))).Name("estimate.new")
-	r.Path("/estimate/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateWorkspace))).Name("estimate")
+	estimate.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateList))).Name(util.SvcEstimate + ".list")
+	r.Path("/estimate/new").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateNewForm))).Name(util.SvcEstimate + ".new.form")
+	r.Path("/estimate/new").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(EstimateNew))).Name(util.SvcEstimate + ".new")
+	r.Path("/estimate/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateWorkspace))).Name(util.SvcEstimate)
 
 	// Standup
 	standup := r.Path("/standup").Subrouter()
-	standup.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupList))).Name("standup.list")
-	r.Path("/standup/new").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupNewForm))).Name("standup.new.form")
-	r.Path("/standup/new").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(StandupNew))).Name("standup.new")
-	r.Path("/standup/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupWorkspace))).Name("standup")
+	standup.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupList))).Name(util.SvcStandup + ".list")
+	r.Path("/standup/new").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupNewForm))).Name(util.SvcStandup + ".new.form")
+	r.Path("/standup/new").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(StandupNew))).Name(util.SvcStandup + ".new")
+	r.Path("/standup/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupWorkspace))).Name(util.SvcStandup)
 
 	// Retro
 	retro := r.Path("/retro").Subrouter()
-	retro.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroList))).Name("retro.list")
-	r.Path("/retro/new").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroNewForm))).Name("retro.new.form")
-	r.Path("/retro/new").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(RetroNew))).Name("retro.new")
-	r.Path("/retro/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroWorkspace))).Name("retro")
+	retro.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroList))).Name(util.SvcRetro + ".list")
+	r.Path("/retro/new").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroNewForm))).Name(util.SvcRetro + ".new.form")
+	r.Path("/retro/new").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(RetroNew))).Name(util.SvcRetro + ".new")
+	r.Path("/retro/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroWorkspace))).Name(util.SvcRetro)
 
 	// Admin
 	admin := r.Path("/admin").Subrouter()

@@ -1,6 +1,23 @@
 package estimate
 
-import "github.com/gofrs/uuid"
+import (
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/internal/app/util"
+)
+
+func (s *Service) NewPoll(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Poll, error) {
+	id := util.UUID()
+
+	sql := `insert into poll (id, estimate_id, idx, author_id, title) values (
+    $1, $2, (select max(idx) + 1 from poll p2 where p2.estimate_id = $3), $4, $5
+	)`;
+	_, err := s.db.Exec(sql, id, estimateID, estimateID, authorID, title)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.GetPollByID(id)
+}
 
 func (s *Service) GetPolls(id uuid.UUID) ([]Poll, error) {
 	var dtos []pollDTO
@@ -32,17 +49,4 @@ func (s *Service) GetPollEstimateID(pollID uuid.UUID) (*uuid.UUID, error) {
 		return nil, err
 	}
 	return &ret, nil
-}
-
-func (s *Service) GetPollVotes(id uuid.UUID) ([]Vote, error) {
-	var dtos []voteDTO
-	err := s.db.Select(&dtos, "select * from vote where poll_id = $1", id)
-	if err != nil {
-		return nil, err
-	}
-	ret := make([]Vote, 0)
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToVote())
-	}
-	return ret, nil
 }

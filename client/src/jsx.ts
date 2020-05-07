@@ -24,7 +24,7 @@ function JSX(tag: string, attrs: any, children: any) {
         e.appendChild(c);
       })
     } else {
-      if(child.nodeType == null) {
+      if(child.nodeType === null || child.nodeType === undefined) {
         child = document.createTextNode(child.toString())
       }
       e.appendChild(child);

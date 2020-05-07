@@ -8,12 +8,12 @@ import (
 )
 
 func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface {}) error {
-	if conn.UserID != userID {
+	if conn.Profile.UserID != userID {
 		return errors.WithStack(errors.New("received name change for wrong user [" + userID.String() + "]"))
 	}
 	var err error = nil
 	switch cmd {
-	case "member-name-save":
+	case util.ClientCmdUpdateProfile:
 		err = saveName(s, conn, userID, param.(map[string]interface {}))
 	default:
 		err = errors.New("unhandled system command [" + cmd + "]")
@@ -41,16 +41,16 @@ func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]inter
 	}
 
 	if current.Name != name {
-		err = memberSvc.UpdateName(conn.Channel.ID, userID, name)
+		current, err = memberSvc.UpdateName(conn.Channel.ID, userID, name)
 		if err != nil {
 			return err
 		}
-		if conn.Channel == nil {
-			return errors.New("no channel registered for [" + conn.ID.String() + "]")
-		}
-		return s.SendMembers(memberSvc, *conn.Channel, nil)
 	}
-	return nil
+
+	if conn.Channel == nil {
+		return errors.New("no channel registered for [" + conn.ID.String() + "]")
+	}
+	return s.sendMemberUpdate(*conn.Channel, current)
 }
 
 func memberSvcFor(s *Service, svc string) (*member.Service, error) {

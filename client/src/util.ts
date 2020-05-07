@@ -3,8 +3,8 @@ function $<T extends HTMLElement>(selector: string, context?: any): T[] {
 }
 
 function $req<T extends HTMLElement>(selector: string): T {
-  let res = $<T>(selector)
-  if (res.length == 0) {
+  const res = $<T>(selector)
+  if (res.length === 0) {
     console.error("no element found for selector [" + selector + "]")
   }
   return res[0];
@@ -17,12 +17,7 @@ function $id<T extends HTMLElement>(id: string): T {
   return $req(id);
 }
 
-let appInitialized = false;
-let appUnloading = false;
-
 function init(svc: string, id: any) {
-  appInitialized = true;
-
   window.onbeforeunload = function () {
     appUnloading = true;
   };

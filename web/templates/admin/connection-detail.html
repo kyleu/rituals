@@ -26,7 +26,7 @@
         <fieldset class="uk-fieldset">
           <div class="uk-margin-small">
             <label class="uk-form-label" for="svc">Service</label>
-            <% ComponentSelect("svc", append([]string{"system"}, util.AllServices...), msg.Svc, _buffer) %>
+            <% ComponentSelect("svc", append([]string{util.SvcSystem}, util.AllServices...), msg.Svc, _buffer) %>
           </div>
 
           <div class="uk-margin">

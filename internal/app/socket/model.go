@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/kyleu/rituals.dev/internal/app/util"
 	"sync"
 )
 
 type connection struct {
 	ID      uuid.UUID
-	UserID  uuid.UUID
+	Profile util.Profile
 	Svc     string
 	ModelID *uuid.UUID
 	Channel *channel
@@ -19,8 +20,8 @@ type connection struct {
 }
 
 type Status struct {
-	ID       uuid.UUID `json:"id"`
-	UserID   uuid.UUID `json:"userID"`
+	ID     uuid.UUID `json:"id"`
+	UserID uuid.UUID `json:"userID"`
 }
 
 type Message struct {
@@ -39,4 +40,9 @@ func (m *Message) ParamJson() string {
 		return "error: " + err.Error()
 	}
 	return string(data)
+}
+
+type OnlineUpdate struct {
+	UserID    uuid.UUID `json:"userID"`
+	Connected bool      `json:"connected"`
 }

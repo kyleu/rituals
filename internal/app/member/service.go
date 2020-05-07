@@ -13,21 +13,25 @@ import (
 
 type Service struct {
 	db        *sqlx.DB
+	svc       string
 	tableName string
 	colName   string
 }
 
-func NewMemberService(db *sqlx.DB, table string, col string) Service {
+func NewMemberService(db *sqlx.DB, svc string, table string, col string) Service {
 	return Service{
 		db:        db,
+		svc:       svc,
 		tableName: table,
 		colName:   col,
 	}
 }
 
+var nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
+
 func (s *Service) GetByModelID(id uuid.UUID) ([]Entry, error) {
 	var dtos []entryDTO
-	q := fmt.Sprintf("select user_id, case when name = '' then (select name from system_user su where su.id = user_id) else name end, role, created from %s where %s = $1 order by lower(name)", s.tableName, s.colName)
+	q := fmt.Sprintf("select user_id, %s, role, created from %s where %s = $1 order by lower(name)", nameClause, s.tableName, s.colName)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
 		return nil, err
@@ -41,7 +45,7 @@ func (s *Service) GetByModelID(id uuid.UUID) ([]Entry, error) {
 
 func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	dto := entryDTO{}
-	q := fmt.Sprintf("select user_id, name, role, created from %s where %s = $1 and user_id = $2", s.tableName, s.colName)
+	q := fmt.Sprintf("select user_id, %s, role, created from %s where %s = $1 and user_id = $2", nameClause, s.tableName, s.colName)
 	err := s.db.Get(&dto, q, modelID, userID)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -79,18 +83,18 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, e
 	}
 }
 
-func (s *Service) NewSlugFor(str string) (string, error) {
+func NewSlugFor(db *sqlx.DB, svc string, str string) (string, error) {
 	if len(str) == 0 {
 		str = util.RandomString(4)
 	}
 	slug := strings.ReplaceAll(strings.ToLower(str), " ", "-")
-	q := "select id from " + s.tableName + " where slug = $1"
-	x, err := s.db.Queryx(q, slug)
+	q := "select id from " + svc + " where slug = $1"
+	x, err := db.Queryx(q, slug)
 	if err != nil {
 		return slug, errors.WithStack(errors.Wrap(err, "error fetching existing slug"))
 	}
 	if x.Next() {
-		slug, err = s.NewSlugFor(slug + "-" + util.RandomString(4))
+		slug, err = NewSlugFor(db, svc, slug + "-" + util.RandomString(4))
 		if err != nil {
 			return slug, errors.WithStack(errors.Wrap(err, "error finding slug for new session"))
 		}
@@ -98,8 +102,11 @@ func (s *Service) NewSlugFor(str string) (string, error) {
 	return slug, nil
 }
 
-func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) error {
+func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (*Entry, error) {
 	q := fmt.Sprintf("update %s set name = $1 where %s = $2 and user_id = $3", s.tableName, s.colName)
 	_, err := s.db.Exec(q, name, modelID, userID)
-	return err
+	if err != nil {
+		return nil, err
+	}
+	return s.Get(modelID, userID)
 }

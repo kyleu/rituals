@@ -2,7 +2,6 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/internal/app/member"
 	"github.com/kyleu/rituals.dev/internal/app/retro"
 	"github.com/kyleu/rituals.dev/internal/app/standup"
 	"github.com/kyleu/rituals.dev/internal/app/user"
@@ -46,7 +45,7 @@ func (s *Service) List() ([]*Status, error) {
 	ret := make([]*Status, 0)
 	ret = append(ret, &Status{ID: systemID, UserID: systemID})
 	for _, conn := range s.connections {
-		ret = append(ret, &Status{ID: conn.ID, UserID: conn.UserID})
+		ret = append(ret, &Status{ID: conn.ID, UserID: conn.Profile.UserID})
 	}
 	return ret, nil
 }
@@ -59,46 +58,7 @@ func (s *Service) GetById(id uuid.UUID) (*Status, error) {
 	if !ok {
 		return nil, errors.New("invalid connection [" + id.String() + "]")
 	}
-	return &Status{ID: conn.ID, UserID: conn.UserID}, nil
-}
-
-func (s *Service) UpdateName(id uuid.UUID, name string) error {
-	return s.users.UpdateUserName(id, name)
-}
-
-func (s *Service) SendMembers(memberSvc *member.Service, ch channel, connID *uuid.UUID) error {
-	members, err := memberSvc.GetByModelID(ch.ID)
-	if err != nil {
-		return err
-	}
-	membersMsg := Message{Svc: util.SvcSystem, Cmd: "members", Param: members}
-	if connID == nil {
-		err = s.WriteChannel(ch, &membersMsg)
-	} else {
-		err = s.WriteMessage(*connID, &membersMsg)
-	}
-	if err != nil {
-		return err
-	}
-
-	return s.SendOnline(ch)
-}
-
-func (s *Service) SendOnline(ch channel) error {
-	connections, ok := s.channels[ch]
-	if !ok {
-		connections = make([]uuid.UUID, 0)
-	}
-	online := make([]uuid.UUID, 0)
-	for _, cID := range connections {
-		c, ok := s.connections[cID]
-		if ok && c != nil && (!contains(online, c.UserID)) {
-			online = append(online, c.UserID)
-		}
-	}
-
-	onlineMsg := Message{Svc: util.SvcSystem, Cmd: "online", Param: online}
-	return s.WriteChannel(ch, &onlineMsg)
+	return &Status{ID: conn.ID, UserID: conn.Profile.UserID}, nil
 }
 
 func onMessage(s *Service, connID uuid.UUID, message Message) error {
@@ -113,14 +73,14 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	}
 	var err error = nil
 	switch message.Svc {
-	case "system":
-		err = onSystemMessage(s, c, c.UserID, message.Cmd, message.Param)
+	case util.SvcSystem:
+		err = onSystemMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcEstimate:
-		err = onEstimateMessage(s, c, c.UserID, message.Cmd, message.Param)
+		err = onEstimateMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcStandup:
-		err = onStandupMessage(s, c, c.UserID, message.Cmd, message.Param)
+		err = onStandupMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcRetro:
-		err = onRetroMessage(s, c, c.UserID, message.Cmd, message.Param)
+		err = onRetroMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	default:
 		return errors.WithStack(errors.New("invalid service [" + message.Svc + "]"))
 	}

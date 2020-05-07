@@ -18,10 +18,10 @@ func (c channel) String() string {
 	return fmt.Sprintf("%s:%s", c.Svc, c.ID)
 }
 
-func (s *Service) Register(userID uuid.UUID, c *websocket.Conn) (uuid.UUID, error) {
+func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, error) {
 	conn := connection{
 		ID:      util.UUID(),
-		UserID:  userID,
+		Profile: profile,
 		Svc:     "",
 		ModelID: nil,
 		Channel: nil,
@@ -105,7 +105,7 @@ func (s *Service) Leave(connID uuid.UUID, ch channel) error {
 		return nil
 	} else {
 		s.channels[ch] = filtered
-		return s.SendOnline(ch)
+		return s.sendOnlineUpdate(ch, conn.Profile.UserID, false)
 	}
 }
 

@@ -10,20 +10,22 @@ function debugMember(member: Member): any {
 }
 
 function renderMember(member: Member): any {
-  let profile = activeProfile
+  let profile = systemCache.profile
   if(profile == null) {
     return <div class="uk-margin-bottom">error</div>
   } else {
     let b = Math.random() >= 0.5;
-    return <li>
-      <div title="user is offline" id={"online-status-" + member.userID} class="right uk-article-meta online-indicator">offline</div>
-      <a class={profile.linkColor + "-fg"} href="" onclick={"activeMember = '" + member.userID + "';"} data-uk-toggle="target: #modal-member">{member.name}</a>
-    </li>
+    return <div>
+      <div title="user is offline" class="right uk-article-meta online-indicator">offline</div>
+      <a class={profile.linkColor + "-fg"} href="" onclick={"systemCache.activeMember = '" + member.userID + "';"} data-uk-toggle="target: #modal-member">{member.name}</a>
+    </div>
   }
 }
 
 function renderMembers(members: Member[]): any {
   return <ul class="uk-list uk-list-divider">
-    {members.map(m => renderMember(m))}
+    { members.map(m => <li id={ "member-" + m.userID }>
+      { renderMember(m) }
+    </li>) }
   </ul>;
 }

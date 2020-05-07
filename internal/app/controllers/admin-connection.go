@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/internal/app/socket"
+	"github.com/kyleu/rituals.dev/internal/app/util"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -45,7 +46,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionIDString), connectionIDString)...)
 		ctx.Breadcrumbs = bc
 
-		msg := socket.Message{Svc: "system", Cmd: "ping", Param: nil}
+		msg := socket.Message{Svc: util.SvcSystem, Cmd: util.ServerCmdPong, Param: nil}
 		return templates.AdminConnectionDetail(connection, msg, ctx, w)
 	})
 }
