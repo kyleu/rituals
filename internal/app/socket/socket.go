@@ -3,6 +3,7 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/internal/app/util"
 
 	"emperror.dev/errors"
@@ -89,7 +90,6 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 		err = onMessage(s, connID, m)
 		if err != nil {
 			_ = s.WriteMessage(c.ID, &Message{Svc: util.SvcSystem, Cmd: util.ServerCmdError, Param: err.Error()})
-			s.logger.Warn(fmt.Sprintf("error handling websocket message", err))
 			return errors.WithStack(errors.Wrap(err, "error handling websocket message"))
 		}
 	}

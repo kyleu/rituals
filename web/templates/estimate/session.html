@@ -2,13 +2,13 @@
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" data-uk-toggle="target: #modal-session" title="edit session"></a>
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="openModal('session');return false;" title="edit session"></a>
     </span>
-    <span id="model-title" data-uk-toggle="target: #modal-session"><%= model.Title %></span>
+    <span id="model-title" onclick="openModal('session');"><%= model.Title %></span>
   </h3>
   <p>Estimation Session</p>
 </div>
-<div id="modal-session" data-uk-modal onshow="modalShow('session')">
+<div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">

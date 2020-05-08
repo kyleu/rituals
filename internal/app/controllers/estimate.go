@@ -1,8 +1,10 @@
 package controllers
 
 import (
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"net/http"
+	"strings"
+
+	"github.com/kyleu/rituals.dev/internal/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"
@@ -35,7 +37,10 @@ func EstimateNewForm(w http.ResponseWriter, r *http.Request) {
 func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	redir(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := r.Form.Get("title")
+		title := strings.TrimSpace(r.Form.Get("title"))
+		if title == "" {
+			title = "Untitled"
+		}
 		sess, err := ctx.App.Estimate.NewSession(title, ctx.Profile.UserID)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating session"))

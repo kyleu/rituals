@@ -1,0 +1,36 @@
+.story-status-section {
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+
+#story-vote-choices {
+  .vote-choice {
+    margin: 6px;
+    padding: 6px;
+
+    min-height: 36px;
+    min-width: 36px;
+
+    cursor: pointer;
+    font-size: 125%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px solid #ccc;
+    &.active {
+      border: 2px solid #f00;
+    }
+  }
+}
+
+#story-vote-members {
+  .vote-member {
+    margin: 6px;
+    padding: 12px;
+    text-align: center;
+  }
+}

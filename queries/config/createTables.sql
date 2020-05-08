@@ -31,24 +31,24 @@ create table if not exists "estimate_member" (
   primary key ("estimate_id", "user_id")
 );
 
-create table "poll" (
+create table "story" (
   "id" uuid not null primary key,
   "estimate_id" uuid not null references "estimate"("id"),
   "idx" int not null default 0,
   "author_id" uuid not null references "system_user"("id"),
   "title" varchar(2048),
-  "status" poll_status not null default 'pending',
+  "status" story_status not null default 'pending',
   "final_vote" varchar(2048) not null default '',
   "created" timestamp not null default now()
 );
 
 create table "vote" (
-  "poll_id" uuid not null references "poll"("id"),
+  "story_id" uuid not null references "story"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "choice" varchar(256) not null,
   "updated" timestamp not null default now(),
   "created" timestamp not null default now(),
-  primary key ("poll_id", "user_id")
+  primary key ("story_id", "user_id")
 );
 
 -- Standup

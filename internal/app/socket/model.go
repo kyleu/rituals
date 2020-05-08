@@ -3,10 +3,11 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
+
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/kyleu/rituals.dev/internal/app/util"
-	"sync"
 )
 
 type connection struct {
@@ -34,7 +35,7 @@ func (m Message) String() string {
 	return fmt.Sprintf("%s/%s", m.Svc, m.Cmd)
 }
 
-func (m *Message) ParamJson() string {
+func (m *Message) ParamJSON() string {
 	data, err := json.Marshal(m.Param)
 	if err != nil {
 		return "error: " + err.Error()

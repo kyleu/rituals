@@ -1,13 +1,14 @@
 package estimate
 
 import (
+	"strings"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/internal/app/member"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"logur.dev/logur"
-	"strings"
 )
 
 type Service struct {
@@ -107,4 +108,17 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, choices []str
 	choiceString := "{" + strings.Join(choices, ",") + "}"
 	_, err := s.db.Exec(q, title, choiceString, sessionID)
 	return errors.WithStack(errors.Wrap(err, "error updating session"))
+}
+
+func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, error) {
+	story, err := s.GetStoryByID(storyID)
+	if err != nil {
+		return false, errors.WithStack(errors.Wrap(err, "cannot load story ["+storyID.String()+"]"))
+	}
+	if story.Status == status {
+		return false, nil
+	}
+	q := "update story set status = $1 where id = $2"
+	_, err = s.db.Exec(q, status.String(), storyID)
+	return true, errors.WithStack(errors.Wrap(err, "error updating story status"))
 }

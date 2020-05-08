@@ -57,14 +57,14 @@ func choicesFromDB(s string) []string {
 }
 
 type Session struct {
-	ID       uuid.UUID      `json:"id"`
-	Slug     string         `json:"slug"`
-	Title    string         `json:"title"`
-	Owner    uuid.UUID      `json:"owner"`
-	Status   Status         `json:"status"`
-	Choices  []string       `json:"choices"`
-	Options  SessionOptions `json:"options"`
-	Created  time.Time      `json:"created"`
+	ID      uuid.UUID      `json:"id"`
+	Slug    string         `json:"slug"`
+	Title   string         `json:"title"`
+	Owner   uuid.UUID      `json:"owner"`
+	Status  Status         `json:"status"`
+	Choices []string       `json:"choices"`
+	Options SessionOptions `json:"options"`
+	Created time.Time      `json:"created"`
 }
 
 func NewSession(title string, slug string, userID uuid.UUID) Session {
@@ -81,26 +81,25 @@ func NewSession(title string, slug string, userID uuid.UUID) Session {
 }
 
 type sessionDTO struct {
-	ID       uuid.UUID `db:"id"`
-	Slug     string    `db:"slug"`
-	Title    string    `db:"title"`
-	Owner    uuid.UUID `db:"owner"`
-	Status   string    `db:"status"`
-	Choices  string    `db:"choices"`
-	Options  string    `db:"options"`
-	Created  time.Time `db:"created"`
+	ID      uuid.UUID `db:"id"`
+	Slug    string    `db:"slug"`
+	Title   string    `db:"title"`
+	Owner   uuid.UUID `db:"owner"`
+	Status  string    `db:"status"`
+	Choices string    `db:"choices"`
+	Options string    `db:"options"`
+	Created time.Time `db:"created"`
 }
 
 func (dto sessionDTO) ToSession() Session {
 	return Session{
-		ID:       dto.ID,
-		Slug:     dto.Slug,
-		Title:    dto.Title,
-		Owner:    dto.Owner,
-		Status:   statusFromString(dto.Status),
-		Choices:  choicesFromDB(dto.Choices),
-		Options:  optionsFromDB(dto.Options),
-		Created:  dto.Created,
+		ID:      dto.ID,
+		Slug:    dto.Slug,
+		Title:   dto.Title,
+		Owner:   dto.Owner,
+		Status:  statusFromString(dto.Status),
+		Choices: choicesFromDB(dto.Choices),
+		Options: optionsFromDB(dto.Options),
+		Created: dto.Created,
 	}
 }
-

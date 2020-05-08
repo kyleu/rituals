@@ -1,7 +1,7 @@
 interface Member {
   userID: string;
   name: string;
-  role: { key: string; };
+  role: { key: string };
   created: string;
 }
 
@@ -11,7 +11,7 @@ interface OnlineUpdate {
 }
 
 function isSelf(x: Member) {
-  if (systemCache.profile === null) {
+  if (systemCache.profile === undefined) {
     return false;
   }
   return x.userID === systemCache.profile.userID;
@@ -38,26 +38,29 @@ function setMembers() {
 }
 
 function onMemberUpdate(member: Member) {
-  if(isSelf(member)) {
+  if (isSelf(member)) {
     UIkit.modal("#modal-self").hide();
   }
   let x = systemCache.members;
 
-  x = x.filter(m => m.userID != member.userID);
+  x = x.filter(m => m.userID !== member.userID);
   x.push(member);
   x = x.sort((l, r) => (l.name > r.name) ? 1 : -1);
 
   systemCache.members = x;
   setMembers();
+  if (estimateCache.activeStory) {
+    viewActiveVotes();
+  }
 }
 
 function onOnlineUpdate(update: OnlineUpdate) {
   if (update.connected) {
-    if (systemCache.online.indexOf(update.userID) == -1) {
-      systemCache.online.push(update.userID)
+    if (systemCache.online.indexOf(update.userID) === -1) {
+      systemCache.online.push(update.userID);
     }
   } else {
-    systemCache.online = systemCache.online.filter(x => x != update.userID)
+    systemCache.online = systemCache.online.filter(x => x !== update.userID);
   }
   renderOnline();
 }
@@ -83,28 +86,28 @@ function onSubmitSelf() {
     cmd: clientCmd.updateProfile,
     param: {
       name: name,
-      choice: choice
-    }
-  }
+      choice: choice,
+    },
+  };
   send(msg);
 }
 
 function getActiveMember() {
-  if (systemCache.activeMember === null) {
-    console.warn("no active member")
-    return null;
+  if (systemCache.activeMember === undefined) {
+    console.warn("no active member");
+    return undefined;
   }
   const curr = systemCache.members.filter(x => x.userID === systemCache.activeMember);
   if (curr.length !== 1) {
     console.log("cannot load active member [" + systemCache.activeMember + "]");
-    return null;
+    return undefined;
   }
   return curr[0];
 }
 
 function viewActiveMember() {
   const member = getActiveMember();
-  if (member === null) {
+  if (member === undefined) {
     return;
   }
   $req("#member-modal-name").innerText = member.name;

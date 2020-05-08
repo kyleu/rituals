@@ -3,7 +3,6 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/internal/app/estimate"
 	"github.com/kyleu/rituals.dev/internal/app/util"
 )
 
@@ -46,23 +45,26 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return err
 	}
 
-	polls, err := s.estimates.GetPolls(ch.ID)
+	stories, err := s.estimates.GetStories(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding polls"))
+		return errors.WithStack(errors.Wrap(err, "error finding stories"))
 	}
 
-	var votes []estimate.Vote
+	votes, err := s.estimates.GetEstimateVotes(ch.ID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error finding votes"))
+	}
 
 	msg := Message{
-		Svc:   util.SvcEstimate,
-		Cmd:   util.ServerCmdSessionJoined,
+		Svc: util.SvcEstimate,
+		Cmd: util.ServerCmdSessionJoined,
 		Param: EstimateSessionJoined{
 			Profile: &conn.Profile,
 			Session: est,
 			Members: members,
-			Online: online,
-			Polls: polls,
-			Votes: votes,
+			Online:  online,
+			Stories: stories,
+			Votes:   votes,
 		},
 	}
 
@@ -76,6 +78,6 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return errors.WithStack(errors.Wrap(err, "error writing member update"))
 	}
 
-	err =  s.sendOnlineUpdate(ch, conn.Profile.UserID, true)
+	err = s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, true)
 	return errors.WithStack(errors.Wrap(err, "error writing online update"))
 }

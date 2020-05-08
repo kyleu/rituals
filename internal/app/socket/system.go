@@ -7,21 +7,21 @@ import (
 	"github.com/kyleu/rituals.dev/internal/app/util"
 )
 
-func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface {}) error {
+func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	if conn.Profile.UserID != userID {
 		return errors.WithStack(errors.New("received name change for wrong user [" + userID.String() + "]"))
 	}
 	var err error = nil
 	switch cmd {
 	case util.ClientCmdUpdateProfile:
-		err = saveName(s, conn, userID, param.(map[string]interface {}))
+		err = saveName(s, conn, userID, param.(map[string]interface{}))
 	default:
 		err = errors.New("unhandled system command [" + cmd + "]")
 	}
 	return errors.WithStack(errors.Wrap(err, "error handling system message"))
 }
 
-func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]interface {}) error {
+func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]interface{}) error {
 	name := o["name"].(string)
 	choice := o["choice"].(string)
 	if choice == "global" {
@@ -54,7 +54,7 @@ func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]inter
 }
 
 func memberSvcFor(s *Service, svc string) (*member.Service, error) {
-	var ret *member.Service = nil
+	var ret *member.Service
 	switch svc {
 	case util.SvcEstimate:
 		ret = &s.estimates.Members

@@ -1,8 +1,9 @@
 package invite
 
 import (
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"time"
+
+	"github.com/kyleu/rituals.dev/internal/app/util"
 
 	"github.com/gofrs/uuid"
 )

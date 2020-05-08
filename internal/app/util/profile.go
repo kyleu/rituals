@@ -72,14 +72,14 @@ type Profile struct {
 	Locale    string    `json:"locale"`
 }
 
-func (u *UserProfile) ToProfile() Profile {
+func (p *UserProfile) ToProfile() Profile {
 	return Profile{
-		UserID:    u.UserID,
-		Name:      u.Name,
-		Role:      u.Role.String(),
-		Theme:     u.Theme.String(),
-		NavColor:  u.NavColor,
-		LinkColor: u.LinkColor,
-		Locale:    u.Locale.String(),
+		UserID:    p.UserID,
+		Name:      p.Name,
+		Role:      p.Role.String(),
+		Theme:     p.Theme.String(),
+		NavColor:  p.NavColor,
+		LinkColor: p.LinkColor,
+		Locale:    p.Locale.String(),
 	}
 }

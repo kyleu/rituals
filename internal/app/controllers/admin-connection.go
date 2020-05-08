@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/internal/app/socket"
 	"github.com/kyleu/rituals.dev/internal/app/util"
-	"net/http"
 
 	"github.com/gorilla/mux"
 
@@ -36,7 +37,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return 0, err
 		}
-		connection, err := ctx.App.Socket.GetById(connectionID)
+		connection, err := ctx.App.Socket.GetByID(connectionID)
 		if err != nil {
 			return 0, err
 		}
@@ -59,7 +60,7 @@ func AdminConnectionPost(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return 0, err
 		}
-		connection, err := ctx.App.Socket.GetById(connectionID)
+		connection, err := ctx.App.Socket.GetByID(connectionID)
 		if err != nil {
 			return 0, err
 		}

@@ -1,12 +1,13 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"sync"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/kyleu/rituals.dev/internal/app/util"
-	"sync"
 )
 
 type channel struct {
@@ -14,8 +15,8 @@ type channel struct {
 	ID  uuid.UUID
 }
 
-func (c channel) String() string {
-	return fmt.Sprintf("%s:%s", c.Svc, c.ID)
+func (ch channel) String() string {
+	return fmt.Sprintf("%s:%s", ch.Svc, ch.ID)
 }
 
 func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, error) {
@@ -105,7 +106,7 @@ func (s *Service) Leave(connID uuid.UUID, ch channel) error {
 		return nil
 	} else {
 		s.channels[ch] = filtered
-		return s.sendOnlineUpdate(ch, conn.Profile.UserID, false)
+		return s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, false)
 	}
 }
 

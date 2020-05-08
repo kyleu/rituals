@@ -1,18 +1,18 @@
 declare namespace JSX {
-  interface Element { }
+  interface Element extends Node {}
   interface IntrinsicElements {
     [elemName: string]: any;
   }
 }
 
-function JSX(tag: string, attrs: any, children: any) {
-  var e = document.createElement(tag);
+function JSX(tag: string, attrs: any) {
+  const e = document.createElement(tag);
   for (const name in attrs) {
     if (name && attrs.hasOwnProperty(name)) {
       const v = attrs[name];
       if (v === true) {
         e.setAttribute(name, name);
-      } else if (v !== false && v != null) {
+      } else if (v !== false && v !== null && v !== undefined) {
         e.setAttribute(name, v.toString());
       }
     }
@@ -22,10 +22,10 @@ function JSX(tag: string, attrs: any, children: any) {
     if (Array.isArray(child)) {
       child.forEach(c => {
         e.appendChild(c);
-      })
+      });
     } else {
-      if(child.nodeType === null || child.nodeType === undefined) {
-        child = document.createTextNode(child.toString())
+      if (child.nodeType === null || child.nodeType === undefined) {
+        child = document.createTextNode(child.toString());
       }
       e.appendChild(child);
     }

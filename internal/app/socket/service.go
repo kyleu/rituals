@@ -2,11 +2,12 @@ package socket
 
 import (
 	"fmt"
+	"sync"
+
 	"github.com/kyleu/rituals.dev/internal/app/retro"
 	"github.com/kyleu/rituals.dev/internal/app/standup"
 	"github.com/kyleu/rituals.dev/internal/app/user"
 	"github.com/kyleu/rituals.dev/internal/app/util"
-	"sync"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -50,7 +51,7 @@ func (s *Service) List() ([]*Status, error) {
 	return ret, nil
 }
 
-func (s *Service) GetById(id uuid.UUID) (*Status, error) {
+func (s *Service) GetByID(id uuid.UUID) (*Status, error) {
 	if id == systemID {
 		return &Status{ID: systemID, UserID: systemID}, nil
 	}
@@ -71,7 +72,7 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	if !ok {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
 	}
-	var err error = nil
+	var err error
 	switch message.Svc {
 	case util.SvcSystem:
 		err = onSystemMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)

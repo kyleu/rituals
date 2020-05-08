@@ -18,9 +18,9 @@ const ClientCmdConnect = "connect"
 const ClientCmdUpdateProfile = "update-profile"
 const ClientCmdUpdateSession = "update-session"
 
-const ClientCmdAddPoll = "add-poll"
-const ClientCmdUpdatePoll = "update-poll"
-const ClientCmdSetPollStatus = "set-poll-status"
+const ClientCmdAddStory = "add-story"
+const ClientCmdUpdateStory = "update-story"
+const ClientCmdSetStoryStatus = "set-story-status"
 const ClientCmdSubmitVote = "submit-vote"
 
 // Server Messages
@@ -33,5 +33,6 @@ const ServerCmdSessionUpdate = "session-update"
 const ServerCmdMemberUpdate = "member-update"
 const ServerCmdOnlineUpdate = "online-update"
 
-const ServerCmdPollUpdate = "poll-update"
+const ServerCmdStoryUpdate = "story-update"
+const ServerCmdStoryStatusChange = "story-status-change"
 const ServerCmdVoteUpdate = "vote-update"

@@ -94,7 +94,7 @@ func NewSlugFor(db *sqlx.DB, svc string, str string) (string, error) {
 		return slug, errors.WithStack(errors.Wrap(err, "error fetching existing slug"))
 	}
 	if x.Next() {
-		slug, err = NewSlugFor(db, svc, slug + "-" + util.RandomString(4))
+		slug, err = NewSlugFor(db, svc, slug+"-"+util.RandomString(4))
 		if err != nil {
 			return slug, errors.WithStack(errors.Wrap(err, "error finding slug for new session"))
 		}

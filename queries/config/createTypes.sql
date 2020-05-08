@@ -1,7 +1,7 @@
 create type system_role as enum ('guest', 'standard', 'admin');
 
 create type estimate_status as enum ('new', 'active', 'complete', 'deleted');
-create type poll_status as enum('pending', 'active', 'complete');
+create type story_status as enum('pending', 'active', 'complete');
 
 create type standup_status as enum ('new', 'deleted');
 

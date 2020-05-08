@@ -1,19 +1,21 @@
 package estimate
 
 import (
-	"github.com/gofrs/uuid"
 	"time"
+
+	"github.com/gofrs/uuid"
 )
 
 type Vote struct {
-	UserID  uuid.UUID
-	Choice  string
-	Updated time.Time
-	Created time.Time
+	StoryID uuid.UUID `json:"storyID"`
+	UserID  uuid.UUID `json:"userID"`
+	Choice  string    `json:"choice"`
+	Updated time.Time `json:"updated"`
+	Created time.Time `json:"created"`
 }
 
 type voteDTO struct {
-	PollID  uuid.UUID `db:"poll_id"`
+	StoryID uuid.UUID `db:"story_id"`
 	UserID  uuid.UUID `db:"user_id"`
 	Choice  string    `db:"choice"`
 	Updated time.Time `db:"updated"`
@@ -22,6 +24,7 @@ type voteDTO struct {
 
 func (dto voteDTO) ToVote() Vote {
 	return Vote{
+		StoryID: dto.StoryID,
 		UserID:  dto.UserID,
 		Choice:  dto.Choice,
 		Updated: dto.Updated,

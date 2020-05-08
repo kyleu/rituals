@@ -6,7 +6,7 @@ import (
 )
 
 func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
-	var err error = nil
+	var err error
 	switch cmd {
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")

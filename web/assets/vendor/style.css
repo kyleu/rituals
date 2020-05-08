@@ -11878,31 +11878,31 @@ iframe.uk-cover {
 }
 
 .uk-dark .clear-fg {
-  color: #121212;
+  color: #fff;
 }
 .uk-dark .grey-fg {
-  color: #2c3531;
+  color: #dddddd;
 }
 .uk-dark .bluegrey-fg {
-  color: #30444e;
+  color: #89b6cc;
 }
 .uk-dark .red-fg {
-  color: #44110a;
+  color: #c1301c;
 }
 .uk-dark .orange-fg {
-  color: #462206;
+  color: #c96112;
 }
 .uk-dark .yellow-fg {
-  color: #453a02;
+  color: #c4a705;
 }
 .uk-dark .green-fg {
-  color: #072918;
+  color: #177245;
 }
 .uk-dark .blue-fg {
-  color: #101e33;
+  color: #397adb;
 }
 .uk-dark .purple-fg {
-  color: #1a0e2d;
+  color: #b768a2;
 }
 .uk-dark .x-fg {
   color: #000000;
@@ -12139,6 +12139,25 @@ h4 {
   margin-top: 0;
 }
 
+.uk-button {
+  text-transform: none;
+}
+
+.modal-title {
+  cursor: default;
+}
+
+.modal-body-height-200 {
+  min-height: 200px !important;
+}
+
+.uk-light .uk-modal-header, .uk-section-primary:not(.uk-preserve-color) .uk-modal-header, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-card-primary.uk-card-body .uk-modal-header, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-header, .uk-card-secondary.uk-card-body .uk-modal-header, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-header, .uk-overlay-primary .uk-modal-header, .uk-offcanvas-bar .uk-modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.uk-light .uk-modal-footer, .uk-section-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-card-primary.uk-card-body .uk-modal-footer, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-card-secondary.uk-card-body .uk-modal-footer, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-overlay-primary .uk-modal-footer, .uk-offcanvas-bar .uk-modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .alert-top {
   margin: 12px;
 }
@@ -12226,4 +12245,33 @@ html.uk-dark, body.uk-dark {
 
 #model-title {
   cursor: default;
+}
+
+.story-status-section {
+  display: none;
+}
+.story-status-section.active {
+  display: block;
+}
+
+#story-vote-choices .vote-choice {
+  margin: 6px;
+  padding: 6px;
+  min-height: 36px;
+  min-width: 36px;
+  cursor: pointer;
+  font-size: 125%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ccc;
+}
+#story-vote-choices .vote-choice.active {
+  border: 2px solid #f00;
+}
+
+#story-vote-members .vote-member {
+  margin: 6px;
+  padding: 12px;
+  text-align: center;
 }

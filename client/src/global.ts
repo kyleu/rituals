@@ -5,8 +5,7 @@ const debug = true;
 let appUnloading = false;
 
 class SystemCache {
-  profile: Profile | null = null;
-
+  profile?: Profile;
   session?: Session;
 
   activeMember?: string;
@@ -21,15 +20,14 @@ class SystemCache {
   online: string[] = [];
 }
 
-
 const systemCache = new SystemCache();
 
 const services = {
   system: "system",
   estimate: "estimate",
   standup: "standup",
-  retro: "retro"
-}
+  retro: "retro",
+};
 
 const clientCmd = {
   error: "error",
@@ -40,11 +38,11 @@ const clientCmd = {
 
   updateSession: "update-session",
 
-  addPoll: "add-poll",
-  updatePoll: "update-poll",
-  setPollStatus: "set-poll-status",
-  submitVote: "submit-vote"
-}
+  addStory: "add-story",
+  updateStory: "update-story",
+  setStoryStatus: "set-story-status",
+  submitVote: "submit-vote",
+};
 
 const serverCmd = {
   error: "error",
@@ -56,6 +54,7 @@ const serverCmd = {
   memberUpdate: "member-update",
   onlineUpdate: "online-update",
 
-  pollUpdate: "poll-update",
-  voteUpdate: "vote-update"
-}
+  storyUpdate: "story-update",
+  storyStatusChange: "story-status-change",
+  voteUpdate: "vote-update",
+};

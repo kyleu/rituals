@@ -26,10 +26,10 @@ func (s *Service) GetOnline(ch channel) ([]uuid.UUID, error) {
 	return online, nil
 }
 
-func (s *Service) sendOnlineUpdate(ch channel, userID uuid.UUID, connected bool) error {
+func (s *Service) sendOnlineUpdate(ch channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {
 	p := OnlineUpdate{UserID: userID, Connected: connected}
 	onlineMsg := Message{Svc: util.SvcSystem, Cmd: util.ServerCmdOnlineUpdate, Param: p}
-	return s.WriteChannel(ch, &onlineMsg)
+	return s.WriteChannel(ch, &onlineMsg, connID)
 }
 
 func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...uuid.UUID) error {

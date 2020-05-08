@@ -29,30 +29,30 @@ func (t Status) String() string {
 }
 
 type Session struct {
-	ID       uuid.UUID `json:"id"`
-	Slug     string    `json:"slug"`
-	Title    string    `json:"title"`
-	Owner    uuid.UUID `json:"owner"`
-	Status   Status    `json:"status"`
-	Created  time.Time `json:"created"`
+	ID      uuid.UUID `json:"id"`
+	Slug    string    `json:"slug"`
+	Title   string    `json:"title"`
+	Owner   uuid.UUID `json:"owner"`
+	Status  Status    `json:"status"`
+	Created time.Time `json:"created"`
 }
 
 type sessionDTO struct {
-	ID       uuid.UUID `db:"id"`
-	Slug     string    `db:"slug"`
-	Title    string    `db:"title"`
-	Owner    uuid.UUID `db:"owner"`
-	Status   string    `db:"status"`
-	Created  time.Time `db:"created"`
+	ID      uuid.UUID `db:"id"`
+	Slug    string    `db:"slug"`
+	Title   string    `db:"title"`
+	Owner   uuid.UUID `db:"owner"`
+	Status  string    `db:"status"`
+	Created time.Time `db:"created"`
 }
 
 func (dto sessionDTO) ToSession() Session {
 	return Session{
-		ID:       dto.ID,
-		Slug:     dto.Slug,
-		Title:    dto.Title,
-		Owner:    dto.Owner,
-		Status:   statusFromString(dto.Status),
-		Created:  dto.Created,
+		ID:      dto.ID,
+		Slug:    dto.Slug,
+		Title:   dto.Title,
+		Owner:   dto.Owner,
+		Status:  statusFromString(dto.Status),
+		Created: dto.Created,
 	}
 }

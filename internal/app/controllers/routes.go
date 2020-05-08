@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"context"
-	"github.com/kyleu/rituals.dev/internal/app/util"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/internal/app/util"
 
 	"github.com/kyleu/rituals.dev/internal/app/config"
 
@@ -72,7 +73,7 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	r.Path("/admin/invite/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminInviteDetail))).Name("admin.invite.detail")
 	r.Path("/admin/estimate").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminEstimateList))).Name("admin.estimate")
 	r.Path("/admin/estimate/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminEstimateDetail))).Name("admin.estimate.detail")
-	r.Path("/admin/poll/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminPollDetail))).Name("admin.poll.detail")
+	r.Path("/admin/story/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminStoryDetail))).Name("admin.story.detail")
 	r.Path("/admin/standup").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminStandupList))).Name("admin.standup")
 	r.Path("/admin/standup/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminStandupDetail))).Name("admin.standup.detail")
 	r.Path("/admin/retro").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminRetroList))).Name("admin.retro")

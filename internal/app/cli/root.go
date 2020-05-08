@@ -1,10 +1,12 @@
 package cli
 
 import (
+	"fmt"
+	"net/http"
+
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	logurhandler "emperror.dev/handler/logur"
-	"fmt"
 	"github.com/gorilla/handlers"
 	"github.com/kyleu/rituals.dev/internal/app/config"
 	"github.com/kyleu/rituals.dev/internal/app/controllers"
@@ -17,7 +19,6 @@ import (
 	"github.com/kyleu/rituals.dev/internal/app/util"
 	"github.com/spf13/cobra"
 	"logur.dev/logur"
-	"net/http"
 )
 
 var verbose bool
@@ -43,7 +44,6 @@ func Configure(version string, commitHash string) cobra.Command {
 	flags.StringVarP(&addr, "address", "a", "127.0.0.1", "interface address to listen on")
 	flags.Uint16VarP(&port, "port", "p", 6660, "port for http server to listen on")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-
 
 	return rootCmd
 }

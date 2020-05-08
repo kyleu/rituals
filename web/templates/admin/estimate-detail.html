@@ -1,4 +1,4 @@
-<%: func AdminEstimateDetail(model *estimate.Session, polls []estimate.Poll, members []member.Entry, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminEstimateDetail(model *estimate.Session, stories []estimate.Story, members []member.Entry, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -49,11 +49,11 @@
       </table>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Polls</h3>
-      <% if len(polls) == 0 { %>
-        <p>No polls available</p>
+      <h3 class="uk-card-title">Stories</h3>
+      <% if len(stories) == 0 { %>
+        <p>No stories available</p>
       <% } else { %>
-        <% AdminPollTable(polls, ctx, _buffer) %>
+        <% AdminStoryTable(stories, ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">

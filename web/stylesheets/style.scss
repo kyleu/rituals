@@ -25,6 +25,28 @@ h4 {
   margin-top: 0;
 }
 
+.uk-button {
+  text-transform: none;
+}
+
+.modal-title {
+  cursor: default;
+}
+
+.modal-body-height-200 {
+  min-height: 200px !important;
+}
+
+.uk-light {
+  .uk-modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .uk-modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
 // Alerts
 .alert-top {
   margin: 12px;
@@ -88,4 +110,5 @@ html.uk-dark, body.uk-dark {
 
 @import "profile.scss";
 @import "members.scss";
+@import "estimate.scss";
 

@@ -39,7 +39,7 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return 0, err
 		}
-		polls, err := ctx.App.Estimate.GetPolls(estimateID)
+		stories, err := ctx.App.Estimate.GetStories(estimateID)
 		if err != nil {
 			return 0, err
 		}
@@ -54,22 +54,22 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return templates.AdminEstimateDetail(estimate, polls, members, ctx, w)
+		return templates.AdminEstimateDetail(estimate, stories, members, ctx, w)
 	})
 }
 
-func AdminPollDetail(w http.ResponseWriter, r *http.Request) {
+func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (int, error) {
-		pollIDString := mux.Vars(r)["id"]
-		pollID, err := uuid.FromString(pollIDString)
+		storyIDString := mux.Vars(r)["id"]
+		storyID, err := uuid.FromString(storyIDString)
 		if err != nil {
-			return 0, errors.Wrap(err, "invalid poll id ["+pollIDString+"]")
+			return 0, errors.Wrap(err, "invalid story id ["+storyIDString+"]")
 		}
-		poll, err := ctx.App.Estimate.GetPollByID(pollID)
+		story, err := ctx.App.Estimate.GetStoryByID(storyID)
 		if err != nil {
 			return 0, err
 		}
-		estimateID, err := ctx.App.Estimate.GetPollEstimateID(pollID)
+		estimateID, err := ctx.App.Estimate.GetStoryEstimateID(storyID)
 		if err != nil {
 			return 0, err
 		}
@@ -77,16 +77,16 @@ func AdminPollDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return 0, err
 		}
-		votes, err := ctx.App.Estimate.GetPollVotes(pollID)
+		votes, err := ctx.App.Estimate.GetStoryVotes(storyID)
 		if err != nil {
 			return 0, err
 		}
-		ctx.Title = fmt.Sprintf("%v:%v", estimate.Slug, poll.Idx)
+		ctx.Title = fmt.Sprintf("%v:%v", estimate.Slug, story.Idx)
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimates")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", poll.EstimateID.String()), estimate.Slug)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.poll.detail", "id", pollIDString), fmt.Sprintf("poll %v", poll.Idx))...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), estimate.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprintf("story %v", story.Idx))...)
 		ctx.Breadcrumbs = bc
-		return templates.AdminPollDetail(poll, votes, ctx, w)
+		return templates.AdminStoryDetail(story, votes, ctx, w)
 	})
 }
