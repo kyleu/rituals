@@ -4,5 +4,5 @@
 /project
 /tmp
 /vendor
-/internal/gen
+/gen
 node_modules

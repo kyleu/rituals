@@ -23,7 +23,7 @@ endif
 .PHONY: clean
 clean: ## Clean builds
 	rm -rf ${BUILD_DIR}/
-	rm -rf internal/gen
+	rm -rf gen
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
@@ -37,8 +37,8 @@ endif
 
 .PHONY: compile-templates
 compile-templates:
-	hero -extensions .html -source web/templates -pkgname templates -dest internal/gen/templates
-	hero -extensions .sql -pkgname queries -source queries -dest internal/gen/queries
+	hero -extensions .html -source web/templates -pkgname templates -dest gen/templates
+	hero -extensions .sql -pkgname queries -source queries -dest gen/queries
 
 .PHONY: build-%
 build-%: goversion compile-templates
@@ -59,9 +59,9 @@ endif
 
 .PHONY: build-release
 build-release: ## Build all binaries without debug information
-	@go-embed -input web/assets -output internal/app/controllers/assets/assets.go
+	@go-embed -input web/assets -output app/controllers/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
-	@git checkout internal/app/controllers/assets/assets.go
+	@git checkout app/controllers/assets/assets.go
 
 .PHONY: build-debug
 build-debug: ## Build all binaries with remote debugging capabilities

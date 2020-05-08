@@ -3,24 +3,24 @@
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
-  <div class="uk-section uk-section-small">
-    <div class="uk-container">
-      <div>
-        <h1 class="uk-heading-hero">Sandboxes</h1>
-        <div class="uk-text-lead">Little tests for various parts of the app</div>
-        <div class="uk-margin-top">
-          <div class="uk-grid-small uk-grid-match uk-child-width-expand@s" uk-grid>
-            <% for _, s := range sandboxes { %>
-              <div>
-                <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-                  <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sandbox.run`, `key`, s) %>"><%= s %></a></h3>
-                  <p>TODO</p>
-                </div>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div>
+      <h1 class="uk-heading-hero">Sandboxes</h1>
+      <div class="uk-text-lead">Little tests for various parts of the app</div>
+      <div class="uk-margin-top">
+        <div class="uk-grid-small uk-grid-match uk-child-width-expand@s" uk-grid>
+          <% for _, s := range sandboxes { %>
+            <div>
+              <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+                <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sandbox.run`, `key`, s) %>"><%= s %></a></h3>
+                <p>TODO</p>
               </div>
-            <% } %>
-          </div>
+            </div>
+          <% } %>
         </div>
       </div>
     </div>
   </div>
+</div>
 <% } %>

@@ -1,10 +1,12 @@
 declare namespace JSX {
   interface Element extends Node {}
+  // noinspection JSUnusedGlobalSymbols
   interface IntrinsicElements {
     [elemName: string]: any;
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 function JSX(tag: string, attrs: any) {
   const e = document.createElement(tag);
   for (const name in attrs) {

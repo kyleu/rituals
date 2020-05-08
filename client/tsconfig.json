@@ -4,7 +4,7 @@
     "jsx": "react",
     "jsxFactory": "JSX",
     "listFiles": false,
-    "module": "system",
+    "module": "none",
     "noImplicitAny": true,
     "removeComments": false,
     "preserveConstEnums": true,

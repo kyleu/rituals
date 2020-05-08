@@ -8,7 +8,7 @@
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Administration</h3>
       <p>Privileged actions for <%= util.AppName %></p>
-      <ul>
+      <ul class="uk-list uk-list-divider">
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user`) %>">Users</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invite`) %>">Invitations</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate`) %>">Estimates</a></li>

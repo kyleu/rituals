@@ -2,7 +2,7 @@ package lib
 
 import (
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/internal/app/cli"
+	"github.com/kyleu/rituals.dev/app/cli"
 )
 
 func Run() {

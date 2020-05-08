@@ -11878,33 +11878,63 @@ iframe.uk-cover {
 }
 
 .uk-dark .clear-fg {
-  color: #fff;
+  color: #777;
+}
+.uk-dark .clear-fg:hover {
+  color: #777;
 }
 .uk-dark .grey-fg {
   color: #dddddd;
 }
+.uk-dark .grey-fg:hover {
+  color: #dddddd;
+}
 .uk-dark .bluegrey-fg {
-  color: #89b6cc;
+  color: #3f7592;
+}
+.uk-dark .bluegrey-fg:hover {
+  color: #3f7592;
 }
 .uk-dark .red-fg {
+  color: #c1301c;
+}
+.uk-dark .red-fg:hover {
   color: #c1301c;
 }
 .uk-dark .orange-fg {
   color: #c96112;
 }
+.uk-dark .orange-fg:hover {
+  color: #c96112;
+}
 .uk-dark .yellow-fg {
+  color: #c4a705;
+}
+.uk-dark .yellow-fg:hover {
   color: #c4a705;
 }
 .uk-dark .green-fg {
   color: #177245;
 }
+.uk-dark .green-fg:hover {
+  color: #177245;
+}
 .uk-dark .blue-fg {
+  color: #397adb;
+}
+.uk-dark .blue-fg:hover {
   color: #397adb;
 }
 .uk-dark .purple-fg {
   color: #b768a2;
 }
+.uk-dark .purple-fg:hover {
+  color: #b768a2;
+}
 .uk-dark .x-fg {
+  color: #000000;
+}
+.uk-dark .x-fg:hover {
   color: #000000;
 }
 .uk-dark .clear-bg {
@@ -11938,31 +11968,31 @@ iframe.uk-cover {
   background: #000000 !important;
 }
 .uk-dark .clear-border {
-  border-color: #121212 !important;
+  border-color: #777 !important;
 }
 .uk-dark .grey-border {
-  border-color: #2c3531 !important;
+  border-color: #dddddd !important;
 }
 .uk-dark .bluegrey-border {
-  border-color: #30444e !important;
+  border-color: #3f7592 !important;
 }
 .uk-dark .red-border {
-  border-color: #44110a !important;
+  border-color: #c1301c !important;
 }
 .uk-dark .orange-border {
-  border-color: #462206 !important;
+  border-color: #c96112 !important;
 }
 .uk-dark .yellow-border {
-  border-color: #453a02 !important;
+  border-color: #c4a705 !important;
 }
 .uk-dark .green-border {
-  border-color: #072918 !important;
+  border-color: #177245 !important;
 }
 .uk-dark .blue-border {
-  border-color: #101e33 !important;
+  border-color: #397adb !important;
 }
 .uk-dark .purple-border {
-  border-color: #1a0e2d !important;
+  border-color: #b768a2 !important;
 }
 .uk-dark .x-border {
   border-color: #000000 !important;
@@ -11971,31 +12001,61 @@ iframe.uk-cover {
 .uk-light .clear-fg, .uk-section-primary:not(.uk-preserve-color) .clear-fg, .uk-section-secondary:not(.uk-preserve-color) .clear-fg, .uk-tile-primary:not(.uk-preserve-color) .clear-fg, .uk-tile-secondary:not(.uk-preserve-color) .clear-fg, .uk-card-primary.uk-card-body .clear-fg, .uk-card-primary > :not([class*=uk-card-media]) .clear-fg, .uk-card-secondary.uk-card-body .clear-fg, .uk-card-secondary > :not([class*=uk-card-media]) .clear-fg, .uk-overlay-primary .clear-fg, .uk-offcanvas-bar .clear-fg {
   color: #fff;
 }
+.uk-light .clear-fg:hover, .uk-section-primary:not(.uk-preserve-color) .clear-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .clear-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .clear-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .clear-fg:hover, .uk-card-primary.uk-card-body .clear-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .clear-fg:hover, .uk-card-secondary.uk-card-body .clear-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .clear-fg:hover, .uk-overlay-primary .clear-fg:hover, .uk-offcanvas-bar .clear-fg:hover {
+  color: #fff;
+}
 .uk-light .grey-fg, .uk-section-primary:not(.uk-preserve-color) .grey-fg, .uk-section-secondary:not(.uk-preserve-color) .grey-fg, .uk-tile-primary:not(.uk-preserve-color) .grey-fg, .uk-tile-secondary:not(.uk-preserve-color) .grey-fg, .uk-card-primary.uk-card-body .grey-fg, .uk-card-primary > :not([class*=uk-card-media]) .grey-fg, .uk-card-secondary.uk-card-body .grey-fg, .uk-card-secondary > :not([class*=uk-card-media]) .grey-fg, .uk-overlay-primary .grey-fg, .uk-offcanvas-bar .grey-fg {
+  color: #dddddd;
+}
+.uk-light .grey-fg:hover, .uk-section-primary:not(.uk-preserve-color) .grey-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .grey-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .grey-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .grey-fg:hover, .uk-card-primary.uk-card-body .grey-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .grey-fg:hover, .uk-card-secondary.uk-card-body .grey-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .grey-fg:hover, .uk-overlay-primary .grey-fg:hover, .uk-offcanvas-bar .grey-fg:hover {
   color: #dddddd;
 }
 .uk-light .bluegrey-fg, .uk-section-primary:not(.uk-preserve-color) .bluegrey-fg, .uk-section-secondary:not(.uk-preserve-color) .bluegrey-fg, .uk-tile-primary:not(.uk-preserve-color) .bluegrey-fg, .uk-tile-secondary:not(.uk-preserve-color) .bluegrey-fg, .uk-card-primary.uk-card-body .bluegrey-fg, .uk-card-primary > :not([class*=uk-card-media]) .bluegrey-fg, .uk-card-secondary.uk-card-body .bluegrey-fg, .uk-card-secondary > :not([class*=uk-card-media]) .bluegrey-fg, .uk-overlay-primary .bluegrey-fg, .uk-offcanvas-bar .bluegrey-fg {
   color: #89b6cc;
 }
+.uk-light .bluegrey-fg:hover, .uk-section-primary:not(.uk-preserve-color) .bluegrey-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .bluegrey-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .bluegrey-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .bluegrey-fg:hover, .uk-card-primary.uk-card-body .bluegrey-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .bluegrey-fg:hover, .uk-card-secondary.uk-card-body .bluegrey-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .bluegrey-fg:hover, .uk-overlay-primary .bluegrey-fg:hover, .uk-offcanvas-bar .bluegrey-fg:hover {
+  color: #89b6cc;
+}
 .uk-light .red-fg, .uk-section-primary:not(.uk-preserve-color) .red-fg, .uk-section-secondary:not(.uk-preserve-color) .red-fg, .uk-tile-primary:not(.uk-preserve-color) .red-fg, .uk-tile-secondary:not(.uk-preserve-color) .red-fg, .uk-card-primary.uk-card-body .red-fg, .uk-card-primary > :not([class*=uk-card-media]) .red-fg, .uk-card-secondary.uk-card-body .red-fg, .uk-card-secondary > :not([class*=uk-card-media]) .red-fg, .uk-overlay-primary .red-fg, .uk-offcanvas-bar .red-fg {
+  color: #c1301c;
+}
+.uk-light .red-fg:hover, .uk-section-primary:not(.uk-preserve-color) .red-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .red-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .red-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .red-fg:hover, .uk-card-primary.uk-card-body .red-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .red-fg:hover, .uk-card-secondary.uk-card-body .red-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .red-fg:hover, .uk-overlay-primary .red-fg:hover, .uk-offcanvas-bar .red-fg:hover {
   color: #c1301c;
 }
 .uk-light .orange-fg, .uk-section-primary:not(.uk-preserve-color) .orange-fg, .uk-section-secondary:not(.uk-preserve-color) .orange-fg, .uk-tile-primary:not(.uk-preserve-color) .orange-fg, .uk-tile-secondary:not(.uk-preserve-color) .orange-fg, .uk-card-primary.uk-card-body .orange-fg, .uk-card-primary > :not([class*=uk-card-media]) .orange-fg, .uk-card-secondary.uk-card-body .orange-fg, .uk-card-secondary > :not([class*=uk-card-media]) .orange-fg, .uk-overlay-primary .orange-fg, .uk-offcanvas-bar .orange-fg {
   color: #c96112;
 }
+.uk-light .orange-fg:hover, .uk-section-primary:not(.uk-preserve-color) .orange-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .orange-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .orange-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .orange-fg:hover, .uk-card-primary.uk-card-body .orange-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .orange-fg:hover, .uk-card-secondary.uk-card-body .orange-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .orange-fg:hover, .uk-overlay-primary .orange-fg:hover, .uk-offcanvas-bar .orange-fg:hover {
+  color: #c96112;
+}
 .uk-light .yellow-fg, .uk-section-primary:not(.uk-preserve-color) .yellow-fg, .uk-section-secondary:not(.uk-preserve-color) .yellow-fg, .uk-tile-primary:not(.uk-preserve-color) .yellow-fg, .uk-tile-secondary:not(.uk-preserve-color) .yellow-fg, .uk-card-primary.uk-card-body .yellow-fg, .uk-card-primary > :not([class*=uk-card-media]) .yellow-fg, .uk-card-secondary.uk-card-body .yellow-fg, .uk-card-secondary > :not([class*=uk-card-media]) .yellow-fg, .uk-overlay-primary .yellow-fg, .uk-offcanvas-bar .yellow-fg {
+  color: #c4a705;
+}
+.uk-light .yellow-fg:hover, .uk-section-primary:not(.uk-preserve-color) .yellow-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .yellow-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .yellow-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .yellow-fg:hover, .uk-card-primary.uk-card-body .yellow-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .yellow-fg:hover, .uk-card-secondary.uk-card-body .yellow-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .yellow-fg:hover, .uk-overlay-primary .yellow-fg:hover, .uk-offcanvas-bar .yellow-fg:hover {
   color: #c4a705;
 }
 .uk-light .green-fg, .uk-section-primary:not(.uk-preserve-color) .green-fg, .uk-section-secondary:not(.uk-preserve-color) .green-fg, .uk-tile-primary:not(.uk-preserve-color) .green-fg, .uk-tile-secondary:not(.uk-preserve-color) .green-fg, .uk-card-primary.uk-card-body .green-fg, .uk-card-primary > :not([class*=uk-card-media]) .green-fg, .uk-card-secondary.uk-card-body .green-fg, .uk-card-secondary > :not([class*=uk-card-media]) .green-fg, .uk-overlay-primary .green-fg, .uk-offcanvas-bar .green-fg {
   color: #177245;
 }
+.uk-light .green-fg:hover, .uk-section-primary:not(.uk-preserve-color) .green-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .green-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .green-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .green-fg:hover, .uk-card-primary.uk-card-body .green-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .green-fg:hover, .uk-card-secondary.uk-card-body .green-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .green-fg:hover, .uk-overlay-primary .green-fg:hover, .uk-offcanvas-bar .green-fg:hover {
+  color: #177245;
+}
 .uk-light .blue-fg, .uk-section-primary:not(.uk-preserve-color) .blue-fg, .uk-section-secondary:not(.uk-preserve-color) .blue-fg, .uk-tile-primary:not(.uk-preserve-color) .blue-fg, .uk-tile-secondary:not(.uk-preserve-color) .blue-fg, .uk-card-primary.uk-card-body .blue-fg, .uk-card-primary > :not([class*=uk-card-media]) .blue-fg, .uk-card-secondary.uk-card-body .blue-fg, .uk-card-secondary > :not([class*=uk-card-media]) .blue-fg, .uk-overlay-primary .blue-fg, .uk-offcanvas-bar .blue-fg {
+  color: #397adb;
+}
+.uk-light .blue-fg:hover, .uk-section-primary:not(.uk-preserve-color) .blue-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .blue-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .blue-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .blue-fg:hover, .uk-card-primary.uk-card-body .blue-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .blue-fg:hover, .uk-card-secondary.uk-card-body .blue-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .blue-fg:hover, .uk-overlay-primary .blue-fg:hover, .uk-offcanvas-bar .blue-fg:hover {
   color: #397adb;
 }
 .uk-light .purple-fg, .uk-section-primary:not(.uk-preserve-color) .purple-fg, .uk-section-secondary:not(.uk-preserve-color) .purple-fg, .uk-tile-primary:not(.uk-preserve-color) .purple-fg, .uk-tile-secondary:not(.uk-preserve-color) .purple-fg, .uk-card-primary.uk-card-body .purple-fg, .uk-card-primary > :not([class*=uk-card-media]) .purple-fg, .uk-card-secondary.uk-card-body .purple-fg, .uk-card-secondary > :not([class*=uk-card-media]) .purple-fg, .uk-overlay-primary .purple-fg, .uk-offcanvas-bar .purple-fg {
   color: #b768a2;
 }
+.uk-light .purple-fg:hover, .uk-section-primary:not(.uk-preserve-color) .purple-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .purple-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .purple-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .purple-fg:hover, .uk-card-primary.uk-card-body .purple-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .purple-fg:hover, .uk-card-secondary.uk-card-body .purple-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .purple-fg:hover, .uk-overlay-primary .purple-fg:hover, .uk-offcanvas-bar .purple-fg:hover {
+  color: #b768a2;
+}
 .uk-light .x-fg, .uk-section-primary:not(.uk-preserve-color) .x-fg, .uk-section-secondary:not(.uk-preserve-color) .x-fg, .uk-tile-primary:not(.uk-preserve-color) .x-fg, .uk-tile-secondary:not(.uk-preserve-color) .x-fg, .uk-card-primary.uk-card-body .x-fg, .uk-card-primary > :not([class*=uk-card-media]) .x-fg, .uk-card-secondary.uk-card-body .x-fg, .uk-card-secondary > :not([class*=uk-card-media]) .x-fg, .uk-overlay-primary .x-fg, .uk-offcanvas-bar .x-fg {
+  color: #000000;
+}
+.uk-light .x-fg:hover, .uk-section-primary:not(.uk-preserve-color) .x-fg:hover, .uk-section-secondary:not(.uk-preserve-color) .x-fg:hover, .uk-tile-primary:not(.uk-preserve-color) .x-fg:hover, .uk-tile-secondary:not(.uk-preserve-color) .x-fg:hover, .uk-card-primary.uk-card-body .x-fg:hover, .uk-card-primary > :not([class*=uk-card-media]) .x-fg:hover, .uk-card-secondary.uk-card-body .x-fg:hover, .uk-card-secondary > :not([class*=uk-card-media]) .x-fg:hover, .uk-overlay-primary .x-fg:hover, .uk-offcanvas-bar .x-fg:hover {
   color: #000000;
 }
 .uk-light .clear-bg, .uk-section-primary:not(.uk-preserve-color) .clear-bg, .uk-section-secondary:not(.uk-preserve-color) .clear-bg, .uk-tile-primary:not(.uk-preserve-color) .clear-bg, .uk-tile-secondary:not(.uk-preserve-color) .clear-bg, .uk-card-primary.uk-card-body .clear-bg, .uk-card-primary > :not([class*=uk-card-media]) .clear-bg, .uk-card-secondary.uk-card-body .clear-bg, .uk-card-secondary > :not([class*=uk-card-media]) .clear-bg, .uk-overlay-primary .clear-bg, .uk-offcanvas-bar .clear-bg {
@@ -12213,9 +12273,8 @@ html.uk-dark, body.uk-dark {
 .swatch {
   width: 32px;
   height: 32px;
-  margin: 0 4px;
+  margin: 0 6px;
   cursor: pointer;
-  display: inline-block;
   border: 1px solid #444;
   color: #fff;
 }
@@ -12267,7 +12326,7 @@ html.uk-dark, body.uk-dark {
   border: 2px solid #ccc;
 }
 #story-vote-choices .vote-choice.active {
-  border: 2px solid #f00;
+  background-color: #9992;
 }
 
 #story-vote-members .vote-member {

@@ -2,9 +2,9 @@
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle" id="member-self">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="openModal('self');return false;" title="edit name"></a>
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('self');return false;" title="edit name"></a>
     </span>
-    <span class="member-name" onclick="openModal('self');"><%= ctx.Profile.Name %></span>
+    <span class="member-name" onclick="events.openModal('self');"><%= ctx.Profile.Name %></span>
   </h3>
   <p class="member-role"></p>
 </div>
@@ -14,7 +14,7 @@
     <div class="uk-modal-header">
       <h2 class="uk-modal-title">Edit Self</h2>
     </div>
-    <form class="uk-form-stacked" id="form-self-name" onsubmit="onSubmitSelf();return false;">
+    <form class="uk-form-stacked" id="form-self-name" onsubmit="member.onSubmitSelf();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
           <fieldset class="uk-fieldset">
             <div class="uk-margin">

@@ -2,9 +2,9 @@
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="openModal('invite');return false;" title="invite members"></a>
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="events.openModal('invite');return false;" title="invite members"></a>
     </span>
-    <span class="modal-title" onclick="openModal('invite');">Members</span>
+    <span class="modal-title" onclick="events.openModal('invite');">Members</span>
   </h3>
   <p id="member-detail">Loading...</p>
 </div>

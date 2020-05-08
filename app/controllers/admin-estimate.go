@@ -1,0 +1,92 @@
+package controllers
+
+import (
+	"fmt"
+	"net/http"
+
+	"emperror.dev/errors"
+	"github.com/gofrs/uuid"
+	"github.com/gorilla/mux"
+
+	"github.com/kyleu/rituals.dev/app/web"
+
+	"github.com/kyleu/rituals.dev/gen/templates"
+)
+
+func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
+	act(w, r, func(ctx web.RequestContext) (string, error) {
+		ctx.Title = "Estimate List"
+		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
+		ctx.Breadcrumbs = bc
+
+		estimates, err := ctx.App.Estimate.List()
+		if err != nil {
+			return "", err
+		}
+		return tmpl(templates.AdminEstimateList(estimates, ctx, w))
+	})
+}
+
+func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
+	act(w, r, func(ctx web.RequestContext) (string, error) {
+		estimateIDString := mux.Vars(r)["id"]
+		estimateID, err := uuid.FromString(estimateIDString)
+		if err != nil {
+			return "", errors.Wrap(err, "invalid estimate id ["+estimateIDString+"]")
+		}
+		estimate, err := ctx.App.Estimate.GetByID(estimateID)
+		if err != nil {
+			return "", err
+		}
+		stories, err := ctx.App.Estimate.GetStories(estimateID)
+		if err != nil {
+			return "", err
+		}
+		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID)
+		if err != nil {
+			return "", err
+		}
+
+		ctx.Title = estimate.Title
+		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
+		ctx.Breadcrumbs = bc
+
+		return tmpl(templates.AdminEstimateDetail(estimate, stories, members, ctx, w))
+	})
+}
+
+func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
+	act(w, r, func(ctx web.RequestContext) (string, error) {
+		storyIDString := mux.Vars(r)["id"]
+		storyID, err := uuid.FromString(storyIDString)
+		if err != nil {
+			return "", errors.Wrap(err, "invalid story id ["+storyIDString+"]")
+		}
+		story, err := ctx.App.Estimate.GetStoryByID(storyID)
+		if err != nil {
+			return "", err
+		}
+		estimateID, err := ctx.App.Estimate.GetStoryEstimateID(storyID)
+		if err != nil {
+			return "", err
+		}
+		estimate, err := ctx.App.Estimate.GetByID(*estimateID)
+		if err != nil {
+			return "", err
+		}
+		votes, err := ctx.App.Estimate.GetStoryVotes(storyID)
+		if err != nil {
+			return "", err
+		}
+		ctx.Title = fmt.Sprintf("%v:%v", estimate.Slug, story.Idx)
+		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), estimate.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprintf("story %v", story.Idx))...)
+		ctx.Breadcrumbs = bc
+		return tmpl(templates.AdminStoryDetail(story, votes, ctx, w))
+	})
+}

@@ -2,9 +2,9 @@
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="openModal('session');return false;" title="edit session"></a>
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('session');return false;" title="edit session"></a>
     </span>
-    <span id="model-title" onclick="openModal('session');"><%= model.Title %></span>
+    <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
   </h3>
   <p>Estimation Session</p>
 </div>
@@ -14,7 +14,7 @@
     <div class="uk-modal-header">
       <h2 class="uk-modal-title">Edit Estimate Session</h2>
     </div>
-    <form class="uk-form-stacked" id="form-detail" onsubmit="onSubmitEstimateSession();return false;">
+    <form class="uk-form-stacked" id="form-detail" onsubmit="estimate.onSubmitEstimateSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
           <div class="uk-margin">

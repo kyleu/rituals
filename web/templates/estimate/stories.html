@@ -2,9 +2,9 @@
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="openModal('add-story');return false;" title="add story"></a>
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="events.openModal('add-story');return false;" title="add story"></a>
     </span>
-    <span class="modal-title" onclick="openModal('add-story');">Stories</span>
+    <span class="modal-title" onclick="events.openModal('add-story');">Stories</span>
   </h3>
   <p id="story-detail">Loading...</p>
 </div>
@@ -14,7 +14,7 @@
     <div class="uk-modal-header">
       <h2 class="uk-modal-title">Add New Story</h2>
     </div>
-    <form class="uk-form-stacked" id="form-detail" onsubmit="onSubmitStory();return false;">
+    <form class="uk-form-stacked" id="form-detail" onsubmit="return story.onSubmitStory();">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
           <div class="uk-margin">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-default" type="button" onclick="requestStoryStatus('active');">Vote</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Vote</button>
       </div>
     </div>
     <div id="story-status-section-active" class="story-status-section">
@@ -54,19 +54,19 @@
         </div>
       </div>
       <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-default" type="button" onclick="requestStoryStatus('pending');">Edit</button>
-        <button class="uk-button uk-button-default" type="button" onclick="requestStoryStatus('complete');">Finish</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('pending');">Edit</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('complete');">Finish</button>
       </div>
     </div>
     <div id="story-status-section-complete" class="story-status-section">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <div class="modal-body-height-200">
-          <p>Complete!</p>
+          <div id="story-vote-results"></div>
         </div>
       </div>
       <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-default" type="button" onclick="requestStoryStatus('active');">Reopen</button>
-        <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-story').hide()">Close</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Reopen</button>
+        <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-story').hide();">Close</button>
       </div>
     </div>
   </div>

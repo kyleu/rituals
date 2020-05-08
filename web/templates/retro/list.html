@@ -1,20 +1,42 @@
-<%: func RetroList(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func RetroList(sessions []retro.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
-  <div class="uk-section uk-section-small">
-    <div class="uk-container">
-      <div>
-        <h1 class="uk-heading-hero">Retro Sessions</h1>
-        <div class="uk-text-lead">TODO</div>
-        <div class="uk-margin-top">
-          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro.new.form`) %>">New Session</a></h3>
-            <p>TODO</p>
-          </div>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div>
+      <h1 class="uk-heading-hero">Retrospectives</h1>
+      <div class="uk-text-lead">Discover improvements and praise for your work</div>
+      <div class="uk-margin-top">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <h3 class="uk-card-title">New Retrospective</h3>
+          <form class="uk-form-stacked" action="<%= ctx.Route(`retro.new`) %>" method="post">
+            <fieldset class="uk-fieldset">
+              <div class="uk-margin-small">
+                <label class="uk-form-label" for="title">Title</label>
+                <input class="uk-input" name="title" type="text" placeholder="Name your retro" value="" />
+              </div>
+
+              <div class="uk-margin-top">
+                <button class="uk-button uk-button-default" type="submit">Start</button>
+              </div>
+            </fieldset>
+          </form>
         </div>
+
+        <% if len(sessions) > 0 { %>
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+          <h3 class="uk-card-title">Prior Retrospectives</h3>
+          <% for _, s := range sessions { %>
+          <div>
+            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro`, `key`, s.Slug) %>"><%= s.Title %></a>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
       </div>
     </div>
   </div>
+</div>
 <% } %>

@@ -9,3 +9,7 @@ project_dir=${dir}/..
 cd $project_dir/client
 
 tsc --project tsconfig.json
+
+cd $project_dir/web/assets
+
+closure-compiler rituals.js > rituals.min.js

@@ -1,139 +1,155 @@
-interface Story {
-  id: string;
-  idx: number;
-  author: string;
-  title: string;
-  status: {
-    key: string;
-  };
-  finalVote: string;
-  created: string;
-}
-
-interface Vote {
-  storyID: string;
-  userID: string;
-  choice: string;
-  updated: string;
-  created: string;
-}
-
-function setStories(stories: Story[]) {
-  estimateCache.stories = stories;
-  const detail = $id("story-detail");
-  detail.innerHTML = "";
-  detail.appendChild(renderStories(stories));
-
-  UIkit.modal("#modal-add-story").hide();
-}
-
-function setVotes(votes: Vote[]) {
-  estimateCache.votes = votes;
-  if (estimateCache.activeStory) {
-    viewActiveVotes();
+namespace story {
+  export interface Story {
+    id: string;
+    idx: number;
+    author: string;
+    title: string;
+    status: {
+      key: string;
+    };
+    finalVote: string;
+    created: string;
   }
-}
 
-function onSubmitStory() {
-  const title = $req<HTMLInputElement>("#story-title-input").value;
-  const msg = {
-    svc: services.estimate,
-    cmd: clientCmd.addStory,
-    param: { title: title },
-  };
-  send(msg);
-}
+  export interface Vote {
+    storyID: string;
+    userID: string;
+    choice: string;
+    updated: string;
+    created: string;
+  }
 
-function getActiveStory() {
-  if (estimateCache.activeStory === undefined) {
-    console.warn("no active story");
-    return undefined;
-  }
-  const curr = estimateCache.stories.filter(x => x.id === estimateCache.activeStory);
-  if (curr.length !== 1) {
-    console.warn("cannot load active story [" + estimateCache.activeStory + "]");
-    return undefined;
-  }
-  return curr[0];
-}
+  export function setStories(stories: Story[]) {
+    estimate.cache.stories = stories;
+    const detail = util.req("#story-detail");
+    detail.innerHTML = "";
+    detail.appendChild(renderStories(stories));
 
-function viewActiveStory() {
-  const story = getActiveStory();
-  if (story === undefined) {
-    console.log("no active story");
-    return;
+    UIkit.modal("#modal-add-story").hide();
   }
-  $req("#story-title").innerText = story.title;
-  viewStoryStatus(story.status.key);
-}
 
-function viewStoryStatus(status: string) {
-  switch (status) {
-    case "pending":
-      break;
-    case "active":
-      viewActiveVotes();
-      break;
-    case "complete":
-      break;
-  }
-  for (let el of $(".story-status-section")) {
-    const s = el.id.substr(el.id.lastIndexOf("-") + 1);
-    if (s === status) {
-      el.classList.add("active");
-    } else {
-      el.classList.remove("active");
+  export function setVotes(votes: Vote[]) {
+    estimate.cache.votes = votes;
+    if (estimate.cache.activeStory) {
+      viewVotes();
     }
   }
-}
 
-function onVoteUpdate(vote: Vote) {
-  let x = estimateCache.votes;
-  x = x.filter(v => v.userID != vote.userID || v.storyID != vote.storyID);
-  x.push(vote);
-  estimateCache.votes = x;
-  if(vote.storyID === estimateCache.activeStory) {
-    viewActiveVotes();
+  export function onSubmitStory() {
+    const title = util.req<HTMLInputElement>("#story-title-input").value;
+    const msg = {
+      svc: services.estimate,
+      cmd: command.client.addStory,
+      param: {title: title},
+    };
+    socket.send(msg);
+    return false;
+  }
+
+  function getActiveStory() {
+    if (estimate.cache.activeStory === undefined) {
+      console.warn("no active story");
+      return undefined;
+    }
+    const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory);
+    if (curr.length !== 1) {
+      console.warn("cannot load active story [" + estimate.cache.activeStory + "]");
+      return undefined;
+    }
+    return curr[0];
+  }
+
+  export function viewActiveStory() {
+    const story = getActiveStory();
+    if (story === undefined) {
+      console.log("no active story");
+      return;
+    }
+    util.req("#story-title").innerText = story.title;
+    viewStoryStatus(story.status.key);
+  }
+
+  function viewStoryStatus(status: string) {
+    switch (status) {
+      case "pending":
+        break;
+      case "active":
+        viewVotes();
+        break;
+      case "complete":
+        viewVotes();
+        break;
+    }
+    for (let el of util.els(".story-status-section")) {
+      const s = el.id.substr(el.id.lastIndexOf("-") + 1);
+      if (s === status) {
+        el.classList.add("active");
+      } else {
+        el.classList.remove("active");
+      }
+    }
+  }
+
+  export function onVoteUpdate(vote: Vote) {
+    let x = estimate.cache.votes;
+    x = x.filter(v => v.userID != vote.userID || v.storyID != vote.storyID);
+    x.push(vote);
+    estimate.cache.votes = x;
+    if (vote.storyID === estimate.cache.activeStory) {
+      viewVotes();
+    }
+  }
+
+  export function viewVotes() {
+    const votes = estimate.cache.activeVotes();
+    const activeVote = votes.filter(v => v.userID === system.cache.profile!.userID).pop();
+
+    viewActiveVotes(votes, activeVote);
+    viewVoteResults(votes);
+  }
+
+  function viewActiveVotes(votes: story.Vote[], activeVote: story.Vote | undefined) {
+    const m = util.req("#story-vote-members");
+    m.innerHTML = "";
+    m.appendChild(renderVoteMembers(system.cache.members, votes));
+
+    const c = util.req("#story-vote-choices");
+    c.innerHTML = "";
+    c.appendChild(renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
+  }
+
+  function viewVoteResults(votes: story.Vote[]) {
+    const c = util.req("#story-vote-results");
+    c.innerHTML = "";
+    c.appendChild(renderVoteResults(system.cache.members, votes));
+  }
+
+  export function requestStoryStatus(s: string) {
+    const story = getActiveStory();
+    if (story === undefined) {
+      console.log("no active story");
+      return;
+    }
+    const msg = {
+      svc: services.estimate,
+      cmd: command.client.setStoryStatus,
+      param: {storyID: story.id, status: s},
+    };
+    socket.send(msg);
+  }
+
+  export function onStoryStatusChange(u: estimate.StoryStatusUpdate) {
+    util.req("#story-" + u.storyID + " .story-status").innerText = u.status.key;
+    viewStoryStatus(u.status.key);
+  }
+
+  // noinspection JSUnusedGlobalSymbols
+  export function onSubmitVote(choice: string) {
+    const msg = {
+      svc: services.estimate,
+      cmd: command.client.submitVote,
+      param: {storyID: estimate.cache.activeStory, choice: choice},
+    };
+    socket.send(msg);
   }
 }
-
-function viewActiveVotes() {
-  const votes = estimateCache.activeVotes();
-  const activeVote = votes.filter(v => v.userID === systemCache.profile!.userID).pop();
-  const m = $id("story-vote-members");
-  m.innerHTML = "";
-  m.appendChild(renderVoteMembers(systemCache.members, votes));
-
-  const c = $id("story-vote-choices");
-  c.innerHTML = "";
-  c.appendChild(renderVoteChoices(estimateCache.detail!.choices, activeVote?.choice));
-}
-
-function requestStoryStatus(s: string) {
-  const story = getActiveStory();
-  if (story === undefined) {
-    console.log("no active story");
-    return;
-  }
-  const msg = {
-    svc: services.estimate,
-    cmd: clientCmd.setStoryStatus,
-    param: { storyID: story.id, status: s },
-  };
-  send(msg);
-}
-
-function onStoryStatusChange(u: StoryStatusUpdate) {
-  $req("#story-" + u.storyID + " .story-status").innerText = u.status.key;
-  viewStoryStatus(u.status.key);
-}
-
-function onSubmitVote(choice: string) {
-  const msg = {
-    svc: services.estimate,
-    cmd: clientCmd.submitVote,
-    param: { storyID: estimateCache.activeStory, choice: choice },
-  };
-  send(msg);
-}
-

@@ -1,60 +1,56 @@
-declare var UIkit: any;
+namespace system {
+  class Cache {
+    profile?: rituals.Profile;
+    session?: rituals.Session;
 
-const debug = true;
+    activeMember?: string;
 
-let appUnloading = false;
+    currentService = "";
+    currentID = "";
+    connectTime = 0;
 
-class SystemCache {
-  profile?: Profile;
-  session?: Session;
+    members: member.Member[] = [];
+    online: string[] = [];
+  }
 
-  activeMember?: string;
-
-  currentService = "";
-  currentID = "";
-  connectTime = 0;
-
-  detail?: EstimateDetail;
-
-  members: Member[] = [];
-  online: string[] = [];
+  export const cache = new Cache();
 }
 
-const systemCache = new SystemCache();
+namespace services {
+  export const system = "system";
+  export const estimate = "estimate";
+  export const standup = "standup";
+  export const retro = "retro";
+}
 
-const services = {
-  system: "system",
-  estimate: "estimate",
-  standup: "standup",
-  retro: "retro",
-};
+namespace command {
+  export const client = {
+    error: "error",
+    ping: "ping",
 
-const clientCmd = {
-  error: "error",
-  ping: "ping",
+    connect: "connect",
+    updateProfile: "update-profile",
 
-  connect: "connect",
-  updateProfile: "update-profile",
+    updateSession: "update-session",
 
-  updateSession: "update-session",
+    addStory: "add-story",
+    updateStory: "update-story",
+    setStoryStatus: "set-story-status",
+    submitVote: "submit-vote",
+  };
 
-  addStory: "add-story",
-  updateStory: "update-story",
-  setStoryStatus: "set-story-status",
-  submitVote: "submit-vote",
-};
+  export const server = {
+    error: "error",
+    pong: "pong",
 
-const serverCmd = {
-  error: "error",
-  pong: "pong",
+    sessionJoined: "session-joined",
+    sessionUpdate: "session-update",
 
-  sessionJoined: "session-joined",
-  sessionUpdate: "session-update",
+    memberUpdate: "member-update",
+    onlineUpdate: "online-update",
 
-  memberUpdate: "member-update",
-  onlineUpdate: "online-update",
-
-  storyUpdate: "story-update",
-  storyStatusChange: "story-status-change",
-  voteUpdate: "vote-update",
-};
+    storyUpdate: "story-update",
+    storyStatusChange: "story-status-change",
+    voteUpdate: "vote-update",
+  };
+}
