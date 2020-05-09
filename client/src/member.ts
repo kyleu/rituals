@@ -31,10 +31,7 @@ namespace member {
     }
 
     const others = system.cache.members.filter(x => !isSelf(x));
-    const detail = util.req("#member-detail");
-    detail.innerHTML = "";
-    detail.appendChild(renderMembers(others));
-
+    util.setContent("#member-detail", renderMembers(others));
     renderOnline();
   }
 

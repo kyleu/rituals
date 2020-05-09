@@ -19,7 +19,7 @@ namespace standup {
         rituals.onError(services.standup, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined
+        let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         setStandupDetail(sj.session);
         break;

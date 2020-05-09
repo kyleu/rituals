@@ -12,4 +12,10 @@ namespace util {
     }
     return res[0];
   }
+
+  export function setContent(path: string, el: JSX.Element) {
+    const detail = util.req(path);
+    detail.innerHTML = "";
+    detail.appendChild(el);
+  }
 }

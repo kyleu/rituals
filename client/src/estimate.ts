@@ -25,7 +25,6 @@ namespace estimate {
 
     public activeVotes(): story.Vote[] {
       if (this.activeStory === undefined) {
-        console.log("!!!")
         return [];
       }
       return this.votes.filter(x => x.storyID == this.activeStory);
@@ -40,7 +39,7 @@ namespace estimate {
         rituals.onError(services.estimate, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined
+        let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         setEstimateDetail(sj.session);
         story.setStories(sj.stories);

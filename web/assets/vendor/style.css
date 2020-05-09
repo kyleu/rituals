@@ -12180,7 +12180,6 @@ pre {
 
 .uk-light .uk-alert, .uk-section-primary:not(.uk-preserve-color) .uk-alert, .uk-section-secondary:not(.uk-preserve-color) .uk-alert, .uk-tile-primary:not(.uk-preserve-color) .uk-alert, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert, .uk-card-primary.uk-card-body .uk-alert, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert, .uk-card-secondary.uk-card-body .uk-alert, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert, .uk-overlay-primary .uk-alert, .uk-offcanvas-bar .uk-alert, .uk-light .uk-alert-primary, .uk-section-primary:not(.uk-preserve-color) .uk-alert-primary, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-primary, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-primary, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-primary, .uk-card-primary.uk-card-body .uk-alert-primary, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-primary, .uk-card-secondary.uk-card-body .uk-alert-primary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-primary, .uk-overlay-primary .uk-alert-primary, .uk-offcanvas-bar .uk-alert-primary, .uk-light .uk-alert-success, .uk-section-primary:not(.uk-preserve-color) .uk-alert-success, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-success, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-success, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-success, .uk-card-primary.uk-card-body .uk-alert-success, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-success, .uk-card-secondary.uk-card-body .uk-alert-success, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-success, .uk-overlay-primary .uk-alert-success, .uk-offcanvas-bar .uk-alert-success, .uk-light .uk-alert-warning, .uk-section-primary:not(.uk-preserve-color) .uk-alert-warning, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-warning, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-warning, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-warning, .uk-card-primary.uk-card-body .uk-alert-warning, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-warning, .uk-card-secondary.uk-card-body .uk-alert-warning, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-warning, .uk-overlay-primary .uk-alert-warning, .uk-offcanvas-bar .uk-alert-warning, .uk-light .uk-alert-danger, .uk-section-primary:not(.uk-preserve-color) .uk-alert-danger, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-danger, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-danger, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-danger, .uk-card-primary.uk-card-body .uk-alert-danger, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-danger, .uk-card-secondary.uk-card-body .uk-alert-danger, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-danger, .uk-overlay-primary .uk-alert-danger, .uk-offcanvas-bar .uk-alert-danger {
   background: #222;
-  border: 1px solid #aaa;
 }
 
 .uk-table th {
@@ -12207,8 +12206,8 @@ h4 {
   cursor: default;
 }
 
-.modal-body-height-200 {
-  min-height: 200px !important;
+.modal-body-height {
+  min-height: 256px !important;
 }
 
 .uk-light .uk-modal-header, .uk-section-primary:not(.uk-preserve-color) .uk-modal-header, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-card-primary.uk-card-body .uk-modal-header, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-header, .uk-card-secondary.uk-card-body .uk-modal-header, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-header, .uk-overlay-primary .uk-modal-header, .uk-offcanvas-bar .uk-modal-header {
@@ -12251,7 +12250,7 @@ html.uk-dark, body.uk-dark {
 }
 
 .frame {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #666;
   padding: 12px;
 }
 .frame.owned .message {
@@ -12260,6 +12259,10 @@ html.uk-dark, body.uk-dark {
 .frame .loc, .frame .additional {
   margin-left: 32px;
   color: #999;
+}
+
+.uk-dark .frame {
+  border-top: 1px solid #ddd;
 }
 
 #navbar {
@@ -12275,7 +12278,7 @@ html.uk-dark, body.uk-dark {
   height: 32px;
   margin: 0 6px;
   cursor: pointer;
-  border: 1px solid #444;
+  border: 1px solid #666;
   color: #fff;
 }
 .swatch.light {
@@ -12306,13 +12309,28 @@ html.uk-dark, body.uk-dark {
   cursor: default;
 }
 
-.story-status-section {
+#story-title {
+  text-align: center;
+  font-size: 150%;
+  margin-bottom: 18px;
+  border: 1px solid #666;
+  padding: 12px;
+}
+
+.uk-dark #story-title {
+  border-color: #ddd;
+}
+
+.story-status-body, .story-status-actions {
   display: none;
 }
-.story-status-section.active {
+.story-status-body.active, .story-status-actions.active {
   display: block;
 }
 
+#story-vote-choices {
+  margin-top: 48px;
+}
 #story-vote-choices .vote-choice {
   margin: 6px;
   padding: 6px;
@@ -12323,14 +12341,59 @@ html.uk-dark, body.uk-dark {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid #ccc;
+  border: 2px solid #666;
 }
 #story-vote-choices .vote-choice.active {
   background-color: #9992;
 }
 
+.uk-dark #story-vote-choices .vote-choice {
+  border-color: #ddd;
+}
+
+#story-vote-members {
+  min-height: 100px;
+}
 #story-vote-members .vote-member {
   margin: 6px;
   padding: 12px;
   text-align: center;
+}
+
+#story-vote-results {
+  min-height: 100px;
+}
+#story-vote-results .vote-result {
+  margin: 6px;
+  padding: 12px;
+  text-align: center;
+}
+#story-vote-results .uk-border-circle {
+  font-size: 150%;
+  margin-bottom: 6px;
+}
+
+#story-vote-summary .result-container {
+  margin-top: 36px;
+}
+#story-vote-summary .result {
+  min-width: 128px;
+  text-align: center;
+}
+#story-vote-summary .uk-border-circle {
+  border: 2px solid #666;
+  display: inline-block;
+  padding: 8px;
+  min-height: 48px;
+  min-width: 48px;
+  line-height: 48px;
+  font-size: 125%;
+  margin-bottom: 6px;
+}
+#story-vote-summary .mean {
+  font-size: 150%;
+}
+
+.uk-dark #story-vote-summary .uk-border-circle {
+  border-color: #ddd;
 }

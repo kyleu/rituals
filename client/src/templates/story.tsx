@@ -48,9 +48,9 @@ namespace story {
 
   function renderVoteResult(member: member.Member, choice: string | undefined): JSX.Element {
     if (choice === undefined) {
-      return <div class="vote-member"><div><span data-uk-icon="icon: minus; ratio: 1.6" /></div> {member.name}</div>;
+      return <div class="vote-result"><div><span class="uk-border-circle"><span data-uk-icon="icon: minus; ratio: 1.6" /></span></div> {member.name}</div>;
     }
-    return <div class="vote-member"><div>{choice}</div> {member.name}</div>;
+    return <div class="vote-result"><div><span class="uk-border-circle">{choice}</span></div> {member.name}</div>;
   }
 
   export function renderVoteResults(members: member.Member[], votes: story.Vote[]): JSX.Element {
@@ -59,6 +59,18 @@ namespace story {
         let vote = votes.filter(v => v.userID == m.userID);
         return renderVoteResult(m, vote.length > 0 ? vote[0].choice : undefined);
       })}
+    </div>;
+  }
+
+  export function renderVoteSummary(votes: story.Vote[]): JSX.Element {
+    const results = getVoteResults(votes);
+    function trim(n: number) { return n.toString().substr(0, 4) }
+    return <div class="uk-flex uk-flex-wrap uk-flex-center result-container">
+      <div class="result"><div class="secondary uk-border-circle">{trim(results.count)} / {trim(votes.length)}</div> <div>votes counted</div></div>
+      <div class="result"><div class="secondary uk-border-circle">{trim(results.min)}-{trim(results.max)}</div> <div>vote range</div></div>
+      <div class="result mean-result"><div class={ "mean uk-border-circle " + system.cache.profile?.linkColor + "-border" }>{trim(results.mean)}</div> <div>average</div></div>
+      <div class="result"><div class="secondary uk-border-circle">{trim(results.median)}</div> <div>median</div></div>
+      <div class="result"><div class="secondary uk-border-circle">{trim(results.mode)}</div> <div>mode</div></div>
     </div>;
   }
 }

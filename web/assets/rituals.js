@@ -9,7 +9,6 @@ var estimate;
         Cache.prototype.activeVotes = function () {
             var _this = this;
             if (this.activeStory === undefined) {
-                console.log("!!!");
                 return [];
             }
             return this.votes.filter(function (x) { return x.storyID == _this.activeStory; });
@@ -211,9 +210,7 @@ var member;
             console.warn("multiple self entries found among members");
         }
         var others = system.cache.members.filter(function (x) { return !isSelf(x); });
-        var detail = util.req("#member-detail");
-        detail.innerHTML = "";
-        detail.appendChild(member_1.renderMembers(others));
+        util.setContent("#member-detail", member_1.renderMembers(others));
         renderOnline();
     }
     member_1.setMembers = setMembers;
@@ -525,17 +522,13 @@ var story;
 (function (story_1) {
     function setStories(stories) {
         estimate.cache.stories = stories;
-        var detail = util.req("#story-detail");
-        detail.innerHTML = "";
-        detail.appendChild(story_1.renderStories(stories));
+        util.setContent("#story-detail", story_1.renderStories(stories));
         UIkit.modal("#modal-add-story").hide();
     }
     story_1.setStories = setStories;
     function setVotes(votes) {
         estimate.cache.votes = votes;
-        if (estimate.cache.activeStory) {
-            viewVotes();
-        }
+        viewVotes();
     }
     story_1.setVotes = setVotes;
     function onSubmitStory() {
@@ -551,7 +544,6 @@ var story;
     story_1.onSubmitStory = onSubmitStory;
     function getActiveStory() {
         if (estimate.cache.activeStory === undefined) {
-            console.warn("no active story");
             return undefined;
         }
         var curr = estimate.cache.stories.filter(function (x) { return x.id === estimate.cache.activeStory; });
@@ -572,18 +564,7 @@ var story;
     }
     story_1.viewActiveStory = viewActiveStory;
     function viewStoryStatus(status) {
-        switch (status) {
-            case "pending":
-                break;
-            case "active":
-                viewVotes();
-                break;
-            case "complete":
-                viewVotes();
-                break;
-        }
-        for (var _i = 0, _a = util.els(".story-status-section"); _i < _a.length; _i++) {
-            var el = _a[_i];
+        function setActive(el, status) {
             var s = el.id.substr(el.id.lastIndexOf("-") + 1);
             if (s === status) {
                 el.classList.add("active");
@@ -592,6 +573,28 @@ var story;
                 el.classList.remove("active");
             }
         }
+        for (var _i = 0, _a = util.els(".story-status-body"); _i < _a.length; _i++) {
+            var el = _a[_i];
+            setActive(el, status);
+        }
+        for (var _b = 0, _c = util.els(".story-status-actions"); _b < _c.length; _b++) {
+            var el = _c[_b];
+            setActive(el, status);
+        }
+        var txt = "TODO";
+        switch (status) {
+            case "pending":
+                txt = "Story";
+                break;
+            case "active":
+                txt = "Voting";
+                break;
+            case "complete":
+                txt = "Results";
+                break;
+        }
+        util.req("#story-status").innerText = txt;
+        viewVotes();
     }
     function onVoteUpdate(vote) {
         var x = estimate.cache.votes;
@@ -604,24 +607,27 @@ var story;
     }
     story_1.onVoteUpdate = onVoteUpdate;
     function viewVotes() {
+        var story = getActiveStory();
+        if (story === undefined) {
+            return;
+        }
         var votes = estimate.cache.activeVotes();
         var activeVote = votes.filter(function (v) { return v.userID === system.cache.profile.userID; }).pop();
-        viewActiveVotes(votes, activeVote);
-        viewVoteResults(votes);
+        if (story.status.key == "active") {
+            viewActiveVotes(votes, activeVote);
+        }
+        if (story.status.key == "complete") {
+            viewVoteResults(votes);
+        }
     }
     story_1.viewVotes = viewVotes;
     function viewActiveVotes(votes, activeVote) {
-        var m = util.req("#story-vote-members");
-        m.innerHTML = "";
-        m.appendChild(story_1.renderVoteMembers(system.cache.members, votes));
-        var c = util.req("#story-vote-choices");
-        c.innerHTML = "";
-        c.appendChild(story_1.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
+        util.setContent("#story-vote-members", story_1.renderVoteMembers(system.cache.members, votes));
+        util.setContent("#story-vote-choices", story_1.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
     }
     function viewVoteResults(votes) {
-        var c = util.req("#story-vote-results");
-        c.innerHTML = "";
-        c.appendChild(story_1.renderVoteResults(system.cache.members, votes));
+        util.setContent("#story-vote-results", story_1.renderVoteResults(system.cache.members, votes));
+        util.setContent("#story-vote-summary", story_1.renderVoteSummary(votes));
     }
     function requestStoryStatus(s) {
         var story = getActiveStory();
@@ -638,6 +644,11 @@ var story;
     }
     story_1.requestStoryStatus = requestStoryStatus;
     function onStoryStatusChange(u) {
+        estimate.cache.stories.forEach(function (s) {
+            if (s.id == u.storyID) {
+                s.status = u.status;
+            }
+        });
         util.req("#story-" + u.storyID + " .story-status").innerText = u.status.key;
         viewStoryStatus(u.status.key);
     }
@@ -652,6 +663,37 @@ var story;
         socket.send(msg);
     }
     story_1.onSubmitVote = onSubmitVote;
+    function getVoteResults(votes) {
+        var floats = votes.map(function (v) {
+            var n = parseFloat(v.choice);
+            if (isNaN(n)) {
+                return -1;
+            }
+            return n;
+        }).filter(function (x) { return x !== -1; }).sort();
+        var count = floats.length;
+        var min = Math.min.apply(Math, floats);
+        var max = Math.max.apply(Math, floats);
+        var sum = floats.reduce(function (x, y) { return x + y; }, 0);
+        var mode = floats.reduce(function (current, item) {
+            var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+            if (val > current.greatestFreq) {
+                current.greatestFreq = val;
+                current.mode = item;
+            }
+            return current;
+        }, { mode: null, greatestFreq: -Infinity, numMapping: {} }).mode;
+        return {
+            count: count,
+            min: min,
+            max: max,
+            sum: sum,
+            mean: count == 0 ? 0 : sum / count,
+            median: count == 0 ? 0 : floats[Math.floor(floats.length / 2)],
+            mode: count == 0 ? 0 : mode
+        };
+    }
+    story_1.getVoteResults = getVoteResults;
 })(story || (story = {}));
 var util;
 (function (util) {
@@ -667,6 +709,12 @@ var util;
         return res[0];
     }
     util.req = req;
+    function setContent(path, el) {
+        var detail = util.req(path);
+        detail.innerHTML = "";
+        detail.appendChild(el);
+    }
+    util.setContent = setContent;
 })(util || (util = {}));
 var member;
 (function (member_3) {
@@ -731,14 +779,16 @@ var story;
     story_2.renderVoteChoices = renderVoteChoices;
     function renderVoteResult(member, choice) {
         if (choice === undefined) {
-            return JSX("div", { "class": "vote-member" },
+            return JSX("div", { "class": "vote-result" },
                 JSX("div", null,
-                    JSX("span", { "data-uk-icon": "icon: minus; ratio: 1.6" })),
+                    JSX("span", { "class": "uk-border-circle" },
+                        JSX("span", { "data-uk-icon": "icon: minus; ratio: 1.6" }))),
                 " ",
                 member.name);
         }
-        return JSX("div", { "class": "vote-member" },
-            JSX("div", null, choice),
+        return JSX("div", { "class": "vote-result" },
+            JSX("div", null,
+                JSX("span", { "class": "uk-border-circle" }, choice)),
             " ",
             member.name);
     }
@@ -749,4 +799,37 @@ var story;
         }));
     }
     story_2.renderVoteResults = renderVoteResults;
+    function renderVoteSummary(votes) {
+        var _a;
+        var results = story_2.getVoteResults(votes);
+        function trim(n) { return n.toString().substr(0, 4); }
+        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center result-container" },
+            JSX("div", { "class": "result" },
+                JSX("div", { "class": "secondary uk-border-circle" },
+                    trim(results.count),
+                    " / ",
+                    trim(votes.length)),
+                " ",
+                JSX("div", null, "votes counted")),
+            JSX("div", { "class": "result" },
+                JSX("div", { "class": "secondary uk-border-circle" },
+                    trim(results.min),
+                    "-",
+                    trim(results.max)),
+                " ",
+                JSX("div", null, "vote range")),
+            JSX("div", { "class": "result mean-result" },
+                JSX("div", { "class": "mean uk-border-circle " + ((_a = system.cache.profile) === null || _a === void 0 ? void 0 : _a.linkColor) + "-border" }, trim(results.mean)),
+                " ",
+                JSX("div", null, "average")),
+            JSX("div", { "class": "result" },
+                JSX("div", { "class": "secondary uk-border-circle" }, trim(results.median)),
+                " ",
+                JSX("div", null, "median")),
+            JSX("div", { "class": "result" },
+                JSX("div", { "class": "secondary uk-border-circle" }, trim(results.mode)),
+                " ",
+                JSX("div", null, "mode")));
+    }
+    story_2.renderVoteSummary = renderVoteSummary;
 })(story || (story = {}));

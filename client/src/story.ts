@@ -19,20 +19,25 @@ namespace story {
     created: string;
   }
 
+  export interface VoteResults {
+    count: number;
+    min: number;
+    max: number;
+    sum: number;
+    mean: number;
+    median: number;
+    mode: number;
+  }
+
   export function setStories(stories: Story[]) {
     estimate.cache.stories = stories;
-    const detail = util.req("#story-detail");
-    detail.innerHTML = "";
-    detail.appendChild(renderStories(stories));
-
+    util.setContent("#story-detail", renderStories(stories));
     UIkit.modal("#modal-add-story").hide();
   }
 
   export function setVotes(votes: Vote[]) {
     estimate.cache.votes = votes;
-    if (estimate.cache.activeStory) {
-      viewVotes();
-    }
+    viewVotes();
   }
 
   export function onSubmitStory() {
@@ -48,7 +53,6 @@ namespace story {
 
   function getActiveStory() {
     if (estimate.cache.activeStory === undefined) {
-      console.warn("no active story");
       return undefined;
     }
     const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory);
@@ -70,17 +74,7 @@ namespace story {
   }
 
   function viewStoryStatus(status: string) {
-    switch (status) {
-      case "pending":
-        break;
-      case "active":
-        viewVotes();
-        break;
-      case "complete":
-        viewVotes();
-        break;
-    }
-    for (let el of util.els(".story-status-section")) {
+    function setActive(el: HTMLElement, status: string) {
       const s = el.id.substr(el.id.lastIndexOf("-") + 1);
       if (s === status) {
         el.classList.add("active");
@@ -88,6 +82,29 @@ namespace story {
         el.classList.remove("active");
       }
     }
+
+    for (let el of util.els(".story-status-body")) {
+      setActive(el, status);
+    }
+    for (let el of util.els(".story-status-actions")) {
+      setActive(el, status);
+    }
+
+    let txt = "TODO";
+    switch(status) {
+      case "pending":
+        txt = "Story";
+        break;
+      case "active":
+        txt = "Voting";
+        break;
+      case "complete":
+        txt = "Results";
+        break;
+    }
+    util.req("#story-status").innerText = txt;
+
+    viewVotes();
   }
 
   export function onVoteUpdate(vote: Vote) {
@@ -101,27 +118,29 @@ namespace story {
   }
 
   export function viewVotes() {
+    const story = getActiveStory();
+    if (story === undefined) {
+      return;
+    }
     const votes = estimate.cache.activeVotes();
     const activeVote = votes.filter(v => v.userID === system.cache.profile!.userID).pop();
 
-    viewActiveVotes(votes, activeVote);
-    viewVoteResults(votes);
+    if (story.status.key == "active") {
+      viewActiveVotes(votes, activeVote);
+    }
+    if (story.status.key == "complete") {
+      viewVoteResults(votes);
+    }
   }
 
   function viewActiveVotes(votes: story.Vote[], activeVote: story.Vote | undefined) {
-    const m = util.req("#story-vote-members");
-    m.innerHTML = "";
-    m.appendChild(renderVoteMembers(system.cache.members, votes));
-
-    const c = util.req("#story-vote-choices");
-    c.innerHTML = "";
-    c.appendChild(renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
+    util.setContent("#story-vote-members", renderVoteMembers(system.cache.members, votes));
+    util.setContent("#story-vote-choices", renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
   }
 
   function viewVoteResults(votes: story.Vote[]) {
-    const c = util.req("#story-vote-results");
-    c.innerHTML = "";
-    c.appendChild(renderVoteResults(system.cache.members, votes));
+    util.setContent("#story-vote-results", renderVoteResults(system.cache.members, votes));
+    util.setContent("#story-vote-summary", renderVoteSummary(votes));
   }
 
   export function requestStoryStatus(s: string) {
@@ -139,6 +158,12 @@ namespace story {
   }
 
   export function onStoryStatusChange(u: estimate.StoryStatusUpdate) {
+    estimate.cache.stories.forEach(s => {
+      if (s.id == u.storyID) {
+        s.status = u.status;
+      }
+    });
+
     util.req("#story-" + u.storyID + " .story-status").innerText = u.status.key;
     viewStoryStatus(u.status.key);
   }
@@ -151,5 +176,41 @@ namespace story {
       param: {storyID: estimate.cache.activeStory, choice: choice},
     };
     socket.send(msg);
+  }
+
+  export function getVoteResults(votes: Vote[]): VoteResults {
+    let floats = votes.map(v => {
+      let n = parseFloat(v.choice);
+      if (isNaN(n)) {
+        return -1;
+      }
+      return n;
+    }).filter(x => x !== -1).sort();
+
+    let count = floats.length;
+
+    let min = Math.min(...floats);
+    let max = Math.max(...floats);
+
+    let sum = floats.reduce((x, y) => x + y, 0);
+
+    var mode = floats.reduce(function(current: any, item) {
+      var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+      if (val > current.greatestFreq) {
+        current.greatestFreq = val;
+        current.mode = item;
+      }
+      return current;
+    }, {mode: null, greatestFreq: -Infinity, numMapping: {}}).mode;
+
+    return {
+      count: count,
+      min: min,
+      max: max,
+      sum: sum,
+      mean: count == 0 ? 0 : sum / count,
+      median: count == 0 ? 0 : floats[Math.floor(floats.length / 2)],
+      mode: count == 0 ? 0 : mode
+    };
   }
 }

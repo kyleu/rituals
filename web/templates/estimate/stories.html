@@ -33,38 +33,37 @@
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
-      <h2 class="uk-modal-title" id="story-title">Story Detail</h2>
+      <h2 class="uk-modal-title" id="story-status">TODO</h2>
     </div>
-    <div id="story-status-section-pending" class="story-status-section active">
-      <div class="uk-modal-body" data-uk-overflow-auto>
-        <div class="modal-body-height-200">
-          <p>Pending!</p>
+    <div class="uk-modal-body" data-uk-overflow-auto>
+      <div id="story-title" class="uk-border-rounded">Story Detail</div>
+      <div class="modal-body-height">
+        <div id="story-status-body-pending" class="story-status-body active">
+          <p>Your story is ready to <a class="<%= ctx.Profile.LinkColor %>-fg" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a></p>
         </div>
-      </div>
-      <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Vote</button>
-      </div>
-    </div>
-    <div id="story-status-section-active" class="story-status-section">
-      <div class="uk-modal-body" data-uk-overflow-auto>
-        <div class="modal-body-height-200">
+        <div id="story-status-body-active" class="story-status-body">
           <div id="story-vote-members"></div>
           <hr />
           <div id="story-vote-choices"></div>
         </div>
-      </div>
-      <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('pending');">Edit</button>
-        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('complete');">Finish</button>
-      </div>
-    </div>
-    <div id="story-status-section-complete" class="story-status-section">
-      <div class="uk-modal-body" data-uk-overflow-auto>
-        <div class="modal-body-height-200">
+        <div id="story-status-body-complete" class="story-status-body">
           <div id="story-vote-results"></div>
+          <hr />
+          <div id="story-vote-summary"></div>
         </div>
       </div>
-      <div class="uk-modal-footer uk-text-right">
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div id="story-status-actions-pending" class="story-status-actions">
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Start Voting</button>
+      </div>
+
+      <div id="story-status-actions-active" class="story-status-actions">
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('pending');">Reset</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('complete');">Finish</button>
+      </div>
+
+      <div id="story-status-actions-complete" class="story-status-actions">
         <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Reopen</button>
         <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-story').hide();">Close</button>
       </div>
