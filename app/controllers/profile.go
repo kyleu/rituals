@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/kyleu/rituals.dev/app/web"
 
@@ -20,7 +21,10 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 func ProfileSave(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		ctx.Profile.Name = r.Form.Get("username")
+		ctx.Profile.Name = strings.TrimSpace(r.Form.Get("username"))
+		if ctx.Profile.Name == "" {
+			ctx.Profile.Name = "Guest"
+		}
 		ctx.Profile.Theme = util.ThemeFromString(r.Form.Get("theme"))
 		ctx.Profile.NavColor = r.Form.Get("navbar-color")
 		ctx.Profile.LinkColor = r.Form.Get("link-color")

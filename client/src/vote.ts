@@ -38,7 +38,7 @@ namespace vote {
       return;
     }
     const votes = estimate.cache.activeVotes();
-    const activeVote = votes.filter(v => v.userID === system.cache.profile!.userID).pop();
+    const activeVote = votes.filter(v => v.userID === system.cache.getProfile().userID).pop();
 
     if (s.status.key == "active") {
       viewActiveVotes(votes, activeVote);

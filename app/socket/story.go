@@ -28,7 +28,7 @@ func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]inter
 		return errors.WithStack(errors.Wrap(err, "cannot save new story"))
 	}
 	err = sendStoryUpdate(s, ch, story)
-	return errors.WithStack(errors.Wrap(err, "error sending stories"))
+	return errors.WithStack(errors.Wrap(err, "error sending story update"))
 }
 
 func onUpdateStory(s *Service) error {

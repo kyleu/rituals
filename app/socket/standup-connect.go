@@ -52,7 +52,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return err
 	}
 
-	updates, err := s.standups.GetUpdates(ch.ID)
+	reports, err := s.standups.GetReports(ch.ID)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 			Session: sess,
 			Members: members,
 			Online:  online,
-			Updates: updates,
+			Reports: reports,
 		},
 	}
 

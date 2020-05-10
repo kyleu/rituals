@@ -65,7 +65,7 @@ namespace estimate {
 
   function setEstimateDetail(detail: Detail) {
     cache.detail = detail;
-    util.req<HTMLInputElement>("#model-choices-input").value = detail.choices.join(", ");
+    util.setValue("#model-choices-input", detail.choices.join(", "));
     rituals.setDetail(detail);
   }
 

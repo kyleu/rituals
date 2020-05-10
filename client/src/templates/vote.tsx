@@ -17,7 +17,7 @@ namespace vote {
   export function renderVoteChoices(choices: string[], choice: string | undefined): JSX.Element {
     return <div class="uk-flex uk-flex-wrap uk-flex-center">
       {choices.map(c => <div
-        class={"vote-choice uk-border-circle uk-box-shadow-hover-medium" + (c === choice ? " active " + system.cache.profile!.linkColor + "-border" : "")}
+        class={"vote-choice uk-border-circle uk-box-shadow-hover-medium" + (c === choice ? " active " + system.cache.getProfile().linkColor + "-border" : "")}
         onclick={"vote.onSubmitVote('" + c + "');"}>{c}</div>)}
     </div>;
   }
@@ -44,7 +44,7 @@ namespace vote {
     return <div class="uk-flex uk-flex-wrap uk-flex-center result-container">
       <div class="result"><div class="secondary uk-border-circle">{trim(results.count)} / {trim(votes.length)}</div> <div>votes counted</div></div>
       <div class="result"><div class="secondary uk-border-circle">{trim(results.min)}-{trim(results.max)}</div> <div>vote range</div></div>
-      <div class="result mean-result"><div class={ "mean uk-border-circle " + system.cache.profile?.linkColor + "-border" }>{trim(results.mean)}</div> <div>average</div></div>
+      <div class="result mean-result"><div class={ "mean uk-border-circle " + system.cache.getProfile().linkColor + "-border" }>{trim(results.mean)}</div> <div>average</div></div>
       <div class="result"><div class="secondary uk-border-circle">{trim(results.median)}</div> <div>median</div></div>
       <div class="result"><div class="secondary uk-border-circle">{trim(results.mode)}</div> <div>mode</div></div>
     </div>;

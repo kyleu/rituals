@@ -1,14 +1,10 @@
 namespace member {
   function renderMember(member: Member): JSX.Element {
-    let profile = system.cache.profile;
-    if (profile === undefined) {
-      return <div class="uk-margin-bottom">error</div>;
-    } else {
-      return <div class="section" onclick={"events.openModal('member', '" + member.userID + "');"}>
-        <div title="user is offline" class="right uk-article-meta online-indicator">offline</div>
-        <div class={profile.linkColor + "-fg section-link"}>{member.name}</div>
-      </div>;
-    }
+    const profile = system.cache.getProfile();
+    return <div class="section" onclick={"events.openModal('member', '" + member.userID + "');"}>
+      <div title="user is offline" class="right uk-article-meta online-indicator">offline</div>
+      <div class={profile.linkColor + "-fg section-link"}>{member.name}</div>
+    </div>;
   }
 
   export function renderMembers(members: Member[]): JSX.Element {
@@ -23,5 +19,13 @@ namespace member {
         </li>)}
       </ul>;
     }
+  }
+
+  export function getMemberName(id: string) {
+    const ret = system.cache.members.filter(m => m.userID === id);
+    if(ret.length === 0) {
+      return id;
+    }
+    return ret[0].name;
   }
 }

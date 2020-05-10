@@ -61,12 +61,13 @@ create table if not exists "standup" (
   "created" timestamp not null default now()
 );
 
-create table "standup_update" (
+create table "report" (
   "id" uuid not null primary key,
   "standup_id" uuid not null references "standup"("id"),
   "d" date not null default now()::date,
   "author_id" uuid not null references "system_user"("id"),
   "content" text not null,
+  "html" text not null,
   "created" timestamp not null default now()
 );
 

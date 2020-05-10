@@ -21,9 +21,9 @@ namespace member {
   export function setMembers() {
     const self = system.cache.members.filter(isSelf);
     if (self.length === 1) {
-      util.req("#member-self .member-name").innerText = self[0].name;
-      util.req<HTMLInputElement>("#self-name-input").value = self[0].name;
-      util.req("#member-self .member-role").innerText = self[0].role.key;
+      util.setText("#member-self .member-name", self[0].name);
+      util.setValue("#self-name-input", self[0].name);
+      util.setText("#member-self .member-role", self[0].role.key);
     } else if (self.length === 0) {
       console.warn("self not found among members");
     } else {
@@ -111,7 +111,7 @@ namespace member {
     if (member === undefined) {
       return;
     }
-    util.req("#member-modal-name").innerText = member.name;
-    util.req("#member-modal-role").innerText = member.role.key;
+    util.setText("#member-modal-name", member.name);
+    util.setText("#member-modal-role", member.role.key);
   }
 }

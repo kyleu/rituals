@@ -11,6 +11,13 @@ namespace system {
 
     members: member.Member[] = [];
     online: string[] = [];
+
+    public getProfile(): rituals.Profile {
+      if(this.profile === undefined) {
+        throw "no active profile";
+      }
+      return this.profile;
+    }
   }
 
   export const cache = new Cache();
@@ -38,7 +45,7 @@ namespace command {
     setStoryStatus: "set-story-status",
     submitVote: "submit-vote",
 
-    addUpdate: "add-update"
+    addReport: "add-report"
   };
 
   export const server = {
@@ -54,5 +61,7 @@ namespace command {
     storyUpdate: "story-update",
     storyStatusChange: "story-status-change",
     voteUpdate: "vote-update",
+
+    reportUpdate: "report-update",
   };
 }

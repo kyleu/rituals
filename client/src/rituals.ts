@@ -54,8 +54,8 @@ namespace rituals {
 
   export function setDetail(session: Session) {
     system.cache.session = session;
-    util.req("#model-title").innerText = session.title;
-    util.req<HTMLInputElement>("#model-title-input").value = session.title;
+    util.setText("#model-title", session.title);
+    util.setValue("#model-title-input", session.title);
     let items = util.els("#navbar .uk-navbar-item");
     if (items.length > 0) {
       items[items.length - 1].innerText = session.title;

@@ -1,14 +1,10 @@
 namespace story {
   function renderStory(story: story.Story): JSX.Element {
-    let profile = system.cache.profile;
-    if (profile === undefined) {
-      return <li>profile error</li>;
-    } else {
-      return <li id={"story-" + story.id} class="section" onclick={"events.openModal('story', '" + story.id + "');"}>
-        <div class="right uk-article-meta story-status">{story.status.key}</div>
-        <div class={profile.linkColor + "-fg section-link"}>{story.title}</div>
-      </li>;
-    }
+    const profile = system.cache.getProfile();
+    return <li id={"story-" + story.id} class="section" onclick={"events.openModal('story', '" + story.id + "');"}>
+      <div class="right uk-article-meta story-status">{story.status.key}</div>
+      <div class={profile.linkColor + "-fg section-link"}>{story.title}</div>
+    </li>;
   }
 
   export function renderStories(stories: story.Story[]): JSX.Element {

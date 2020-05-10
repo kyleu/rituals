@@ -6,15 +6,13 @@ namespace events {
   export function openModal(key: string, id?: string) {
     switch (key) {
       case "session":
-        const sessionInput = util.req<HTMLInputElement>("#model-title-input");
-        sessionInput.value = util.req("#model-title").innerText;
+        const sessionInput = util.setValue("#model-title-input", util.req("#model-title").innerText);
         delay(() => sessionInput.focus());
         break;
 
       // member
       case "self":
-        const selfInput = util.req<HTMLInputElement>("#self-name-input");
-        selfInput.value = util.req("#member-self .member-name").innerText;
+        const selfInput = util.setValue("#self-name-input", util.req("#member-self .member-name").innerText);
         delay(() => selfInput.focus());
         break;
       case "invite":
@@ -26,8 +24,7 @@ namespace events {
 
       // estimate
       case "add-story":
-        const storyInput = util.req<HTMLInputElement>("#story-title-input");
-        storyInput.value = "";
+        const storyInput = util.setValue("#story-title-input", "");
         delay(() => storyInput.focus());
         break;
       case "story":
@@ -36,16 +33,15 @@ namespace events {
         break;
 
       // standup
-      case "add-update":
-        const updateDate = util.req<HTMLInputElement>("#standup-update-date");
-        updateDate.value = dateToYMD(new Date());
-        const updateInput = util.req<HTMLInputElement>("#standup-update-input");
-        updateInput.value = "";
-        delay(() => updateInput.focus());
+      case "add-report":
+        util.setValue("#standup-report-date", dateToYMD(new Date()));
+        const reportContent = util.setValue("#standup-report-content", "");
+        util.wireTextarea(reportContent as HTMLTextAreaElement);
+        delay(() => reportContent.focus());
         break;
-      case "update":
-        standup.cache.activeUpdate = id;
-        update.viewActiveUpdate();
+      case "report":
+        standup.cache.activeReport = id;
+        report.viewActiveReport();
         break;
 
       // default

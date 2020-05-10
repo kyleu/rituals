@@ -47,7 +47,7 @@ var estimate;
     estimate.onEstimateMessage = onEstimateMessage;
     function setEstimateDetail(detail) {
         estimate.cache.detail = detail;
-        util.req("#model-choices-input").value = detail.choices.join(", ");
+        util.setValue("#model-choices-input", detail.choices.join(", "));
         rituals.setDetail(detail);
     }
     function onSubmitEstimateSession() {
@@ -80,14 +80,12 @@ var events;
     function openModal(key, id) {
         switch (key) {
             case "session":
-                var sessionInput_1 = util.req("#model-title-input");
-                sessionInput_1.value = util.req("#model-title").innerText;
+                var sessionInput_1 = util.setValue("#model-title-input", util.req("#model-title").innerText);
                 delay(function () { return sessionInput_1.focus(); });
                 break;
             // member
             case "self":
-                var selfInput_1 = util.req("#self-name-input");
-                selfInput_1.value = util.req("#member-self .member-name").innerText;
+                var selfInput_1 = util.setValue("#self-name-input", util.req("#member-self .member-name").innerText);
                 delay(function () { return selfInput_1.focus(); });
                 break;
             case "invite":
@@ -98,8 +96,7 @@ var events;
                 break;
             // estimate
             case "add-story":
-                var storyInput_1 = util.req("#story-title-input");
-                storyInput_1.value = "";
+                var storyInput_1 = util.setValue("#story-title-input", "");
                 delay(function () { return storyInput_1.focus(); });
                 break;
             case "story":
@@ -107,16 +104,15 @@ var events;
                 story.viewActiveStory();
                 break;
             // standup
-            case "add-update":
-                var updateDate = util.req("#standup-update-date");
-                updateDate.value = dateToYMD(new Date());
-                var updateInput_1 = util.req("#standup-update-input");
-                updateInput_1.value = "";
-                delay(function () { return updateInput_1.focus(); });
+            case "add-report":
+                util.setValue("#standup-report-date", dateToYMD(new Date()));
+                var reportContent_1 = util.setValue("#standup-report-content", "");
+                util.wireTextarea(reportContent_1);
+                delay(function () { return reportContent_1.focus(); });
                 break;
-            case "update":
-                standup.cache.activeUpdate = id;
-                update.viewActiveUpdate();
+            case "report":
+                standup.cache.activeReport = id;
+                report.viewActiveReport();
                 break;
             // default
             default:
@@ -143,6 +139,12 @@ var system;
             this.members = [];
             this.online = [];
         }
+        Cache.prototype.getProfile = function () {
+            if (this.profile === undefined) {
+                throw "no active profile";
+            }
+            return this.profile;
+        };
         return Cache;
     }());
     system.cache = new Cache();
@@ -166,7 +168,7 @@ var command;
         updateStory: "update-story",
         setStoryStatus: "set-story-status",
         submitVote: "submit-vote",
-        addUpdate: "add-update"
+        addReport: "add-report"
     };
     command.server = {
         error: "error",
@@ -177,7 +179,8 @@ var command;
         onlineUpdate: "online-update",
         storyUpdate: "story-update",
         storyStatusChange: "story-status-change",
-        voteUpdate: "vote-update"
+        voteUpdate: "vote-update",
+        reportUpdate: "report-update"
     };
 })(command || (command = {}));
 // noinspection JSUnusedGlobalSymbols
@@ -221,9 +224,9 @@ var member;
     function setMembers() {
         var self = system.cache.members.filter(isSelf);
         if (self.length === 1) {
-            util.req("#member-self .member-name").innerText = self[0].name;
-            util.req("#self-name-input").value = self[0].name;
-            util.req("#member-self .member-role").innerText = self[0].role.key;
+            util.setText("#member-self .member-name", self[0].name);
+            util.setValue("#self-name-input", self[0].name);
+            util.setText("#member-self .member-role", self[0].role.key);
         }
         else if (self.length === 0) {
             console.warn("self not found among members");
@@ -311,11 +314,89 @@ var member;
         if (member === undefined) {
             return;
         }
-        util.req("#member-modal-name").innerText = member.name;
-        util.req("#member-modal-role").innerText = member.role.key;
+        util.setText("#member-modal-name", member.name);
+        util.setText("#member-modal-role", member.role.key);
     }
     member_1.viewActiveMember = viewActiveMember;
 })(member || (member = {}));
+var report;
+(function (report_1) {
+    function onSubmitReport() {
+        var d = util.req("#standup-report-date").value;
+        var content = util.req("#standup-report-content").value;
+        var msg = {
+            svc: services.standup,
+            cmd: command.client.addReport,
+            param: { d: d, content: content }
+        };
+        socket.send(msg);
+        return false;
+    }
+    report_1.onSubmitReport = onSubmitReport;
+    function getActiveReport() {
+        if (standup.cache.activeReport === undefined) {
+            console.warn("no active report");
+            return undefined;
+        }
+        var curr = standup.cache.reports.filter(function (x) { return x.id === standup.cache.activeReport; });
+        if (curr.length !== 1) {
+            console.log("cannot load active report [" + standup.cache.activeReport + "]");
+            return undefined;
+        }
+        return curr[0];
+    }
+    function viewActiveReport() {
+        var profile = system.cache.getProfile();
+        var report = getActiveReport();
+        if (report === undefined) {
+            return;
+        }
+        util.setText("#report-title", report.d + " / " + member.getMemberName(report.author));
+        var contentEdit = util.req("#modal-report .content-edit");
+        var contentEditTextarea = util.req(".uk-textarea", contentEdit);
+        var contentView = util.req("#modal-report .content-view");
+        var buttonsEdit = util.req("#modal-report .buttons-edit");
+        var buttonsView = util.req("#modal-report .buttons-view");
+        if (report.author === profile.userID) {
+            contentEdit.style.display = "block";
+            util.setValue(contentEditTextarea, report.content);
+            util.wireTextarea(contentEditTextarea);
+            contentView.style.display = "none";
+            util.setHTML(contentView, "");
+            buttonsEdit.style.display = "block";
+            buttonsView.style.display = "none";
+        }
+        else {
+            contentEdit.style.display = "none";
+            util.setValue(contentEditTextarea, "");
+            contentView.style.display = "block";
+            util.setHTML(contentView, report.html);
+            buttonsEdit.style.display = "none";
+            buttonsView.style.display = "block";
+        }
+        console.log("viewActiveReport: " + (report === null || report === void 0 ? void 0 : report.id));
+    }
+    report_1.viewActiveReport = viewActiveReport;
+    function setReports(reports) {
+        standup.cache.reports = reports;
+        util.setContent("#report-detail", report_1.renderReports(reports));
+        UIkit.modal("#modal-add-report").hide();
+    }
+    report_1.setReports = setReports;
+    function getReportDates(reports) {
+        function distinct(v, i, s) {
+            return s.indexOf(v) === i;
+        }
+        function toCollection(d) {
+            return {
+                "d": d,
+                "reports": reports.filter(function (r) { return r.d === d; })
+            };
+        }
+        return reports.map(function (r) { return r.d; }).filter(distinct).sort().reverse().map(toCollection);
+    }
+    report_1.getReportDates = getReportDates;
+})(report || (report = {}));
 var retro;
 (function (retro) {
     var Cache = /** @class */ (function () {
@@ -384,8 +465,8 @@ var rituals;
     rituals.onSocketMessage = onSocketMessage;
     function setDetail(session) {
         system.cache.session = session;
-        util.req("#model-title").innerText = session.title;
-        util.req("#model-title-input").value = session.title;
+        util.setText("#model-title", session.title);
+        util.setValue("#model-title-input", session.title);
         var items = util.els("#navbar .uk-navbar-item");
         if (items.length > 0) {
             items[items.length - 1].innerText = session.title;
@@ -504,7 +585,7 @@ var standup;
 (function (standup) {
     var Cache = /** @class */ (function () {
         function Cache() {
-            this.updates = [];
+            this.reports = [];
         }
         return Cache;
     }());
@@ -518,7 +599,7 @@ var standup;
                 var sj = param;
                 rituals.onSessionJoin(sj);
                 setStandupDetail(sj.session);
-                update.setUpdates(sj.updates);
+                report.setReports(sj.reports);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
@@ -584,7 +665,7 @@ var story;
             console.log("no active story");
             return;
         }
-        util.req("#story-title").innerText = s.title;
+        util.setText("#story-title", s.title);
         viewStoryStatus(s.status.key);
     }
     story_1.viewActiveStory = viewActiveStory;
@@ -618,7 +699,7 @@ var story;
                 txt = "Results";
                 break;
         }
-        util.req("#story-status").innerText = txt;
+        util.setText("#story-status", txt);
         vote.viewVotes();
     }
     function requestStoryStatus(s) {
@@ -677,31 +758,6 @@ var story;
         }
     }
 })(story || (story = {}));
-var update;
-(function (update) {
-    function onSubmitUpdate() {
-        var d = util.req("#standup-update-date").value;
-        var content = util.req("#standup-update-input").value;
-        var msg = {
-            svc: services.standup,
-            cmd: command.client.addUpdate,
-            param: { d: d, title: content }
-        };
-        socket.send(msg);
-        return false;
-    }
-    update.onSubmitUpdate = onSubmitUpdate;
-    function viewActiveUpdate() {
-        console.log("viewActiveUpdate");
-    }
-    update.viewActiveUpdate = viewActiveUpdate;
-    function setUpdates(updates) {
-        standup.cache.updates = updates;
-        util.setContent("#update-detail", update.renderUpdates(updates));
-        UIkit.modal("#modal-add-update").hide();
-    }
-    update.setUpdates = setUpdates;
-})(update || (update = {}));
 var util;
 (function (util) {
     function els(selector, context) {
@@ -724,12 +780,61 @@ var util;
         return res;
     }
     util.req = req;
-    function setContent(path, el) {
-        var detail = util.req(path);
-        detail.innerHTML = "";
-        detail.appendChild(el);
+    function setHTML(el, html) {
+        if (typeof el === "string") {
+            el = util.req(el);
+        }
+        el.innerHTML = html;
+        return el;
+    }
+    util.setHTML = setHTML;
+    function setContent(el, e) {
+        if (typeof el === "string") {
+            el = util.req(el);
+        }
+        el.innerHTML = "";
+        el.appendChild(e);
+        return el;
     }
     util.setContent = setContent;
+    function setText(el, text) {
+        if (typeof el === "string") {
+            el = util.req(el);
+        }
+        el.innerText = text;
+        return el;
+    }
+    util.setText = setText;
+    function setValue(el, text) {
+        if (typeof el === "string") {
+            el = util.req(el);
+        }
+        el.value = text;
+        return el;
+    }
+    util.setValue = setValue;
+    function wireTextarea(text) {
+        function resize() {
+            text.style.height = 'auto';
+            text.style.height = (text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)) + 'px';
+        }
+        function delayedResize() {
+            window.setTimeout(resize, 0);
+        }
+        var x = text.dataset["autoresize"];
+        if (x === undefined) {
+            text.dataset["autoresize"] = "true";
+            text.addEventListener('change', resize, false);
+            text.addEventListener('cut', delayedResize, false);
+            text.addEventListener('paste', delayedResize, false);
+            text.addEventListener('drop', delayedResize, false);
+            text.addEventListener('keydown', delayedResize, false);
+            text.focus();
+            text.select();
+        }
+        resize();
+    }
+    util.wireTextarea = wireTextarea;
 })(util || (util = {}));
 var vote;
 (function (vote) {
@@ -754,7 +859,7 @@ var vote;
             return;
         }
         var votes = estimate.cache.activeVotes();
-        var activeVote = votes.filter(function (v) { return v.userID === system.cache.profile.userID; }).pop();
+        var activeVote = votes.filter(function (v) { return v.userID === system.cache.getProfile().userID; }).pop();
         if (s.status.key == "active") {
             viewActiveVotes(votes, activeVote);
         }
@@ -816,15 +921,10 @@ var vote;
 var member;
 (function (member_3) {
     function renderMember(member) {
-        var profile = system.cache.profile;
-        if (profile === undefined) {
-            return JSX("div", { "class": "uk-margin-bottom" }, "error");
-        }
-        else {
-            return JSX("div", { "class": "section", onclick: "events.openModal('member', '" + member.userID + "');" },
-                JSX("div", { title: "user is offline", "class": "right uk-article-meta online-indicator" }, "offline"),
-                JSX("div", { "class": profile.linkColor + "-fg section-link" }, member.name));
-        }
+        var profile = system.cache.getProfile();
+        return JSX("div", { "class": "section", onclick: "events.openModal('member', '" + member.userID + "');" },
+            JSX("div", { title: "user is offline", "class": "right uk-article-meta online-indicator" }, "offline"),
+            JSX("div", { "class": profile.linkColor + "-fg section-link" }, member.name));
     }
     function renderMembers(members) {
         if (members.length === 0) {
@@ -836,19 +936,43 @@ var member;
         }
     }
     member_3.renderMembers = renderMembers;
+    function getMemberName(id) {
+        var ret = system.cache.members.filter(function (m) { return m.userID === id; });
+        if (ret.length === 0) {
+            return id;
+        }
+        return ret[0].name;
+    }
+    member_3.getMemberName = getMemberName;
 })(member || (member = {}));
+var report;
+(function (report) {
+    function renderReport(model) {
+        var profile = system.cache.getProfile();
+        return JSX("div", null,
+            JSX("a", { "class": profile.linkColor + "-fg", href: "", onclick: "return events.openModal('report', '" + model.id + "');" }, member.getMemberName(model.author)));
+    }
+    function renderReports(reports) {
+        if (reports.length === 0) {
+            return JSX("div", null,
+                JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('add-report');", type: "button" }, "Add Report"));
+        }
+        else {
+            var dates = report.getReportDates(reports);
+            return JSX("ul", { "class": "uk-list uk-list-divider" }, dates.map(function (day) { return JSX("li", { id: "report-date-" + day.d },
+                JSX("div", null, day.d),
+                JSX("ul", { "class": "uk-list" }, day.reports.map(function (r) { return JSX("li", null, renderReport(r)); }))); }));
+        }
+    }
+    report.renderReports = renderReports;
+})(report || (report = {}));
 var story;
 (function (story_2) {
     function renderStory(story) {
-        var profile = system.cache.profile;
-        if (profile === undefined) {
-            return JSX("li", null, "profile error");
-        }
-        else {
-            return JSX("li", { id: "story-" + story.id, "class": "section", onclick: "events.openModal('story', '" + story.id + "');" },
-                JSX("div", { "class": "right uk-article-meta story-status" }, story.status.key),
-                JSX("div", { "class": profile.linkColor + "-fg section-link" }, story.title));
-        }
+        var profile = system.cache.getProfile();
+        return JSX("li", { id: "story-" + story.id, "class": "section", onclick: "events.openModal('story', '" + story.id + "');" },
+            JSX("div", { "class": "right uk-article-meta story-status" }, story.status.key),
+            JSX("div", { "class": profile.linkColor + "-fg section-link" }, story.title));
     }
     function renderStories(stories) {
         if (stories.length === 0) {
@@ -879,29 +1003,6 @@ var story;
     }
     story_2.renderTotal = renderTotal;
 })(story || (story = {}));
-var update;
-(function (update_1) {
-    function renderUpdate(model) {
-        var profile = system.cache.profile;
-        if (profile === undefined) {
-            return JSX("div", { "class": "uk-margin-bottom" }, "error");
-        }
-        else {
-            return JSX("div", { "class": "section", onclick: "events.openModal('update', '" + model + "');" },
-                JSX("div", { "class": profile.linkColor + "-fg section-link" }, model.id));
-        }
-    }
-    function renderUpdates(updates) {
-        if (updates.length === 0) {
-            return JSX("div", null,
-                JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('add-stuff');", type: "button" }, "Add Update"));
-        }
-        else {
-            return JSX("ul", { "class": "uk-list uk-list-divider" }, updates.map(function (update) { return JSX("li", { id: "update-" + update.id }, renderUpdate(update)); }));
-        }
-    }
-    update_1.renderUpdates = renderUpdates;
-})(update || (update = {}));
 var vote;
 (function (vote_1) {
     function renderVoteMember(member, hasVote) {
@@ -915,7 +1016,7 @@ var vote;
     }
     vote_1.renderVoteMembers = renderVoteMembers;
     function renderVoteChoices(choices, choice) {
-        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center" }, choices.map(function (c) { return JSX("div", { "class": "vote-choice uk-border-circle uk-box-shadow-hover-medium" + (c === choice ? " active " + system.cache.profile.linkColor + "-border" : ""), onclick: "vote.onSubmitVote('" + c + "');" }, c); }));
+        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center" }, choices.map(function (c) { return JSX("div", { "class": "vote-choice uk-border-circle uk-box-shadow-hover-medium" + (c === choice ? " active " + system.cache.getProfile().linkColor + "-border" : ""), onclick: "vote.onSubmitVote('" + c + "');" }, c); }));
     }
     vote_1.renderVoteChoices = renderVoteChoices;
     function renderVoteResult(member, choice) {
@@ -941,7 +1042,6 @@ var vote;
     }
     vote_1.renderVoteResults = renderVoteResults;
     function renderVoteSummary(votes) {
-        var _a;
         var results = vote_1.getVoteResults(votes);
         function trim(n) { return n.toString().substr(0, 4); }
         return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center result-container" },
@@ -960,7 +1060,7 @@ var vote;
                 " ",
                 JSX("div", null, "vote range")),
             JSX("div", { "class": "result mean-result" },
-                JSX("div", { "class": "mean uk-border-circle " + ((_a = system.cache.profile) === null || _a === void 0 ? void 0 : _a.linkColor) + "-border" }, trim(results.mean)),
+                JSX("div", { "class": "mean uk-border-circle " + system.cache.getProfile().linkColor + "-border" }, trim(results.mean)),
                 " ",
                 JSX("div", null, "average")),
             JSX("div", { "class": "result" },

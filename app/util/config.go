@@ -23,7 +23,7 @@ const ClientCmdUpdateStory = "update-story"
 const ClientCmdSetStoryStatus = "set-story-status"
 const ClientCmdSubmitVote = "submit-vote"
 
-const ClientCmdAddUpdate = "add-update"
+const ClientCmdAddReport = "add-report"
 
 // Server Messages
 const ServerCmdError = "error"
@@ -38,3 +38,5 @@ const ServerCmdOnlineUpdate = "online-update"
 const ServerCmdStoryUpdate = "story-update"
 const ServerCmdStoryStatusChange = "story-status-change"
 const ServerCmdVoteUpdate = "vote-update"
+
+const ServerCmdReportUpdate = "report-update"

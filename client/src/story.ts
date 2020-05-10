@@ -48,7 +48,7 @@ namespace story {
       console.log("no active story");
       return;
     }
-    util.req("#story-title").innerText = s.title;
+    util.setText("#story-title", s.title);
     viewStoryStatus(s.status.key);
   }
 
@@ -81,7 +81,7 @@ namespace story {
         txt = "Results";
         break;
     }
-    util.req("#story-status").innerText = txt;
+    util.setText("#story-status", txt);
 
     vote.viewVotes();
   }

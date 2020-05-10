@@ -3,7 +3,8 @@ drop table if exists "story";
 drop table if exists "estimate_member";
 drop table if exists "estimate";
 
-drop table if exists "standup_update";
+drop table if exists "standup_update"; -- Legacy
+drop table if exists "report";
 drop table if exists "standup_member";
 drop table if exists "standup";
 

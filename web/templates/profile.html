@@ -86,9 +86,8 @@
 
 <script>
   function setNavColor(el, c) {
-    let input = document.getElementById("navbar-color");
-    input.value = c;
-    let nb = document.getElementById("navbar");
+    util.setValue("#navbar-color", c);
+    let nb = util.req("navbar");
     nb.className = (c + "-bg uk-navbar-container uk-navbar");
     let colors = document.querySelectorAll(".nav_swatch");
     colors.forEach(function(i) {
@@ -98,8 +97,7 @@
   }
 
   function setLinkColor(el, c) {
-    let input = document.getElementById("link-color");
-    input.value = c;
+    util.setValue("#link-color", c);
     let l = document.getElementById("link-example");
     l.className = (c + "-fg");
     let colors = document.querySelectorAll(".link_swatch");
