@@ -2,8 +2,10 @@ package estimate
 
 import (
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
+	"strconv"
 )
 
 func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Story, error) {
@@ -20,9 +22,9 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUI
 	return s.GetStoryByID(id)
 }
 
-func (s *Service) GetStories(id uuid.UUID) ([]Story, error) {
+func (s *Service) GetStories(estimateID uuid.UUID) ([]Story, error) {
 	var dtos []storyDTO
-	err := s.db.Select(&dtos, "select * from story where estimate_id = $1 order by idx", id)
+	err := s.db.Select(&dtos, "select * from story where estimate_id = $1 order by idx", estimateID)
 	if err != nil {
 		return nil, err
 	}
@@ -52,15 +54,49 @@ func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 	return &ret, nil
 }
 
-func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, error) {
+func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, string, error) {
 	story, err := s.GetStoryByID(storyID)
 	if err != nil {
-		return false, errors.WithStack(errors.Wrap(err, "cannot load story ["+storyID.String()+"]"))
+		return false, "", errors.WithStack(errors.Wrap(err, "cannot load story ["+storyID.String()+"]"))
 	}
 	if story.Status == status {
-		return false, nil
+		return false, "", nil
 	}
-	q := "update story set status = $1 where id = $2"
-	_, err = s.db.Exec(q, status.String(), storyID)
-	return true, errors.WithStack(errors.Wrap(err, "error updating story status"))
+
+	finalVote := ""
+	if status == StoryStatusComplete {
+		votes, err := s.GetStoryVotes(storyID)
+		if err != nil {
+			return false, finalVote, errors.WithStack(errors.Wrap(err, "cannot load story votes for ["+storyID.String()+"]"))
+		}
+		finalVote = calcFinalVote(votes)
+	}
+	q := "update story set status = $1, final_vote = $2 where id = $3"
+	_, err = s.db.Exec(q, status.String(), finalVote, storyID)
+	return true, finalVote, errors.WithStack(errors.Wrap(err, "error updating story status"))
+}
+
+func calcFinalVote(votes []Vote) string {
+	choices := make([]float64, 0)
+	for _, v := range votes {
+		f, err := strconv.ParseFloat(v.Choice, 64)
+		if err == nil {
+			choices = append(choices, f)
+		}
+	}
+
+	sum := float64(0)
+	for _, f := range choices {
+		sum += f
+	}
+
+	final := float64(0)
+	if len(choices) > 0 {
+		final = sum / float64(len(choices))
+	}
+	ret := fmt.Sprintf("%v", final)
+	if (len(ret) < 4) {
+		return ret
+	}
+	return ret[0:4]
 }

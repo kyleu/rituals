@@ -5,12 +5,20 @@ namespace util {
     return UIkit.util.$$(selector, context) as T[];
   }
 
-  export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {
+  export function opt<T extends HTMLElement>(selector: string, context?: HTMLElement): T | null {
     const res = util.els<T>(selector, context);
     if (res.length === 0) {
-      console.error("no element found for selector [" + selector + "]");
+      return null;
     }
     return res[0];
+  }
+
+  export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {
+    const res = util.opt<T>(selector, context);
+    if (res === null) {
+      console.error("no element found for selector [" + selector + "]");
+    }
+    return res!;
   }
 
   export function setContent(path: string, el: JSX.Element) {

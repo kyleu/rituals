@@ -15,6 +15,7 @@ type StandupSessionJoined struct {
 	Session *standup.Session `json:"session"`
 	Members []member.Entry   `json:"members"`
 	Online  []uuid.UUID      `json:"online"`
+	Updates []standup.Update `json:"updates"`
 }
 
 func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
@@ -24,6 +25,8 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 		err = onStandupConnect(s, conn, userID, param.(string))
 	case util.ClientCmdUpdateSession:
 		err = onStandupSessionSave(s, *conn.Channel, param.(map[string]interface{}))
+	case util.ClientCmdAddUpdate:
+		err = onAddUpdate(s, *conn.Channel, userID, param.(map[string]interface{}))
 	default:
 		err = errors.New("unhandled standup command [" + cmd + "]")
 	}
@@ -55,4 +58,3 @@ func sendStandupSessionUpdate(s *Service, ch channel) error {
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending standup session"))
 }
-

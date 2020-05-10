@@ -12203,7 +12203,7 @@ h4 {
 }
 
 .modal-title {
-  cursor: default;
+  cursor: pointer;
 }
 
 .modal-body-height {
@@ -12302,11 +12302,18 @@ html.uk-dark, body.uk-dark {
 }
 
 .member-name {
-  cursor: default;
+  cursor: pointer;
 }
 
 #model-title {
-  cursor: default;
+  cursor: pointer;
+}
+
+.section {
+  cursor: pointer;
+}
+.section:hover .section-link {
+  text-decoration: underline;
 }
 
 #story-title {
@@ -12396,4 +12403,15 @@ html.uk-dark, body.uk-dark {
 
 .uk-dark #story-vote-summary .uk-border-circle {
   border-color: #ddd;
+}
+
+.vote-badge {
+  border: 1px solid #666;
+  padding: 4px 8px;
+  color: #fff;
+}
+
+.uk-dark .vote-badge {
+  border-color: #ddd;
+  color: #000;
 }

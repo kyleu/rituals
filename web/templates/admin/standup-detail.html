@@ -1,4 +1,4 @@
-<%: func AdminStandupDetail(model *standup.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminStandupDetail(model *standup.Session, members []member.Entry, updates []standup.Update, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -6,7 +6,10 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <h3 class="uk-card-title">Daily Standup</h3>
+      <h3 class="uk-card-title">
+        <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcStandup, `key`, model.Slug) %>">Join</a></div>
+        Daily Standup
+      </h3>
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
@@ -31,11 +34,26 @@
           </tr>
           <tr>
             <th>Created</th>
-            <td><%=v model.Created %></td>
+            <td><% ComponentDateTime(&model.Created, _buffer) %></td>
           </tr>
-
         </tbody>
       </table>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Members</h3>
+      <% if len(members) == 0 { %>
+      <p>No members available</p>
+      <% } else { %>
+      <% AdminMemberTable(members, ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Updates</h3>
+      <% if len(updates) == 0 { %>
+      <p>No updates available</p>
+      <% } else { %>
+      <% AdminUpdateTable(updates, ctx, _buffer) %>
+      <% } %>
     </div>
   </div>
 </div>

@@ -38,12 +38,17 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		members, err := ctx.App.Retro.Members.GetByModelID(retroID)
+		if err != nil {
+			return "", err
+		}
+
 		ctx.Title = retro.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retro")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroIDString), retro.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminRetroDetail(retro, ctx, w))
+		return tmpl(templates.AdminRetroDetail(retro, members, ctx, w))
 	})
 }

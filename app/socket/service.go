@@ -43,25 +43,26 @@ func NewSocketService(logger logur.LoggerFacade, users *user.Service, estimates 
 }
 
 var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
+var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem, ChannelID: &systemID}
 
 func (s *Service) List() ([]*Status, error) {
 	ret := make([]*Status, 0)
-	ret = append(ret, &Status{ID: systemID, UserID: systemID})
+	ret = append(ret, &systemStatus)
 	for _, conn := range s.connections {
-		ret = append(ret, &Status{ID: conn.ID, UserID: conn.Profile.UserID})
+		ret = append(ret, conn.ToStatus())
 	}
 	return ret, nil
 }
 
 func (s *Service) GetByID(id uuid.UUID) (*Status, error) {
 	if id == systemID {
-		return &Status{ID: systemID, UserID: systemID}, nil
+		return &systemStatus, nil
 	}
 	conn, ok := s.connections[id]
 	if !ok {
 		return nil, errors.New("invalid connection [" + id.String() + "]")
 	}
-	return &Status{ID: conn.ID, UserID: conn.Profile.UserID}, nil
+	return conn.ToStatus(), nil
 }
 
 func onMessage(s *Service, connID uuid.UUID, message Message) error {

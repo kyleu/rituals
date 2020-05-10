@@ -11,8 +11,9 @@ import (
 )
 
 type StoryStatusChange struct {
-	StoryID uuid.UUID            `json:"storyID"`
-	Status  estimate.StoryStatus `json:"status"`
+	StoryID   uuid.UUID            `json:"storyID"`
+	Status    estimate.StoryStatus `json:"status"`
+	FinalVote string               `json:"finalVote"`
 }
 
 func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
@@ -43,13 +44,14 @@ func onSetStoryStatus(s *Service, ch channel, m map[string]interface{}) error {
 	}
 	statusString := m["status"].(string)
 	status := estimate.StoryStatusFromString(statusString)
-	changed, err := s.estimates.SetStoryStatus(storyID, status)
+	changed, finalVote, err := s.estimates.SetStoryStatus(storyID, status)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update status of story ["+storyIDString+"]"))
 	}
 
 	if changed {
-		msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryStatusChange, Param: StoryStatusChange{StoryID: storyID, Status: status}}
+		param := StoryStatusChange{StoryID: storyID, Status: status, FinalVote: finalVote}
+		msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryStatusChange, Param: param}
 		err := s.WriteChannel(ch, &msg)
 		return errors.WithStack(errors.Wrap(err, "error sending story update"))
 	}

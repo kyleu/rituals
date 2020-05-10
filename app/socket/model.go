@@ -20,9 +20,19 @@ type connection struct {
 	mu      sync.Mutex
 }
 
+func (c *connection) ToStatus() *Status {
+	if c.Channel == nil {
+		return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: "", ChannelID: nil}
+	}
+	return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: c.Channel.Svc, ChannelID: &c.Channel.ID}
+}
+
 type Status struct {
-	ID     uuid.UUID `json:"id"`
-	UserID uuid.UUID `json:"userID"`
+	ID         uuid.UUID `json:"id"`
+	UserID     uuid.UUID `json:"userID"`
+	Username   string
+	ChannelSvc string
+	ChannelID  *uuid.UUID
 }
 
 type Message struct {

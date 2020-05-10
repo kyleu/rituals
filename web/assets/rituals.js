@@ -26,7 +26,7 @@ var estimate;
                 rituals.onSessionJoin(sj);
                 setEstimateDetail(sj.session);
                 story.setStories(sj.stories);
-                story.setVotes(sj.votes);
+                vote.setVotes(sj.votes);
                 break;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
@@ -38,7 +38,7 @@ var estimate;
                 story.onStoryStatusChange(param);
                 break;
             case command.server.voteUpdate:
-                story.onVoteUpdate(param);
+                vote.onVoteUpdate(param);
                 break;
             default:
                 console.warn("unhandled command [" + cmd + "] for estimate");
@@ -79,15 +79,16 @@ var events;
     }
     function openModal(key, id) {
         switch (key) {
-            case "self":
-                var selfInput_1 = util.req("#self-name-input");
-                selfInput_1.value = util.req("#member-self .member-name").innerText;
-                delay(function () { return selfInput_1.focus(); });
-                break;
             case "session":
                 var sessionInput_1 = util.req("#model-title-input");
                 sessionInput_1.value = util.req("#model-title").innerText;
                 delay(function () { return sessionInput_1.focus(); });
+                break;
+            // member
+            case "self":
+                var selfInput_1 = util.req("#self-name-input");
+                selfInput_1.value = util.req("#member-self .member-name").innerText;
+                delay(function () { return selfInput_1.focus(); });
                 break;
             case "invite":
                 break;
@@ -95,6 +96,7 @@ var events;
                 system.cache.activeMember = id;
                 member.viewActiveMember();
                 break;
+            // estimate
             case "add-story":
                 var storyInput_1 = util.req("#story-title-input");
                 storyInput_1.value = "";
@@ -104,6 +106,19 @@ var events;
                 estimate.cache.activeStory = id;
                 story.viewActiveStory();
                 break;
+            // standup
+            case "add-update":
+                var updateDate = util.req("#standup-update-date");
+                updateDate.value = dateToYMD(new Date());
+                var updateInput_1 = util.req("#standup-update-input");
+                updateInput_1.value = "";
+                delay(function () { return updateInput_1.focus(); });
+                break;
+            case "update":
+                standup.cache.activeUpdate = id;
+                update.viewActiveUpdate();
+                break;
+            // default
             default:
                 console.debug("unhandled modal [" + key + "]");
         }
@@ -111,6 +126,12 @@ var events;
         return false;
     }
     events.openModal = openModal;
+    function dateToYMD(date) {
+        var d = date.getDate();
+        var m = date.getMonth() + 1;
+        var y = date.getFullYear();
+        return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    }
 })(events || (events = {}));
 var system;
 (function (system) {
@@ -144,7 +165,8 @@ var command;
         addStory: "add-story",
         updateStory: "update-story",
         setStoryStatus: "set-story-status",
-        submitVote: "submit-vote"
+        submitVote: "submit-vote",
+        addUpdate: "add-update"
     };
     command.server = {
         error: "error",
@@ -220,12 +242,15 @@ var member;
         }
         var x = system.cache.members;
         x = x.filter(function (m) { return m.userID !== member.userID; });
+        if (x.length === system.cache.members.length) {
+            UIkit.notification(member.name + " has joined", { status: "success", pos: "top-right" });
+        }
         x.push(member);
         x = x.sort(function (l, r) { return (l.name > r.name) ? 1 : -1; });
         system.cache.members = x;
         setMembers();
         if (estimate.cache.activeStory) {
-            story.viewVotes();
+            vote.viewVotes();
         }
     }
     member_1.onMemberUpdate = onMemberUpdate;
@@ -479,10 +504,11 @@ var standup;
 (function (standup) {
     var Cache = /** @class */ (function () {
         function Cache() {
+            this.updates = [];
         }
         return Cache;
     }());
-    var cache = new Cache();
+    standup.cache = new Cache();
     function onStandupMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
@@ -492,6 +518,7 @@ var standup;
                 var sj = param;
                 rituals.onSessionJoin(sj);
                 setStandupDetail(sj.session);
+                update.setUpdates(sj.updates);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
@@ -502,7 +529,7 @@ var standup;
     }
     standup.onStandupMessage = onStandupMessage;
     function setStandupDetail(detail) {
-        cache.detail = detail;
+        standup.cache.detail = detail;
         rituals.setDetail(detail);
     }
     function onSubmitStandupSession() {
@@ -523,14 +550,11 @@ var story;
     function setStories(stories) {
         estimate.cache.stories = stories;
         util.setContent("#story-detail", story_1.renderStories(stories));
+        stories.forEach(function (s) { return setStoryStatus(s.id, s.status.key, s, false); });
+        showTotalIfNeeded();
         UIkit.modal("#modal-add-story").hide();
     }
     story_1.setStories = setStories;
-    function setVotes(votes) {
-        estimate.cache.votes = votes;
-        viewVotes();
-    }
-    story_1.setVotes = setVotes;
     function onSubmitStory() {
         var title = util.req("#story-title-input").value;
         var msg = {
@@ -553,14 +577,15 @@ var story;
         }
         return curr[0];
     }
+    story_1.getActiveStory = getActiveStory;
     function viewActiveStory() {
-        var story = getActiveStory();
-        if (story === undefined) {
+        var s = getActiveStory();
+        if (s === undefined) {
             console.log("no active story");
             return;
         }
-        util.req("#story-title").innerText = story.title;
-        viewStoryStatus(story.status.key);
+        util.req("#story-title").innerText = s.title;
+        viewStoryStatus(s.status.key);
     }
     story_1.viewActiveStory = viewActiveStory;
     function viewStoryStatus(status) {
@@ -581,7 +606,7 @@ var story;
             var el = _c[_b];
             setActive(el, status);
         }
-        var txt = "TODO";
+        var txt = "";
         switch (status) {
             case "pending":
                 txt = "Story";
@@ -594,40 +619,7 @@ var story;
                 break;
         }
         util.req("#story-status").innerText = txt;
-        viewVotes();
-    }
-    function onVoteUpdate(vote) {
-        var x = estimate.cache.votes;
-        x = x.filter(function (v) { return v.userID != vote.userID || v.storyID != vote.storyID; });
-        x.push(vote);
-        estimate.cache.votes = x;
-        if (vote.storyID === estimate.cache.activeStory) {
-            viewVotes();
-        }
-    }
-    story_1.onVoteUpdate = onVoteUpdate;
-    function viewVotes() {
-        var story = getActiveStory();
-        if (story === undefined) {
-            return;
-        }
-        var votes = estimate.cache.activeVotes();
-        var activeVote = votes.filter(function (v) { return v.userID === system.cache.profile.userID; }).pop();
-        if (story.status.key == "active") {
-            viewActiveVotes(votes, activeVote);
-        }
-        if (story.status.key == "complete") {
-            viewVoteResults(votes);
-        }
-    }
-    story_1.viewVotes = viewVotes;
-    function viewActiveVotes(votes, activeVote) {
-        util.setContent("#story-vote-members", story_1.renderVoteMembers(system.cache.members, votes));
-        util.setContent("#story-vote-choices", story_1.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
-    }
-    function viewVoteResults(votes) {
-        util.setContent("#story-vote-results", story_1.renderVoteResults(system.cache.members, votes));
-        util.setContent("#story-vote-summary", story_1.renderVoteSummary(votes));
+        vote.viewVotes();
     }
     function requestStoryStatus(s) {
         var story = getActiveStory();
@@ -643,16 +635,142 @@ var story;
         socket.send(msg);
     }
     story_1.requestStoryStatus = requestStoryStatus;
+    function setStoryStatus(storyID, status, currStory, calcTotal) {
+        if (currStory !== null && currStory.status.key == "complete") {
+            if (currStory.finalVote.length > 0) {
+                status = currStory.finalVote;
+            }
+        }
+        util.setContent("#story-" + storyID + " .story-status", story_1.renderStatus(status));
+        if (calcTotal) {
+            showTotalIfNeeded();
+        }
+    }
     function onStoryStatusChange(u) {
+        var currStory = null;
         estimate.cache.stories.forEach(function (s) {
             if (s.id == u.storyID) {
+                currStory = s;
+                s.finalVote = u.finalVote;
                 s.status = u.status;
             }
         });
-        util.req("#story-" + u.storyID + " .story-status").innerText = u.status.key;
-        viewStoryStatus(u.status.key);
+        setStoryStatus(u.storyID, u.status.key, currStory, true);
+        if (u.storyID === estimate.cache.activeStory) {
+            viewStoryStatus(u.status.key);
+        }
     }
     story_1.onStoryStatusChange = onStoryStatusChange;
+    function showTotalIfNeeded() {
+        var stories = estimate.cache.stories;
+        var strings = stories.filter(function (s) { return s.status.key === "complete"; }).map(function (s) { return s.finalVote; }).filter(function (c) { return c.length > 0; });
+        var floats = strings.map(function (c) { return parseFloat(c); }).filter(function (f) { return !isNaN(f); });
+        var sum = 0;
+        floats.forEach(function (f) { return sum += f; });
+        var curr = util.opt("#story-total");
+        var panel = util.req("#story-list");
+        if (curr !== null) {
+            panel.removeChild(curr);
+        }
+        if (sum > 0) {
+            panel.appendChild(story_1.renderTotal(sum));
+        }
+    }
+})(story || (story = {}));
+var update;
+(function (update) {
+    function onSubmitUpdate() {
+        var d = util.req("#standup-update-date").value;
+        var content = util.req("#standup-update-input").value;
+        var msg = {
+            svc: services.standup,
+            cmd: command.client.addUpdate,
+            param: { d: d, title: content }
+        };
+        socket.send(msg);
+        return false;
+    }
+    update.onSubmitUpdate = onSubmitUpdate;
+    function viewActiveUpdate() {
+        console.log("viewActiveUpdate");
+    }
+    update.viewActiveUpdate = viewActiveUpdate;
+    function setUpdates(updates) {
+        standup.cache.updates = updates;
+        util.setContent("#update-detail", update.renderUpdates(updates));
+        UIkit.modal("#modal-add-update").hide();
+    }
+    update.setUpdates = setUpdates;
+})(update || (update = {}));
+var util;
+(function (util) {
+    function els(selector, context) {
+        return UIkit.util.$$(selector, context);
+    }
+    util.els = els;
+    function opt(selector, context) {
+        var res = util.els(selector, context);
+        if (res.length === 0) {
+            return null;
+        }
+        return res[0];
+    }
+    util.opt = opt;
+    function req(selector, context) {
+        var res = util.opt(selector, context);
+        if (res === null) {
+            console.error("no element found for selector [" + selector + "]");
+        }
+        return res;
+    }
+    util.req = req;
+    function setContent(path, el) {
+        var detail = util.req(path);
+        detail.innerHTML = "";
+        detail.appendChild(el);
+    }
+    util.setContent = setContent;
+})(util || (util = {}));
+var vote;
+(function (vote) {
+    function setVotes(votes) {
+        estimate.cache.votes = votes;
+        viewVotes();
+    }
+    vote.setVotes = setVotes;
+    function onVoteUpdate(v) {
+        var x = estimate.cache.votes;
+        x = x.filter(function (v) { return v.userID != v.userID || v.storyID != v.storyID; });
+        x.push(v);
+        estimate.cache.votes = x;
+        if (v.storyID === estimate.cache.activeStory) {
+            viewVotes();
+        }
+    }
+    vote.onVoteUpdate = onVoteUpdate;
+    function viewVotes() {
+        var s = story.getActiveStory();
+        if (s === undefined) {
+            return;
+        }
+        var votes = estimate.cache.activeVotes();
+        var activeVote = votes.filter(function (v) { return v.userID === system.cache.profile.userID; }).pop();
+        if (s.status.key == "active") {
+            viewActiveVotes(votes, activeVote);
+        }
+        if (s.status.key == "complete") {
+            viewVoteResults(votes);
+        }
+    }
+    vote.viewVotes = viewVotes;
+    function viewActiveVotes(votes, activeVote) {
+        util.setContent("#story-vote-members", vote.renderVoteMembers(system.cache.members, votes));
+        util.setContent("#story-vote-choices", vote.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
+    }
+    function viewVoteResults(votes) {
+        util.setContent("#story-vote-results", vote.renderVoteResults(system.cache.members, votes));
+        util.setContent("#story-vote-summary", vote.renderVoteSummary(votes));
+    }
     // noinspection JSUnusedGlobalSymbols
     function onSubmitVote(choice) {
         var msg = {
@@ -662,7 +780,7 @@ var story;
         };
         socket.send(msg);
     }
-    story_1.onSubmitVote = onSubmitVote;
+    vote.onSubmitVote = onSubmitVote;
     function getVoteResults(votes) {
         var floats = votes.map(function (v) {
             var n = parseFloat(v.choice);
@@ -693,29 +811,8 @@ var story;
             mode: count == 0 ? 0 : mode
         };
     }
-    story_1.getVoteResults = getVoteResults;
-})(story || (story = {}));
-var util;
-(function (util) {
-    function els(selector, context) {
-        return UIkit.util.$$(selector, context);
-    }
-    util.els = els;
-    function req(selector, context) {
-        var res = util.els(selector, context);
-        if (res.length === 0) {
-            console.error("no element found for selector [" + selector + "]");
-        }
-        return res[0];
-    }
-    util.req = req;
-    function setContent(path, el) {
-        var detail = util.req(path);
-        detail.innerHTML = "";
-        detail.appendChild(el);
-    }
-    util.setContent = setContent;
-})(util || (util = {}));
+    vote.getVoteResults = getVoteResults;
+})(vote || (vote = {}));
 var member;
 (function (member_3) {
     function renderMember(member) {
@@ -724,9 +821,9 @@ var member;
             return JSX("div", { "class": "uk-margin-bottom" }, "error");
         }
         else {
-            return JSX("div", null,
+            return JSX("div", { "class": "section", onclick: "events.openModal('member', '" + member.userID + "');" },
                 JSX("div", { title: "user is offline", "class": "right uk-article-meta online-indicator" }, "offline"),
-                JSX("a", { "class": profile.linkColor + "-fg", href: "", onclick: "return events.openModal('member', '" + member.userID + "');" }, member.name));
+                JSX("div", { "class": profile.linkColor + "-fg section-link" }, member.name));
         }
     }
     function renderMembers(members) {
@@ -748,9 +845,9 @@ var story;
             return JSX("li", null, "profile error");
         }
         else {
-            return JSX("li", { id: "story-" + story.id },
+            return JSX("li", { id: "story-" + story.id, "class": "section", onclick: "events.openModal('story', '" + story.id + "');" },
                 JSX("div", { "class": "right uk-article-meta story-status" }, story.status.key),
-                JSX("a", { "class": profile.linkColor + "-fg", href: "", onclick: "return events.openModal('story', '" + story.id + "');" }, story.title));
+                JSX("div", { "class": profile.linkColor + "-fg section-link" }, story.title));
         }
     }
     function renderStories(stories) {
@@ -759,10 +856,54 @@ var story;
                 JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('add-story');", type: "button" }, "Add Story"));
         }
         else {
-            return JSX("ul", { "class": "uk-list uk-list-divider" }, stories.map(function (s) { return renderStory(s); }));
+            return JSX("ul", { id: "story-list", "class": "uk-list uk-list-divider" }, stories.map(function (s) { return renderStory(s); }));
         }
     }
     story_2.renderStories = renderStories;
+    function renderStatus(status) {
+        switch (status) {
+            case "pending":
+                return JSX("span", null, status);
+            case "active":
+                return JSX("span", null, status);
+            default:
+                return JSX("span", { "class": "vote-badge uk-border-rounded" }, status);
+        }
+    }
+    story_2.renderStatus = renderStatus;
+    function renderTotal(sum) {
+        return JSX("li", { id: "story-total" },
+            JSX("div", { "class": "right uk-article-meta" },
+                JSX("span", { "class": "vote-badge uk-border-rounded" }, sum)),
+            " Total");
+    }
+    story_2.renderTotal = renderTotal;
+})(story || (story = {}));
+var update;
+(function (update_1) {
+    function renderUpdate(model) {
+        var profile = system.cache.profile;
+        if (profile === undefined) {
+            return JSX("div", { "class": "uk-margin-bottom" }, "error");
+        }
+        else {
+            return JSX("div", { "class": "section", onclick: "events.openModal('update', '" + model + "');" },
+                JSX("div", { "class": profile.linkColor + "-fg section-link" }, model.id));
+        }
+    }
+    function renderUpdates(updates) {
+        if (updates.length === 0) {
+            return JSX("div", null,
+                JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('add-stuff');", type: "button" }, "Add Update"));
+        }
+        else {
+            return JSX("ul", { "class": "uk-list uk-list-divider" }, updates.map(function (update) { return JSX("li", { id: "update-" + update.id }, renderUpdate(update)); }));
+        }
+    }
+    update_1.renderUpdates = renderUpdates;
+})(update || (update = {}));
+var vote;
+(function (vote_1) {
     function renderVoteMember(member, hasVote) {
         return JSX("div", { "class": "vote-member", title: member.name + " has " + (hasVote ? "voted" : "not voted") },
             JSX("div", null,
@@ -772,11 +913,11 @@ var story;
     function renderVoteMembers(members, votes) {
         return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-around" }, members.map(function (m) { return renderVoteMember(m, votes.filter(function (v) { return v.userID == m.userID; }).length > 0); }));
     }
-    story_2.renderVoteMembers = renderVoteMembers;
+    vote_1.renderVoteMembers = renderVoteMembers;
     function renderVoteChoices(choices, choice) {
-        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center" }, choices.map(function (c) { return JSX("div", { "class": "vote-choice uk-border-circle uk-box-shadow-hover-medium" + (c === choice ? " active " + system.cache.profile.linkColor + "-border" : ""), onclick: "story.onSubmitVote('" + c + "');" }, c); }));
+        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center" }, choices.map(function (c) { return JSX("div", { "class": "vote-choice uk-border-circle uk-box-shadow-hover-medium" + (c === choice ? " active " + system.cache.profile.linkColor + "-border" : ""), onclick: "vote.onSubmitVote('" + c + "');" }, c); }));
     }
-    story_2.renderVoteChoices = renderVoteChoices;
+    vote_1.renderVoteChoices = renderVoteChoices;
     function renderVoteResult(member, choice) {
         if (choice === undefined) {
             return JSX("div", { "class": "vote-result" },
@@ -795,13 +936,13 @@ var story;
     function renderVoteResults(members, votes) {
         return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-around" }, members.map(function (m) {
             var vote = votes.filter(function (v) { return v.userID == m.userID; });
-            return renderVoteResult(m, vote.length > 0 ? vote[0].choice : undefined);
+            return renderVoteResult(m, length > 0 ? vote[0].choice : undefined);
         }));
     }
-    story_2.renderVoteResults = renderVoteResults;
+    vote_1.renderVoteResults = renderVoteResults;
     function renderVoteSummary(votes) {
         var _a;
-        var results = story_2.getVoteResults(votes);
+        var results = vote_1.getVoteResults(votes);
         function trim(n) { return n.toString().substr(0, 4); }
         return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-center result-container" },
             JSX("div", { "class": "result" },
@@ -831,5 +972,5 @@ var story;
                 " ",
                 JSX("div", null, "mode")));
     }
-    story_2.renderVoteSummary = renderVoteSummary;
-})(story || (story = {}));
+    vote_1.renderVoteSummary = renderVoteSummary;
+})(vote || (vote = {}));

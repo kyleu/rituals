@@ -37,6 +37,8 @@ namespace command {
     updateStory: "update-story",
     setStoryStatus: "set-story-status",
     submitVote: "submit-vote",
+
+    addUpdate: "add-update"
   };
 
   export const server = {

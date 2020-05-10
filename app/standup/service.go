@@ -28,7 +28,7 @@ func NewStandupService(db *sqlx.DB, logger logur.Logger) Service {
 }
 
 func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
-	slug, err := util.NewSlugFor(s.db, util.SvcStandup, title)
+	slug, err := member.NewSlugFor(s.db, util.SvcStandup, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating slug"))
 	}
@@ -58,7 +58,6 @@ func (s *Service) List() ([]Session, error) {
 
 func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 	dto := &sessionDTO{}
-	println(fmt.Sprintf(":::::::: %v", s))
 	err := s.db.Get(dto, "select * from standup where id = $1", id)
 	if err != nil {
 		if err == sql.ErrNoRows {

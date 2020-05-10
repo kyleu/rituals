@@ -39,7 +39,7 @@
           </tr>
           <tr>
             <th>Created</th>
-            <td><%=v user.Created %></td>
+            <td><% ComponentDateTime(&user.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

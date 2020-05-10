@@ -38,7 +38,7 @@ func OpenDatabase(logger logur.LoggerFacade) (*sqlx.DB, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error applying initial queries"))
 	}
 
-	logger.Debug("config service started")
+	// logger.Debug("config service started")
 	return db, nil
 }
 

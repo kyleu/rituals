@@ -28,7 +28,7 @@ func NewRetroService(db *sqlx.DB, logger logur.Logger) Service {
 }
 
 func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
-	slug, err := util.NewSlugFor(s.db, util.SvcRetro, title)
+	slug, err := member.NewSlugFor(s.db, util.SvcRetro, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating slug"))
 	}

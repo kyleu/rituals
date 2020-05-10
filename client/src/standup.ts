@@ -5,13 +5,17 @@ namespace standup {
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
+    updates: update.Update[]
   }
 
   class Cache {
     detail?: Detail;
+    updates: update.Update[] = [];
+
+    activeUpdate?: string;
   }
 
-  const cache = new Cache();
+  export const cache = new Cache();
 
   export function onStandupMessage(cmd: string, param: any) {
     switch (cmd) {
@@ -22,6 +26,7 @@ namespace standup {
         let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         setStandupDetail(sj.session);
+        update.setUpdates(sj.updates)
         break;
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);

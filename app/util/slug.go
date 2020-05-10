@@ -1,27 +1,44 @@
 package util
 
 import (
-	"emperror.dev/errors"
-	"github.com/jmoiron/sqlx"
+	"regexp"
 	"strings"
 )
 
-func NewSlugFor(db *sqlx.DB, svc string, str string) (string, error) {
-	if len(str) == 0 {
-		str = strings.ToLower(RandomString(4))
+var regexpNonAuthorizedChars = regexp.MustCompile("[^a-zA-Z0-9-_]")
+var regexpMultipleDashes = regexp.MustCompile("-+")
+
+func Slugify(s string) (slug string) {
+	slug = strings.TrimSpace(s)
+
+	slug = strings.ToLower(slug)
+
+	slug = regexpNonAuthorizedChars.ReplaceAllString(slug, "-")
+	slug = regexpMultipleDashes.ReplaceAllString(slug, "-")
+	slug = strings.Trim(slug, "-_")
+
+	slug = smartTruncate(slug)
+
+	return slug
+}
+
+func smartTruncate(text string) string {
+	maxLength := 256
+	if len(text) < maxLength {
+		return text
 	}
-	slug := strings.ReplaceAll(strings.ToLower(str), " ", "-")
-	q := "select id from " + svc + " where slug = $1"
-	x, err := db.Queryx(q, slug)
-	if err != nil {
-		return slug, errors.WithStack(errors.Wrap(err, "error fetching existing slug"))
+
+	var truncated string
+	words := strings.SplitAfter(text, "-")
+	if len(words[0]) > maxLength {
+		return words[0][:maxLength]
 	}
-	if x.Next() {
-		junk := strings.ToLower(RandomString(4))
-		slug, err = NewSlugFor(db, svc, slug+"-"+junk)
-		if err != nil {
-			return slug, errors.WithStack(errors.Wrap(err, "error finding slug for new session"))
+	for _, word := range words {
+		if len(truncated)+len(word)-1 <= maxLength {
+			truncated = truncated + word
+		} else {
+			break
 		}
 	}
-	return slug, nil
+	return strings.Trim(truncated, "-")
 }

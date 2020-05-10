@@ -14,6 +14,7 @@ require (
 	github.com/jackc/pgx/v4 v4.6.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/mattn/go-runewidth v0.0.8 // indirect
+	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be
 	github.com/sagikazarmark/ocmux v0.2.0
 	github.com/shiyanhui/hero v0.0.2
 	github.com/sirupsen/logrus v1.4.2

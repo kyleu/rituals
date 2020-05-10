@@ -15,7 +15,7 @@
       <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.standup.detail`, `id`, model.ID.String()) %>"><%=v model.Slug %></a></td>
       <td><%= model.Title %></td>
       <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Owner.String()) %>"><%=v model.Owner %></a></td>
-      <td><%=v model.Created %></td>
+      <td><% ComponentDateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

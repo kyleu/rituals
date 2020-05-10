@@ -8,9 +8,18 @@
 }
 
 .member-name {
-  cursor: default;
+  cursor: pointer;
 }
 
 #model-title {
-  cursor: default;
+  cursor: pointer;
+}
+
+.section {
+  cursor: pointer;
+  &:hover {
+    .section-link {
+      text-decoration: underline;
+    }
+  }
 }

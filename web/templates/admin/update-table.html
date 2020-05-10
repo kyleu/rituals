@@ -1,0 +1,24 @@
+<%: func AdminUpdateTable(updates []standup.Update, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Author</th>
+      <th>Content</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range updates { %>
+    <tr>
+      <td><% ComponentUUID(&model.ID, buffer) %></td>
+      <td><%=v model.D %></td>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Author.String()) %>"><% ComponentUUID(&model.Author, buffer) %></a></td>
+      <td><%= model.Content %></td>
+      <td><% ComponentDateTime(&model.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

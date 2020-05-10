@@ -23,6 +23,8 @@ const ClientCmdUpdateStory = "update-story"
 const ClientCmdSetStoryStatus = "set-story-status"
 const ClientCmdSubmitVote = "submit-vote"
 
+const ClientCmdAddUpdate = "add-update"
+
 // Server Messages
 const ServerCmdError = "error"
 const ServerCmdPong = "pong"

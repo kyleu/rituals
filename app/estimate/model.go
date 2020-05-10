@@ -75,7 +75,7 @@ func NewSession(title string, slug string, userID uuid.UUID) Session {
 		Owner:   userID,
 		Status:  StatusNew,
 		Choices: nil,
-		Options: SessionOptions{Foo: "TODO"},
+		Options: SessionOptions{Foo: ""},
 		Created: time.Time{},
 	}
 }

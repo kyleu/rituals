@@ -52,7 +52,7 @@ func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid
 		return nil
 	}
 
-	s.logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Svc, message.Cmd, len(conns)))
+	// s.logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Svc, message.Cmd, len(conns)))
 	for _, conn := range conns {
 		if !contains(except, conn) {
 			connID := conn

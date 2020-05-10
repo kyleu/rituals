@@ -4,15 +4,16 @@ namespace estimate {
     options: object;
   }
 
-  export interface StoryStatusUpdate {
+  export interface StoryStatusChange {
     storyID: string;
     status: { key: string };
+    finalVote: string;
   }
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
     stories: story.Story[];
-    votes: story.Vote[];
+    votes: vote.Vote[];
   }
 
   class Cache {
@@ -21,9 +22,9 @@ namespace estimate {
     detail?: Detail;
 
     stories: story.Story[] = [];
-    votes: story.Vote[] = [];
+    votes: vote.Vote[] = [];
 
-    public activeVotes(): story.Vote[] {
+    public activeVotes(): vote.Vote[] {
       if (this.activeStory === undefined) {
         return [];
       }
@@ -43,7 +44,7 @@ namespace estimate {
         rituals.onSessionJoin(sj);
         setEstimateDetail(sj.session);
         story.setStories(sj.stories);
-        story.setVotes(sj.votes);
+        vote.setVotes(sj.votes);
         break;
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);
@@ -52,10 +53,10 @@ namespace estimate {
         onStoryUpdate(param as story.Story);
         break;
       case command.server.storyStatusChange:
-        story.onStoryStatusChange(param as StoryStatusUpdate);
+        story.onStoryStatusChange(param as StoryStatusChange);
         break;
       case command.server.voteUpdate:
-        story.onVoteUpdate(param as story.Vote);
+        vote.onVoteUpdate(param as vote.Vote);
         break;
       default:
         console.warn("unhandled command [" + cmd + "] for estimate");

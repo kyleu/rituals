@@ -4,9 +4,9 @@ namespace member {
     if (profile === undefined) {
       return <div class="uk-margin-bottom">error</div>;
     } else {
-      return <div>
+      return <div class="section" onclick={"events.openModal('member', '" + member.userID + "');"}>
         <div title="user is offline" class="right uk-article-meta online-indicator">offline</div>
-        <a class={profile.linkColor + "-fg"} href="" onclick={"return events.openModal('member', '" + member.userID + "');"}>{member.name}</a>
+        <div class={profile.linkColor + "-fg section-link"}>{member.name}</div>
       </div>;
     }
   }

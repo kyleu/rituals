@@ -38,12 +38,20 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		members, err := ctx.App.Standup.Members.GetByModelID(standupID)
+		if err != nil {
+			return "", err
+		}
+		updates, err := ctx.App.Standup.GetUpdates(standupID)
+		if err != nil {
+			return "", err
+		}
 		ctx.Title = standup.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminStandupDetail(standup, ctx, w))
+		return tmpl(templates.AdminStandupDetail(standup, members, updates, ctx, w))
 	})
 }

@@ -3,6 +3,9 @@ while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
 DIR="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
 cd "$DIR"
 
+./scripts/build-client.sh
+./scripts/build-css.sh
+
 for arch in amd64 386
 do
   for os in darwin linux windows

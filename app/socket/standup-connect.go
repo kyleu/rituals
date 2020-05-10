@@ -52,6 +52,11 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return err
 	}
 
+	updates, err := s.standups.GetUpdates(ch.ID)
+	if err != nil {
+		return err
+	}
+
 	msg := Message{
 		Svc: util.SvcStandup,
 		Cmd: util.ServerCmdSessionJoined,
@@ -60,6 +65,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 			Session: sess,
 			Members: members,
 			Online:  online,
+			Updates: updates,
 		},
 	}
 

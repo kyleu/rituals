@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>Created</th>
-            <td><%=v model.Created %></td>
+            <td><% ComponentDateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

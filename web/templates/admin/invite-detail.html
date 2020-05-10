@@ -10,7 +10,7 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th>ID</th>
+            <th>Key</th>
             <td><%= model.Key %></td>
           </tr>
           <tr>
@@ -45,7 +45,7 @@
           </tr>
           <tr>
             <th>Created</th>
-            <td><%=v model.Created %></td>
+            <td><% ComponentDateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

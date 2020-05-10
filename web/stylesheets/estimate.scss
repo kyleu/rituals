@@ -93,3 +93,14 @@
 .uk-dark #story-vote-summary .uk-border-circle {
   border-color: #ddd;
 }
+
+.vote-badge {
+  border: 1px solid #666;
+  padding: 4px 8px;
+  color: #fff;
+}
+
+.uk-dark .vote-badge {
+  border-color: #ddd;
+  color: #000;
+}

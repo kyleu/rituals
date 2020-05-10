@@ -1,0 +1,21 @@
+<%: func ComponentChannel(svc string, id *uuid.UUID, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<% if id == nil { %>
+  &lt;nil&gt;
+<% } else { %>
+  <%
+    var url = ""
+    switch svc {
+    case util.SvcEstimate:
+      url = ctx.Route("admin.estimate.detail", "id", id.String())
+    case util.SvcStandup:
+      url = ctx.Route("admin.standup.detail", "id", id.String())
+    case util.SvcRetro:
+      url = ctx.Route("admin.retro.detail", "id", id.String())
+    }
+  %>
+  <% if url == "" { %>
+    <%= svc %>:<% ComponentUUID(id, buffer) %>
+  <% } else { %>
+    <a class="<%= ctx.Profile.LinkClass() %>" href="<%= url %>"><%= svc %>:<% ComponentUUID(id, buffer) %></a>
+  <% } %>
+<% } %>

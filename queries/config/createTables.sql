@@ -36,7 +36,7 @@ create table "story" (
   "estimate_id" uuid not null references "estimate"("id"),
   "idx" int not null default 0,
   "author_id" uuid not null references "system_user"("id"),
-  "title" varchar(2048),
+  "title" varchar(2048) not null,
   "status" story_status not null default 'pending',
   "final_vote" varchar(2048) not null default '',
   "created" timestamp not null default now()
@@ -58,6 +58,15 @@ create table if not exists "standup" (
   "title" varchar(2048) not null,
   "owner" uuid references "system_user"("id"),
   "status" standup_status not null,
+  "created" timestamp not null default now()
+);
+
+create table "standup_update" (
+  "id" uuid not null primary key,
+  "standup_id" uuid not null references "standup"("id"),
+  "d" date not null default now()::date,
+  "author_id" uuid not null references "system_user"("id"),
+  "content" text not null,
   "created" timestamp not null default now()
 );
 

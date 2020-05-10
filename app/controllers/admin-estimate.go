@@ -39,11 +39,11 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		stories, err := ctx.App.Estimate.GetStories(estimateID)
+		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID)
 		if err != nil {
 			return "", err
 		}
-		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID)
+		stories, err := ctx.App.Estimate.GetStories(estimateID)
 		if err != nil {
 			return "", err
 		}
@@ -54,7 +54,7 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminEstimateDetail(estimate, stories, members, ctx, w))
+		return tmpl(templates.AdminEstimateDetail(estimate, members, stories, ctx, w))
 	})
 }
 

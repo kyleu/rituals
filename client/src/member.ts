@@ -42,13 +42,16 @@ namespace member {
     let x = system.cache.members;
 
     x = x.filter(m => m.userID !== member.userID);
+    if(x.length === system.cache.members.length) {
+      UIkit.notification(member.name + " has joined", {status: "success", pos: "top-right"});
+    }
     x.push(member);
     x = x.sort((l, r) => (l.name > r.name) ? 1 : -1);
 
     system.cache.members = x;
     setMembers();
     if (estimate.cache.activeStory) {
-      story.viewVotes();
+      vote.viewVotes();
     }
   }
 
