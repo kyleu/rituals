@@ -31,7 +31,7 @@ func statusFromString(s string) Status {
 	return StatusNew
 }
 
-func (t Status) String() string {
+func (t *Status) String() string {
 	return t.Key
 }
 
@@ -39,7 +39,7 @@ type SessionOptions struct {
 	Foo string `json:"foo"`
 }
 
-func (o SessionOptions) ToJSON() string {
+func (o *SessionOptions) ToJSON() string {
 	b, _ := json.Marshal(o)
 	return string(b)
 }
@@ -91,7 +91,7 @@ type sessionDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto sessionDTO) ToSession() Session {
+func (dto *sessionDTO) ToSession() Session {
 	return Session{
 		ID:      dto.ID,
 		Slug:    dto.Slug,

@@ -19,15 +19,15 @@
           </tr>
           <tr>
             <th>Source</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Src.String()) %>"><%=v model.Src %></a></td>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Src.String()) %>"><%= model.Src.String() %></a></td>
           </tr>
           <tr>
             <th>Target</th>
             <td>
               <% if model.Tgt == nil { %>
-                <%=v model.Tgt %>
+                -
               <% } else { %>
-                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Tgt.String()) %>"><%=v model.Tgt %></a>
+                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Tgt.String()) %>"><%= model.Tgt.String() %></a>
               <% } %>
             </td>
           </tr>

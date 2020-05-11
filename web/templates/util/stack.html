@@ -9,11 +9,11 @@
         <tr>
           <td>
             <% if strings.Contains(f.Key, util.AppName) { %>
-            <div class="error-key error-owned"><%=v f.Key %></div>
+            <div class="error-key error-owned"><%= f.Key %></div>
             <% } else { %>
-            <div class="error-key"><%=v f.Key %></div>
+            <div class="error-key"><%= f.Key %></div>
             <% } %>
-            <div class="error-location"><%=v f.Loc %></div>
+            <div class="error-location"><%= f.Loc %></div>
           </td>
         </tr>
         <% } %>

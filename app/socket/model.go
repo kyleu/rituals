@@ -41,7 +41,7 @@ type Message struct {
 	Param interface{} `json:"param"`
 }
 
-func (m Message) String() string {
+func (m *Message) String() string {
 	return fmt.Sprintf("%s/%s", m.Svc, m.Cmd)
 }
 

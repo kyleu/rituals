@@ -19,12 +19,12 @@ type AppErrorHandler struct {
 	Logger logur.LoggerFacade
 }
 
-func (a AppErrorHandler) Handle(err error) {
+func (a *AppErrorHandler) Handle(err error) {
 	if err != nil {
 		a.Logger.Error(fmt.Sprintf("general error: %+v", err))
 	}
 }
-func (AppErrorHandler) HandleContext(_ context.Context, _ error) {}
+func (*AppErrorHandler) HandleContext(_ context.Context, _ error) {}
 
 type stackTracer interface {
 	StackTrace() errors.StackTrace

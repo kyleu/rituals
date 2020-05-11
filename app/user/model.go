@@ -19,12 +19,12 @@ type SystemUser struct {
 	Created   time.Time `db:"created"`
 }
 
-func (su *SystemUser) ToProfile() util.UserProfile {
+func (su *SystemUser) ToProfile() *util.UserProfile {
 	locale, err := language.Parse(su.Locale)
 	if err != nil {
 		locale = language.AmericanEnglish
 	}
-	return util.UserProfile{
+	return &util.UserProfile{
 		UserID:    su.UserID,
 		Name:      su.Name,
 		Role:      util.RoleFromString(su.Role),

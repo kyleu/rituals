@@ -16,8 +16,8 @@ type Service struct {
 	colName   string
 }
 
-func NewMemberService(db *sqlx.DB, svc string, table string, col string) Service {
-	return Service{
+func NewService(db *sqlx.DB, svc string, table string, col string) *Service {
+	return &Service{
 		db:        db,
 		svc:       svc,
 		tableName: table,
@@ -34,7 +34,7 @@ func (s *Service) GetByModelID(id uuid.UUID) ([]Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Entry, 0)
+	ret := make([]Entry, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToEntry())
 	}

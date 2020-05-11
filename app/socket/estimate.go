@@ -46,7 +46,10 @@ func onEstimateSessionSave(s *Service, ch channel, param map[string]interface{})
 	if title == "" {
 		title = "Untitled"
 	}
-	choicesString := param["choices"].(string)
+	choicesString, ok := param["choices"].(string)
+	if !ok {
+		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"])))
+	}
 	choices := util.StringToArray(choicesString)
 	if len(choices) == 0 {
 		choices = estimate.DefaultChoices

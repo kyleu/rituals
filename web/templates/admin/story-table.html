@@ -16,7 +16,7 @@
     <tr>
       <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.story.detail`, `id`, model.ID.String()) %>"><% ComponentUUID(&model.ID, buffer) %></a></td>
       <td><%=v model.Idx %></td>
-      <td><%=v model.Status %></td>
+      <td><%= model.Status.String() %></td>
       <td><%= model.Title %></td>
       <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Author.String()) %>"><% ComponentUUID(&model.Author, buffer) %></a></td>
       <td><% ComponentDateTime(&model.Created, buffer) %></td>

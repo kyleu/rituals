@@ -15,12 +15,12 @@ type channel struct {
 	ID  uuid.UUID
 }
 
-func (ch channel) String() string {
+func (ch *channel) String() string {
 	return fmt.Sprintf("%s:%s", ch.Svc, ch.ID)
 }
 
 func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, error) {
-	conn := connection{
+	conn := &connection{
 		ID:      util.UUID(),
 		Profile: profile,
 		Svc:     "",
@@ -32,7 +32,7 @@ func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, 
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 
-	s.connections[conn.ID] = &conn
+	s.connections[conn.ID] = conn
 	return conn.ID, nil
 }
 

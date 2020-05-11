@@ -1,0 +1,25 @@
+.report-detail {
+  border: 1px solid #666;
+  margin: 8px 0;
+
+  a {
+    display: block;
+    margin: 8px 0 0 8px;
+  }
+
+  .report-content {
+    padding: 8px;
+    display: none;
+
+    p {
+      margin: 0;
+    }
+    ul {
+      list-style: disc;
+    }
+  }
+}
+
+.uk-dark .report-detail {
+  border-color: #ddd;
+}

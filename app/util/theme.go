@@ -23,7 +23,7 @@ var ThemeDark = Theme{
 
 var AllThemes = []Theme{ThemeLight, ThemeDark}
 
-func (t Theme) String() string {
+func (t *Theme) String() string {
 	return t.Name
 }
 

@@ -26,7 +26,7 @@ func statusFromString(s string) Status {
 	return StatusNew
 }
 
-func (t Status) String() string {
+func (t *Status) String() string {
 	return t.Key
 }
 
@@ -59,7 +59,7 @@ type sessionDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto sessionDTO) ToSession() Session {
+func (dto *sessionDTO) ToSession() Session {
 	return Session{
 		ID:      dto.ID,
 		Slug:    dto.Slug,

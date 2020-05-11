@@ -23,7 +23,7 @@ require (
 	github.com/spf13/cobra v0.0.5
 	golang.org/x/mobile v0.0.0-20200212152714-2b26a4705d24 // indirect
 	golang.org/x/text v0.3.2
-	golang.org/x/tools v0.0.0-20200219161401-5fb17a1e7b9b // indirect
+	golang.org/x/tools v0.0.0-20200509030707-2212a7e161a5 // indirect
 	logur.dev/adapter/logrus v0.4.1
 	logur.dev/logur v0.16.2
 )

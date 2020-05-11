@@ -25,9 +25,9 @@ func FormatInteger(l language.Tag, v int) string {
 
 func PluralChoice(single string, plural string, v int) string {
 	if v == 1 || v == -1 {
-		return fmt.Sprintf("%v %v", v, single)
+		return fmt.Sprint(v, " ", single)
 	}
-	return fmt.Sprintf("%v %v", v, plural)
+	return fmt.Sprint(v, " ", plural)
 }
 
 func BoolUnicode(b bool) string {
@@ -45,7 +45,7 @@ func PathParams(s string) []string {
 	}
 	matches := re.FindAll([]byte(s), -1)
 
-	ret := make([]string, 0)
+	ret := make([]string, 0, len(matches))
 	for _, m := range matches {
 		ret = append(ret, string(m))
 	}

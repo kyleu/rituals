@@ -11,11 +11,11 @@
         <tbody>
           <tr>
             <th>ID</th>
-            <td><%=v model.ID %></td>
+            <td><%= model.ID.String() %></td>
           </tr>
           <tr>
             <th>Estimate</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate.detail`, `id`, model.EstimateID.String()) %>"><%=v model.EstimateID %></a></td>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate.detail`, `id`, model.EstimateID.String()) %>"><%= model.EstimateID.String() %></a></td>
           </tr>
           <tr>
             <th>Index</th>
@@ -23,15 +23,15 @@
           </tr>
           <tr>
             <th>Status</th>
-            <td><%=v model.Status %></td>
+            <td><%= model.Status.String() %></td>
           </tr>
           <tr>
             <th>Title</th>
-            <td><%=v model.Title %></td>
+            <td><%= model.Title %></td>
           </tr>
           <tr>
             <th>Author</th>
-            <td><%=v model.Author %></td>
+            <td><%= model.Author.String() %></td>
           </tr>
           <tr>
             <th>Created</th>

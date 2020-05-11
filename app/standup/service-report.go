@@ -22,13 +22,25 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	return s.GetReportByID(id)
 }
 
+func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, authorID uuid.UUID) (*Report, error) {
+	html := markdown.ToHTML(content)
+
+	sql := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
+	_, err := s.db.Exec(sql, d, authorID, content, html, reportID)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.GetReportByID(reportID)
+}
+
 func (s *Service) GetReports(standupID uuid.UUID) ([]Report, error) {
 	var dtos []reportDTO
 	err := s.db.Select(&dtos, "select * from report where standup_id = $1 order by d desc, created", standupID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Report, 0)
+	ret := make([]Report, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToReport())
 	}

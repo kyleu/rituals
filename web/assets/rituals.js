@@ -113,6 +113,11 @@ var events;
             case "report":
                 standup.cache.activeReport = id;
                 report.viewActiveReport();
+                var reportEditContent_1 = util.req("#standup-report-edit-content");
+                delay(function () {
+                    util.wireTextarea(reportEditContent_1);
+                    reportEditContent_1.focus();
+                });
                 break;
             // default
             default:
@@ -168,7 +173,8 @@ var command;
         updateStory: "update-story",
         setStoryStatus: "set-story-status",
         submitVote: "submit-vote",
-        addReport: "add-report"
+        addReport: "add-report",
+        editReport: "edit-report"
     };
     command.server = {
         error: "error",
@@ -244,6 +250,8 @@ var member;
             UIkit.modal("#modal-self").hide();
         }
         var x = system.cache.members;
+        var curr = x.filter(function (m) { return m.userID === member.userID; });
+        var nameChanged = curr.length == 1 && curr[0].name != member.name;
         x = x.filter(function (m) { return m.userID !== member.userID; });
         if (x.length === system.cache.members.length) {
             UIkit.notification(member.name + " has joined", { status: "success", pos: "top-right" });
@@ -252,8 +260,18 @@ var member;
         x = x.sort(function (l, r) { return (l.name > r.name) ? 1 : -1; });
         system.cache.members = x;
         setMembers();
-        if (estimate.cache.activeStory) {
-            vote.viewVotes();
+        if (nameChanged) {
+            if (system.cache.currentService == services.estimate) {
+                if (estimate.cache.activeStory) {
+                    vote.viewVotes();
+                }
+            }
+            if (system.cache.currentService == services.standup) {
+                util.setContent("#report-detail", report.renderReports(standup.cache.reports));
+                if (standup.cache.activeReport) {
+                    report.viewActiveReport();
+                }
+            }
         }
     }
     member_1.onMemberUpdate = onMemberUpdate;
@@ -333,6 +351,18 @@ var report;
         return false;
     }
     report_1.onSubmitReport = onSubmitReport;
+    function onEditReport() {
+        var d = util.req("#standup-report-edit-date").value;
+        var content = util.req("#standup-report-edit-content").value;
+        var msg = {
+            svc: services.standup,
+            cmd: command.client.editReport,
+            param: { id: standup.cache.activeReport, d: d, content: content }
+        };
+        socket.send(msg);
+        return false;
+    }
+    report_1.onEditReport = onEditReport;
     function getActiveReport() {
         if (standup.cache.activeReport === undefined) {
             console.warn("no active report");
@@ -353,12 +383,14 @@ var report;
         }
         util.setText("#report-title", report.d + " / " + member.getMemberName(report.author));
         var contentEdit = util.req("#modal-report .content-edit");
-        var contentEditTextarea = util.req(".uk-textarea", contentEdit);
+        var contentEditDate = util.req("#standup-report-edit-date", contentEdit);
+        var contentEditTextarea = util.req("#standup-report-edit-content", contentEdit);
         var contentView = util.req("#modal-report .content-view");
         var buttonsEdit = util.req("#modal-report .buttons-edit");
         var buttonsView = util.req("#modal-report .buttons-view");
         if (report.author === profile.userID) {
             contentEdit.style.display = "block";
+            util.setValue(contentEditDate, report.d);
             util.setValue(contentEditTextarea, report.content);
             util.wireTextarea(contentEditTextarea);
             contentView.style.display = "none";
@@ -368,13 +400,13 @@ var report;
         }
         else {
             contentEdit.style.display = "none";
+            util.setValue(contentEditDate, "");
             util.setValue(contentEditTextarea, "");
             contentView.style.display = "block";
             util.setHTML(contentView, report.html);
             buttonsEdit.style.display = "none";
             buttonsView.style.display = "block";
         }
-        console.log("viewActiveReport: " + (report === null || report === void 0 ? void 0 : report.id));
     }
     report_1.viewActiveReport = viewActiveReport;
     function setReports(reports) {
@@ -390,7 +422,7 @@ var report;
         function toCollection(d) {
             return {
                 "d": d,
-                "reports": reports.filter(function (r) { return r.d === d; })
+                "reports": reports.filter(function (r) { return r.d === d; }).sort(function (l, r) { return (l.created > r.created ? -1 : 1); })
             };
         }
         return reports.map(function (r) { return r.d; }).filter(distinct).sort().reverse().map(toCollection);
@@ -604,6 +636,9 @@ var standup;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
                 break;
+            case command.server.reportUpdate:
+                onReportUpdate(param);
+                break;
             default:
                 console.warn("unhandled command [" + cmd + "] for standup");
         }
@@ -625,6 +660,15 @@ var standup;
         socket.send(msg);
     }
     standup.onSubmitStandupSession = onSubmitStandupSession;
+    function onReportUpdate(r) {
+        var x = standup.cache.reports;
+        x = x.filter(function (p) { return p.id !== r.id; });
+        x.push(r);
+        report.setReports(x);
+        if (r.id === standup.cache.activeReport) {
+            UIkit.modal("#modal-report").hide();
+        }
+    }
 })(standup || (standup = {}));
 var story;
 (function (story_1) {
@@ -949,8 +993,13 @@ var report;
 (function (report) {
     function renderReport(model) {
         var profile = system.cache.getProfile();
-        return JSX("div", null,
-            JSX("a", { "class": profile.linkColor + "-fg", href: "", onclick: "return events.openModal('report', '" + model.id + "');" }, member.getMemberName(model.author)));
+        var ret = JSX("div", { id: "report-" + model.id, "class": "report-detail uk-border-rounded section", onclick: "events.openModal('report', '" + model.id + "');" },
+            JSX("a", { "class": profile.linkColor + "-fg section-link" }, member.getMemberName(model.author)),
+            JSX("div", { "class": "report-content" }, "loading..."));
+        if (model.html.length > 0) {
+            util.setHTML(util.req(".report-content", ret), model.html).style.display = "block";
+        }
+        return ret;
     }
     function renderReports(reports) {
         if (reports.length === 0) {
@@ -959,9 +1008,9 @@ var report;
         }
         else {
             var dates = report.getReportDates(reports);
-            return JSX("ul", { "class": "uk-list uk-list-divider" }, dates.map(function (day) { return JSX("li", { id: "report-date-" + day.d },
+            return JSX("ul", { "class": "uk-list" }, dates.map(function (day) { return JSX("li", { id: "report-date-" + day.d },
                 JSX("div", null, day.d),
-                JSX("ul", { "class": "uk-list" }, day.reports.map(function (r) { return JSX("li", null, renderReport(r)); }))); }));
+                day.reports.map(function (r) { return JSX("li", null, renderReport(r)); })); }));
         }
     }
     report.renderReports = renderReports;

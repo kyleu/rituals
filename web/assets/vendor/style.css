@@ -12415,3 +12415,26 @@ html.uk-dark, body.uk-dark {
   border-color: #ddd;
   color: #000;
 }
+
+.report-detail {
+  border: 1px solid #666;
+  margin: 8px 0;
+}
+.report-detail a {
+  display: block;
+  margin: 8px 0 0 8px;
+}
+.report-detail .report-content {
+  padding: 8px;
+  display: none;
+}
+.report-detail .report-content p {
+  margin: 0;
+}
+.report-detail .report-content ul {
+  list-style: disc;
+}
+
+.uk-dark .report-detail {
+  border-color: #ddd;
+}

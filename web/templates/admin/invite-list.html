@@ -21,10 +21,10 @@
         <% for _, i := range invites { %>
           <tr>
             <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invite.detail`, `key`, i.Key) %>"><%= i.Key %></a></td>
-            <td><%=v i.K %>:<%=v i.V %></td>
+            <td><%= i.K.String() %>:<%= i.V %></td>
             <td><% ComponentUUID(i.Src, _buffer) %></td>
             <td><% ComponentUUID(i.Tgt, _buffer) %></td>
-            <td><%=v i.Status %></td>
+            <td><%= i.Status.String() %></td>
           </tr>
         <% } %>
         </tbody>

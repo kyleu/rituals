@@ -13,16 +13,16 @@ import (
 
 type Service struct {
 	db      *sqlx.DB
-	Members member.Service
+	Members *member.Service
 	logger  logur.Logger
 }
 
-func NewRetroService(db *sqlx.DB, logger logur.Logger) Service {
+func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro})
 
-	return Service{
+	return &Service{
 		db:      db,
-		Members: member.NewMemberService(db, util.SvcRetro, "retro_member", "retro_id"),
+		Members: member.NewService(db, util.SvcRetro, "retro_member", "retro_id"),
 		logger:  logger,
 	}
 }
@@ -49,7 +49,7 @@ func (s *Service) List() ([]Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0)
+	ret := make([]Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
@@ -88,7 +88,7 @@ func (s *Service) GetByOwner() ([]Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0)
+	ret := make([]Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
@@ -99,13 +99,13 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	var dtos []sessionDTO
 	q := "select x.* from retro x join retro_member m on x.id = m.retro_id where m.user_id = $1 order by created desc"
 	if limit > 0 {
-		q += fmt.Sprintf(" limit %v", limit)
+		q += fmt.Sprint(" limit ", limit)
 	}
 	err := s.db.Select(&dtos, q, userID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0)
+	ret := make([]Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}

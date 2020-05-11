@@ -31,6 +31,9 @@ namespace standup {
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);
         break;
+      case command.server.reportUpdate:
+        onReportUpdate(param as report.Report);
+        break;
       default:
         console.warn("unhandled command [" + cmd + "] for standup");
     }
@@ -51,5 +54,18 @@ namespace standup {
       },
     };
     socket.send(msg);
+  }
+
+  function onReportUpdate(r: report.Report) {
+    let x = cache.reports;
+
+    x = x.filter((p) => p.id !== r.id);
+    x.push(r);
+
+    report.setReports(x);
+
+    if(r.id === standup.cache.activeReport) {
+      UIkit.modal("#modal-report").hide();
+    }
   }
 }

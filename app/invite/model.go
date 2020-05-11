@@ -39,7 +39,7 @@ func typeFromString(s string) InvitationType {
 	return InvitationTypeEstimate
 }
 
-func (t InvitationType) String() string {
+func (t *InvitationType) String() string {
 	return t.Key
 }
 
@@ -62,7 +62,7 @@ func statusFromString(s string) InvitationStatus {
 	return InvitationStatusPending
 }
 
-func (t InvitationStatus) String() string {
+func (t *InvitationStatus) String() string {
 	return t.Key
 }
 
@@ -78,7 +78,7 @@ type Invitation struct {
 	Created  time.Time
 }
 
-func (dto invitationDTO) ToInvitation() Invitation {
+func (dto *invitationDTO) ToInvitation() Invitation {
 	return Invitation{
 		Key:      dto.Key,
 		K:        typeFromString(dto.K),

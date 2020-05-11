@@ -25,6 +25,18 @@ namespace report {
     return false;
   }
 
+  export function onEditReport() {
+    const d = util.req<HTMLInputElement>("#standup-report-edit-date").value;
+    const content = util.req<HTMLInputElement>("#standup-report-edit-content").value;
+    const msg = {
+      svc: services.standup,
+      cmd: command.client.editReport,
+      param: {id: standup.cache.activeReport, d: d, content: content},
+    };
+    socket.send(msg);
+    return false;
+  }
+
   function getActiveReport() {
     if (standup.cache.activeReport === undefined) {
       console.warn("no active report");
@@ -47,13 +59,15 @@ namespace report {
 
     util.setText("#report-title", report.d + " / " + member.getMemberName(report.author));
     const contentEdit = util.req("#modal-report .content-edit");
-    const contentEditTextarea = util.req<HTMLTextAreaElement>(".uk-textarea", contentEdit);
+    const contentEditDate = util.req<HTMLInputElement>("#standup-report-edit-date", contentEdit);
+    const contentEditTextarea = util.req<HTMLTextAreaElement>("#standup-report-edit-content", contentEdit);
     const contentView = util.req("#modal-report .content-view");
     const buttonsEdit = util.req("#modal-report .buttons-edit");
     const buttonsView = util.req("#modal-report .buttons-view");
 
     if(report.author === profile.userID) {
       contentEdit.style.display = "block";
+      util.setValue(contentEditDate, report.d);
       util.setValue(contentEditTextarea, report.content);
       util.wireTextarea(contentEditTextarea);
       contentView.style.display = "none";
@@ -62,14 +76,13 @@ namespace report {
       buttonsView.style.display = "none";
     } else {
       contentEdit.style.display = "none";
+      util.setValue(contentEditDate, "");
       util.setValue(contentEditTextarea, "");
       contentView.style.display = "block";
       util.setHTML(contentView, report.html);
       buttonsEdit.style.display = "none";
       buttonsView.style.display = "block";
     }
-
-    console.log("viewActiveReport: " + report?.id);
   }
 
   export function setReports(reports: Report[]) {
@@ -86,7 +99,7 @@ namespace report {
     function toCollection(d: string): DayReports {
       return {
         "d": d,
-        "reports": reports.filter(r => r.d === d)
+        "reports": reports.filter(r => r.d === d).sort((l, r) => (l.created > r.created ? -1 : 1))
       }
     }
 

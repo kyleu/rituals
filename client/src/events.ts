@@ -42,6 +42,11 @@ namespace events {
       case "report":
         standup.cache.activeReport = id;
         report.viewActiveReport();
+        const reportEditContent = util.req("#standup-report-edit-content");
+        delay(() => {
+          util.wireTextarea(reportEditContent as HTMLTextAreaElement);
+          reportEditContent.focus();
+        });
         break;
 
       // default

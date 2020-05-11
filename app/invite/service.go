@@ -14,10 +14,10 @@ type Service struct {
 	logger logur.Logger
 }
 
-func NewInviteService(db *sqlx.DB, logger logur.Logger) Service {
+func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
 
-	return Service{
+	return &Service{
 		db:     db,
 		logger: logger,
 	}
@@ -29,7 +29,7 @@ func (s *Service) List() ([]Invitation, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Invitation, 0)
+	ret := make([]Invitation, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToInvitation())
 	}

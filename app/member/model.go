@@ -26,7 +26,7 @@ func roleFromString(s string) Role {
 	return RoleMember
 }
 
-func (t Role) String() string {
+func (t *Role) String() string {
 	return t.Key
 }
 
@@ -37,7 +37,7 @@ type entryDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto entryDTO) ToEntry() Entry {
+func (dto *entryDTO) ToEntry() Entry {
 	return Entry{
 		UserID:  dto.UserID,
 		Name:    dto.Name,

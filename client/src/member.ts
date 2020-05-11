@@ -40,6 +40,8 @@ namespace member {
       UIkit.modal("#modal-self").hide();
     }
     let x = system.cache.members;
+    const curr = x.filter(m => m.userID === member.userID);
+    const nameChanged = curr.length == 1 && curr[0].name != member.name;
 
     x = x.filter(m => m.userID !== member.userID);
     if(x.length === system.cache.members.length) {
@@ -50,8 +52,19 @@ namespace member {
 
     system.cache.members = x;
     setMembers();
-    if (estimate.cache.activeStory) {
-      vote.viewVotes();
+
+    if (nameChanged) {
+      if (system.cache.currentService == services.estimate) {
+        if (estimate.cache.activeStory) {
+          vote.viewVotes();
+        }
+      }
+      if (system.cache.currentService == services.standup) {
+        util.setContent("#report-detail", report.renderReports(standup.cache.reports));
+        if (standup.cache.activeReport) {
+          report.viewActiveReport();
+        }
+      }
     }
   }
 

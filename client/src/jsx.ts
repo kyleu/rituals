@@ -1,5 +1,5 @@
 declare namespace JSX {
-  interface Element extends Node {}
+  interface Element extends HTMLElement {}
   // noinspection JSUnusedGlobalSymbols
   interface IntrinsicElements {
     [elemName: string]: any;

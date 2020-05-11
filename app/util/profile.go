@@ -23,7 +23,7 @@ var RoleAdmin = Role{
 
 var AllRoles = []Role{RoleGuest, RoleUser, RoleAdmin}
 
-func (t Role) String() string {
+func (t *Role) String() string {
 	return t.Key
 }
 
@@ -50,8 +50,8 @@ func (p *UserProfile) LinkClass() string {
 	return p.LinkColor + "-fg"
 }
 
-func NewUserProfile(id uuid.UUID) UserProfile {
-	return UserProfile{
+func NewUserProfile(id uuid.UUID) *UserProfile {
+	return &UserProfile{
 		UserID:    id,
 		Name:      "Guest",
 		Role:      RoleGuest,

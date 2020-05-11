@@ -57,11 +57,11 @@ func memberSvcFor(s *Service, svc string) (*member.Service, error) {
 	var ret *member.Service
 	switch svc {
 	case util.SvcEstimate:
-		ret = &s.estimates.Members
+		ret = s.estimates.Members
 	case util.SvcStandup:
-		ret = &s.standups.Members
+		ret = s.standups.Members
 	case util.SvcRetro:
-		ret = &s.retros.Members
+		ret = s.retros.Members
 	default:
 		return nil, errors.New("invalid service [" + svc + "]")
 	}

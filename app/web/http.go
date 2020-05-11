@@ -74,8 +74,14 @@ var store = sessions.NewCookieStore([]byte(sessionKey))
 const sessionName = util.AppName + "-session"
 
 func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
-	ai := r.Context().Value("info").(*config.AppInfo)
-	routes := r.Context().Value("routes").(*mux.Router)
+	ai, ok := r.Context().Value("info").(*config.AppInfo)
+	if !ok {
+		ai.Logger.Warn("cannot load AppInfo")
+	}
+	routes, ok := r.Context().Value("routes").(*mux.Router)
+	if !ok {
+		ai.Logger.Warn("cannot load Router")
+	}
 	session, err := store.Get(r, sessionName)
 	if err != nil {
 		session = sessions.NewSession(store, sessionName)
@@ -103,20 +109,18 @@ func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 
 	user, err := ai.User.GetByID(userID, true)
 	if err != nil {
-		ai.Logger.Warn(fmt.Sprintf("unable to load user profile: %v", err))
+		ai.Logger.Warn(fmt.Sprintf("unable to load user profile: %+v", err))
 	}
 	var prof *util.UserProfile
 	if user == nil {
-		fallback := util.NewUserProfile(userID)
-		prof = &fallback
+		prof = util.NewUserProfile(userID)
 	} else {
-		fallback := user.ToProfile()
-		prof = &fallback
+		prof = user.ToProfile()
 	}
 
 	flashes := make([]string, 0)
 	for _, f := range session.Flashes() {
-		flashes = append(flashes, fmt.Sprintf("%v", f))
+		flashes = append(flashes, fmt.Sprint(f))
 	}
 
 	logger := logur.WithFields(ai.Logger, map[string]interface{}{"path": r.URL.Path, "method": r.Method})

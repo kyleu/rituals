@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"emperror.dev/errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -37,7 +38,11 @@ func InternalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 		ctx := web.ExtractContext(w, r.WithContext(rc))
 		ctx.Title = "Server Error"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(r.URL.Path, "error")
-		_, _ = templates.InternalServerError(util.GetErrorDetail(err.(error)), r, ctx, w)
+		e, ok := err.(error)
+		if !ok {
+			e = errors.New(fmt.Sprintf("err is of type [%T]", err))
+		}
+		_, _ = templates.InternalServerError(util.GetErrorDetail(e), r, ctx, w)
 		args := map[string]interface{}{"status": 500}
 		st := http.StatusInternalServerError
 		ctx.Logger.Warn(fmt.Sprintf("[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, err), args)

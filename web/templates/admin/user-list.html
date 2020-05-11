@@ -22,9 +22,9 @@
         <% for _, u := range users { %>
           <tr>
             <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, u.UserID.String()) %>"><% ComponentUUID(&u.UserID, _buffer) %></a></td>
-            <td><%=v u.Name %></td>
-            <td><%=v u.Role %></td>
-            <td><%=v u.Theme %></td>
+            <td><%= u.Name %></td>
+            <td><%= u.Role %></td>
+            <td><%= u.Theme %></td>
             <td><%=v u.Locale %></td>
             <td><% ComponentDateTime(&u.Created, _buffer) %></td>
           </tr>

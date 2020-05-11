@@ -26,7 +26,7 @@ func StoryStatusFromString(s string) StoryStatus {
 	return StoryStatusPending
 }
 
-func (t StoryStatus) String() string {
+func (t *StoryStatus) String() string {
 	return t.Key
 }
 
@@ -52,7 +52,7 @@ type storyDTO struct {
 	Created    time.Time `db:"created"`
 }
 
-func (dto storyDTO) ToStory() Story {
+func (dto *storyDTO) ToStory() Story {
 	return Story{
 		ID:         dto.ID,
 		EstimateID: dto.EstimateID,

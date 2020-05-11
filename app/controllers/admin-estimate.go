@@ -81,11 +81,11 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		ctx.Title = fmt.Sprintf("%v:%v", estimate.Slug, story.Idx)
+		ctx.Title = fmt.Sprint(estimate.Slug, ":", story.Idx)
 		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), estimate.Slug)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprintf("story %v", story.Idx))...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprint("story ", story.Idx))...)
 		ctx.Breadcrumbs = bc
 		return tmpl(templates.AdminStoryDetail(story, votes, ctx, w))
 	})

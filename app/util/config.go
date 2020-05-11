@@ -24,6 +24,7 @@ const ClientCmdSetStoryStatus = "set-story-status"
 const ClientCmdSubmitVote = "submit-vote"
 
 const ClientCmdAddReport = "add-report"
+const ClientCmdEditReport = "edit-report"
 
 // Server Messages
 const ServerCmdError = "error"

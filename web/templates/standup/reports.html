@@ -41,13 +41,20 @@
     </div>
     <div class="uk-modal-body" data-uk-overflow-auto>
       <div class="content-edit">
-        <textarea class="uk-textarea"></textarea>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="standup-report-edit-date">Date</label>
+          <input class="uk-input" id="standup-report-edit-date" type="date" />
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="standup-report-edit-content">Content</label>
+          <textarea class="uk-textarea" id="standup-report-edit-content"></textarea>
+        </div>
       </div>
       <div class="content-view"></div>
     </div>
     <div class="uk-modal-footer uk-text-right">
       <div class="buttons-edit">
-        <button class="uk-button uk-button-default" type="button" onclick="report.saveReport();">Save</button>
+        <button class="uk-button uk-button-default" type="button" onclick="report.onEditReport();">Save</button>
       </div>
       <div class="buttons-view">
         <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-report').hide();">Close</button>

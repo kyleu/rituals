@@ -55,19 +55,19 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	errorHandler := logurhandler.New(logger)
 	defer emperror.HandleRecover(errorHandler)
 
-	handler := emperror.WithDetails(util.AppErrorHandler{Logger: logger}, "key", "value")
+	handler := emperror.WithDetails(&util.AppErrorHandler{Logger: logger}, "key", "value")
 
 	db, err := config.OpenDatabase(logger)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating config service"))
 	}
 
-	userSvc := user.NewUserService(db, logger)
-	inviteSvc := invite.NewInviteService(db, logger)
-	estimateSvc := estimate.NewEstimateService(db, logger)
-	standupSvc := standup.NewStandupService(db, logger)
-	retroSvc := retro.NewRetroService(db, logger)
-	socketSvc := socket.NewSocketService(logger, &userSvc, &estimateSvc, &standupSvc, &retroSvc)
+	userSvc := user.NewService(db, logger)
+	inviteSvc := invite.NewService(db, logger)
+	estimateSvc := estimate.NewService(db, logger)
+	standupSvc := standup.NewService(db, logger)
+	retroSvc := retro.NewService(db, logger)
+	socketSvc := socket.NewService(logger, userSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{
 		Debug:    verbose,
@@ -75,11 +75,11 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Commit:   commitHash,
 		Logger:   logger,
 		Errors:   handler,
-		User:     &userSvc,
-		Invite:   &inviteSvc,
-		Estimate: &estimateSvc,
-		Standup:  &standupSvc,
-		Retro:    &retroSvc,
+		User:     userSvc,
+		Invite:   inviteSvc,
+		Estimate: estimateSvc,
+		Standup:  standupSvc,
+		Retro:    retroSvc,
 		Socket:   &socketSvc,
 	}
 
@@ -96,6 +96,6 @@ func MakeServer(info *config.AppInfo, address string, port uint16) error {
 		msg += " (verbose)"
 	}
 	info.Logger.Info(msg, map[string]interface{}{"address": address, "port": port})
-	err = http.ListenAndServe(fmt.Sprintf("%v:%v", address, port), handlers.CORS()(routes))
+	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(routes))
 	return errors.WithStack(errors.Wrap(err, "unable to run http server"))
 }

@@ -15,16 +15,16 @@ import (
 
 type Service struct {
 	db      *sqlx.DB
-	Members member.Service
+	Members *member.Service
 	logger  logur.Logger
 }
 
-func NewEstimateService(db *sqlx.DB, logger logur.Logger) Service {
+func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcEstimate})
 
-	return Service{
+	return &Service{
 		db:      db,
-		Members: member.NewMemberService(db, util.SvcEstimate, "estimate_member", "estimate_id"),
+		Members: member.NewService(db, util.SvcEstimate, "estimate_member", "estimate_id"),
 		logger:  logger,
 	}
 }
@@ -52,7 +52,7 @@ func (s *Service) List() ([]Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0)
+	ret := make([]Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
@@ -91,7 +91,7 @@ func (s *Service) GetByOwner(id uuid.UUID) ([]Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0)
+	ret := make([]Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
@@ -102,13 +102,13 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	var dtos []sessionDTO
 	q := "select x.* from estimate x join estimate_member m on x.id = m.estimate_id where m.user_id = $1 order by created desc"
 	if limit > 0 {
-		q += fmt.Sprintf(" limit %v", limit)
+		q += fmt.Sprint(" limit ", limit)
 	}
 	err := s.db.Select(&dtos, q, userID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0)
+	ret := make([]Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}

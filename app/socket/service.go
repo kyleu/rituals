@@ -27,7 +27,7 @@ type Service struct {
 	retros        *retro.Service
 }
 
-func NewSocketService(logger logur.LoggerFacade, users *user.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+func NewService(logger logur.LoggerFacade, users *user.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "socket"})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
@@ -68,7 +68,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Status, error) {
 func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	if connID == systemID {
 		s.logger.Warn("--- admin message received ---")
-		s.logger.Warn(fmt.Sprintf("%v", message))
+		s.logger.Warn(fmt.Sprint(message))
 		return nil
 	}
 	c, ok := s.connections[connID]

@@ -12,7 +12,7 @@ func (s *Service) GetStoryVotes(storyID uuid.UUID) ([]Vote, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Vote, 0)
+	ret := make([]Vote, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToVote())
 	}
@@ -25,7 +25,7 @@ func (s *Service) GetEstimateVotes(estimateID uuid.UUID) ([]Vote, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Vote, 0)
+	ret := make([]Vote, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToVote())
 	}

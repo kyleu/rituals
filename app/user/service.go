@@ -15,10 +15,10 @@ type Service struct {
 	logger logur.Logger
 }
 
-func NewUserService(db *sqlx.DB, logger logur.Logger) Service {
+func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
 
-	return Service{
+	return &Service{
 		db:     db,
 		logger: logger,
 	}

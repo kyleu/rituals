@@ -28,7 +28,7 @@ func (s *Service) GetStories(estimateID uuid.UUID) ([]Story, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Story, 0)
+	ret := make([]Story, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToStory())
 	}
@@ -94,7 +94,7 @@ func calcFinalVote(votes []Vote) string {
 	if len(choices) > 0 {
 		final = sum / float64(len(choices))
 	}
-	ret := fmt.Sprintf("%v", final)
+	ret := fmt.Sprint(final)
 	if (len(ret) < 4) {
 		return ret
 	}

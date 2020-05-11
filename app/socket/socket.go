@@ -14,7 +14,7 @@ import (
 func (s *Service) Write(connID uuid.UUID, message string) error {
 	if connID == systemID {
 		s.logger.Warn("--- admin message sent ---")
-		s.logger.Warn(fmt.Sprintf("%v", message))
+		s.logger.Warn(fmt.Sprint(message))
 		return nil
 	}
 

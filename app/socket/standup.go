@@ -27,6 +27,8 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 		err = onStandupSessionSave(s, *conn.Channel, param.(map[string]interface{}))
 	case util.ClientCmdAddReport:
 		err = onAddReport(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case util.ClientCmdEditReport:
+		err = onEditReport(s, *conn.Channel, userID, param.(map[string]interface{}))
 	default:
 		err = errors.New("unhandled standup command [" + cmd + "]")
 	}
