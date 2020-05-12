@@ -6,7 +6,7 @@ namespace estimate {
 
   export interface StoryStatusChange {
     storyID: string;
-    status: { key: string };
+    status: string;
     finalVote: string;
   }
 
@@ -66,6 +66,7 @@ namespace estimate {
   function setEstimateDetail(detail: Detail) {
     cache.detail = detail;
     util.setValue("#model-choices-input", detail.choices.join(", "));
+    story.viewActiveStory();
     rituals.setDetail(detail);
   }
 

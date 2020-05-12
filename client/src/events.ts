@@ -34,7 +34,7 @@ namespace events {
 
       // standup
       case "add-report":
-        util.setValue("#standup-report-date", dateToYMD(new Date()));
+        util.setValue("#standup-report-date", util.dateToYMD(new Date()));
         const reportContent = util.setValue("#standup-report-content", "");
         util.wireTextarea(reportContent as HTMLTextAreaElement);
         delay(() => reportContent.focus());
@@ -49,18 +49,28 @@ namespace events {
         });
         break;
 
+      // retro
+      case "add-feedback":
+        util.setSelectOption(util.req("#retro-feedback-category"), id);
+        const feedbackContent = util.setValue("#retro-feedback-content", "");
+        util.wireTextarea(feedbackContent as HTMLTextAreaElement);
+        delay(() => feedbackContent.focus());
+        break;
+      case "feedback":
+        retro.cache.activeFeedback = id;
+        feedback.viewActiveFeedback();
+        const feedbackEditContent = util.req("#retro-feedback-edit-content");
+        delay(() => {
+          util.wireTextarea(feedbackEditContent as HTMLTextAreaElement);
+          feedbackEditContent.focus();
+        });
+        break;
+
       // default
       default:
         console.debug("unhandled modal [" + key + "]");
     }
     UIkit.modal("#modal-" + key).show();
     return false;
-  }
-
-  function dateToYMD(date: Date) {
-    var d = date.getDate();
-    var m = date.getMonth() + 1;
-    var y = date.getFullYear();
-    return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
   }
 }

@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"database/sql"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 )
@@ -48,20 +49,20 @@ func (s *Service) GetVote(storyID uuid.UUID, userID uuid.UUID) (*Vote, error) {
 func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string) (*Vote, error) {
 	curr, err := s.GetVote(storyID, userID)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error getting current vote"))
+		return nil, errors.WithStack(errors.Wrap(err, "error getting current votes for story ["+storyID.String()+"]"))
 	}
 	if curr == nil {
 		q := "insert into vote (story_id, user_id, choice) values ($1, $2, $3)"
 		_, err = s.db.Exec(q, storyID, userID, choice)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "error saving new vote"))
+			return nil, errors.WithStack(errors.Wrap(err, "error saving new vote for story ["+storyID.String()+"]"))
 		}
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
 	} else {
 		q := "update vote set choice = $1 where story_id = $2 and user_id = $3"
 		_, err := s.db.Exec(q, choice, storyID, userID)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "error updating vote"))
+			return nil, errors.WithStack(errors.Wrap(err, "error updating vote for story ["+storyID.String()+"]"))
 		}
 		curr.Choice = choice
 		return curr, nil

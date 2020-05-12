@@ -2,8 +2,10 @@ package retro
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/member"
@@ -30,15 +32,16 @@ func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcRetro, title)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error creating slug"))
+		return nil, errors.WithStack(errors.Wrap(err, "error creating retro slug"))
 	}
 
 	e := NewSession(title, slug, userID)
 
-	q := "insert into retro (id, slug, title, owner, status) values ($1, $2, $3, $4, $5)"
-	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String())
+	q := "insert into retro (id, slug, title, owner, status, categories) values ($1, $2, $3, $4, $5, %6)"
+	categoriesString := "{" + strings.Join(e.Categories, ",") + "}"
+	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String(), categoriesString)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error saving new session"))
+		return nil, errors.WithStack(errors.Wrap(err, "error saving new retro session"))
 	}
 	return &e, nil
 }
@@ -97,7 +100,7 @@ func (s *Service) GetByOwner() ([]Session, error) {
 
 func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	var dtos []sessionDTO
-	q := "select x.* from retro x join retro_member m on x.id = m.retro_id where m.user_id = $1 order by created desc"
+	q := "select x.* from retro x join retro_member m on x.id = m.retro_id where m.user_id = $1 order by m.created desc"
 	if limit > 0 {
 		q += fmt.Sprint(" limit ", limit)
 	}
@@ -112,8 +115,9 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	return ret, nil
 }
 
-func (s *Service) UpdateSession(sessionID uuid.UUID, title string) error {
-	q := "update retro set title = $1 where id = $2"
-	_, err := s.db.Exec(q, title, sessionID)
-	return errors.WithStack(errors.Wrap(err, "error updating standup session"))
+func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []string) error {
+	q := "update retro set title = $1, categories = $2 where id = $3"
+	categoriesString := "{" + strings.Join(categories, ",") + "}"
+	_, err := s.db.Exec(q, title, categoriesString, sessionID)
+	return errors.WithStack(errors.Wrap(err, "error updating retro session"))
 }

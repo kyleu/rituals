@@ -26,6 +26,9 @@ const ClientCmdSubmitVote = "submit-vote"
 const ClientCmdAddReport = "add-report"
 const ClientCmdEditReport = "edit-report"
 
+const ClientCmdAddFeedback = "add-feedback"
+const ClientCmdEditFeedback = "edit-feedback"
+
 // Server Messages
 const ServerCmdError = "error"
 const ServerCmdPong = "pong"
@@ -41,3 +44,5 @@ const ServerCmdStoryStatusChange = "story-status-change"
 const ServerCmdVoteUpdate = "vote-update"
 
 const ServerCmdReportUpdate = "report-update"
+
+const ServerCmdFeedbackUpdate = "feedback-update"

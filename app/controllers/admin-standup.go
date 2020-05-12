@@ -32,7 +32,7 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		standupIDString := mux.Vars(r)["id"]
 		standupID, err := uuid.FromString(standupIDString)
 		if err != nil {
-			return "", errors.Wrap(err, "invalid standup id ["+standupIDString+"]")
+			return "", errors.New("invalid standup id [" + standupIDString + "]")
 		}
 		standup, err := ctx.App.Standup.GetByID(standupID)
 		if err != nil {

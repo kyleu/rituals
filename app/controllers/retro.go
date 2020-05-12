@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 	"strings"
+
+	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
 
@@ -35,7 +36,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 		}
 		sess, err := ctx.App.Retro.NewSession(title, ctx.Profile.UserID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error creating session"))
+			return "", errors.WithStack(errors.Wrap(err, "error creating retro session"))
 		}
 		return ctx.Route("retro", "key", sess.Slug), nil
 	})
@@ -46,7 +47,7 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)["key"]
 		sess, err := ctx.App.Retro.GetBySlug(key)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot load session"))
+			return "", errors.WithStack(errors.Wrap(err, "cannot load retro session"))
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load retro [" + key + "]")

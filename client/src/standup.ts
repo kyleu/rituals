@@ -1,6 +1,6 @@
 namespace standup {
   interface Detail extends rituals.Session {
-    options: object;
+
   }
 
   interface SessionJoined extends rituals.SessionJoined {

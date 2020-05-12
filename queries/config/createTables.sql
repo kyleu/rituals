@@ -31,7 +31,7 @@ create table if not exists "estimate_member" (
   primary key ("estimate_id", "user_id")
 );
 
-create table "story" (
+create table if not exists "story" (
   "id" uuid not null primary key,
   "estimate_id" uuid not null references "estimate"("id"),
   "idx" int not null default 0,
@@ -42,7 +42,7 @@ create table "story" (
   "created" timestamp not null default now()
 );
 
-create table "vote" (
+create table if not exists "vote" (
   "story_id" uuid not null references "story"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "choice" varchar(256) not null,
@@ -61,6 +61,15 @@ create table if not exists "standup" (
   "created" timestamp not null default now()
 );
 
+create table if not exists "standup_member" (
+  "standup_id" uuid not null references "standup"("id"),
+  "user_id" uuid not null references "system_user"("id"),
+  "name" varchar(2048) not null,
+  "role" varchar(64) not null,
+  "created" timestamp not null default now(),
+  primary key ("standup_id", "user_id")
+);
+
 create table "report" (
   "id" uuid not null primary key,
   "standup_id" uuid not null references "standup"("id"),
@@ -71,15 +80,6 @@ create table "report" (
   "created" timestamp not null default now()
 );
 
-create table if not exists "standup_member" (
-  "standup_id" uuid not null references "standup"("id"),
-  "user_id" uuid not null references "system_user"("id"),
-  "name" varchar(2048) not null,
-  "role" varchar(64) not null,
-  "created" timestamp not null default now(),
-  primary key ("standup_id", "user_id")
-);
-
 -- Retro
 create table if not exists "retro" (
   "id" uuid not null primary key,
@@ -87,6 +87,7 @@ create table if not exists "retro" (
   "title" varchar(2048) not null,
   "owner" uuid references "system_user"("id"),
   "status" retro_status not null,
+  "categories" varchar(2048)[] not null,
   "created" timestamp not null default now()
 );
 
@@ -97,6 +98,17 @@ create table if not exists "retro_member" (
   "role" varchar(64) not null,
   "created" timestamp not null default now(),
   primary key ("retro_id", "user_id")
+);
+
+create table if not exists "feedback" (
+  "id" uuid not null primary key,
+  "retro_id" uuid not null references "retro"("id"),
+  "idx" int not null default 0,
+  "author_id" uuid not null references "system_user"("id"),
+  "category" varchar(2048) not null,
+  "content" text not null,
+  "html" text not null,
+  "created" timestamp not null default now()
 );
 
 -- Invite

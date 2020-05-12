@@ -11,7 +11,7 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 	if conn.Profile.UserID != userID {
 		return errors.WithStack(errors.New("received name change for wrong user [" + userID.String() + "]"))
 	}
-	var err error = nil
+	var err error
 	switch cmd {
 	case util.ClientCmdUpdateProfile:
 		err = saveName(s, conn, userID, param.(map[string]interface{}))

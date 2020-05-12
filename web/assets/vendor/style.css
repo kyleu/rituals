@@ -12418,14 +12418,14 @@ html.uk-dark, body.uk-dark {
 
 .report-detail {
   border: 1px solid #666;
-  margin: 8px 0;
+  margin-top: 8px;
 }
 .report-detail a {
   display: block;
-  margin: 8px 0 0 8px;
+  margin: 16px 0 0 16px;
 }
 .report-detail .report-content {
-  padding: 8px;
+  padding: 16px;
   display: none;
 }
 .report-detail .report-content p {
@@ -12436,5 +12436,46 @@ html.uk-dark, body.uk-dark {
 }
 
 .uk-dark .report-detail {
+  border-color: #ddd;
+}
+
+#report-detail h5 {
+  margin-bottom: 8px;
+}
+#report-detail ul {
+  margin: 0;
+}
+
+.feedback-list {
+  display: block;
+}
+
+.feedback-category-header {
+  font-size: 125%;
+  margin-bottom: 16px;
+}
+.feedback-category-header .feedback-category-title {
+  cursor: pointer;
+}
+
+.feedback-detail {
+  border: 1px solid #666;
+  margin-top: 8px;
+  padding: 8px;
+}
+.feedback-detail a {
+  display: block;
+}
+.feedback-detail .feedback-content {
+  display: none;
+}
+.feedback-detail .feedback-content p {
+  margin: 0;
+}
+.feedback-detail .feedback-content ul {
+  list-style: disc;
+}
+
+.uk-dark .feedback-detail {
   border-color: #ddd;
 }

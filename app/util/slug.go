@@ -35,7 +35,7 @@ func smartTruncate(text string) string {
 	}
 	for _, word := range words {
 		if len(truncated)+len(word)-1 <= maxLength {
-			truncated = truncated + word
+			truncated += word
 		} else {
 			break
 		}

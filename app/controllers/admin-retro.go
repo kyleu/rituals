@@ -32,7 +32,7 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		retroIDString := mux.Vars(r)["id"]
 		retroID, err := uuid.FromString(retroIDString)
 		if err != nil {
-			return "", errors.Wrap(err, "invalid retro id ["+retroIDString+"]")
+			return "", errors.New("invalid retro id [" + retroIDString + "]")
 		}
 		retro, err := ctx.App.Retro.GetByID(retroID)
 		if err != nil {

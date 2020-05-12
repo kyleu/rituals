@@ -32,7 +32,7 @@ func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcEstimate, title)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error creating slug"))
+		return nil, errors.WithStack(errors.Wrap(err, "error creating estimate slug"))
 	}
 
 	e := NewSession(title, slug, userID)
@@ -41,7 +41,7 @@ func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	choiceString := "{" + strings.Join(e.Choices, ",") + "}"
 	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String(), choiceString, e.Options.ToJSON())
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error saving new session"))
+		return nil, errors.WithStack(errors.Wrap(err, "error saving new estimate session"))
 	}
 	return &e, nil
 }
@@ -100,7 +100,7 @@ func (s *Service) GetByOwner(id uuid.UUID) ([]Session, error) {
 
 func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	var dtos []sessionDTO
-	q := "select x.* from estimate x join estimate_member m on x.id = m.estimate_id where m.user_id = $1 order by created desc"
+	q := "select x.* from estimate x join estimate_member m on x.id = m.estimate_id where m.user_id = $1 order by m.created desc"
 	if limit > 0 {
 		q += fmt.Sprint(" limit ", limit)
 	}

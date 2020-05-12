@@ -1,6 +1,7 @@
 package estimate
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -30,11 +31,15 @@ func (t *StoryStatus) String() string {
 	return t.Key
 }
 
+func (t StoryStatus) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
+}
+
 type Story struct {
 	ID         uuid.UUID   `json:"id"`
 	EstimateID uuid.UUID   `json:"estimateID"`
 	Idx        uint        `json:"idx"`
-	Author     uuid.UUID   `json:"author"`
+	AuthorID   uuid.UUID   `json:"authorID"`
 	Title      string      `json:"title"`
 	Status     StoryStatus `json:"status"`
 	FinalVote  string      `json:"finalVote"`
@@ -45,7 +50,7 @@ type storyDTO struct {
 	ID         uuid.UUID `db:"id"`
 	EstimateID uuid.UUID `db:"estimate_id"`
 	Idx        uint      `db:"idx"`
-	Author     uuid.UUID `db:"author_id"`
+	AuthorID   uuid.UUID `db:"author_id"`
 	Title      string    `db:"title"`
 	Status     string    `db:"status"`
 	FinalVote  string    `db:"final_vote"`
@@ -57,7 +62,7 @@ func (dto *storyDTO) ToStory() Story {
 		ID:         dto.ID,
 		EstimateID: dto.EstimateID,
 		Idx:        dto.Idx,
-		Author:     dto.Author,
+		AuthorID:   dto.AuthorID,
 		Title:      dto.Title,
 		Status:     StoryStatusFromString(dto.Status),
 		FinalVote:  dto.FinalVote,

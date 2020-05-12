@@ -1,6 +1,7 @@
 package invite
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -43,6 +44,10 @@ func (t *InvitationType) String() string {
 	return t.Key
 }
 
+func (t InvitationType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
+}
+
 type InvitationStatus struct {
 	Key string
 }
@@ -64,6 +69,10 @@ func statusFromString(s string) InvitationStatus {
 
 func (t *InvitationStatus) String() string {
 	return t.Key
+}
+
+func (t InvitationStatus) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
 }
 
 type Invitation struct {

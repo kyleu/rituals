@@ -1,20 +1,22 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
 type RetroSessionJoined struct {
-	Profile *util.Profile  `json:"profile"`
-	Session *retro.Session `json:"session"`
-	Members []member.Entry `json:"members"`
-	Online  []uuid.UUID    `json:"online"`
+	Profile  *util.Profile    `json:"profile"`
+	Session  *retro.Session   `json:"session"`
+	Members  []member.Entry   `json:"members"`
+	Online   []uuid.UUID      `json:"online"`
+	Feedback []retro.Feedback `json:"feedback"`
 }
 
 func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
@@ -24,6 +26,10 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 		err = onRetroConnect(s, conn, userID, param.(string))
 	case util.ClientCmdUpdateSession:
 		err = onRetroSessionSave(s, *conn.Channel, param.(map[string]interface{}))
+	case util.ClientCmdAddFeedback:
+		err = onAddFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case util.ClientCmdEditFeedback:
+		err = onEditFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")
 	}
@@ -35,9 +41,17 @@ func onRetroSessionSave(s *Service, ch channel, param map[string]interface{}) er
 	if title == "" {
 		title = "Untitled"
 	}
-	s.logger.Debug(fmt.Sprintf("saving retro session [%s]", title))
+	categoriesString, ok := param["categories"].(string)
+	if !ok {
+		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"])))
+	}
+	categories := util.StringToArray(categoriesString)
+	if len(categories) == 0 {
+		categories = retro.DefaultCategories
+	}
+	s.logger.Debug(fmt.Sprintf("saving retro session [%s] with categories [%s]", title, strings.Join(categories, ", ")))
 
-	err := s.retros.UpdateSession(ch.ID, title)
+	err := s.retros.UpdateSession(ch.ID, title, categories)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating retro session"))
 	}

@@ -5,6 +5,7 @@ values
   ('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'System Admin', 'admin', 'light', 'bluegrey', 'bluegrey', 'en-US')
 ;
 
+-- Estimate
 insert into estimate
   (id, slug, title, owner, status, choices, options)
 values
@@ -37,11 +38,19 @@ values
   ('11000003-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '4')
 ;
 
+-- Standup
 insert into standup
   (id, slug, title, owner, status)
 values
   ('20000000-0000-0000-0000-000000000000', 'standup-a', 'Daily Standup A', '00000000-0000-0000-0000-000000000000', 'new'),
   ('20000001-0000-0000-0000-000000000000', 'standup-b', 'Daily Standup B', '00000000-0000-0000-0000-000000000000', 'new')
+;
+
+insert into standup_member
+  (standup_id, user_id, name, role)
+values
+  ('20000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'AliasA', 'owner'),
+  ('20000000-0000-0000-0000-000000000000', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'AliasB', 'owner')
 ;
 
 insert into report
@@ -53,18 +62,12 @@ values
   ('11000003-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', '2020-05-10', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'Report D', 'Report D')
 ;
 
-insert into standup_member
-  (standup_id, user_id, name, role)
-values
-  ('20000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'AliasA', 'owner'),
-  ('20000000-0000-0000-0000-000000000000', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'AliasB', 'owner')
-;
-
+-- Retro
 insert into retro
-  (id, slug, title, owner, status)
+  (id, slug, title, owner, status, categories)
 values
-  ('30000000-0000-0000-0000-000000000000', 'retro-a', 'Retrospective A', '00000000-0000-0000-0000-000000000000', 'new'),
-  ('30000001-0000-0000-0000-000000000000', 'retro-b', 'Retrospective B', '00000000-0000-0000-0000-000000000000', 'new')
+  ('30000000-0000-0000-0000-000000000000', 'retro-a', 'Retrospective A', '00000000-0000-0000-0000-000000000000', 'new', '{}'),
+  ('30000001-0000-0000-0000-000000000000', 'retro-b', 'Retrospective B', '00000000-0000-0000-0000-000000000000', 'new', '{}')
 ;
 
 insert into retro_member
@@ -74,6 +77,16 @@ values
   ('30000000-0000-0000-0000-000000000000', 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'AliasB', 'owner')
 ;
 
+insert into feedback
+  (id, retro_id, idx, author_id, category, content, html)
+values
+  ('11000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 0, '00000000-0000-0000-0000-000000000000', 'bad', 'Bad!', 'Bad!'),
+  ('11000001-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 1, '00000000-0000-0000-0000-000000000000', 'good', 'Good A', 'Good A'),
+  ('11000002-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 2, 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'good', 'Good B', 'Good B'),
+  ('11000003-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 3, 'FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 'improve', 'Improve stuff', 'Improve stuff')
+;
+
+-- Invite
 insert into invitation
   (key, k, v, src, tgt, note, status)
 values

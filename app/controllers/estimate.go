@@ -35,7 +35,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 		}
 		sess, err := ctx.App.Estimate.NewSession(title, ctx.Profile.UserID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error creating session"))
+			return "", errors.WithStack(errors.Wrap(err, "error creating estimate session"))
 		}
 		return ctx.Route(util.SvcEstimate, "key", sess.Slug), nil
 	})
@@ -46,7 +46,7 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)["key"]
 		sess, err := ctx.App.Estimate.GetBySlug(key)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot load session"))
+			return "", errors.WithStack(errors.Wrap(err, "cannot load estimate session"))
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + key + "]")

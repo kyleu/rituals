@@ -1,0 +1,61 @@
+<%: func RetroFeedback(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+  <h3 class="uk-card-title">
+    <span class="modal-title" onclick="events.openModal('add-feedback');">Feedback</span>
+  </h3>
+  <p id="feedback-detail">Loading...</p>
+</div>
+<div id="modal-add-feedback" data-uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Add Feedback</h2>
+    </div>
+    <form class="uk-form-stacked" id="form-detail" onsubmit="return feedback.onSubmitFeedback();">
+      <div class="uk-modal-body" data-uk-overflow-auto>
+        <fieldset class="uk-fieldset">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="retro-feedback-category">Category</label>
+            <select class="uk-select" id="retro-feedback-category"></select>
+          </div>
+          <div class="uk-margin">
+            <label class="uk-form-label" for="retro-feedback-content">Feedback</label>
+            <textarea class="uk-textarea" id="retro-feedback-content" placeholder="Markdown and HTML supported"></textarea>
+          </div>
+        </fieldset>
+      </div>
+      <div class="uk-modal-footer uk-text-right">
+        <button class="uk-button uk-button-default" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="modal-feedback" class="uk-modal-container" data-uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title" id="feedback-title">...</h2>
+    </div>
+    <div class="uk-modal-body" data-uk-overflow-auto>
+      <div class="content-edit">
+        <div class="uk-margin">
+          <label class="uk-form-label" for="retro-feedback-edit-category">Category</label>
+          <select class="uk-select" id="retro-feedback-edit-category"></select>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="retro-feedback-edit-content">Content</label>
+          <textarea class="uk-textarea" id="retro-feedback-edit-content"></textarea>
+        </div>
+      </div>
+      <div class="content-view"></div>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div class="buttons-edit">
+        <button class="uk-button uk-button-default" type="button" onclick="feedback.onEditFeedback();">Save</button>
+      </div>
+      <div class="buttons-view">
+        <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-feedback').hide();">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

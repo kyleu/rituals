@@ -9,7 +9,7 @@ import (
 func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	standupID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error reading channel id"))
+		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
 	}
 	ch := channel{Svc: util.SvcStandup, ID: standupID}
 	err = s.Join(conn.ID, ch)
@@ -27,12 +27,12 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 
 	sess, err := s.standups.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding session"))
+		return errors.WithStack(errors.Wrap(err, "error finding standup session"))
 	}
 	if sess == nil {
 		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing initial message"))
+			return errors.WithStack(errors.Wrap(err, "error writing standup error message"))
 		}
 		return nil
 	}
@@ -71,7 +71,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 
 	err = s.WriteMessage(conn.ID, &msg)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial message"))
+		return errors.WithStack(errors.Wrap(err, "error writing initial standup message"))
 	}
 
 	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)

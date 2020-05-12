@@ -88,5 +88,5 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	default:
 		err = errors.New("invalid service [" + message.Svc + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling message ["+message.String()+"]"))
+	return errors.WithStack(errors.Wrap(err, "error handling socket message ["+message.String()+"]"))
 }

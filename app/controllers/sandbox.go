@@ -35,4 +35,3 @@ func SandboxForm(w http.ResponseWriter, r *http.Request) {
 		return tmpl(templates.SandboxForm(key, ctx, w))
 	})
 }
-

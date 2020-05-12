@@ -2,11 +2,9 @@ namespace story {
   export interface Story {
     id: string;
     idx: number;
-    author: string;
+    authorID: string;
     title: string;
-    status: {
-      key: string;
-    };
+    status: string;
     finalVote: string;
     created: string;
   }
@@ -14,7 +12,7 @@ namespace story {
   export function setStories(stories: Story[]) {
     estimate.cache.stories = stories;
     util.setContent("#story-detail", renderStories(stories));
-    stories.forEach(s => setStoryStatus(s.id, s.status.key, s, false));
+    stories.forEach(s => setStoryStatus(s.id, s.status, s, false));
     showTotalIfNeeded();
     UIkit.modal("#modal-add-story").hide();
   }
@@ -45,11 +43,11 @@ namespace story {
   export function viewActiveStory() {
     const s = getActiveStory();
     if (s === undefined) {
-      console.log("no active story");
+      console.warn("no active story");
       return;
     }
     util.setText("#story-title", s.title);
-    viewStoryStatus(s.status.key);
+    viewStoryStatus(s.status);
   }
 
   function viewStoryStatus(status: string) {
@@ -89,7 +87,7 @@ namespace story {
   export function requestStoryStatus(s: string) {
     const story = getActiveStory();
     if (story === undefined) {
-      console.log("no active story");
+      console.warn("no active story");
       return;
     }
     const msg = {
@@ -101,7 +99,7 @@ namespace story {
   }
 
   function setStoryStatus(storyID: string, status: string, currStory: story.Story | null, calcTotal: boolean) {
-    if (currStory !== null && currStory!.status.key == "complete") {
+    if (currStory !== null && currStory!.status == "complete") {
       if (currStory!.finalVote.length > 0) {
         status = currStory!.finalVote;
       }
@@ -122,15 +120,15 @@ namespace story {
       }
     });
 
-    setStoryStatus(u.storyID, u.status.key, currStory, true);
+    setStoryStatus(u.storyID, u.status, currStory, true);
     if(u.storyID === estimate.cache.activeStory) {
-      viewStoryStatus(u.status.key);
+      viewStoryStatus(u.status);
     }
   }
 
   function showTotalIfNeeded() {
     let stories = estimate.cache.stories;
-    let strings = stories.filter(s => s.status.key === "complete").map(s => s.finalVote).filter(c => c.length > 0);
+    let strings = stories.filter(s => s.status === "complete").map(s => s.finalVote).filter(c => c.length > 0);
     let floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));
     let sum = 0;
     floats.forEach(f => sum += f);

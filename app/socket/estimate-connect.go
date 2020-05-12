@@ -9,7 +9,7 @@ import (
 func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	estimateID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error reading channel id"))
+		return errors.WithStack(errors.New("error reading estimate id [" + param + "]"))
 	}
 	ch := channel{Svc: util.SvcEstimate, ID: estimateID}
 	err = s.Join(conn.ID, ch)
@@ -27,12 +27,12 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 
 	est, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding session"))
+		return errors.WithStack(errors.Wrap(err, "error finding estimate session"))
 	}
 	if est == nil {
 		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing initial message"))
+			return errors.WithStack(errors.Wrap(err, "error writing error message"))
 		}
 		return nil
 	}
@@ -77,7 +77,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 
 	err = s.WriteMessage(conn.ID, &msg)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial message"))
+		return errors.WithStack(errors.Wrap(err, "error writing initial estimate message"))
 	}
 
 	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)

@@ -25,7 +25,7 @@ func Asset(base, path string) ([]byte, string, string, error) {
 	file := base + path
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
-		return nil, "", "", errors.WithStack(errors.Wrap(err, "error reading asset ["+path+"]"))
+		return nil, "", "", errors.WithStack(errors.Wrap(err, "error reading asset at ["+path+"]"))
 	}
 	if data != nil {
 		w := gzip.NewWriter(&b)

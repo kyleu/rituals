@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"context"
-	"emperror.dev/errors"
 	"fmt"
 	"io"
 	"net/http"
+
+	"emperror.dev/errors"
 
 	"github.com/kyleu/rituals.dev/app/util"
 

@@ -1,13 +1,14 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+	"time"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
-	"time"
 )
 
 func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
@@ -55,7 +56,7 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 
 	c, ok := param["content"].(string)
 	if !ok {
-		return errors.WithStack(errors.Wrap(err, "cannot read content"))
+		return errors.WithStack(errors.Wrap(err, "cannot read report content"))
 	}
 	content := strings.TrimSpace(c)
 	if len(content) == 0 {
@@ -84,7 +85,7 @@ func parseDate(s string) (*time.Time, error) {
 	}
 	t, err := time.Parse("2006-01-02", dString)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "invalid date [" + dString + "]"))
+		return nil, errors.WithStack(errors.New("invalid date [" + dString + "] (expected 2020-01-15)"))
 	}
 	return &t, nil
 }

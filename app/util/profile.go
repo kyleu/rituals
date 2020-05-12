@@ -1,6 +1,8 @@
 package util
 
 import (
+	"encoding/json"
+
 	"github.com/gofrs/uuid"
 	"golang.org/x/text/language"
 )
@@ -25,6 +27,10 @@ var AllRoles = []Role{RoleGuest, RoleUser, RoleAdmin}
 
 func (t *Role) String() string {
 	return t.Key
+}
+
+func (t Role) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
 }
 
 func RoleFromString(s string) Role {

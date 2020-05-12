@@ -1,8 +1,8 @@
 namespace report {
-  function renderReport(model: report.Report): JSX.Element {
+  function renderReport(model: Report): JSX.Element {
     const profile = system.cache.getProfile();
     const ret = <div id={"report-" + model.id} class="report-detail uk-border-rounded section" onclick={"events.openModal('report', '" + model.id + "');"}>
-      <a class={profile.linkColor + "-fg section-link"}>{member.getMemberName(model.author)}</a>
+      <a class={profile.linkColor + "-fg section-link"}>{member.getMemberName(model.authorID)}</a>
       <div class="report-content">loading...</div>
     </div>;
 
@@ -13,7 +13,7 @@ namespace report {
     return ret;
   }
 
-  export function renderReports(reports: report.Report[]): JSX.Element {
+  export function renderReports(reports: Report[]): JSX.Element {
     if (reports.length === 0) {
       return <div>
         <button class="uk-button uk-button-default" onclick="events.openModal('add-report');" type="button">Add Report</button>
@@ -22,11 +22,15 @@ namespace report {
       const dates = getReportDates(reports);
       return <ul class="uk-list">
         {dates.map(day => <li id={"report-date-" + day.d}>
-          <div>{day.d}</div>
-          {day.reports.map(r => <li>{renderReport(r)}</li>)}
+          <h5>
+            <div class="right uk-article-meta">{util.dow(util.dateFromYMD(day.d).getDay())}</div>
+            {util.dateFromYMD(day.d).toLocaleDateString()}
+          </h5>
+          <ul>
+            {day.reports.map(r => <li>{renderReport(r)}</li>)}
+          </ul>
         </li>)}
       </ul>;
     }
   }
-
 }

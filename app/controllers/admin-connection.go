@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gofrs/uuid"
@@ -35,7 +36,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		connectionIDString := mux.Vars(r)["id"]
 		connectionID, err := uuid.FromString(connectionIDString)
 		if err != nil {
-			return "", err
+			return "", errors.New("invalid connection id [" + connectionIDString + "]")
 		}
 		connection, err := ctx.App.Socket.GetByID(connectionID)
 		if err != nil {
@@ -58,7 +59,7 @@ func AdminConnectionPost(w http.ResponseWriter, r *http.Request) {
 		connectionIDString := r.Form.Get("id")
 		connectionID, err := uuid.FromString(connectionIDString)
 		if err != nil {
-			return "", err
+			return "", errors.New("invalid connection id [" + connectionIDString + "]")
 		}
 		connection, err := ctx.App.Socket.GetByID(connectionID)
 		if err != nil {

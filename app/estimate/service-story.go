@@ -1,11 +1,12 @@
 package estimate
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strconv"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strconv"
 )
 
 func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Story, error) {
@@ -95,7 +96,7 @@ func calcFinalVote(votes []Vote) string {
 		final = sum / float64(len(choices))
 	}
 	ret := fmt.Sprint(final)
-	if (len(ret) < 4) {
+	if len(ret) < 4 {
 		return ret
 	}
 	return ret[0:4]

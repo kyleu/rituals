@@ -1,13 +1,14 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
 type StandupSessionJoined struct {
@@ -19,7 +20,7 @@ type StandupSessionJoined struct {
 }
 
 func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
-	var err error = nil
+	var err error
 	switch cmd {
 	case util.ClientCmdConnect:
 		err = onStandupConnect(s, conn, userID, param.(string))

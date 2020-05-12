@@ -46,7 +46,10 @@ namespace command {
     submitVote: "submit-vote",
 
     addReport: "add-report",
-    editReport: "edit-report"
+    editReport: "edit-report",
+
+    addFeedback: "add-feedback",
+    editFeedback: "edit-feedback"
   };
 
   export const server = {
@@ -64,5 +67,7 @@ namespace command {
     voteUpdate: "vote-update",
 
     reportUpdate: "report-update",
+
+    feedbackUpdate: "feedback-update",
   };
 }

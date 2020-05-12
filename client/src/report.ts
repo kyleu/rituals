@@ -2,7 +2,7 @@ namespace report {
   export interface Report {
     id: string;
     d: string;
-    author: string;
+    authorID: string;
     content: string;
     html: string;
     created: string;
@@ -54,10 +54,11 @@ namespace report {
     const profile = system.cache.getProfile();
     const report = getActiveReport();
     if (report === undefined) {
+      console.warn("no active report");
       return;
     }
 
-    util.setText("#report-title", report.d + " / " + member.getMemberName(report.author));
+    util.setText("#report-title", report.d + " / " + member.getMemberName(report.authorID));
     const contentEdit = util.req("#modal-report .content-edit");
     const contentEditDate = util.req<HTMLInputElement>("#standup-report-edit-date", contentEdit);
     const contentEditTextarea = util.req<HTMLTextAreaElement>("#standup-report-edit-content", contentEdit);
@@ -65,7 +66,7 @@ namespace report {
     const buttonsEdit = util.req("#modal-report .buttons-edit");
     const buttonsView = util.req("#modal-report .buttons-view");
 
-    if(report.author === profile.userID) {
+    if(report.authorID === profile.userID) {
       contentEdit.style.display = "block";
       util.setValue(contentEditDate, report.d);
       util.setValue(contentEditTextarea, report.content);

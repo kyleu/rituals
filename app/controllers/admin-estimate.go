@@ -33,7 +33,7 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		estimateIDString := mux.Vars(r)["id"]
 		estimateID, err := uuid.FromString(estimateIDString)
 		if err != nil {
-			return "", errors.Wrap(err, "invalid estimate id ["+estimateIDString+"]")
+			return "", errors.New("invalid estimate id [" + estimateIDString + "]")
 		}
 		estimate, err := ctx.App.Estimate.GetByID(estimateID)
 		if err != nil {
@@ -63,7 +63,7 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 		storyIDString := mux.Vars(r)["id"]
 		storyID, err := uuid.FromString(storyIDString)
 		if err != nil {
-			return "", errors.Wrap(err, "invalid story id ["+storyIDString+"]")
+			return "", errors.New("invalid story id [" + storyIDString + "]")
 		}
 		story, err := ctx.App.Estimate.GetStoryByID(storyID)
 		if err != nil {

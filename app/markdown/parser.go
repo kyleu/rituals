@@ -1,8 +1,10 @@
 package markdown
 
 import (
-	"github.com/russross/blackfriday"
+	"strings"
+
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/russross/blackfriday"
 )
 
 var policy = bluemonday.UGCPolicy()
@@ -10,5 +12,6 @@ var policy = bluemonday.UGCPolicy()
 func ToHTML(s string) string {
 	html := string(blackfriday.Run([]byte(s)))
 	ret := policy.Sanitize(html)
+	ret = strings.TrimSuffix(ret, "\n")
 	return ret
 }

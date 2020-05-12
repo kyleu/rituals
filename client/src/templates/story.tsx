@@ -2,7 +2,7 @@ namespace story {
   function renderStory(story: story.Story): JSX.Element {
     const profile = system.cache.getProfile();
     return <li id={"story-" + story.id} class="section" onclick={"events.openModal('story', '" + story.id + "');"}>
-      <div class="right uk-article-meta story-status">{story.status.key}</div>
+      <div class="right uk-article-meta story-status">{story.status}</div>
       <div class={profile.linkColor + "-fg section-link"}>{story.title}</div>
     </li>;
   }

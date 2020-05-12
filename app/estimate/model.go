@@ -35,6 +35,10 @@ func (t *Status) String() string {
 	return t.Key
 }
 
+func (t Status) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
+}
+
 type SessionOptions struct {
 	Foo string `json:"foo"`
 }

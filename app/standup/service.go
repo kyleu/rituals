@@ -2,8 +2,9 @@ package standup
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/member"
@@ -30,7 +31,7 @@ func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcStandup, title)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error creating slug"))
+		return nil, errors.WithStack(errors.Wrap(err, "error creating standup slug"))
 	}
 
 	e := NewSession(title, slug, userID)
@@ -38,7 +39,7 @@ func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	q := "insert into standup (id, slug, title, owner, status) values ($1, $2, $3, $4, $5)"
 	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String())
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error saving new session"))
+		return nil, errors.WithStack(errors.Wrap(err, "error saving new standup session"))
 	}
 	return &e, nil
 }
@@ -97,7 +98,7 @@ func (s *Service) GetByOwner() ([]Session, error) {
 
 func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	var dtos []sessionDTO
-	q := "select x.* from standup x join standup_member m on x.id = m.standup_id where m.user_id = $1 order by created desc"
+	q := "select x.* from standup x join standup_member m on x.id = m.standup_id where m.user_id = $1 order by m.created desc"
 	if limit > 0 {
 		q += fmt.Sprint(" limit ", limit)
 	}

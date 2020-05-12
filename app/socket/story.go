@@ -40,7 +40,7 @@ func onSetStoryStatus(s *Service, ch channel, m map[string]interface{}) error {
 	storyIDString := m["storyID"].(string)
 	storyID, err := uuid.FromString(storyIDString)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "invalid story ["+storyIDString+"]"))
+		return errors.WithStack(errors.New("invalid story [" + storyIDString + "]"))
 	}
 	statusString := m["status"].(string)
 	status := estimate.StoryStatusFromString(statusString)
@@ -63,7 +63,7 @@ func onSubmitVote(s *Service, ch channel, userID uuid.UUID, param map[string]int
 	storyIDString := param["storyID"].(string)
 	storyID, err := uuid.FromString(storyIDString)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot parse storyID"))
+		return errors.WithStack(errors.Wrap(err, "cannot parse story ["+storyIDString+"]"))
 	}
 	choice := param["choice"].(string)
 

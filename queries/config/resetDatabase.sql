@@ -8,6 +8,7 @@ drop table if exists "report";
 drop table if exists "standup_member";
 drop table if exists "standup";
 
+drop table if exists "feedback";
 drop table if exists "retro_member";
 drop table if exists "retro";
 

@@ -1,5 +1,9 @@
 package util
 
+import (
+	"encoding/json"
+)
+
 type Theme struct {
 	Name            string
 	BackgroundClass string
@@ -25,6 +29,10 @@ var AllThemes = []Theme{ThemeLight, ThemeDark}
 
 func (t *Theme) String() string {
 	return t.Name
+}
+
+func (t Theme) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Name)
 }
 
 func ThemeFromString(s string) Theme {

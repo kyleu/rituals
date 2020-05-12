@@ -1,10 +1,11 @@
 package standup
 
 import (
+	"time"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/markdown"
 	"github.com/kyleu/rituals.dev/app/util"
-	"time"
 )
 
 func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, authorID uuid.UUID) (*Report, error) {

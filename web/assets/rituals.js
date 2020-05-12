@@ -48,6 +48,7 @@ var estimate;
     function setEstimateDetail(detail) {
         estimate.cache.detail = detail;
         util.setValue("#model-choices-input", detail.choices.join(", "));
+        story.viewActiveStory();
         rituals.setDetail(detail);
     }
     function onSubmitEstimateSession() {
@@ -105,7 +106,7 @@ var events;
                 break;
             // standup
             case "add-report":
-                util.setValue("#standup-report-date", dateToYMD(new Date()));
+                util.setValue("#standup-report-date", util.dateToYMD(new Date()));
                 var reportContent_1 = util.setValue("#standup-report-content", "");
                 util.wireTextarea(reportContent_1);
                 delay(function () { return reportContent_1.focus(); });
@@ -119,6 +120,22 @@ var events;
                     reportEditContent_1.focus();
                 });
                 break;
+            // retro
+            case "add-feedback":
+                util.setSelectOption(util.req("#retro-feedback-category"), id);
+                var feedbackContent_1 = util.setValue("#retro-feedback-content", "");
+                util.wireTextarea(feedbackContent_1);
+                delay(function () { return feedbackContent_1.focus(); });
+                break;
+            case "feedback":
+                retro.cache.activeFeedback = id;
+                feedback.viewActiveFeedback();
+                var feedbackEditContent_1 = util.req("#retro-feedback-edit-content");
+                delay(function () {
+                    util.wireTextarea(feedbackEditContent_1);
+                    feedbackEditContent_1.focus();
+                });
+                break;
             // default
             default:
                 console.debug("unhandled modal [" + key + "]");
@@ -127,13 +144,111 @@ var events;
         return false;
     }
     events.openModal = openModal;
-    function dateToYMD(date) {
-        var d = date.getDate();
-        var m = date.getMonth() + 1;
-        var y = date.getFullYear();
-        return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-    }
 })(events || (events = {}));
+var feedback;
+(function (feedback_1) {
+    function setFeedback(feedback) {
+        retro.cache.feedback = feedback;
+        util.setContent("#feedback-detail", feedback_1.renderFeedbackArray(feedback));
+        UIkit.modal("#modal-add-feedback").hide();
+    }
+    feedback_1.setFeedback = setFeedback;
+    function onSubmitFeedback() {
+        var category = util.req("#retro-feedback-category").value;
+        var content = util.req("#retro-feedback-content").value;
+        var msg = {
+            svc: services.retro,
+            cmd: command.client.addFeedback,
+            param: { category: category, content: content }
+        };
+        socket.send(msg);
+        return false;
+    }
+    feedback_1.onSubmitFeedback = onSubmitFeedback;
+    function onEditFeedback() {
+        var id = retro.cache.activeFeedback;
+        var category = util.req("#retro-feedback-edit-category").value;
+        var content = util.req("#retro-feedback-edit-content").value;
+        var msg = {
+            svc: services.retro,
+            cmd: command.client.editFeedback,
+            param: { id: id, category: category, content: content }
+        };
+        socket.send(msg);
+        return false;
+    }
+    feedback_1.onEditFeedback = onEditFeedback;
+    function getActiveFeedback() {
+        if (retro.cache.activeFeedback === undefined) {
+            return undefined;
+        }
+        var curr = retro.cache.feedback.filter(function (x) { return x.id === retro.cache.activeFeedback; });
+        if (curr.length !== 1) {
+            console.warn("cannot load active Feedback [" + retro.cache.activeFeedback + "]");
+            return undefined;
+        }
+        return curr[0];
+    }
+    feedback_1.getActiveFeedback = getActiveFeedback;
+    function viewActiveFeedback() {
+        var profile = system.cache.getProfile();
+        var fb = getActiveFeedback();
+        if (fb === undefined) {
+            console.warn("no active feedback");
+            return;
+        }
+        util.setText("#feedback-title", fb.category + " / " + member.getMemberName(fb.authorID));
+        var contentEdit = util.req("#modal-feedback .content-edit");
+        var contentEditCategory = util.req("#retro-feedback-edit-category", contentEdit);
+        var contentEditTextarea = util.req("#retro-feedback-edit-content", contentEdit);
+        var contentView = util.req("#modal-feedback .content-view");
+        var buttonsEdit = util.req("#modal-feedback .buttons-edit");
+        var buttonsView = util.req("#modal-feedback .buttons-view");
+        if (fb.authorID === profile.userID) {
+            contentEdit.style.display = "block";
+            util.setSelectOption(contentEditCategory, fb.category);
+            util.setValue(contentEditTextarea, fb.content);
+            util.wireTextarea(contentEditTextarea);
+            contentView.style.display = "none";
+            util.setHTML(contentView, "");
+            buttonsEdit.style.display = "block";
+            buttonsView.style.display = "none";
+        }
+        else {
+            contentEdit.style.display = "none";
+            util.setSelectOption(contentEditCategory, undefined);
+            util.setValue(contentEditTextarea, "");
+            contentView.style.display = "block";
+            util.setHTML(contentView, fb.html);
+            buttonsEdit.style.display = "none";
+            buttonsView.style.display = "block";
+        }
+    }
+    feedback_1.viewActiveFeedback = viewActiveFeedback;
+    function onFeedbackUpdate(r) {
+        var x = retro.cache.feedback;
+        x = x.filter(function (p) { return p.id !== r.id; });
+        x.push(r);
+        feedback.setFeedback(x);
+        if (r.id === retro.cache.activeFeedback) {
+            UIkit.modal("#modal-feedback").hide();
+        }
+    }
+    feedback_1.onFeedbackUpdate = onFeedbackUpdate;
+    function getFeedbackCategories(feedback, categories) {
+        function toCollection(c) {
+            var reports = feedback.filter(function (r) { return r.category === c; }).sort(function (l, r) { return (l.created > r.created ? -1 : 1); });
+            return { category: c, feedback: reports };
+        }
+        var ret = categories.map(toCollection);
+        var extras = feedback.filter(function (r) { return categories.indexOf(r.category) == -1; });
+        if (extras.length > 0) {
+            ret.push({ category: "unknown", feedback: extras });
+        }
+        return ret;
+    }
+    feedback_1.getFeedbackCategories = getFeedbackCategories;
+})(feedback || (feedback = {}));
 var system;
 (function (system) {
     var Cache = /** @class */ (function () {
@@ -174,7 +289,9 @@ var command;
         setStoryStatus: "set-story-status",
         submitVote: "submit-vote",
         addReport: "add-report",
-        editReport: "edit-report"
+        editReport: "edit-report",
+        addFeedback: "add-feedback",
+        editFeedback: "edit-feedback"
     };
     command.server = {
         error: "error",
@@ -186,7 +303,8 @@ var command;
         storyUpdate: "story-update",
         storyStatusChange: "story-status-change",
         voteUpdate: "vote-update",
-        reportUpdate: "report-update"
+        reportUpdate: "report-update",
+        feedbackUpdate: "feedback-update"
     };
 })(command || (command = {}));
 // noinspection JSUnusedGlobalSymbols
@@ -232,7 +350,7 @@ var member;
         if (self.length === 1) {
             util.setText("#member-self .member-name", self[0].name);
             util.setValue("#self-name-input", self[0].name);
-            util.setText("#member-self .member-role", self[0].role.key);
+            util.setText("#member-self .member-role", self[0].role);
         }
         else if (self.length === 0) {
             console.warn("self not found among members");
@@ -270,6 +388,12 @@ var member;
                 util.setContent("#report-detail", report.renderReports(standup.cache.reports));
                 if (standup.cache.activeReport) {
                     report.viewActiveReport();
+                }
+            }
+            if (system.cache.currentService == services.retro) {
+                util.setContent("#report-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+                if (retro.cache.activeFeedback) {
+                    feedback.viewActiveFeedback();
                 }
             }
         }
@@ -333,7 +457,7 @@ var member;
             return;
         }
         util.setText("#member-modal-name", member.name);
-        util.setText("#member-modal-role", member.role.key);
+        util.setText("#member-modal-role", member.role);
     }
     member_1.viewActiveMember = viewActiveMember;
 })(member || (member = {}));
@@ -379,16 +503,17 @@ var report;
         var profile = system.cache.getProfile();
         var report = getActiveReport();
         if (report === undefined) {
+            console.warn("no active report");
             return;
         }
-        util.setText("#report-title", report.d + " / " + member.getMemberName(report.author));
+        util.setText("#report-title", report.d + " / " + member.getMemberName(report.authorID));
         var contentEdit = util.req("#modal-report .content-edit");
         var contentEditDate = util.req("#standup-report-edit-date", contentEdit);
         var contentEditTextarea = util.req("#standup-report-edit-content", contentEdit);
         var contentView = util.req("#modal-report .content-view");
         var buttonsEdit = util.req("#modal-report .buttons-edit");
         var buttonsView = util.req("#modal-report .buttons-view");
-        if (report.author === profile.userID) {
+        if (report.authorID === profile.userID) {
             contentEdit.style.display = "block";
             util.setValue(contentEditDate, report.d);
             util.setValue(contentEditTextarea, report.content);
@@ -433,10 +558,11 @@ var retro;
 (function (retro) {
     var Cache = /** @class */ (function () {
         function Cache() {
+            this.feedback = [];
         }
         return Cache;
     }());
-    var cache = new Cache();
+    retro.cache = new Cache();
     function onRetroMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
@@ -446,9 +572,13 @@ var retro;
                 var sj = param;
                 rituals.onSessionJoin(sj);
                 setRetroDetail(sj.session);
+                feedback.setFeedback(sj.feedback);
                 break;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
+                break;
+            case command.server.feedbackUpdate:
+                feedback.onFeedbackUpdate(param);
                 break;
             default:
                 console.warn("unhandled command [" + cmd + "] for retro");
@@ -456,16 +586,22 @@ var retro;
     }
     retro.onRetroMessage = onRetroMessage;
     function setRetroDetail(detail) {
-        cache.detail = detail;
+        retro.cache.detail = detail;
+        util.setValue("#model-categories-input", detail.categories.join(", "));
+        util.setOptions(util.req("#retro-feedback-category"), detail.categories);
+        util.setOptions(util.req("#retro-feedback-edit-category"), detail.categories);
+        feedback.setFeedback(retro.cache.feedback);
         rituals.setDetail(detail);
     }
     function onSubmitRetroSession() {
         var title = util.req("#model-title-input").value;
+        var categories = util.req("#model-categories-input").value;
         var msg = {
             svc: services.retro,
             cmd: command.client.updateSession,
             param: {
-                title: title
+                title: title,
+                categories: categories
             }
         };
         socket.send(msg);
@@ -675,7 +811,7 @@ var story;
     function setStories(stories) {
         estimate.cache.stories = stories;
         util.setContent("#story-detail", story_1.renderStories(stories));
-        stories.forEach(function (s) { return setStoryStatus(s.id, s.status.key, s, false); });
+        stories.forEach(function (s) { return setStoryStatus(s.id, s.status, s, false); });
         showTotalIfNeeded();
         UIkit.modal("#modal-add-story").hide();
     }
@@ -706,11 +842,11 @@ var story;
     function viewActiveStory() {
         var s = getActiveStory();
         if (s === undefined) {
-            console.log("no active story");
+            console.warn("no active story");
             return;
         }
         util.setText("#story-title", s.title);
-        viewStoryStatus(s.status.key);
+        viewStoryStatus(s.status);
     }
     story_1.viewActiveStory = viewActiveStory;
     function viewStoryStatus(status) {
@@ -749,7 +885,7 @@ var story;
     function requestStoryStatus(s) {
         var story = getActiveStory();
         if (story === undefined) {
-            console.log("no active story");
+            console.warn("no active story");
             return;
         }
         var msg = {
@@ -761,7 +897,7 @@ var story;
     }
     story_1.requestStoryStatus = requestStoryStatus;
     function setStoryStatus(storyID, status, currStory, calcTotal) {
-        if (currStory !== null && currStory.status.key == "complete") {
+        if (currStory !== null && currStory.status == "complete") {
             if (currStory.finalVote.length > 0) {
                 status = currStory.finalVote;
             }
@@ -780,15 +916,15 @@ var story;
                 s.status = u.status;
             }
         });
-        setStoryStatus(u.storyID, u.status.key, currStory, true);
+        setStoryStatus(u.storyID, u.status, currStory, true);
         if (u.storyID === estimate.cache.activeStory) {
-            viewStoryStatus(u.status.key);
+            viewStoryStatus(u.status);
         }
     }
     story_1.onStoryStatusChange = onStoryStatusChange;
     function showTotalIfNeeded() {
         var stories = estimate.cache.stories;
-        var strings = stories.filter(function (s) { return s.status.key === "complete"; }).map(function (s) { return s.finalVote; }).filter(function (c) { return c.length > 0; });
+        var strings = stories.filter(function (s) { return s.status === "complete"; }).map(function (s) { return s.finalVote; }).filter(function (c) { return c.length > 0; });
         var floats = strings.map(function (c) { return parseFloat(c); }).filter(function (f) { return !isNaN(f); });
         var sum = 0;
         floats.forEach(function (f) { return sum += f; });
@@ -879,6 +1015,58 @@ var util;
         resize();
     }
     util.wireTextarea = wireTextarea;
+    function dateToYMD(date) {
+        var d = date.getDate();
+        var m = date.getMonth() + 1;
+        var y = date.getFullYear();
+        return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    }
+    util.dateToYMD = dateToYMD;
+    function dateFromYMD(s) {
+        var d = new Date(s);
+        d = new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+        return d;
+    }
+    util.dateFromYMD = dateFromYMD;
+    function dow(i) {
+        switch (i) {
+            case 0:
+                return "Sun";
+            case 1:
+                return "Mon";
+            case 2:
+                return "Tue";
+            case 3:
+                return "Wed";
+            case 4:
+                return "Thu";
+            case 5:
+                return "Fri";
+            case 6:
+                return "Sat";
+            default:
+                return "???";
+        }
+    }
+    util.dow = dow;
+    function setOptions(el, categories) {
+        el.innerHTML = "";
+        for (var _i = 0, categories_1 = categories; _i < categories_1.length; _i++) {
+            var c = categories_1[_i];
+            var opt_1 = document.createElement("option");
+            opt_1.value = c;
+            opt_1.innerText = c;
+            el.appendChild(opt_1);
+        }
+    }
+    util.setOptions = setOptions;
+    function setSelectOption(el, o) {
+        for (var i = 0; i < el.children.length; i++) {
+            var e = el.children.item(i);
+            e.selected = e.value === o;
+        }
+    }
+    util.setSelectOption = setSelectOption;
 })(util || (util = {}));
 var vote;
 (function (vote) {
@@ -904,10 +1092,10 @@ var vote;
         }
         var votes = estimate.cache.activeVotes();
         var activeVote = votes.filter(function (v) { return v.userID === system.cache.getProfile().userID; }).pop();
-        if (s.status.key == "active") {
+        if (s.status == "active") {
             viewActiveVotes(votes, activeVote);
         }
-        if (s.status.key == "complete") {
+        if (s.status == "complete") {
             viewVoteResults(votes);
         }
     }
@@ -962,6 +1150,37 @@ var vote;
     }
     vote.getVoteResults = getVoteResults;
 })(vote || (vote = {}));
+var feedback;
+(function (feedback) {
+    function renderFeedback(model) {
+        var profile = system.cache.getProfile();
+        var ret = JSX("div", { id: "feedback-" + model.id, "class": "feedback-detail uk-border-rounded section", onclick: "events.openModal('feedback', '" + model.id + "');" },
+            JSX("a", { "class": profile.linkColor + "-fg section-link" }, member.getMemberName(model.authorID)),
+            JSX("div", { "class": "feedback-content" }, "loading..."));
+        if (model.html.length > 0) {
+            util.setHTML(util.req(".feedback-content", ret), model.html).style.display = "block";
+        }
+        return ret;
+    }
+    function renderFeedbackArray(f) {
+        var _a;
+        if (f.length === 0) {
+            return JSX("div", null,
+                JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('add-feedback');", type: "button" }, "Add Feedback"));
+        }
+        else {
+            var cats = feedback.getFeedbackCategories(f, ((_a = retro.cache.detail) === null || _a === void 0 ? void 0 : _a.categories) || []);
+            var profile_1 = system.cache.getProfile();
+            return JSX("div", { "class": "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "uk-grid": "" }, cats.map(function (cat) { return JSX("div", { "class": "feedback-list uk-transition-toggle" },
+                JSX("div", { "class": "feedback-category-header" },
+                    JSX("span", { "class": "right" },
+                        JSX("a", { "class": profile_1.linkColor + "-fg uk-icon-button uk-transition-fade", "data-uk-icon": "plus", onclick: "events.openModal('add-feedback', '" + cat.category + "');", title: "edit session" })),
+                    JSX("span", { "class": "feedback-category-title", onclick: "events.openModal('add-feedback', '" + cat.category + "');" }, cat.category)),
+                JSX("div", null, cat.feedback.map(function (fb) { return JSX("div", null, renderFeedback(fb)); }))); }));
+        }
+    }
+    feedback.renderFeedbackArray = renderFeedbackArray;
+})(feedback || (feedback = {}));
 var member;
 (function (member_3) {
     function renderMember(member) {
@@ -994,7 +1213,7 @@ var report;
     function renderReport(model) {
         var profile = system.cache.getProfile();
         var ret = JSX("div", { id: "report-" + model.id, "class": "report-detail uk-border-rounded section", onclick: "events.openModal('report', '" + model.id + "');" },
-            JSX("a", { "class": profile.linkColor + "-fg section-link" }, member.getMemberName(model.author)),
+            JSX("a", { "class": profile.linkColor + "-fg section-link" }, member.getMemberName(model.authorID)),
             JSX("div", { "class": "report-content" }, "loading..."));
         if (model.html.length > 0) {
             util.setHTML(util.req(".report-content", ret), model.html).style.display = "block";
@@ -1009,8 +1228,10 @@ var report;
         else {
             var dates = report.getReportDates(reports);
             return JSX("ul", { "class": "uk-list" }, dates.map(function (day) { return JSX("li", { id: "report-date-" + day.d },
-                JSX("div", null, day.d),
-                day.reports.map(function (r) { return JSX("li", null, renderReport(r)); })); }));
+                JSX("h5", null,
+                    JSX("div", { "class": "right uk-article-meta" }, util.dow(util.dateFromYMD(day.d).getDay())),
+                    util.dateFromYMD(day.d).toLocaleDateString()),
+                JSX("ul", null, day.reports.map(function (r) { return JSX("li", null, renderReport(r)); }))); }));
         }
     }
     report.renderReports = renderReports;
@@ -1020,7 +1241,7 @@ var story;
     function renderStory(story) {
         var profile = system.cache.getProfile();
         return JSX("li", { id: "story-" + story.id, "class": "section", onclick: "events.openModal('story', '" + story.id + "');" },
-            JSX("div", { "class": "right uk-article-meta story-status" }, story.status.key),
+            JSX("div", { "class": "right uk-article-meta story-status" }, story.status),
             JSX("div", { "class": profile.linkColor + "-fg section-link" }, story.title));
     }
     function renderStories(stories) {

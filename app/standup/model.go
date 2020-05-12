@@ -1,9 +1,11 @@
 package standup
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
+	"encoding/json"
 	"strings"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -28,6 +30,10 @@ func statusFromString(s string) Status {
 
 func (t *Status) String() string {
 	return t.Key
+}
+
+func (t Status) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
 }
 
 type Session struct {

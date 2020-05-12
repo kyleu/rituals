@@ -32,7 +32,7 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		userIDString := mux.Vars(r)["id"]
 		userID, err := uuid.FromString(userIDString)
 		if err != nil {
-			return "", errors.Wrap(err, "invalid user id ["+userIDString+"]")
+			return "", errors.New("invalid user id [" + userIDString + "]")
 		}
 		user, err := ctx.App.User.GetByID(userID, false)
 		if err != nil {

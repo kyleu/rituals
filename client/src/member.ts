@@ -2,7 +2,7 @@ namespace member {
   export interface Member {
     userID: string;
     name: string;
-    role: { key: string };
+    role: string;
     created: string;
   }
 
@@ -23,7 +23,7 @@ namespace member {
     if (self.length === 1) {
       util.setText("#member-self .member-name", self[0].name);
       util.setValue("#self-name-input", self[0].name);
-      util.setText("#member-self .member-role", self[0].role.key);
+      util.setText("#member-self .member-role", self[0].role);
     } else if (self.length === 0) {
       console.warn("self not found among members");
     } else {
@@ -63,6 +63,12 @@ namespace member {
         util.setContent("#report-detail", report.renderReports(standup.cache.reports));
         if (standup.cache.activeReport) {
           report.viewActiveReport();
+        }
+      }
+      if (system.cache.currentService == services.retro) {
+        util.setContent("#report-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+        if (retro.cache.activeFeedback) {
+          feedback.viewActiveFeedback();
         }
       }
     }
@@ -125,6 +131,6 @@ namespace member {
       return;
     }
     util.setText("#member-modal-name", member.name);
-    util.setText("#member-modal-role", member.role.key);
+    util.setText("#member-modal-role", member.role);
   }
 }

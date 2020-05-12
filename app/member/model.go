@@ -1,6 +1,7 @@
 package member
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -28,6 +29,10 @@ func roleFromString(s string) Role {
 
 func (t *Role) String() string {
 	return t.Key
+}
+
+func (t Role) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
 }
 
 type entryDTO struct {

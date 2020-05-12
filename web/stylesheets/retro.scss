@@ -1,0 +1,35 @@
+.feedback-list {
+  display: block;
+}
+
+.feedback-category-header {
+  font-size: 125%;
+  margin-bottom: 16px;
+  .feedback-category-title {
+    cursor: pointer;
+  }
+}
+
+.feedback-detail {
+  border: 1px solid #666;
+  margin-top: 8px;
+  padding: 8px;
+
+  a {
+    display: block;
+  }
+
+  .feedback-content {
+    display: none;
+    p {
+      margin: 0;
+    }
+    ul {
+      list-style: disc;
+    }
+  }
+}
+
+.uk-dark .feedback-detail {
+  border-color: #ddd;
+}
