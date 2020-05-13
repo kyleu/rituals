@@ -27,14 +27,14 @@ func NewService(db *sqlx.DB, svc string, table string, col string) *Service {
 
 var nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
-func (s *Service) GetByModelID(id uuid.UUID) ([]Entry, error) {
+func (s *Service) GetByModelID(id uuid.UUID) ([]*Entry, error) {
 	var dtos []entryDTO
 	q := fmt.Sprintf("select user_id, %s, role, created from %s where %s = $1 order by lower(name)", nameClause, s.tableName, s.colName)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Entry, 0, len(dtos))
+	ret := make([]*Entry, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToEntry())
 	}
@@ -51,8 +51,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := dto.ToEntry()
-	return &ret, nil
+	return dto.ToEntry(), nil
 }
 
 func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, error) {

@@ -7,26 +7,26 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-func (s *Service) GetStoryVotes(storyID uuid.UUID) ([]Vote, error) {
+func (s *Service) GetStoryVotes(storyID uuid.UUID) ([]*Vote, error) {
 	var dtos []voteDTO
 	err := s.db.Select(&dtos, "select * from vote where story_id = $1", storyID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Vote, 0, len(dtos))
+	ret := make([]*Vote, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToVote())
 	}
 	return ret, nil
 }
 
-func (s *Service) GetEstimateVotes(estimateID uuid.UUID) ([]Vote, error) {
+func (s *Service) GetEstimateVotes(estimateID uuid.UUID) ([]*Vote, error) {
 	var dtos []voteDTO
 	err := s.db.Select(&dtos, "select v.* from vote v join story s on v.story_id = s.id where s.estimate_id = $1", estimateID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Vote, 0, len(dtos))
+	ret := make([]*Vote, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToVote())
 	}
@@ -42,8 +42,7 @@ func (s *Service) GetVote(storyID uuid.UUID, userID uuid.UUID) (*Vote, error) {
 		}
 		return nil, err
 	}
-	ret := dto.ToVote()
-	return &ret, nil
+	return dto.ToVote(), nil
 }
 
 func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string) (*Vote, error) {

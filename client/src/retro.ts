@@ -1,6 +1,4 @@
 namespace retro {
-  import Feedback = feedback.Feedback;
-
   interface Detail extends rituals.Session {
     categories: string[];
   }
@@ -35,6 +33,9 @@ namespace retro {
         break;
       case command.server.feedbackUpdate:
         feedback.onFeedbackUpdate(param as feedback.Feedback);
+        break;
+      case command.server.feedbackRemove:
+        feedback.onFeedbackRemoved(param as string);
         break;
       default:
         console.warn("unhandled command [" + cmd + "] for retro");

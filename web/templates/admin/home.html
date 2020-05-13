@@ -10,6 +10,8 @@
       <p>Privileged actions for <%= util.AppName %></p>
       <ul class="uk-list uk-list-divider">
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user`) %>">Users</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.auth`) %>">Auth</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.action`) %>">Actions</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invite`) %>">Invitations</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate`) %>">Estimates</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.standup`) %>">Daily Standups</a></li>

@@ -28,6 +28,34 @@ namespace story {
     return false;
   }
 
+  export function beginEditStory() {
+    const s = getActiveStory()!;
+    const x = prompt("Edit your story", s.title)
+    if(x !== null && x !== s.title) {
+      const msg = {
+        svc: services.estimate,
+        cmd: command.client.updateStory,
+        param: { id: s.id, title: x },
+      };
+      socket.send(msg);
+    }
+    return false;
+  }
+
+  export function onRemoveStory() {
+    const id = estimate.cache.activeStory;
+    if(id && confirm("Delete this story?")) {
+      const msg = {
+        svc: services.estimate,
+        cmd: command.client.removeStory,
+        param: id,
+      };
+      socket.send(msg);
+      UIkit.modal("#modal-story").hide();
+    }
+    return false;
+  }
+
   export function getActiveStory() {
     if (estimate.cache.activeStory === undefined) {
       return undefined;
@@ -50,83 +78,7 @@ namespace story {
     viewStoryStatus(s.status);
   }
 
-  function viewStoryStatus(status: string) {
-    function setActive(el: HTMLElement, status: string) {
-      const s = el.id.substr(el.id.lastIndexOf("-") + 1);
-      if (s === status) {
-        el.classList.add("active");
-      } else {
-        el.classList.remove("active");
-      }
-    }
-
-    for (let el of util.els(".story-status-body")) {
-      setActive(el, status);
-    }
-    for (let el of util.els(".story-status-actions")) {
-      setActive(el, status);
-    }
-
-    let txt = "";
-    switch(status) {
-      case "pending":
-        txt = "Story";
-        break;
-      case "active":
-        txt = "Voting";
-        break;
-      case "complete":
-        txt = "Results";
-        break;
-    }
-    util.setText("#story-status", txt);
-
-    vote.viewVotes();
-  }
-
-  export function requestStoryStatus(s: string) {
-    const story = getActiveStory();
-    if (story === undefined) {
-      console.warn("no active story");
-      return;
-    }
-    const msg = {
-      svc: services.estimate,
-      cmd: command.client.setStoryStatus,
-      param: {storyID: story.id, status: s},
-    };
-    socket.send(msg);
-  }
-
-  function setStoryStatus(storyID: string, status: string, currStory: story.Story | null, calcTotal: boolean) {
-    if (currStory !== null && currStory!.status == "complete") {
-      if (currStory!.finalVote.length > 0) {
-        status = currStory!.finalVote;
-      }
-    }
-    util.setContent("#story-" + storyID + " .story-status", renderStatus(status));
-    if (calcTotal) {
-      showTotalIfNeeded();
-    }
-  }
-
-  export function onStoryStatusChange(u: estimate.StoryStatusChange) {
-    let currStory: Story | null = null;
-    estimate.cache.stories.forEach(s => {
-      if (s.id == u.storyID) {
-        currStory = s;
-        s.finalVote = u.finalVote;
-        s.status = u.status;
-      }
-    });
-
-    setStoryStatus(u.storyID, u.status, currStory, true);
-    if(u.storyID === estimate.cache.activeStory) {
-      viewStoryStatus(u.status);
-    }
-  }
-
-  function showTotalIfNeeded() {
+  export function showTotalIfNeeded() {
     let stories = estimate.cache.stories;
     let strings = stories.filter(s => s.status === "complete").map(s => s.finalVote).filter(c => c.length > 0);
     let floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));

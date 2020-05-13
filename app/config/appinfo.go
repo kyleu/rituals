@@ -2,6 +2,8 @@ package config
 
 import (
 	"emperror.dev/emperror"
+	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/invite"
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -18,6 +20,8 @@ type AppInfo struct {
 	Logger   logur.LoggerFacade
 	Errors   emperror.ErrorHandlerFacade
 	User     *user.Service
+	Auth     *auth.Service
+	Action   *actions.Service
 	Invite   *invite.Service
 	Estimate *estimate.Service
 	Standup  *standup.Service

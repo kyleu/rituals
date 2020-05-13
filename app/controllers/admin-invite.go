@@ -13,7 +13,7 @@ import (
 func AdminInviteList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Invitation List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite"), "invites")...)
 		ctx.Breadcrumbs = bc
 
@@ -33,7 +33,7 @@ func AdminInviteDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Title = invite.Key
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite"), "invites")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite.detail", "key", key), key)...)
 		ctx.Breadcrumbs = bc

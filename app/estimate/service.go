@@ -3,6 +3,7 @@ package estimate
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/actions"
 	"strings"
 
 	"emperror.dev/errors"
@@ -14,15 +15,17 @@ import (
 )
 
 type Service struct {
-	db      *sqlx.DB
-	Members *member.Service
-	logger  logur.Logger
+	actions   *actions.Service
+	db        *sqlx.DB
+	Members   *member.Service
+	logger    logur.Logger
 }
 
-func NewService(db *sqlx.DB, logger logur.Logger) *Service {
+func NewService(actions *actions.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcEstimate})
 
 	return &Service{
+		actions: actions,
 		db:      db,
 		Members: member.NewService(db, util.SvcEstimate, "estimate_member", "estimate_id"),
 		logger:  logger,
@@ -46,13 +49,13 @@ func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	return &e, nil
 }
 
-func (s *Service) List() ([]Session, error) {
+func (s *Service) List() ([]*Session, error) {
 	var dtos []sessionDTO
 	err := s.db.Select(&dtos, "select * from estimate order by created desc")
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0, len(dtos))
+	ret := make([]*Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
@@ -68,8 +71,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 		}
 		return nil, err
 	}
-	ret := dto.ToSession()
-	return &ret, nil
+	return dto.ToSession(), nil
 }
 
 func (s *Service) GetBySlug(slug string) (*Session, error) {
@@ -81,24 +83,23 @@ func (s *Service) GetBySlug(slug string) (*Session, error) {
 		}
 		return nil, err
 	}
-	ret := dto.ToSession()
-	return &ret, nil
+	return dto.ToSession(), nil
 }
 
-func (s *Service) GetByOwner(id uuid.UUID) ([]Session, error) {
+func (s *Service) GetByOwner(id uuid.UUID) ([]*Session, error) {
 	var dtos []sessionDTO
 	err := s.db.Select(&dtos, "select * from estimate where owner = $1 order by created desc", id)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0, len(dtos))
+	ret := make([]*Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
 	return ret, nil
 }
 
-func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
+func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]*Session, error) {
 	var dtos []sessionDTO
 	q := "select x.* from estimate x join estimate_member m on x.id = m.estimate_id where m.user_id = $1 order by m.created desc"
 	if limit > 0 {
@@ -108,7 +109,7 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0, len(dtos))
+	ret := make([]*Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}

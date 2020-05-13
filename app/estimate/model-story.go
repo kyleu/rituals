@@ -20,7 +20,7 @@ var AllStoryStatuses = []StoryStatus{StoryStatusPending, StoryStatusActive, Stor
 
 func StoryStatusFromString(s string) StoryStatus {
 	for _, t := range AllStoryStatuses {
-		if t.String() == s {
+		if t.Key == s {
 			return t
 		}
 	}
@@ -57,8 +57,8 @@ type storyDTO struct {
 	Created    time.Time `db:"created"`
 }
 
-func (dto *storyDTO) ToStory() Story {
-	return Story{
+func (dto *storyDTO) ToStory() *Story {
+	return &Story{
 		ID:         dto.ID,
 		EstimateID: dto.EstimateID,
 		Idx:        dto.Idx,

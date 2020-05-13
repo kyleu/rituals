@@ -38,10 +38,24 @@ namespace feedback {
     const content = util.req<HTMLInputElement>("#retro-feedback-edit-content").value;
     const msg = {
       svc: services.retro,
-      cmd: command.client.editFeedback,
+      cmd: command.client.updateFeedback,
       param: {id: id, category: category, content: content},
     };
     socket.send(msg);
+    return false;
+  }
+
+  export function onRemoveFeedback() {
+    const id = retro.cache.activeFeedback;
+    if(id && confirm("Delete this feedback?")) {
+      const msg = {
+        svc: services.retro,
+        cmd: command.client.removeFeedback,
+        param: id,
+      };
+      socket.send(msg);
+      UIkit.modal("#modal-feedback").hide();
+    }
     return false;
   }
 
@@ -94,14 +108,24 @@ namespace feedback {
   }
 
   export function onFeedbackUpdate(r: feedback.Feedback) {
-    let x = retro.cache.feedback;
-
-    x = x.filter((p) => p.id !== r.id);
+    const x = preUpdate(r.id)
     x.push(r);
+    postUpdate(x, r.id)
+  }
 
+  export function onFeedbackRemoved(id: string) {
+    const x = preUpdate(id)
+    postUpdate(x, id)
+    UIkit.notification("feedback has been deleted", {status: "success", pos: "top-right"});
+  }
+
+  function preUpdate(id: string) {
+    return retro.cache.feedback.filter((p) => p.id !== id);
+  }
+
+  function postUpdate(x: feedback.Feedback[], id: string) {
     feedback.setFeedback(x);
-
-    if(r.id === retro.cache.activeFeedback) {
+    if(id === retro.cache.activeFeedback) {
       UIkit.modal("#modal-feedback").hide();
     }
   }

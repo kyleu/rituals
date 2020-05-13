@@ -1,0 +1,14 @@
+<%: func AdminActionList(actions []*actions.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">App Actions</h3>
+      <% AdminActionTable(actions, ctx, _buffer) %>
+    </div>
+  </div>
+</div>
+<% } %>

@@ -23,6 +23,7 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	r.Methods(http.MethodGet).Path("/").Handler(addContext(r, info, http.HandlerFunc(Home))).Name("home")
 	r.Methods(http.MethodGet).Path("/s").Handler(addContext(r, info, http.HandlerFunc(Socket))).Name("websocket")
 
+	// Profile
 	profile := r.Path("/profile").Subrouter()
 	profile.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(Profile))).Name("profile")
 	profile.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(ProfileSave))).Name("profile.save")
@@ -31,6 +32,11 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	sandbox := r.Path("/sandbox").Subrouter()
 	sandbox.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SandboxList))).Name("sandbox")
 	r.Path("/sandbox/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SandboxForm))).Name("sandbox.run")
+
+	// Auth
+	_ = r.Path("/auth").Subrouter()
+	r.Path("/auth/callback/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AuthCallback))).Name("auth.callback")
+	r.Path("/auth/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AuthSubmit))).Name("auth.submit")
 
 	// Join
 	join := r.Path("/join").Subrouter()
@@ -57,9 +63,13 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 
 	// Admin
 	admin := r.Path("/admin").Subrouter()
-	admin.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminHome))).Name("admin.home")
+	admin.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminHome))).Name("admin")
 	r.Path("/admin/user").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminUserList))).Name("admin.user")
 	r.Path("/admin/user/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminUserDetail))).Name("admin.user.detail")
+	r.Path("/admin/auth").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminAuthList))).Name("admin.auth")
+	r.Path("/admin/auth/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminAuthDetail))).Name("admin.auth.detail")
+	r.Path("/admin/action").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminActionList))).Name("admin.action")
+	r.Path("/admin/action/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminActionDetail))).Name("admin.action.detail")
 	r.Path("/admin/invite").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminInviteList))).Name("admin.invite")
 	r.Path("/admin/invite/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminInviteDetail))).Name("admin.invite.detail")
 	r.Path("/admin/estimate").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminEstimateList))).Name("admin.estimate")

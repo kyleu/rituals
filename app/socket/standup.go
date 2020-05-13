@@ -14,9 +14,9 @@ import (
 type StandupSessionJoined struct {
 	Profile *util.Profile    `json:"profile"`
 	Session *standup.Session `json:"session"`
-	Members []member.Entry   `json:"members"`
+	Members []*member.Entry   `json:"members"`
 	Online  []uuid.UUID      `json:"online"`
-	Reports []standup.Report `json:"reports"`
+	Reports []*standup.Report `json:"reports"`
 }
 
 func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
@@ -28,8 +28,10 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 		err = onStandupSessionSave(s, *conn.Channel, param.(map[string]interface{}))
 	case util.ClientCmdAddReport:
 		err = onAddReport(s, *conn.Channel, userID, param.(map[string]interface{}))
-	case util.ClientCmdEditReport:
+	case util.ClientCmdUpdateReport:
 		err = onEditReport(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case util.ClientCmdRemoveReport:
+		err = onRemoveReport(s, *conn.Channel, userID, param.(string))
 	default:
 		err = errors.New("unhandled standup command [" + cmd + "]")
 	}

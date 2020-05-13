@@ -1,4 +1,4 @@
-<%: func AdminUserDetail(user *user.SystemUser, estimates []estimate.Session, standups []standup.Session, retros []retro.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminUserDetail(user *user.SystemUser, auths []*auth.Record, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -34,6 +34,16 @@
             <td><%= user.LinkColor %></td>
           </tr>
           <tr>
+            <th>Picture</th>
+            <td>
+              <% if len(user.Picture) == 0 { %>
+                -
+              <% } else { %>
+                <img src="<%= user.Picture %>" />
+              <% } %>
+            </td>
+          </tr>
+          <tr>
             <th>Locale</th>
             <td><%=v user.Locale %></td>
           </tr>
@@ -45,6 +55,12 @@
       </table>
     </div>
 
+    <% if len(auths) > 0 { %>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Auth Records</h3>
+      <% AdminAuthTable(auths, ctx, _buffer) %>
+    </div>
+    <% } %>
     <% if len(estimates) > 0 { %>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
       <h3 class="uk-card-title">Estimate Sessions</h3>

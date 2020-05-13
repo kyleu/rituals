@@ -26,8 +26,8 @@ type reportDTO struct {
 	Created   time.Time `db:"created"`
 }
 
-func (dto *reportDTO) ToReport() Report {
-	return Report{
+func (dto *reportDTO) ToReport() *Report {
+	return &Report{
 		ID:        dto.ID,
 		StandupID: dto.StandupID,
 		D:         dto.D.Format("2006-01-02"),

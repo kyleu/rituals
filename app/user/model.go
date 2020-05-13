@@ -15,6 +15,7 @@ type SystemUser struct {
 	Theme     string    `db:"theme"`
 	NavColor  string    `db:"nav_color"`
 	LinkColor string    `db:"link_color"`
+	Picture   string    `db:"picture"`
 	Locale    string    `db:"locale"`
 	Created   time.Time `db:"created"`
 }
@@ -31,6 +32,7 @@ func (su *SystemUser) ToProfile() *util.UserProfile {
 		Theme:     util.ThemeFromString(su.Theme),
 		NavColor:  su.NavColor,
 		LinkColor: su.LinkColor,
+		Picture:   su.Picture,
 		Locale:    locale,
 	}
 }

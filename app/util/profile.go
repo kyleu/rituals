@@ -35,7 +35,7 @@ func (t Role) MarshalJSON() ([]byte, error) {
 
 func RoleFromString(s string) Role {
 	for _, t := range AllRoles {
-		if t.String() == s {
+		if t.Key == s {
 			return t
 		}
 	}
@@ -49,6 +49,7 @@ type UserProfile struct {
 	Theme     Theme
 	NavColor  string
 	LinkColor string
+	Picture   string
 	Locale    language.Tag
 }
 
@@ -64,6 +65,7 @@ func NewUserProfile(id uuid.UUID) *UserProfile {
 		Theme:     ThemeLight,
 		NavColor:  "bluegrey",
 		LinkColor: "bluegrey",
+		Picture:   "",
 		Locale:    language.AmericanEnglish,
 	}
 }

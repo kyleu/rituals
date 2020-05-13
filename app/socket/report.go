@@ -33,7 +33,7 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 	s.logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", d.Format("2006-01-02"), userID))
 	report, err := s.standups.NewReport(ch.ID, *d, content, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot save new story"))
+		return errors.WithStack(errors.Wrap(err, "cannot save new report"))
 	}
 	err = sendReportUpdate(s, ch, report)
 	return errors.WithStack(errors.Wrap(err, "error sending report"))
@@ -66,10 +66,25 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", d.Format("2006-01-02"), userID))
 	report, err := s.standups.UpdateReport(id, *d, content, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot update story"))
+		return errors.WithStack(errors.Wrap(err, "cannot update report"))
 	}
 	err = sendReportUpdate(s, ch, report)
 	return errors.WithStack(err)
+}
+
+func onRemoveReport(s *Service, ch channel, userID uuid.UUID, param string) error {
+	reportID, err := uuid.FromString(param)
+	if err != nil {
+		return errors.New("invalid report id [" + param + "]")
+	}
+	s.logger.Debug(fmt.Sprintf("removing report [%s]", reportID))
+	err = s.standups.RemoveReport(reportID, userID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot remove report"))
+	}
+	msg := Message{Svc: util.SvcStandup, Cmd: util.ServerCmdReportRemove, Param: reportID}
+	err = s.WriteChannel(ch, &msg)
+	return errors.WithStack(errors.Wrap(err, "error sending report removal notification"))
 }
 
 func sendReportUpdate(s *Service, ch channel, report *standup.Report) error {

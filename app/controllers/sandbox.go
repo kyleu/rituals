@@ -16,7 +16,7 @@ var _sandboxes = []string{"gallery", "parse", "testbed"}
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Sandboxes"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")
+		ctx.Breadcrumbs = append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")...)
 		return tmpl(templates.SandboxList(_sandboxes, ctx, w))
 	})
 }
@@ -28,7 +28,8 @@ func SandboxForm(w http.ResponseWriter, r *http.Request) {
 			return "", errors.WithStack(errors.New("error!"))
 		}
 		ctx.Title = "[" + key + "] Sandbox"
-		bc := web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")
+		bc := append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")...)
 		bc = append(bc, web.Breadcrumb{Path: ctx.Route("sandbox.run", "key", key), Title: key})
 		ctx.Breadcrumbs = bc
 

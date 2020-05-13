@@ -1,0 +1,26 @@
+<%: func AdminAuthTable(auths []*auth.Record, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>K</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range auths { %>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.auth.detail`, `id`, model.ID.String()) %>"><% ComponentUUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.K %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.Name %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.Email %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

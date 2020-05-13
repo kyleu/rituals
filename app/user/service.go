@@ -2,6 +2,7 @@ package user
 
 import (
 	"database/sql"
+	"github.com/kyleu/rituals.dev/app/actions"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -11,22 +12,24 @@ import (
 )
 
 type Service struct {
-	db     *sqlx.DB
-	logger logur.Logger
+	actions *actions.Service
+	db      *sqlx.DB
+	logger  logur.Logger
 }
 
-func NewService(db *sqlx.DB, logger logur.Logger) *Service {
+func NewService(actions *actions.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
 
 	return &Service{
-		db:     db,
-		logger: logger,
+		actions: actions,
+		db:      db,
+		logger:  logger,
 	}
 }
 
-func (s *Service) List() ([]SystemUser, error) {
-	var ret []SystemUser
-	err := s.db.Select(&ret, "select * from system_user")
+func (s *Service) List() ([]*SystemUser, error) {
+	var ret []*SystemUser
+	err := s.db.Select(&ret, "select * from system_user order by created desc")
 	if err != nil {
 		return nil, err
 	}
@@ -51,10 +54,10 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) 
 
 func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
 	s.logger.Info("creating user [" + id.String() + "]")
-	q := "insert into system_user (id, name, role, theme, nav_color, link_color, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8)"
+	q := "insert into system_user (id, name, role, theme, nav_color, link_color, picture, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8)"
 	role := "guest"
 	prof := util.NewUserProfile(id)
-	_, err := s.db.Exec(q, prof.UserID, prof.Name, role, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Locale.String(), time.Now())
+	_, err := s.db.Exec(q, prof.UserID, prof.Name, role, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), time.Now())
 	if err != nil {
 		return nil, err
 	}
@@ -63,9 +66,8 @@ func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
 
 func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error) {
 	s.logger.Info("updating user [" + prof.UserID.String() + "] from profile")
-	q := "update system_user set name = $1, role = $2, theme = $3, nav_color = $4, link_color = $5, locale = $6 where id = $7"
-	role := "guest"
-	_, err := s.db.Exec(q, prof.Name, role, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Locale.String(), prof.UserID)
+	q := "update system_user set name = $1, role = $2, theme = $3, nav_color = $4, link_color = $5, picture = $6, locale = $7 where id = $8"
+	_, err := s.db.Exec(q, prof.Name, prof.Role.Key, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), prof.UserID)
 	if err != nil {
 		return nil, err
 	}

@@ -14,10 +14,10 @@ import (
 type EstimateSessionJoined struct {
 	Profile *util.Profile     `json:"profile"`
 	Session *estimate.Session `json:"session"`
-	Members []member.Entry    `json:"members"`
+	Members []*member.Entry    `json:"members"`
 	Online  []uuid.UUID       `json:"online"`
-	Stories []estimate.Story  `json:"stories"`
-	Votes   []estimate.Vote   `json:"votes"`
+	Stories []*estimate.Story  `json:"stories"`
+	Votes   []*estimate.Vote   `json:"votes"`
 }
 
 func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
@@ -30,7 +30,9 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 	case util.ClientCmdAddStory:
 		err = onAddStory(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdUpdateStory:
-		err = onUpdateStory(s)
+		err = onUpdateStory(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case util.ClientCmdRemoveStory:
+		err = onRemoveStory(s, *conn.Channel, userID, param.(string))
 	case util.ClientCmdSetStoryStatus:
 		err = onSetStoryStatus(s, *conn.Channel, param.(map[string]interface{}))
 	case util.ClientCmdSubmitVote:

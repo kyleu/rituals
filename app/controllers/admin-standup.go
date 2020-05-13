@@ -15,7 +15,7 @@ import (
 func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Daily Standup List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
 		ctx.Breadcrumbs = bc
 
@@ -47,7 +47,7 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Title = standup.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
 		ctx.Breadcrumbs = bc

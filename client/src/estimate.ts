@@ -52,6 +52,9 @@ namespace estimate {
       case command.server.storyUpdate:
         onStoryUpdate(param as story.Story);
         break;
+      case command.server.storyRemove:
+        onStoryRemove(param as string);
+        break;
       case command.server.storyStatusChange:
         story.onStoryStatusChange(param as StoryStatusChange);
         break;
@@ -84,13 +87,25 @@ namespace estimate {
     socket.send(msg);
   }
 
-  function onStoryUpdate(s: story.Story) {
-    let x = cache.stories;
-
-    x = x.filter((p) => p.id !== s.id);
+  export function onStoryUpdate(s: story.Story) {
+    const x = preUpdate(s.id)
     x.push(s);
-    x = x.sort((l, r) => (l.idx > r.idx ? 1 : -1));
-
+    if(s.id === estimate.cache.activeStory) {
+      util.setText("#story-title", s.title);
+    }
     story.setStories(x);
+  }
+
+  export function onStoryRemove(id: string) {
+    const x = preUpdate(id)
+    story.setStories(x);
+    if(id === estimate.cache.activeStory) {
+      UIkit.modal("#modal-story").hide();
+    }
+    UIkit.notification("story has been deleted", {status: "success", pos: "top-right"});
+  }
+
+  function preUpdate(id: string) {
+    return estimate.cache.stories.filter((p) => p.id !== id);
   }
 }

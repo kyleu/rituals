@@ -34,6 +34,9 @@ var estimate;
             case command.server.storyUpdate:
                 onStoryUpdate(param);
                 break;
+            case command.server.storyRemove:
+                onStoryRemove(param);
+                break;
             case command.server.storyStatusChange:
                 story.onStoryStatusChange(param);
                 break;
@@ -66,11 +69,25 @@ var estimate;
     }
     estimate.onSubmitEstimateSession = onSubmitEstimateSession;
     function onStoryUpdate(s) {
-        var x = estimate.cache.stories;
-        x = x.filter(function (p) { return p.id !== s.id; });
+        var x = preUpdate(s.id);
         x.push(s);
-        x = x.sort(function (l, r) { return (l.idx > r.idx ? 1 : -1); });
+        if (s.id === estimate.cache.activeStory) {
+            util.setText("#story-title", s.title);
+        }
         story.setStories(x);
+    }
+    estimate.onStoryUpdate = onStoryUpdate;
+    function onStoryRemove(id) {
+        var x = preUpdate(id);
+        story.setStories(x);
+        if (id === estimate.cache.activeStory) {
+            UIkit.modal("#modal-story").hide();
+        }
+        UIkit.notification("story has been deleted", { status: "success", pos: "top-right" });
+    }
+    estimate.onStoryRemove = onStoryRemove;
+    function preUpdate(id) {
+        return estimate.cache.stories.filter(function (p) { return p.id !== id; });
     }
 })(estimate || (estimate = {}));
 var events;
@@ -171,13 +188,27 @@ var feedback;
         var content = util.req("#retro-feedback-edit-content").value;
         var msg = {
             svc: services.retro,
-            cmd: command.client.editFeedback,
+            cmd: command.client.updateFeedback,
             param: { id: id, category: category, content: content }
         };
         socket.send(msg);
         return false;
     }
     feedback_1.onEditFeedback = onEditFeedback;
+    function onRemoveFeedback() {
+        var id = retro.cache.activeFeedback;
+        if (id && confirm("Delete this feedback?")) {
+            var msg = {
+                svc: services.retro,
+                cmd: command.client.removeFeedback,
+                param: id
+            };
+            socket.send(msg);
+            UIkit.modal("#modal-feedback").hide();
+        }
+        return false;
+    }
+    feedback_1.onRemoveFeedback = onRemoveFeedback;
     function getActiveFeedback() {
         if (retro.cache.activeFeedback === undefined) {
             return undefined;
@@ -226,15 +257,26 @@ var feedback;
     }
     feedback_1.viewActiveFeedback = viewActiveFeedback;
     function onFeedbackUpdate(r) {
-        var x = retro.cache.feedback;
-        x = x.filter(function (p) { return p.id !== r.id; });
+        var x = preUpdate(r.id);
         x.push(r);
+        postUpdate(x, r.id);
+    }
+    feedback_1.onFeedbackUpdate = onFeedbackUpdate;
+    function onFeedbackRemoved(id) {
+        var x = preUpdate(id);
+        postUpdate(x, id);
+        UIkit.notification("feedback has been deleted", { status: "success", pos: "top-right" });
+    }
+    feedback_1.onFeedbackRemoved = onFeedbackRemoved;
+    function preUpdate(id) {
+        return retro.cache.feedback.filter(function (p) { return p.id !== id; });
+    }
+    function postUpdate(x, id) {
         feedback.setFeedback(x);
-        if (r.id === retro.cache.activeFeedback) {
+        if (id === retro.cache.activeFeedback) {
             UIkit.modal("#modal-feedback").hide();
         }
     }
-    feedback_1.onFeedbackUpdate = onFeedbackUpdate;
     function getFeedbackCategories(feedback, categories) {
         function toCollection(c) {
             var reports = feedback.filter(function (r) { return r.category === c; }).sort(function (l, r) { return (l.created > r.created ? -1 : 1); });
@@ -286,12 +328,15 @@ var command;
         updateSession: "update-session",
         addStory: "add-story",
         updateStory: "update-story",
+        removeStory: "remove-story",
         setStoryStatus: "set-story-status",
         submitVote: "submit-vote",
         addReport: "add-report",
-        editReport: "edit-report",
+        updateReport: "update-report",
+        removeReport: "remove-report",
         addFeedback: "add-feedback",
-        editFeedback: "edit-feedback"
+        updateFeedback: "update-feedback",
+        removeFeedback: "remove-feedback"
     };
     command.server = {
         error: "error",
@@ -301,10 +346,13 @@ var command;
         memberUpdate: "member-update",
         onlineUpdate: "online-update",
         storyUpdate: "story-update",
+        storyRemove: "story-remove",
         storyStatusChange: "story-status-change",
         voteUpdate: "vote-update",
         reportUpdate: "report-update",
-        feedbackUpdate: "feedback-update"
+        reportRemove: "report-remove",
+        feedbackUpdate: "feedback-update",
+        feedbackRemove: "feedback-remove"
     };
 })(command || (command = {}));
 // noinspection JSUnusedGlobalSymbols
@@ -391,7 +439,7 @@ var member;
                 }
             }
             if (system.cache.currentService == services.retro) {
-                util.setContent("#report-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+                util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
                 if (retro.cache.activeFeedback) {
                     feedback.viewActiveFeedback();
                 }
@@ -480,13 +528,27 @@ var report;
         var content = util.req("#standup-report-edit-content").value;
         var msg = {
             svc: services.standup,
-            cmd: command.client.editReport,
+            cmd: command.client.updateReport,
             param: { id: standup.cache.activeReport, d: d, content: content }
         };
         socket.send(msg);
         return false;
     }
     report_1.onEditReport = onEditReport;
+    function onRemoveReport() {
+        var id = standup.cache.activeReport;
+        if (id && confirm("Delete this report?")) {
+            var msg = {
+                svc: services.standup,
+                cmd: command.client.removeReport,
+                param: id
+            };
+            socket.send(msg);
+            UIkit.modal("#modal-report").hide();
+        }
+        return false;
+    }
+    report_1.onRemoveReport = onRemoveReport;
     function getActiveReport() {
         if (standup.cache.activeReport === undefined) {
             console.warn("no active report");
@@ -579,6 +641,9 @@ var retro;
                 break;
             case command.server.feedbackUpdate:
                 feedback.onFeedbackUpdate(param);
+                break;
+            case command.server.feedbackRemove:
+                feedback.onFeedbackRemoved(param);
                 break;
             default:
                 console.warn("unhandled command [" + cmd + "] for retro");
@@ -775,6 +840,9 @@ var standup;
             case command.server.reportUpdate:
                 onReportUpdate(param);
                 break;
+            case command.server.reportRemove:
+                onReportRemoved(param);
+                break;
             default:
                 console.warn("unhandled command [" + cmd + "] for standup");
         }
@@ -797,58 +865,27 @@ var standup;
     }
     standup.onSubmitStandupSession = onSubmitStandupSession;
     function onReportUpdate(r) {
-        var x = standup.cache.reports;
-        x = x.filter(function (p) { return p.id !== r.id; });
+        var x = preUpdate(r.id);
         x.push(r);
+        postUpdate(x, r.id);
+    }
+    function onReportRemoved(id) {
+        var x = preUpdate(id);
+        postUpdate(x, id);
+        UIkit.notification("report has been deleted", { status: "success", pos: "top-right" });
+    }
+    function preUpdate(id) {
+        return standup.cache.reports.filter(function (p) { return p.id !== id; });
+    }
+    function postUpdate(x, id) {
         report.setReports(x);
-        if (r.id === standup.cache.activeReport) {
+        if (id === standup.cache.activeReport) {
             UIkit.modal("#modal-report").hide();
         }
     }
 })(standup || (standup = {}));
 var story;
 (function (story_1) {
-    function setStories(stories) {
-        estimate.cache.stories = stories;
-        util.setContent("#story-detail", story_1.renderStories(stories));
-        stories.forEach(function (s) { return setStoryStatus(s.id, s.status, s, false); });
-        showTotalIfNeeded();
-        UIkit.modal("#modal-add-story").hide();
-    }
-    story_1.setStories = setStories;
-    function onSubmitStory() {
-        var title = util.req("#story-title-input").value;
-        var msg = {
-            svc: services.estimate,
-            cmd: command.client.addStory,
-            param: { title: title }
-        };
-        socket.send(msg);
-        return false;
-    }
-    story_1.onSubmitStory = onSubmitStory;
-    function getActiveStory() {
-        if (estimate.cache.activeStory === undefined) {
-            return undefined;
-        }
-        var curr = estimate.cache.stories.filter(function (x) { return x.id === estimate.cache.activeStory; });
-        if (curr.length !== 1) {
-            console.warn("cannot load active story [" + estimate.cache.activeStory + "]");
-            return undefined;
-        }
-        return curr[0];
-    }
-    story_1.getActiveStory = getActiveStory;
-    function viewActiveStory() {
-        var s = getActiveStory();
-        if (s === undefined) {
-            console.warn("no active story");
-            return;
-        }
-        util.setText("#story-title", s.title);
-        viewStoryStatus(s.status);
-    }
-    story_1.viewActiveStory = viewActiveStory;
     function viewStoryStatus(status) {
         function setActive(el, status) {
             var s = el.id.substr(el.id.lastIndexOf("-") + 1);
@@ -882,8 +919,9 @@ var story;
         util.setText("#story-status", txt);
         vote.viewVotes();
     }
+    story_1.viewStoryStatus = viewStoryStatus;
     function requestStoryStatus(s) {
-        var story = getActiveStory();
+        var story = story_1.getActiveStory();
         if (story === undefined) {
             console.warn("no active story");
             return;
@@ -904,9 +942,10 @@ var story;
         }
         util.setContent("#story-" + storyID + " .story-status", story_1.renderStatus(status));
         if (calcTotal) {
-            showTotalIfNeeded();
+            story_1.showTotalIfNeeded();
         }
     }
+    story_1.setStoryStatus = setStoryStatus;
     function onStoryStatusChange(u) {
         var currStory = null;
         estimate.cache.stories.forEach(function (s) {
@@ -922,6 +961,78 @@ var story;
         }
     }
     story_1.onStoryStatusChange = onStoryStatusChange;
+})(story || (story = {}));
+var story;
+(function (story) {
+    function setStories(stories) {
+        estimate.cache.stories = stories;
+        util.setContent("#story-detail", story.renderStories(stories));
+        stories.forEach(function (s) { return story.setStoryStatus(s.id, s.status, s, false); });
+        showTotalIfNeeded();
+        UIkit.modal("#modal-add-story").hide();
+    }
+    story.setStories = setStories;
+    function onSubmitStory() {
+        var title = util.req("#story-title-input").value;
+        var msg = {
+            svc: services.estimate,
+            cmd: command.client.addStory,
+            param: { title: title }
+        };
+        socket.send(msg);
+        return false;
+    }
+    story.onSubmitStory = onSubmitStory;
+    function beginEditStory() {
+        var s = getActiveStory();
+        var x = prompt("Edit your story", s.title);
+        if (x !== null && x !== s.title) {
+            var msg = {
+                svc: services.estimate,
+                cmd: command.client.updateStory,
+                param: { id: s.id, title: x }
+            };
+            socket.send(msg);
+        }
+        return false;
+    }
+    story.beginEditStory = beginEditStory;
+    function onRemoveStory() {
+        var id = estimate.cache.activeStory;
+        if (id && confirm("Delete this story?")) {
+            var msg = {
+                svc: services.estimate,
+                cmd: command.client.removeStory,
+                param: id
+            };
+            socket.send(msg);
+            UIkit.modal("#modal-story").hide();
+        }
+        return false;
+    }
+    story.onRemoveStory = onRemoveStory;
+    function getActiveStory() {
+        if (estimate.cache.activeStory === undefined) {
+            return undefined;
+        }
+        var curr = estimate.cache.stories.filter(function (x) { return x.id === estimate.cache.activeStory; });
+        if (curr.length !== 1) {
+            console.warn("cannot load active story [" + estimate.cache.activeStory + "]");
+            return undefined;
+        }
+        return curr[0];
+    }
+    story.getActiveStory = getActiveStory;
+    function viewActiveStory() {
+        var s = getActiveStory();
+        if (s === undefined) {
+            console.warn("no active story");
+            return;
+        }
+        util.setText("#story-title", s.title);
+        story.viewStoryStatus(s.status);
+    }
+    story.viewActiveStory = viewActiveStory;
     function showTotalIfNeeded() {
         var stories = estimate.cache.stories;
         var strings = stories.filter(function (s) { return s.status === "complete"; }).map(function (s) { return s.finalVote; }).filter(function (c) { return c.length > 0; });
@@ -934,9 +1045,10 @@ var story;
             panel.removeChild(curr);
         }
         if (sum > 0) {
-            panel.appendChild(story_1.renderTotal(sum));
+            panel.appendChild(story.renderTotal(sum));
         }
     }
+    story.showTotalIfNeeded = showTotalIfNeeded;
 })(story || (story = {}));
 var util;
 (function (util) {
@@ -1092,11 +1204,28 @@ var vote;
         }
         var votes = estimate.cache.activeVotes();
         var activeVote = votes.filter(function (v) { return v.userID === system.cache.getProfile().userID; }).pop();
-        if (s.status == "active") {
-            viewActiveVotes(votes, activeVote);
-        }
-        if (s.status == "complete") {
-            viewVoteResults(votes);
+        switch (s.status) {
+            case "pending":
+                var uID = system.cache.getProfile().userID;
+                var e = util.req("#story-edit-section");
+                var v = util.req("#story-view-section");
+                if (uID === s.authorID) {
+                    e.style.display = "block";
+                    v.style.display = "none";
+                }
+                else {
+                    e.style.display = "none";
+                    v.style.display = "block";
+                }
+                break;
+            case "active":
+                viewActiveVotes(votes, activeVote);
+                break;
+            case "complete":
+                viewVoteResults(votes);
+                break;
+            default:
+                console.log("invalid story status [" + s.status + "]");
         }
     }
     vote.viewVotes = viewVotes;

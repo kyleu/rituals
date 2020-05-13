@@ -24,7 +24,7 @@ var DefaultChoices = []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", 
 
 func statusFromString(s string) Status {
 	for _, t := range AllStatuses {
-		if t.String() == s {
+		if t.Key == s {
 			return t
 		}
 	}
@@ -95,8 +95,8 @@ type sessionDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto *sessionDTO) ToSession() Session {
-	return Session{
+func (dto *sessionDTO) ToSession() *Session {
+	return &Session{
 		ID:      dto.ID,
 		Slug:    dto.Slug,
 		Title:   dto.Title,

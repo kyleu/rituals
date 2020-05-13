@@ -2,7 +2,7 @@ namespace vote {
   function renderVoteMember(member: member.Member, hasVote: boolean): JSX.Element {
     return <div class="vote-member" title={member.name + " has " + (hasVote ? "voted" : "not voted")}>
       <div>
-        <span data-uk-icon={"icon: " + (hasVote ? "check" : "minus") + "; ratio: 1.6"}/>
+        <span data-uk-icon={"icon: " + (hasVote ? "check" : "minus") + "; ratio: 1.6"}></span>
       </div>
       {member.name}
     </div>;
@@ -24,7 +24,7 @@ namespace vote {
 
   function renderVoteResult(member: member.Member, choice: string | undefined): JSX.Element {
     if (choice === undefined) {
-      return <div class="vote-result"><div><span class="uk-border-circle"><span data-uk-icon="icon: minus; ratio: 1.6" /></span></div> {member.name}</div>;
+      return <div class="vote-result"><div><span class="uk-border-circle"><span data-uk-icon="icon: minus; ratio: 1.6"></span></span></div> {member.name}</div>;
     }
     return <div class="vote-result"><div><span class="uk-border-circle">{choice}</span></div> {member.name}</div>;
   }

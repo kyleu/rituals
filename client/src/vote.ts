@@ -40,11 +40,27 @@ namespace vote {
     const votes = estimate.cache.activeVotes();
     const activeVote = votes.filter(v => v.userID === system.cache.getProfile().userID).pop();
 
-    if (s.status == "active") {
-      viewActiveVotes(votes, activeVote);
-    }
-    if (s.status == "complete") {
-      viewVoteResults(votes);
+    switch (s.status) {
+      case "pending":
+        const uID = system.cache.getProfile().userID;
+        const e = util.req("#story-edit-section");
+        const v = util.req("#story-view-section")
+        if(uID === s.authorID) {
+          e.style.display = "block";
+          v.style.display = "none";
+        } else {
+          e.style.display = "none";
+          v.style.display = "block";
+        }
+        break;
+      case "active":
+        viewActiveVotes(votes, activeVote);
+        break;
+      case "complete":
+        viewVoteResults(votes);
+        break;
+      default:
+        console.log("invalid story status [" + s.status + "]");
     }
   }
 

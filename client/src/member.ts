@@ -66,7 +66,7 @@ namespace member {
         }
       }
       if (system.cache.currentService == services.retro) {
-        util.setContent("#report-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+        util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
         if (retro.cache.activeFeedback) {
           feedback.viewActiveFeedback();
         }

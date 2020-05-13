@@ -1,0 +1,25 @@
+<%: func AdminActionDetail(model *actions.Action, user *user.SystemUser, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">App Action</h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= model.ID.String() %></td>
+          </tr>
+          <tr>
+            <th>Occurred</th>
+            <td><% ComponentDateTime(&model.Occurred, _buffer) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% } %>

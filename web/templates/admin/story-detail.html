@@ -1,4 +1,4 @@
-<%: func AdminStoryDetail(model *estimate.Story, votes []estimate.Vote, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminStoryDetail(model *estimate.Story, votes []*estimate.Vote, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -31,7 +31,7 @@
           </tr>
           <tr>
             <th>Author</th>
-            <td><%= model.AuthorID.String() %></td>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.AuthorID.String()) %>"><%= model.AuthorID.String() %></a></td>
           </tr>
           <tr>
             <th>Created</th>

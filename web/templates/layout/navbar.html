@@ -11,10 +11,13 @@
       <div class="uk-navbar-right">
         <ul class="uk-navbar-nav">
           <li>
+            <% if len(ctx.Profile.Picture) == 0 { %>
             <a href="<%= ctx.Route(`profile`) %>" data-uk-icon="icon:user" title="Profile"></a>
-          </li>
-          <li>
-            <a href="<%= ctx.Route(`about`) %>" data-uk-icon="icon: bookmark" title="About <%= util.AppName %>"></a>
+            <% } else { %>
+            <a href="<%= ctx.Route(`profile`) %>" title="Profile">
+              <img id="navbar-image" class="uk-border-circle" src="<%= ctx.Profile.Picture %>" />
+            </a>
+            <% } %>
           </li>
         </ul>
       </div>

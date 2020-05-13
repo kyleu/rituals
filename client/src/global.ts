@@ -42,14 +42,17 @@ namespace command {
 
     addStory: "add-story",
     updateStory: "update-story",
+    removeStory: "remove-story",
     setStoryStatus: "set-story-status",
     submitVote: "submit-vote",
 
     addReport: "add-report",
-    editReport: "edit-report",
+    updateReport: "update-report",
+    removeReport: "remove-report",
 
     addFeedback: "add-feedback",
-    editFeedback: "edit-feedback"
+    updateFeedback: "update-feedback",
+    removeFeedback: "remove-feedback",
   };
 
   export const server = {
@@ -63,11 +66,14 @@ namespace command {
     onlineUpdate: "online-update",
 
     storyUpdate: "story-update",
+    storyRemove: "story-remove",
     storyStatusChange: "story-status-change",
     voteUpdate: "vote-update",
 
     reportUpdate: "report-update",
+    reportRemove: "report-remove",
 
     feedbackUpdate: "feedback-update",
+    feedbackRemove: "feedback-remove",
   };
 }

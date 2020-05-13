@@ -2,6 +2,8 @@ package cli
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"net/http"
 
 	"emperror.dev/emperror"
@@ -62,12 +64,14 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating config service"))
 	}
 
-	userSvc := user.NewService(db, logger)
-	inviteSvc := invite.NewService(db, logger)
-	estimateSvc := estimate.NewService(db, logger)
-	standupSvc := standup.NewService(db, logger)
-	retroSvc := retro.NewService(db, logger)
-	socketSvc := socket.NewService(logger, userSvc, estimateSvc, standupSvc, retroSvc)
+	actionService := actions.NewService(db, logger)
+	userSvc := user.NewService(actionService, db, logger)
+	authSvc := auth.NewService(actionService, db, logger, userSvc)
+	inviteSvc := invite.NewService(actionService, db, logger)
+	estimateSvc := estimate.NewService(actionService, db, logger)
+	standupSvc := standup.NewService(actionService, db, logger)
+	retroSvc := retro.NewService(actionService, db, logger)
+	socketSvc := socket.NewService(actionService, logger, userSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{
 		Debug:    verbose,
@@ -76,6 +80,8 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Logger:   logger,
 		Errors:   handler,
 		User:     userSvc,
+		Auth:     authSvc,
+		Action:   actionService,
 		Invite:   inviteSvc,
 		Estimate: estimateSvc,
 		Standup:  standupSvc,

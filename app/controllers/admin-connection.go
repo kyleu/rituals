@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"emperror.dev/errors"
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/gofrs/uuid"
@@ -19,7 +19,7 @@ import (
 func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Connection List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
 		ctx.Breadcrumbs = bc
 
@@ -43,7 +43,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Title = connection.ID.String()
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionIDString), connectionIDString)...)
 		ctx.Breadcrumbs = bc
@@ -78,7 +78,7 @@ func AdminConnectionPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = connectionID.String()
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionIDString), connectionIDString)...)
 		ctx.Breadcrumbs = bc

@@ -1,4 +1,4 @@
-<%: func AdminEstimateDetail(model *estimate.Session, members []member.Entry, stories []estimate.Story, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminEstimateDetail(model *estimate.Session, members []*member.Entry, stories []*estimate.Story, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -26,7 +26,7 @@
           </tr>
           <tr>
             <th>Owner</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Owner.String()) %>"><%= model.Owner.String() %></a></td>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
           </tr>
           <tr>
             <th>Status</th>

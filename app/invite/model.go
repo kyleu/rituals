@@ -33,7 +33,7 @@ var AllInvitationTypes = []InvitationType{InvitationTypeEstimate, InvitationType
 
 func typeFromString(s string) InvitationType {
 	for _, t := range AllInvitationTypes {
-		if t.String() == s {
+		if t.Key == s {
 			return t
 		}
 	}
@@ -60,7 +60,7 @@ var AllInvitationStatuses = []InvitationStatus{InvitationStatusPending, Invitati
 
 func statusFromString(s string) InvitationStatus {
 	for _, t := range AllInvitationStatuses {
-		if t.String() == s {
+		if t.Key == s {
 			return t
 		}
 	}
@@ -87,8 +87,8 @@ type Invitation struct {
 	Created  time.Time
 }
 
-func (dto *invitationDTO) ToInvitation() Invitation {
-	return Invitation{
+func (dto *invitationDTO) ToInvitation() *Invitation {
+	return &Invitation{
 		Key:      dto.Key,
 		K:        typeFromString(dto.K),
 		V:        dto.V,

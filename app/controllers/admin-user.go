@@ -15,7 +15,7 @@ import (
 func AdminUserList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "User List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
 		ctx.Breadcrumbs = bc
 
@@ -38,6 +38,10 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		auths, err := ctx.App.Auth.GetByUserID(userID, 0)
+		if err != nil {
+			return "", err
+		}
 		estimates, err := ctx.App.Estimate.GetByMember(userID, 0)
 		if err != nil {
 			return "", err
@@ -52,11 +56,11 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = user.Name
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user.detail", "id", userIDString), user.Name)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminUserDetail(user, estimates, standups, retros, ctx, w))
+		return tmpl(templates.AdminUserDetail(user, auths, estimates, standups, retros, ctx, w))
 	})
 }

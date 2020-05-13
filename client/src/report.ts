@@ -30,10 +30,24 @@ namespace report {
     const content = util.req<HTMLInputElement>("#standup-report-edit-content").value;
     const msg = {
       svc: services.standup,
-      cmd: command.client.editReport,
+      cmd: command.client.updateReport,
       param: {id: standup.cache.activeReport, d: d, content: content},
     };
     socket.send(msg);
+    return false;
+  }
+
+  export function onRemoveReport() {
+    const id = standup.cache.activeReport;
+    if(id && confirm("Delete this report?")) {
+      const msg = {
+        svc: services.standup,
+        cmd: command.client.removeReport,
+        param: id,
+      };
+      socket.send(msg);
+      UIkit.modal("#modal-report").hide();
+    }
     return false;
   }
 

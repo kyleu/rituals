@@ -68,8 +68,8 @@ func exec(name string, db *sqlx.DB, logger logur.LoggerFacade, f func(*strings.B
 	f(sb)
 	sqls := strings.Split(sb.String(), ";")
 	startNanos := time.Now().UnixNano()
-	for _, sql := range sqls {
-		_, err := db.Exec(sql)
+	for _, q := range sqls {
+		_, err := db.Exec(q)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "cannot execute ["+name+"]"))
 		}

@@ -12,10 +12,10 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	id := util.UUID()
 	html := markdown.ToHTML(content)
 
-	sql := `insert into report (id, standup_id, d, author_id, content, html) values (
+	q := `insert into report (id, standup_id, d, author_id, content, html) values (
     $1, $2, $3, $4, $5, $6
 	)`
-	_, err := s.db.Exec(sql, id, standupID, d, authorID, content, html)
+	_, err := s.db.Exec(q, id, standupID, d, authorID, content, html)
 	if err != nil {
 		return nil, err
 	}
@@ -26,8 +26,8 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, authorID uuid.UUID) (*Report, error) {
 	html := markdown.ToHTML(content)
 
-	sql := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
-	_, err := s.db.Exec(sql, d, authorID, content, html, reportID)
+	q := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
+	_, err := s.db.Exec(q, d, authorID, content, html, reportID)
 	if err != nil {
 		return nil, err
 	}
@@ -35,13 +35,13 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	return s.GetReportByID(reportID)
 }
 
-func (s *Service) GetReports(standupID uuid.UUID) ([]Report, error) {
+func (s *Service) GetReports(standupID uuid.UUID) ([]*Report, error) {
 	var dtos []reportDTO
 	err := s.db.Select(&dtos, "select * from report where standup_id = $1 order by d desc, created", standupID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Report, 0, len(dtos))
+	ret := make([]*Report, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToReport())
 	}
@@ -54,8 +54,7 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := dto.ToReport()
-	return &ret, nil
+	return dto.ToReport(), nil
 }
 
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
@@ -65,4 +64,10 @@ func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 		return nil, err
 	}
 	return &ret, nil
+}
+
+func (s *Service) RemoveReport(reportID uuid.UUID, _ uuid.UUID) error {
+	q := "delete from report where id = $1"
+	_, err := s.db.Exec(q, reportID)
+	return err
 }

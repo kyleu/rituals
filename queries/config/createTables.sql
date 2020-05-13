@@ -6,9 +6,24 @@ create table if not exists "system_user" (
   "theme" varchar(32) not null,
   "nav_color" varchar(32) not null,
   "link_color" varchar(32) not null,
+  "picture" text not null,
   "locale" varchar(32) not null,
   "created" timestamp not null default now()
 );
+
+create table if not exists "auth" (
+  "id" uuid not null primary key,
+  "user_id" uuid not null references "system_user"("id"),
+  "k" varchar(32) not null,
+  "v" text not null,
+  "expires" timestamp,
+  "name" varchar(2048),
+  "email" varchar(2048),
+  "picture" text,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_auth_k_v on auth(k, v);
 
 -- Estimate
 create table if not exists "estimate" (
@@ -21,6 +36,8 @@ create table if not exists "estimate" (
   "options" json not null,
   "created" timestamp not null default now()
 );
+
+create index if not exists idx_estimate_slug on estimate(slug);
 
 create table if not exists "estimate_member" (
   "estimate_id" uuid not null references "estimate"("id"),
@@ -61,6 +78,8 @@ create table if not exists "standup" (
   "created" timestamp not null default now()
 );
 
+create index if not exists idx_standup_slug on standup(slug);
+
 create table if not exists "standup_member" (
   "standup_id" uuid not null references "standup"("id"),
   "user_id" uuid not null references "system_user"("id"),
@@ -90,6 +109,8 @@ create table if not exists "retro" (
   "categories" varchar(2048)[] not null,
   "created" timestamp not null default now()
 );
+
+create index if not exists idx_retro_slug on retro(slug);
 
 create table if not exists "retro_member" (
   "retro_id" uuid not null references "retro"("id"),
@@ -122,6 +143,18 @@ create table if not exists "invitation" (
   "status" invitation_status not null,
   "redeemed" timestamp,
   "created" timestamp not null default now()
+);
+
+-- Actions
+create table if not exists "action" (
+  "id" uuid not null primary key,
+  "svc" varchar(64) not null,
+  "model_id" uuid not null,
+  "author_id" uuid references "system_user"("id"),
+  "act" varchar(64) not null,
+  "content" json,
+  "note" text,
+  "occurred" timestamp not null default now()
 );
 
 -- <%: func CreateTables(w io.Writer) %>

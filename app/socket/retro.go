@@ -14,9 +14,9 @@ import (
 type RetroSessionJoined struct {
 	Profile  *util.Profile    `json:"profile"`
 	Session  *retro.Session   `json:"session"`
-	Members  []member.Entry   `json:"members"`
+	Members  []*member.Entry   `json:"members"`
 	Online   []uuid.UUID      `json:"online"`
-	Feedback []retro.Feedback `json:"feedback"`
+	Feedback []*retro.Feedback `json:"feedback"`
 }
 
 func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
@@ -28,8 +28,10 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 		err = onRetroSessionSave(s, *conn.Channel, param.(map[string]interface{}))
 	case util.ClientCmdAddFeedback:
 		err = onAddFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
-	case util.ClientCmdEditFeedback:
+	case util.ClientCmdUpdateFeedback:
 		err = onEditFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case util.ClientCmdRemoveFeedback:
+		err = onRemoveFeedback(s, *conn.Channel, userID, param.(string))
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")
 	}

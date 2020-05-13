@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/actions"
 	"sync"
 
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -21,13 +22,14 @@ type Service struct {
 	channels      map[channel][]uuid.UUID
 	channelsMu    sync.Mutex
 	logger        logur.LoggerFacade
+	actions       *actions.Service
 	users         *user.Service
 	estimates     *estimate.Service
 	standups      *standup.Service
 	retros        *retro.Service
 }
 
-func NewService(logger logur.LoggerFacade, users *user.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+func NewService(actions *actions.Service, logger logur.LoggerFacade, users *user.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "socket"})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
@@ -35,6 +37,7 @@ func NewService(logger logur.LoggerFacade, users *user.Service, estimates *estim
 		channels:      make(map[channel][]uuid.UUID),
 		channelsMu:    sync.Mutex{},
 		logger:        logger,
+		actions:       actions,
 		estimates:     estimates,
 		standups:      standups,
 		retros:        retros,

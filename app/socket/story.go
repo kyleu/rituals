@@ -31,16 +31,46 @@ func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]inter
 	return errors.WithStack(errors.Wrap(err, "error sending story update"))
 }
 
-func onUpdateStory(s *Service) error {
-	s.logger.Debug("TODO: update story")
-	return nil
+func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
+	storyIDString := param["id"].(string)
+	storyID, err := uuid.FromString(storyIDString)
+	if err != nil {
+		return errors.New("invalid story id [" + storyIDString + "]")
+	}
+
+	title := strings.TrimSpace(param["title"].(string))
+	if title == "" {
+		title = "Untitled"
+	}
+
+	st, err := s.estimates.UpdateStory(userID, storyID, title)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot update story"))
+	}
+	err = sendStoryUpdate(s, ch, st)
+	return errors.WithStack(err)
+}
+
+func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error {
+	storyID, err := uuid.FromString(param)
+	if err != nil {
+		return errors.New("invalid story id [" + param + "]")
+	}
+	s.logger.Debug(fmt.Sprintf("removing report [%s]", storyID))
+	err = s.estimates.RemoveStory(storyID, userID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot remove story"))
+	}
+	msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryRemove, Param: storyID}
+	err = s.WriteChannel(ch, &msg)
+	return errors.WithStack(errors.Wrap(err, "error sending story removal notification"))
 }
 
 func onSetStoryStatus(s *Service, ch channel, m map[string]interface{}) error {
 	storyIDString := m["storyID"].(string)
 	storyID, err := uuid.FromString(storyIDString)
 	if err != nil {
-		return errors.WithStack(errors.New("invalid story [" + storyIDString + "]"))
+		return errors.WithStack(errors.New("invalid story id [" + storyIDString + "]"))
 	}
 	statusString := m["status"].(string)
 	status := estimate.StoryStatusFromString(statusString)

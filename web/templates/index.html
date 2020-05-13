@@ -1,4 +1,4 @@
-<%: func Index(ctx web.RequestContext, estimates []estimate.Session, standups []standup.Session, retros []retro.Session, w io.Writer) (int, error) %>
+<%: func Index(ctx web.RequestContext, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,6 +7,14 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">
+        <span class="right">
+          <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
+        </span>
+        <% if ctx.Profile.Role == util.RoleAdmin { %>
+        <span class="right">
+          <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
+        </span>
+        <% } %>
         <%= util.AppName %>
       </h3>
       <form method="post" action="<%= ctx.Route(`join.post`) %>">

@@ -110,6 +110,11 @@ html.uk-dark, body.uk-dark {
   svg {
     max-width: none;
   }
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @import "profile.scss";

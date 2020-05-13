@@ -67,6 +67,21 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 	return errors.WithStack(err)
 }
 
+func onRemoveFeedback(s *Service, ch channel, userID uuid.UUID, param string) error {
+	feedbackID, err := uuid.FromString(param)
+	if err != nil {
+		return errors.New("invalid feedback id [" + param + "]")
+	}
+	s.logger.Debug(fmt.Sprintf("removing report [%s]", feedbackID))
+	err = s.retros.RemoveFeedback(feedbackID, userID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot remove feedback"))
+	}
+	msg := Message{Svc: util.SvcRetro, Cmd: util.ServerCmdFeedbackRemove, Param: feedbackID}
+	err = s.WriteChannel(ch, &msg)
+	return errors.WithStack(errors.Wrap(err, "error sending feedback removal notification"))
+}
+
 func sendFeedbackUpdate(s *Service, ch channel, fb *retro.Feedback) error {
 	msg := Message{Svc: util.SvcRetro, Cmd: util.ServerCmdFeedbackUpdate, Param: fb}
 	err := s.WriteChannel(ch, &msg)

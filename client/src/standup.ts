@@ -34,6 +34,9 @@ namespace standup {
       case command.server.reportUpdate:
         onReportUpdate(param as report.Report);
         break;
+      case command.server.reportRemove:
+        onReportRemoved(param as string);
+        break;
       default:
         console.warn("unhandled command [" + cmd + "] for standup");
     }
@@ -57,14 +60,25 @@ namespace standup {
   }
 
   function onReportUpdate(r: report.Report) {
-    let x = cache.reports;
-
-    x = x.filter((p) => p.id !== r.id);
+    const x = preUpdate(r.id)
     x.push(r);
+    postUpdate(x, r.id)
+  }
 
+  function onReportRemoved(id: string) {
+    const x = preUpdate(id)
+    postUpdate(x, id)
+    UIkit.notification("report has been deleted", {status: "success", pos: "top-right"});
+  }
+
+  function preUpdate(id: string) {
+    return cache.reports.filter((p) => p.id !== id);
+  }
+
+  function postUpdate(x: report.Report[], id: string) {
     report.setReports(x);
 
-    if(r.id === standup.cache.activeReport) {
+    if(id === standup.cache.activeReport) {
       UIkit.modal("#modal-report").hide();
     }
   }

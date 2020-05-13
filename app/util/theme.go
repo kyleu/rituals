@@ -37,7 +37,7 @@ func (t Theme) MarshalJSON() ([]byte, error) {
 
 func ThemeFromString(s string) Theme {
 	for _, t := range AllThemes {
-		if t.String() == s {
+		if t.Name == s {
 			return t
 		}
 	}

@@ -16,7 +16,7 @@ import (
 func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Estimate List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
 		ctx.Breadcrumbs = bc
 
@@ -49,7 +49,7 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = estimate.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
 		ctx.Breadcrumbs = bc
@@ -82,7 +82,7 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Title = fmt.Sprint(estimate.Slug, ":", story.Idx)
-		bc := web.BreadcrumbsSimple(ctx.Route("admin.home"), "admin")
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), estimate.Slug)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprint("story ", story.Idx))...)

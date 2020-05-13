@@ -12,10 +12,10 @@ import (
 func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Story, error) {
 	id := util.UUID()
 
-	sql := `insert into story (id, estimate_id, idx, author_id, title) values (
+	q := `insert into story (id, estimate_id, idx, author_id, title) values (
     $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5
 	)`
-	_, err := s.db.Exec(sql, id, estimateID, estimateID, authorID, title)
+	_, err := s.db.Exec(q, id, estimateID, estimateID, authorID, title)
 	if err != nil {
 		return nil, err
 	}
@@ -23,13 +23,13 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUI
 	return s.GetStoryByID(id)
 }
 
-func (s *Service) GetStories(estimateID uuid.UUID) ([]Story, error) {
+func (s *Service) GetStories(estimateID uuid.UUID) ([]*Story, error) {
 	var dtos []storyDTO
 	err := s.db.Select(&dtos, "select * from story where estimate_id = $1 order by idx", estimateID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Story, 0, len(dtos))
+	ret := make([]*Story, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToStory())
 	}
@@ -42,8 +42,7 @@ func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := dto.ToStory()
-	return &ret, nil
+	return dto.ToStory(), nil
 }
 
 func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
@@ -53,6 +52,27 @@ func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 		return nil, err
 	}
 	return &ret, nil
+}
+
+func (s *Service) UpdateStory(_ uuid.UUID, storyID uuid.UUID, title string) (*Story, error) {
+	q := `update story set title = $1 where id = $2`
+	_, err := s.db.Exec(q, title, storyID)
+	if err != nil {
+		return nil, err
+	}
+	return s.GetStoryByID(storyID)
+}
+
+func (s *Service) RemoveStory(storyID uuid.UUID, _ uuid.UUID) error {
+	q1 := "delete from vote where story_id = $1"
+	_, err := s.db.Exec(q1, storyID)
+	if err != nil {
+		return err
+	}
+
+	q2 := "delete from story where id = $1"
+	_, err = s.db.Exec(q2, storyID)
+	return err
 }
 
 func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, string, error) {
@@ -77,7 +97,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, s
 	return true, finalVote, errors.WithStack(errors.Wrap(err, "error updating story status"))
 }
 
-func calcFinalVote(votes []Vote) string {
+func calcFinalVote(votes []*Vote) string {
 	choices := make([]float64, 0)
 	for _, v := range votes {
 		f, err := strconv.ParseFloat(v.Choice, 64)

@@ -12272,6 +12272,10 @@ html.uk-dark, body.uk-dark {
 #navbar svg {
   max-width: none;
 }
+#navbar img {
+  width: 32px;
+  height: 32px;
+}
 
 .swatch {
   width: 32px;
@@ -12291,6 +12295,13 @@ html.uk-dark, body.uk-dark {
 .swatch .icon {
   margin-top: 6px;
   color: transparent;
+}
+
+.signin-icon {
+  display: block;
+  float: left;
+  margin-top: 2px;
+  margin-right: 6px;
 }
 
 .online-indicator {
@@ -12474,6 +12485,13 @@ html.uk-dark, body.uk-dark {
 }
 .feedback-detail .feedback-content ul {
   list-style: disc;
+}
+
+#feedback-detail h5 {
+  margin-bottom: 8px;
+}
+#feedback-detail ul {
+  margin: 0;
 }
 
 .uk-dark .feedback-detail {

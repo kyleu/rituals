@@ -3,6 +3,7 @@ package retro
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/actions"
 	"strings"
 
 	"emperror.dev/errors"
@@ -14,15 +15,17 @@ import (
 )
 
 type Service struct {
+	actions *actions.Service
 	db      *sqlx.DB
 	Members *member.Service
 	logger  logur.Logger
 }
 
-func NewService(db *sqlx.DB, logger logur.Logger) *Service {
+func NewService(actions *actions.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro})
 
 	return &Service{
+		actions: actions,
 		db:      db,
 		Members: member.NewService(db, util.SvcRetro, "retro_member", "retro_id"),
 		logger:  logger,
@@ -37,7 +40,7 @@ func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 
 	e := NewSession(title, slug, userID)
 
-	q := "insert into retro (id, slug, title, owner, status, categories) values ($1, $2, $3, $4, $5, %6)"
+	q := "insert into retro (id, slug, title, owner, status, categories) values ($1, $2, $3, $4, $5, $6)"
 	categoriesString := "{" + strings.Join(e.Categories, ",") + "}"
 	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String(), categoriesString)
 	if err != nil {
@@ -46,13 +49,13 @@ func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
 	return &e, nil
 }
 
-func (s *Service) List() ([]Session, error) {
+func (s *Service) List() ([]*Session, error) {
 	var dtos []sessionDTO
 	err := s.db.Select(&dtos, "select * from retro order by created desc")
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0, len(dtos))
+	ret := make([]*Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
@@ -68,8 +71,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 		}
 		return nil, err
 	}
-	ret := dto.ToSession()
-	return &ret, nil
+	return dto.ToSession(), nil
 }
 
 func (s *Service) GetBySlug(slug string) (*Session, error) {
@@ -81,24 +83,23 @@ func (s *Service) GetBySlug(slug string) (*Session, error) {
 		}
 		return nil, err
 	}
-	ret := dto.ToSession()
-	return &ret, nil
+	return dto.ToSession(), nil
 }
 
-func (s *Service) GetByOwner() ([]Session, error) {
+func (s *Service) GetByOwner() ([]*Session, error) {
 	var dtos []sessionDTO
 	err := s.db.Select(&dtos, "select * from retro where owner = $1 order by created desc")
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0, len(dtos))
+	ret := make([]*Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}
 	return ret, nil
 }
 
-func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
+func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]*Session, error) {
 	var dtos []sessionDTO
 	q := "select x.* from retro x join retro_member m on x.id = m.retro_id where m.user_id = $1 order by m.created desc"
 	if limit > 0 {
@@ -108,7 +109,7 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]Session, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]Session, 0, len(dtos))
+	ret := make([]*Session, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}

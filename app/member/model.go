@@ -20,7 +20,7 @@ var AllRoles = []Role{RoleCreator, RoleOwner, RoleMember, RoleObserver}
 
 func roleFromString(s string) Role {
 	for _, t := range AllRoles {
-		if t.String() == s {
+		if t.Key == s {
 			return t
 		}
 	}
@@ -42,8 +42,8 @@ type entryDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto *entryDTO) ToEntry() Entry {
-	return Entry{
+func (dto *entryDTO) ToEntry() *Entry {
+	return &Entry{
 		UserID:  dto.UserID,
 		Name:    dto.Name,
 		Role:    roleFromString(dto.Role),

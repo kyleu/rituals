@@ -13,7 +13,9 @@ drop table if exists "retro_member";
 drop table if exists "retro";
 
 drop table if exists "invitation";
+drop table if exists "action";
 
+drop table if exists "auth";
 drop table if exists "system_user";
 
 drop type if exists "estimate_status";
