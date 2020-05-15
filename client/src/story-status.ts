@@ -36,7 +36,6 @@ namespace story {
   export function requestStoryStatus(s: string) {
     const story = getActiveStory();
     if (story === undefined) {
-      console.warn("no active story");
       return;
     }
     const msg = {

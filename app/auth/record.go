@@ -18,6 +18,12 @@ func (s *Service) NewRecord(r *Record) (*Record, error) {
 	return s.GetByID(r.ID)
 }
 
+func (s *Service) UpdateRecord(r *Record) error {
+	q := "update auth set expires = $1, name = $2, email = $3, picture = $4 where id = $5"
+	_, err := s.db.Exec(q, r.Expires, r.Name, r.Email, r.Picture, r.ID)
+	return err
+}
+
 func (s *Service) List() ([]*Record, error) {
 	var dtos []recordDTO
 	q := "select * from auth order by created desc"

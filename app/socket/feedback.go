@@ -59,7 +59,7 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", category, userID))
-	feedback, err := s.retros.UpdateFeedback(id, category, content)
+	feedback, err := s.retros.UpdateFeedback(id, category, content, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update feedback"))
 	}

@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"database/sql"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -46,6 +47,10 @@ func (s *Service) GetVote(storyID uuid.UUID, userID uuid.UUID) (*Vote, error) {
 }
 
 func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string) (*Vote, error) {
+	estimateID, err := s.GetStoryEstimateID(storyID)
+	if err != nil {
+		return nil, errors.WithStack(errors.Wrap(err, "error getting current votes for story ["+storyID.String()+"]"))
+	}
 	curr, err := s.GetVote(storyID, userID)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error getting current votes for story ["+storyID.String()+"]"))
@@ -56,6 +61,10 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		if err != nil {
 			return nil, errors.WithStack(errors.Wrap(err, "error saving new vote for story ["+storyID.String()+"]"))
 		}
+
+		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
+		s.actions.Post(util.SvcEstimate, *estimateID, userID, "add-vote", actionContent, "")
+
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
 	} else {
 		q := "update vote set choice = $1 where story_id = $2 and user_id = $3"
@@ -64,6 +73,10 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 			return nil, errors.WithStack(errors.Wrap(err, "error updating vote for story ["+storyID.String()+"]"))
 		}
 		curr.Choice = choice
+
+		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
+		s.actions.Post(util.SvcEstimate, *estimateID, userID, "update-vote", actionContent, "")
+
 		return curr, nil
 	}
 }

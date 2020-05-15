@@ -3,54 +3,28 @@ package auth
 import (
 	"emperror.dev/errors"
 	"github.com/jmoiron/sqlx"
-	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/github"
-	"golang.org/x/oauth2/google"
 	"logur.dev/logur"
 )
 
 type Service struct {
-	actions    *actions.Service
+	actions    *action.Service
 	db         *sqlx.DB
 	logger     logur.Logger
 	users      *user.Service
-	googleConf *oauth2.Config
-	githubConf *oauth2.Config
 }
 
-func NewService(actions *actions.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
-	googleConf := oauth2.Config{
-		ClientID:     "37858401718-arnqoomkhbbm2r5494f763b06b6d43h5.apps.googleusercontent.com",
-		ClientSecret: "e7CypFkwa7B_kvi9zOuTpeXu",
-		Endpoint:     google.Endpoint,
-		RedirectURL:  "http://localhost:6660/auth/callback/google",
-		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.profile",
-			"https://www.googleapis.com/auth/userinfo.email",
-		},
-	}
+var host = "localhost:6660"
 
-	githubConf := oauth2.Config{
-		ClientID:     "566d7b94991e79edfa71",
-		ClientSecret: "d67a6c671eb850fa98a855c2c6b5946cdcea11c3",
-		Endpoint:     github.Endpoint,
-		RedirectURL:  "http://localhost:6660/auth/callback/github",
-		Scopes: []string{
-			"profile",
-		},
-	}
-
+func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "auth"})
 	svc := Service{
 		actions:    actions,
 		db:         db,
 		logger:     logger,
 		users:      users,
-		googleConf: &googleConf,
-		githubConf: &githubConf,
 	}
 	return &svc
 }
@@ -86,10 +60,15 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 		return s.mergeProfile(profile, record)
 	} else {
 		if curr.UserID == profile.UserID {
-			s.logger.Warn("TODO insert auth record with matching users")
+			record.ID = curr.ID
+			err = s.UpdateRecord(record)
 			return s.mergeProfile(profile, record)
 		} else {
 			s.logger.Warn("TODO insert auth record with conflicting users")
+			record, err = s.NewRecord(record)
+			if err != nil {
+				return nil, errors.WithStack(errors.Wrap(err, "error saving new auth record"))
+			}
 			return s.mergeProfile(profile, record)
 		}
 	}
@@ -97,6 +76,9 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 
 func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, error) {
 	p.Name = record.Name
+	if p.Name == "" {
+		p.Name = record.K + " User"
+	}
 	p.Picture = record.Picture
 
 	p, err := s.users.SaveProfile(p)

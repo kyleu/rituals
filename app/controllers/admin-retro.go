@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -13,7 +14,7 @@ import (
 )
 
 func AdminRetroList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Retrospective List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retro")...)
@@ -28,7 +29,7 @@ func AdminRetroList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		retroIDString := mux.Vars(r)["id"]
 		retroID, err := uuid.FromString(retroIDString)
 		if err != nil {
@@ -38,7 +39,16 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if retro == nil {
+			ctx.Session.AddFlash("error:Can't load retro [" + retroIDString + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.retro"), nil
+		}
 		members, err := ctx.App.Retro.Members.GetByModelID(retroID)
+		if err != nil {
+			return "", err
+		}
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro, retroID)
 		if err != nil {
 			return "", err
 		}
@@ -49,6 +59,6 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroIDString), retro.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminRetroDetail(retro, members, ctx, w))
+		return tmpl(templates.AdminRetroDetail(retro, members, actions, ctx, w))
 	})
 }

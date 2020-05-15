@@ -19,6 +19,7 @@ namespace rituals {
     id: string;
     slug: string;
     title: string;
+    sprintID: string;
     owner: string;
     status: { key: string };
     created: string;
@@ -37,6 +38,9 @@ namespace rituals {
     switch (msg.svc) {
       case services.system:
         onSystemMessage(msg.cmd, msg.param);
+        break;
+      case services.sprint:
+        sprint.onSprintMessage(msg.cmd, msg.param);
         break;
       case services.estimate:
         estimate.onEstimateMessage(msg.cmd, msg.param);
@@ -77,6 +81,9 @@ namespace rituals {
     switch (cmd) {
       case command.server.error:
         onError("system", param as string);
+        break;
+      case command.server.actions:
+        action.viewActions(param as action.Action[]);
         break;
       case command.server.memberUpdate:
         member.onMemberUpdate(param as member.Member);

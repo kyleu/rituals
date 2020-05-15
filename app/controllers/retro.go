@@ -34,7 +34,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 		if title == "" {
 			title = "Untitled"
 		}
-		sess, err := ctx.App.Retro.NewSession(title, ctx.Profile.UserID)
+		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, nil)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating retro session"))
 		}

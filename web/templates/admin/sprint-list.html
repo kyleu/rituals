@@ -1,0 +1,14 @@
+<%: func AdminSprintList(sprints []*sprint.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">Sprints</h3>
+      <% AdminSprintTable(sprints, ctx, _buffer) %>
+    </div>
+  </div>
+</div>
+<% } %>

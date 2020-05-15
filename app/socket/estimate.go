@@ -26,7 +26,7 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 	case util.ClientCmdConnect:
 		err = onEstimateConnect(s, conn, userID, param.(string))
 	case util.ClientCmdUpdateSession:
-		err = onEstimateSessionSave(s, *conn.Channel, param.(map[string]interface{}))
+		err = onEstimateSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdAddStory:
 		err = onAddStory(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdUpdateStory:
@@ -34,7 +34,7 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 	case util.ClientCmdRemoveStory:
 		err = onRemoveStory(s, *conn.Channel, userID, param.(string))
 	case util.ClientCmdSetStoryStatus:
-		err = onSetStoryStatus(s, *conn.Channel, param.(map[string]interface{}))
+		err = onSetStoryStatus(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdSubmitVote:
 		err = onSubmitVote(s, *conn.Channel, userID, param.(map[string]interface{}))
 	default:
@@ -43,7 +43,7 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 	return errors.WithStack(errors.Wrap(err, "error handling estimate message"))
 }
 
-func onEstimateSessionSave(s *Service, ch channel, param map[string]interface{}) error {
+func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	title := strings.TrimSpace(param["title"].(string))
 	if title == "" {
 		title = "Untitled"
@@ -58,7 +58,7 @@ func onEstimateSessionSave(s *Service, ch channel, param map[string]interface{})
 	}
 	s.logger.Debug(fmt.Sprintf("saving estimate session [%s] with choices [%s]", title, strings.Join(choices, ", ")))
 
-	err := s.estimates.UpdateSession(ch.ID, title, choices)
+	err := s.estimates.UpdateSession(ch.ID, title, choices, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating estimate session"))
 	}
@@ -70,8 +70,12 @@ func onEstimateSessionSave(s *Service, ch channel, param map[string]interface{})
 func sendEstimateSessionUpdate(s *Service, ch channel) error {
 	est, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding estimate session"))
+		return errors.WithStack(errors.Wrap(err, "error finding estimate session [" + ch.ID.String() + "]"))
 	}
+	if est == nil {
+		return errors.WithStack(errors.Wrap(err, "cannot load estimate session [" + ch.ID.String() + "]"))
+	}
+
 	msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdSessionUpdate, Param: est}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending estimate session"))

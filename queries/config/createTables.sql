@@ -25,11 +25,31 @@ create table if not exists "auth" (
 
 create index if not exists idx_auth_k_v on auth(k, v);
 
+-- Sprint
+create table if not exists "sprint" (
+  "id" uuid not null primary key,
+  "slug" varchar(128) not null unique,
+  "title" varchar(2048) not null,
+  "owner" uuid references "system_user"("id"),
+  "end_date" date,
+  "created" timestamp not null default now()
+);
+
+create table if not exists "sprint_member" (
+  "sprint_id" uuid not null references "sprint"("id"),
+  "user_id" uuid not null references "system_user"("id"),
+  "name" varchar(2048) not null,
+  "role" varchar(64) not null,
+  "created" timestamp not null default now(),
+  primary key ("sprint_id", "user_id")
+);
+
 -- Estimate
 create table if not exists "estimate" (
   "id" uuid not null primary key,
   "slug" varchar(128) not null unique,
   "title" varchar(2048) not null,
+  "sprint_id" uuid references "sprint"("id"),
   "owner" uuid references "system_user"("id"),
   "status" estimate_status not null,
   "choices" varchar(2048)[] not null,
@@ -73,6 +93,7 @@ create table if not exists "standup" (
   "id" uuid not null primary key,
   "slug" varchar(128) not null unique,
   "title" varchar(2048) not null,
+  "sprint_id" uuid references "sprint"("id"),
   "owner" uuid references "system_user"("id"),
   "status" standup_status not null,
   "created" timestamp not null default now()
@@ -104,6 +125,7 @@ create table if not exists "retro" (
   "id" uuid not null primary key,
   "slug" varchar(128) not null unique,
   "title" varchar(2048) not null,
+  "sprint_id" uuid references "sprint"("id"),
   "owner" uuid references "system_user"("id"),
   "status" retro_status not null,
   "categories" varchar(2048)[] not null,

@@ -43,6 +43,17 @@ func act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 	}
 }
 
+func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
+	act(w, r, func(ctx web.RequestContext) (string, error) {
+		if(ctx.Profile.Role != util.RoleAdmin) {
+			ctx.Session.AddFlash("error:You're not an administrator, silly")
+			saveSession(w, r, ctx)
+			return ctx.Route("home"), nil
+		}
+		return f(ctx)
+	})
+}
+
 func tmpl(_ int, err error) (string, error) {
 	return "", err
 }

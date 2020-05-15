@@ -1,4 +1,4 @@
-<%: func AdminStandupDetail(model *standup.Session, members []*member.Entry, reports []*standup.Report, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminStandupDetail(model *standup.Session, members []*member.Entry, reports []*standup.Report, actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -53,6 +53,14 @@
       <p>No reports available</p>
       <% } else { %>
       <% AdminReportTable(reports, ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Actions</h3>
+      <% if len(actions) == 0 { %>
+      <p>No actions available</p>
+      <% } else { %>
+      <% AdminActionTable(actions, ctx, _buffer) %>
       <% } %>
     </div>
   </div>

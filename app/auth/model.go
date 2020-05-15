@@ -43,16 +43,3 @@ func (dto *recordDTO) ToRecord() *Record {
 	}
 }
 
-type googleUser struct {
-	ID            string `json:"id"`
-	Email         string `json:"email"`
-	Name          string `json:"name"`
-	Picture       string `json:"picture"`
-}
-
-type githubUser struct {
-	ID            string `json:"login"`
-	Email         string `json:"email"`
-	Name          string `json:"name"`
-	Picture       string `json:"avatar_url"`
-}

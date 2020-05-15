@@ -2,12 +2,9 @@ package controllers
 
 import (
 	"emperror.dev/errors"
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/app/web"
 	"net/http"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func AuthSubmit(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +30,9 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		return tmpl(templates.Todo(fmt.Sprintf("Auth Callback: %v", record), ctx, w))
+		ctx.Session.AddFlash("success:Signed in as " + record.Name)
+		saveSession(w, r, ctx)
+
+		return ctx.Route("home"), nil
 	})
 }

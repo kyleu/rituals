@@ -100,8 +100,8 @@ namespace vote {
 
     let sum = floats.reduce((x, y) => x + y, 0);
 
-    var mode = floats.reduce(function(current: any, item) {
-      var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+    const mode = floats.reduce(function(current: any, item) {
+      const val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
       if (val > current.greatestFreq) {
         current.greatestFreq = val;
         current.mode = item;

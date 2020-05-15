@@ -37,6 +37,10 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return nil
 	}
 
+	conn.Svc = ch.Svc
+	conn.ModelID = &ch.ID
+	s.actions.Post(ch.Svc, ch.ID, userID, "connect", nil, "")
+
 	entry, _, err := s.standups.Members.Register(ch.ID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining standup as member"))

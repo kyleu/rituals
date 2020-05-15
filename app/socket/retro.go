@@ -25,7 +25,7 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 	case util.ClientCmdConnect:
 		err = onRetroConnect(s, conn, userID, param.(string))
 	case util.ClientCmdUpdateSession:
-		err = onRetroSessionSave(s, *conn.Channel, param.(map[string]interface{}))
+		err = onRetroSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdAddFeedback:
 		err = onAddFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdUpdateFeedback:
@@ -38,7 +38,7 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 	return errors.WithStack(errors.Wrap(err, "error handling retro message"))
 }
 
-func onRetroSessionSave(s *Service, ch channel, param map[string]interface{}) error {
+func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	title := strings.TrimSpace(param["title"].(string))
 	if title == "" {
 		title = "Untitled"
@@ -53,7 +53,7 @@ func onRetroSessionSave(s *Service, ch channel, param map[string]interface{}) er
 	}
 	s.logger.Debug(fmt.Sprintf("saving retro session [%s] with categories [%s]", title, strings.Join(categories, ", ")))
 
-	err := s.retros.UpdateSession(ch.ID, title, categories)
+	err := s.retros.UpdateSession(ch.ID, title, categories, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating retro session"))
 	}
@@ -65,8 +65,12 @@ func onRetroSessionSave(s *Service, ch channel, param map[string]interface{}) er
 func sendRetroSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.retros.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding retro session"))
+		return errors.WithStack(errors.Wrap(err, "error finding retro session [" + ch.ID.String() + "]"))
 	}
+	if sess == nil {
+		return errors.WithStack(errors.Wrap(err, "cannot load retro session [" + ch.ID.String() + "]"))
+	}
+
 	msg := Message{Svc: util.SvcRetro, Cmd: util.ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending retro session"))

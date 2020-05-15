@@ -37,6 +37,10 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return nil
 	}
 
+	conn.Svc = ch.Svc
+	conn.ModelID = &ch.ID
+	s.actions.Post(ch.Svc, ch.ID, userID, "connect", nil, "")
+
 	entry, _, err := s.retros.Members.Register(ch.ID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining retro as member"))

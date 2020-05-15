@@ -3,7 +3,7 @@ package standup
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/action"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -14,36 +14,38 @@ import (
 )
 
 type Service struct {
-	actions *actions.Service
+	actions *action.Service
 	db      *sqlx.DB
 	Members *member.Service
 	logger  logur.Logger
 }
 
-func NewService(actions *actions.Service, db *sqlx.DB, logger logur.Logger) *Service {
+func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcStandup})
 
 	return &Service{
 		actions: actions,
 		db:      db,
-		Members: member.NewService(db, util.SvcStandup, "standup_member", "standup_id"),
+		Members: member.NewService(actions, db, util.SvcStandup),
 		logger:  logger,
 	}
 }
 
-func (s *Service) NewSession(title string, userID uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcStandup, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating standup slug"))
 	}
 
-	e := NewSession(title, slug, userID)
+	e := NewSession(title, slug, userID, sprintID)
 
 	q := "insert into standup (id, slug, title, owner, status) values ($1, $2, $3, $4, $5)"
 	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String())
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new standup session"))
 	}
+
+	s.actions.Post(util.SvcStandup, e.ID, userID, "create", nil, "")
 	return &e, nil
 }
 
@@ -114,8 +116,26 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]*Session, error) {
 	return ret, nil
 }
 
-func (s *Service) UpdateSession(sessionID uuid.UUID, title string) error {
+func (s *Service) GetBySprint(sprintID uuid.UUID, limit int) ([]*Session, error) {
+	var dtos []sessionDTO
+	q := "select * from standup where sprint_id = $1 order by created desc"
+	if limit > 0 {
+		q += fmt.Sprint(" limit ", limit)
+	}
+	err := s.db.Select(&dtos, q, sprintID)
+	if err != nil {
+		return nil, err
+	}
+	ret := make([]*Session, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToSession())
+	}
+	return ret, nil
+}
+
+func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.UUID) error {
 	q := "update standup set title = $1 where id = $2"
 	_, err := s.db.Exec(q, title, sessionID)
+	s.actions.Post(util.SvcStandup, sessionID, userID, "update", nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating standup session"))
 }

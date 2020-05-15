@@ -1,6 +1,7 @@
 package standup
 
 import (
+	"emperror.dev/errors"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -20,19 +21,10 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 		return nil, err
 	}
 
+	actionContent := map[string]interface{}{"reportID": id}
+	s.actions.Post(util.SvcStandup, standupID, authorID, "add-report", actionContent, "")
+
 	return s.GetReportByID(id)
-}
-
-func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, authorID uuid.UUID) (*Report, error) {
-	html := markdown.ToHTML(content)
-
-	q := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
-	_, err := s.db.Exec(q, d, authorID, content, html, reportID)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.GetReportByID(reportID)
 }
 
 func (s *Service) GetReports(standupID uuid.UUID) ([]*Report, error) {
@@ -66,8 +58,37 @@ func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	return &ret, nil
 }
 
-func (s *Service) RemoveReport(reportID uuid.UUID, _ uuid.UUID) error {
+func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, authorID uuid.UUID) (*Report, error) {
+	html := markdown.ToHTML(content)
+
+	q := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
+	_, err := s.db.Exec(q, d, authorID, content, html, reportID)
+	if err != nil {
+		return nil, err
+	}
+
+	report, err := s.GetReportByID(reportID)
+	if report == nil {
+		return nil, errors.New("cannot load newly-updated report")
+	}
+
+	actionContent := map[string]interface{}{"reportID": reportID}
+	s.actions.Post(util.SvcStandup, report.StandupID, authorID, "update-report", actionContent, "")
+
+	return report, err
+}
+
+func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
+	report, err := s.GetReportByID(reportID)
+	if report == nil {
+		return errors.New("cannot load report [" + reportID.String() + "] for removal")
+	}
+
 	q := "delete from report where id = $1"
-	_, err := s.db.Exec(q, reportID)
+	_, err = s.db.Exec(q, reportID)
+
+	actionContent := map[string]interface{}{"reportID": reportID}
+	s.actions.Post(util.SvcStandup, report.StandupID, userID, "remove-report", actionContent, "")
+
 	return err
 }

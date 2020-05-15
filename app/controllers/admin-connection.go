@@ -17,7 +17,7 @@ import (
 )
 
 func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Connection List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
@@ -32,7 +32,7 @@ func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		connectionIDString := mux.Vars(r)["id"]
 		connectionID, err := uuid.FromString(connectionIDString)
 		if err != nil {
@@ -54,7 +54,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminConnectionPost(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		connectionIDString := r.Form.Get("id")
 		connectionID, err := uuid.FromString(connectionIDString)

@@ -1,4 +1,4 @@
-<%: func AdminEstimateDetail(model *estimate.Session, members []*member.Entry, stories []*estimate.Story, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminEstimateDetail(model *estimate.Session, members []*member.Entry, stories []*estimate.Story, actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -65,6 +65,14 @@
         <p>No stories available</p>
       <% } else { %>
         <% AdminStoryTable(stories, ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Actions</h3>
+      <% if len(actions) == 0 { %>
+        <p>No actions available</p>
+      <% } else { %>
+        <% AdminActionTable(actions, ctx, _buffer) %>
       <% } %>
     </div>
   </div>

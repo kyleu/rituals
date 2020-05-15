@@ -61,38 +61,41 @@ func choicesFromDB(s string) []string {
 }
 
 type Session struct {
-	ID      uuid.UUID      `json:"id"`
-	Slug    string         `json:"slug"`
-	Title   string         `json:"title"`
-	Owner   uuid.UUID      `json:"owner"`
-	Status  Status         `json:"status"`
-	Choices []string       `json:"choices"`
-	Options SessionOptions `json:"options"`
-	Created time.Time      `json:"created"`
+	ID       uuid.UUID      `json:"id"`
+	Slug     string         `json:"slug"`
+	Title    string         `json:"title"`
+	SprintID *uuid.UUID     `json:"sprintID"`
+	Owner    uuid.UUID      `json:"owner"`
+	Status   Status         `json:"status"`
+	Choices  []string       `json:"choices"`
+	Options  SessionOptions `json:"options"`
+	Created  time.Time      `json:"created"`
 }
 
-func NewSession(title string, slug string, userID uuid.UUID) Session {
+func NewSession(title string, slug string, userID uuid.UUID, sprintID *uuid.UUID) Session {
 	return Session{
-		ID:      util.UUID(),
-		Slug:    slug,
-		Title:   strings.TrimSpace(title),
-		Owner:   userID,
-		Status:  StatusNew,
-		Choices: nil,
-		Options: SessionOptions{Foo: ""},
-		Created: time.Time{},
+		ID:       util.UUID(),
+		Slug:     slug,
+		Title:    strings.TrimSpace(title),
+		SprintID: sprintID,
+		Owner:    userID,
+		Status:   StatusNew,
+		Choices:  nil,
+		Options:  SessionOptions{Foo: ""},
+		Created:  time.Time{},
 	}
 }
 
 type sessionDTO struct {
-	ID      uuid.UUID `db:"id"`
-	Slug    string    `db:"slug"`
-	Title   string    `db:"title"`
-	Owner   uuid.UUID `db:"owner"`
-	Status  string    `db:"status"`
-	Choices string    `db:"choices"`
-	Options string    `db:"options"`
-	Created time.Time `db:"created"`
+	ID       uuid.UUID  `db:"id"`
+	Slug     string     `db:"slug"`
+	Title    string     `db:"title"`
+	SprintID *uuid.UUID `db:"sprint_id"`
+	Owner    uuid.UUID  `db:"owner"`
+	Status   string     `db:"status"`
+	Choices  string     `db:"choices"`
+	Options  string     `db:"options"`
+	Created  time.Time  `db:"created"`
 }
 
 func (dto *sessionDTO) ToSession() *Session {
@@ -100,6 +103,7 @@ func (dto *sessionDTO) ToSession() *Session {
 		ID:      dto.ID,
 		Slug:    dto.Slug,
 		Title:   dto.Title,
+		SprintID: dto.SprintID,
 		Owner:   dto.Owner,
 		Status:  statusFromString(dto.Status),
 		Choices: choicesFromDB(dto.Choices),

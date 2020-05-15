@@ -33,7 +33,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 		if title == "" {
 			title = "Untitled"
 		}
-		sess, err := ctx.App.Estimate.NewSession(title, ctx.Profile.UserID)
+		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, nil)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating estimate session"))
 		}

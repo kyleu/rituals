@@ -1,4 +1,22 @@
 "use strict";
+var action;
+(function (action) {
+    function loadActions() {
+        var msg = {
+            svc: services.system,
+            cmd: command.client.getActions,
+            param: null
+        };
+        socket.send(msg);
+    }
+    action.loadActions = loadActions;
+    function viewActions(actions) {
+        var el = util.req("#action-list");
+        el.innerHTML = "";
+        el.appendChild(action.renderActions(actions));
+    }
+    action.viewActions = viewActions;
+})(action || (action = {}));
 var estimate;
 (function (estimate) {
     var Cache = /** @class */ (function () {
@@ -111,6 +129,10 @@ var events;
             case "member":
                 system.cache.activeMember = id;
                 member.viewActiveMember();
+                break;
+            // actions
+            case "actions":
+                action.loadActions();
                 break;
             // estimate
             case "add-story":
@@ -314,6 +336,7 @@ var system;
 var services;
 (function (services) {
     services.system = "system";
+    services.sprint = "sprint";
     services.estimate = "estimate";
     services.standup = "standup";
     services.retro = "retro";
@@ -324,6 +347,7 @@ var command;
         error: "error",
         ping: "ping",
         connect: "connect",
+        getActions: "get-actions",
         updateProfile: "update-profile",
         updateSession: "update-session",
         addStory: "add-story",
@@ -341,6 +365,7 @@ var command;
     command.server = {
         error: "error",
         pong: "pong",
+        actions: "actions",
         sessionJoined: "session-joined",
         sessionUpdate: "session-update",
         memberUpdate: "member-update",
@@ -682,6 +707,9 @@ var rituals;
             case services.system:
                 onSystemMessage(msg.cmd, msg.param);
                 break;
+            case services.sprint:
+                sprint.onSprintMessage(msg.cmd, msg.param);
+                break;
             case services.estimate:
                 estimate.onEstimateMessage(msg.cmd, msg.param);
                 break;
@@ -720,6 +748,9 @@ var rituals;
         switch (cmd) {
             case command.server.error:
                 onError("system", param);
+                break;
+            case command.server.actions:
+                action.viewActions(param);
                 break;
             case command.server.memberUpdate:
                 member.onMemberUpdate(param);
@@ -814,6 +845,49 @@ var socket;
         }
     }
 })(socket || (socket = {}));
+var sprint;
+(function (sprint) {
+    var Cache = /** @class */ (function () {
+        function Cache() {
+        }
+        return Cache;
+    }());
+    sprint.cache = new Cache();
+    function onSprintMessage(cmd, param) {
+        switch (cmd) {
+            case command.server.error:
+                rituals.onError(services.sprint, param);
+                break;
+            case command.server.sessionJoined:
+                var sj = param;
+                rituals.onSessionJoin(sj);
+                setSprintDetail(sj.session);
+                break;
+            case command.server.sessionUpdate:
+                setSprintDetail(param);
+                break;
+            default:
+                console.warn("unhandled command [" + cmd + "] for sprint");
+        }
+    }
+    sprint.onSprintMessage = onSprintMessage;
+    function setSprintDetail(detail) {
+        sprint.cache.detail = detail;
+        rituals.setDetail(detail);
+    }
+    function onSubmitSprintSession() {
+        var title = util.req("#model-title-input").value;
+        var msg = {
+            svc: services.sprint,
+            cmd: command.client.updateSession,
+            param: {
+                title: title
+            }
+        };
+        socket.send(msg);
+    }
+    sprint.onSubmitSprintSession = onSubmitSprintSession;
+})(sprint || (sprint = {}));
 var standup;
 (function (standup) {
     var Cache = /** @class */ (function () {
@@ -923,7 +997,6 @@ var story;
     function requestStoryStatus(s) {
         var story = story_1.getActiveStory();
         if (story === undefined) {
-            console.warn("no active story");
             return;
         }
         var msg = {
@@ -1026,7 +1099,6 @@ var story;
     function viewActiveStory() {
         var s = getActiveStory();
         if (s === undefined) {
-            console.warn("no active story");
             return;
         }
         util.setText("#story-title", s.title);
@@ -1279,6 +1351,46 @@ var vote;
     }
     vote.getVoteResults = getVoteResults;
 })(vote || (vote = {}));
+var action;
+(function (action_1) {
+    function renderAction(action) {
+        return JSX("tr", null,
+            JSX("td", null, getMemberName(action.authorID)),
+            JSX("td", null, action.act),
+            JSX("td", null,
+                JSX("pre", null, JSON.stringify(action.content, null, 2))),
+            JSX("td", null, action.note),
+            JSX("td", null,
+                new Date(action.occurred).toLocaleDateString(),
+                " ",
+                new Date(action.occurred).toLocaleTimeString().slice(0, 8)));
+    }
+    function renderActions(actions) {
+        if (actions.length === 0) {
+            return JSX("div", null, "No actions available");
+        }
+        else {
+            return JSX("table", { "class": "uk-table uk-table-divider uk-text-left" },
+                JSX("thead", null,
+                    JSX("tr", null,
+                        JSX("th", null, "Author"),
+                        JSX("th", null, "Act"),
+                        JSX("th", null, "Content"),
+                        JSX("th", null, "Note"),
+                        JSX("th", null, "Occurred"))),
+                JSX("tbody", null, actions.map(function (a) { return renderAction(a); })));
+        }
+    }
+    action_1.renderActions = renderActions;
+    function getMemberName(id) {
+        var ret = system.cache.members.filter(function (m) { return m.userID === id; });
+        if (ret.length === 0) {
+            return id;
+        }
+        return ret[0].name;
+    }
+    action_1.getMemberName = getMemberName;
+})(action || (action = {}));
 var feedback;
 (function (feedback) {
     function renderFeedback(model) {
@@ -1375,7 +1487,7 @@ var story;
     }
     function renderStories(stories) {
         if (stories.length === 0) {
-            return JSX("div", null,
+            return JSX("div", { id: "story-list" },
                 JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('add-story');", type: "button" }, "Add Story"));
         }
         else {

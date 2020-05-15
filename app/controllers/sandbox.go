@@ -11,7 +11,7 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-var _sandboxes = []string{"gallery", "parse", "testbed"}
+var _sandboxes = []string{"gallery", "graphql", "testbed"}
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {

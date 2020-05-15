@@ -18,7 +18,7 @@ func UUID() uuid.UUID {
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 
-var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func RandomString(length int) string {
 	b := make([]byte, length)

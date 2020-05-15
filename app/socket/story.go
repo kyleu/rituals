@@ -43,7 +43,7 @@ func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]in
 		title = "Untitled"
 	}
 
-	st, err := s.estimates.UpdateStory(userID, storyID, title)
+	st, err := s.estimates.UpdateStory(storyID, title, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update story"))
 	}
@@ -66,15 +66,20 @@ func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error
 	return errors.WithStack(errors.Wrap(err, "error sending story removal notification"))
 }
 
-func onSetStoryStatus(s *Service, ch channel, m map[string]interface{}) error {
+func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, m map[string]interface{}) error {
 	storyIDString := m["storyID"].(string)
 	storyID, err := uuid.FromString(storyIDString)
 	if err != nil {
 		return errors.WithStack(errors.New("invalid story id [" + storyIDString + "]"))
 	}
+	story, err := s.estimates.GetStoryByID(storyID)
+	if err != nil {
+		return errors.WithStack(errors.New("cannot find story with id [" + storyIDString + "]"))
+	}
+
 	statusString := m["status"].(string)
 	status := estimate.StoryStatusFromString(statusString)
-	changed, finalVote, err := s.estimates.SetStoryStatus(storyID, status)
+	changed, finalVote, err := s.estimates.SetStoryStatus(storyID, status, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update status of story ["+storyIDString+"]"))
 	}
@@ -83,6 +88,8 @@ func onSetStoryStatus(s *Service, ch channel, m map[string]interface{}) error {
 		param := StoryStatusChange{StoryID: storyID, Status: status, FinalVote: finalVote}
 		msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryStatusChange, Param: param}
 		err := s.WriteChannel(ch, &msg)
+		actionContent := map[string]interface{}{"storyID": storyID, "status": status.Key, "finalVote": finalVote}
+		s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "add-vote", actionContent, "")
 		return errors.WithStack(errors.Wrap(err, "error sending story update"))
 	}
 

@@ -25,7 +25,7 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 	case util.ClientCmdConnect:
 		err = onStandupConnect(s, conn, userID, param.(string))
 	case util.ClientCmdUpdateSession:
-		err = onStandupSessionSave(s, *conn.Channel, param.(map[string]interface{}))
+		err = onStandupSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdAddReport:
 		err = onAddReport(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case util.ClientCmdUpdateReport:
@@ -38,14 +38,14 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 	return errors.WithStack(errors.Wrap(err, "error handling standup message"))
 }
 
-func onStandupSessionSave(s *Service, ch channel, param map[string]interface{}) error {
+func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	title := strings.TrimSpace(param["title"].(string))
 	if title == "" {
 		title = "Untitled"
 	}
 	s.logger.Debug(fmt.Sprintf("saving standup session [%s]", title))
 
-	err := s.standups.UpdateSession(ch.ID, title)
+	err := s.standups.UpdateSession(ch.ID, title, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating standup session"))
 	}
@@ -57,7 +57,10 @@ func onStandupSessionSave(s *Service, ch channel, param map[string]interface{}) 
 func sendStandupSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.standups.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding standup session"))
+		return errors.WithStack(errors.Wrap(err, "error finding standup session [" + ch.ID.String() + "]"))
+	}
+	if sess == nil {
+		return errors.WithStack(errors.Wrap(err, "cannot load standup session [" + ch.ID.String() + "]"))
 	}
 	msg := Message{Svc: util.SvcStandup, Cmd: util.ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)

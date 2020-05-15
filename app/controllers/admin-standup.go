@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -13,7 +14,7 @@ import (
 )
 
 func AdminStandupList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Daily Standup List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
@@ -28,7 +29,7 @@ func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		standupIDString := mux.Vars(r)["id"]
 		standupID, err := uuid.FromString(standupIDString)
 		if err != nil {
@@ -38,6 +39,11 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if standup == nil {
+			ctx.Session.AddFlash("error:Can't load standup [" + standupIDString + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.standup"), nil
+		}
 		members, err := ctx.App.Standup.Members.GetByModelID(standupID)
 		if err != nil {
 			return "", err
@@ -46,12 +52,17 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup, standupID)
+		if err != nil {
+			return "", err
+		}
+
 		ctx.Title = standup.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminStandupDetail(standup, members, reports, ctx, w))
+		return tmpl(templates.AdminStandupDetail(standup, members, reports, actions, ctx, w))
 	})
 }

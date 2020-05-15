@@ -13,7 +13,7 @@ import (
 )
 
 func AdminUserList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "User List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
@@ -28,7 +28,7 @@ func AdminUserList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		userIDString := mux.Vars(r)["id"]
 		userID, err := uuid.FromString(userIDString)
 		if err != nil {
@@ -38,6 +38,12 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if user == nil {
+			ctx.Session.AddFlash("error:Can't load user [" + userIDString + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.user"), nil
+		}
+
 		auths, err := ctx.App.Auth.GetByUserID(userID, 0)
 		if err != nil {
 			return "", err
@@ -54,6 +60,10 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		actions, err := ctx.App.Action.GetByAuthor(userID)
+		if err != nil {
+			return "", err
+		}
 
 		ctx.Title = user.Name
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
@@ -61,6 +71,6 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user.detail", "id", userIDString), user.Name)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminUserDetail(user, auths, estimates, standups, retros, ctx, w))
+		return tmpl(templates.AdminUserDetail(user, auths, estimates, standups, retros, actions, ctx, w))
 	})
 }

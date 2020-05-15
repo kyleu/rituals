@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -14,7 +15,7 @@ import (
 )
 
 func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Estimate List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
@@ -29,7 +30,7 @@ func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		estimateIDString := mux.Vars(r)["id"]
 		estimateID, err := uuid.FromString(estimateIDString)
 		if err != nil {
@@ -39,11 +40,21 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if estimate == nil {
+			ctx.Session.AddFlash("error:Can't load estimate [" + estimateIDString + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.estimate"), nil
+		}
+
 		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID)
 		if err != nil {
 			return "", err
 		}
 		stories, err := ctx.App.Estimate.GetStories(estimateID)
+		if err != nil {
+			return "", err
+		}
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate, estimateID)
 		if err != nil {
 			return "", err
 		}
@@ -54,12 +65,12 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminEstimateDetail(estimate, members, stories, ctx, w))
+		return tmpl(templates.AdminEstimateDetail(estimate, members, stories, actions, ctx, w))
 	})
 }
 
 func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		storyIDString := mux.Vars(r)["id"]
 		storyID, err := uuid.FromString(storyIDString)
 		if err != nil {
@@ -77,6 +88,12 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if estimate == nil {
+			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.estimate"), nil
+		}
+
 		votes, err := ctx.App.Estimate.GetStoryVotes(storyID)
 		if err != nil {
 			return "", err

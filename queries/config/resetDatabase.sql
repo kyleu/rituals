@@ -12,6 +12,9 @@ drop table if exists "feedback";
 drop table if exists "retro_member";
 drop table if exists "retro";
 
+drop table if exists "sprint_member";
+drop table if exists "sprint";
+
 drop table if exists "invitation";
 drop table if exists "action";
 

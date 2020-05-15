@@ -43,6 +43,12 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	r.Path("/join/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(JoinGet))).Name("join.get")
 	join.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(JoinPost))).Name("join.post")
 
+	// Sprint
+	sprint := r.Path("/sprint").Subrouter()
+	sprint.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SprintList))).Name(util.SvcSprint + ".list")
+	sprint.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(SprintNew))).Name(util.SvcSprint + ".new")
+	r.Path("/estimate/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SprintWorkspace))).Name(util.SvcSprint)
+
 	// Estimate
 	estimate := r.Path("/estimate").Subrouter()
 	estimate.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateList))).Name(util.SvcEstimate + ".list")
@@ -60,6 +66,11 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	retro.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroList))).Name(util.SvcRetro + ".list")
 	retro.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(RetroNew))).Name(util.SvcRetro + ".new")
 	r.Path("/retro/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroWorkspace))).Name(util.SvcRetro)
+
+	// GraphQL
+	graphql := r.Path("/graphql").Subrouter()
+	graphql.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(GraphQLHome))).Name("graphql")
+	graphql.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(GraphQLRun))).Name("graphql.run")
 
 	// Admin
 	admin := r.Path("/admin").Subrouter()
@@ -79,6 +90,8 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 	r.Path("/admin/standup/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminStandupDetail))).Name("admin.standup.detail")
 	r.Path("/admin/retro").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminRetroList))).Name("admin.retro")
 	r.Path("/admin/retro/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminRetroDetail))).Name("admin.retro.detail")
+	r.Path("/admin/sprint").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminSprintList))).Name("admin.sprint")
+	r.Path("/admin/sprint/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminSprintDetail))).Name("admin.sprint.detail")
 	r.Path("/admin/connection").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminConnectionList))).Name("admin.connection")
 	r.Path("/admin/connection").Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(AdminConnectionPost))).Name("admin.connection.post")
 	r.Path("/admin/connection/{id}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(AdminConnectionDetail))).Name("admin.connection.detail")

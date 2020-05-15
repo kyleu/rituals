@@ -3,29 +3,30 @@ package member
 import (
 	"database/sql"
 	"fmt"
-	"strings"
-
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/kyleu/rituals.dev/app/action"
 )
 
 type Service struct {
+	actions   *action.Service
 	db        *sqlx.DB
 	svc       string
 	tableName string
 	colName   string
 }
 
-func NewService(db *sqlx.DB, svc string, table string, col string) *Service {
+func NewService(actions *action.Service, db *sqlx.DB, svc string) *Service {
 	return &Service{
+		actions:   actions,
 		db:        db,
 		svc:       svc,
-		tableName: table,
-		colName:   col,
+		tableName: svc + "_member",
+		colName:   svc + "_id",
 	}
 }
 
-var nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
+const nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
 func (s *Service) GetByModelID(id uuid.UUID) ([]*Entry, error) {
 	var dtos []entryDTO
@@ -60,22 +61,17 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, e
 		return nil, false, err
 	}
 	if dto == nil {
-		q := fmt.Sprintf(strings.TrimSpace(`
-			insert into %s (%s, user_id, name, role) 
-			values ($1, $2, '', 'member')
-		`), s.tableName, s.colName)
+		q := fmt.Sprintf(`insert into %s (%s, user_id, name, role) values ($1, $2, '', 'member')`, s.tableName, s.colName)
 		_, err = s.db.Exec(q, modelID, userID)
 		if err != nil {
 			return nil, false, err
 		}
-		entry, err := s.Get(modelID, userID)
-		return entry, true, err
+		dto, err = s.Get(modelID, userID)
+
+		s.actions.Post(s.svc, modelID, userID, "add-member", nil, "")
+
+		return dto, true, err
 	} else {
-		// q := fmt.Sprintf("update %s set name = $1, role = $2 where %s = $3 and user_id = $4)", s.tableName, s.colName)
-		// _, err = s.db.Exec(q, modelID, userID, name, role)
-		// if err != nil {
-		// 	return nil, err
-		// }
 		return dto, false, nil
 	}
 }

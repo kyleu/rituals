@@ -1,4 +1,4 @@
-<%: func AdminActionDetail(model *actions.Action, user *user.SystemUser, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminActionDetail(model *action.Action, user *user.SystemUser, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -12,6 +12,27 @@
           <tr>
             <th>ID</th>
             <td><%= model.ID.String() %></td>
+          </tr>
+          <tr>
+            <th>Model</th>
+            <td><% ComponentChannel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
+          </tr>
+          <tr>
+            <th>Author ID</th>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.AuthorID.String()) %>"><%= model.AuthorID.String() %></a></td>
+          </tr>
+          <tr>
+            <th>Act</th>
+            <td><%= model.Act %></td>
+          </tr>
+          <tr>
+            <th>Content</th>
+            <% j, _ := model.ContentJSON() %>
+            <td><pre><%= j %></pre></td>
+          </tr>
+          <tr>
+            <th>Note</th>
+            <td><%= model.Note %></td>
           </tr>
           <tr>
             <th>Occurred</th>

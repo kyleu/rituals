@@ -13,7 +13,7 @@ import (
 )
 
 func AdminAuthList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Auth List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.auth"), "auths")...)
@@ -28,7 +28,7 @@ func AdminAuthList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminAuthDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		authIDString := mux.Vars(r)["id"]
 		authID, err := uuid.FromString(authIDString)
 		if err != nil {
@@ -38,9 +38,20 @@ func AdminAuthDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if auth == nil {
+			ctx.Session.AddFlash("error:Can't load auth [" + authIDString + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.auth"), nil
+		}
+
 		user, err := ctx.App.User.GetByID(auth.UserID, false)
 		if err != nil {
 			return "", err
+		}
+		if user == nil {
+			ctx.Session.AddFlash("error:Can't load user [" + auth.UserID.String() + "]")
+			saveSession(w, r, ctx)
+			return ctx.Route("admin.auth"), nil
 		}
 
 		ctx.Title = user.Name

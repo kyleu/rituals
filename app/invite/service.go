@@ -2,7 +2,7 @@ package invite
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/action"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -11,12 +11,12 @@ import (
 )
 
 type Service struct {
-	actions *actions.Service
+	actions *action.Service
 	db      *sqlx.DB
 	logger  logur.Logger
 }
 
-func NewService(service *actions.Service, db *sqlx.DB, logger logur.Logger) *Service {
+func NewService(service *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
 
 	return &Service{

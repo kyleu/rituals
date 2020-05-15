@@ -36,6 +36,9 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		}
 		return nil
 	}
+	conn.Svc = ch.Svc
+	conn.ModelID = &ch.ID
+	s.actions.Post(ch.Svc, ch.ID, userID, "connect", nil, "")
 
 	entry, _, err := s.estimates.Members.Register(ch.ID, userID)
 	if err != nil {

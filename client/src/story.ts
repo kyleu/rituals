@@ -71,7 +71,6 @@ namespace story {
   export function viewActiveStory() {
     const s = getActiveStory();
     if (s === undefined) {
-      console.warn("no active story");
       return;
     }
     util.setText("#story-title", s.title);

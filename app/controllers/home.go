@@ -12,6 +12,10 @@ import (
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
+		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, 5)
+		if err != nil {
+			return "", err
+		}
 		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, 5)
 		if err != nil {
 			return "", err
@@ -26,7 +30,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Home"
-		return tmpl(templates.Index(ctx, estimates, standups, retros, w))
+		return tmpl(templates.Index(ctx, sprints, estimates, standups, retros, w))
 	})
 }
 

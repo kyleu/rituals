@@ -23,13 +23,6 @@ type Breadcrumb struct {
 
 type Breadcrumbs []Breadcrumb
 
-func (bc Breadcrumbs) Title(ai *config.AppInfo) string {
-	if len(bc) == 0 {
-		return util.AppName
-	}
-	return bc[len(bc)-1].Title
-}
-
 func BreadcrumbsSimple(path string, title string) Breadcrumbs {
 	return []Breadcrumb{
 		{path, title},

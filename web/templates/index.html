@@ -1,4 +1,4 @@
-<%: func Index(ctx web.RequestContext, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, w io.Writer) (int, error) %>
+<%: func Index(ctx web.RequestContext, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,28 +7,47 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">
-        <span class="right">
-          <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
-        </span>
+            <span class="right">
+              <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
+            </span>
         <% if ctx.Profile.Role == util.RoleAdmin { %>
         <span class="right">
-          <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
-        </span>
+              <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
+            </span>
         <% } %>
-        <%= util.AppName %>
+        Join Now
       </h3>
       <form method="post" action="<%= ctx.Route(`join.post`) %>">
         <div class="uk-inline">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: forward"></button>
-          <input class="uk-input uk-form-large" type="text" name="i" placeholder="Invite Code" />
+          <input class="uk-input" type="text" name="i" placeholder="Invite Code" />
         </div>
       </form>
     </div>
-
-    <div class="uk-grid-medium uk-grid-match uk-child-width-1-3@s uk-margin-medium" uk-grid>
-      <div>
+    <div class="uk-grid-medium uk-grid-match uk-margin-medium" uk-grid>
+      <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`estimate.list`) %>">Estimation Session</a></h3>
+          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint.list`) %>">Sprints</a></h3>
+          <form method="post" action="<%= ctx.Route(`sprint.new`) %>">
+            <div class="uk-inline uk-display-block">
+              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new sprint"></button>
+              <input class="uk-input" type="text" id="sprint-title" name="title" placeholder="Title" />
+            </div>
+          </form>
+          <% if len(sprints) > 0 { %>
+            <ul class="uk-list uk-list-divider uk-margin-top">
+              <% for _, s := range sprints { %>
+                <li>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint`, `key`, s.Slug) %>"><%= s.Title %></a>
+                </li>
+              <% } %>
+            </ul>
+          <% } %>
+        </div>
+      </div>
+      <div class="uk-width-1-2@s">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`estimate.list`) %>">Estimation Sessions</a></h3>
           <form method="post" action="<%= ctx.Route(`estimate.new`) %>">
             <div class="uk-inline uk-display-block">
               <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new estimation session"></button>
@@ -46,9 +65,9 @@
           <% } %>
         </div>
       </div>
-      <div>
+      <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`standup.list`) %>">Daily Standup</a></h3>
+          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`standup.list`) %>">Daily Standups</a></h3>
           <form method="post" action="<%= ctx.Route(`standup.new`) %>">
             <div class="uk-inline uk-display-block">
               <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new daily standup"></button>
@@ -66,9 +85,9 @@
           <% } %>
         </div>
       </div>
-      <div>
+      <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro.list`) %>">Retrospective</a></h3>
+          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro.list`) %>">Retrospectives</a></h3>
           <form method="post" action="<%= ctx.Route(`retro.new`) %>">
             <div class="uk-inline uk-display-block">
               <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new retrospective"></button>

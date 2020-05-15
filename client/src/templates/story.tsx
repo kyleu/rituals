@@ -9,7 +9,7 @@ namespace story {
 
   export function renderStories(stories: story.Story[]): JSX.Element {
     if (stories.length === 0) {
-      return <div>
+      return <div id="story-list">
         <button class="uk-button uk-button-default" onclick="events.openModal('add-story');" type="button">Add Story</button>
       </div>;
     } else {

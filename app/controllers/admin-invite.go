@@ -11,7 +11,7 @@ import (
 )
 
 func AdminInviteList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Invitation List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.invite"), "invites")...)
@@ -26,7 +26,7 @@ func AdminInviteList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminInviteDetail(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		key := mux.Vars(r)["key"]
 		invite, err := ctx.App.Invite.GetByKey(key)
 		if err != nil {

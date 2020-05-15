@@ -25,6 +25,7 @@ namespace system {
 
 namespace services {
   export const system = "system";
+  export const sprint = "sprint";
   export const estimate = "estimate";
   export const standup = "standup";
   export const retro = "retro";
@@ -36,6 +37,7 @@ namespace command {
     ping: "ping",
 
     connect: "connect",
+    getActions: "get-actions",
     updateProfile: "update-profile",
 
     updateSession: "update-session",
@@ -59,6 +61,7 @@ namespace command {
     error: "error",
     pong: "pong",
 
+    actions: "actions",
     sessionJoined: "session-joined",
     sessionUpdate: "session-update",
 

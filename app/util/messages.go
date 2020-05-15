@@ -1,10 +1,10 @@
 package util
 
 // Client Messages
-const ClientCmdError = "error"
 const ClientCmdPing = "ping"
 
 const ClientCmdConnect = "connect"
+const ClientCmdGetActions = "get-actions"
 const ClientCmdUpdateProfile = "update-profile"
 const ClientCmdUpdateSession = "update-session"
 
@@ -28,6 +28,8 @@ const ServerCmdPong = "pong"
 
 const ServerCmdSessionJoined = "session-joined"
 const ServerCmdSessionUpdate = "session-update"
+
+const ServerCmdActions = "actions"
 
 const ServerCmdMemberUpdate = "member-update"
 const ServerCmdOnlineUpdate = "online-update"

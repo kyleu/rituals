@@ -12183,6 +12183,7 @@ pre {
 }
 
 .uk-table th {
+  vertical-align: top;
   text-transform: none;
 }
 

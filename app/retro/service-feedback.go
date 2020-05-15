@@ -1,6 +1,7 @@
 package retro
 
 import (
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/markdown"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -49,10 +50,13 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 		return nil, err
 	}
 
+	actionContent := map[string]interface{}{"feedbackID": id}
+	s.actions.Post(util.SvcRetro, retroID, authorID, "add-feedback", actionContent, "")
+
 	return s.GetFeedbackByID(id)
 }
 
-func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content string) (*Feedback, error) {
+func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content string, userID uuid.UUID) (*Feedback, error) {
 	html := markdown.ToHTML(content)
 
 	q := `update feedback set category = $1, content = $2, html = $3 where id = $4`
@@ -61,11 +65,28 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 		return nil, err
 	}
 
+	fb, err := s.GetFeedbackByID(feedbackID)
+	if fb == nil {
+		return nil, errors.New("cannot load newly-updated feedback")
+	}
+
+	actionContent := map[string]interface{}{"feedbackID": feedbackID}
+	s.actions.Post(util.SvcRetro, fb.RetroID, userID, "update-feedback", actionContent, "")
+
 	return s.GetFeedbackByID(feedbackID)
 }
 
-func (s *Service) RemoveFeedback(feedbackID uuid.UUID, _ uuid.UUID) error {
+func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
+	feedback, err := s.GetFeedbackByID(feedbackID)
+	if feedback == nil {
+		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
+	}
+
 	q := "delete from feedback where id = $1"
-	_, err := s.db.Exec(q, feedbackID)
+	_, err = s.db.Exec(q, feedbackID)
+
+	actionContent := map[string]interface{}{"feedbackID": feedbackID}
+	s.actions.Post(util.SvcRetro, feedback.RetroID, userID, "remove-feedback", actionContent, "")
+
 	return err
 }

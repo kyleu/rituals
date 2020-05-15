@@ -22,6 +22,11 @@ namespace events {
         member.viewActiveMember();
         break;
 
+      // actions
+      case "actions":
+        action.loadActions();
+        break;
+
       // estimate
       case "add-story":
         const storyInput = util.setValue("#story-title-input", "");

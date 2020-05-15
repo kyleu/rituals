@@ -1,26 +1,27 @@
 package cli
 
 import (
-	"fmt"
-	"github.com/kyleu/rituals.dev/app/actions"
-	"github.com/kyleu/rituals.dev/app/auth"
-	"net/http"
-
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	logurhandler "emperror.dev/handler/logur"
+	"fmt"
 	"github.com/gorilla/handlers"
+	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/controllers"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/invite"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/socket"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/spf13/cobra"
 	"logur.dev/logur"
+	"net/http"
+	"os"
 )
 
 var verbose bool
@@ -51,6 +52,8 @@ func Configure(version string, commitHash string) cobra.Command {
 }
 
 func InitApp(version string, commitHash string) (*config.AppInfo, error) {
+	_ = os.Setenv("TZ", "UTC")
+
 	logger := util.InitLogging(verbose)
 	logger = logur.WithFields(logger, map[string]interface{}{"debug": verbose, "version": version, "commit": commitHash})
 
@@ -64,14 +67,15 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating config service"))
 	}
 
-	actionService := actions.NewService(db, logger)
+	actionService := action.NewService(db, logger)
 	userSvc := user.NewService(actionService, db, logger)
 	authSvc := auth.NewService(actionService, db, logger, userSvc)
 	inviteSvc := invite.NewService(actionService, db, logger)
 	estimateSvc := estimate.NewService(actionService, db, logger)
 	standupSvc := standup.NewService(actionService, db, logger)
 	retroSvc := retro.NewService(actionService, db, logger)
-	socketSvc := socket.NewService(actionService, logger, userSvc, estimateSvc, standupSvc, retroSvc)
+	sprintSvc := sprint.NewService(actionService, db, logger)
+	socketSvc := socket.NewService(actionService, logger, userSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{
 		Debug:    verbose,
@@ -86,6 +90,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Estimate: estimateSvc,
 		Standup:  standupSvc,
 		Retro:    retroSvc,
+		Sprint:   sprintSvc,
 		Socket:   &socketSvc,
 	}
 

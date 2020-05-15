@@ -5,6 +5,7 @@
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('session');return false;" title="edit session"></a>
     </span>
     <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
+    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
   </h3>
   <p>Daily Standup</p>
 </div>

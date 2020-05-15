@@ -9,20 +9,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Story, error) {
-	id := util.UUID()
-
-	q := `insert into story (id, estimate_id, idx, author_id, title) values (
-    $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5
-	)`
-	_, err := s.db.Exec(q, id, estimateID, estimateID, authorID, title)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.GetStoryByID(id)
-}
-
 func (s *Service) GetStories(estimateID uuid.UUID) ([]*Story, error) {
 	var dtos []storyDTO
 	err := s.db.Select(&dtos, "select * from story where estimate_id = $1 order by idx", estimateID)
@@ -54,28 +40,62 @@ func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 	return &ret, nil
 }
 
-func (s *Service) UpdateStory(_ uuid.UUID, storyID uuid.UUID, title string) (*Story, error) {
+func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Story, error) {
+	id := util.UUID()
+
+	q := `insert into story (id, estimate_id, idx, author_id, title) values (
+    $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5
+	)`
+	_, err := s.db.Exec(q, id, estimateID, estimateID, authorID, title)
+	if err != nil {
+		return nil, err
+	}
+
+	actionContent := map[string]interface{}{"storyID": id}
+	s.actions.Post(util.SvcEstimate, estimateID, authorID, "add-story", actionContent, "")
+
+	return s.GetStoryByID(id)
+}
+
+func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID) (*Story, error) {
 	q := `update story set title = $1 where id = $2`
 	_, err := s.db.Exec(q, title, storyID)
 	if err != nil {
 		return nil, err
 	}
-	return s.GetStoryByID(storyID)
+	story, err := s.GetStoryByID(storyID)
+	if story == nil {
+		return nil, errors.New("cannot load newly-updated story")
+	}
+
+	actionContent := map[string]interface{}{"storyID": storyID}
+	s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "update-story", actionContent, "")
+
+	return story, err
 }
 
-func (s *Service) RemoveStory(storyID uuid.UUID, _ uuid.UUID) error {
+func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
+	story, err := s.GetStoryByID(storyID)
+	if story == nil {
+		return errors.New("cannot load story [" + storyID.String() + "] for removal")
+	}
+
 	q1 := "delete from vote where story_id = $1"
-	_, err := s.db.Exec(q1, storyID)
+	_, err = s.db.Exec(q1, storyID)
 	if err != nil {
 		return err
 	}
 
 	q2 := "delete from story where id = $1"
 	_, err = s.db.Exec(q2, storyID)
+
+	actionContent := map[string]interface{}{"storyID": storyID}
+	s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "remove-story", actionContent, "")
+
 	return err
 }
 
-func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, string, error) {
+func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID uuid.UUID) (bool, string, error) {
 	story, err := s.GetStoryByID(storyID)
 	if err != nil {
 		return false, "", errors.WithStack(errors.Wrap(err, "cannot load story ["+storyID.String()+"]"))
@@ -94,6 +114,10 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus) (bool, s
 	}
 	q := "update story set status = $1, final_vote = $2 where id = $3"
 	_, err = s.db.Exec(q, status.String(), finalVote, storyID)
+
+	actionContent := map[string]interface{}{"storyID": storyID, "status": status, "finalVote": finalVote}
+	s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "story-status", actionContent, "")
+
 	return true, finalVote, errors.WithStack(errors.Wrap(err, "error updating story status"))
 }
 

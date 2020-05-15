@@ -1,0 +1,32 @@
+<%: func SprintSession(model *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+  <h3 class="uk-card-title">
+    <span class="right">
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('sprint');return false;" title="edit sprint"></a>
+    </span>
+    <span id="model-title" onclick="events.openModal('sprint');"><%= model.Title %></span>
+    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
+  </h3>
+  <p>Sprint</p>
+</div>
+<div id="modal-session" data-uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Edit Sprint</h2>
+    </div>
+    <form class="uk-form-stacked" id="form-detail" onsubmit="sprint.onSubmitSprintSession();return false;">
+      <div class="uk-modal-body" data-uk-overflow-auto>
+        <fieldset class="uk-fieldset">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="model-title-input">Title</label>
+            <input class="uk-input" id="model-title-input" type="text" />
+          </div>
+        </fieldset>
+      </div>
+      <div class="uk-modal-footer uk-text-right">
+        <button class="uk-button uk-button-default" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

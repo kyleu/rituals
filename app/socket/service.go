@@ -2,7 +2,8 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"sync"
 
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -22,14 +23,15 @@ type Service struct {
 	channels      map[channel][]uuid.UUID
 	channelsMu    sync.Mutex
 	logger        logur.LoggerFacade
-	actions       *actions.Service
+	actions       *action.Service
 	users         *user.Service
+	sprints       *sprint.Service
 	estimates     *estimate.Service
 	standups      *standup.Service
 	retros        *retro.Service
 }
 
-func NewService(actions *actions.Service, logger logur.LoggerFacade, users *user.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+func NewService(actions *action.Service, logger logur.LoggerFacade, users *user.Service, sprints *sprint.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "socket"})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
@@ -38,6 +40,7 @@ func NewService(actions *actions.Service, logger logur.LoggerFacade, users *user
 		channelsMu:    sync.Mutex{},
 		logger:        logger,
 		actions:       actions,
+		sprints:       sprints,
 		estimates:     estimates,
 		standups:      standups,
 		retros:        retros,
@@ -82,6 +85,8 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	switch message.Svc {
 	case util.SvcSystem:
 		err = onSystemMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
+	case util.SvcSprint:
+		err = onSprintMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcEstimate:
 		err = onEstimateMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcStandup:

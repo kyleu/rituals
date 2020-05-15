@@ -4,6 +4,7 @@ const AppName = "rituals.dev"
 
 // Services
 const SvcSystem = "system"
+const SvcSprint = "sprint"
 const SvcEstimate = "estimate"
 const SvcStandup = "standup"
 const SvcRetro = "retro"

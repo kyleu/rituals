@@ -1,4 +1,4 @@
-<%: func AdminUserDetail(user *user.SystemUser, auths []*auth.Record, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminUserDetail(user *user.SystemUser, auths []*auth.Record, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -77,6 +77,12 @@
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
       <h3 class="uk-card-title">Retrospectives</h3>
       <% AdminRetroTable(retros, ctx, _buffer) %>
+    </div>
+    <% } %>
+    <% if len(actions) > 0 { %>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Actions</h3>
+      <% AdminActionTable(actions, ctx, _buffer) %>
     </div>
     <% } %>
   </div>

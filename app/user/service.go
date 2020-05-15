@@ -2,7 +2,7 @@ package user
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/actions"
+	"github.com/kyleu/rituals.dev/app/action"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -12,12 +12,12 @@ import (
 )
 
 type Service struct {
-	actions *actions.Service
+	actions *action.Service
 	db      *sqlx.DB
 	logger  logur.Logger
 }
 
-func NewService(actions *actions.Service, db *sqlx.DB, logger logur.Logger) *Service {
+func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
 
 	return &Service{
@@ -54,7 +54,7 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) 
 
 func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
 	s.logger.Info("creating user [" + id.String() + "]")
-	q := "insert into system_user (id, name, role, theme, nav_color, link_color, picture, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8)"
+	q := "insert into system_user (id, name, role, theme, nav_color, link_color, picture, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 	role := "guest"
 	prof := util.NewUserProfile(id)
 	_, err := s.db.Exec(q, prof.UserID, prof.Name, role, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), time.Now())
