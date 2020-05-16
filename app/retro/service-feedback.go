@@ -51,7 +51,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": id}
-	s.actions.Post(util.SvcRetro, retroID, authorID, "add-feedback", actionContent, "")
+	s.actions.Post(util.SvcRetro.Key, retroID, authorID, "add-feedback", actionContent, "")
 
 	return s.GetFeedbackByID(id)
 }
@@ -71,7 +71,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.actions.Post(util.SvcRetro, fb.RetroID, userID, "update-feedback", actionContent, "")
+	s.actions.Post(util.SvcRetro.Key, fb.RetroID, userID, "update-feedback", actionContent, "")
 
 	return s.GetFeedbackByID(feedbackID)
 }
@@ -86,7 +86,7 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	_, err = s.db.Exec(q, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.actions.Post(util.SvcRetro, feedback.RetroID, userID, "remove-feedback", actionContent, "")
+	s.actions.Post(util.SvcRetro.Key, feedback.RetroID, userID, "remove-feedback", actionContent, "")
 
 	return err
 }

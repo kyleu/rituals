@@ -16,7 +16,7 @@ namespace util {
   export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {
     const res = util.opt<T>(selector, context);
     if (res === null) {
-      console.error("no element found for selector [" + selector + "]");
+      console.warn("no element found for selector [" + selector + "]");
     }
     return res!;
   }

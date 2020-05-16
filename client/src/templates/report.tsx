@@ -2,7 +2,7 @@ namespace report {
   function renderReport(model: Report): JSX.Element {
     const profile = system.cache.getProfile();
     const ret = <div id={"report-" + model.id} class="report-detail uk-border-rounded section" onclick={"events.openModal('report', '" + model.id + "');"}>
-      <a class={profile.linkColor + "-fg section-link"}>{member.getMemberName(model.authorID)}</a>
+      <a class={profile.linkColor + "-fg section-link"}>{system.getMemberName(model.authorID)}</a>
       <div class="report-content">loading...</div>
     </div>;
 

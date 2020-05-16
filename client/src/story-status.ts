@@ -39,7 +39,7 @@ namespace story {
       return;
     }
     const msg = {
-      svc: services.estimate,
+      svc: services.estimate.key,
       cmd: command.client.setStoryStatus,
       param: {storyID: story.id, status: s},
     };

@@ -12,7 +12,7 @@ namespace action {
 
   export function loadActions() {
     const msg = {
-      svc: services.system,
+      svc: services.system.key,
       cmd: command.client.getActions,
       param: null
     };
@@ -20,8 +20,6 @@ namespace action {
   }
 
   export function viewActions(actions: action.Action[]) {
-    const el = util.req("#action-list");
-    el.innerHTML = "";
-    el.appendChild(renderActions(actions))
+    util.setContent("#action-list", renderActions(actions));
   }
 }

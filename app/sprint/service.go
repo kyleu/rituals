@@ -20,18 +20,18 @@ type Service struct {
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro.Key})
 
 	return &Service{
 		actions: actions,
 		db:      db,
-		Members: member.NewService(actions, db, util.SvcSprint),
+		Members: member.NewService(actions, db, util.SvcSprint.Key),
 		logger:  logger,
 	}
 }
 
 func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
-	slug, err := member.NewSlugFor(s.db, util.SvcSprint, title)
+	slug, err := member.NewSlugFor(s.db, util.SvcSprint.Key, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating sprint slug"))
 	}
@@ -44,7 +44,7 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new sprint session"))
 	}
 
-	s.actions.Post(util.SvcSprint, e.ID, userID, "create", nil, "")
+	s.actions.Post(util.SvcSprint.Key, e.ID, userID, "create", nil, "")
 	return &e, nil
 }
 
@@ -118,6 +118,6 @@ func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]*Session, error) {
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.UUID) error {
 	q := "update sprint set title = $1 where id = $2"
 	_, err := s.db.Exec(q, title, sessionID)
-	s.actions.Post(util.SvcSprint, sessionID, userID, "update", nil, "")
+	s.actions.Post(util.SvcSprint.Key, sessionID, userID, "update", nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating sprint session"))
 }

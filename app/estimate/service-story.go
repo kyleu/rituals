@@ -52,7 +52,7 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUI
 	}
 
 	actionContent := map[string]interface{}{"storyID": id}
-	s.actions.Post(util.SvcEstimate, estimateID, authorID, "add-story", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, estimateID, authorID, "add-story", actionContent, "")
 
 	return s.GetStoryByID(id)
 }
@@ -69,7 +69,7 @@ func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID)
 	}
 
 	actionContent := map[string]interface{}{"storyID": storyID}
-	s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "update-story", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "update-story", actionContent, "")
 
 	return story, err
 }
@@ -90,7 +90,7 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 	_, err = s.db.Exec(q2, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID}
-	s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "remove-story", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "remove-story", actionContent, "")
 
 	return err
 }
@@ -116,7 +116,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 	_, err = s.db.Exec(q, status.String(), finalVote, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID, "status": status, "finalVote": finalVote}
-	s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "story-status", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "story-status", actionContent, "")
 
 	return true, finalVote, errors.WithStack(errors.Wrap(err, "error updating story status"))
 }

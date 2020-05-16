@@ -1,10 +1,8 @@
 package socket
 
 import (
-	"fmt"
-	"strings"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -17,10 +15,7 @@ type StoryStatusChange struct {
 }
 
 func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := strings.TrimSpace(param["title"].(string))
-	if title == "" {
-		title = "Untitled"
-	}
+	title := util.ServiceTitle(param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("adding story [%s]", title))
 
 	story, err := s.estimates.NewStory(ch.ID, title, userID)
@@ -38,11 +33,7 @@ func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]in
 		return errors.New("invalid story id [" + storyIDString + "]")
 	}
 
-	title := strings.TrimSpace(param["title"].(string))
-	if title == "" {
-		title = "Untitled"
-	}
-
+	title := util.ServiceTitle(param["title"].(string))
 	st, err := s.estimates.UpdateStory(storyID, title, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update story"))
@@ -61,7 +52,7 @@ func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot remove story"))
 	}
-	msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryRemove, Param: storyID}
+	msg := Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdStoryRemove, Param: storyID}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending story removal notification"))
 }
@@ -86,10 +77,10 @@ func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, m map[string]int
 
 	if changed {
 		param := StoryStatusChange{StoryID: storyID, Status: status, FinalVote: finalVote}
-		msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryStatusChange, Param: param}
+		msg := Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdStoryStatusChange, Param: param}
 		err := s.WriteChannel(ch, &msg)
 		actionContent := map[string]interface{}{"storyID": storyID, "status": status.Key, "finalVote": finalVote}
-		s.actions.Post(util.SvcEstimate, story.EstimateID, userID, "add-vote", actionContent, "")
+		s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "add-vote", actionContent, "")
 		return errors.WithStack(errors.Wrap(err, "error sending story update"))
 	}
 
@@ -109,13 +100,13 @@ func onSubmitVote(s *Service, ch channel, userID uuid.UUID, param map[string]int
 		return errors.WithStack(errors.Wrap(err, "cannot update vote"))
 	}
 
-	msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdVoteUpdate, Param: vote}
+	msg := Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdVoteUpdate, Param: vote}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending story update"))
 }
 
 func sendStoryUpdate(s *Service, ch channel, story *estimate.Story) error {
-	msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdStoryUpdate, Param: story}
+	msg := Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdStoryUpdate, Param: story}
 	err := s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending story update"))
 }

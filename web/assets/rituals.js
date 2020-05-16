@@ -3,7 +3,7 @@ var action;
 (function (action) {
     function loadActions() {
         var msg = {
-            svc: services.system,
+            svc: services.system.key,
             cmd: command.client.getActions,
             param: null
         };
@@ -11,9 +11,7 @@ var action;
     }
     action.loadActions = loadActions;
     function viewActions(actions) {
-        var el = util.req("#action-list");
-        el.innerHTML = "";
-        el.appendChild(action.renderActions(actions));
+        util.setContent("#action-list", action.renderActions(actions));
     }
     action.viewActions = viewActions;
 })(action || (action = {}));
@@ -37,7 +35,7 @@ var estimate;
     function onEstimateMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.estimate, param);
+                rituals.onError(services.estimate.key, param);
                 break;
             case command.server.sessionJoined:
                 var sj = param;
@@ -76,7 +74,7 @@ var estimate;
         var title = util.req("#model-title-input").value;
         var choices = util.req("#model-choices-input").value;
         var msg = {
-            svc: services.estimate,
+            svc: services.estimate.key,
             cmd: command.client.updateSession,
             param: {
                 title: title,
@@ -196,7 +194,7 @@ var feedback;
         var category = util.req("#retro-feedback-category").value;
         var content = util.req("#retro-feedback-content").value;
         var msg = {
-            svc: services.retro,
+            svc: services.retro.key,
             cmd: command.client.addFeedback,
             param: { category: category, content: content }
         };
@@ -209,7 +207,7 @@ var feedback;
         var category = util.req("#retro-feedback-edit-category").value;
         var content = util.req("#retro-feedback-edit-content").value;
         var msg = {
-            svc: services.retro,
+            svc: services.retro.key,
             cmd: command.client.updateFeedback,
             param: { id: id, category: category, content: content }
         };
@@ -221,7 +219,7 @@ var feedback;
         var id = retro.cache.activeFeedback;
         if (id && confirm("Delete this feedback?")) {
             var msg = {
-                svc: services.retro,
+                svc: services.retro.key,
                 cmd: command.client.removeFeedback,
                 param: id
             };
@@ -250,7 +248,7 @@ var feedback;
             console.warn("no active feedback");
             return;
         }
-        util.setText("#feedback-title", fb.category + " / " + member.getMemberName(fb.authorID));
+        util.setText("#feedback-title", fb.category + " / " + system.getMemberName(fb.authorID));
         var contentEdit = util.req("#modal-feedback .content-edit");
         var contentEditCategory = util.req("#retro-feedback-edit-category", contentEdit);
         var contentEditTextarea = util.req("#retro-feedback-edit-content", contentEdit);
@@ -331,15 +329,48 @@ var system;
         };
         return Cache;
     }());
+    function getMemberName(id) {
+        var ret = system.cache.members.filter(function (m) { return m.userID === id; });
+        if (ret.length === 0) {
+            return id;
+        }
+        return ret[0].name;
+    }
+    system.getMemberName = getMemberName;
     system.cache = new Cache();
 })(system || (system = {}));
 var services;
 (function (services) {
-    services.system = "system";
-    services.sprint = "sprint";
-    services.estimate = "estimate";
-    services.standup = "standup";
-    services.retro = "retro";
+    services.system = {
+        key: "system",
+        title: "System",
+        plural: "systems",
+        icon: "close"
+    };
+    services.sprint = {
+        key: "sprint",
+        title: "Sprint",
+        plural: "sprints",
+        icon: "git-fork"
+    };
+    services.estimate = {
+        key: "estimate",
+        title: "Estimate",
+        plural: "estimates",
+        icon: "settings"
+    };
+    services.standup = {
+        key: "standup",
+        title: "Standup",
+        plural: "standups",
+        icon: "future"
+    };
+    services.retro = {
+        key: "retro",
+        title: "Retrospective",
+        plural: "retros",
+        icon: "history"
+    };
 })(services || (services = {}));
 var command;
 (function (command) {
@@ -452,22 +483,26 @@ var member;
         system.cache.members = x;
         setMembers();
         if (nameChanged) {
-            if (system.cache.currentService == services.estimate) {
-                if (estimate.cache.activeStory) {
-                    vote.viewVotes();
-                }
-            }
-            if (system.cache.currentService == services.standup) {
-                util.setContent("#report-detail", report.renderReports(standup.cache.reports));
-                if (standup.cache.activeReport) {
-                    report.viewActiveReport();
-                }
-            }
-            if (system.cache.currentService == services.retro) {
-                util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
-                if (retro.cache.activeFeedback) {
-                    feedback.viewActiveFeedback();
-                }
+            switch (system.cache.currentService) {
+                case services.sprint.key:
+                    break;
+                case services.estimate.key:
+                    if (estimate.cache.activeStory) {
+                        vote.viewVotes();
+                    }
+                    break;
+                case services.standup.key:
+                    util.setContent("#report-detail", report.renderReports(standup.cache.reports));
+                    if (standup.cache.activeReport) {
+                        report.viewActiveReport();
+                    }
+                    break;
+                case services.retro.key:
+                    util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+                    if (retro.cache.activeFeedback) {
+                        feedback.viewActiveFeedback();
+                    }
+                    break;
             }
         }
     }
@@ -502,7 +537,7 @@ var member;
         var name = util.req("#self-name-input").value;
         var choice = util.req("#self-name-choice-global").checked ? "global" : "local";
         var msg = {
-            svc: services.system,
+            svc: services.system.key,
             cmd: command.client.updateProfile,
             param: {
                 name: name,
@@ -519,7 +554,7 @@ var member;
         }
         var curr = system.cache.members.filter(function (x) { return x.userID === system.cache.activeMember; });
         if (curr.length !== 1) {
-            console.log("cannot load active member [" + system.cache.activeMember + "]");
+            console.warn("cannot load active member [" + system.cache.activeMember + "]");
             return undefined;
         }
         return curr[0];
@@ -540,7 +575,7 @@ var report;
         var d = util.req("#standup-report-date").value;
         var content = util.req("#standup-report-content").value;
         var msg = {
-            svc: services.standup,
+            svc: services.standup.key,
             cmd: command.client.addReport,
             param: { d: d, content: content }
         };
@@ -552,7 +587,7 @@ var report;
         var d = util.req("#standup-report-edit-date").value;
         var content = util.req("#standup-report-edit-content").value;
         var msg = {
-            svc: services.standup,
+            svc: services.standup.key,
             cmd: command.client.updateReport,
             param: { id: standup.cache.activeReport, d: d, content: content }
         };
@@ -564,7 +599,7 @@ var report;
         var id = standup.cache.activeReport;
         if (id && confirm("Delete this report?")) {
             var msg = {
-                svc: services.standup,
+                svc: services.standup.key,
                 cmd: command.client.removeReport,
                 param: id
             };
@@ -581,7 +616,7 @@ var report;
         }
         var curr = standup.cache.reports.filter(function (x) { return x.id === standup.cache.activeReport; });
         if (curr.length !== 1) {
-            console.log("cannot load active report [" + standup.cache.activeReport + "]");
+            console.warn("cannot load active report [" + standup.cache.activeReport + "]");
             return undefined;
         }
         return curr[0];
@@ -593,7 +628,7 @@ var report;
             console.warn("no active report");
             return;
         }
-        util.setText("#report-title", report.d + " / " + member.getMemberName(report.authorID));
+        util.setText("#report-title", report.d + " / " + system.getMemberName(report.authorID));
         var contentEdit = util.req("#modal-report .content-edit");
         var contentEditDate = util.req("#standup-report-edit-date", contentEdit);
         var contentEditTextarea = util.req("#standup-report-edit-content", contentEdit);
@@ -653,7 +688,7 @@ var retro;
     function onRetroMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.retro, param);
+                rituals.onError(services.retro.key, param);
                 break;
             case command.server.sessionJoined:
                 var sj = param;
@@ -687,7 +722,7 @@ var retro;
         var title = util.req("#model-title-input").value;
         var categories = util.req("#model-categories-input").value;
         var msg = {
-            svc: services.retro,
+            svc: services.retro.key,
             cmd: command.client.updateSession,
             param: {
                 title: title,
@@ -701,22 +736,22 @@ var retro;
 var rituals;
 (function (rituals) {
     function onSocketMessage(msg) {
-        console.log("message received");
-        console.log(msg);
+        console.debug("message received");
+        console.debug(msg);
         switch (msg.svc) {
-            case services.system:
+            case services.system.key:
                 onSystemMessage(msg.cmd, msg.param);
                 break;
-            case services.sprint:
+            case services.sprint.key:
                 sprint.onSprintMessage(msg.cmd, msg.param);
                 break;
-            case services.estimate:
+            case services.estimate.key:
                 estimate.onEstimateMessage(msg.cmd, msg.param);
                 break;
-            case services.standup:
+            case services.standup.key:
                 standup.onStandupMessage(msg.cmd, msg.param);
                 break;
-            case services.retro:
+            case services.retro.key:
                 retro.onRetroMessage(msg.cmd, msg.param);
                 break;
             default:
@@ -817,8 +852,8 @@ var socket;
     }
     socket_1.socketConnect = socketConnect;
     function send(msg) {
-        console.log("sending message");
-        console.log(msg);
+        console.debug("sending message");
+        console.debug(msg);
         socket.send(JSON.stringify(msg));
     }
     socket_1.send = send;
@@ -849,6 +884,9 @@ var sprint;
 (function (sprint) {
     var Cache = /** @class */ (function () {
         function Cache() {
+            this.estimates = [];
+            this.standups = [];
+            this.retros = [];
         }
         return Cache;
     }());
@@ -856,12 +894,13 @@ var sprint;
     function onSprintMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.sprint, param);
+                rituals.onError(services.sprint.key, param);
                 break;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
                 setSprintDetail(sj.session);
+                setSprintContents(sj);
                 break;
             case command.server.sessionUpdate:
                 setSprintDetail(param);
@@ -875,10 +914,27 @@ var sprint;
         sprint.cache.detail = detail;
         rituals.setDetail(detail);
     }
+    function setSprintContents(sj) {
+        viewEstimates(sj.estimates);
+        viewStandups(sj.standups);
+        viewRetros(sj.retros);
+    }
+    function viewEstimates(estimates) {
+        sprint.cache.estimates = estimates;
+        util.setContent("#sprint-estimate-list", sprint.renderContents(services.estimate, sprint.cache.estimates));
+    }
+    function viewStandups(standups) {
+        sprint.cache.standups = standups;
+        util.setContent("#sprint-standup-list", sprint.renderContents(services.standup, sprint.cache.standups));
+    }
+    function viewRetros(retros) {
+        sprint.cache.retros = retros;
+        util.setContent("#sprint-retro-list", sprint.renderContents(services.retro, sprint.cache.retros));
+    }
     function onSubmitSprintSession() {
         var title = util.req("#model-title-input").value;
         var msg = {
-            svc: services.sprint,
+            svc: services.sprint.key,
             cmd: command.client.updateSession,
             param: {
                 title: title
@@ -900,7 +956,7 @@ var standup;
     function onStandupMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.standup, param);
+                rituals.onError(services.standup.key, param);
                 break;
             case command.server.sessionJoined:
                 var sj = param;
@@ -929,7 +985,7 @@ var standup;
     function onSubmitStandupSession() {
         var title = util.req("#model-title-input").value;
         var msg = {
-            svc: services.standup,
+            svc: services.standup.key,
             cmd: command.client.updateSession,
             param: {
                 title: title
@@ -1000,7 +1056,7 @@ var story;
             return;
         }
         var msg = {
-            svc: services.estimate,
+            svc: services.estimate.key,
             cmd: command.client.setStoryStatus,
             param: { storyID: story.id, status: s }
         };
@@ -1048,7 +1104,7 @@ var story;
     function onSubmitStory() {
         var title = util.req("#story-title-input").value;
         var msg = {
-            svc: services.estimate,
+            svc: services.estimate.key,
             cmd: command.client.addStory,
             param: { title: title }
         };
@@ -1061,7 +1117,7 @@ var story;
         var x = prompt("Edit your story", s.title);
         if (x !== null && x !== s.title) {
             var msg = {
-                svc: services.estimate,
+                svc: services.estimate.key,
                 cmd: command.client.updateStory,
                 param: { id: s.id, title: x }
             };
@@ -1074,7 +1130,7 @@ var story;
         var id = estimate.cache.activeStory;
         if (id && confirm("Delete this story?")) {
             var msg = {
-                svc: services.estimate,
+                svc: services.estimate.key,
                 cmd: command.client.removeStory,
                 param: id
             };
@@ -1139,7 +1195,7 @@ var util;
     function req(selector, context) {
         var res = util.opt(selector, context);
         if (res === null) {
-            console.error("no element found for selector [" + selector + "]");
+            console.warn("no element found for selector [" + selector + "]");
         }
         return res;
     }
@@ -1297,7 +1353,7 @@ var vote;
                 viewVoteResults(votes);
                 break;
             default:
-                console.log("invalid story status [" + s.status + "]");
+                console.warn("invalid story status [" + s.status + "]");
         }
     }
     vote.viewVotes = viewVotes;
@@ -1312,7 +1368,7 @@ var vote;
     // noinspection JSUnusedGlobalSymbols
     function onSubmitVote(choice) {
         var msg = {
-            svc: services.estimate,
+            svc: services.estimate.key,
             cmd: command.client.submitVote,
             param: { storyID: estimate.cache.activeStory, choice: choice }
         };
@@ -1355,7 +1411,7 @@ var action;
 (function (action_1) {
     function renderAction(action) {
         return JSX("tr", null,
-            JSX("td", null, getMemberName(action.authorID)),
+            JSX("td", null, system.getMemberName(action.authorID)),
             JSX("td", null, action.act),
             JSX("td", null,
                 JSX("pre", null, JSON.stringify(action.content, null, 2))),
@@ -1382,21 +1438,13 @@ var action;
         }
     }
     action_1.renderActions = renderActions;
-    function getMemberName(id) {
-        var ret = system.cache.members.filter(function (m) { return m.userID === id; });
-        if (ret.length === 0) {
-            return id;
-        }
-        return ret[0].name;
-    }
-    action_1.getMemberName = getMemberName;
 })(action || (action = {}));
 var feedback;
 (function (feedback) {
     function renderFeedback(model) {
         var profile = system.cache.getProfile();
         var ret = JSX("div", { id: "feedback-" + model.id, "class": "feedback-detail uk-border-rounded section", onclick: "events.openModal('feedback', '" + model.id + "');" },
-            JSX("a", { "class": profile.linkColor + "-fg section-link" }, member.getMemberName(model.authorID)),
+            JSX("a", { "class": profile.linkColor + "-fg section-link" }, system.getMemberName(model.authorID)),
             JSX("div", { "class": "feedback-content" }, "loading..."));
         if (model.html.length > 0) {
             util.setHTML(util.req(".feedback-content", ret), model.html).style.display = "block";
@@ -1440,21 +1488,13 @@ var member;
         }
     }
     member_3.renderMembers = renderMembers;
-    function getMemberName(id) {
-        var ret = system.cache.members.filter(function (m) { return m.userID === id; });
-        if (ret.length === 0) {
-            return id;
-        }
-        return ret[0].name;
-    }
-    member_3.getMemberName = getMemberName;
 })(member || (member = {}));
 var report;
 (function (report) {
     function renderReport(model) {
         var profile = system.cache.getProfile();
         var ret = JSX("div", { id: "report-" + model.id, "class": "report-detail uk-border-rounded section", onclick: "events.openModal('report', '" + model.id + "');" },
-            JSX("a", { "class": profile.linkColor + "-fg section-link" }, member.getMemberName(model.authorID)),
+            JSX("a", { "class": profile.linkColor + "-fg section-link" }, system.getMemberName(model.authorID)),
             JSX("div", { "class": "report-content" }, "loading..."));
         if (model.html.length > 0) {
             util.setHTML(util.req(".report-content", ret), model.html).style.display = "block";
@@ -1477,6 +1517,35 @@ var report;
     }
     report.renderReports = renderReports;
 })(report || (report = {}));
+var sprint;
+(function (sprint) {
+    function renderSprintContent(svc, session) {
+        var profile = system.cache.getProfile();
+        return JSX("tr", null,
+            JSX("td", null,
+                JSX("a", { "class": profile.linkColor + "-fg", href: "/" + svc.key + "/" + session.slug }, session.slug)),
+            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
+            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" },
+                new Date(session.created).toLocaleDateString(),
+                " ",
+                new Date(session.created).toLocaleTimeString().slice(0, 8)));
+    }
+    function toContent(svc, sessions) {
+        return sessions.map(function (s) { return { svc: svc, session: s }; });
+    }
+    function renderContents(svc, sessions) {
+        var contents = toContent(svc, sessions);
+        contents.sort(function (l, r) { return (l.session.created > r.session.created ? -1 : 1); });
+        if (contents.length === 0) {
+            return JSX("div", null, "No " + svc.plural + " in this sprint");
+        }
+        else {
+            return JSX("table", { "class": "uk-table uk-table-divider uk-text-left" },
+                JSX("tbody", null, contents.map(function (a) { return renderSprintContent(a.svc, a.session); })));
+        }
+    }
+    sprint.renderContents = renderContents;
+})(sprint || (sprint = {}));
 var story;
 (function (story_2) {
     function renderStory(story) {

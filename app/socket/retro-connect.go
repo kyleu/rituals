@@ -11,7 +11,7 @@ func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string
 	if err != nil {
 		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
 	}
-	ch := channel{Svc: util.SvcRetro, ID: retroID}
+	ch := channel{Svc: util.SvcRetro.Key, ID: retroID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining channel"))
@@ -21,7 +21,7 @@ func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string
 }
 
 func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcRetro {
+	if ch.Svc != util.SvcRetro.Key {
 		return errors.WithStack(errors.New("retro cannot handle [" + ch.Svc + "] message"))
 	}
 
@@ -30,7 +30,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return errors.WithStack(errors.Wrap(err, "error finding retro session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing error message"))
 		}
@@ -62,7 +62,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 	}
 
 	msg := Message{
-		Svc: util.SvcRetro,
+		Svc: util.SvcRetro.Key,
 		Cmd: util.ServerCmdSessionJoined,
 		Param: RetroSessionJoined{
 			Profile:  &conn.Profile,

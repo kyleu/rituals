@@ -25,9 +25,9 @@ type InvitationType struct {
 	Key string
 }
 
-var InvitationTypeEstimate = InvitationType{Key: util.SvcEstimate}
-var InvitationTypeStandup = InvitationType{Key: util.SvcStandup}
-var InvitationTypeRetro = InvitationType{Key: util.SvcRetro}
+var InvitationTypeEstimate = InvitationType{Key: util.SvcEstimate.Key}
+var InvitationTypeStandup = InvitationType{Key: util.SvcStandup.Key}
+var InvitationTypeRetro = InvitationType{Key: util.SvcRetro.Key}
 
 var AllInvitationTypes = []InvitationType{InvitationTypeEstimate, InvitationTypeStandup, InvitationTypeRetro}
 

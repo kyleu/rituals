@@ -24,7 +24,7 @@ namespace feedback {
     const category = util.req<HTMLInputElement>("#retro-feedback-category").value;
     const content = util.req<HTMLInputElement>("#retro-feedback-content").value;
     const msg = {
-      svc: services.retro,
+      svc: services.retro.key,
       cmd: command.client.addFeedback,
       param: {category: category, content: content},
     };
@@ -37,7 +37,7 @@ namespace feedback {
     const category = util.req<HTMLInputElement>("#retro-feedback-edit-category").value;
     const content = util.req<HTMLInputElement>("#retro-feedback-edit-content").value;
     const msg = {
-      svc: services.retro,
+      svc: services.retro.key,
       cmd: command.client.updateFeedback,
       param: {id: id, category: category, content: content},
     };
@@ -49,7 +49,7 @@ namespace feedback {
     const id = retro.cache.activeFeedback;
     if(id && confirm("Delete this feedback?")) {
       const msg = {
-        svc: services.retro,
+        svc: services.retro.key,
         cmd: command.client.removeFeedback,
         param: id,
       };
@@ -79,7 +79,7 @@ namespace feedback {
       return;
     }
 
-    util.setText("#feedback-title", fb.category + " / " + member.getMemberName(fb.authorID));
+    util.setText("#feedback-title", fb.category + " / " + system.getMemberName(fb.authorID));
     const contentEdit = util.req("#modal-feedback .content-edit");
     const contentEditCategory = util.req<HTMLSelectElement>("#retro-feedback-edit-category", contentEdit);
     const contentEditTextarea = util.req<HTMLTextAreaElement>("#retro-feedback-edit-content", contentEdit);

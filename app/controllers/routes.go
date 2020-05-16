@@ -45,27 +45,27 @@ func BuildRouter(info *config.AppInfo) (*mux.Router, error) {
 
 	// Sprint
 	sprint := r.Path("/sprint").Subrouter()
-	sprint.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SprintList))).Name(util.SvcSprint + ".list")
-	sprint.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(SprintNew))).Name(util.SvcSprint + ".new")
-	r.Path("/estimate/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SprintWorkspace))).Name(util.SvcSprint)
+	sprint.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SprintList))).Name(util.SvcSprint.Key + ".list")
+	sprint.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(SprintNew))).Name(util.SvcSprint.Key + ".new")
+	r.Path("/sprint/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(SprintWorkspace))).Name(util.SvcSprint.Key)
 
 	// Estimate
 	estimate := r.Path("/estimate").Subrouter()
-	estimate.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateList))).Name(util.SvcEstimate + ".list")
-	estimate.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(EstimateNew))).Name(util.SvcEstimate + ".new")
-	r.Path("/estimate/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateWorkspace))).Name(util.SvcEstimate)
+	estimate.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateList))).Name(util.SvcEstimate.Key + ".list")
+	estimate.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(EstimateNew))).Name(util.SvcEstimate.Key + ".new")
+	r.Path("/estimate/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(EstimateWorkspace))).Name(util.SvcEstimate.Key)
 
 	// Standup
 	standup := r.Path("/standup").Subrouter()
-	standup.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupList))).Name(util.SvcStandup + ".list")
-	standup.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(StandupNew))).Name(util.SvcStandup + ".new")
-	r.Path("/standup/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupWorkspace))).Name(util.SvcStandup)
+	standup.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupList))).Name(util.SvcStandup.Key + ".list")
+	standup.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(StandupNew))).Name(util.SvcStandup.Key + ".new")
+	r.Path("/standup/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(StandupWorkspace))).Name(util.SvcStandup.Key)
 
 	// Retro
 	retro := r.Path("/retro").Subrouter()
-	retro.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroList))).Name(util.SvcRetro + ".list")
-	retro.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(RetroNew))).Name(util.SvcRetro + ".new")
-	r.Path("/retro/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroWorkspace))).Name(util.SvcRetro)
+	retro.Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroList))).Name(util.SvcRetro.Key + ".list")
+	retro.Methods(http.MethodPost).Handler(addContext(r, info, http.HandlerFunc(RetroNew))).Name(util.SvcRetro.Key + ".new")
+	r.Path("/retro/{key}").Methods(http.MethodGet).Handler(addContext(r, info, http.HandlerFunc(RetroWorkspace))).Name(util.SvcRetro.Key)
 
 	// GraphQL
 	graphql := r.Path("/graphql").Subrouter()

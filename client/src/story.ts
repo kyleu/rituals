@@ -20,7 +20,7 @@ namespace story {
   export function onSubmitStory() {
     const title = util.req<HTMLInputElement>("#story-title-input").value;
     const msg = {
-      svc: services.estimate,
+      svc: services.estimate.key,
       cmd: command.client.addStory,
       param: {title: title},
     };
@@ -33,7 +33,7 @@ namespace story {
     const x = prompt("Edit your story", s.title)
     if(x !== null && x !== s.title) {
       const msg = {
-        svc: services.estimate,
+        svc: services.estimate.key,
         cmd: command.client.updateStory,
         param: { id: s.id, title: x },
       };
@@ -46,7 +46,7 @@ namespace story {
     const id = estimate.cache.activeStory;
     if(id && confirm("Delete this story?")) {
       const msg = {
-        svc: services.estimate,
+        svc: services.estimate.key,
         cmd: command.client.removeStory,
         param: id,
       };

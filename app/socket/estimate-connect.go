@@ -11,7 +11,7 @@ func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param str
 	if err != nil {
 		return errors.WithStack(errors.New("error reading estimate id [" + param + "]"))
 	}
-	ch := channel{Svc: util.SvcEstimate, ID: estimateID}
+	ch := channel{Svc: util.SvcEstimate.Key, ID: estimateID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining channel"))
@@ -21,7 +21,7 @@ func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param str
 }
 
 func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcEstimate {
+	if ch.Svc != util.SvcEstimate.Key {
 		return errors.WithStack(errors.New("estimate cannot handle [" + ch.Svc + "] message"))
 	}
 
@@ -30,7 +30,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return errors.WithStack(errors.Wrap(err, "error finding estimate session"))
 	}
 	if est == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing error message"))
 		}
@@ -66,7 +66,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 	}
 
 	msg := Message{
-		Svc: util.SvcEstimate,
+		Svc: util.SvcEstimate.Key,
 		Cmd: util.ServerCmdSessionJoined,
 		Param: EstimateSessionJoined{
 			Profile: &conn.Profile,

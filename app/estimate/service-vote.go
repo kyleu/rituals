@@ -63,7 +63,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		}
 
 		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
-		s.actions.Post(util.SvcEstimate, *estimateID, userID, "add-vote", actionContent, "")
+		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, "add-vote", actionContent, "")
 
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
 	} else {
@@ -75,7 +75,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		curr.Choice = choice
 
 		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
-		s.actions.Post(util.SvcEstimate, *estimateID, userID, "update-vote", actionContent, "")
+		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, "update-vote", actionContent, "")
 
 		return curr, nil
 	}

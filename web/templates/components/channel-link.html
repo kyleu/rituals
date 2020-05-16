@@ -5,11 +5,11 @@
   <%
     var url = ""
     switch svc {
-    case util.SvcEstimate:
+    case util.SvcEstimate.Key:
       url = ctx.Route("admin.estimate.detail", "id", id.String())
-    case util.SvcStandup:
+    case util.SvcStandup.Key:
       url = ctx.Route("admin.standup.detail", "id", id.String())
-    case util.SvcRetro:
+    case util.SvcRetro.Key:
       url = ctx.Route("admin.retro.detail", "id", id.String())
     }
   %>

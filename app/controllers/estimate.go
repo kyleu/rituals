@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"net/http"
-	"strings"
-
 	"github.com/kyleu/rituals.dev/app/util"
+	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"
@@ -21,7 +19,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Estimation Sessions"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("estimate.list"), "estimate")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("estimate.list"), util.SvcEstimate.Key)
 		return tmpl(templates.EstimateList(sessions, ctx, w))
 	})
 }
@@ -29,15 +27,12 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := strings.TrimSpace(r.Form.Get("title"))
-		if title == "" {
-			title = "Untitled"
-		}
+		title := util.ServiceTitle(r.Form.Get("title"))
 		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, nil)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating estimate session"))
 		}
-		return ctx.Route(util.SvcEstimate, "key", sess.Slug), nil
+		return ctx.Route(util.SvcEstimate.Key, "key", sess.Slug), nil
 	})
 }
 
@@ -55,8 +50,8 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), "estimate")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate, "key", key), sess.Title)...)
+		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), util.SvcEstimate.Key)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.EstimateWorkspace(sess, ctx, w))

@@ -22,18 +22,18 @@ type Service struct {
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro.Key})
 
 	return &Service{
 		actions: actions,
 		db:      db,
-		Members: member.NewService(actions, db, util.SvcRetro),
+		Members: member.NewService(actions, db, util.SvcRetro.Key),
 		logger:  logger,
 	}
 }
 
 func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
-	slug, err := member.NewSlugFor(s.db, util.SvcRetro, title)
+	slug, err := member.NewSlugFor(s.db, util.SvcRetro.Key, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating retro slug"))
 	}
@@ -47,7 +47,7 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new retro session"))
 	}
 
-	s.actions.Post(util.SvcRetro, e.ID, userID, "create", nil, "")
+	s.actions.Post(util.SvcRetro.Key, e.ID, userID, "create", nil, "")
 	return &e, nil
 }
 
@@ -139,6 +139,6 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []
 	q := "update retro set title = $1, categories = $2 where id = $3"
 	categoriesString := "{" + strings.Join(categories, ",") + "}"
 	_, err := s.db.Exec(q, title, categoriesString, sessionID)
-	s.actions.Post(util.SvcRetro, sessionID, userID, "update", nil, "")
+	s.actions.Post(util.SvcRetro.Key, sessionID, userID, "update", nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating retro session"))
 }

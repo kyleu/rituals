@@ -49,7 +49,7 @@ func NewService(actions *action.Service, logger logur.LoggerFacade, users *user.
 }
 
 var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
-var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem, ChannelID: &systemID}
+var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem.Key, ChannelID: &systemID}
 
 func (s *Service) List() ([]*Status, error) {
 	ret := make([]*Status, 0)
@@ -83,15 +83,15 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	}
 	var err error
 	switch message.Svc {
-	case util.SvcSystem:
+	case util.SvcSystem.Key:
 		err = onSystemMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
-	case util.SvcSprint:
+	case util.SvcSprint.Key:
 		err = onSprintMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
-	case util.SvcEstimate:
+	case util.SvcEstimate.Key:
 		err = onEstimateMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
-	case util.SvcStandup:
+	case util.SvcStandup.Key:
 		err = onStandupMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
-	case util.SvcRetro:
+	case util.SvcRetro.Key:
 		err = onRetroMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	default:
 		err = errors.New("invalid service [" + message.Svc + "]")

@@ -17,7 +17,7 @@ func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Daily Standup List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
 		ctx.Breadcrumbs = bc
 
 		standups, err := ctx.App.Standup.List()
@@ -52,14 +52,14 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup, standupID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, standupID)
 		if err != nil {
 			return "", err
 		}
 
 		ctx.Title = standup.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), "standup")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
 		ctx.Breadcrumbs = bc
 

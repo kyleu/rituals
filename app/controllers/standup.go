@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"net/http"
-	"strings"
-
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
+	"net/http"
 
 	"github.com/gorilla/mux"
 
@@ -22,7 +20,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Daily Standups"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("standup.list"), "standup")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("standup.list"), util.SvcStandup.Key)
 		return tmpl(templates.StandupList(sessions, ctx, w))
 	})
 }
@@ -30,15 +28,12 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 func StandupNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := strings.TrimSpace(r.Form.Get("title"))
-		if title == "" {
-			title = "Untitled"
-		}
+		title := util.ServiceTitle(r.Form.Get("title"))
 		sess, err := ctx.App.Standup.New(title, ctx.Profile.UserID, nil)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating standup session"))
 		}
-		return ctx.Route("standup", "key", sess.Slug), nil
+		return ctx.Route(util.SvcStandup.Key, "key", sess.Slug), nil
 	})
 }
 
@@ -56,8 +51,8 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("standup.list"), "standup")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcStandup, "key", key), sess.Title)...)
+		bc := web.BreadcrumbsSimple(ctx.Route("standup.list"), util.SvcStandup.Key)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.StandupWorkspace(sess, ctx, w))

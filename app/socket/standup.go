@@ -1,10 +1,8 @@
 package socket
 
 import (
-	"fmt"
-	"strings"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/standup"
@@ -39,10 +37,7 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 }
 
 func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := strings.TrimSpace(param["title"].(string))
-	if title == "" {
-		title = "Untitled"
-	}
+	title := util.ServiceTitle(param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("saving standup session [%s]", title))
 
 	err := s.standups.UpdateSession(ch.ID, title, userID)
@@ -62,7 +57,7 @@ func sendStandupSessionUpdate(s *Service, ch channel) error {
 	if sess == nil {
 		return errors.WithStack(errors.Wrap(err, "cannot load standup session [" + ch.ID.String() + "]"))
 	}
-	msg := Message{Svc: util.SvcStandup, Cmd: util.ServerCmdSessionUpdate, Param: sess}
+	msg := Message{Svc: util.SvcStandup.Key, Cmd: util.ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending standup session"))
 }

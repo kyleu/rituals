@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"net/http"
-	"strings"
-
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
+	"net/http"
 
 	"github.com/gorilla/mux"
 
@@ -30,10 +28,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 func SprintNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := strings.TrimSpace(r.Form.Get("title"))
-		if title == "" {
-			title = "Untitled"
-		}
+		title := util.ServiceTitle(r.Form.Get("title"))
 		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, nil)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating sprint session"))
@@ -57,7 +52,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("sprint.list"), "sprint")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcSprint, "key", key), sess.Title)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.SprintWorkspace(sess, ctx, w))

@@ -37,7 +37,7 @@ namespace estimate {
   export function onEstimateMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.estimate, param as string);
+        rituals.onError(services.estimate.key, param as string);
         break;
       case command.server.sessionJoined:
         let sj = param as SessionJoined;
@@ -77,7 +77,7 @@ namespace estimate {
     const title = util.req<HTMLInputElement>("#model-title-input").value;
     const choices = util.req<HTMLInputElement>("#model-choices-input").value;
     const msg = {
-      svc: services.estimate,
+      svc: services.estimate.key,
       cmd: command.client.updateSession,
       param: {
         title: title,

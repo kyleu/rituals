@@ -22,18 +22,18 @@ type Service struct {
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcEstimate})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcEstimate.Key})
 
 	return &Service{
 		actions: actions,
 		db:      db,
-		Members: member.NewService(actions, db, util.SvcEstimate),
+		Members: member.NewService(actions, db, util.SvcEstimate.Key),
 		logger:  logger,
 	}
 }
 
 func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
-	slug, err := member.NewSlugFor(s.db, util.SvcEstimate, title)
+	slug, err := member.NewSlugFor(s.db, util.SvcEstimate.Key, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating estimate slug"))
 	}
@@ -47,7 +47,7 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new estimate session"))
 	}
 
-	s.actions.Post(util.SvcEstimate, e.ID, userID, "create", nil, "")
+	s.actions.Post(util.SvcEstimate.Key, e.ID, userID, "create", nil, "")
 	return &e, nil
 }
 
@@ -139,6 +139,6 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, choices []str
 	q := "update estimate set title = $1, choices = $2 where id = $3"
 	choiceString := "{" + strings.Join(choices, ",") + "}"
 	_, err := s.db.Exec(q, title, choiceString, sessionID)
-	s.actions.Post(util.SvcEstimate, sessionID, userID, "update", nil, "")
+	s.actions.Post(util.SvcEstimate.Key, sessionID, userID, "update", nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating estimate session"))
 }

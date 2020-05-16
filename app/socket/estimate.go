@@ -44,10 +44,7 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 }
 
 func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := strings.TrimSpace(param["title"].(string))
-	if title == "" {
-		title = "Untitled"
-	}
+	title := util.ServiceTitle(param["title"].(string))
 	choicesString, ok := param["choices"].(string)
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"])))
@@ -76,7 +73,7 @@ func sendEstimateSessionUpdate(s *Service, ch channel) error {
 		return errors.WithStack(errors.Wrap(err, "cannot load estimate session [" + ch.ID.String() + "]"))
 	}
 
-	msg := Message{Svc: util.SvcEstimate, Cmd: util.ServerCmdSessionUpdate, Param: est}
+	msg := Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdSessionUpdate, Param: est}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
 }

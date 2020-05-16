@@ -1,7 +1,7 @@
 namespace action {
   function renderAction(action: Action): JSX.Element {
     return <tr>
-      <td>{getMemberName(action.authorID)}</td>
+      <td>{system.getMemberName(action.authorID)}</td>
       <td>{action.act}</td>
       <td><pre>{JSON.stringify(action.content, null, 2)}</pre></td>
       <td>{action.note}</td>
@@ -28,13 +28,5 @@ namespace action {
         </tbody>
       </table>;
     }
-  }
-
-  export function getMemberName(id: string) {
-    const ret = system.cache.members.filter(m => m.userID === id);
-    if(ret.length === 0) {
-      return id;
-    }
-    return ret[0].name;
   }
 }

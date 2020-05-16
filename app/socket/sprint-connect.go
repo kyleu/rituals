@@ -11,7 +11,7 @@ func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param strin
 	if err != nil {
 		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
 	}
-	ch := channel{Svc: util.SvcSprint, ID: sprintID}
+	ch := channel{Svc: util.SvcSprint.Key, ID: sprintID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining channel"))
@@ -21,7 +21,7 @@ func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param strin
 }
 
 func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcSprint {
+	if ch.Svc != util.SvcSprint.Key {
 		return errors.WithStack(errors.New("sprint cannot handle [" + ch.Svc + "] message"))
 	}
 
@@ -30,7 +30,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return errors.WithStack(errors.Wrap(err, "error finding sprint session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing sprint error message"))
 		}
@@ -56,14 +56,30 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return err
 	}
 
+	estimates, err := s.estimates.GetBySprint(ch.ID, 0)
+	if err != nil {
+		return err
+	}
+	standups, err := s.standups.GetBySprint(ch.ID, 0)
+	if err != nil {
+		return err
+	}
+	retros, err := s.retros.GetBySprint(ch.ID, 0)
+	if err != nil {
+		return err
+	}
+
 	msg := Message{
-		Svc: util.SvcSprint,
+		Svc: util.SvcSprint.Key,
 		Cmd: util.ServerCmdSessionJoined,
 		Param: SprintSessionJoined{
-			Profile: &conn.Profile,
-			Session: sess,
-			Members: members,
-			Online:  online,
+			Profile:   &conn.Profile,
+			Session:   sess,
+			Members:   members,
+			Online:    online,
+			Estimates: estimates,
+			Standups:  standups,
+			Retros:    retros,
 		},
 	}
 

@@ -20,7 +20,7 @@ namespace retro {
   export function onRetroMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.retro, param as string);
+        rituals.onError(services.retro.key, param as string);
         break;
       case command.server.sessionJoined:
         let sj = param as SessionJoined
@@ -55,7 +55,7 @@ namespace retro {
     const title = util.req<HTMLInputElement>("#model-title-input").value;
     const categories = util.req<HTMLInputElement>("#model-categories-input").value;
     const msg = {
-      svc: services.retro,
+      svc: services.retro.key,
       cmd: command.client.updateSession,
       param: {
         title: title,

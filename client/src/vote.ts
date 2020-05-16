@@ -60,7 +60,7 @@ namespace vote {
         viewVoteResults(votes);
         break;
       default:
-        console.log("invalid story status [" + s.status + "]");
+        console.warn("invalid story status [" + s.status + "]");
     }
   }
 
@@ -77,7 +77,7 @@ namespace vote {
   // noinspection JSUnusedGlobalSymbols
   export function onSubmitVote(choice: string) {
     const msg = {
-      svc: services.estimate,
+      svc: services.estimate.key,
       cmd: command.client.submitVote,
       param: {storyID: estimate.cache.activeStory, choice: choice}
     };

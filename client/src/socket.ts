@@ -39,8 +39,8 @@ namespace socket {
   }
 
   export function send(msg: rituals.Message) {
-    console.log("sending message");
-    console.log(msg);
+    console.debug("sending message");
+    console.debug(msg);
     socket.send(JSON.stringify(msg));
   }
 

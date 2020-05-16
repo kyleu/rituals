@@ -77,13 +77,13 @@ func onRemoveFeedback(s *Service, ch channel, userID uuid.UUID, param string) er
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot remove feedback"))
 	}
-	msg := Message{Svc: util.SvcRetro, Cmd: util.ServerCmdFeedbackRemove, Param: feedbackID}
+	msg := Message{Svc: util.SvcRetro.Key, Cmd: util.ServerCmdFeedbackRemove, Param: feedbackID}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending feedback removal notification"))
 }
 
 func sendFeedbackUpdate(s *Service, ch channel, fb *retro.Feedback) error {
-	msg := Message{Svc: util.SvcRetro, Cmd: util.ServerCmdFeedbackUpdate, Param: fb}
+	msg := Message{Svc: util.SvcRetro.Key, Cmd: util.ServerCmdFeedbackUpdate, Param: fb}
 	err := s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending feedback update"))
 }

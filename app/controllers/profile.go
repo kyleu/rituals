@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -29,8 +28,6 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 		ctx.Profile.Theme = util.ThemeFromString(r.Form.Get("theme"))
 		ctx.Profile.NavColor = r.Form.Get("navbar-color")
 		ctx.Profile.LinkColor = r.Form.Get("link-color")
-		println("!!!!!!!!!!!")
-		println(fmt.Sprintf("%v", ctx.Profile))
 		_, err := ctx.App.User.SaveProfile(ctx.Profile)
 		if err != nil {
 			return "", err

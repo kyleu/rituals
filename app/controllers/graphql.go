@@ -22,6 +22,11 @@ func GraphQLHome(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+
+		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("graphql"), "graphql")...)
+		ctx.Breadcrumbs = bc
+
 		ctx.Title = "GraphiQL"
 		return tmpl(templates.GraphiQL(ctx, w))
 	})
@@ -37,35 +42,26 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "cannot read JSON body for GraphQL"))
 		}
-		println(1)
 		err = r.Body.Close()
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "cannot close body for GraphQL"))
 		}
 
 		var req map[string]interface{}
-		println(2)
 		err = json.Unmarshal(body, &req)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))
 		}
-		println(3)
 		operationName := req["operationName"]
 		query := req["query"]
 		variables := req["variables"]
-		println(4)
 
-		o := operationName.(string)
-		println(5)
-		q := query.(string)
-		println(6)
 		var v map[string]interface{}
 		if variables != nil {
 			v = variables.(map[string]interface{})
 		}
-		println(7)
 
-		r, err := svc.Run(o, q, v)
+		r, err := svc.Run(operationName.(string), query.(string), v)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error running GraphQL"))
 		}

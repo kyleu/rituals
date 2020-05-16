@@ -20,12 +20,4 @@ namespace member {
       </ul>;
     }
   }
-
-  export function getMemberName(id: string) {
-    const ret = system.cache.members.filter(m => m.userID === id);
-    if(ret.length === 0) {
-      return id;
-    }
-    return ret[0].name;
-  }
 }

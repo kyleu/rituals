@@ -54,22 +54,26 @@ namespace member {
     setMembers();
 
     if (nameChanged) {
-      if (system.cache.currentService == services.estimate) {
-        if (estimate.cache.activeStory) {
-          vote.viewVotes();
-        }
-      }
-      if (system.cache.currentService == services.standup) {
-        util.setContent("#report-detail", report.renderReports(standup.cache.reports));
-        if (standup.cache.activeReport) {
-          report.viewActiveReport();
-        }
-      }
-      if (system.cache.currentService == services.retro) {
-        util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
-        if (retro.cache.activeFeedback) {
-          feedback.viewActiveFeedback();
-        }
+      switch (system.cache.currentService) {
+        case services.sprint.key:
+          break;
+        case services.estimate.key:
+          if (estimate.cache.activeStory) {
+            vote.viewVotes();
+          }
+          break;
+        case services.standup.key:
+          util.setContent("#report-detail", report.renderReports(standup.cache.reports));
+          if (standup.cache.activeReport) {
+            report.viewActiveReport();
+          }
+          break;
+        case services.retro.key:
+          util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+          if (retro.cache.activeFeedback) {
+            feedback.viewActiveFeedback();
+          }
+          break;
       }
     }
   }
@@ -102,7 +106,7 @@ namespace member {
     const name = util.req<HTMLInputElement>("#self-name-input").value;
     const choice = util.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
     const msg = {
-      svc: services.system,
+      svc: services.system.key,
       cmd: command.client.updateProfile,
       param: {
         name: name,
@@ -119,7 +123,7 @@ namespace member {
     }
     const curr = system.cache.members.filter(x => x.userID === system.cache.activeMember);
     if (curr.length !== 1) {
-      console.log("cannot load active member [" + system.cache.activeMember + "]");
+      console.warn("cannot load active member [" + system.cache.activeMember + "]");
       return undefined;
     }
     return curr[0];

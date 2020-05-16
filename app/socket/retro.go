@@ -39,10 +39,7 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 }
 
 func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := strings.TrimSpace(param["title"].(string))
-	if title == "" {
-		title = "Untitled"
-	}
+	title := util.ServiceTitle(param["title"].(string))
 	categoriesString, ok := param["categories"].(string)
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"])))
@@ -71,7 +68,7 @@ func sendRetroSessionUpdate(s *Service, ch channel) error {
 		return errors.WithStack(errors.Wrap(err, "cannot load retro session [" + ch.ID.String() + "]"))
 	}
 
-	msg := Message{Svc: util.SvcRetro, Cmd: util.ServerCmdSessionUpdate, Param: sess}
+	msg := Message{Svc: util.SvcRetro.Key, Cmd: util.ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending retro session"))
 }

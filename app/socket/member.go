@@ -28,11 +28,11 @@ func (s *Service) GetOnline(ch channel) ([]uuid.UUID, error) {
 
 func (s *Service) sendOnlineUpdate(ch channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {
 	p := OnlineUpdate{UserID: userID, Connected: connected}
-	onlineMsg := Message{Svc: util.SvcSystem, Cmd: util.ServerCmdOnlineUpdate, Param: p}
+	onlineMsg := Message{Svc: util.SvcSystem.Key, Cmd: util.ServerCmdOnlineUpdate, Param: p}
 	return s.WriteChannel(ch, &onlineMsg, connID)
 }
 
 func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...uuid.UUID) error {
-	onlineMsg := Message{Svc: util.SvcSystem, Cmd: util.ServerCmdMemberUpdate, Param: current}
+	onlineMsg := Message{Svc: util.SvcSystem.Key, Cmd: util.ServerCmdMemberUpdate, Param: current}
 	return s.WriteChannel(ch, &onlineMsg, except...)
 }

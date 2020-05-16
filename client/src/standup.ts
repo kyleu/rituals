@@ -20,7 +20,7 @@ namespace standup {
   export function onStandupMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.standup, param as string);
+        rituals.onError(services.standup.key, param as string);
         break;
       case command.server.sessionJoined:
         let sj = param as SessionJoined;
@@ -50,7 +50,7 @@ namespace standup {
   export function onSubmitStandupSession() {
     const title = util.req<HTMLInputElement>("#model-title-input").value;
     const msg = {
-      svc: services.standup,
+      svc: services.standup.key,
       cmd: command.client.updateSession,
       param: {
         title: title,

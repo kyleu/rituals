@@ -60,7 +60,7 @@ func AdminSprintDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint, sprintID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint.Key, sprintID)
 		if err != nil {
 			return "", err
 		}

@@ -1,5 +1,44 @@
-<%: func SprintContents(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintContents(model *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-  <h3 class="uk-card-title">Contents</h3>
-  <p id="report-detail">Loading...</p>
+  <div>
+    <h3 class="left uk-card-title">Estimates</h3>
+    <div class="right">
+      <form method="post" action="<%= ctx.Route(`estimate.new`) %>">
+        <input type="hidden" name="sprint" value="<%=v model.ID %>" />
+        <div class="uk-inline uk-display-block">
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new estimate"></button>
+          <input class="uk-input" type="text" id="estimate-title" name="title" placeholder="Title" />
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="sprint-estimate-list" class="clear"><p>Loading...</p></div>
+  <hr />
+  <div>
+    <h3 class="left uk-card-title">Standups</h3>
+    <div class="right">
+      <form method="post" action="<%= ctx.Route(`standup.new`) %>">
+        <input type="hidden" name="sprint" value="<%=v model.ID %>" />
+        <div class="uk-inline uk-display-block">
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new standup"></button>
+          <input class="uk-input" type="text" id="standup-title" name="title" placeholder="Title" />
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="sprint-standup-list" class="clear"><p>Loading...</p></div>
+  <hr />
+  <div>
+    <h3 class="left uk-card-title">Retros</h3>
+    <div class="right">
+      <form method="post" action="<%= ctx.Route(`retro.new`) %>">
+        <input type="hidden" name="sprint" value="<%=v model.ID %>" />
+        <div class="uk-inline uk-display-block">
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new retro"></button>
+          <input class="uk-input" type="text" id="retro-title" name="title" placeholder="Title" />
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="sprint-retro-list" class="clear"><p>Loading...</p></div>
 </div>

@@ -48,7 +48,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionIDString), connectionIDString)...)
 		ctx.Breadcrumbs = bc
 
-		msg := socket.Message{Svc: util.SvcSystem, Cmd: util.ServerCmdPong, Param: nil}
+		msg := socket.Message{Svc: util.SvcSystem.Key, Cmd: util.ServerCmdPong, Param: nil}
 		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))
 	})
 }

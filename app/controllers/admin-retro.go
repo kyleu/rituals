@@ -17,7 +17,7 @@ func AdminRetroList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Retrospective List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retro")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), util.SvcRetro.Key)...)
 		ctx.Breadcrumbs = bc
 
 		retros, err := ctx.App.Retro.List()
@@ -48,14 +48,14 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro, retroID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, retroID)
 		if err != nil {
 			return "", err
 		}
 
 		ctx.Title = retro.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), "retro")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), util.SvcRetro.Key)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroIDString), retro.Slug)...)
 		ctx.Breadcrumbs = bc
 

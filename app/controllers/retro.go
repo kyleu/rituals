@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"net/http"
-	"strings"
-
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
+	"net/http"
 
 	"github.com/gorilla/mux"
 
@@ -22,7 +20,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Retrospectives"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("retro.list"), "retro")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("retro.list"), util.SvcRetro.Key)
 		return tmpl(templates.RetroList(sessions, ctx, w))
 	})
 }
@@ -30,15 +28,12 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 func RetroNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := strings.TrimSpace(r.Form.Get("title"))
-		if title == "" {
-			title = "Untitled"
-		}
+		title := util.ServiceTitle(r.Form.Get("title"))
 		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, nil)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating retro session"))
 		}
-		return ctx.Route("retro", "key", sess.Slug), nil
+		return ctx.Route(util.SvcRetro.Key, "key", sess.Slug), nil
 	})
 }
 
@@ -56,8 +51,8 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("retro.list"), "retro")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcRetro, "key", key), sess.Title)...)
+		bc := web.BreadcrumbsSimple(ctx.Route("retro.list"), util.SvcRetro.Key)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.RetroWorkspace(sess, ctx, w))

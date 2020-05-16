@@ -11,7 +11,7 @@ func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param stri
 	if err != nil {
 		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
 	}
-	ch := channel{Svc: util.SvcStandup, ID: standupID}
+	ch := channel{Svc: util.SvcStandup.Key, ID: standupID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining channel"))
@@ -21,7 +21,7 @@ func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param stri
 }
 
 func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcStandup {
+	if ch.Svc != util.SvcStandup.Key {
 		return errors.WithStack(errors.New("standup cannot handle [" + ch.Svc + "] message"))
 	}
 
@@ -30,7 +30,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return errors.WithStack(errors.Wrap(err, "error finding standup session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing standup error message"))
 		}
@@ -62,7 +62,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 	}
 
 	msg := Message{
-		Svc: util.SvcStandup,
+		Svc: util.SvcStandup.Key,
 		Cmd: util.ServerCmdSessionJoined,
 		Param: StandupSessionJoined{
 			Profile: &conn.Profile,

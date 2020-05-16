@@ -20,15 +20,55 @@ namespace system {
     }
   }
 
+  export function getMemberName(id: string) {
+    const ret = cache.members.filter(m => m.userID === id);
+    if(ret.length === 0) {
+      return id;
+    }
+    return ret[0].name;
+  }
+
   export const cache = new Cache();
 }
 
 namespace services {
-  export const system = "system";
-  export const sprint = "sprint";
-  export const estimate = "estimate";
-  export const standup = "standup";
-  export const retro = "retro";
+  export interface Service {
+    key: string,
+    title: string,
+    plural: string,
+    icon: string,
+  }
+
+  export const system = {
+    key: "system",
+    title: "System",
+    plural: "systems",
+    icon: "close"
+  };
+  export const sprint = {
+    key: "sprint",
+    title: "Sprint",
+    plural: "sprints",
+    icon: "git-fork"
+  };
+  export const estimate = {
+    key: "estimate",
+    title: "Estimate",
+    plural: "estimates",
+    icon: "settings"
+  };
+  export const standup = {
+    key: "standup",
+    title: "Standup",
+    plural: "standups",
+    icon: "future"
+  };
+  export const retro = {
+    key: "retro",
+    title: "Retrospective",
+    plural: "retros",
+    icon: "history"
+  };
 }
 
 namespace command {

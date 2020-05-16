@@ -2,7 +2,7 @@ namespace feedback {
   function renderFeedback(model: Feedback): JSX.Element {
     const profile = system.cache.getProfile();
     const ret = <div id={"feedback-" + model.id} class="feedback-detail uk-border-rounded section" onclick={"events.openModal('feedback', '" + model.id + "');"}>
-      <a class={profile.linkColor + "-fg section-link"}>{member.getMemberName(model.authorID)}</a>
+      <a class={profile.linkColor + "-fg section-link"}>{system.getMemberName(model.authorID)}</a>
       <div class="feedback-content">loading...</div>
     </div>;
 

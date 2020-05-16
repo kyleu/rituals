@@ -3,7 +3,7 @@
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
-  <div id="graphiql" style="flex: 1 1 auto;"></div>
+  <div id="graphiql" style="height: calc(100vh - 54px);"></div>
   <% if ctx.App.Debug { %>
   <link rel="stylesheet" media="screen" href="/assets/vendor/graphiql/graphiql.css">
   <script src="/assets/vendor/react/react.development.js"></script>
@@ -18,19 +18,21 @@
 
   <script>
     function graphQLFetcher(graphQLParams) {
-      return fetch(
-        "<%= ctx.Route(`graphql.run`) %>",
-        {
-          method: "post",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(graphQLParams),
-          credentials: "omit",
+      return fetch("<%= ctx.Route(`graphql.run`) %>", {
+        method: "post",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
         },
-      ).then(function (response) {
+        body: JSON.stringify(graphQLParams),
+      }).then(function (response) {
         return response.text();
+      }).then(function (responseBody) {
+        try {
+          return JSON.parse(responseBody);
+        } catch (error) {
+          return responseBody;
+        }
       });
     }
 

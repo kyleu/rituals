@@ -33,22 +33,22 @@ namespace rituals {
   }
 
   export function onSocketMessage(msg: Message) {
-    console.log("message received");
-    console.log(msg);
+    console.debug("message received");
+    console.debug(msg);
     switch (msg.svc) {
-      case services.system:
+      case services.system.key:
         onSystemMessage(msg.cmd, msg.param);
         break;
-      case services.sprint:
+      case services.sprint.key:
         sprint.onSprintMessage(msg.cmd, msg.param);
         break;
-      case services.estimate:
+      case services.estimate.key:
         estimate.onEstimateMessage(msg.cmd, msg.param);
         break;
-      case services.standup:
+      case services.standup.key:
         standup.onStandupMessage(msg.cmd, msg.param);
         break;
-      case services.retro:
+      case services.retro.key:
         retro.onRetroMessage(msg.cmd, msg.param);
         break;
       default:

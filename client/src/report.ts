@@ -17,7 +17,7 @@ namespace report {
     const d = util.req<HTMLInputElement>("#standup-report-date").value;
     const content = util.req<HTMLInputElement>("#standup-report-content").value;
     const msg = {
-      svc: services.standup,
+      svc: services.standup.key,
       cmd: command.client.addReport,
       param: {d: d, content: content},
     };
@@ -29,7 +29,7 @@ namespace report {
     const d = util.req<HTMLInputElement>("#standup-report-edit-date").value;
     const content = util.req<HTMLInputElement>("#standup-report-edit-content").value;
     const msg = {
-      svc: services.standup,
+      svc: services.standup.key,
       cmd: command.client.updateReport,
       param: {id: standup.cache.activeReport, d: d, content: content},
     };
@@ -41,7 +41,7 @@ namespace report {
     const id = standup.cache.activeReport;
     if(id && confirm("Delete this report?")) {
       const msg = {
-        svc: services.standup,
+        svc: services.standup.key,
         cmd: command.client.removeReport,
         param: id,
       };
@@ -58,7 +58,7 @@ namespace report {
     }
     const curr = standup.cache.reports.filter(x => x.id === standup.cache.activeReport);
     if (curr.length !== 1) {
-      console.log("cannot load active report [" + standup.cache.activeReport + "]");
+      console.warn("cannot load active report [" + standup.cache.activeReport + "]");
       return undefined;
     }
     return curr[0];
@@ -72,7 +72,7 @@ namespace report {
       return;
     }
 
-    util.setText("#report-title", report.d + " / " + member.getMemberName(report.authorID));
+    util.setText("#report-title", report.d + " / " + system.getMemberName(report.authorID));
     const contentEdit = util.req("#modal-report .content-edit");
     const contentEditDate = util.req<HTMLInputElement>("#standup-report-edit-date", contentEdit);
     const contentEditTextarea = util.req<HTMLTextAreaElement>("#standup-report-edit-content", contentEdit);

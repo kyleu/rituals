@@ -22,7 +22,7 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	}
 
 	actionContent := map[string]interface{}{"reportID": id}
-	s.actions.Post(util.SvcStandup, standupID, authorID, "add-report", actionContent, "")
+	s.actions.Post(util.SvcStandup.Key, standupID, authorID, "add-report", actionContent, "")
 
 	return s.GetReportByID(id)
 }
@@ -73,7 +73,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	}
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.actions.Post(util.SvcStandup, report.StandupID, authorID, "update-report", actionContent, "")
+	s.actions.Post(util.SvcStandup.Key, report.StandupID, authorID, "update-report", actionContent, "")
 
 	return report, err
 }
@@ -88,7 +88,7 @@ func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 	_, err = s.db.Exec(q, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.actions.Post(util.SvcStandup, report.StandupID, userID, "remove-report", actionContent, "")
+	s.actions.Post(util.SvcStandup.Key, report.StandupID, userID, "remove-report", actionContent, "")
 
 	return err
 }

@@ -82,13 +82,13 @@ func onRemoveReport(s *Service, ch channel, userID uuid.UUID, param string) erro
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot remove report"))
 	}
-	msg := Message{Svc: util.SvcStandup, Cmd: util.ServerCmdReportRemove, Param: reportID}
+	msg := Message{Svc: util.SvcStandup.Key, Cmd: util.ServerCmdReportRemove, Param: reportID}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending report removal notification"))
 }
 
 func sendReportUpdate(s *Service, ch channel, report *standup.Report) error {
-	msg := Message{Svc: util.SvcStandup, Cmd: util.ServerCmdReportUpdate, Param: report}
+	msg := Message{Svc: util.SvcStandup.Key, Cmd: util.ServerCmdReportUpdate, Param: report}
 	err := s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending report update"))
 }

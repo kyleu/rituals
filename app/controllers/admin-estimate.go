@@ -18,7 +18,7 @@ func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Estimate List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
 		ctx.Breadcrumbs = bc
 
 		estimates, err := ctx.App.Estimate.List()
@@ -54,14 +54,14 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate, estimateID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, estimateID)
 		if err != nil {
 			return "", err
 		}
 
 		ctx.Title = estimate.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
 		ctx.Breadcrumbs = bc
 
@@ -100,7 +100,7 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = fmt.Sprint(estimate.Slug, ":", story.Idx)
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), "estimate")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), estimate.Slug)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprint("story ", story.Idx))...)
 		ctx.Breadcrumbs = bc
