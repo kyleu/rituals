@@ -20,7 +20,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Daily Sprints"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("sprint.list"), "sprint")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key + ".list"), "sprint")
 		return tmpl(templates.SprintList(sessions, ctx, w))
 	})
 }
@@ -33,7 +33,7 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating sprint session"))
 		}
-		return ctx.Route("sprint", "key", sess.Slug), nil
+		return ctx.Route(util.SvcSprint.Key, "key", sess.Slug), nil
 	})
 }
 
@@ -47,11 +47,11 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")
 			saveSession(w, r, ctx)
-			return ctx.Route("sprint.list"), nil
+			return ctx.Route(util.SvcSprint.Key + ".list"), nil
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("sprint.list"), "sprint")
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key + ".list"), "sprint")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 

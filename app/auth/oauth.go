@@ -6,13 +6,17 @@ import (
 	"golang.org/x/oauth2"
 )
 
+func callbackUrl(host, k string) string {
+	return "http://" + host + "/auth/callback/" + k
+}
+
 func (s *Service) getConfig(key string) *oauth2.Config {
 	switch key {
-	case "google":
+	case ProviderGoogle.Key:
 		return &googleConf
-	case "github":
+	case ProviderGitHub.Key:
 		return &githubConf
-	case "slack":
+	case ProviderSlack.Key:
 		return &slackConf
 	default:
 		return nil
@@ -43,11 +47,11 @@ func (s *Service) decodeRecord(key string, code string) (*Record, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error getting token"))
 	}
 	switch key {
-	case "google":
+	case ProviderGoogle.Key:
 		return googleAuth(tok)
-	case "github":
+	case ProviderGitHub.Key:
 		return githubAuth(tok)
-	case "slack":
+	case ProviderSlack.Key:
 		return slackAuth(tok)
 	default:
 		return nil, nil

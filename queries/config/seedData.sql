@@ -8,6 +8,13 @@ values
   ('00000003-0000-0000-0000-000000000000', 'Janet', 'guest', 'light', 'bluegrey', 'bluegrey', '', 'en-US')
 ;
 
+-- Auth
+insert into auth
+  (id, user_id, provider, provider_id, expires, name, email, picture)
+values
+  ('01000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'google', '105933957667429955106', now(), 'Kyle Unverferth', 'kyle@kyleu.com', 'https://lh3.googleusercontent.com/a-/AOh14GiTXL-FkFruVKRTqLxdDmM7RqKe2CZxWRR57xLC27GP9YozCdan2ZUli-y6VoqruMMo2p3-AMNgNnh07l22NtQtRtJ1Y8nm1yi8C4udJft1vp90XwjULbfCT-e8yJJkpkqrb5BcsS_c2u3FI8TmL5zglH_IeUAJ5GPcFh8wV4-n0Ljf9IRLsNb0iinEPjYQKOifp_OpbexnQU1dn7SN3b0I2ygl9JWOZMIZeIP8dDY5JzUO0DZniYGgrX6BuWQpOvydcwxPw9YkagvSEez9dM_OZGget-cXm58nNOMytABeJu7GUbxO60MJm0fM7nYHFwJXzLazYQZNdLQDCnAMvI_HquWL-kzOvTeEt7jQXFTiSddXTeqx-YW4avE-fYvDC71pz0vK9UE8mE-5FIH0WqrFI7xOwTEif4oxAeDWnNLU6MPbSeusNw4Rxn-eIB-TShP-ZHYoUNJ0pm3n2HeRfISXv8STyvLl80SbqeumnS7yPluwseZBXyBDMXv9C1cL3JXS6HhNoTUrGC8sXU2WN5FVbBrh52ZZQEwcvWefQylTJbNKhYh46plQfqbPXByTWzU71YzLRRhhO1uqcVJOy1U1mGPj3X6pHKw3xxAtHQEc4C9u1Z-fayOHZormz6jb1hAKOJHgynZrgi9pb0OKysrhDx3zpgvLbtSpZnNHKuAywUU-gWVOZth0GjbQnVhEHhxRFcZTp-VNIlAwsRrr5Q36vDcqeQlm8nJPKHc7SklCjxG-TV2I6nSLzd0UeKZN80H_ng'),
+  ('01000001-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'slack', 'kyle@kyleu.com', now(), 'Kyle Unverferth', 'kyle@kyleu.com', 'https://secure.gravatar.com/avatar/c693fdc9e93d89bba0bfb012fa4a1d76.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-192.png')
+;
 
 -- Sprint
 insert into sprint
@@ -34,7 +41,7 @@ values
 insert into estimate
   (id, slug, title, sprint_id, owner, status, choices, options)
 values
-  ('10000000-0000-0000-0000-000000000000', 'estimate-a', 'Sprint 4', '90000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'new', '{}', '{}'),
+  ('10000000-0000-0000-0000-000000000000', 'estimate-a', 'Estimation A', '90000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'new', '{}', '{}'),
   ('10000001-0000-0000-0000-000000000000', 'estimate-b', 'Ad-hoc Session', null, '00000001-0000-0000-0000-000000000000', 'new', '{}', '{}'),
   ('10000002-0000-0000-0000-000000000000', 'estimate-c', 'April Estimates', null, '00000003-0000-0000-0000-000000000000', 'new', '{}', '{}')
 ;
@@ -74,7 +81,7 @@ values
 insert into standup
   (id, slug, title, sprint_id, owner, status)
 values
-  ('20000000-0000-0000-0000-000000000000', 'standup-a', 'Sprint 4', '90000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'new'),
+  ('20000000-0000-0000-0000-000000000000', 'standup-a', 'Standup A', '90000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'new'),
   ('20000001-0000-0000-0000-000000000000', 'standup-b', 'Team Standup', null, '00000000-0000-0000-0000-000000000000', 'new')
 ;
 
@@ -99,7 +106,7 @@ values
 insert into retro
   (id, slug, title, sprint_id, owner, status, categories)
 values
-  ('30000000-0000-0000-0000-000000000000', 'retro-a', 'Sprint 4', '90000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'new', '{}'),
+  ('30000000-0000-0000-0000-000000000000', 'retro-a', 'Retro A', '90000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'new', '{}'),
   ('30000001-0000-0000-0000-000000000000', 'retro-b', 'Team Retro', null, '00000000-0000-0000-0000-000000000000', 'new', '{}')
 ;
 
@@ -124,10 +131,10 @@ values
 insert into action
   (id, svc, model_id, author_id, act, content, note)
 values
-  ('40000000-0000-0000-0000-000000000000', 'estimate', '10000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'add-member', '{}', 'Action A'),
-  ('40000001-0000-0000-0000-000000000000', 'estimate', '10000001-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'add-member', '{}', 'Action B'),
-  ('40000002-0000-0000-0000-000000000000', 'standup', '20000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'add-member', '{}', 'Action C'),
-  ('40000003-0000-0000-0000-000000000000', 'retro', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'add-member', '{}', 'Action D')
+  ('40000000-0000-0000-0000-000000000000', 'estimate', '10000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'add-member', 'null', 'Action A'),
+  ('40000001-0000-0000-0000-000000000000', 'estimate', '10000001-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'add-member', 'null', 'Action B'),
+  ('40000002-0000-0000-0000-000000000000', 'standup', '20000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'add-member', 'null', 'Action C'),
+  ('40000003-0000-0000-0000-000000000000', 'retro', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'add-member', 'null', 'Action D')
 ;
 
 

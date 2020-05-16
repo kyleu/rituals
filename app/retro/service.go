@@ -38,17 +38,20 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 		return nil, errors.WithStack(errors.Wrap(err, "error creating retro slug"))
 	}
 
-	e := NewSession(title, slug, userID, sprintID)
+	model := NewSession(title, slug, userID, sprintID)
 
-	q := "insert into retro (id, slug, title, owner, status, categories) values ($1, $2, $3, $4, $5, $6)"
-	categoriesString := "{" + strings.Join(e.Categories, ",") + "}"
-	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.Status.String(), categoriesString)
+	q := "insert into retro (id, slug, title, sprint_id, owner, status, categories) values ($1, $2, $3, $4, $5, $6, $7)"
+	categoriesString := "{" + strings.Join(model.Categories, ",") + "}"
+	_, err = s.db.Exec(q, model.ID, slug, model.Title, model.SprintID, model.Owner, model.Status.String(), categoriesString)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new retro session"))
 	}
 
-	s.actions.Post(util.SvcRetro.Key, e.ID, userID, "create", nil, "")
-	return &e, nil
+	s.actions.Post(util.SvcRetro.Key, model.ID, userID, "create", nil, "")
+	if model.SprintID != nil {
+		s.actions.Post(util.SvcSprint.Key, model.ID, userID, "add-retro", nil, "")
+	}
+	return &model, nil
 }
 
 func (s *Service) List() ([]*Session, error) {

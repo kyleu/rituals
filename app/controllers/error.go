@@ -17,6 +17,11 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
+type ErrorResult struct {
+	Status string
+	Message string
+}
+
 func NotFound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusNotFound)
@@ -28,7 +33,7 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	_, _ = templates.NotFound(r, ctx, w)
 }
 
-func InternalServerError(router *mux.Router, info *config.AppInfo, w http.ResponseWriter, r *http.Request) {
+func internalServerError(router *mux.Router, info *config.AppInfo, w http.ResponseWriter, r *http.Request) {
 	defer lastChanceError(w)
 
 	if err := recover(); err != nil {
@@ -46,7 +51,7 @@ func InternalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 		_, _ = templates.InternalServerError(util.GetErrorDetail(e), r, ctx, w)
 		args := map[string]interface{}{"status": 500}
 		st := http.StatusInternalServerError
-		ctx.Logger.Warn(fmt.Sprintf("[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, err), args)
+		ctx.Logger.Warn(fmt.Sprintf("[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, e), args)
 	}
 }
 

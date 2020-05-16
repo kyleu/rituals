@@ -48,7 +48,7 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 	}
 	record.UserID = profile.UserID
 
-	curr, err := s.GetByKV(record.K, record.V)
+	curr, err := s.GetByProviderID(record.Provider.Key, record.ProviderID)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error retrieving auth record"))
 	}
@@ -77,7 +77,7 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, error) {
 	p.Name = record.Name
 	if p.Name == "" {
-		p.Name = record.K + " User"
+		p.Name = record.Provider.Title + " User"
 	}
 	p.Picture = record.Picture
 

@@ -48,7 +48,6 @@ func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid
 
 	conns, ok := s.channels[channel]
 	if !ok {
-		s.logger.Warn("unable to load missing channel [" + channel.String() + "]")
 		return nil
 	}
 

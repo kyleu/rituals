@@ -44,7 +44,7 @@ func (s *Service) Run(operationName string, doc string, variables map[string]int
 	if len(r.Errors) > 0 {
 		errString := ""
 		for i, e := range r.Errors {
-			errString += fmt.Sprintf("%s: %s", i, e.Error())
+			errString += fmt.Sprintf("%v: %v", i, e)
 			if i < len(r.Errors) - 1 {
 				errString += ", "
 			}

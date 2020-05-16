@@ -1,4 +1,4 @@
-<%: func StandupWorkspace(model *standup.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func StandupWorkspace(model *standup.Session, sprint *sprint.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -17,7 +17,7 @@
         <% StandupReports(ctx, _buffer) %>
       </div>
       <div class="uk-width-1-3@m">
-        <% MemberOthers(ctx, _buffer) %>
+        <% MemberOthers(sprint, ctx, _buffer) %>
       </div>
     </div>
   </div>

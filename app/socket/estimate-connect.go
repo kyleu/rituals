@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -25,11 +26,11 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return errors.WithStack(errors.New("estimate cannot handle [" + ch.Svc + "] message"))
 	}
 
-	est, err := s.estimates.GetByID(ch.ID)
+	sess, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding estimate session"))
 	}
-	if est == nil {
+	if sess == nil {
 		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing error message"))
@@ -43,6 +44,14 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 	entry, _, err := s.estimates.Members.Register(ch.ID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error joining estimate as member"))
+	}
+
+	var sprintEntry *member.Entry
+	if sess.SprintID != nil {
+		sprintEntry, _, err = s.sprints.Members.Register(*sess.SprintID, userID)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error joining sprint as member"))
+		}
 	}
 
 	members, err := s.estimates.Members.GetByModelID(ch.ID)
@@ -70,7 +79,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		Cmd: util.ServerCmdSessionJoined,
 		Param: EstimateSessionJoined{
 			Profile: &conn.Profile,
-			Session: est,
+			Session: sess,
 			Members: members,
 			Online:  online,
 			Stories: stories,
@@ -81,6 +90,13 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 	err = s.WriteMessage(conn.ID, &msg)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error writing initial estimate message"))
+	}
+
+	if sprintEntry != nil {
+		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint.Key, ID: *sess.SprintID}, sprintEntry, conn.ID)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error writing member update to sprint"))
+		}
 	}
 
 	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)

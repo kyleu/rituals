@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -46,6 +47,14 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return errors.WithStack(errors.Wrap(err, "error joining standup as member"))
 	}
 
+	var sprintEntry *member.Entry
+	if sess.SprintID != nil {
+		sprintEntry, _, err = s.sprints.Members.Register(*sess.SprintID, userID)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error joining sprint as member"))
+		}
+	}
+
 	members, err := s.standups.Members.GetByModelID(ch.ID)
 	if err != nil {
 		return err
@@ -76,6 +85,13 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 	err = s.WriteMessage(conn.ID, &msg)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error writing initial standup message"))
+	}
+
+	if sprintEntry != nil {
+		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint.Key, ID: *sess.SprintID}, sprintEntry, conn.ID)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error writing member update to sprint"))
+		}
 	}
 
 	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)

@@ -5,7 +5,8 @@
     <tr>
       <th>ID</th>
       <th>User</th>
-      <th>K</th>
+      <th>Provider</th>
+      <th>Provider ID</th>
       <th>Name</th>
       <th>Email</th>
       <th>Created</th>
@@ -16,7 +17,8 @@
     <tr>
       <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.auth.detail`, `id`, model.ID.String()) %>"><% ComponentUUID(&model.ID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><%= model.K %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.Provider.Key %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.ProviderID %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Name %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Email %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>

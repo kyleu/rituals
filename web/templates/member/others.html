@@ -1,4 +1,4 @@
-<%: func MemberOthers(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberOthers(sprint *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
@@ -16,6 +16,9 @@
     </div>
     <div class="uk-modal-body" data-uk-overflow-auto>
       <p>For now, just share the url of this page from your address bar</p>
+      <% if sprint != nil{ %>
+        <p>Joining this session will also join the current sprint, <%= sprint.Title %></p>
+      <% } %>
     </div>
   </div>
 </div>

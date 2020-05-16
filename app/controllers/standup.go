@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
@@ -20,7 +21,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Daily Standups"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("standup.list"), util.SvcStandup.Key)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key + ".list"), util.SvcStandup.Key)
 		return tmpl(templates.StandupList(sessions, ctx, w))
 	})
 }
@@ -47,14 +48,22 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + key + "]")
 			saveSession(w, r, ctx)
-			return ctx.Route("standup.list"), nil
+			return ctx.Route(util.SvcStandup.Key + ".list"), nil
+		}
+
+		var spr *sprint.Session
+		if sess.SprintID != nil {
+			spr, _ = ctx.App.Sprint.GetByID(*sess.SprintID)
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("standup.list"), util.SvcStandup.Key)
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key + ".list"), util.SvcStandup.Key)
+		if spr != nil {
+			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", spr.Slug), spr.Title)
+		}
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.StandupWorkspace(sess, ctx, w))
+		return tmpl(templates.StandupWorkspace(sess, spr, ctx, w))
 	})
 }

@@ -569,6 +569,67 @@ var member;
     }
     member_1.viewActiveMember = viewActiveMember;
 })(member || (member = {}));
+var profile;
+(function (profile) {
+    function setNavColor(el, c) {
+        util.setValue("#navbar-color", c);
+        var nb = util.req("#navbar");
+        nb.className = (c + "-bg uk-navbar-container uk-navbar");
+        var colors = document.querySelectorAll(".navbar_swatch");
+        colors.forEach(function (i) {
+            i.classList.remove("active");
+        });
+        el.classList.add("active");
+    }
+    profile.setNavColor = setNavColor;
+    function setLinkColor(el, c) {
+        util.setValue("#link-color", c);
+        var links = util.els(".profile-link");
+        links.forEach(function (l) {
+            l.classList.forEach(function (x) {
+                if (x.indexOf("-fg") > -1) {
+                    l.classList.remove(x);
+                }
+                l.classList.add(c + "-fg");
+            });
+        });
+        var colors = document.querySelectorAll(".link_swatch");
+        colors.forEach(function (i) {
+            i.classList.remove("active");
+        });
+        el.classList.add("active");
+    }
+    profile.setLinkColor = setLinkColor;
+    function selectTheme(theme) {
+        var card = util.els(".uk-card");
+        switch (theme) {
+            case "light":
+                document.documentElement.classList.remove("uk-light");
+                document.body.classList.remove("uk-light");
+                document.documentElement.classList.add("uk-dark");
+                document.body.classList.add("uk-dark");
+                card.forEach(function (x) {
+                    x.classList.add("uk-card-default");
+                    x.classList.remove("uk-card-secondary");
+                });
+                break;
+            case "dark":
+                document.documentElement.classList.add("uk-light");
+                document.body.classList.add("uk-light");
+                document.documentElement.classList.remove("uk-dark");
+                document.body.classList.remove("uk-dark");
+                card.forEach(function (x) {
+                    x.classList.remove("uk-card-default");
+                    x.classList.add("uk-card-secondary");
+                });
+                break;
+            default:
+                console.warn("invalid theme");
+                break;
+        }
+    }
+    profile.selectTheme = selectTheme;
+})(profile || (profile = {}));
 var report;
 (function (report_1) {
     function onSubmitReport() {
@@ -1410,11 +1471,11 @@ var vote;
 var action;
 (function (action_1) {
     function renderAction(action) {
+        var c = JSON.stringify(action.content, null, 2);
         return JSX("tr", null,
             JSX("td", null, system.getMemberName(action.authorID)),
             JSX("td", null, action.act),
-            JSX("td", null,
-                JSX("pre", null, JSON.stringify(action.content, null, 2))),
+            JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
             JSX("td", null, action.note),
             JSX("td", null,
                 new Date(action.occurred).toLocaleDateString(),

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"emperror.dev/errors"
 	"net/http"
 	"strings"
 
@@ -12,9 +13,13 @@ import (
 
 func Profile(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
+		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, 0)
+		if err != nil {
+			return "", errors.WithStack(errors.Wrap(err, "cannot load auth records for user [" + ctx.Profile.UserID.String() + "]"))
+		}
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("profile"), "profile")
-		return tmpl(templates.Profile(ctx, w))
+		return tmpl(templates.Profile(auths, ctx, w))
 	})
 }
 

@@ -3,18 +3,28 @@ package auth
 import (
 	"emperror.dev/errors"
 	"encoding/json"
+	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/github"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
 
+var githubConf = oauth2.Config{
+	ClientID:     secrets.GitHubClientID,
+	ClientSecret: secrets.GitHubClientSecret,
+	Endpoint:     github.Endpoint,
+	RedirectURL:  callbackUrl(host, ProviderGitHub.Key),
+	Scopes:       []string{"profile"},
+}
+
 type githubUser struct {
-	ID            string `json:"login"`
-	Email         string `json:"email"`
-	Name          string `json:"name"`
-	Picture       string `json:"avatar_url"`
+	ID      string `json:"login"`
+	Email   string `json:"email"`
+	Name    string `json:"name"`
+	Picture string `json:"avatar_url"`
 }
 
 func githubAuth(tok *oauth2.Token) (*Record, error) {
@@ -23,7 +33,7 @@ func githubAuth(tok *oauth2.Token) (*Record, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorization", "token " + tok.AccessToken)
+	req.Header.Add("Authorization", "token "+tok.AccessToken)
 	response, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -38,15 +48,14 @@ func githubAuth(tok *oauth2.Token) (*Record, error) {
 	}
 
 	ret := Record{
-		ID:      util.UUID(),
-		K:       "github",
-		V:       user.ID,
-		Expires: &tok.Expiry,
-		Name:    user.Name,
-		Email:   user.Email,
-		Picture: user.Picture,
-		Created: time.Time{},
+		ID:         util.UUID(),
+		Provider:   &ProviderGitHub,
+		ProviderID: user.ID,
+		Expires:    &tok.Expiry,
+		Name:       user.Name,
+		Email:      user.Email,
+		Picture:    user.Picture,
+		Created:    time.Time{},
 	}
 	return &ret, nil
 }
-

@@ -1,8 +1,8 @@
 # Installing
 
-## Github Releases
+## GitHub Releases
 
-Compiled binaries are available at [Github Releases](https://github.com/kyleu/rituals.dev/releases). Simply download and extract your platform's distribution, unzip, and run `rituals`.
+Compiled binaries are available at [GitHub Releases](https://github.com/kyleu/rituals.dev/releases). Simply download and extract your platform's distribution, unzip, and run `rituals`.
 
 ## Homebrew
 

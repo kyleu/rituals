@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
@@ -19,7 +20,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Estimation Sessions"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("estimate.list"), util.SvcEstimate.Key)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key + ".list"), util.SvcEstimate.Key)
 		return tmpl(templates.EstimateList(sessions, ctx, w))
 	})
 }
@@ -46,14 +47,22 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + key + "]")
 			saveSession(w, r, ctx)
-			return ctx.Route("estimate.list"), nil
+			return ctx.Route(util.SvcEstimate.Key + ".list"), nil
+		}
+
+		var spr *sprint.Session
+		if sess.SprintID != nil {
+			spr, _ = ctx.App.Sprint.GetByID(*sess.SprintID)
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("estimate.list"), util.SvcEstimate.Key)
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key + ".list"), util.SvcEstimate.Key)
+		if spr != nil {
+			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", spr.Slug), spr.Title)
+		}
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.EstimateWorkspace(sess, ctx, w))
+		return tmpl(templates.EstimateWorkspace(sess, spr, ctx, w))
 	})
 }

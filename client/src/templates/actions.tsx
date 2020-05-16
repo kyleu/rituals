@@ -1,9 +1,10 @@
 namespace action {
   function renderAction(action: Action): JSX.Element {
+    let c = JSON.stringify(action.content, null, 2);
     return <tr>
       <td>{system.getMemberName(action.authorID)}</td>
       <td>{action.act}</td>
-      <td><pre>{JSON.stringify(action.content, null, 2)}</pre></td>
+      <td>{c === "null" ? "" : <pre>{c}</pre>}</td>
       <td>{action.note}</td>
       <td>{new Date(action.occurred).toLocaleDateString()} {new Date(action.occurred).toLocaleTimeString().slice(0, 8)}</td>
     </tr>;

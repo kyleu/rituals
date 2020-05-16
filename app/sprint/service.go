@@ -36,16 +36,16 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 		return nil, errors.WithStack(errors.Wrap(err, "error creating sprint slug"))
 	}
 
-	e := NewSession(title, slug, userID, nil)
+	model := NewSession(title, slug, userID, nil)
 
 	q := "insert into sprint (id, slug, title, owner, end_date) values ($1, $2, $3, $4, $5)"
-	_, err = s.db.Exec(q, e.ID, slug, e.Title, e.Owner, e.EndDate)
+	_, err = s.db.Exec(q, model.ID, slug, model.Title, model.Owner, model.EndDate)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new sprint session"))
 	}
 
-	s.actions.Post(util.SvcSprint.Key, e.ID, userID, "create", nil, "")
-	return &e, nil
+	s.actions.Post(util.SvcSprint.Key, model.ID, userID, "create", nil, "")
+	return &model, nil
 }
 
 func (s *Service) List() ([]*Session, error) {

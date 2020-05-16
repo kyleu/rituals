@@ -1,4 +1,4 @@
-<%: func Profile(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func Profile(auths []*auth.Record, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -23,9 +23,9 @@
               <div class="uk-form-controls uk-form-controls-text">
                 <label for="theme-<%= t.String() %>">
                   <% if t == ctx.Profile.Theme { %>
-                  <input class="uk-radio" id="theme-<%= t.String() %>" name="theme" type="radio" onchange="if (this.checked) { selectTheme(this.value); }" value="<%= t.String() %>" checked="checked" />
+                  <input class="uk-radio" id="theme-<%= t.String() %>" name="theme" type="radio" onchange="if (this.checked) { profile.selectTheme(this.value); }" value="<%= t.String() %>" checked="checked" />
                   <% } else { %>
-                  <input class="uk-radio" id="theme-<%= t.String() %>" name="theme" type="radio" onchange="if (this.checked) { selectTheme(this.value); }" value="<%= t.String() %>" />
+                  <input class="uk-radio" id="theme-<%= t.String() %>" name="theme" type="radio" onchange="if (this.checked) { profile.selectTheme(this.value); }" value="<%= t.String() %>" />
                   <% } %>
                   <%= t.String() %>
                 </label>
@@ -33,48 +33,8 @@
               <% } %>
             </div>
 
-            <input id="navbar-color" name="navbar-color" type="hidden" value="<%= ctx.Profile.NavColor %>" />
-            <div class="uk-margin">
-              <label class="uk-form-label">Navbar Color</label>
-              <div class="uk-form-controls">
-                <div class="uk-flex uk-flex-wrap">
-                  <% for _, c := range util.AllColors { %>
-                  <%
-                  navCls := ""
-                  if ctx.Profile.NavColor == c {
-                  navCls = "active "
-                  }
-                  %>
-                  <div class="swatch nav_swatch <%= navCls %> <%= c %>-bg uk-text-center" title="<%= c %>" onclick="setNavColor(this, '<%= c %>');">
-                    <div class="icon" data-uk-icon="icon: check"></div>
-                  </div>
-                  <% } %>
-                </div>
-              </div>
-            </div>
-
-            <input id="link-color" name="link-color" type="hidden" value="<%= ctx.Profile.LinkColor %>" />
-            <div class="uk-margin">
-              <label class="uk-form-label">
-                <a class="<%= ctx.Profile.LinkColor %>-fg profile-link" href="" onclick="return false;">Link</a>
-                Color
-              </label>
-              <div class="uk-form-controls">
-                <div class="uk-flex uk-flex-wrap">
-                  <% for _, c := range util.AllColors { %>
-                  <%
-                  linkCls := ""
-                  if ctx.Profile.LinkColor == c {
-                  linkCls = "active "
-                  }
-                  %>
-                  <div class="swatch link_swatch <%= linkCls %> <%= c %>-bg uk-text-center" title="<%= c %>" onclick="setLinkColor(this, '<%= c %>');">
-                    <div class="icon" data-uk-icon="icon: check"></div>
-                  </div>
-                  <% } %>
-                </div>
-              </div>
-            </div>
+            <% ProfileColors("navbar", "Nav", ctx.Profile.NavColor, ctx, _buffer) %>
+            <% ProfileColors("link", "Link", ctx.Profile.LinkColor, ctx, _buffer) %>
 
             <div class="uk-margin-top">
               <button class="uk-button uk-button-default" type="submit">Save Changes</button>
@@ -83,64 +43,9 @@
         </div>
       </div>
       <div class="uk-width-1-4@m">
-        <% AuthSigninList(ctx, _buffer) %>
+        <% AuthSigninList(auths, ctx, _buffer) %>
       </div>
     </div>
   </div>
 </div>
-
-<script>
-  function setNavColor(el, c) {
-    util.setValue("#navbar-color", c);
-    let nb = util.req("#navbar");
-    nb.className = (c + "-bg uk-navbar-container uk-navbar");
-    let colors = document.querySelectorAll(".nav_swatch");
-    colors.forEach(function(i) {
-      i.classList.remove("active");
-    })
-    el.classList.add("active");
-  }
-
-  function setLinkColor(el, c) {
-    util.setValue("#link-color", c);
-    let links = util.els(".profile-link");
-    links.forEach(l => {
-      l.className = (c + "-fg profile-link");
-    });
-    let colors = document.querySelectorAll(".link_swatch");
-    colors.forEach(function(i) {
-      i.classList.remove("active");
-    })
-    el.classList.add("active");
-  }
-
-  function selectTheme(theme) {
-    let card = util.els(".uk-card");
-    switch (theme) {
-      case "light":
-        document.documentElement.classList.remove("uk-light");
-        document.body.classList.remove("uk-light");
-        document.documentElement.classList.add("uk-dark");
-        document.body.classList.add("uk-dark");
-        card.forEach(x => {
-          x.classList.add("uk-card-default");
-          x.classList.remove("uk-card-secondary");
-        });
-        break;
-      case "dark":
-        document.documentElement.classList.add("uk-light");
-        document.body.classList.add("uk-light");
-        document.documentElement.classList.remove("uk-dark");
-        document.body.classList.remove("uk-dark");
-        card.forEach(x => {
-          x.classList.remove("uk-card-default");
-          x.classList.add("uk-card-secondary");
-        });
-        break;
-      default:
-        console.warn("invalid theme");
-        break;
-    }
-  }
-</script>
 <% } %>

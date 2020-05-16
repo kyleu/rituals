@@ -14,8 +14,8 @@ create table if not exists "system_user" (
 create table if not exists "auth" (
   "id" uuid not null primary key,
   "user_id" uuid not null references "system_user"("id"),
-  "k" varchar(32) not null,
-  "v" text not null,
+  "provider" varchar(32) not null,
+  "provider_id" text not null,
   "expires" timestamp,
   "name" varchar(2048),
   "email" varchar(2048),
@@ -23,7 +23,7 @@ create table if not exists "auth" (
   "created" timestamp not null default now()
 );
 
-create index if not exists idx_auth_k_v on auth(k, v);
+create index if not exists idx_auth_provider_provider_id on auth(provider, provider_id);
 
 -- Sprint
 create table if not exists "sprint" (

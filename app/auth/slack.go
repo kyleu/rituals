@@ -3,12 +3,22 @@ package auth
 import (
 	"emperror.dev/errors"
 	"encoding/json"
+	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/slack"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
+
+var slackConf = oauth2.Config{
+	ClientID:     secrets.SlackClientID,
+	ClientSecret: secrets.SlackClientSecret,
+	Endpoint:     slack.Endpoint,
+	RedirectURL:  callbackUrl(host, ProviderSlack.Key),
+	Scopes:       []string{"users.profile:read"},
+}
 
 type slackResponse struct {
 	Ok      bool          `json:"ok"`
@@ -43,14 +53,14 @@ func slackAuth(tok *oauth2.Token) (*Record, error) {
 	}
 
 	ret := Record{
-		ID:      util.UUID(),
-		K:       "github",
-		V:       rsp.Profile.Email,
-		Expires: &tok.Expiry,
-		Name:    rsp.Profile.Name,
-		Email:   rsp.Profile.Email,
-		Picture: rsp.Profile.Picture,
-		Created: time.Time{},
+		ID:         util.UUID(),
+		Provider:   &ProviderSlack,
+		ProviderID: rsp.Profile.Email,
+		Expires:    &tok.Expiry,
+		Name:       rsp.Profile.Name,
+		Email:      rsp.Profile.Email,
+		Picture:    rsp.Profile.Picture,
+		Created:    time.Time{},
 	}
 	return &ret, nil
 }

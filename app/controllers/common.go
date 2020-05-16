@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -29,7 +30,15 @@ func act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 		if ctx.Title == "" {
 			ctx.Title = "Error"
 		}
-		_, _ = templates.InternalServerError(util.GetErrorDetail(err), r, ctx, w)
+		contentType := r.Header.Get("Content-Type")
+		switch contentType {
+		case "application/json", "text/json":
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			b, _ := json.MarshalIndent(ErrorResult{Status:  "error", Message: err.Error()}, "", "  ")
+			_, _ = w.Write(b)
+		default:
+			_, _ = templates.InternalServerError(util.GetErrorDetail(err), r, ctx, w)
+		}
 	}
 	if redir != "" {
 		if len(ctx.Flashes) > 0 {

@@ -1,19 +1,17 @@
-<%: func AuthSigninList(ctx web.RequestContext, buffer *bytes.Buffer) %>
-
+<%: func AuthSigninList(auths []*auth.Record, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div id="signin-card" class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
   <h3 class="uk-card-title">Sign In</h3>
   <ul class="uk-list uk-list-divider uk-margin-top">
-    <li>
-      <a class="<%= ctx.Profile.LinkClass() %> profile-link uk-icon-link signin-icon" data-uk-icon="icon: github-alt" href="<%= ctx.Route(`auth.submit`, `key`, `github`) %>"></a>
-      <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(`auth.submit`, `key`, `github`) %>">GitHub</a>
-    </li>
-    <li>
-      <a class="<%= ctx.Profile.LinkClass() %> profile-link uk-icon-link signin-icon" data-uk-icon="icon: google" href="<%= ctx.Route(`auth.submit`, `key`, `google`) %>"></a>
-      <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(`auth.submit`, `key`, `google`) %>">Google</a>
-    </li>
-    <li>
-      <a class="<%= ctx.Profile.LinkClass() %> profile-link uk-icon-link signin-icon" data-uk-icon="icon: hashtag" href="<%= ctx.Route(`auth.submit`, `key`, `slack`) %>"></a>
-      <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(`auth.submit`, `key`, `slack`) %>">Slack</a>
-    </li>
+    <% for _, p := range auth.AllProviders { %>
+      <%
+        var curr []*auth.Record
+        for _, a := range auths {
+          if a.Provider == p {
+            curr = append(curr, a)
+          }
+        }
+      %>
+      <% AuthSigninLink(p, curr, ctx, buffer) %>
+    <% } %>
   </ul>
 </div>

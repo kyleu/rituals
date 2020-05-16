@@ -1,0 +1,15 @@
+<%: func AuthSigninLink(p *auth.Provider, current []*auth.Record, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<li>
+  <% if len(current) == 0 { %>
+    <a class="<%= ctx.Profile.LinkClass() %> profile-link uk-icon-link signin-icon" data-uk-icon="icon: <%= p.Icon %>" href="<%= ctx.Route(`auth.submit`, `key`, p.Key) %>"></a>
+    <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(`auth.submit`, `key`, p.Key) %>"><%= p.Title %></a>
+  <% } else { %>
+    <div class="uk-icon signin-icon" data-uk-icon="icon: <%= p.Icon %>"></div>
+    <%= p.Title %>
+  <% } %>
+  <% for _, a := range current { %>
+  <% if a.Provider == p { %>
+    <div class="uk-article-meta"><%= a.ProviderID %></div>
+  <% } %>
+  <% } %>
+</li>

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
@@ -20,7 +21,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = "Retrospectives"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("retro.list"), util.SvcRetro.Key)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key + ".list"), util.SvcRetro.Key)
 		return tmpl(templates.RetroList(sessions, ctx, w))
 	})
 }
@@ -47,14 +48,22 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load retro [" + key + "]")
 			saveSession(w, r, ctx)
-			return ctx.Route("retro.list"), nil
+			return ctx.Route(util.SvcRetro.Key + ".list"), nil
+		}
+
+		var spr *sprint.Session
+		if sess.SprintID != nil {
+			spr, _ = ctx.App.Sprint.GetByID(*sess.SprintID)
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("retro.list"), util.SvcRetro.Key)
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key + ".list"), util.SvcRetro.Key)
+		if spr != nil {
+			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", spr.Slug), spr.Title)
+		}
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.RetroWorkspace(sess, ctx, w))
+		return tmpl(templates.RetroWorkspace(sess, spr, ctx, w))
 	})
 }
