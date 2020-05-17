@@ -16,8 +16,6 @@ type Service struct {
 	users      *user.Service
 }
 
-var host = "localhost:6660"
-
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "auth"})
 	svc := Service{
@@ -34,7 +32,7 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 		return nil, errors.New("no user profile for auth")
 	}
 
-	cfg := s.getConfig(key)
+	cfg := s.getConfig(false, "", key)
 	if cfg == nil {
 		return nil, errors.New("no auth config for [" + key + "]")
 	}

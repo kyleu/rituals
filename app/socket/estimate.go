@@ -24,19 +24,47 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 	var err error
 	switch cmd {
 	case util.ClientCmdConnect:
-		err = onEstimateConnect(s, conn, userID, param.(string))
+		p, ok := param.(string)
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as string"))
+		}
+		err = onEstimateConnect(s, conn, userID, p)
 	case util.ClientCmdUpdateSession:
-		err = onEstimateSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+		p, ok := param.(map[string]interface{})
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
+		}
+		err = onEstimateSessionSave(s, *conn.Channel, userID, p)
 	case util.ClientCmdAddStory:
-		err = onAddStory(s, *conn.Channel, userID, param.(map[string]interface{}))
+		p, ok := param.(map[string]interface{})
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
+		}
+		err = onAddStory(s, *conn.Channel, userID, p)
 	case util.ClientCmdUpdateStory:
-		err = onUpdateStory(s, *conn.Channel, userID, param.(map[string]interface{}))
+		p, ok := param.(map[string]interface{})
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
+		}
+		err = onUpdateStory(s, *conn.Channel, userID, p)
 	case util.ClientCmdRemoveStory:
-		err = onRemoveStory(s, *conn.Channel, userID, param.(string))
+		p, ok := param.(string)
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as string"))
+		}
+		err = onRemoveStory(s, *conn.Channel, userID, p)
 	case util.ClientCmdSetStoryStatus:
-		err = onSetStoryStatus(s, *conn.Channel, userID, param.(map[string]interface{}))
+		p, ok := param.(map[string]interface{})
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
+		}
+		err = onSetStoryStatus(s, *conn.Channel, userID, p)
 	case util.ClientCmdSubmitVote:
-		err = onSubmitVote(s, *conn.Channel, userID, param.(map[string]interface{}))
+		p, ok := param.(map[string]interface{})
+		if(!ok) {
+			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
+		}
+		err = onSubmitVote(s, *conn.Channel, userID, p)
 	default:
 		err = errors.New("unhandled estimate command [" + cmd + "]")
 	}
@@ -44,7 +72,11 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 }
 
 func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(param["title"].(string))
+	titleString, ok := param["choices"].(string)
+	if(!ok) {
+		return errors.WithStack(errors.New("cannot read choices as string"))
+	}
+	title := util.ServiceTitle(titleString)
 	choicesString, ok := param["choices"].(string)
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"])))

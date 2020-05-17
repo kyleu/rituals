@@ -12,12 +12,14 @@ import (
 	"time"
 )
 
-var githubConf = oauth2.Config{
-	ClientID:     secrets.GitHubClientID,
-	ClientSecret: secrets.GitHubClientSecret,
-	Endpoint:     github.Endpoint,
-	RedirectURL:  callbackUrl(host, ProviderGitHub.Key),
-	Scopes:       []string{"profile"},
+func githubConf(secure bool, host string) *oauth2.Config {
+	return &oauth2.Config{
+		ClientID:     secrets.GitHubClientID,
+		ClientSecret: secrets.GitHubClientSecret,
+		Endpoint:     github.Endpoint,
+		RedirectURL:  callbackUrl(secure, host, ProviderGitHub.Key),
+		Scopes:       []string{"profile"},
+	}
 }
 
 type githubUser struct {

@@ -46,7 +46,7 @@ func internalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(r.URL.Path, "error")
 		e, ok := err.(error)
 		if !ok {
-			e = errors.New(fmt.Sprintf("err is of type [%T]", err))
+			e = errors.New(fmt.Sprintf("err [%v] is of type [%T]", err, err))
 		}
 		_, _ = templates.InternalServerError(util.GetErrorDetail(e), r, ctx, w)
 		args := map[string]interface{}{"status": 500}

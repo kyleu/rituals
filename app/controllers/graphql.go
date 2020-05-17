@@ -55,19 +55,23 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 			return graphQLResponse(w, errorResponseJSON(errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))))
 		}
 		op := ""
-		operationName := req["operationName"]
-		if operationName != nil {
-			op = operationName.(string)
+		opParam, ok := req["operationName"]
+		if ok {
+			op = opParam.(string)
 		}
-		query := req["query"]
-		variables := req["variables"]
+		query := ""
+		queryParam, ok := req["query"]
+		if ok {
+			query = queryParam.(string)
+		}
 
 		var v map[string]interface{}
-		if variables != nil {
+		variables, ok := req["variables"]
+		if ok {
 			v = variables.(map[string]interface{})
 		}
 
-		res, err := svc.Run(op, query.(string), v)
+		res, err := svc.Run(op, query, v)
 		if err != nil {
 			return graphQLResponse(w, errorResponseJSON(errors.WithStack(errors.Wrap(err, "error running GraphQL"))))
 		}

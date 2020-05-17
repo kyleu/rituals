@@ -12,15 +12,17 @@ import (
 	"time"
 )
 
-var googleConf = oauth2.Config{
-	ClientID:     secrets.GoogleClientID,
-	ClientSecret: secrets.GoogleClientSecret,
-	Endpoint:     google.Endpoint,
-	RedirectURL:  callbackUrl(host, ProviderGoogle.Key),
-	Scopes: []string{
-		"https://www.googleapis.com/auth/userinfo.profile",
-		"https://www.googleapis.com/auth/userinfo.email",
-	},
+func googleConf(secure bool, host string) *oauth2.Config {
+	return &oauth2.Config{
+		ClientID:     secrets.GoogleClientID,
+		ClientSecret: secrets.GoogleClientSecret,
+		Endpoint:     google.Endpoint,
+		RedirectURL:  callbackUrl(secure, host, ProviderGoogle.Key),
+		Scopes: []string{
+			"https://www.googleapis.com/auth/userinfo.profile",
+			"https://www.googleapis.com/auth/userinfo.email",
+		},
+	}
 }
 
 type googleUser struct {

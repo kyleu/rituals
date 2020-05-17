@@ -12,12 +12,14 @@ import (
 	"time"
 )
 
-var slackConf = oauth2.Config{
-	ClientID:     secrets.SlackClientID,
-	ClientSecret: secrets.SlackClientSecret,
-	Endpoint:     slack.Endpoint,
-	RedirectURL:  callbackUrl(host, ProviderSlack.Key),
-	Scopes:       []string{"users.profile:read"},
+func slackConf(secure bool, host string) *oauth2.Config {
+	return &oauth2.Config{
+		ClientID:     secrets.SlackClientID,
+		ClientSecret: secrets.SlackClientSecret,
+		Endpoint:     slack.Endpoint,
+		RedirectURL:  callbackUrl(secure, host, ProviderSlack.Key),
+		Scopes:       []string{"users.profile:read"},
+	}
 }
 
 type slackResponse struct {

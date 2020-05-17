@@ -5,12 +5,15 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/app/web"
 	"net/http"
+	"strings"
 )
 
 func AuthSubmit(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		key := mux.Vars(r)["key"]
-		url := ctx.App.Auth.UrlFor(key)
+		host := r.Header.Get("Host")
+		secure := strings.HasSuffix(r.Proto, "s")
+		url := ctx.App.Auth.UrlFor(secure, host, key)
 		if len(url) == 0 {
 			return "", errors.New("invalid auth key [" + key + "]")
 		}

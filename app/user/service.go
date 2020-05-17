@@ -55,9 +55,8 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) 
 func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
 	s.logger.Info("creating user [" + id.String() + "]")
 	q := "insert into system_user (id, name, role, theme, nav_color, link_color, picture, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
-	role := "guest"
 	prof := util.NewUserProfile(id)
-	_, err := s.db.Exec(q, prof.UserID, prof.Name, role, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), time.Now())
+	_, err := s.db.Exec(q, prof.UserID, prof.Name, util.RoleGuest.Key, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), time.Now())
 	if err != nil {
 		return nil, err
 	}
