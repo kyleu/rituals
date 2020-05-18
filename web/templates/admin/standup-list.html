@@ -1,4 +1,4 @@
-<%: func AdminStandupList(standups []*standup.Session, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminStandupList(standups []*standup.Session, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Daily Standups</h3>
-      <% AdminStandupTable(standups, ctx, _buffer) %>
+      <% AdminStandupTable(standups, params.Get("standup"), ctx, _buffer) %>
     </div>
   </div>
 </div>

@@ -1,15 +1,15 @@
-<%: func AdminAuthTable(auths []*auth.Record, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminAuthTable(auths []*auth.Record, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>User</th>
-      <th>Provider</th>
-      <th>Provider ID</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Created</th>
+      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("userID", "User", params, ctx, buffer) %>
+      <% ComponentTableHeader("provider", "Provider", params, ctx, buffer) %>
+      <% ComponentTableHeader("providerID", "Provider ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("name", "Name", params, ctx, buffer) %>
+      <% ComponentTableHeader("email", "Email", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

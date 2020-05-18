@@ -1,13 +1,13 @@
-<%: func AdminReportTable(reports []*standup.Report, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminReportTable(reports []*standup.Report, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Date</th>
-      <th>Author</th>
-      <th>Content</th>
-      <th>Created</th>
+      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("d", "Date", params, ctx, buffer) %>
+      <% ComponentTableHeader("authorID", "Author", params, ctx, buffer) %>
+      <% ComponentTableHeader("content", "Content", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

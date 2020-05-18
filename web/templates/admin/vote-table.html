@@ -1,12 +1,12 @@
-<%: func AdminVoteTable(votes []*estimate.Vote, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminVoteTable(votes []*estimate.Vote, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>User</th>
-      <th>Choice</th>
-      <th>Updated</th>
-      <th>Created</th>
+      <% ComponentTableHeader("userID", "User", params, ctx, buffer) %>
+      <% ComponentTableHeader("choice", "Choice", params, ctx, buffer) %>
+      <% ComponentTableHeader("updated", "Updated", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

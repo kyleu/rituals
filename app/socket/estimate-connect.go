@@ -31,7 +31,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return errors.WithStack(errors.Wrap(err, "error finding estimate session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing error message"))
 		}
@@ -54,7 +54,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		}
 	}
 
-	members, err := s.estimates.Members.GetByModelID(ch.ID)
+	members, err := s.estimates.Members.GetByModelID(ch.ID, nil)
 	if err != nil {
 		return err
 	}
@@ -64,19 +64,19 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return err
 	}
 
-	stories, err := s.estimates.GetStories(ch.ID)
+	stories, err := s.estimates.GetStories(ch.ID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding stories"))
 	}
 
-	votes, err := s.estimates.GetEstimateVotes(ch.ID)
+	votes, err := s.estimates.GetEstimateVotes(ch.ID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding votes"))
 	}
 
 	msg := Message{
 		Svc: util.SvcEstimate.Key,
-		Cmd: util.ServerCmdSessionJoined,
+		Cmd: ServerCmdSessionJoined,
 		Param: EstimateSessionJoined{
 			Profile: &conn.Profile,
 			Session: sess,

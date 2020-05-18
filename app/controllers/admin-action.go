@@ -19,11 +19,12 @@ func AdminActionList(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.action"), "actions")...)
 		ctx.Breadcrumbs = bc
 
-		actions, err := ctx.App.Action.List()
+		params := paramSetFromRequest(r)
+		actions, err := ctx.App.Action.List(params.Get("action"))
 		if err != nil {
 			return "", err
 		}
-		return tmpl(templates.AdminActionList(actions, ctx, w))
+		return tmpl(templates.AdminActionList(actions, params, ctx, w))
 	})
 }
 

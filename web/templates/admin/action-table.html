@@ -1,14 +1,14 @@
-<%: func AdminActionTable(actions []*action.Action, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminActionTable(actions []*action.Action, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Model</th>
-      <th>AuthorID</th>
-      <th>Act</th>
-      <th>Note</th>
-      <th>Created</th>
+      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("modelID", "Model", params, ctx, buffer) %>
+      <% ComponentTableHeader("authorID", "AuthorID", params, ctx, buffer) %>
+      <% ComponentTableHeader("act", "Act", params, ctx, buffer) %>
+      <% ComponentTableHeader("note", "Note", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

@@ -18,7 +18,7 @@ import (
 )
 
 type ErrorResult struct {
-	Status string
+	Status  string
 	Message string
 }
 

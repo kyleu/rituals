@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/query"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
@@ -39,7 +41,7 @@ func (t Status) MarshalJSON() ([]byte, error) {
 var DefaultCategories = []string{"good", "bad", "improve"}
 
 func categoriesFromDB(s string) []string {
-	ret := util.StringToArray(s)
+	ret := query.StringToArray(s)
 	if len(ret) == 0 {
 		return DefaultCategories
 	}

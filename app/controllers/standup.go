@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
-	"net/http"
 
 	"github.com/gorilla/mux"
 
@@ -15,13 +16,14 @@ import (
 
 func StandupList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
-		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, 0)
+		params := paramSetFromRequest(r)
+		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get("standup"))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving standups"))
 		}
 
 		ctx.Title = "Daily Standups"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key + ".list"), util.SvcStandup.Key)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Key)
 		return tmpl(templates.StandupList(sessions, ctx, w))
 	})
 }
@@ -57,7 +59,7 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key + ".list"), util.SvcStandup.Key)
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Key)
 		if spr != nil {
 			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", spr.Slug), spr.Title)
 		}

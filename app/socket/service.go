@@ -2,9 +2,11 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/sprint"
 	"sync"
+
+	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/query"
+	"github.com/kyleu/rituals.dev/app/sprint"
 
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/standup"
@@ -22,7 +24,7 @@ type Service struct {
 	connectionsMu sync.Mutex
 	channels      map[channel][]uuid.UUID
 	channelsMu    sync.Mutex
-	logger        logur.LoggerFacade
+	logger        logur.Logger
 	actions       *action.Service
 	users         *user.Service
 	sprints       *sprint.Service
@@ -31,7 +33,7 @@ type Service struct {
 	retros        *retro.Service
 }
 
-func NewService(actions *action.Service, logger logur.LoggerFacade, users *user.Service, sprints *sprint.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+func NewService(actions *action.Service, logger logur.Logger, users *user.Service, sprints *sprint.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "socket"})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
@@ -51,11 +53,16 @@ func NewService(actions *action.Service, logger logur.LoggerFacade, users *user.
 var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
 var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem.Key, ChannelID: &systemID}
 
-func (s *Service) List() ([]*Status, error) {
+func (s *Service) List(params *query.Params) ([]*Status, error) {
+	params = query.ParamsWithDefaultOrdering("connection", params)
 	ret := make([]*Status, 0)
 	ret = append(ret, &systemStatus)
+	var idx = 0
 	for _, conn := range s.connections {
-		ret = append(ret, conn.ToStatus())
+		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
+			ret = append(ret, conn.ToStatus())
+		}
+		idx += 1
 	}
 	return ret, nil
 }

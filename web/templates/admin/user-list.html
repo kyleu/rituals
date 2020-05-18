@@ -1,4 +1,4 @@
-<%: func AdminUserList(users []*user.SystemUser, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminUserList(users []*user.SystemUser, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,30 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">System Users</h3>
-      <table class="uk-table uk-table-divider uk-text-left">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Theme</th>
-            <th>Locale</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody>
-        <% for _, u := range users { %>
-          <tr>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, u.UserID.String()) %>"><% ComponentUUID(&u.UserID, _buffer) %></a></td>
-            <td><%= u.Name %></td>
-            <td><%= u.Role %></td>
-            <td><%= u.Theme %></td>
-            <td><%=v u.Locale %></td>
-            <td><% ComponentDateTime(&u.Created, _buffer) %></td>
-          </tr>
-        <% } %>
-        </tbody>
-      </table>
+      <% AdminUserTable(users, params.Get("estimate"), ctx, _buffer) %>
     </div>
   </div>
 </div>

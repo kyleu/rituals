@@ -31,7 +31,7 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	// Sandbox
 	sandbox := r.Path("/sandbox").Subrouter()
 	sandbox.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(SandboxList))).Name("sandbox")
-	r.Path("/sandbox/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(SandboxForm))).Name("sandbox.run")
+	r.Path("/sandbox/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(SandboxRun))).Name("sandbox.run")
 
 	// Auth
 	_ = r.Path("/auth").Subrouter()

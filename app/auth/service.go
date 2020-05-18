@@ -10,19 +10,19 @@ import (
 )
 
 type Service struct {
-	actions    *action.Service
-	db         *sqlx.DB
-	logger     logur.Logger
-	users      *user.Service
+	actions *action.Service
+	db      *sqlx.DB
+	logger  logur.Logger
+	users   *user.Service
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "auth"})
 	svc := Service{
-		actions:    actions,
-		db:         db,
-		logger:     logger,
-		users:      users,
+		actions: actions,
+		db:      db,
+		logger:  logger,
+		users:   users,
 	}
 	return &svc
 }
@@ -79,7 +79,7 @@ func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, er
 	}
 	p.Picture = record.Picture
 
-	p, err := s.users.SaveProfile(p)
+	_, err := s.users.SaveProfile(p)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving user profile"))
 	}

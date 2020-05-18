@@ -10,13 +10,8 @@ import (
 	"logur.dev/logur"
 )
 
-type ErrorHandler interface {
-	Handle(err error)
-	HandleContext(ctx context.Context, err error)
-}
-
 type AppErrorHandler struct {
-	Logger logur.LoggerFacade
+	Logger logur.Logger
 }
 
 func (a *AppErrorHandler) Handle(err error) {
@@ -34,7 +29,7 @@ type unwrappable interface {
 	Unwrap() error
 }
 
-type ErrorFrame struct {
+type errorFrame struct {
 	Key string
 	Loc string
 }
@@ -65,7 +60,7 @@ func GetErrorDetail(e error) *ErrorDetail {
 	}
 }
 
-func TraceDetail(trace errors.StackTrace) []ErrorFrame {
+func TraceDetail(trace errors.StackTrace) []errorFrame {
 	s := fmt.Sprintf("%+v", trace)
 	lines := strings.Split(s, "\n")
 	validLines := make([]string, 0)
@@ -75,9 +70,9 @@ func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 			validLines = append(validLines, l)
 		}
 	}
-	ret := make([]ErrorFrame, 0)
+	ret := make([]errorFrame, 0)
 	for i := 0; i < len(validLines)-1; i += 2 {
-		f := ErrorFrame{Key: validLines[i], Loc: validLines[i+1]}
+		f := errorFrame{Key: validLines[i], Loc: validLines[i+1]}
 		ret = append(ret, f)
 	}
 	return ret

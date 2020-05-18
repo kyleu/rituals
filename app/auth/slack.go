@@ -1,15 +1,16 @@
 package auth
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"time"
+
+	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/slack"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
 func slackConf(secure bool, host string) *oauth2.Config {
@@ -17,7 +18,7 @@ func slackConf(secure bool, host string) *oauth2.Config {
 		ClientID:     secrets.SlackClientID,
 		ClientSecret: secrets.SlackClientSecret,
 		Endpoint:     slack.Endpoint,
-		RedirectURL:  callbackUrl(secure, host, ProviderSlack.Key),
+		RedirectURL:  callbackURL(secure, host, ProviderSlack.Key),
 		Scopes:       []string{"users.profile:read"},
 	}
 }

@@ -14,7 +14,7 @@ import (
 	"logur.dev/logur"
 )
 
-func OpenDatabase(logger logur.LoggerFacade) (*sqlx.DB, error) {
+func OpenDatabase(logger logur.Logger) (*sqlx.DB, error) {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "config"})
 
 	// TODO load from config
@@ -42,7 +42,7 @@ func OpenDatabase(logger logur.LoggerFacade) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func dbWipe(db *sqlx.DB, logger logur.LoggerFacade) error {
+func dbWipe(db *sqlx.DB, logger logur.Logger) error {
 	err := exec("reset", db, logger, func(sb *strings.Builder) { queries.ResetDatabase(sb) })
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func dbWipe(db *sqlx.DB, logger logur.LoggerFacade) error {
 	return nil
 }
 
-func exec(name string, db *sqlx.DB, logger logur.LoggerFacade, f func(*strings.Builder)) error {
+func exec(name string, db *sqlx.DB, logger logur.Logger, f func(*strings.Builder)) error {
 	sb := &strings.Builder{}
 	f(sb)
 	sqls := strings.Split(sb.String(), ";")

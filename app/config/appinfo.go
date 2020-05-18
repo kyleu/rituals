@@ -18,7 +18,7 @@ type AppInfo struct {
 	Debug    bool
 	Version  string
 	Commit   string
-	Logger   logur.LoggerFacade
+	Logger   logur.Logger
 	Errors   emperror.ErrorHandlerFacade
 	User     *user.Service
 	Auth     *auth.Service

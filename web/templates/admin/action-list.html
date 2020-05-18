@@ -1,4 +1,4 @@
-<%: func AdminActionList(actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminActionList(actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">App Actions</h3>
-      <% AdminActionTable(actions, ctx, _buffer) %>
+      <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
     </div>
   </div>
 </div>

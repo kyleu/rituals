@@ -4,25 +4,25 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/markdown"
+	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) GetFeedback(retroID uuid.UUID) ([]*Feedback, error) {
+var defaultFeedbackOrdering = []*query.Ordering{{Column: "category", Asc: true}, {Column: "idx", Asc: true}, {Column: "created", Asc: false}}
+
+func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) ([]*Feedback, error) {
+	params = query.ParamsWithDefaultOrdering("feddback", params, defaultFeedbackOrdering...)
 	var dtos []feedbackDTO
-	err := s.db.Select(&dtos, "select * from feedback where retro_id = $1 order by category, idx, created", retroID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", "feedback", "retro_id = $1", params.OrderByString(), params.Limit, params.Offset), retroID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Feedback, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToFeedback())
-	}
-	return ret, nil
+	return toFeedbacks(dtos), nil
 }
 
 func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	dto := &feedbackDTO{}
-	err := s.db.Get(dto, "select * from feedback where id = $1", feedbackID)
+	err := s.db.Get(dto, query.SQLSelect("*", "feedback", "id = $1", "", 0, 0), feedbackID)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,8 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	err := s.db.Get(&ret, "select retro_id from feedback where id = $1", feedbackID)
+	q := query.SQLSelect("retro_id", "feedback", "id = $1", "", 0, 0)
+	err := s.db.Get(&ret, q, feedbackID)
 	if err != nil {
 		return nil, err
 	}
@@ -66,6 +67,9 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	}
 
 	fb, err := s.GetFeedbackByID(feedbackID)
+	if err != nil {
+		return nil, errors.WithStack(errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for update"))
+	}
 	if fb == nil {
 		return nil, errors.New("cannot load newly-updated feedback")
 	}
@@ -78,6 +82,9 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 
 func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	feedback, err := s.GetFeedbackByID(feedbackID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot load report ["+feedbackID.String()+"] for removal"))
+	}
 	if feedback == nil {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
 	}
@@ -89,4 +96,12 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	s.actions.Post(util.SvcRetro.Key, feedback.RetroID, userID, "remove-feedback", actionContent, "")
 
 	return err
+}
+
+func toFeedbacks(dtos []feedbackDTO) []*Feedback {
+	ret := make([]*Feedback, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToFeedback())
+	}
+	return ret
 }

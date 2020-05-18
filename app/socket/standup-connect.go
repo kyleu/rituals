@@ -31,7 +31,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return errors.WithStack(errors.Wrap(err, "error finding standup session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup.Key, Cmd: ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing standup error message"))
 		}
@@ -55,7 +55,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		}
 	}
 
-	members, err := s.standups.Members.GetByModelID(ch.ID)
+	members, err := s.standups.Members.GetByModelID(ch.ID, nil)
 	if err != nil {
 		return err
 	}
@@ -65,14 +65,14 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return err
 	}
 
-	reports, err := s.standups.GetReports(ch.ID)
+	reports, err := s.standups.GetReports(ch.ID, nil)
 	if err != nil {
 		return err
 	}
 
 	msg := Message{
 		Svc: util.SvcStandup.Key,
-		Cmd: util.ServerCmdSessionJoined,
+		Cmd: ServerCmdSessionJoined,
 		Param: StandupSessionJoined{
 			Profile: &conn.Profile,
 			Session: sess,

@@ -1,12 +1,12 @@
-<%: func AdminConnectionTable(connections []*socket.Status, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminConnectionTable(connections []*socket.Status, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>User</th>
-      <th>Name</th>
-      <th>Channel</th>
+      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("userID", "User", params, ctx, buffer) %>
+      <% ComponentTableHeader("name", "Name", params, ctx, buffer) %>
+      <% ComponentTableHeader("channel", "Channel", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

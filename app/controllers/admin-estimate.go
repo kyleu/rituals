@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -21,11 +22,12 @@ func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
 		ctx.Breadcrumbs = bc
 
-		estimates, err := ctx.App.Estimate.List()
+		params := paramSetFromRequest(r)
+		estimates, err := ctx.App.Estimate.List(params.Get("estimate"))
 		if err != nil {
 			return "", err
 		}
-		return tmpl(templates.AdminEstimateList(estimates, ctx, w))
+		return tmpl(templates.AdminEstimateList(estimates, params, ctx, w))
 	})
 }
 
@@ -36,36 +38,38 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.New("invalid estimate id [" + estimateIDString + "]")
 		}
-		estimate, err := ctx.App.Estimate.GetByID(estimateID)
+		sess, err := ctx.App.Estimate.GetByID(estimateID)
 		if err != nil {
 			return "", err
 		}
-		if estimate == nil {
+		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + estimateIDString + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.estimate"), nil
 		}
 
-		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID)
+		params := paramSetFromRequest(r)
+
+		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID, params.Get("member"))
 		if err != nil {
 			return "", err
 		}
-		stories, err := ctx.App.Estimate.GetStories(estimateID)
+		stories, err := ctx.App.Estimate.GetStories(estimateID, params.Get("story"))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, estimateID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, estimateID, params.Get("action"))
 		if err != nil {
 			return "", err
 		}
 
-		ctx.Title = estimate.Title
+		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), estimate.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminEstimateDetail(estimate, members, stories, actions, ctx, w))
+		return tmpl(templates.AdminEstimateDetail(sess, members, stories, actions, params, ctx, w))
 	})
 }
 
@@ -84,26 +88,28 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		estimate, err := ctx.App.Estimate.GetByID(*estimateID)
+		sess, err := ctx.App.Estimate.GetByID(*estimateID)
 		if err != nil {
 			return "", err
 		}
-		if estimate == nil {
+		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.estimate"), nil
 		}
 
-		votes, err := ctx.App.Estimate.GetStoryVotes(storyID)
+		params := paramSetFromRequest(r)
+
+		votes, err := ctx.App.Estimate.GetStoryVotes(storyID, params.Get("vote"))
 		if err != nil {
 			return "", err
 		}
-		ctx.Title = fmt.Sprint(estimate.Slug, ":", story.Idx)
+		ctx.Title = fmt.Sprint(sess.Slug, ":", story.Idx)
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), estimate.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), sess.Slug)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprint("story ", story.Idx))...)
 		ctx.Breadcrumbs = bc
-		return tmpl(templates.AdminStoryDetail(story, votes, ctx, w))
+		return tmpl(templates.AdminStoryDetail(story, votes, params, ctx, w))
 	})
 }

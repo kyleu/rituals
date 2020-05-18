@@ -1,4 +1,4 @@
-<%: func AdminRetroDetail(model *retro.Session, members []*member.Entry, actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminRetroDetail(model *retro.Session, members []*member.Entry, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -44,7 +44,7 @@
       <% if len(members) == 0 { %>
       <p>No members available</p>
       <% } else { %>
-      <% AdminMemberTable(members, ctx, _buffer) %>
+      <% AdminMemberTable(members, params.Get("member"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -52,7 +52,7 @@
       <% if len(actions) == 0 { %>
         <p>No actions available</p>
       <% } else { %>
-        <% AdminActionTable(actions, ctx, _buffer) %>
+        <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

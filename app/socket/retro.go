@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/rituals.dev/app/query"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
@@ -12,25 +14,25 @@ import (
 )
 
 type RetroSessionJoined struct {
-	Profile  *util.Profile    `json:"profile"`
-	Session  *retro.Session   `json:"session"`
+	Profile  *util.Profile     `json:"profile"`
+	Session  *retro.Session    `json:"session"`
 	Members  []*member.Entry   `json:"members"`
-	Online   []uuid.UUID      `json:"online"`
+	Online   []uuid.UUID       `json:"online"`
 	Feedback []*retro.Feedback `json:"feedback"`
 }
 
 func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
 	switch cmd {
-	case util.ClientCmdConnect:
+	case ClientCmdConnect:
 		err = onRetroConnect(s, conn, userID, param.(string))
-	case util.ClientCmdUpdateSession:
+	case ClientCmdUpdateSession:
 		err = onRetroSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
-	case util.ClientCmdAddFeedback:
+	case ClientCmdAddFeedback:
 		err = onAddFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
-	case util.ClientCmdUpdateFeedback:
+	case ClientCmdUpdateFeedback:
 		err = onEditFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
-	case util.ClientCmdRemoveFeedback:
+	case ClientCmdRemoveFeedback:
 		err = onRemoveFeedback(s, *conn.Channel, userID, param.(string))
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")
@@ -44,7 +46,7 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"])))
 	}
-	categories := util.StringToArray(categoriesString)
+	categories := query.StringToArray(categoriesString)
 	if len(categories) == 0 {
 		categories = retro.DefaultCategories
 	}
@@ -62,13 +64,13 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 func sendRetroSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.retros.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding retro session [" + ch.ID.String() + "]"))
+		return errors.WithStack(errors.Wrap(err, "error finding retro session ["+ch.ID.String()+"]"))
 	}
 	if sess == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load retro session [" + ch.ID.String() + "]"))
+		return errors.WithStack(errors.Wrap(err, "cannot load retro session ["+ch.ID.String()+"]"))
 	}
 
-	msg := Message{Svc: util.SvcRetro.Key, Cmd: util.ServerCmdSessionUpdate, Param: sess}
+	msg := Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending retro session"))
 }

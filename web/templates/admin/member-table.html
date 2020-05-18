@@ -1,12 +1,12 @@
-<%: func AdminMemberTable(members []*member.Entry, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminMemberTable(members []*member.Entry, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>User ID</th>
-      <th>Name</th>
-      <th>Role</th>
-      <th>Created</th>
+      <% ComponentTableHeader("userID", "User ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("name", "Name", params, ctx, buffer) %>
+      <% ComponentTableHeader("role", "Role", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

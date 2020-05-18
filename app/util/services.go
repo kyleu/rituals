@@ -3,10 +3,10 @@ package util
 import "strings"
 
 type Service struct {
-	Key string
-	Title string
+	Key    string
+	Title  string
 	Plural string
-	Icon string
+	Icon   string
 }
 
 // Services

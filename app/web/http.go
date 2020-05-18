@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -29,11 +30,13 @@ func BreadcrumbsSimple(path string, title string) Breadcrumbs {
 	}
 }
 
-type RequestContext struct {
+type
+RequestContext struct {
 	App         *config.AppInfo
-	Logger      logur.LoggerFacade
+	Logger      logur.Logger
 	Profile     *util.UserProfile
 	Routes      *mux.Router
+	Request     *url.URL
 	Title       string
 	Breadcrumbs Breadcrumbs
 	Flashes     []string
@@ -46,12 +49,12 @@ func (r *RequestContext) Route(act string, pairs ...string) string {
 		r.App.Logger.Warn("cannot find route at path [" + act + "]")
 		return "/routenotfound"
 	}
-	url, err := route.URL(pairs...)
+	u, err := route.URL(pairs...)
 	if err != nil {
 		r.App.Logger.Warn("cannot bind route at path [" + act + "]")
 		return "/routeerror"
 	}
-	return url.Path
+	return u.Path
 }
 
 var sessionKey = func() string {
@@ -89,7 +92,7 @@ func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 		}
 	} else {
 		userID = util.UUID()
-		_, err := ai.User.CreateNewUser(userID)
+		_, err := ai.User.New(userID)
 		if err != nil {
 			ai.Logger.Warn(fmt.Sprintf("cannot save user: %+v", err))
 		}
@@ -123,6 +126,7 @@ func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 		Logger:      logger,
 		Profile:     prof,
 		Routes:      routes,
+		Request:     r.URL,
 		Title:       util.AppName,
 		Breadcrumbs: nil,
 		Flashes:     flashes,

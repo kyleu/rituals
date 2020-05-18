@@ -4,27 +4,26 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/kyleu/rituals.dev/app/query"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) GetStories(estimateID uuid.UUID) ([]*Story, error) {
+func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) ([]*Story, error) {
+	params = query.ParamsWithDefaultOrdering("story", params, &query.Ordering{Column: "idx", Asc: true})
 	var dtos []storyDTO
-	err := s.db.Select(&dtos, "select * from story where estimate_id = $1 order by idx", estimateID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", "story", "estimate_id = $1", params.OrderByString(), params.Limit, params.Offset), estimateID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Story, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToStory())
-	}
-	return ret, nil
+	return toStories(dtos), nil
 }
 
 func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 	dto := &storyDTO{}
-	err := s.db.Get(dto, "select * from story where id = $1", storyID)
+	err := s.db.Get(dto, query.SQLSelect("*", "story", "id = $1", "", 0, 0), storyID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +32,8 @@ func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 
 func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	err := s.db.Get(&ret, "select estimate_id from story where id = $1", storyID)
+	q := query.SQLSelect("estimate_id", "story", "id = $1", "", 0, 0)
+	err := s.db.Get(&ret, q, storyID)
 	if err != nil {
 		return nil, err
 	}
@@ -76,6 +76,9 @@ func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID)
 
 func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 	story, err := s.GetStoryByID(storyID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot load report ["+storyID.String()+"] for removal"))
+	}
 	if story == nil {
 		return errors.New("cannot load story [" + storyID.String() + "] for removal")
 	}
@@ -106,7 +109,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 
 	finalVote := ""
 	if status == StoryStatusComplete {
-		votes, err := s.GetStoryVotes(storyID)
+		votes, err := s.GetStoryVotes(storyID, nil)
 		if err != nil {
 			return false, finalVote, errors.WithStack(errors.Wrap(err, "cannot load story votes for ["+storyID.String()+"]"))
 		}
@@ -144,4 +147,12 @@ func calcFinalVote(votes []*Vote) string {
 		return ret
 	}
 	return ret[0:4]
+}
+
+func toStories(dtos []storyDTO) []*Story {
+	ret := make([]*Story, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToStory())
+	}
+	return ret
 }

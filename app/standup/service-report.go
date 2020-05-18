@@ -1,8 +1,10 @@
 package standup
 
 import (
-	"emperror.dev/errors"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/app/query"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/markdown"
@@ -27,9 +29,12 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	return s.GetReportByID(id)
 }
 
-func (s *Service) GetReports(standupID uuid.UUID) ([]*Report, error) {
+var defaultReportOrdering = []*query.Ordering{{Column: "d", Asc: false}, {Column: "created", Asc: false}}
+
+func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Report, error) {
+	params = query.ParamsWithDefaultOrdering("report", params, defaultReportOrdering...)
 	var dtos []reportDTO
-	err := s.db.Select(&dtos, "select * from report where standup_id = $1 order by d desc, created", standupID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", "report", "standup_id = $1", params.OrderByString(), params.Limit, params.Offset), standupID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +47,7 @@ func (s *Service) GetReports(standupID uuid.UUID) ([]*Report, error) {
 
 func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	dto := &reportDTO{}
-	err := s.db.Get(dto, "select * from report where id = $1", reportID)
+	err := s.db.Get(dto, query.SQLSelect("*", "report", "id = $1", "", 0, 0), reportID)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +56,8 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	err := s.db.Get(&ret, "select standup_id from report where id = $1", reportID)
+	q := query.SQLSelect("standup_id", "report", "id = $1", "", 0, 0)
+	err := s.db.Get(&ret, q, reportID)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +86,9 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 
 func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 	report, err := s.GetReportByID(reportID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot load report ["+reportID.String()+"] for removal"))
+	}
 	if report == nil {
 		return errors.New("cannot load report [" + reportID.String() + "] for removal")
 	}

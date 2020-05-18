@@ -1,14 +1,14 @@
-<%: func AdminStoryTable(stories []*estimate.Story, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminStoryTable(stories []*estimate.Story, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Index</th>
-      <th>Status</th>
-      <th>Title</th>
-      <th>Author</th>
-      <th>Created</th>
+      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("idx", "Index", params, ctx, buffer) %>
+      <% ComponentTableHeader("status", "Status", params, ctx, buffer) %>
+      <% ComponentTableHeader("title", "Title", params, ctx, buffer) %>
+      <% ComponentTableHeader("author", "Author", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

@@ -1,4 +1,4 @@
-package util
+package cli
 
 import (
 	"os"
@@ -8,7 +8,7 @@ import (
 	"logur.dev/logur"
 )
 
-func InitLogging(verbose bool) logur.LoggerFacade {
+func initLogging(verbose bool) logur.Logger {
 	logger := logrus.New()
 
 	logger.SetOutput(os.Stdout)

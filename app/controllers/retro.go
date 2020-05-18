@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
-	"net/http"
 
 	"github.com/gorilla/mux"
 
@@ -15,13 +16,14 @@ import (
 
 func RetroList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
-		sessions, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, 0)
+		params := paramSetFromRequest(r)
+		sessions, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get("retro"))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving retros"))
 		}
 
 		ctx.Title = "Retrospectives"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key + ".list"), util.SvcRetro.Key)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key+".list"), util.SvcRetro.Key)
 		return tmpl(templates.RetroList(sessions, ctx, w))
 	})
 }
@@ -57,7 +59,7 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key + ".list"), util.SvcRetro.Key)
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key+".list"), util.SvcRetro.Key)
 		if spr != nil {
 			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", spr.Slug), spr.Title)
 		}

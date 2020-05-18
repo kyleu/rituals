@@ -2,9 +2,10 @@ package retro
 
 import (
 	"database/sql"
-	"fmt"
-	"github.com/kyleu/rituals.dev/app/action"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -54,22 +55,19 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 	return &model, nil
 }
 
-func (s *Service) List() ([]*Session, error) {
+func (s *Service) List(params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("retro", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	err := s.db.Select(&dtos, "select * from retro order by created desc")
+	err := s.db.Select(&dtos, query.SQLSelect("*", "retro", "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
 func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 	dto := &sessionDTO{}
-	err := s.db.Get(dto, "select * from retro where id = $1", id)
+	err := s.db.Get(dto, query.SQLSelect("*", "retro", "id = $1", "", 0, 0), id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -81,7 +79,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 
 func (s *Service) GetBySlug(slug string) (*Session, error) {
 	var dto = &sessionDTO{}
-	err := s.db.Get(dto, "select * from retro where slug = $1", slug)
+	err := s.db.Get(dto, query.SQLSelect("*", "retro", "slug = $1", "", 0, 0), slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -91,51 +89,36 @@ func (s *Service) GetBySlug(slug string) (*Session, error) {
 	return dto.ToSession(), nil
 }
 
-func (s *Service) GetByOwner() ([]*Session, error) {
+func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("retro", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	err := s.db.Select(&dtos, "select * from retro where owner = $1 order by created desc")
+	err := s.db.Select(&dtos, query.SQLSelect("*", "retro", "owner = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
-func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]*Session, error) {
+func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("retro", params, &query.Ordering{Column: "m.created", Asc: false})
 	var dtos []sessionDTO
-	q := "select x.* from retro x join retro_member m on x.id = m.retro_id where m.user_id = $1 order by m.created desc"
-	if limit > 0 {
-		q += fmt.Sprint(" limit ", limit)
-	}
+	q := query.SQLSelect("x.*", "retro x join retro_member m on x.id = m.retro_id", "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, userID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
-func (s *Service) GetBySprint(sprintID uuid.UUID, limit int) ([]*Session, error) {
+func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("retro", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	q := "select * from retro where sprint_id = $1 order by created desc"
-	if limit > 0 {
-		q += fmt.Sprint(" limit ", limit)
-	}
+	q := query.SQLSelect("*", "retro", "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, sprintID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []string, userID uuid.UUID) error {
@@ -144,4 +127,12 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []
 	_, err := s.db.Exec(q, title, categoriesString, sessionID)
 	s.actions.Post(util.SvcRetro.Key, sessionID, userID, "update", nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating retro session"))
+}
+
+func toSessions(dtos []sessionDTO) []*Session {
+	ret := make([]*Session, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToSession())
+	}
+	return ret
 }

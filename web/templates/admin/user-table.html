@@ -1,0 +1,26 @@
+<%: func AdminUserTable(users []*user.SystemUser, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader("name", "Name", params, ctx, buffer) %>
+      <% ComponentTableHeader("role", "Role", params, ctx, buffer) %>
+      <% ComponentTableHeader("theme", "Theme", params, ctx, buffer) %>
+      <% ComponentTableHeader("locale", "Locale", params, ctx, buffer) %>
+      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, u := range users { %>
+    <tr>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, u.UserID.String()) %>"><% ComponentUUID(&u.UserID, buffer) %></a></td>
+      <td><%= u.Name %></td>
+      <td><%= u.Role %></td>
+      <td><%= u.Theme %></td>
+      <td><%=v u.Locale %></td>
+      <td><% ComponentDateTime(&u.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

@@ -1,15 +1,16 @@
 package auth
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"time"
+
+	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
 func githubConf(secure bool, host string) *oauth2.Config {
@@ -17,7 +18,7 @@ func githubConf(secure bool, host string) *oauth2.Config {
 		ClientID:     secrets.GitHubClientID,
 		ClientSecret: secrets.GitHubClientSecret,
 		Endpoint:     github.Endpoint,
-		RedirectURL:  callbackUrl(secure, host, ProviderGitHub.Key),
+		RedirectURL:  callbackURL(secure, host, ProviderGitHub.Key),
 		Scopes:       []string{"profile"},
 	}
 }
@@ -43,10 +44,13 @@ func githubAuth(tok *oauth2.Token) (*Record, error) {
 	defer func() { _ = response.Body.Close() }()
 
 	contents, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, errors.WithStack(errors.Wrap(err, "error reading GitHub response"))
+	}
 	var user = githubUser{}
 	err = json.Unmarshal(contents, &user)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error marshalling github user"))
+		return nil, errors.WithStack(errors.Wrap(err, "error marshalling GitHub user"))
 	}
 
 	ret := Record{

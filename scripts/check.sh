@@ -24,7 +24,7 @@ golangci-lint run \
   -E bodyclose \
   -E depguard \
   -E dogsled \
-  -E dupl \
+  -D dupl \
   -E funlen \
   -D gochecknoglobals \
   -D gochecknoinits \
@@ -40,7 +40,7 @@ golangci-lint run \
   -E goprintffuncname \
   -D gosec \
   -E interfacer \
-  -E lll \
+  -D lll \
   -E maligned \
   -E misspell \
   -E nakedret \

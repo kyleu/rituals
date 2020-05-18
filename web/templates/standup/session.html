@@ -1,4 +1,4 @@
-<%: func StandupSession(model *standup.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func StandupSession(model *standup.Session, sprint *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
@@ -7,7 +7,11 @@
     <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
   </h3>
-  <p>Daily Standup</p>
+  <% if sprint == nil { %>
+    <p>Daily Standup</p>
+  <% } else { %>
+    <p><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint`, `key`, sprint.Slug) %>"><%= sprint.Title %></a> Daily Standup</p>
+  <% } %>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">

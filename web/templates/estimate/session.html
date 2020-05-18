@@ -1,4 +1,4 @@
-<%: func EstimateSession(model *estimate.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func EstimateSession(model *estimate.Session, sprint *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
@@ -7,7 +7,11 @@
     <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
   </h3>
-  <p>Estimation Session</p>
+  <% if sprint == nil { %>
+    <p>Estimation Session</p>
+  <% } else { %>
+    <p><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint`, `key`, sprint.Slug) %>"><%= sprint.Title %></a> Estimation Session</p>
+  <% } %>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">

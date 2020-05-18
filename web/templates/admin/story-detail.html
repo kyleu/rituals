@@ -1,4 +1,4 @@
-<%: func AdminStoryDetail(model *estimate.Story, votes []*estimate.Vote, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminStoryDetail(model *estimate.Story, votes []*estimate.Vote, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -45,7 +45,7 @@
       <% if len(votes) == 0 { %>
         <p>No votes available</p>
       <% } else { %>
-        <% AdminVoteTable(votes, ctx, _buffer) %>
+        <% AdminVoteTable(votes, params.Get("vote"), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

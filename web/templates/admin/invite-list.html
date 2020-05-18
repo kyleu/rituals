@@ -1,4 +1,4 @@
-<%: func AdminInviteList(invites []*invite.Invitation, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminInviteList(invites []*invite.Invitation, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,28 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Invitations</h3>
-      <table class="uk-table uk-table-divider uk-text-left">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Relation</th>
-            <th>Source</th>
-            <th>Target</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-        <% for _, i := range invites { %>
-          <tr>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invite.detail`, `key`, i.Key) %>"><%= i.Key %></a></td>
-            <td><%= i.K.String() %>:<%= i.V %></td>
-            <td><% ComponentUUID(i.Src, _buffer) %></td>
-            <td><% ComponentUUID(i.Tgt, _buffer) %></td>
-            <td><%= i.Status.String() %></td>
-          </tr>
-        <% } %>
-        </tbody>
-      </table>
+      <% AdminInviteTable(invites, params.Get("invite"), ctx, _buffer) %>
     </div>
   </div>
 </div>

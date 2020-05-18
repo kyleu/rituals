@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -20,11 +21,12 @@ func AdminSprintList(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint"), "sprint")...)
 		ctx.Breadcrumbs = bc
 
-		sprints, err := ctx.App.Sprint.List()
+		params := paramSetFromRequest(r)
+		sprints, err := ctx.App.Sprint.List(params.Get("sprint"))
 		if err != nil {
 			return "", err
 		}
-		return tmpl(templates.AdminSprintList(sprints, ctx, w))
+		return tmpl(templates.AdminSprintList(sprints, params, ctx, w))
 	})
 }
 
@@ -35,42 +37,45 @@ func AdminSprintDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.New("invalid sprint id [" + sprintIDString + "]")
 		}
-		sprint, err := ctx.App.Sprint.GetByID(sprintID)
+		sess, err := ctx.App.Sprint.GetByID(sprintID)
 		if err != nil {
 			return "", err
 		}
-		if sprint == nil {
+		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + sprintIDString + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.sprint"), nil
 		}
-		members, err := ctx.App.Sprint.Members.GetByModelID(sprintID)
+
+		params := paramSetFromRequest(r)
+
+		members, err := ctx.App.Sprint.Members.GetByModelID(sprintID, params.Get("member"))
 		if err != nil {
 			return "", err
 		}
-		estimates, err := ctx.App.Estimate.GetBySprint(sprintID, 0)
+		estimates, err := ctx.App.Estimate.GetBySprint(sprintID, params.Get("estimate"))
 		if err != nil {
 			return "", err
 		}
-		standups, err := ctx.App.Standup.GetBySprint(sprintID, 0)
+		standups, err := ctx.App.Standup.GetBySprint(sprintID, params.Get("standup"))
 		if err != nil {
 			return "", err
 		}
-		retros, err := ctx.App.Retro.GetBySprint(sprintID, 0)
+		retros, err := ctx.App.Retro.GetBySprint(sprintID, params.Get("retro"))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint.Key, sprintID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint.Key, sprintID, params.Get("action"))
 		if err != nil {
 			return "", err
 		}
 
-		ctx.Title = sprint.Title
+		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint"), "sprint")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint.detail", "id", sprintIDString), sprint.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint.detail", "id", sprintIDString), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminSprintDetail(sprint, members, estimates, standups, retros, actions, ctx, w))
+		return tmpl(templates.AdminSprintDetail(sess, members, estimates, standups, retros, actions, params, ctx, w))
 	})
 }

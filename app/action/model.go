@@ -1,10 +1,11 @@
 package action
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
-	"github.com/gofrs/uuid"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/gofrs/uuid"
 )
 
 type Action struct {

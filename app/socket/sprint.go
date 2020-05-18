@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
@@ -25,9 +26,9 @@ type SprintSessionJoined struct {
 func onSprintMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
 	switch cmd {
-	case util.ClientCmdConnect:
+	case ClientCmdConnect:
 		err = onSprintConnect(s, conn, userID, param.(string))
-	case util.ClientCmdUpdateSession:
+	case ClientCmdUpdateSession:
 		err = onSprintSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
 	default:
 		err = errors.New("unhandled sprint command [" + cmd + "]")
@@ -56,7 +57,7 @@ func sendSprintSessionUpdate(s *Service, ch channel) error {
 	if sess == nil {
 		return errors.WithStack(errors.Wrap(err, "cannot load sprint session ["+ch.ID.String()+"]"))
 	}
-	msg := Message{Svc: util.SvcSprint.Key, Cmd: util.ServerCmdSessionUpdate, Param: sess}
+	msg := Message{Svc: util.SvcSprint.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending sprint session"))
 }

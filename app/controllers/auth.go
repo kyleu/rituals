@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+	"strings"
+
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/app/web"
-	"net/http"
-	"strings"
 )
 
 func AuthSubmit(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +14,7 @@ func AuthSubmit(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)["key"]
 		host := r.Header.Get("Host")
 		secure := strings.HasSuffix(r.Proto, "s")
-		url := ctx.App.Auth.UrlFor(secure, host, key)
+		url := ctx.App.Auth.URLFor(secure, host, key)
 		if len(url) == 0 {
 			return "", errors.New("invalid auth key [" + key + "]")
 		}

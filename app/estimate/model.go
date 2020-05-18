@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/query"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
 )
@@ -53,7 +55,7 @@ func optionsFromDB(x string) SessionOptions {
 }
 
 func choicesFromDB(s string) []string {
-	ret := util.StringToArray(s)
+	ret := query.StringToArray(s)
 	if len(ret) == 0 {
 		return DefaultChoices
 	}
@@ -100,14 +102,14 @@ type sessionDTO struct {
 
 func (dto *sessionDTO) ToSession() *Session {
 	return &Session{
-		ID:      dto.ID,
-		Slug:    dto.Slug,
-		Title:   dto.Title,
+		ID:       dto.ID,
+		Slug:     dto.Slug,
+		Title:    dto.Title,
 		SprintID: dto.SprintID,
-		Owner:   dto.Owner,
-		Status:  statusFromString(dto.Status),
-		Choices: choicesFromDB(dto.Choices),
-		Options: optionsFromDB(dto.Options),
-		Created: dto.Created,
+		Owner:    dto.Owner,
+		Status:   statusFromString(dto.Status),
+		Choices:  choicesFromDB(dto.Choices),
+		Options:  optionsFromDB(dto.Options),
+		Created:  dto.Created,
 	}
 }

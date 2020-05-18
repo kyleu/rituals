@@ -2,8 +2,9 @@ package standup
 
 import (
 	"database/sql"
-	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -52,22 +53,19 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 	return &model, nil
 }
 
-func (s *Service) List() ([]*Session, error) {
+func (s *Service) List(params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	err := s.db.Select(&dtos, "select * from standup order by created desc")
+	err := s.db.Select(&dtos, query.SQLSelect("*", "standup", "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
 func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 	dto := &sessionDTO{}
-	err := s.db.Get(dto, "select * from standup where id = $1", id)
+	err := s.db.Get(dto, query.SQLSelect("*", "standup", "id = $1", "", 0, 0), id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -79,7 +77,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 
 func (s *Service) GetBySlug(slug string) (*Session, error) {
 	var dto = &sessionDTO{}
-	err := s.db.Get(dto, "select * from standup where slug = $1", slug)
+	err := s.db.Get(dto, query.SQLSelect("*", "standup", "slug = $1", "", 0, 0), slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -89,51 +87,36 @@ func (s *Service) GetBySlug(slug string) (*Session, error) {
 	return dto.ToSession(), nil
 }
 
-func (s *Service) GetByOwner() ([]*Session, error) {
+func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	err := s.db.Select(&dtos, "select * from standup where owner = $1 order by created desc")
+	err := s.db.Select(&dtos, query.SQLSelect("*", "standup", "owner = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
-func (s *Service) GetByMember(userID uuid.UUID, limit int) ([]*Session, error) {
+func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "m.created", Asc: false})
 	var dtos []sessionDTO
-	q := "select x.* from standup x join standup_member m on x.id = m.standup_id where m.user_id = $1 order by m.created desc"
-	if limit > 0 {
-		q += fmt.Sprint(" limit ", limit)
-	}
+	q := query.SQLSelect("x.*", "standup x join standup_member m on x.id = m.standup_id", "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, userID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
-func (s *Service) GetBySprint(sprintID uuid.UUID, limit int) ([]*Session, error) {
+func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	q := "select * from standup where sprint_id = $1 order by created desc"
-	if limit > 0 {
-		q += fmt.Sprint(" limit ", limit)
-	}
+	q := query.SQLSelect("*", "standup", "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, sprintID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Session, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
-	}
-	return ret, nil
+	return toSessions(dtos), nil
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.UUID) error {
@@ -141,4 +124,12 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.U
 	_, err := s.db.Exec(q, title, sessionID)
 	s.actions.Post(util.SvcStandup.Key, sessionID, userID, "update", nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating standup session"))
+}
+
+func toSessions(dtos []sessionDTO) []*Session {
+	ret := make([]*Session, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToSession())
+	}
+	return ret
 }

@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"emperror.dev/errors"
 	"net/http"
 	"strings"
+
+	"emperror.dev/errors"
 
 	"github.com/kyleu/rituals.dev/app/web"
 
@@ -13,9 +14,10 @@ import (
 
 func Profile(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, 0)
+		params := paramSetFromRequest(r)
+		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get("auth"))
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot load auth records for user [" + ctx.Profile.UserID.String() + "]"))
+			return "", errors.WithStack(errors.Wrap(err, "cannot load auth records for user ["+ctx.Profile.UserID.String()+"]"))
 		}
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("profile"), "profile")

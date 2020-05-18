@@ -12,19 +12,21 @@ import (
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
-		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, 5)
+		params := paramSetFromRequest(r)
+
+		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get("sprint"))
 		if err != nil {
 			return "", err
 		}
-		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, 5)
+		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get("estimate"))
 		if err != nil {
 			return "", err
 		}
-		standups, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, 5)
+		standups, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get("standup"))
 		if err != nil {
 			return "", err
 		}
-		retros, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, 5)
+		retros, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get("retro"))
 		if err != nil {
 			return "", err
 		}

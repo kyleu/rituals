@@ -2,8 +2,9 @@ package auth
 
 import (
 	"database/sql"
-	"fmt"
+
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/query"
 )
 
 func (s *Service) NewRecord(r *Record) (*Record, error) {
@@ -24,23 +25,19 @@ func (s *Service) UpdateRecord(r *Record) error {
 	return err
 }
 
-func (s *Service) List() ([]*Record, error) {
+func (s *Service) List(params *query.Params) ([]*Record, error) {
+	params = query.ParamsWithDefaultOrdering("auth", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []recordDTO
-	q := "select * from auth order by created desc"
-	err := s.db.Select(&dtos, q)
+	err := s.db.Select(&dtos, query.SQLSelect("*", "auth", "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Record, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToRecord())
-	}
-	return ret, nil
+	return toRecords(dtos), nil
 }
 
 func (s *Service) GetByID(authID uuid.UUID) (*Record, error) {
 	dto := &recordDTO{}
-	err := s.db.Get(dto, "select * from auth where id = $1", authID)
+	err := s.db.Get(dto, query.SQLSelect("*", "auth", "id = $1", "", 0, 0), authID)
 	if err != nil {
 		return nil, err
 	}
@@ -48,12 +45,8 @@ func (s *Service) GetByID(authID uuid.UUID) (*Record, error) {
 }
 
 func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
-	println("!!!!!!!")
-	println(key)
-	println(code)
-
 	dto := &recordDTO{}
-	err := s.db.Get(dto, "select * from auth where provider = $1 and provider_id = $2", key, code)
+	err := s.db.Get(dto, query.SQLSelect("*", "auth", "provider = $1 and provider_id = $2", "", 0, 0), key, code)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -63,19 +56,20 @@ func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
 	return dto.ToRecord(), nil
 }
 
-func (s *Service) GetByUserID(userID uuid.UUID, limit int) ([]*Record, error) {
+func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) ([]*Record, error) {
+	params = query.ParamsWithDefaultOrdering("auth", params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []recordDTO
-	q := "select * from auth where user_id = $1 order by created desc"
-	if limit > 0 {
-		q += fmt.Sprint(" limit ", limit)
-	}
-	err := s.db.Select(&dtos, q, userID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", "auth", "user_id = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
 		return nil, err
 	}
+	return toRecords(dtos), nil
+}
+
+func toRecords(dtos []recordDTO) []*Record {
 	ret := make([]*Record, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToRecord())
 	}
-	return ret, nil
+	return ret
 }

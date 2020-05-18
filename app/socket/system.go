@@ -13,12 +13,12 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 	}
 	var err error
 	switch cmd {
-	case util.ClientCmdPing:
-		msg := Message{Svc: util.SvcSystem.Key, Cmd: util.ServerCmdPong, Param: param}
+	case ClientCmdPing:
+		msg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdPong, Param: param}
 		err = s.WriteMessage(conn.ID, &msg)
-	case util.ClientCmdUpdateProfile:
+	case ClientCmdUpdateProfile:
 		err = saveName(s, conn, userID, param.(map[string]interface{}))
-	case util.ClientCmdGetActions:
+	case ClientCmdGetActions:
 		err = sendActions(s, conn)
 	default:
 		err = errors.New("unhandled system command [" + cmd + "]")
@@ -30,11 +30,11 @@ func sendActions(s *Service, conn *connection) error {
 	if conn.ModelID == nil {
 		return errors.New("no active model for connection [" + conn.ID.String() + "]")
 	}
-	actions, err := s.actions.GetBySvcModel(conn.Svc, *conn.ModelID)
+	actions, err := s.actions.GetBySvcModel(conn.Svc, *conn.ModelID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot get actions"))
 	}
-	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: util.ServerCmdActions, Param: actions}
+	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdActions, Param: actions}
 	return s.WriteMessage(conn.ID, &actionsMsg)
 }
 

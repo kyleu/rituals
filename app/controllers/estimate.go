@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
-	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"
@@ -14,13 +15,14 @@ import (
 
 func EstimateList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
-		sessions, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, 0)
+		params := paramSetFromRequest(r)
+		sessions, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get("estimate"))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving estimates"))
 		}
 
 		ctx.Title = "Estimation Sessions"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key + ".list"), util.SvcEstimate.Key)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key+".list"), util.SvcEstimate.Key)
 		return tmpl(templates.EstimateList(sessions, ctx, w))
 	})
 }
@@ -56,7 +58,7 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key + ".list"), util.SvcEstimate.Key)
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key+".list"), util.SvcEstimate.Key)
 		if spr != nil {
 			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", spr.Slug), spr.Title)
 		}

@@ -2,8 +2,10 @@ package user
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/action"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/query"
 
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
@@ -27,32 +29,7 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Serv
 	}
 }
 
-func (s *Service) List() ([]*SystemUser, error) {
-	var ret []*SystemUser
-	err := s.db.Select(&ret, "select * from system_user order by created desc")
-	if err != nil {
-		return nil, err
-	}
-	return ret, nil
-}
-
-func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) {
-	ret := &SystemUser{}
-	err := s.db.Get(ret, "select * from system_user where id = $1", id)
-	if err == sql.ErrNoRows {
-		if addIfMissing {
-			return s.CreateNewUser(id)
-		} else {
-			return nil, nil
-		}
-	}
-	if err != nil {
-		return nil, err
-	}
-	return ret, nil
-}
-
-func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
+func (s *Service) New(id uuid.UUID) (*SystemUser, error) {
 	s.logger.Info("creating user [" + id.String() + "]")
 	q := "insert into system_user (id, name, role, theme, nav_color, link_color, picture, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 	prof := util.NewUserProfile(id)
@@ -61,6 +38,32 @@ func (s *Service) CreateNewUser(id uuid.UUID) (*SystemUser, error) {
 		return nil, err
 	}
 	return s.GetByID(id, false)
+}
+
+func (s *Service) List(params *query.Params) ([]*SystemUser, error) {
+	params = query.ParamsWithDefaultOrdering("user", params, &query.Ordering{Column: "created", Asc: false})
+	var ret []*SystemUser
+	err := s.db.Select(&ret, query.SQLSelect("*", "system_user", "", params.OrderByString(), params.Limit, params.Offset))
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
+}
+
+func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) {
+	ret := &SystemUser{}
+	err := s.db.Get(ret, query.SQLSelect("*", "system_user", "id = $1", "", 0, 0), id)
+	if err == sql.ErrNoRows {
+		if addIfMissing {
+			return s.New(id)
+		} else {
+			return nil, nil
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
 
 func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error) {

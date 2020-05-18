@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/rituals.dev/app/query"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/estimate"
@@ -14,54 +16,54 @@ import (
 type EstimateSessionJoined struct {
 	Profile *util.Profile     `json:"profile"`
 	Session *estimate.Session `json:"session"`
-	Members []*member.Entry    `json:"members"`
+	Members []*member.Entry   `json:"members"`
 	Online  []uuid.UUID       `json:"online"`
-	Stories []*estimate.Story  `json:"stories"`
-	Votes   []*estimate.Vote   `json:"votes"`
+	Stories []*estimate.Story `json:"stories"`
+	Votes   []*estimate.Vote  `json:"votes"`
 }
 
 func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
 	switch cmd {
-	case util.ClientCmdConnect:
+	case ClientCmdConnect:
 		p, ok := param.(string)
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as string"))
 		}
 		err = onEstimateConnect(s, conn, userID, p)
-	case util.ClientCmdUpdateSession:
+	case ClientCmdUpdateSession:
 		p, ok := param.(map[string]interface{})
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
 		}
 		err = onEstimateSessionSave(s, *conn.Channel, userID, p)
-	case util.ClientCmdAddStory:
+	case ClientCmdAddStory:
 		p, ok := param.(map[string]interface{})
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
 		}
 		err = onAddStory(s, *conn.Channel, userID, p)
-	case util.ClientCmdUpdateStory:
+	case ClientCmdUpdateStory:
 		p, ok := param.(map[string]interface{})
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
 		}
 		err = onUpdateStory(s, *conn.Channel, userID, p)
-	case util.ClientCmdRemoveStory:
+	case ClientCmdRemoveStory:
 		p, ok := param.(string)
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as string"))
 		}
 		err = onRemoveStory(s, *conn.Channel, userID, p)
-	case util.ClientCmdSetStoryStatus:
+	case ClientCmdSetStoryStatus:
 		p, ok := param.(map[string]interface{})
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
 		}
 		err = onSetStoryStatus(s, *conn.Channel, userID, p)
-	case util.ClientCmdSubmitVote:
+	case ClientCmdSubmitVote:
 		p, ok := param.(map[string]interface{})
-		if(!ok) {
+		if !ok {
 			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
 		}
 		err = onSubmitVote(s, *conn.Channel, userID, p)
@@ -73,7 +75,7 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 
 func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	titleString, ok := param["choices"].(string)
-	if(!ok) {
+	if !ok {
 		return errors.WithStack(errors.New("cannot read choices as string"))
 	}
 	title := util.ServiceTitle(titleString)
@@ -81,7 +83,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"])))
 	}
-	choices := util.StringToArray(choicesString)
+	choices := query.StringToArray(choicesString)
 	if len(choices) == 0 {
 		choices = estimate.DefaultChoices
 	}
@@ -99,13 +101,13 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 func sendEstimateSessionUpdate(s *Service, ch channel) error {
 	est, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding estimate session [" + ch.ID.String() + "]"))
+		return errors.WithStack(errors.Wrap(err, "error finding estimate session ["+ch.ID.String()+"]"))
 	}
 	if est == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load estimate session [" + ch.ID.String() + "]"))
+		return errors.WithStack(errors.Wrap(err, "cannot load estimate session ["+ch.ID.String()+"]"))
 	}
 
-	msg := Message{Svc: util.SvcEstimate.Key, Cmd: util.ServerCmdSessionUpdate, Param: est}
+	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdSessionUpdate, Param: est}
 	err = s.WriteChannel(ch, &msg)
 	return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
 }

@@ -1,4 +1,4 @@
-package util
+package socket
 
 // Client Messages
 const ClientCmdPing = "ping"

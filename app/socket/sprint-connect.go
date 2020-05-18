@@ -30,7 +30,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return errors.WithStack(errors.Wrap(err, "error finding sprint session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint.Key, Cmd: ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing sprint error message"))
 		}
@@ -46,7 +46,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return errors.WithStack(errors.Wrap(err, "error joining sprint as member"))
 	}
 
-	members, err := s.sprints.Members.GetByModelID(ch.ID)
+	members, err := s.sprints.Members.GetByModelID(ch.ID, nil)
 	if err != nil {
 		return err
 	}
@@ -56,22 +56,22 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return err
 	}
 
-	estimates, err := s.estimates.GetBySprint(ch.ID, 0)
+	estimates, err := s.estimates.GetBySprint(ch.ID, nil)
 	if err != nil {
 		return err
 	}
-	standups, err := s.standups.GetBySprint(ch.ID, 0)
+	standups, err := s.standups.GetBySprint(ch.ID, nil)
 	if err != nil {
 		return err
 	}
-	retros, err := s.retros.GetBySprint(ch.ID, 0)
+	retros, err := s.retros.GetBySprint(ch.ID, nil)
 	if err != nil {
 		return err
 	}
 
 	msg := Message{
 		Svc: util.SvcSprint.Key,
-		Cmd: util.ServerCmdSessionJoined,
+		Cmd: ServerCmdSessionJoined,
 		Param: SprintSessionJoined{
 			Profile:   &conn.Profile,
 			Session:   sess,

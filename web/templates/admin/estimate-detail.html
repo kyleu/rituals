@@ -1,4 +1,4 @@
-<%: func AdminEstimateDetail(model *estimate.Session, members []*member.Entry, stories []*estimate.Story, actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminEstimateDetail(model *estimate.Session, members []*member.Entry, stories []*estimate.Story, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -56,7 +56,7 @@
       <% if len(members) == 0 { %>
       <p>No members available</p>
       <% } else { %>
-      <% AdminMemberTable(members, ctx, _buffer) %>
+      <% AdminMemberTable(members, params.Get("member"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -64,7 +64,7 @@
       <% if len(stories) == 0 { %>
         <p>No stories available</p>
       <% } else { %>
-        <% AdminStoryTable(stories, ctx, _buffer) %>
+        <% AdminStoryTable(stories, params.Get("story"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -72,7 +72,7 @@
       <% if len(actions) == 0 { %>
         <p>No actions available</p>
       <% } else { %>
-        <% AdminActionTable(actions, ctx, _buffer) %>
+        <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
 	"net/http"
+
+	"emperror.dev/errors"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/socket"
@@ -23,11 +24,12 @@ func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
 		ctx.Breadcrumbs = bc
 
-		connections, err := ctx.App.Socket.List()
+		p := paramSetFromRequest(r)
+		connections, err := ctx.App.Socket.List(p.Get("socket"))
 		if err != nil {
 			return "", err
 		}
-		return tmpl(templates.AdminConnectionList(connections, ctx, w))
+		return tmpl(templates.AdminConnectionList(connections, p, ctx, w))
 	})
 }
 
@@ -48,7 +50,7 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionIDString), connectionIDString)...)
 		ctx.Breadcrumbs = bc
 
-		msg := socket.Message{Svc: util.SvcSystem.Key, Cmd: util.ServerCmdPong, Param: nil}
+		msg := socket.Message{Svc: util.SvcSystem.Key, Cmd: socket.ServerCmdPong, Param: nil}
 		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))
 	})
 }

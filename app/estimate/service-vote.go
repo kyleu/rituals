@@ -2,41 +2,38 @@ package estimate
 
 import (
 	"database/sql"
+
+	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 )
 
-func (s *Service) GetStoryVotes(storyID uuid.UUID) ([]*Vote, error) {
+func (s *Service) GetStoryVotes(storyID uuid.UUID, params *query.Params) ([]*Vote, error) {
+	params = query.ParamsWithDefaultOrdering("story", params)
 	var dtos []voteDTO
-	err := s.db.Select(&dtos, "select * from vote where story_id = $1", storyID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", "vote", "story_id = $1", params.OrderByString(), params.Limit, params.Offset), storyID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Vote, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToVote())
-	}
-	return ret, nil
+	return toVotes(dtos), nil
 }
 
-func (s *Service) GetEstimateVotes(estimateID uuid.UUID) ([]*Vote, error) {
+func (s *Service) GetEstimateVotes(estimateID uuid.UUID, params *query.Params) ([]*Vote, error) {
+	params = query.ParamsWithDefaultOrdering("vote", params)
 	var dtos []voteDTO
-	err := s.db.Select(&dtos, "select v.* from vote v join story s on v.story_id = s.id where s.estimate_id = $1", estimateID)
+	q := query.SQLSelect("v.*", "vote v join story s on v.story_id = s.id", "s.estimate_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, estimateID)
 	if err != nil {
 		return nil, err
 	}
-	ret := make([]*Vote, 0, len(dtos))
-	for _, dto := range dtos {
-		ret = append(ret, dto.ToVote())
-	}
-	return ret, nil
+	return toVotes(dtos), nil
 }
 
 func (s *Service) GetVote(storyID uuid.UUID, userID uuid.UUID) (*Vote, error) {
 	dto := &voteDTO{}
-	err := s.db.Get(dto, "select * from vote v where v.story_id = $1 and v.user_id = $2", storyID, userID)
+	err := s.db.Get(dto, query.SQLSelect("*", "vote", "story_id = $1 and user_id = $2", "", 0, 0), storyID, userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -79,4 +76,12 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 
 		return curr, nil
 	}
+}
+
+func toVotes(dtos []voteDTO) []*Vote {
+	ret := make([]*Vote, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToVote())
+	}
+	return ret
 }

@@ -34,7 +34,7 @@ func act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 		switch contentType {
 		case "application/json", "text/json":
 			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			b, _ := json.MarshalIndent(ErrorResult{Status:  "error", Message: err.Error()}, "", "  ")
+			b, _ := json.MarshalIndent(ErrorResult{Status: "error", Message: err.Error()}, "", "  ")
 			_, _ = w.Write(b)
 		default:
 			_, _ = templates.InternalServerError(util.GetErrorDetail(err), r, ctx, w)
@@ -54,7 +54,7 @@ func act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 
 func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
-		if(ctx.Profile.Role != util.RoleAdmin) {
+		if ctx.Profile.Role != util.RoleAdmin {
 			ctx.Session.AddFlash("error:You're not an administrator, silly")
 			saveSession(w, r, ctx)
 			return ctx.Route("home"), nil

@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -20,11 +21,12 @@ func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
 		ctx.Breadcrumbs = bc
 
-		standups, err := ctx.App.Standup.List()
+		params := paramSetFromRequest(r)
+		standups, err := ctx.App.Standup.List(params.Get("standup"))
 		if err != nil {
 			return "", err
 		}
-		return tmpl(templates.AdminStandupList(standups, ctx, w))
+		return tmpl(templates.AdminStandupList(standups, params, ctx, w))
 	})
 }
 
@@ -35,34 +37,37 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.New("invalid standup id [" + standupIDString + "]")
 		}
-		standup, err := ctx.App.Standup.GetByID(standupID)
+		sess, err := ctx.App.Standup.GetByID(standupID)
 		if err != nil {
 			return "", err
 		}
-		if standup == nil {
+		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + standupIDString + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.standup"), nil
 		}
-		members, err := ctx.App.Standup.Members.GetByModelID(standupID)
+
+		params := paramSetFromRequest(r)
+
+		members, err := ctx.App.Standup.Members.GetByModelID(standupID, params.Get("member"))
 		if err != nil {
 			return "", err
 		}
-		reports, err := ctx.App.Standup.GetReports(standupID)
+		reports, err := ctx.App.Standup.GetReports(standupID, params.Get("report"))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, standupID)
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, standupID, params.Get("action"))
 		if err != nil {
 			return "", err
 		}
 
-		ctx.Title = standup.Title
+		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), standup.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupIDString), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminStandupDetail(standup, members, reports, actions, ctx, w))
+		return tmpl(templates.AdminStandupDetail(sess, members, reports, actions, params, ctx, w))
 	})
 }

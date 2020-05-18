@@ -1,0 +1,20 @@
+<%: func SandboxRun(sb *sandbox.Sandbox, content string, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title"><%= sb.Title %></h3>
+      <div class="uk-margin-top">
+        <% if sb.Key == "gallery" { %>
+          <% SandboxGallery(ctx, _buffer) %>
+        <% } else { %>
+          <pre><%= content %></pre>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

@@ -31,7 +31,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return errors.WithStack(errors.Wrap(err, "error finding retro session"))
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: util.ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdError, Param: "invalid session"})
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error writing error message"))
 		}
@@ -55,7 +55,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		}
 	}
 
-	members, err := s.retros.Members.GetByModelID(ch.ID)
+	members, err := s.retros.Members.GetByModelID(ch.ID, nil)
 	if err != nil {
 		return err
 	}
@@ -65,14 +65,14 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return err
 	}
 
-	feedback, err := s.retros.GetFeedback(ch.ID)
+	feedback, err := s.retros.GetFeedback(ch.ID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding feedback for retro"))
 	}
 
 	msg := Message{
 		Svc: util.SvcRetro.Key,
-		Cmd: util.ServerCmdSessionJoined,
+		Cmd: ServerCmdSessionJoined,
 		Param: RetroSessionJoined{
 			Profile:  &conn.Profile,
 			Session:  sess,

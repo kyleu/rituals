@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"github.com/gofrs/uuid"
 	"time"
+
+	"github.com/gofrs/uuid"
 )
 
 type Provider struct {

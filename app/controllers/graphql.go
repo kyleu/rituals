@@ -1,15 +1,18 @@
 package controllers
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+
+	"emperror.dev/errors"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/gql"
-	"io"
-	"io/ioutil"
-	"net/http"
+	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/web"
 
@@ -42,17 +45,17 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		}
 		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(errors.WithStack(errors.Wrap(err, "cannot read JSON body for GraphQL"))))
+			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "cannot read JSON body for GraphQL"))))
 		}
 		err = r.Body.Close()
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(errors.WithStack(errors.Wrap(err, "cannot close body for GraphQL"))))
+			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "cannot close body for GraphQL"))))
 		}
 
 		var req map[string]interface{}
 		err = json.Unmarshal(body, &req)
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))))
+			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))))
 		}
 		op := ""
 		opParam, ok := req["operationName"]
@@ -71,9 +74,9 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 			v = variables.(map[string]interface{})
 		}
 
-		res, err := svc.Run(op, query, v)
+		res, err := svc.Run(op, query, v, ctx)
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(errors.WithStack(errors.Wrap(err, "error running GraphQL"))))
+			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "error running GraphQL"))))
 		}
 
 		return graphQLResponse(w, res)
@@ -106,12 +109,13 @@ func prepareService(app *config.AppInfo) error {
 	return nil
 }
 
-func errorResponseJSON(errors ...error) *graphql.Result {
+func errorResponseJSON(logger logur.Logger, errors ...error) *graphql.Result {
 	var errs []gqlerrors.FormattedError
 	for _, err := range errors {
+		logger.Warn(fmt.Sprintf("error running GraphQL: %+v", err))
 		errs = append(errs, gqlerrors.FormattedError{Message: err.Error()})
 	}
 	return &graphql.Result{
-		Errors:     errs,
+		Errors: errs,
 	}
 }

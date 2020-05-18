@@ -19,11 +19,12 @@ func AdminAuthList(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.auth"), "auths")...)
 		ctx.Breadcrumbs = bc
 
-		users, err := ctx.App.Auth.List()
+		params := paramSetFromRequest(r)
+		users, err := ctx.App.Auth.List(params.Get("auth"))
 		if err != nil {
 			return "", err
 		}
-		return tmpl(templates.AdminAuthList(users, ctx, w))
+		return tmpl(templates.AdminAuthList(users, params, ctx, w))
 	})
 }
 
@@ -34,22 +35,22 @@ func AdminAuthDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.New("invalid auth id [" + authIDString + "]")
 		}
-		auth, err := ctx.App.Auth.GetByID(authID)
+		record, err := ctx.App.Auth.GetByID(authID)
 		if err != nil {
 			return "", err
 		}
-		if auth == nil {
+		if record == nil {
 			ctx.Session.AddFlash("error:Can't load auth [" + authIDString + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.auth"), nil
 		}
 
-		user, err := ctx.App.User.GetByID(auth.UserID, false)
+		user, err := ctx.App.User.GetByID(record.UserID, false)
 		if err != nil {
 			return "", err
 		}
 		if user == nil {
-			ctx.Session.AddFlash("error:Can't load user [" + auth.UserID.String() + "]")
+			ctx.Session.AddFlash("error:Can't load user [" + record.UserID.String() + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.auth"), nil
 		}
@@ -60,6 +61,6 @@ func AdminAuthDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.auth.detail", "id", authIDString), authIDString[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminAuthDetail(auth, user, ctx, w))
+		return tmpl(templates.AdminAuthDetail(record, user, ctx, w))
 	})
 }

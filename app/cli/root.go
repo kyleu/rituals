@@ -1,10 +1,13 @@
 package cli
 
 import (
+	"fmt"
+	"net/http"
+	"os"
+
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	logurhandler "emperror.dev/handler/logur"
-	"fmt"
 	"github.com/gorilla/handlers"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
@@ -20,8 +23,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/spf13/cobra"
 	"logur.dev/logur"
-	"net/http"
-	"os"
 )
 
 var verbose bool
@@ -54,7 +55,7 @@ func Configure(version string, commitHash string) cobra.Command {
 func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	_ = os.Setenv("TZ", "UTC")
 
-	logger := util.InitLogging(verbose)
+	logger := initLogging(verbose)
 	logger = logur.WithFields(logger, map[string]interface{}{"debug": verbose, "version": version, "commit": commitHash})
 
 	errorHandler := logurhandler.New(logger)

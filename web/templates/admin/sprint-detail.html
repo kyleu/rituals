@@ -1,4 +1,4 @@
-<%: func AdminSprintDetail(model *sprint.Session, members []*member.Entry, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminSprintDetail(model *sprint.Session, members []*member.Entry, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -44,7 +44,7 @@
         <% if len(members) == 0 { %>
       <p>No members available</p>
       <% } else { %>
-        <% AdminMemberTable(members, ctx, _buffer) %>
+        <% AdminMemberTable(members, params.Get("member"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -52,7 +52,7 @@
       <% if len(estimates) == 0 { %>
       <p>No estimates available</p>
       <% } else { %>
-      <% AdminEstimateTable(estimates, ctx, _buffer) %>
+      <% AdminEstimateTable(estimates, params.Get("estimate"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -60,7 +60,7 @@
       <% if len(standups) == 0 { %>
       <p>No standups available</p>
       <% } else { %>
-      <% AdminStandupTable(standups, ctx, _buffer) %>
+      <% AdminStandupTable(standups, params.Get("standup"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -68,7 +68,7 @@
       <% if len(retros) == 0 { %>
         <p>No retros available</p>
       <% } else { %>
-        <% AdminRetroTable(retros, ctx, _buffer) %>
+        <% AdminRetroTable(retros, params.Get("retro"), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -76,7 +76,7 @@
       <% if len(actions) == 0 { %>
         <p>No actions available</p>
       <% } else { %>
-        <% AdminActionTable(actions, ctx, _buffer) %>
+        <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

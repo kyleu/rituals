@@ -2,11 +2,12 @@ package auth
 
 import (
 	"context"
+
 	"emperror.dev/errors"
 	"golang.org/x/oauth2"
 )
 
-func callbackUrl(secure bool, host string, k string) string {
+func callbackURL(secure bool, host string, k string) string {
 	if secure {
 		return "https://" + host + "/auth/callback/" + k
 	}
@@ -29,7 +30,7 @@ func (s *Service) getConfig(secure bool, host string, key string) *oauth2.Config
 	}
 }
 
-func (s *Service) UrlFor(secure bool, host string, key string) string {
+func (s *Service) URLFor(secure bool, host string, key string) string {
 	cfg := s.getConfig(secure, host, key)
 	if cfg == nil {
 		return ""

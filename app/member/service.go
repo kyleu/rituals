@@ -3,9 +3,11 @@ package member
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/query"
 )
 
 type Service struct {
@@ -28,9 +30,10 @@ func NewService(actions *action.Service, db *sqlx.DB, svc string) *Service {
 
 const nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
-func (s *Service) GetByModelID(id uuid.UUID) ([]*Entry, error) {
+func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) ([]*Entry, error) {
+	params = query.ParamsWithDefaultOrdering("member", params, &query.Ordering{Column: "lower(name)", Asc: true})
 	var dtos []entryDTO
-	q := fmt.Sprintf("select user_id, %s, role, created from %s where %s = $1 order by lower(name)", nameClause, s.tableName, s.colName)
+	q := query.SQLSelect(fmt.Sprintf("user_id, %s, role, created", nameClause), s.tableName, fmt.Sprintf("%s = $1", s.colName), params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
 		return nil, err
@@ -44,7 +47,7 @@ func (s *Service) GetByModelID(id uuid.UUID) ([]*Entry, error) {
 
 func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	dto := entryDTO{}
-	q := fmt.Sprintf("select user_id, %s, role, created from %s where %s = $1 and user_id = $2", nameClause, s.tableName, s.colName)
+	q := query.SQLSelect(fmt.Sprintf("user_id, %s, role, created", nameClause), s.tableName, fmt.Sprintf("%s = $1 and user_id = $2", s.colName), "", 0, 0)
 	err := s.db.Get(&dto, q, modelID, userID)
 	if err == sql.ErrNoRows {
 		return nil, nil
