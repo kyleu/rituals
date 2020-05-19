@@ -2,8 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/sprint"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/sprint"
 
 	"github.com/kyleu/rituals.dev/app/query"
 
@@ -104,7 +105,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 
 	curr, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading estimate session [" + ch.ID.String() + "] for update"))
+		return errors.WithStack(errors.Wrap(err, "error loading estimate session ["+ch.ID.String()+"] for update"))
 	}
 
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
@@ -119,7 +120,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
 	}
 
-	if(sprintChanged) {
+	if sprintChanged {
 		spr := s.sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, spr)
 		if err != nil {

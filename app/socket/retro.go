@@ -2,9 +2,10 @@ package socket
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/sprint"
-	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -65,7 +66,7 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 
 	curr, err := s.retros.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading retro session [" + ch.ID.String() + "] for update"))
+		return errors.WithStack(errors.Wrap(err, "error loading retro session ["+ch.ID.String()+"] for update"))
 	}
 
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
@@ -80,7 +81,7 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		return errors.WithStack(errors.Wrap(err, "error sending retro session"))
 	}
 
-	if(sprintChanged) {
+	if sprintChanged {
 		spr := s.sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, spr)
 		if err != nil {

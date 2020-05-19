@@ -61,10 +61,10 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		Svc: util.SvcTeam.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: TeamSessionJoined{
-			Profile:   &conn.Profile,
-			Session:   sess,
-			Members:   members,
-			Online:    online,
+			Profile: &conn.Profile,
+			Session: sess,
+			Members: members,
+			Online:  online,
 		},
 	}
 

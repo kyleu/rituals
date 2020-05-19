@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"

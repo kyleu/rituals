@@ -2,9 +2,10 @@ package web
 
 import (
 	"fmt"
-	"github.com/gofrs/uuid"
 	"net/http"
 	"net/url"
+
+	"github.com/gofrs/uuid"
 
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/util"

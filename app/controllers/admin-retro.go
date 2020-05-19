@@ -18,7 +18,7 @@ func AdminRetroList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = util.SvcRetro.Title + " List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin." + util.SvcRetro.Key), util.SvcRetro.Key)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin."+util.SvcRetro.Key), util.SvcRetro.Key)...)
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)

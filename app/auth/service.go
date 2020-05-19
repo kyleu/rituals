@@ -60,6 +60,9 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 		if curr.UserID == profile.UserID {
 			record.ID = curr.ID
 			err = s.UpdateRecord(record)
+			if err != nil {
+				return nil, errors.WithStack(errors.Wrap(err, "error updating auth record"))
+			}
 			return s.mergeProfile(profile, record)
 		} else {
 			s.logger.Warn("TODO insert auth record with conflicting users")

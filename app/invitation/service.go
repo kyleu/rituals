@@ -2,8 +2,9 @@ package invitation
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/util"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"

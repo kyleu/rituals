@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/sprint"
@@ -101,7 +102,6 @@ func setSprint(s *Service, conn *connection, userID uuid.UUID, param interface{}
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, fmt.Sprintf("cannot remove %v [%v] from sprint [%v]", conn.Svc, conn.ModelID, sprintID)))
 		}
-
 	} else {
 		sprP, err := s.sprints.AssignSprint(conn.Svc, conn.ModelID, userID, nil)
 		spr = sprP

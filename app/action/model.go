@@ -9,35 +9,35 @@ import (
 )
 
 const (
-  ActCreate = "create"
-  ActConnect = "connect"
-	ActUpdate = "update"
+	ActCreate  = "create"
+	ActConnect = "connect"
+	ActUpdate  = "update"
 
 	ActAssignSprint = "assign-sprint"
 
-	ActContentAdd = "content-add"
-  ActContentUpdate = "content-update"
-  ActContentRemove = "content-remove"
+	ActContentAdd    = "content-add"
+	ActContentUpdate = "content-update"
+	ActContentRemove = "content-remove"
 
-  ActFeedbackAdd = "feedback-add"
-  ActFeedbackUpdate = "feedback-update"
-  ActFeedbackRemove = "feedback-remove"
+	ActFeedbackAdd    = "feedback-add"
+	ActFeedbackUpdate = "feedback-update"
+	ActFeedbackRemove = "feedback-remove"
 
-  ActMemberAdd = "member-add"
-  ActMemberUpdate = "member-update"
-  ActMemberRemove = "member-remove"
+	ActMemberAdd    = "member-add"
+	ActMemberUpdate = "member-update"
+	ActMemberRemove = "member-remove"
 
-  ActReportAdd = "report-add"
-  ActReportUpdate = "report-update"
-  ActReportRemove = "report-remove"
+	ActReportAdd    = "report-add"
+	ActReportUpdate = "report-update"
+	ActReportRemove = "report-remove"
 
-  ActStoryAdd = "story-add"
-  ActStoryUpdate = "story-update"
-  ActStoryRemove = "story-remove"
-  ActStoryStatus = "story-status"
+	ActStoryAdd    = "story-add"
+	ActStoryUpdate = "story-update"
+	ActStoryRemove = "story-remove"
+	ActStoryStatus = "story-status"
 
-  ActVoteAdd = "vote-add"
-  ActVoteUpdate = "vote-update"
+	ActVoteAdd    = "vote-add"
+	ActVoteUpdate = "vote-update"
 )
 
 type Action struct {

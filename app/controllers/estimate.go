@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
-	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"

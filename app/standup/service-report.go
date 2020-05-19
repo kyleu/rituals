@@ -1,8 +1,9 @@
 package standup
 
 import (
-	"github.com/kyleu/rituals.dev/app/action"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/action"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/query"

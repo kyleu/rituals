@@ -50,14 +50,14 @@ func choicesFromDB(s string) []string {
 }
 
 type Session struct {
-	ID       uuid.UUID      `json:"id"`
-	Slug     string         `json:"slug"`
-	Title    string         `json:"title"`
-	SprintID *uuid.UUID     `json:"sprintID"`
-	Owner    uuid.UUID      `json:"owner"`
-	Status   Status         `json:"status"`
-	Choices  []string       `json:"choices"`
-	Created  time.Time      `json:"created"`
+	ID       uuid.UUID  `json:"id"`
+	Slug     string     `json:"slug"`
+	Title    string     `json:"title"`
+	SprintID *uuid.UUID `json:"sprintID"`
+	Owner    uuid.UUID  `json:"owner"`
+	Status   Status     `json:"status"`
+	Choices  []string   `json:"choices"`
+	Created  time.Time  `json:"created"`
 }
 
 func NewSession(title string, slug string, userID uuid.UUID, sprintID *uuid.UUID) Session {

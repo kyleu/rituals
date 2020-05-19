@@ -2,6 +2,7 @@ package sprint
 
 import (
 	"database/sql"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
@@ -115,7 +116,7 @@ func (s *Service) AssignSprint(svc string, sessionID *uuid.UUID, userID uuid.UUI
 	_, err := s.db.Exec(q, sprintID, sessionID)
 	s.actions.Post(svc, *sessionID, userID, action.ActAssignSprint, sprintID, "")
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error updating sprint for " + svc + " session"))
+		return nil, errors.WithStack(errors.Wrap(err, "error updating sprint for "+svc+" session"))
 	}
 	if sprintID == nil {
 		return nil, nil

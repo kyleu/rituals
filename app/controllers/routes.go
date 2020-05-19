@@ -14,7 +14,7 @@ import (
 
 const (
 	routesKey = "routes"
-  infoKey = "info"
+	infoKey   = "info"
 )
 
 func BuildRouter(app *config.AppInfo) (*mux.Router, error) {

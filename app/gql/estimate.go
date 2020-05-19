@@ -26,10 +26,10 @@ func initEstimate() {
 	estimateStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "EstimateStatus",
 		Values: graphql.EnumValueConfigMap{
-			"new": &graphql.EnumValueConfig{Value: "new"},
-			"active": &graphql.EnumValueConfig{Value: "active"},
+			"new":      &graphql.EnumValueConfig{Value: "new"},
+			"active":   &graphql.EnumValueConfig{Value: "active"},
 			"complete": &graphql.EnumValueConfig{Value: "complete"},
-			"deleted": &graphql.EnumValueConfig{Value: "deleted"},
+			"deleted":  &graphql.EnumValueConfig{Value: "deleted"},
 		},
 	})
 

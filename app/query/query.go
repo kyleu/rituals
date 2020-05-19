@@ -2,9 +2,10 @@ package query
 
 import (
 	"fmt"
-	"logur.dev/logur"
 	"net/url"
 	"strings"
+
+	"logur.dev/logur"
 )
 
 type Ordering struct {

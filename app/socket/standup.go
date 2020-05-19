@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/sprint"
@@ -55,7 +56,7 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 
 	curr, err := s.standups.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading standup session [" + ch.ID.String() + "] for update"))
+		return errors.WithStack(errors.Wrap(err, "error loading standup session ["+ch.ID.String()+"] for update"))
 	}
 
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
@@ -70,14 +71,13 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 		return errors.WithStack(errors.Wrap(err, "error sending standup session"))
 	}
 
-	if(sprintChanged) {
+	if sprintChanged {
 		spr := s.sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, spr)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated standup session"))
 		}
 	}
-
 
 	return nil
 }

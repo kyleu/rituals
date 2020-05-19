@@ -2,8 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/team"
 	"sync"
+
+	"github.com/kyleu/rituals.dev/app/team"
 
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/query"

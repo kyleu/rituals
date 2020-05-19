@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
 

@@ -26,7 +26,7 @@ func initStandup() {
 	standupStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "StandupStatus",
 		Values: graphql.EnumValueConfigMap{
-			"new": &graphql.EnumValueConfig{Value: "new"},
+			"new":     &graphql.EnumValueConfig{Value: "new"},
 			"deleted": &graphql.EnumValueConfig{Value: "deleted"},
 		},
 	})

@@ -11,10 +11,10 @@ import (
 )
 
 type TeamSessionJoined struct {
-	Profile   *util.Profile       `json:"profile"`
-	Session   *team.Session     `json:"session"`
-	Members   []*member.Entry     `json:"members"`
-	Online    []uuid.UUID         `json:"online"`
+	Profile *util.Profile   `json:"profile"`
+	Session *team.Session   `json:"session"`
+	Members []*member.Entry `json:"members"`
+	Online  []uuid.UUID     `json:"online"`
 }
 
 func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {

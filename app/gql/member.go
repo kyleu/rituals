@@ -15,8 +15,8 @@ func initMember() {
 	memberRoleType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "MemberRole",
 		Values: graphql.EnumValueConfigMap{
-			"owner": &graphql.EnumValueConfig{Value: "owner"},
-			"member": &graphql.EnumValueConfig{Value: "member"},
+			"owner":    &graphql.EnumValueConfig{Value: "owner"},
+			"member":   &graphql.EnumValueConfig{Value: "member"},
 			"observer": &graphql.EnumValueConfig{Value: "observer"},
 		},
 	})

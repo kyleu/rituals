@@ -2,11 +2,12 @@ package cli
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/kyleu/rituals.dev/app/invitation"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/team"
-	"net/http"
-	"os"
 
 	"emperror.dev/emperror"
 	"emperror.dev/errors"

@@ -8,11 +8,11 @@ import (
 )
 
 var (
-	teamArgs             graphql.FieldConfigArgument
-	teamResolver         Callback
-	teamsResolver        Callback
-	teamMemberResolver   Callback
-	teamType             *graphql.Object
+	teamArgs           graphql.FieldConfigArgument
+	teamResolver       Callback
+	teamsResolver      Callback
+	teamMemberResolver Callback
+	teamType           *graphql.Object
 )
 
 func initTeam() {

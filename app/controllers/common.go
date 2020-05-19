@@ -3,10 +3,11 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gofrs/uuid"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/gofrs/uuid"
 
 	"emperror.dev/errors"
 

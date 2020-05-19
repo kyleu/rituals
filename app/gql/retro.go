@@ -26,7 +26,7 @@ func initRetro() {
 	retroStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "RetroStatus",
 		Values: graphql.EnumValueConfigMap{
-			"new": &graphql.EnumValueConfig{Value: "new"},
+			"new":     &graphql.EnumValueConfig{Value: "new"},
 			"deleted": &graphql.EnumValueConfig{Value: "deleted"},
 		},
 	})
