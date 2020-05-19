@@ -19,7 +19,7 @@ type Service struct {
 }
 
 func NewService(db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "action"})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAction})
 	svc := Service{
 		db:     db,
 		logger: logger,
@@ -48,9 +48,9 @@ func (s *Service) Post(svc string, modelID uuid.UUID, authorID uuid.UUID, act st
 }
 
 func (s *Service) List(params *query.Params) ([]*Action, error) {
-	params = query.ParamsWithDefaultOrdering("action", params, &query.Ordering{Column: "occurred", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
 	var dtos []actionDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "action", "", params.OrderByString(), params.Limit, params.Offset))
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (s *Service) List(params *query.Params) ([]*Action, error) {
 
 func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 	dto := &actionDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "action", "id = $1", "", 0, 0), id)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyAction, "id = $1", "", 0, 0), id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -70,9 +70,9 @@ func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 }
 
 func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) ([]*Action, error) {
-	params = query.ParamsWithDefaultOrdering("action", params, &query.Ordering{Column: "occurred", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
 	var dtos []actionDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "action", "author_id = $1", params.OrderByString(), params.Limit, params.Offset), id)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset), id)
 	if err != nil {
 		return nil, err
 	}
@@ -80,9 +80,9 @@ func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) ([]*Action, er
 }
 
 func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Params) ([]*Action, error) {
-	params = query.ParamsWithDefaultOrdering("action", params, &query.Ordering{Column: "occurred", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
 	var dtos []actionDTO
-	q := query.SQLSelect("*", "action", "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", util.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, svc, modelID)
 	if err != nil {
 		return nil, err

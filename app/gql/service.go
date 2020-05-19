@@ -78,11 +78,14 @@ func initSchema() {
 	if !graphQLInitialized {
 		graphQLInitialized = true
 
+		initMember()
+
 		initEstimate()
 		initStandup()
 		initRetro()
 
 		initSprint()
+		initTeam()
 		initProfile()
 		initSandbox()
 	}

@@ -1,4 +1,4 @@
-<%: func AdminInviteList(invites []*invite.Invitation, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminInvitationList(invitations []*invitation.Invitation, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Invitations</h3>
-      <% AdminInviteTable(invites, params.Get("invite"), ctx, _buffer) %>
+      <% AdminInvitationTable(invitations, params.Get(util.KeyInvitation, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

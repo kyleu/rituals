@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -20,7 +21,7 @@ func AdminActionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		actions, err := ctx.App.Action.List(params.Get("action"))
+		actions, err := ctx.App.Action.List(params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}

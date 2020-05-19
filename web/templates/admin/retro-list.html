@@ -6,8 +6,8 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <h3 class="uk-card-title">Retrospectives</h3>
-      <% AdminRetroTable(retros, params.Get("retro"), ctx, _buffer) %>
+      <h3 class="uk-card-title"><%= util.SvcRetro.PluralTitle %></h3>
+      <% AdminRetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

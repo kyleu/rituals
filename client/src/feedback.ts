@@ -23,11 +23,7 @@ namespace feedback {
   export function onSubmitFeedback() {
     const category = util.req<HTMLInputElement>("#retro-feedback-category").value;
     const content = util.req<HTMLInputElement>("#retro-feedback-content").value;
-    const msg = {
-      svc: services.retro.key,
-      cmd: command.client.addFeedback,
-      param: {category: category, content: content},
-    };
+    const msg = {svc: services.retro.key, cmd: command.client.addFeedback, param: {category: category, content: content}};
     socket.send(msg);
     return false;
   }
@@ -36,11 +32,7 @@ namespace feedback {
     const id = retro.cache.activeFeedback;
     const category = util.req<HTMLInputElement>("#retro-feedback-edit-category").value;
     const content = util.req<HTMLInputElement>("#retro-feedback-edit-content").value;
-    const msg = {
-      svc: services.retro.key,
-      cmd: command.client.updateFeedback,
-      param: {id: id, category: category, content: content},
-    };
+    const msg = {svc: services.retro.key, cmd: command.client.updateFeedback, param: {id: id, category: category, content: content}};
     socket.send(msg);
     return false;
   }
@@ -48,11 +40,7 @@ namespace feedback {
   export function onRemoveFeedback() {
     const id = retro.cache.activeFeedback;
     if(id && confirm("Delete this feedback?")) {
-      const msg = {
-        svc: services.retro.key,
-        cmd: command.client.removeFeedback,
-        param: id,
-      };
+      const msg = {svc: services.retro.key, cmd: command.client.removeFeedback, param: id};
       socket.send(msg);
       UIkit.modal("#modal-feedback").hide();
     }
@@ -137,7 +125,7 @@ namespace feedback {
     }
 
     let ret = categories.map(toCollection);
-    const extras = feedback.filter(r => categories.indexOf(r.category) == -1);
+    const extras = feedback.filter(r => categories.indexOf(r.category) === -1);
     if (extras.length > 0) {
       ret.push({category: "unknown", feedback: extras})
     }

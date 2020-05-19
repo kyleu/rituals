@@ -2,6 +2,7 @@ package query
 
 import (
 	"fmt"
+	"logur.dev/logur"
 	"net/url"
 	"strings"
 )
@@ -83,12 +84,15 @@ func (p *Params) ToQueryString(u *url.URL) string {
 	return ret.Encode()
 }
 
-func (p *Params) Filtered() *Params {
+func (p *Params) Filtered(logger logur.Logger) *Params {
 	if len(p.Orderings) > 0 {
 		allowed := make([]*Ordering, 0)
 		for _, o := range p.Orderings {
 			containsCol := false
-			available, _ := allowedColumns[p.Key]
+			available, ok := allowedColumns[p.Key]
+			if !ok {
+				logger.Warn("no columns available for [" + p.Key + "]")
+			}
 			for _, c := range available {
 				if c == o.Column {
 					containsCol = true
@@ -97,6 +101,8 @@ func (p *Params) Filtered() *Params {
 
 			if containsCol {
 				allowed = append(allowed, o)
+			} else {
+				logger.Warn("no column [" + o.Column + "] available in allowed columns for [" + p.Key + "]")
 			}
 		}
 		return &Params{Key: p.Key, Orderings: allowed, Limit: p.Limit, Offset: p.Offset}
@@ -107,10 +113,10 @@ func (p *Params) Filtered() *Params {
 
 type ParamSet map[string]*Params
 
-func (s ParamSet) Get(key string) *Params {
+func (s ParamSet) Get(key string, logger logur.Logger) *Params {
 	x, ok := s[key]
 	if !ok {
 		return nil
 	}
-	return x.Filtered()
+	return x.Filtered(logger)
 }

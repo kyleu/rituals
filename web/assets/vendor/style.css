@@ -12254,6 +12254,20 @@ html.uk-dark, body.uk-dark {
   color: #999;
 }
 
+.h1-icon {
+  float: left;
+  margin: 10px 14px 0 0;
+}
+
+h3 a:hover {
+  text-decoration: none;
+}
+
+.h3-icon {
+  float: left;
+  margin: 7px 12px 0 0;
+}
+
 .frame {
   border-top: 1px solid #666;
   padding: 12px;
@@ -12321,7 +12335,7 @@ html.uk-dark, body.uk-dark {
   cursor: pointer;
 }
 
-#model-title {
+#model-title, .model-icon {
   cursor: pointer;
 }
 

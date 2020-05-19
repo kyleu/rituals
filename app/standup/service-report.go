@@ -1,6 +1,7 @@
 package standup
 
 import (
+	"github.com/kyleu/rituals.dev/app/action"
 	"time"
 
 	"emperror.dev/errors"
@@ -24,7 +25,7 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	}
 
 	actionContent := map[string]interface{}{"reportID": id}
-	s.actions.Post(util.SvcStandup.Key, standupID, authorID, "add-report", actionContent, "")
+	s.actions.Post(util.SvcStandup.Key, standupID, authorID, action.ActReportAdd, actionContent, "")
 
 	return s.GetReportByID(id)
 }
@@ -32,9 +33,9 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 var defaultReportOrdering = []*query.Ordering{{Column: "d", Asc: false}, {Column: "created", Asc: false}}
 
 func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Report, error) {
-	params = query.ParamsWithDefaultOrdering("report", params, defaultReportOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyReport, params, defaultReportOrdering...)
 	var dtos []reportDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "report", "standup_id = $1", params.OrderByString(), params.Limit, params.Offset), standupID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyReport, "standup_id = $1", params.OrderByString(), params.Limit, params.Offset), standupID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Repo
 
 func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	dto := &reportDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "report", "id = $1", "", 0, 0), reportID)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyReport, "id = $1", "", 0, 0), reportID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +57,7 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelect("standup_id", "report", "id = $1", "", 0, 0)
+	q := query.SQLSelect("standup_id", util.KeyReport, "id = $1", "", 0, 0)
 	err := s.db.Get(&ret, q, reportID)
 	if err != nil {
 		return nil, err
@@ -79,7 +80,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	}
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.actions.Post(util.SvcStandup.Key, report.StandupID, authorID, "update-report", actionContent, "")
+	s.actions.Post(util.SvcStandup.Key, report.StandupID, authorID, action.ActReportUpdate, actionContent, "")
 
 	return report, err
 }
@@ -97,7 +98,7 @@ func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 	_, err = s.db.Exec(q, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.actions.Post(util.SvcStandup.Key, report.StandupID, userID, "remove-report", actionContent, "")
+	s.actions.Post(util.SvcStandup.Key, report.StandupID, userID, action.ActReportRemove, actionContent, "")
 
 	return err
 }

@@ -38,16 +38,12 @@ namespace story {
     if (story === undefined) {
       return;
     }
-    const msg = {
-      svc: services.estimate.key,
-      cmd: command.client.setStoryStatus,
-      param: {storyID: story.id, status: s},
-    };
+    const msg = {svc: services.estimate.key, cmd: command.client.setStoryStatus, param: {storyID: story.id, status: s}};
     socket.send(msg);
   }
 
   export function setStoryStatus(storyID: string, status: string, currStory: story.Story | null, calcTotal: boolean) {
-    if (currStory !== null && currStory!.status == "complete") {
+    if (currStory !== null && currStory!.status === "complete") {
       if (currStory!.finalVote.length > 0) {
         status = currStory!.finalVote;
       }
@@ -61,7 +57,7 @@ namespace story {
   export function onStoryStatusChange(u: estimate.StoryStatusChange) {
     let currStory: Story | null = null;
     estimate.cache.stories.forEach(s => {
-      if (s.id == u.storyID) {
+      if (s.id === u.storyID) {
         currStory = s;
         s.finalVote = u.finalVote;
         s.status = u.status;

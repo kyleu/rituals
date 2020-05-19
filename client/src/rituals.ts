@@ -19,9 +19,8 @@ namespace rituals {
     id: string;
     slug: string;
     title: string;
-    sprintID: string;
+    sprintID?: string;
     owner: string;
-    status: { key: string };
     created: string;
   }
 
@@ -33,11 +32,16 @@ namespace rituals {
   }
 
   export function onSocketMessage(msg: Message) {
-    console.debug("message received");
-    console.debug(msg);
+    if(debug) {
+      console.debug("message received");
+      console.debug(msg);
+    }
     switch (msg.svc) {
       case services.system.key:
         onSystemMessage(msg.cmd, msg.param);
+        break;
+      case services.team.key:
+        team.onTeamMessage(msg.cmd, msg.param);
         break;
       case services.sprint.key:
         sprint.onSprintMessage(msg.cmd, msg.param);
@@ -60,6 +64,10 @@ namespace rituals {
     system.cache.session = session;
     util.setText("#model-title", session.title);
     util.setValue("#model-title-input", session.title);
+    const removeFromSprintButton = util.els("#remove-from-sprint-button");
+    if(removeFromSprintButton.length > 0) {
+      removeFromSprintButton[0].style.display = session.sprintID ? "block" : "none";
+    }
     let items = util.els("#navbar .uk-navbar-item");
     if (items.length > 0) {
       items[items.length - 1].innerText = session.title;
@@ -84,6 +92,9 @@ namespace rituals {
         break;
       case command.server.actions:
         action.viewActions(param as action.Action[]);
+        break;
+      case command.server.sprints:
+        sprint.viewSprints(param as sprint.Detail[]);
         break;
       case command.server.memberUpdate:
         member.onMemberUpdate(param as member.Member);
@@ -112,5 +123,21 @@ namespace rituals {
     };
 
     socket.socketConnect(svc, id);
+  }
+
+  export function removeFromSprint() {
+    if (confirm("Remove this from the current sprint?")) {
+      const msg = {svc: services.system.key, cmd: command.client.setSprint, param: null};
+      socket.send(msg);
+    }
+  }
+
+  export function setSprint(spr: sprint.Detail | undefined) {
+    UIkit.modal("#modal-session").hide();
+    const container = util.req("#sprint-link-container");
+    container.innerHTML = "";
+    if(spr) {
+      container.appendChild(sprint.renderSprintLink(spr))
+    }
   }
 }

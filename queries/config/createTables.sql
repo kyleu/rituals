@@ -25,12 +25,31 @@ create table if not exists "auth" (
 
 create index if not exists idx_auth_provider_provider_id on auth(provider, provider_id);
 
+-- Team
+create table if not exists "team" (
+  "id" uuid not null primary key,
+  "slug" varchar(128) not null unique,
+  "title" varchar(2048) not null,
+  "owner" uuid references "system_user"("id"),
+  "created" timestamp not null default now()
+);
+
+create table if not exists "team_member" (
+  "team_id" uuid not null references "team"("id"),
+  "user_id" uuid not null references "system_user"("id"),
+  "name" varchar(2048) not null,
+  "role" member_status not null,
+  "created" timestamp not null default now(),
+  primary key ("team_id", "user_id")
+);
+
 -- Sprint
 create table if not exists "sprint" (
   "id" uuid not null primary key,
   "slug" varchar(128) not null unique,
   "title" varchar(2048) not null,
   "owner" uuid references "system_user"("id"),
+  "start_date" date,
   "end_date" date,
   "created" timestamp not null default now()
 );
@@ -39,7 +58,7 @@ create table if not exists "sprint_member" (
   "sprint_id" uuid not null references "sprint"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
-  "role" varchar(64) not null,
+  "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("sprint_id", "user_id")
 );
@@ -53,7 +72,6 @@ create table if not exists "estimate" (
   "owner" uuid references "system_user"("id"),
   "status" estimate_status not null,
   "choices" varchar(2048)[] not null,
-  "options" json not null,
   "created" timestamp not null default now()
 );
 
@@ -63,7 +81,7 @@ create table if not exists "estimate_member" (
   "estimate_id" uuid not null references "estimate"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
-  "role" varchar(64) not null,
+  "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("estimate_id", "user_id")
 );
@@ -105,7 +123,7 @@ create table if not exists "standup_member" (
   "standup_id" uuid not null references "standup"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
-  "role" varchar(64) not null,
+  "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("standup_id", "user_id")
 );
@@ -138,7 +156,7 @@ create table if not exists "retro_member" (
   "retro_id" uuid not null references "retro"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
-  "role" varchar(64) not null,
+  "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("retro_id", "user_id")
 );

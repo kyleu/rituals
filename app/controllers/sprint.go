@@ -16,13 +16,13 @@ import (
 func SprintList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := paramSetFromRequest(r)
-		sessions, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get("sprint"))
+		sessions, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving sprints"))
 		}
 
-		ctx.Title = "Daily Sprints"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), "sprint")
+		ctx.Title = "Sprints"
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
 		return tmpl(templates.SprintList(sessions, ctx, w))
 	})
 }
@@ -53,7 +53,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), "sprint")
+		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, "key", key), sess.Title)...)
 		ctx.Breadcrumbs = bc
 

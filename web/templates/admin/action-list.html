@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">App Actions</h3>
-      <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
+      <% AdminActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

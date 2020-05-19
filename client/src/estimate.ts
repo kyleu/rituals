@@ -1,7 +1,7 @@
 namespace estimate {
   interface Detail extends rituals.Session {
+    status: { key: string };
     choices: string[];
-    options: object;
   }
 
   export interface StoryStatusChange {
@@ -12,6 +12,7 @@ namespace estimate {
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
+    sprint?: sprint.Detail;
     stories: story.Story[];
     votes: vote.Vote[];
   }
@@ -20,6 +21,7 @@ namespace estimate {
     activeStory?: string;
 
     detail?: Detail;
+    sprint?: sprint.Detail;
 
     stories: story.Story[] = [];
     votes: vote.Vote[] = [];
@@ -28,7 +30,7 @@ namespace estimate {
       if (this.activeStory === undefined) {
         return [];
       }
-      return this.votes.filter(x => x.storyID == this.activeStory);
+      return this.votes.filter(x => x.storyID === this.activeStory);
     }
   }
 
@@ -42,12 +44,20 @@ namespace estimate {
       case command.server.sessionJoined:
         let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
+        rituals.setSprint(sj.sprint)
         setEstimateDetail(sj.session);
         story.setStories(sj.stories);
         vote.setVotes(sj.votes);
         break;
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);
+        break;
+      case command.server.sprintUpdate:
+        const x = param as sprint.Detail | undefined
+        if (estimate.cache.detail) {
+          estimate.cache.detail.sprintID = x?.id;
+        }
+        rituals.setSprint(x)
         break;
       case command.server.storyUpdate:
         onStoryUpdate(param as story.Story);
@@ -76,14 +86,9 @@ namespace estimate {
   export function onSubmitEstimateSession() {
     const title = util.req<HTMLInputElement>("#model-title-input").value;
     const choices = util.req<HTMLInputElement>("#model-choices-input").value;
-    const msg = {
-      svc: services.estimate.key,
-      cmd: command.client.updateSession,
-      param: {
-        title: title,
-        choices: choices,
-      },
-    };
+    const sprintID = util.req<HTMLSelectElement>("#model-sprint-select select").value;
+
+    const msg = {svc: services.estimate.key, cmd: command.client.updateSession, param: {title: title, choices: choices, sprintID: sprintID}};
     socket.send(msg);
   }
 

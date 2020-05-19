@@ -17,7 +17,7 @@ type Service struct {
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "auth"})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAuth})
 	svc := Service{
 		actions: actions,
 		db:      db,

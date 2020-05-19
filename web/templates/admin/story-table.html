@@ -3,12 +3,12 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
-      <% ComponentTableHeader("idx", "Index", params, ctx, buffer) %>
-      <% ComponentTableHeader("status", "Status", params, ctx, buffer) %>
-      <% ComponentTableHeader("title", "Title", params, ctx, buffer) %>
-      <% ComponentTableHeader("author", "Author", params, ctx, buffer) %>
-      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, "idx", "Index", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, "status", "Status", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, "title", "Title", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, "author", "Author", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, "created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

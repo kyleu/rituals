@@ -3,13 +3,13 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader("id", "ID", params, ctx, buffer) %>
-      <% ComponentTableHeader("userID", "User", params, ctx, buffer) %>
-      <% ComponentTableHeader("provider", "Provider", params, ctx, buffer) %>
-      <% ComponentTableHeader("providerID", "Provider ID", params, ctx, buffer) %>
-      <% ComponentTableHeader("name", "Name", params, ctx, buffer) %>
-      <% ComponentTableHeader("email", "Email", params, ctx, buffer) %>
-      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "userID", "User", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "provider", "Provider", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "providerID", "Provider ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "name", "Name", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "email", "Email", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, "created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

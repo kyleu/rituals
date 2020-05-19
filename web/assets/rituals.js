@@ -2,11 +2,7 @@
 var action;
 (function (action) {
     function loadActions() {
-        var msg = {
-            svc: services.system.key,
-            cmd: command.client.getActions,
-            param: null
-        };
+        var msg = { svc: services.system.key, cmd: command.client.getActions, param: null };
         socket.send(msg);
     }
     action.loadActions = loadActions;
@@ -27,7 +23,7 @@ var estimate;
             if (this.activeStory === undefined) {
                 return [];
             }
-            return this.votes.filter(function (x) { return x.storyID == _this.activeStory; });
+            return this.votes.filter(function (x) { return x.storyID === _this.activeStory; });
         };
         return Cache;
     }());
@@ -40,12 +36,20 @@ var estimate;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
+                rituals.setSprint(sj.sprint);
                 setEstimateDetail(sj.session);
                 story.setStories(sj.stories);
                 vote.setVotes(sj.votes);
                 break;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
+                break;
+            case command.server.sprintUpdate:
+                var x = param;
+                if (estimate.cache.detail) {
+                    estimate.cache.detail.sprintID = x === null || x === void 0 ? void 0 : x.id;
+                }
+                rituals.setSprint(x);
                 break;
             case command.server.storyUpdate:
                 onStoryUpdate(param);
@@ -73,14 +77,8 @@ var estimate;
     function onSubmitEstimateSession() {
         var title = util.req("#model-title-input").value;
         var choices = util.req("#model-choices-input").value;
-        var msg = {
-            svc: services.estimate.key,
-            cmd: command.client.updateSession,
-            param: {
-                title: title,
-                choices: choices
-            }
-        };
+        var sprintID = util.req("#model-sprint-select select").value;
+        var msg = { svc: services.estimate.key, cmd: command.client.updateSession, param: { title: title, choices: choices, sprintID: sprintID } };
         socket.send(msg);
     }
     estimate.onSubmitEstimateSession = onSubmitEstimateSession;
@@ -116,13 +114,14 @@ var events;
             case "session":
                 var sessionInput_1 = util.setValue("#model-title-input", util.req("#model-title").innerText);
                 delay(function () { return sessionInput_1.focus(); });
+                sprint.refreshSprints();
                 break;
             // member
             case "self":
                 var selfInput_1 = util.setValue("#self-name-input", util.req("#member-self .member-name").innerText);
                 delay(function () { return selfInput_1.focus(); });
                 break;
-            case "invite":
+            case "invitation":
                 break;
             case "member":
                 system.cache.activeMember = id;
@@ -175,7 +174,7 @@ var events;
                 break;
             // default
             default:
-                console.debug("unhandled modal [" + key + "]");
+                console.warn("unhandled modal [" + key + "]");
         }
         UIkit.modal("#modal-" + key).show();
         return false;
@@ -193,11 +192,7 @@ var feedback;
     function onSubmitFeedback() {
         var category = util.req("#retro-feedback-category").value;
         var content = util.req("#retro-feedback-content").value;
-        var msg = {
-            svc: services.retro.key,
-            cmd: command.client.addFeedback,
-            param: { category: category, content: content }
-        };
+        var msg = { svc: services.retro.key, cmd: command.client.addFeedback, param: { category: category, content: content } };
         socket.send(msg);
         return false;
     }
@@ -206,11 +201,7 @@ var feedback;
         var id = retro.cache.activeFeedback;
         var category = util.req("#retro-feedback-edit-category").value;
         var content = util.req("#retro-feedback-edit-content").value;
-        var msg = {
-            svc: services.retro.key,
-            cmd: command.client.updateFeedback,
-            param: { id: id, category: category, content: content }
-        };
+        var msg = { svc: services.retro.key, cmd: command.client.updateFeedback, param: { id: id, category: category, content: content } };
         socket.send(msg);
         return false;
     }
@@ -218,11 +209,7 @@ var feedback;
     function onRemoveFeedback() {
         var id = retro.cache.activeFeedback;
         if (id && confirm("Delete this feedback?")) {
-            var msg = {
-                svc: services.retro.key,
-                cmd: command.client.removeFeedback,
-                param: id
-            };
+            var msg = { svc: services.retro.key, cmd: command.client.removeFeedback, param: id };
             socket.send(msg);
             UIkit.modal("#modal-feedback").hide();
         }
@@ -303,7 +290,7 @@ var feedback;
             return { category: c, feedback: reports };
         }
         var ret = categories.map(toCollection);
-        var extras = feedback.filter(function (r) { return categories.indexOf(r.category) == -1; });
+        var extras = feedback.filter(function (r) { return categories.indexOf(r.category) === -1; });
         if (extras.length > 0) {
             ret.push({ category: "unknown", feedback: extras });
         }
@@ -311,6 +298,7 @@ var feedback;
     }
     feedback_1.getFeedbackCategories = getFeedbackCategories;
 })(feedback || (feedback = {}));
+var debug = true;
 var system;
 (function (system) {
     var Cache = /** @class */ (function () {
@@ -347,6 +335,12 @@ var services;
         plural: "systems",
         icon: "close"
     };
+    services.team = {
+        key: "team",
+        title: "Team",
+        plural: "teams",
+        icon: "users"
+    };
     services.sprint = {
         key: "sprint",
         title: "Sprint",
@@ -355,13 +349,13 @@ var services;
     };
     services.estimate = {
         key: "estimate",
-        title: "Estimate",
+        title: "Estimate Session",
         plural: "estimates",
         icon: "settings"
     };
     services.standup = {
         key: "standup",
-        title: "Standup",
+        title: "Daily Standup",
         plural: "standups",
         icon: "future"
     };
@@ -378,9 +372,11 @@ var command;
         error: "error",
         ping: "ping",
         connect: "connect",
-        getActions: "get-actions",
-        updateProfile: "update-profile",
         updateSession: "update-session",
+        getActions: "get-actions",
+        getSprints: "get-sprints",
+        setSprint: "set-sprint",
+        updateProfile: "update-profile",
         addStory: "add-story",
         updateStory: "update-story",
         removeStory: "remove-story",
@@ -396,9 +392,11 @@ var command;
     command.server = {
         error: "error",
         pong: "pong",
-        actions: "actions",
         sessionJoined: "session-joined",
         sessionUpdate: "session-update",
+        sprintUpdate: "sprint-update",
+        actions: "actions",
+        sprints: "sprints",
         memberUpdate: "member-update",
         onlineUpdate: "online-update",
         storyUpdate: "story-update",
@@ -473,7 +471,7 @@ var member;
         }
         var x = system.cache.members;
         var curr = x.filter(function (m) { return m.userID === member.userID; });
-        var nameChanged = curr.length == 1 && curr[0].name != member.name;
+        var nameChanged = curr.length === 1 && curr[0].name !== member.name;
         x = x.filter(function (m) { return m.userID !== member.userID; });
         if (x.length === system.cache.members.length) {
             UIkit.notification(member.name + " has joined", { status: "success", pos: "top-right" });
@@ -484,6 +482,8 @@ var member;
         setMembers();
         if (nameChanged) {
             switch (system.cache.currentService) {
+                case services.team.key:
+                    break;
                 case services.sprint.key:
                     break;
                 case services.estimate.key:
@@ -522,13 +522,13 @@ var member;
     function renderOnline() {
         for (var _i = 0, _a = system.cache.members; _i < _a.length; _i++) {
             var member_2 = _a[_i];
-            var els = util.els("#member-" + member_2.userID + " .online-indicator");
-            if (els.length === 1) {
+            var el = util.opt("#member-" + member_2.userID + " .online-indicator");
+            if (el) {
                 if (system.cache.online.indexOf(member_2.userID) === -1) {
-                    els[0].classList.add("offline");
+                    el.classList.add("offline");
                 }
                 else {
-                    els[0].classList.remove("offline");
+                    el.classList.remove("offline");
                 }
             }
         }
@@ -536,14 +536,7 @@ var member;
     function onSubmitSelf() {
         var name = util.req("#self-name-input").value;
         var choice = util.req("#self-name-choice-global").checked ? "global" : "local";
-        var msg = {
-            svc: services.system.key,
-            cmd: command.client.updateProfile,
-            param: {
-                name: name,
-                choice: choice
-            }
-        };
+        var msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name: name, choice: choice } };
         socket.send(msg);
     }
     member_1.onSubmitSelf = onSubmitSelf;
@@ -635,11 +628,7 @@ var report;
     function onSubmitReport() {
         var d = util.req("#standup-report-date").value;
         var content = util.req("#standup-report-content").value;
-        var msg = {
-            svc: services.standup.key,
-            cmd: command.client.addReport,
-            param: { d: d, content: content }
-        };
+        var msg = { svc: services.standup.key, cmd: command.client.addReport, param: { d: d, content: content } };
         socket.send(msg);
         return false;
     }
@@ -647,11 +636,7 @@ var report;
     function onEditReport() {
         var d = util.req("#standup-report-edit-date").value;
         var content = util.req("#standup-report-edit-content").value;
-        var msg = {
-            svc: services.standup.key,
-            cmd: command.client.updateReport,
-            param: { id: standup.cache.activeReport, d: d, content: content }
-        };
+        var msg = { svc: services.standup.key, cmd: command.client.updateReport, param: { id: standup.cache.activeReport, d: d, content: content } };
         socket.send(msg);
         return false;
     }
@@ -659,11 +644,7 @@ var report;
     function onRemoveReport() {
         var id = standup.cache.activeReport;
         if (id && confirm("Delete this report?")) {
-            var msg = {
-                svc: services.standup.key,
-                cmd: command.client.removeReport,
-                param: id
-            };
+            var msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
             socket.send(msg);
             UIkit.modal("#modal-report").hide();
         }
@@ -754,11 +735,19 @@ var retro;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
+                rituals.setSprint(sj.sprint);
                 setRetroDetail(sj.session);
                 feedback.setFeedback(sj.feedback);
                 break;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
+                break;
+            case command.server.sprintUpdate:
+                var x = param;
+                if (retro.cache.detail) {
+                    retro.cache.detail.sprintID = x === null || x === void 0 ? void 0 : x.id;
+                }
+                rituals.setSprint(x);
                 break;
             case command.server.feedbackUpdate:
                 feedback.onFeedbackUpdate(param);
@@ -782,14 +771,8 @@ var retro;
     function onSubmitRetroSession() {
         var title = util.req("#model-title-input").value;
         var categories = util.req("#model-categories-input").value;
-        var msg = {
-            svc: services.retro.key,
-            cmd: command.client.updateSession,
-            param: {
-                title: title,
-                categories: categories
-            }
-        };
+        var sprintID = util.req("#model-sprint-select select").value;
+        var msg = { svc: services.retro.key, cmd: command.client.updateSession, param: { title: title, categories: categories, sprintID: sprintID } };
         socket.send(msg);
     }
     retro.onSubmitRetroSession = onSubmitRetroSession;
@@ -797,11 +780,16 @@ var retro;
 var rituals;
 (function (rituals) {
     function onSocketMessage(msg) {
-        console.debug("message received");
-        console.debug(msg);
+        if (debug) {
+            console.debug("message received");
+            console.debug(msg);
+        }
         switch (msg.svc) {
             case services.system.key:
                 onSystemMessage(msg.cmd, msg.param);
+                break;
+            case services.team.key:
+                team.onTeamMessage(msg.cmd, msg.param);
                 break;
             case services.sprint.key:
                 sprint.onSprintMessage(msg.cmd, msg.param);
@@ -824,6 +812,10 @@ var rituals;
         system.cache.session = session;
         util.setText("#model-title", session.title);
         util.setValue("#model-title-input", session.title);
+        var removeFromSprintButton = util.els("#remove-from-sprint-button");
+        if (removeFromSprintButton.length > 0) {
+            removeFromSprintButton[0].style.display = session.sprintID ? "block" : "none";
+        }
         var items = util.els("#navbar .uk-navbar-item");
         if (items.length > 0) {
             items[items.length - 1].innerText = session.title;
@@ -847,6 +839,9 @@ var rituals;
                 break;
             case command.server.actions:
                 action.viewActions(param);
+                break;
+            case command.server.sprints:
+                sprint.viewSprints(param);
                 break;
             case command.server.memberUpdate:
                 member.onMemberUpdate(param);
@@ -873,6 +868,22 @@ var rituals;
         socket.socketConnect(svc, id);
     }
     rituals.init = init;
+    function removeFromSprint() {
+        if (confirm("Remove this from the current sprint?")) {
+            var msg = { svc: services.system.key, cmd: command.client.setSprint, param: null };
+            socket.send(msg);
+        }
+    }
+    rituals.removeFromSprint = removeFromSprint;
+    function setSprint(spr) {
+        UIkit.modal("#modal-session").hide();
+        var container = util.req("#sprint-link-container");
+        container.innerHTML = "";
+        if (spr) {
+            container.appendChild(sprint.renderSprintLink(spr));
+        }
+    }
+    rituals.setSprint = setSprint;
 })(rituals || (rituals = {}));
 var socket;
 (function (socket_1) {
@@ -896,7 +907,9 @@ var socket;
         system.cache.connectTime = Date.now();
         socket = new WebSocket(socketUrl());
         socket.onopen = function () {
-            console.debug("socket connected");
+            if (debug) {
+                console.debug("socket connected");
+            }
             var msg = { svc: svc, cmd: command.client.connect, param: id };
             send(msg);
         };
@@ -913,18 +926,22 @@ var socket;
     }
     socket_1.socketConnect = socketConnect;
     function send(msg) {
-        console.debug("sending message");
-        console.debug(msg);
+        if (debug) {
+            console.debug("sending message");
+            console.debug(msg);
+        }
         socket.send(JSON.stringify(msg));
     }
     socket_1.send = send;
     function onSocketClose() {
         function disconnect(seconds) {
-            if (seconds === 1) {
-                console.warn("socket closed, reconnecting in a second");
-            }
-            else {
-                console.warn("socket closed, reconnecting in " + seconds + " seconds");
+            if (debug) {
+                if (seconds === 1) {
+                    console.info("socket closed, reconnecting in a second");
+                }
+                else {
+                    console.info("socket closed, reconnecting in " + seconds + " seconds");
+                }
             }
             setTimeout(function () {
                 socketConnect(system.cache.currentService, system.cache.currentID);
@@ -994,16 +1011,27 @@ var sprint;
     }
     function onSubmitSprintSession() {
         var title = util.req("#model-title-input").value;
-        var msg = {
-            svc: services.sprint.key,
-            cmd: command.client.updateSession,
-            param: {
-                title: title
-            }
-        };
+        var msg = { svc: services.sprint.key, cmd: command.client.updateSession, param: { title: title } };
         socket.send(msg);
     }
     sprint.onSubmitSprintSession = onSubmitSprintSession;
+    function refreshSprints() {
+        var sprintSelect = util.opt("#model-sprint-select");
+        if (sprintSelect) {
+            var msg = { svc: services.system.key, cmd: command.client.getSprints, param: null };
+            socket.send(msg);
+        }
+    }
+    sprint.refreshSprints = refreshSprints;
+    function viewSprints(sprints) {
+        var _a;
+        var c = util.opt("#model-sprint-container");
+        if (c) {
+            c.style.display = sprints.length > 0 ? "inline" : "none";
+        }
+        util.setContent("#model-sprint-select", sprint.renderSprintSelect(sprints, (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.sprintID));
+    }
+    sprint.viewSprints = viewSprints;
 })(sprint || (sprint = {}));
 var standup;
 (function (standup) {
@@ -1022,11 +1050,19 @@ var standup;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
+                rituals.setSprint(sj.sprint);
                 setStandupDetail(sj.session);
                 report.setReports(sj.reports);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
+                break;
+            case command.server.sprintUpdate:
+                var x = param;
+                if (standup.cache.detail) {
+                    standup.cache.detail.sprintID = x === null || x === void 0 ? void 0 : x.id;
+                }
+                rituals.setSprint(x);
                 break;
             case command.server.reportUpdate:
                 onReportUpdate(param);
@@ -1045,13 +1081,8 @@ var standup;
     }
     function onSubmitStandupSession() {
         var title = util.req("#model-title-input").value;
-        var msg = {
-            svc: services.standup.key,
-            cmd: command.client.updateSession,
-            param: {
-                title: title
-            }
-        };
+        var sprintID = util.req("#model-sprint-select select").value;
+        var msg = { svc: services.standup.key, cmd: command.client.updateSession, param: { title: title, sprintID: sprintID } };
         socket.send(msg);
     }
     standup.onSubmitStandupSession = onSubmitStandupSession;
@@ -1116,16 +1147,12 @@ var story;
         if (story === undefined) {
             return;
         }
-        var msg = {
-            svc: services.estimate.key,
-            cmd: command.client.setStoryStatus,
-            param: { storyID: story.id, status: s }
-        };
+        var msg = { svc: services.estimate.key, cmd: command.client.setStoryStatus, param: { storyID: story.id, status: s } };
         socket.send(msg);
     }
     story_1.requestStoryStatus = requestStoryStatus;
     function setStoryStatus(storyID, status, currStory, calcTotal) {
-        if (currStory !== null && currStory.status == "complete") {
+        if (currStory !== null && currStory.status === "complete") {
             if (currStory.finalVote.length > 0) {
                 status = currStory.finalVote;
             }
@@ -1139,7 +1166,7 @@ var story;
     function onStoryStatusChange(u) {
         var currStory = null;
         estimate.cache.stories.forEach(function (s) {
-            if (s.id == u.storyID) {
+            if (s.id === u.storyID) {
                 currStory = s;
                 s.finalVote = u.finalVote;
                 s.status = u.status;
@@ -1164,24 +1191,16 @@ var story;
     story.setStories = setStories;
     function onSubmitStory() {
         var title = util.req("#story-title-input").value;
-        var msg = {
-            svc: services.estimate.key,
-            cmd: command.client.addStory,
-            param: { title: title }
-        };
+        var msg = { svc: services.estimate.key, cmd: command.client.addStory, param: { title: title } };
         socket.send(msg);
         return false;
     }
     story.onSubmitStory = onSubmitStory;
     function beginEditStory() {
         var s = getActiveStory();
-        var x = prompt("Edit your story", s.title);
-        if (x !== null && x !== s.title) {
-            var msg = {
-                svc: services.estimate.key,
-                cmd: command.client.updateStory,
-                param: { id: s.id, title: x }
-            };
+        var newTitle = prompt("Edit your story", s.title);
+        if (newTitle !== null && newTitle !== s.title) {
+            var msg = { svc: services.estimate.key, cmd: command.client.updateStory, param: { id: s.id, title: newTitle } };
             socket.send(msg);
         }
         return false;
@@ -1190,11 +1209,7 @@ var story;
     function onRemoveStory() {
         var id = estimate.cache.activeStory;
         if (id && confirm("Delete this story?")) {
-            var msg = {
-                svc: services.estimate.key,
-                cmd: command.client.removeStory,
-                param: id
-            };
+            var msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
             socket.send(msg);
             UIkit.modal("#modal-story").hide();
         }
@@ -1239,6 +1254,49 @@ var story;
     }
     story.showTotalIfNeeded = showTotalIfNeeded;
 })(story || (story = {}));
+var team;
+(function (team) {
+    var Cache = /** @class */ (function () {
+        function Cache() {
+            this.estimates = [];
+            this.standups = [];
+            this.retros = [];
+        }
+        return Cache;
+    }());
+    team.cache = new Cache();
+    function onTeamMessage(cmd, param) {
+        switch (cmd) {
+            case command.server.error:
+                rituals.onError(services.team.key, param);
+                break;
+            case command.server.sessionJoined:
+                var sj = param;
+                rituals.onSessionJoin(sj);
+                setTeamDetail(sj.session);
+                setTeamHistory(sj);
+                break;
+            case command.server.sessionUpdate:
+                setTeamDetail(param);
+                break;
+            default:
+                console.warn("unhandled command [" + cmd + "] for team");
+        }
+    }
+    team.onTeamMessage = onTeamMessage;
+    function setTeamDetail(detail) {
+        team.cache.detail = detail;
+        rituals.setDetail(detail);
+    }
+    function setTeamHistory(sj) {
+    }
+    function onSubmitTeamSession() {
+        var title = util.req("#model-title-input").value;
+        var msg = { svc: services.team.key, cmd: command.client.updateSession, param: { title: title } };
+        socket.send(msg);
+    }
+    team.onSubmitTeamSession = onSubmitTeamSession;
+})(team || (team = {}));
 var util;
 (function (util) {
     function els(selector, context) {
@@ -1378,7 +1436,7 @@ var vote;
     vote.setVotes = setVotes;
     function onVoteUpdate(v) {
         var x = estimate.cache.votes;
-        x = x.filter(function (v) { return v.userID != v.userID || v.storyID != v.storyID; });
+        x = x.filter(function (v) { return v.userID !== v.userID || v.storyID !== v.storyID; });
         x.push(v);
         estimate.cache.votes = x;
         if (v.storyID === estimate.cache.activeStory) {
@@ -1428,11 +1486,7 @@ var vote;
     }
     // noinspection JSUnusedGlobalSymbols
     function onSubmitVote(choice) {
-        var msg = {
-            svc: services.estimate.key,
-            cmd: command.client.submitVote,
-            param: { storyID: estimate.cache.activeStory, choice: choice }
-        };
+        var msg = { svc: services.estimate.key, cmd: command.client.submitVote, param: { storyID: estimate.cache.activeStory, choice: choice } };
         socket.send(msg);
     }
     vote.onSubmitVote = onSubmitVote;
@@ -1461,9 +1515,9 @@ var vote;
             min: min,
             max: max,
             sum: sum,
-            mean: count == 0 ? 0 : sum / count,
-            median: count == 0 ? 0 : floats[Math.floor(floats.length / 2)],
-            mode: count == 0 ? 0 : mode
+            mean: count === 0 ? 0 : sum / count,
+            median: count === 0 ? 0 : floats[Math.floor(floats.length / 2)],
+            mode: count === 0 ? 0 : mode
         };
     }
     vote.getVoteResults = getVoteResults;
@@ -1542,7 +1596,7 @@ var member;
     function renderMembers(members) {
         if (members.length === 0) {
             return JSX("div", null,
-                JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('invite');", type: "button" }, "Invite Members"));
+                JSX("button", { "class": "uk-button uk-button-default", onclick: "events.openModal('invitation');", type: "button" }, "Invite Members"));
         }
         else {
             return JSX("ul", { "class": "uk-list uk-list-divider" }, members.map(function (m) { return JSX("li", { id: "member-" + m.userID }, renderMember(m)); }));
@@ -1584,7 +1638,7 @@ var sprint;
         var profile = system.cache.getProfile();
         return JSX("tr", null,
             JSX("td", null,
-                JSX("a", { "class": profile.linkColor + "-fg", href: "/" + svc.key + "/" + session.slug }, session.slug)),
+                JSX("a", { "class": profile.linkColor + "-fg", href: "/" + svc.key + "/" + session.slug }, session.title)),
             JSX("td", { "class": "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
             JSX("td", { "class": "uk-table-shrink uk-text-nowrap" },
                 new Date(session.created).toLocaleDateString(),
@@ -1606,6 +1660,21 @@ var sprint;
         }
     }
     sprint.renderContents = renderContents;
+    function renderSprintLink(spr) {
+        var profile = system.cache.getProfile();
+        return JSX("span", null,
+            JSX("a", { "class": profile.linkColor + "-fg", href: "/sprint/" + spr.slug }, spr.title),
+            "\u00A0");
+    }
+    sprint.renderSprintLink = renderSprintLink;
+    function renderSprintSelect(sprints, activeID) {
+        return JSX("select", { "class": "uk-select" },
+            JSX("option", { value: "" }, "- no sprint -"),
+            sprints.map(function (s) {
+                return s.id === activeID ? JSX("option", { selected: "selected", value: s.id }, s.title) : JSX("option", { value: s.id }, s.title);
+            }));
+    }
+    sprint.renderSprintSelect = renderSprintSelect;
 })(sprint || (sprint = {}));
 var story;
 (function (story_2) {
@@ -1653,7 +1722,7 @@ var vote;
             member.name);
     }
     function renderVoteMembers(members, votes) {
-        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-around" }, members.map(function (m) { return renderVoteMember(m, votes.filter(function (v) { return v.userID == m.userID; }).length > 0); }));
+        return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-around" }, members.map(function (m) { return renderVoteMember(m, votes.filter(function (v) { return v.userID === m.userID; }).length > 0); }));
     }
     vote_1.renderVoteMembers = renderVoteMembers;
     function renderVoteChoices(choices, choice) {
@@ -1677,7 +1746,7 @@ var vote;
     }
     function renderVoteResults(members, votes) {
         return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-around" }, members.map(function (m) {
-            var vote = votes.filter(function (v) { return v.userID == m.userID; });
+            var vote = votes.filter(function (v) { return v.userID === m.userID; });
             return renderVoteResult(m, length > 0 ? vote[0].choice : undefined);
         }));
     }

@@ -6,8 +6,8 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <h3 class="uk-card-title">Estimate Sessions</h3>
-      <% AdminEstimateTable(estimates, params.Get("estimate"), ctx, _buffer) %>
+      <h3 class="uk-card-title"><%= util.SvcEstimate.PluralTitle %></h3>
+      <% AdminEstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

@@ -8,7 +8,7 @@
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">
         <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcEstimate.Key, `key`, model.Slug) %>">Join</a></div>
-        Estimate Session
+        util.SvcEstimate.Title
       </h3>
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
@@ -41,10 +41,6 @@
             </td>
           </tr>
           <tr>
-            <th>Options</th>
-            <td><%=v model.Options %></td>
-          </tr>
-          <tr>
             <th>Created</th>
             <td><% ComponentDateTime(&model.Created, _buffer) %></td>
           </tr>
@@ -56,7 +52,7 @@
       <% if len(members) == 0 { %>
       <p>No members available</p>
       <% } else { %>
-      <% AdminMemberTable(members, params.Get("member"), ctx, _buffer) %>
+      <% AdminMemberTable(members, params.Get(util.KeyMember, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -64,7 +60,7 @@
       <% if len(stories) == 0 { %>
         <p>No stories available</p>
       <% } else { %>
-        <% AdminStoryTable(stories, params.Get("story"), ctx, _buffer) %>
+        <% AdminStoryTable(stories, params.Get(util.KeyStory, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -72,7 +68,7 @@
       <% if len(actions) == 0 { %>
         <p>No actions available</p>
       <% } else { %>
-        <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
+        <% AdminActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

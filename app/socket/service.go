@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/team"
 	"sync"
 
 	"github.com/kyleu/rituals.dev/app/action"
@@ -27,14 +28,15 @@ type Service struct {
 	logger        logur.Logger
 	actions       *action.Service
 	users         *user.Service
+	teams         *team.Service
 	sprints       *sprint.Service
 	estimates     *estimate.Service
 	standups      *standup.Service
 	retros        *retro.Service
 }
 
-func NewService(actions *action.Service, logger logur.Logger, users *user.Service, sprints *sprint.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "socket"})
+func NewService(actions *action.Service, logger logur.Logger, users *user.Service, teams *team.Service, sprints *sprint.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeySocket})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
 		connectionsMu: sync.Mutex{},
@@ -42,11 +44,12 @@ func NewService(actions *action.Service, logger logur.Logger, users *user.Servic
 		channelsMu:    sync.Mutex{},
 		logger:        logger,
 		actions:       actions,
+		users:         users,
+		teams:         teams,
 		sprints:       sprints,
 		estimates:     estimates,
 		standups:      standups,
 		retros:        retros,
-		users:         users,
 	}
 }
 
@@ -54,7 +57,7 @@ var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
 var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem.Key, ChannelID: &systemID}
 
 func (s *Service) List(params *query.Params) ([]*Status, error) {
-	params = query.ParamsWithDefaultOrdering("connection", params)
+	params = query.ParamsWithDefaultOrdering(util.KeyConnection, params)
 	ret := make([]*Status, 0)
 	ret = append(ret, &systemStatus)
 	var idx = 0
@@ -92,6 +95,8 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	switch message.Svc {
 	case util.SvcSystem.Key:
 		err = onSystemMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
+	case util.SvcTeam.Key:
+		err = onTeamMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcSprint.Key:
 		err = onSprintMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	case util.SvcEstimate.Key:

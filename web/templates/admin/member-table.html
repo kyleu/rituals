@@ -3,10 +3,10 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader("userID", "User ID", params, ctx, buffer) %>
-      <% ComponentTableHeader("name", "Name", params, ctx, buffer) %>
-      <% ComponentTableHeader("role", "Role", params, ctx, buffer) %>
-      <% ComponentTableHeader("created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyMember, "userID", "User ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyMember, "name", "Name", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyMember, "role", "Role", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyMember, "created", "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/action"
 	"strconv"
 
 	"github.com/kyleu/rituals.dev/app/query"
@@ -12,9 +13,9 @@ import (
 )
 
 func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) ([]*Story, error) {
-	params = query.ParamsWithDefaultOrdering("story", params, &query.Ordering{Column: "idx", Asc: true})
+	params = query.ParamsWithDefaultOrdering(util.KeyStory, params, &query.Ordering{Column: "idx", Asc: true})
 	var dtos []storyDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "story", "estimate_id = $1", params.OrderByString(), params.Limit, params.Offset), estimateID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyStory, "estimate_id = $1", params.OrderByString(), params.Limit, params.Offset), estimateID)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +24,7 @@ func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) ([]*Sto
 
 func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 	dto := &storyDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "story", "id = $1", "", 0, 0), storyID)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyStory, "id = $1", "", 0, 0), storyID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +33,7 @@ func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 
 func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelect("estimate_id", "story", "id = $1", "", 0, 0)
+	q := query.SQLSelect("estimate_id", util.KeyStory, "id = $1", "", 0, 0)
 	err := s.db.Get(&ret, q, storyID)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUI
 	}
 
 	actionContent := map[string]interface{}{"storyID": id}
-	s.actions.Post(util.SvcEstimate.Key, estimateID, authorID, "add-story", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, estimateID, authorID, action.ActStoryAdd, actionContent, "")
 
 	return s.GetStoryByID(id)
 }
@@ -69,7 +70,7 @@ func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID)
 	}
 
 	actionContent := map[string]interface{}{"storyID": storyID}
-	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "update-story", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, action.ActStoryUpdate, actionContent, "")
 
 	return story, err
 }
@@ -93,7 +94,7 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 	_, err = s.db.Exec(q2, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID}
-	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "remove-story", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, action.ActStoryRemove, actionContent, "")
 
 	return err
 }
@@ -119,7 +120,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 	_, err = s.db.Exec(q, status.String(), finalVote, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID, "status": status, "finalVote": finalVote}
-	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, "story-status", actionContent, "")
+	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, action.ActStoryStatus, actionContent, "")
 
 	return true, finalVote, errors.WithStack(errors.Wrap(err, "error updating story status"))
 }

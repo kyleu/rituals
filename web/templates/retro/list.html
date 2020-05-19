@@ -6,12 +6,15 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div>
-      <h1 class="uk-heading-hero">Retrospectives</h1>
+      <h1 class="uk-heading-hero">
+        <div class="h1-icon" data-uk-icon="icon: <%= util.SvcRetro.Icon %>; ratio: 1.6;"></div>
+        <%= util.SvcRetro.PluralTitle %>
+      </h1>
       <div class="uk-text-lead">Discover improvements and praise for your work</div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title">New Retrospective</h3>
-          <form class="uk-form-stacked" action="<%= ctx.Route(`retro.new`) %>" method="post">
+          <h3 class="uk-card-title">New <%= util.SvcRetro.Title %></h3>
+          <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcRetro.Key + `.new`) %>" method="post">
             <fieldset class="uk-fieldset">
               <div class="uk-margin-small">
                 <label class="uk-form-label" for="title">Title</label>
@@ -27,10 +30,10 @@
 
         <% if len(sessions) > 0 { %>
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-          <h3 class="uk-card-title">Prior Retrospectives</h3>
+          <h3 class="uk-card-title">Prior <%= util.SvcRetro.PluralTitle %></h3>
           <% for _, s := range sessions { %>
           <div>
-            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro`, `key`, s.Slug) %>"><%= s.Title %></a>
+            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcRetro.Key, `key`, s.Slug) %>"><%= s.Title %></a>
           </div>
           <% } %>
         </div>

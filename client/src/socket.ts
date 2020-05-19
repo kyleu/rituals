@@ -22,7 +22,9 @@ namespace socket {
 
     socket = new WebSocket(socketUrl());
     socket.onopen = function () {
-      console.debug("socket connected");
+      if(debug) {
+        console.debug("socket connected");
+      }
       const msg = {svc: svc, cmd: command.client.connect, param: id};
       send(msg);
     };
@@ -39,17 +41,21 @@ namespace socket {
   }
 
   export function send(msg: rituals.Message) {
-    console.debug("sending message");
-    console.debug(msg);
+    if(debug) {
+      console.debug("sending message");
+      console.debug(msg);
+    }
     socket.send(JSON.stringify(msg));
   }
 
   function onSocketClose() {
     function disconnect(seconds: number) {
-      if (seconds === 1) {
-        console.warn("socket closed, reconnecting in a second");
-      } else {
-        console.warn("socket closed, reconnecting in " + seconds + " seconds");
+      if(debug) {
+        if (seconds === 1) {
+          console.info("socket closed, reconnecting in a second");
+        } else {
+          console.info("socket closed, reconnecting in " + seconds + " seconds");
+        }
       }
       setTimeout(() => {
         socketConnect(system.cache.currentService, system.cache.currentID);

@@ -1,6 +1,7 @@
 namespace sprint {
   export interface Detail extends rituals.Session {
-
+    startDate: string;
+    endDate: string;
   }
 
   interface SessionJoined extends rituals.SessionJoined {
@@ -28,7 +29,7 @@ namespace sprint {
         let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         setSprintDetail(sj.session);
-        setSprintContents(sj)
+        setSprintContents(sj);
         break;
       case command.server.sessionUpdate:
         setSprintDetail(param as Detail);
@@ -66,13 +67,23 @@ namespace sprint {
 
   export function onSubmitSprintSession() {
     const title = util.req<HTMLInputElement>("#model-title-input").value;
-    const msg = {
-      svc: services.sprint.key,
-      cmd: command.client.updateSession,
-      param: {
-        title: title,
-      },
-    };
+    const msg = {svc: services.sprint.key, cmd: command.client.updateSession, param: {title: title}};
     socket.send(msg);
+  }
+
+  export function refreshSprints() {
+    const sprintSelect = util.opt("#model-sprint-select");
+    if (sprintSelect) {
+      const msg = {svc: services.system.key, cmd: command.client.getSprints, param: null};
+      socket.send(msg);
+    }
+  }
+
+  export function viewSprints(sprints: sprint.Detail[]) {
+    const c = util.opt("#model-sprint-container");
+    if(c) {
+      c.style.display = sprints.length > 0 ? "inline" : "none";
+    }
+    util.setContent("#model-sprint-select", renderSprintSelect(sprints, system.cache.session?.sprintID));
   }
 }

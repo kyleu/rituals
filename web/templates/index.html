@@ -1,44 +1,54 @@
-<%: func Index(ctx web.RequestContext, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, w io.Writer) (int, error) %>
+<%: func Index(ctx web.RequestContext, teams []*team.Session, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <h3 class="uk-card-title">
-            <span class="right">
-              <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
-            </span>
-        <% if ctx.Profile.Role == util.RoleAdmin { %>
-        <span class="right">
-              <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
-            </span>
-        <% } %>
-        Join Now
-      </h3>
-      <form method="post" action="<%= ctx.Route(`join.post`) %>">
-        <div class="uk-inline">
-          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: forward"></button>
-          <input class="uk-input" type="text" name="i" placeholder="Invite Code" />
-        </div>
-      </form>
-    </div>
     <div class="uk-grid-medium uk-grid-match uk-margin-medium" uk-grid>
       <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint.list`) %>">Sprints</a></h3>
-          <form method="post" action="<%= ctx.Route(`sprint.new`) %>">
-            <div class="uk-inline uk-display-block">
-              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new sprint"></button>
-              <input class="uk-input" type="text" id="sprint-title" name="title" placeholder="Title" />
+          <h3 class="uk-card-title">
+            <span class="right">
+              <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
+            </span>
+            <% if ctx.Profile.Role == util.RoleAdmin { %>
+            <span class="right">
+              <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
+            </span>
+            <% } %>
+            Join Now
+          </h3>
+          <form method="post" action="<%= ctx.Route(`join.post`) %>">
+            <div class="uk-inline">
+              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: forward"></button>
+              <input class="uk-input" type="text" name="i" placeholder="Invite Code" />
             </div>
           </form>
+        </div>
+      </div>
+      <div class="uk-width-1-2@s">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <% IndexPanel(util.SvcTeam, ctx, _buffer) %>
+          <% if len(teams) > 0 { %>
+          <ul class="uk-list uk-list-divider uk-margin-top">
+            <% for _, t := range teams { %>
+            <li>
+              <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcTeam.Key, `key`, t.Slug) %>"><%= t.Title %></a>
+            </li>
+            <% } %>
+          </ul>
+          <% } %>
+        </div>
+      </div>
+      <div class="uk-width-1-2@s">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+          <% IndexPanel(util.SvcSprint, ctx, _buffer) %>
           <% if len(sprints) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range sprints { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint`, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcSprint.Key, `key`, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -47,18 +57,12 @@
       </div>
       <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`estimate.list`) %>">Estimation Sessions</a></h3>
-          <form method="post" action="<%= ctx.Route(`estimate.new`) %>">
-            <div class="uk-inline uk-display-block">
-              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new estimation session"></button>
-              <input class="uk-input" type="text" id="estimate-title" name="title" placeholder="Title" />
-            </div>
-          </form>
+          <% IndexPanel(util.SvcEstimate, ctx, _buffer) %>
           <% if len(estimates) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range estimates { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`estimate`, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcEstimate.Key, `key`, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -67,18 +71,12 @@
       </div>
       <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`standup.list`) %>">Daily Standups</a></h3>
-          <form method="post" action="<%= ctx.Route(`standup.new`) %>">
-            <div class="uk-inline uk-display-block">
-              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new daily standup"></button>
-              <input class="uk-input" type="text" id="standup-title" name="title" placeholder="Title" />
-            </div>
-          </form>
+          <% IndexPanel(util.SvcStandup, ctx, _buffer) %>
           <% if len(standups) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range standups { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`standup`, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcStandup.Key, `key`, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -87,18 +85,12 @@
       </div>
       <div class="uk-width-1-2@s">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro.list`) %>">Retrospectives</a></h3>
-          <form method="post" action="<%= ctx.Route(`retro.new`) %>">
-            <div class="uk-inline uk-display-block">
-              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new retrospective"></button>
-              <input class="uk-input" type="text" id="retro-title" name="title" placeholder="Title" />
-            </div>
-          </form>
+          <% IndexPanel(util.SvcRetro, ctx, _buffer) %>
           <% if len(retros) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range retros { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`retro`, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcRetro.Key, `key`, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>

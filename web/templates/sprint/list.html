@@ -6,12 +6,15 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div>
-      <h1 class="uk-heading-hero">Sprints</h1>
+      <h1 class="uk-heading-hero">
+        <div class="h1-icon" data-uk-icon="icon: <%= util.SvcSprint.Icon %>; ratio: 1.6;"></div>
+        Sprints
+      </h1>
       <div class="uk-text-lead">Plan your time and direct your efforts</div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
           <h3 class="uk-card-title">New Sprint</h3>
-          <form class="uk-form-stacked" action="<%= ctx.Route(`sprint.new`) %>" method="post">
+          <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcSprint.Key + `.new`) %>" method="post">
             <fieldset class="uk-fieldset">
               <div class="uk-margin-small">
                 <label class="uk-form-label" for="title">Title</label>
@@ -30,7 +33,7 @@
           <h3 class="uk-card-title">Prior Sprints</h3>
           <% for _, s := range sprints { %>
           <div>
-            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint`, `key`, s.Slug) %>"><%= s.Title %></a>
+            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcSprint.Key, `key`, s.Slug) %>"><%= s.Title %></a>
           </div>
           <% } %>
         </div>

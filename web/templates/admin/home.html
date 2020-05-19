@@ -12,11 +12,12 @@
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user`) %>">Users</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.auth`) %>">Auth</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.action`) %>">Actions</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.team`) %>">Teams</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.sprint`) %>">Sprints</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invite`) %>">Invitations</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invitation`) %>">Invitations</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate`) %>">Estimates</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.standup`) %>">Daily Standups</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.retro`) %>">Retrospectives</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.standup`) %>"><%= util.SvcStandup.PluralTitle %></a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.retro`) %>"><%= util.SvcRetro.PluralTitle %></a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.connection`) %>">Connections</a></li>
         <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`graphql`) %>">GraphQL</a></li>
       </ul>

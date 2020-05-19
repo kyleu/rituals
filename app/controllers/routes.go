@@ -12,8 +12,10 @@ import (
 	"github.com/sagikazarmark/ocmux"
 )
 
-const routesKey = "routes"
-const infoKey = "info"
+const (
+	routesKey = "routes"
+  infoKey = "info"
+)
 
 func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r := mux.NewRouter()
@@ -43,6 +45,12 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Path("/join/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(JoinGet))).Name("join.get")
 	join.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(JoinPost))).Name("join.post")
 
+	// Team
+	team := r.Path("/team").Subrouter()
+	team.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(TeamList))).Name(util.SvcTeam.Key + ".list")
+	team.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(TeamNew))).Name(util.SvcTeam.Key + ".new")
+	r.Path("/team/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(TeamWorkspace))).Name(util.SvcTeam.Key)
+
 	// Sprint
 	sprint := r.Path("/sprint").Subrouter()
 	sprint.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(SprintList))).Name(util.SvcSprint.Key + ".list")
@@ -67,14 +75,10 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	retro.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(RetroNew))).Name(util.SvcRetro.Key + ".new")
 	r.Path("/retro/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(RetroWorkspace))).Name(util.SvcRetro.Key)
 
-	// GraphQL
-	graphql := r.Path("/graphql").Subrouter()
-	graphql.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(GraphQLHome))).Name("graphql")
-	graphql.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(GraphQLRun))).Name("graphql.run")
-
 	// Admin
 	admin := r.Path("/admin").Subrouter()
 	admin.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminHome))).Name("admin")
+
 	r.Path("/admin/user").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminUserList))).Name("admin.user")
 	r.Path("/admin/user/{id}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminUserDetail))).Name("admin.user.detail")
 
@@ -84,8 +88,11 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Path("/admin/action").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminActionList))).Name("admin.action")
 	r.Path("/admin/action/{id}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminActionDetail))).Name("admin.action.detail")
 
-	r.Path("/admin/invite").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminInviteList))).Name("admin.invite")
-	r.Path("/admin/invite/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminInviteDetail))).Name("admin.invite.detail")
+	r.Path("/admin/invitation").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminInvitationList))).Name("admin.invitation")
+	r.Path("/admin/invitation/{key}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminInvitationDetail))).Name("admin.invitation.detail")
+
+	r.Path("/admin/team").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminTeamList))).Name("admin.team")
+	r.Path("/admin/team/{id}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminTeamDetail))).Name("admin.team.detail")
 
 	r.Path("/admin/sprint").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminSprintList))).Name("admin.sprint")
 	r.Path("/admin/sprint/{id}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminSprintDetail))).Name("admin.sprint.detail")
@@ -103,6 +110,11 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Path("/admin/connection").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminConnectionList))).Name("admin.connection")
 	r.Path("/admin/connection").Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(AdminConnectionPost))).Name("admin.connection.post")
 	r.Path("/admin/connection/{id}").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(AdminConnectionDetail))).Name("admin.connection.detail")
+
+	// GraphQL
+	graphql := r.Path("/admin/graphql").Subrouter()
+	graphql.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(GraphQLHome))).Name("graphql")
+	graphql.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(GraphQLRun))).Name("graphql.run")
 
 	// Utils
 	_ = r.Path("/utils").Subrouter()

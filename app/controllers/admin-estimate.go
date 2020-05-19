@@ -23,7 +23,7 @@ func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		estimates, err := ctx.App.Estimate.List(params.Get("estimate"))
+		estimates, err := ctx.App.Estimate.List(params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -50,15 +50,15 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID, params.Get("member"))
+		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID, params.Get(util.KeyMember, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		stories, err := ctx.App.Estimate.GetStories(estimateID, params.Get("story"))
+		stories, err := ctx.App.Estimate.GetStories(estimateID, params.Get(util.KeyStory, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, estimateID, params.Get("action"))
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, estimateID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -100,7 +100,7 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		votes, err := ctx.App.Estimate.GetStoryVotes(storyID, params.Get("vote"))
+		votes, err := ctx.App.Estimate.GetStoryVotes(storyID, params.Get(util.KeyVote, ctx.Logger))
 		if err != nil {
 			return "", err
 		}

@@ -17,12 +17,12 @@ import (
 func RetroList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := paramSetFromRequest(r)
-		sessions, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get("retro"))
+		sessions, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving retros"))
 		}
 
-		ctx.Title = "Retrospectives"
+		ctx.Title = util.SvcRetro.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key+".list"), util.SvcRetro.Key)
 		return tmpl(templates.RetroList(sessions, ctx, w))
 	})
@@ -32,7 +32,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(r.Form.Get("title"))
-		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, nil)
+		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, getSprintID(r.Form))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating retro session"))
 		}

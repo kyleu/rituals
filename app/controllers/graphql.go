@@ -22,7 +22,7 @@ import (
 var svc *gql.Service
 
 func GraphQLHome(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
 			return "", err
@@ -38,7 +38,7 @@ func GraphQLHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func GraphQLRun(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
 			return "", err

@@ -45,7 +45,7 @@
       <% if len(votes) == 0 { %>
         <p>No votes available</p>
       <% } else { %>
-        <% AdminVoteTable(votes, params.Get("vote"), ctx, _buffer) %>
+        <% AdminVoteTable(votes, params.Get(util.KeyVote, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

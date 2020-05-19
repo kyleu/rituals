@@ -3,6 +3,7 @@ package retro
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/markdown"
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -11,9 +12,9 @@ import (
 var defaultFeedbackOrdering = []*query.Ordering{{Column: "category", Asc: true}, {Column: "idx", Asc: true}, {Column: "created", Asc: false}}
 
 func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) ([]*Feedback, error) {
-	params = query.ParamsWithDefaultOrdering("feddback", params, defaultFeedbackOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)
 	var dtos []feedbackDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "feedback", "retro_id = $1", params.OrderByString(), params.Limit, params.Offset), retroID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyFeedback, "retro_id = $1", params.OrderByString(), params.Limit, params.Offset), retroID)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +23,7 @@ func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) ([]*Feedb
 
 func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	dto := &feedbackDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "feedback", "id = $1", "", 0, 0), feedbackID)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyFeedback, "id = $1", "", 0, 0), feedbackID)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +32,7 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelect("retro_id", "feedback", "id = $1", "", 0, 0)
+	q := query.SQLSelect("retro_id", util.KeyFeedback, "id = $1", "", 0, 0)
 	err := s.db.Get(&ret, q, feedbackID)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": id}
-	s.actions.Post(util.SvcRetro.Key, retroID, authorID, "add-feedback", actionContent, "")
+	s.actions.Post(util.SvcRetro.Key, retroID, authorID, action.ActFeedbackAdd, actionContent, "")
 
 	return s.GetFeedbackByID(id)
 }
@@ -75,7 +76,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.actions.Post(util.SvcRetro.Key, fb.RetroID, userID, "update-feedback", actionContent, "")
+	s.actions.Post(util.SvcRetro.Key, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent, "")
 
 	return s.GetFeedbackByID(feedbackID)
 }
@@ -93,7 +94,7 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	_, err = s.db.Exec(q, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.actions.Post(util.SvcRetro.Key, feedback.RetroID, userID, "remove-feedback", actionContent, "")
+	s.actions.Post(util.SvcRetro.Key, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
 
 	return err
 }

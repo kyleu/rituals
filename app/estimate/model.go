@@ -22,8 +22,6 @@ var StatusDeleted = Status{Key: "deleted"}
 
 var AllStatuses = []Status{StatusNew, StatusActive, StatusComplete, StatusDeleted}
 
-var DefaultChoices = []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", "?"}
-
 func statusFromString(s string) Status {
 	for _, t := range AllStatuses {
 		if t.Key == s {
@@ -41,18 +39,7 @@ func (t Status) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
-type SessionOptions struct {
-	Foo string `json:"foo"`
-}
-
-func (o *SessionOptions) ToJSON() string {
-	b, _ := json.Marshal(o)
-	return string(b)
-}
-
-func optionsFromDB(x string) SessionOptions {
-	return SessionOptions{Foo: x}
-}
+var DefaultChoices = []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", "?"}
 
 func choicesFromDB(s string) []string {
 	ret := query.StringToArray(s)
@@ -70,7 +57,6 @@ type Session struct {
 	Owner    uuid.UUID      `json:"owner"`
 	Status   Status         `json:"status"`
 	Choices  []string       `json:"choices"`
-	Options  SessionOptions `json:"options"`
 	Created  time.Time      `json:"created"`
 }
 
@@ -83,7 +69,6 @@ func NewSession(title string, slug string, userID uuid.UUID, sprintID *uuid.UUID
 		Owner:    userID,
 		Status:   StatusNew,
 		Choices:  nil,
-		Options:  SessionOptions{Foo: ""},
 		Created:  time.Time{},
 	}
 }
@@ -96,7 +81,6 @@ type sessionDTO struct {
 	Owner    uuid.UUID  `db:"owner"`
 	Status   string     `db:"status"`
 	Choices  string     `db:"choices"`
-	Options  string     `db:"options"`
 	Created  time.Time  `db:"created"`
 }
 
@@ -109,7 +93,6 @@ func (dto *sessionDTO) ToSession() *Session {
 		Owner:    dto.Owner,
 		Status:   statusFromString(dto.Status),
 		Choices:  choicesFromDB(dto.Choices),
-		Options:  optionsFromDB(dto.Options),
 		Created:  dto.Created,
 	}
 }

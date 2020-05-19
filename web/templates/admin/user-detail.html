@@ -1,4 +1,4 @@
-<%: func AdminUserDetail(user *user.SystemUser, auths []*auth.Record, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminUserDetail(user *user.SystemUser, auths []*auth.Record, teams []*team.Session, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -56,40 +56,46 @@
     </div>
 
     <% if len(auths) > 0 { %>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Auth Records</h3>
-      <% AdminAuthTable(auths, params.Get("auth"), ctx, _buffer) %>
-    </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Auth Records</h3>
+        <% AdminAuthTable(auths, params.Get(util.KeyAuth, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(teams) > 0 { %>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Teams</h3>
+        <% AdminTeamTable(teams, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
     <% } %>
     <% if len(sprints) > 0 { %>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Sprints</h3>
-      <% AdminSprintTable(sprints, params.Get("sprint"), ctx, _buffer) %>
-    </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Sprints</h3>
+        <% AdminSprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
     <% } %>
     <% if len(estimates) > 0 { %>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Estimate Sessions</h3>
-      <% AdminEstimateTable(estimates, params.Get("estimate"), ctx, _buffer) %>
-    </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title"><%= util.SvcEstimate.PluralTitle %></h3>
+        <% AdminEstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
     <% } %>
     <% if len(standups) > 0 { %>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Daily Standups</h3>
-      <% AdminStandupTable(standups, params.Get("standup"), ctx, _buffer) %>
-    </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title"><%= util.SvcStandup.PluralTitle %></h3>
+        <% AdminStandupTable(standups, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
     <% } %>
     <% if len(retros) > 0 { %>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Retrospectives</h3>
-      <% AdminRetroTable(retros, params.Get("retro"), ctx, _buffer) %>
-    </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title"><%= util.SvcRetro.PluralTitle %></h3>
+        <% AdminRetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
     <% } %>
     <% if len(actions) > 0 { %>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-      <h3 class="uk-card-title">Actions</h3>
-      <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
-    </div>
+      <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Actions</h3>
+        <% AdminActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
+      </div>
     <% } %>
   </div>
 </div>

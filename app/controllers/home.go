@@ -14,25 +14,29 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := paramSetFromRequest(r)
 
-		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get("sprint"))
+		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get("estimate"))
+		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		standups, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get("standup"))
+		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		retros, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get("retro"))
+		standups, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		if err != nil {
+			return "", err
+		}
+		retros, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
 
 		ctx.Title = "Home"
-		return tmpl(templates.Index(ctx, sprints, estimates, standups, retros, w))
+		return tmpl(templates.Index(ctx, teams, sprints, estimates, standups, retros, w))
 	})
 }
 

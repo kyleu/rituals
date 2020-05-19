@@ -16,11 +16,7 @@ namespace report {
   export function onSubmitReport() {
     const d = util.req<HTMLInputElement>("#standup-report-date").value;
     const content = util.req<HTMLInputElement>("#standup-report-content").value;
-    const msg = {
-      svc: services.standup.key,
-      cmd: command.client.addReport,
-      param: {d: d, content: content},
-    };
+    const msg = {svc: services.standup.key, cmd: command.client.addReport, param: {d: d, content: content}};
     socket.send(msg);
     return false;
   }
@@ -28,11 +24,7 @@ namespace report {
   export function onEditReport() {
     const d = util.req<HTMLInputElement>("#standup-report-edit-date").value;
     const content = util.req<HTMLInputElement>("#standup-report-edit-content").value;
-    const msg = {
-      svc: services.standup.key,
-      cmd: command.client.updateReport,
-      param: {id: standup.cache.activeReport, d: d, content: content},
-    };
+    const msg = {svc: services.standup.key, cmd: command.client.updateReport, param: {id: standup.cache.activeReport, d: d, content: content}};
     socket.send(msg);
     return false;
   }
@@ -40,11 +32,7 @@ namespace report {
   export function onRemoveReport() {
     const id = standup.cache.activeReport;
     if(id && confirm("Delete this report?")) {
-      const msg = {
-        svc: services.standup.key,
-        cmd: command.client.removeReport,
-        param: id,
-      };
+      const msg = {svc: services.standup.key, cmd: command.client.removeReport, param: id};
       socket.send(msg);
       UIkit.modal("#modal-report").hide();
     }

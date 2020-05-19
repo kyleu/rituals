@@ -8,7 +8,7 @@
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">
         <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcRetro.Key, `key`, model.Slug) %>">Join</a></div>
-        Retrospective
+        <%= util.SvcRetro.Title %>
       </h3>
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
@@ -44,7 +44,7 @@
       <% if len(members) == 0 { %>
       <p>No members available</p>
       <% } else { %>
-      <% AdminMemberTable(members, params.Get("member"), ctx, _buffer) %>
+      <% AdminMemberTable(members, params.Get(util.KeyMember, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
@@ -52,7 +52,7 @@
       <% if len(actions) == 0 { %>
         <p>No actions available</p>
       <% } else { %>
-        <% AdminActionTable(actions, params.Get("action"), ctx, _buffer) %>
+        <% AdminActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
   </div>

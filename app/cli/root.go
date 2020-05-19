@@ -2,6 +2,9 @@ package cli
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/invitation"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/team"
 	"net/http"
 	"os"
 
@@ -14,10 +17,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/controllers"
 	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/invite"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/socket"
-	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -71,28 +72,30 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	actionService := action.NewService(db, logger)
 	userSvc := user.NewService(actionService, db, logger)
 	authSvc := auth.NewService(actionService, db, logger, userSvc)
-	inviteSvc := invite.NewService(actionService, db, logger)
+	invitationSvc := invitation.NewService(actionService, db, logger)
+	teamSvc := team.NewService(actionService, db, logger)
+	sprintSvc := sprint.NewService(actionService, db, logger)
 	estimateSvc := estimate.NewService(actionService, db, logger)
 	standupSvc := standup.NewService(actionService, db, logger)
 	retroSvc := retro.NewService(actionService, db, logger)
-	sprintSvc := sprint.NewService(actionService, db, logger)
-	socketSvc := socket.NewService(actionService, logger, userSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
+	socketSvc := socket.NewService(actionService, logger, userSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{
-		Debug:    verbose,
-		Version:  version,
-		Commit:   commitHash,
-		Logger:   logger,
-		Errors:   handler,
-		User:     userSvc,
-		Auth:     authSvc,
-		Action:   actionService,
-		Invite:   inviteSvc,
-		Estimate: estimateSvc,
-		Standup:  standupSvc,
-		Retro:    retroSvc,
-		Sprint:   sprintSvc,
-		Socket:   &socketSvc,
+		Debug:      verbose,
+		Version:    version,
+		Commit:     commitHash,
+		Logger:     logger,
+		Errors:     handler,
+		User:       userSvc,
+		Auth:       authSvc,
+		Action:     actionService,
+		Invitation: invitationSvc,
+		Team:       teamSvc,
+		Sprint:     sprintSvc,
+		Estimate:   estimateSvc,
+		Standup:    standupSvc,
+		Retro:      retroSvc,
+		Socket:     &socketSvc,
 	}
 
 	return &ai, nil

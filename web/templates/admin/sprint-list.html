@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Sprints</h3>
-      <% AdminSprintTable(sprints, params.Get("sprint"), ctx, _buffer) %>
+      <% AdminSprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

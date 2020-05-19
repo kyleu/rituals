@@ -1,0 +1,14 @@
+<%: func AdminTeamList(teams []*team.Session, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">Teams</h3>
+      <% AdminTeamTable(teams, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, _buffer) %>
+    </div>
+  </div>
+</div>
+<% } %>

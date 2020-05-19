@@ -16,13 +16,13 @@ import (
 
 func AdminRetroList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = "Retrospective List"
+		ctx.Title = util.SvcRetro.Title + " List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), util.SvcRetro.Key)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin." + util.SvcRetro.Key), util.SvcRetro.Key)...)
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		retros, err := ctx.App.Retro.List(params.Get("retro"))
+		retros, err := ctx.App.Retro.List(params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -49,11 +49,11 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		members, err := ctx.App.Retro.Members.GetByModelID(retroID, params.Get("member"))
+		members, err := ctx.App.Retro.Members.GetByModelID(retroID, params.Get(util.KeyMember, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, retroID, params.Get("action"))
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, retroID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}

@@ -1,6 +1,7 @@
 <%: func RetroFeedback(ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
   <h3 class="uk-card-title">
+    <span class="model-icon h3-icon" onclick="events.openModal('add-feedback');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
     <span class="modal-title" onclick="events.openModal('add-feedback');">Feedback</span>
   </h3>
   <p id="feedback-detail">Loading...</p>

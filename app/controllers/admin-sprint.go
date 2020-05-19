@@ -18,11 +18,11 @@ func AdminSprintList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Sprint List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint"), "sprint")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint"), util.SvcSprint.Key)...)
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		sprints, err := ctx.App.Sprint.List(params.Get("sprint"))
+		sprints, err := ctx.App.Sprint.List(params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -49,30 +49,30 @@ func AdminSprintDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		members, err := ctx.App.Sprint.Members.GetByModelID(sprintID, params.Get("member"))
+		members, err := ctx.App.Sprint.Members.GetByModelID(sprintID, params.Get(util.KeyMember, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		estimates, err := ctx.App.Estimate.GetBySprint(sprintID, params.Get("estimate"))
+		estimates, err := ctx.App.Estimate.GetBySprint(sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		standups, err := ctx.App.Standup.GetBySprint(sprintID, params.Get("standup"))
+		standups, err := ctx.App.Standup.GetBySprint(sprintID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		retros, err := ctx.App.Retro.GetBySprint(sprintID, params.Get("retro"))
+		retros, err := ctx.App.Retro.GetBySprint(sprintID, params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint.Key, sprintID, params.Get("action"))
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint.Key, sprintID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
 
 		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint"), "sprint")...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint"), util.SvcSprint.Key)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.sprint.detail", "id", sprintIDString), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 

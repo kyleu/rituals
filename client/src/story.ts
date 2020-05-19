@@ -19,24 +19,16 @@ namespace story {
 
   export function onSubmitStory() {
     const title = util.req<HTMLInputElement>("#story-title-input").value;
-    const msg = {
-      svc: services.estimate.key,
-      cmd: command.client.addStory,
-      param: {title: title},
-    };
+    const msg = {svc: services.estimate.key, cmd: command.client.addStory, param: {title: title}};
     socket.send(msg);
     return false;
   }
 
   export function beginEditStory() {
     const s = getActiveStory()!;
-    const x = prompt("Edit your story", s.title)
-    if(x !== null && x !== s.title) {
-      const msg = {
-        svc: services.estimate.key,
-        cmd: command.client.updateStory,
-        param: { id: s.id, title: x },
-      };
+    const newTitle = prompt("Edit your story", s.title)
+    if(newTitle !== null && newTitle !== s.title) {
+      const msg = {svc: services.estimate.key, cmd: command.client.updateStory, param: { id: s.id, title: newTitle }};
       socket.send(msg);
     }
     return false;
@@ -45,11 +37,7 @@ namespace story {
   export function onRemoveStory() {
     const id = estimate.cache.activeStory;
     if(id && confirm("Delete this story?")) {
-      const msg = {
-        svc: services.estimate.key,
-        cmd: command.client.removeStory,
-        param: id,
-      };
+      const msg = {svc: services.estimate.key, cmd: command.client.removeStory, param: id};
       socket.send(msg);
       UIkit.modal("#modal-story").hide();
     }

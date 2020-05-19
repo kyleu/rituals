@@ -1,46 +1,56 @@
 package socket
 
 // Client Messages
-const ClientCmdPing = "ping"
+const (
+	ClientCmdPing = "ping"
 
-const ClientCmdConnect = "connect"
-const ClientCmdGetActions = "get-actions"
-const ClientCmdUpdateProfile = "update-profile"
-const ClientCmdUpdateSession = "update-session"
+  ClientCmdConnect = "connect"
+  ClientCmdUpdateSession = "update-session"
 
-const ClientCmdAddStory = "add-story"
-const ClientCmdUpdateStory = "update-story"
-const ClientCmdRemoveStory = "remove-story"
-const ClientCmdSetStoryStatus = "set-story-status"
-const ClientCmdSubmitVote = "submit-vote"
+	ClientCmdGetActions = "get-actions"
+	ClientCmdGetSprints = "get-sprints"
+	ClientCmdSetSprint = "set-sprint"
 
-const ClientCmdAddReport = "add-report"
-const ClientCmdUpdateReport = "update-report"
-const ClientCmdRemoveReport = "remove-report"
+	ClientCmdUpdateProfile = "update-profile"
 
-const ClientCmdAddFeedback = "add-feedback"
-const ClientCmdUpdateFeedback = "update-feedback"
-const ClientCmdRemoveFeedback = "remove-feedback"
+  ClientCmdAddStory = "add-story"
+  ClientCmdUpdateStory = "update-story"
+  ClientCmdRemoveStory = "remove-story"
+  ClientCmdSetStoryStatus = "set-story-status"
+  ClientCmdSubmitVote = "submit-vote"
+
+  ClientCmdAddReport = "add-report"
+  ClientCmdUpdateReport = "update-report"
+  ClientCmdRemoveReport = "remove-report"
+
+  ClientCmdAddFeedback = "add-feedback"
+  ClientCmdUpdateFeedback = "update-feedback"
+  ClientCmdRemoveFeedback = "remove-feedback"
+)
 
 // Server Messages
-const ServerCmdError = "error"
-const ServerCmdPong = "pong"
+const (
+	ServerCmdError = "error"
+  ServerCmdPong = "pong"
 
-const ServerCmdSessionJoined = "session-joined"
-const ServerCmdSessionUpdate = "session-update"
+  ServerCmdSessionJoined = "session-joined"
+  ServerCmdSessionUpdate = "session-update"
+	ServerCmdSprintUpdate = "sprint-update"
 
-const ServerCmdActions = "actions"
+	ServerCmdActions = "actions"
+	ServerCmdSprints = "sprints"
 
-const ServerCmdMemberUpdate = "member-update"
-const ServerCmdOnlineUpdate = "online-update"
+  ServerCmdMemberUpdate = "member-update"
+  ServerCmdOnlineUpdate = "online-update"
 
-const ServerCmdStoryUpdate = "story-update"
-const ServerCmdStoryRemove = "story-remove"
-const ServerCmdStoryStatusChange = "story-status-change"
-const ServerCmdVoteUpdate = "vote-update"
+  ServerCmdStoryUpdate = "story-update"
+  ServerCmdStoryRemove = "story-remove"
+  ServerCmdStoryStatusChange = "story-status-change"
+  ServerCmdVoteUpdate = "vote-update"
 
-const ServerCmdReportUpdate = "report-update"
-const ServerCmdReportRemove = "report-remove"
+  ServerCmdReportUpdate = "report-update"
+  ServerCmdReportRemove = "report-remove"
 
-const ServerCmdFeedbackUpdate = "feedback-update"
-const ServerCmdFeedbackRemove = "feedback-remove"
+  ServerCmdFeedbackUpdate = "feedback-update"
+  ServerCmdFeedbackRemove = "feedback-remove"
+)

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -20,7 +21,7 @@ func AdminUserList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		users, err := ctx.App.User.List(params.Get("user"))
+		users, err := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -47,27 +48,31 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		auths, err := ctx.App.Auth.GetByUserID(userID, params.Get("auth"))
+		auths, err := ctx.App.Auth.GetByUserID(userID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		sprints, err := ctx.App.Sprint.GetByMember(userID, params.Get("sprint"))
+		teams, err := ctx.App.Team.GetByMember(userID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		estimates, err := ctx.App.Estimate.GetByMember(userID, params.Get("estimate"))
+		sprints, err := ctx.App.Sprint.GetByMember(userID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		standups, err := ctx.App.Standup.GetByMember(userID, params.Get("standup"))
+		estimates, err := ctx.App.Estimate.GetByMember(userID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		retros, err := ctx.App.Retro.GetByMember(userID, params.Get("retro"))
+		standups, err := ctx.App.Standup.GetByMember(userID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetByAuthor(userID, params.Get("action"))
+		retros, err := ctx.App.Retro.GetByMember(userID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		if err != nil {
+			return "", err
+		}
+		actions, err := ctx.App.Action.GetByAuthor(userID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -78,6 +83,6 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user.detail", "id", userIDString), u.Name)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminUserDetail(u, auths, sprints, estimates, standups, retros, actions, params, ctx, w))
+		return tmpl(templates.AdminUserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))
 	})
 }

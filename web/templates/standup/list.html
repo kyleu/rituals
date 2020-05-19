@@ -6,12 +6,15 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div>
-      <h1 class="uk-heading-hero">Daily Standups</h1>
+      <h1 class="uk-heading-hero">
+        <div class="h1-icon" data-uk-icon="icon: <%= util.SvcStandup.Icon %>; ratio: 1.6;"></div>
+        <%= util.SvcStandup.PluralTitle %>
+      </h1>
       <div class="uk-text-lead">Share your progress with your team</div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
           <h3 class="uk-card-title">New Standup</h3>
-          <form class="uk-form-stacked" action="<%= ctx.Route(`standup.new`) %>" method="post">
+          <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcStandup.Key + `.new`) %>" method="post">
             <fieldset class="uk-fieldset">
               <div class="uk-margin-small">
                 <label class="uk-form-label" for="title">Title</label>
@@ -30,7 +33,7 @@
           <h3 class="uk-card-title">Prior Standups</h3>
           <% for _, s := range sessions { %>
           <div>
-            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`standup`, `key`, s.Slug) %>"><%= s.Title %></a>
+            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcStandup.Key, `key`, s.Slug) %>"><%= s.Title %></a>
           </div>
           <% } %>
         </div>

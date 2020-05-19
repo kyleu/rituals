@@ -24,7 +24,7 @@ namespace vote {
 
   export function onVoteUpdate(v: Vote) {
     let x = estimate.cache.votes;
-    x = x.filter(v => v.userID != v.userID || v.storyID != v.storyID);
+    x = x.filter(v => v.userID !== v.userID || v.storyID !== v.storyID);
     x.push(v);
     estimate.cache.votes = x;
     if (v.storyID === estimate.cache.activeStory) {
@@ -76,11 +76,7 @@ namespace vote {
 
   // noinspection JSUnusedGlobalSymbols
   export function onSubmitVote(choice: string) {
-    const msg = {
-      svc: services.estimate.key,
-      cmd: command.client.submitVote,
-      param: {storyID: estimate.cache.activeStory, choice: choice}
-    };
+    const msg = {svc: services.estimate.key, cmd: command.client.submitVote, param: {storyID: estimate.cache.activeStory, choice: choice}};
     socket.send(msg);
   }
 
@@ -114,9 +110,9 @@ namespace vote {
       min: min,
       max: max,
       sum: sum,
-      mean: count == 0 ? 0 : sum / count,
-      median: count == 0 ? 0 : floats[Math.floor(floats.length / 2)],
-      mode: count == 0 ? 0 : mode
+      mean: count === 0 ? 0 : sum / count,
+      median: count === 0 ? 0 : floats[Math.floor(floats.length / 2)],
+      mode: count === 0 ? 0 : mode
     };
   }
 }

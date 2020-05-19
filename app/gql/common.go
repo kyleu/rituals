@@ -4,6 +4,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/web"
+	"logur.dev/logur"
 )
 
 var graphQLInitialized = false
@@ -36,7 +37,7 @@ var listArgs = graphql.FieldConfigArgument{
 	},
 }
 
-func paramSetFromGraphQLParams(key string, params graphql.ResolveParams) *query.Params {
+func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger logur.Logger) *query.Params {
 	orderings := make([]*query.Ordering, 0)
 	o, ok := params.Args["orders"]
 	if ok {
@@ -60,5 +61,5 @@ func paramSetFromGraphQLParams(key string, params graphql.ResolveParams) *query.
 	}
 
 	ret := &query.Params{Key: key, Orderings: orderings, Limit: limit, Offset: offset}
-	return ret.Filtered()
+	return ret.Filtered(logger)
 }

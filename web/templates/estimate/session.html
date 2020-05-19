@@ -4,20 +4,17 @@
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('session');return false;" title="edit session"></a>
     </span>
+    <span class="model-icon h3-icon" onclick="events.openModal('session');" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>;"></span>
     <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
   </h3>
-  <% if sprint == nil { %>
-    <p>Estimation Session</p>
-  <% } else { %>
-    <p><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`sprint`, `key`, sprint.Slug) %>"><%= sprint.Title %></a> Estimation Session</p>
-  <% } %>
+  <p><span id="sprint-link-container"></span><%= util.SvcEstimate.Title %></p>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
-      <h2 class="uk-modal-title">Edit Estimate Session</h2>
+      <h2 class="uk-modal-title">Edit <%= util.SvcEstimate.Title %></h2>
     </div>
     <form class="uk-form-stacked" id="form-detail" onsubmit="estimate.onSubmitEstimateSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
@@ -30,9 +27,14 @@
             <label class="uk-form-label" for="model-choices-input">Choices</label>
             <input class="uk-input" id="model-choices-input" type="text" />
           </div>
+          <div id="model-sprint-container" class="uk-margin">
+            <label class="uk-form-label" for="model-sprint-select">Sprint</label>
+            <div id="model-sprint-select"><select class="uk-select"></select></div>
+          </div>
         </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">
+        <button id="remove-from-sprint-button" class="left uk-button uk-button-default" onclick="rituals.removeFromSprint()" type="button">Remove From Sprint</button>
         <button class="uk-button uk-button-default" type="submit">Save</button>
       </div>
     </form>

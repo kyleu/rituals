@@ -15,7 +15,7 @@ import (
 func Profile(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := paramSetFromRequest(r)
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get("auth"))
+		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "cannot load auth records for user ["+ctx.Profile.UserID.String()+"]"))
 		}

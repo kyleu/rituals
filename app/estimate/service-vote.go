@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"database/sql"
+	"github.com/kyleu/rituals.dev/app/action"
 
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -11,9 +12,9 @@ import (
 )
 
 func (s *Service) GetStoryVotes(storyID uuid.UUID, params *query.Params) ([]*Vote, error) {
-	params = query.ParamsWithDefaultOrdering("story", params)
+	params = query.ParamsWithDefaultOrdering(util.KeyStory, params)
 	var dtos []voteDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "vote", "story_id = $1", params.OrderByString(), params.Limit, params.Offset), storyID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyVote, "story_id = $1", params.OrderByString(), params.Limit, params.Offset), storyID)
 	if err != nil {
 		return nil, err
 	}
@@ -21,7 +22,7 @@ func (s *Service) GetStoryVotes(storyID uuid.UUID, params *query.Params) ([]*Vot
 }
 
 func (s *Service) GetEstimateVotes(estimateID uuid.UUID, params *query.Params) ([]*Vote, error) {
-	params = query.ParamsWithDefaultOrdering("vote", params)
+	params = query.ParamsWithDefaultOrdering(util.KeyVote, params)
 	var dtos []voteDTO
 	q := query.SQLSelect("v.*", "vote v join story s on v.story_id = s.id", "s.estimate_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, estimateID)
@@ -33,7 +34,7 @@ func (s *Service) GetEstimateVotes(estimateID uuid.UUID, params *query.Params) (
 
 func (s *Service) GetVote(storyID uuid.UUID, userID uuid.UUID) (*Vote, error) {
 	dto := &voteDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "vote", "story_id = $1 and user_id = $2", "", 0, 0), storyID, userID)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyVote, "story_id = $1 and user_id = $2", "", 0, 0), storyID, userID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -60,7 +61,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		}
 
 		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
-		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, "add-vote", actionContent, "")
+		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, action.ActVoteAdd, actionContent, "")
 
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
 	} else {
@@ -72,7 +73,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		curr.Choice = choice
 
 		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
-		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, "update-vote", actionContent, "")
+		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, action.ActVoteUpdate, actionContent, "")
 
 		return curr, nil
 	}

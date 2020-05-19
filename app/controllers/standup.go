@@ -17,12 +17,12 @@ import (
 func StandupList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := paramSetFromRequest(r)
-		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get("standup"))
+		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving standups"))
 		}
 
-		ctx.Title = "Daily Standups"
+		ctx.Title = util.SvcStandup.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Key)
 		return tmpl(templates.StandupList(sessions, ctx, w))
 	})
@@ -32,7 +32,7 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(r.Form.Get("title"))
-		sess, err := ctx.App.Standup.New(title, ctx.Profile.UserID, nil)
+		sess, err := ctx.App.Standup.New(title, ctx.Profile.UserID, getSprintID(r.Form))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating standup session"))
 		}

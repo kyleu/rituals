@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/query"
@@ -26,9 +27,9 @@ func (s *Service) UpdateRecord(r *Record) error {
 }
 
 func (s *Service) List(params *query.Params) ([]*Record, error) {
-	params = query.ParamsWithDefaultOrdering("auth", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []recordDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "auth", "", params.OrderByString(), params.Limit, params.Offset))
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAuth, "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +38,7 @@ func (s *Service) List(params *query.Params) ([]*Record, error) {
 
 func (s *Service) GetByID(authID uuid.UUID) (*Record, error) {
 	dto := &recordDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "auth", "id = $1", "", 0, 0), authID)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyAuth, "id = $1", "", 0, 0), authID)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (s *Service) GetByID(authID uuid.UUID) (*Record, error) {
 
 func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
 	dto := &recordDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "auth", "provider = $1 and provider_id = $2", "", 0, 0), key, code)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyAuth, "provider = $1 and provider_id = $2", "", 0, 0), key, code)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -57,9 +58,9 @@ func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
 }
 
 func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) ([]*Record, error) {
-	params = query.ParamsWithDefaultOrdering("auth", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []recordDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "auth", "user_id = $1", params.OrderByString(), params.Limit, params.Offset), userID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
 		return nil, err
 	}

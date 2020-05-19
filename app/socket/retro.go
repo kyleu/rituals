@@ -2,9 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/kyleu/rituals.dev/app/query"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -16,6 +16,7 @@ import (
 type RetroSessionJoined struct {
 	Profile  *util.Profile     `json:"profile"`
 	Session  *retro.Session    `json:"session"`
+	Sprint   *sprint.Session   `json:"sprint"`
 	Members  []*member.Entry   `json:"members"`
 	Online   []uuid.UUID       `json:"online"`
 	Feedback []*retro.Feedback `json:"feedback"`
@@ -50,15 +51,44 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 	if len(categories) == 0 {
 		categories = retro.DefaultCategories
 	}
-	s.logger.Debug(fmt.Sprintf("saving retro session [%s] with categories [%s]", title, strings.Join(categories, ", ")))
 
-	err := s.retros.UpdateSession(ch.ID, title, categories, userID)
+	var sprintID *uuid.UUID
+	sprintIDString, ok := param["sprintID"]
+	if ok {
+		sprintIDResult, err := uuid.FromString(sprintIDString.(string))
+		if err == nil {
+			sprintID = &sprintIDResult
+		}
+	}
+
+	s.logger.Debug(fmt.Sprintf("saving retro session [%s] with categories [%s] and sprint [%s]", title, strings.Join(categories, ", "), sprintID))
+
+	curr, err := s.retros.GetByID(ch.ID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error loading retro session [" + ch.ID.String() + "] for update"))
+	}
+
+	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
+
+	err = s.retros.UpdateSession(ch.ID, title, categories, sprintID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating retro session"))
 	}
 
 	err = sendRetroSessionUpdate(s, ch)
-	return errors.WithStack(errors.Wrap(err, "error sending retro session"))
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error sending retro session"))
+	}
+
+	if(sprintChanged) {
+		spr := s.sprints.GetByIDPointer(sprintID)
+		err = sendSprintUpdate(s, ch, spr)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated retro session"))
+		}
+	}
+
+	return nil
 }
 
 func sendRetroSessionUpdate(s *Service, ch channel) error {

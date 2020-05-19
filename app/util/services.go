@@ -3,45 +3,70 @@ package util
 import "strings"
 
 type Service struct {
-	Key    string
-	Title  string
-	Plural string
-	Icon   string
+	Key         string
+	Title       string
+	Plural      string
+	PluralTitle string
+	Icon        string
 }
 
 // Services
 var SvcSystem = Service{
-	Key:    "system",
-	Title:  "System",
-	Plural: "systems",
-	Icon:   "close",
+	Key:         "system",
+	Title:       "System",
+	Plural:      "systems",
+	PluralTitle: "Systems",
+	Icon:        "close",
+}
+var SvcTeam = Service{
+	Key:         "team",
+	Title:       "Team",
+	Plural:      "teams",
+	PluralTitle: "Teams",
+	Icon:        "users",
 }
 var SvcSprint = Service{
-	Key:    "sprint",
-	Title:  "Sprint",
-	Plural: "sprints",
-	Icon:   "git-fork",
+	Key:         "sprint",
+	Title:       "Sprint",
+	Plural:      "sprints",
+	PluralTitle: "Sprints",
+	Icon:        "social",
 }
 var SvcEstimate = Service{
-	Key:    "estimate",
-	Title:  "Estimate",
-	Plural: "estimates",
-	Icon:   "settings",
+	Key:         "estimate",
+	Title:       "Estimation Session",
+	Plural:      "estimates",
+	PluralTitle: "Estimation Sessions",
+	Icon:        "settings",
 }
 var SvcStandup = Service{
-	Key:    "standup",
-	Title:  "Standup",
-	Plural: "standups",
-	Icon:   "future",
+	Key:         "standup",
+	Title:       "Daily Standup",
+	Plural:      "standups",
+	PluralTitle: "Daily Standups",
+	Icon:        "future",
 }
 var SvcRetro = Service{
-	Key:    "retro",
-	Title:  "Retrospective",
-	Plural: "retros",
-	Icon:   "history",
+	Key:         "retro",
+	Title:       "Retrospective",
+	Plural:      "retros",
+	PluralTitle: "Retrospectives",
+	Icon:        "history",
 }
 
-var AllServiceKeys = []string{SvcEstimate.Key, SvcStandup.Key, SvcRetro.Key}
+const (
+	KeyAction     = "action"
+	KeyAuth       = "auth"
+	KeyConnection = "connection"
+	KeyFeedback   = "feedback"
+	KeyInvitation = "invitation"
+	KeyMember     = "member"
+	KeyReport     = "report"
+	KeySocket     = "socket"
+	KeyStory      = "story"
+	KeyUser       = "user"
+	KeyVote       = "vote"
+)
 
 func ServiceTitle(title string) string {
 	title = strings.TrimSpace(title)

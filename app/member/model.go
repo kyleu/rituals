@@ -11,12 +11,11 @@ type Role struct {
 	Key string `json:"key"`
 }
 
-var RoleCreator = Role{Key: "creator"}
 var RoleOwner = Role{Key: "owner"}
 var RoleMember = Role{Key: "member"}
 var RoleObserver = Role{Key: "observer"}
 
-var AllRoles = []Role{RoleCreator, RoleOwner, RoleMember, RoleObserver}
+var AllRoles = []Role{RoleOwner, RoleMember, RoleObserver}
 
 func roleFromString(s string) Role {
 	for _, t := range AllRoles {

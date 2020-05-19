@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"strings"
 
 	"github.com/kyleu/rituals.dev/app/query"
@@ -16,6 +17,7 @@ import (
 type EstimateSessionJoined struct {
 	Profile *util.Profile     `json:"profile"`
 	Session *estimate.Session `json:"session"`
+	Sprint  *sprint.Session   `json:"sprint"`
 	Members []*member.Entry   `json:"members"`
 	Online  []uuid.UUID       `json:"online"`
 	Stories []*estimate.Story `json:"stories"`
@@ -74,11 +76,12 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 }
 
 func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	titleString, ok := param["choices"].(string)
+	titleString, ok := param["title"].(string)
 	if !ok {
 		return errors.WithStack(errors.New("cannot read choices as string"))
 	}
 	title := util.ServiceTitle(titleString)
+
 	choicesString, ok := param["choices"].(string)
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"])))
@@ -87,15 +90,44 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 	if len(choices) == 0 {
 		choices = estimate.DefaultChoices
 	}
-	s.logger.Debug(fmt.Sprintf("saving estimate session [%s] with choices [%s]", title, strings.Join(choices, ", ")))
 
-	err := s.estimates.UpdateSession(ch.ID, title, choices, userID)
+	var sprintID *uuid.UUID
+	sprintIDString, ok := param["sprintID"]
+	if ok {
+		sprintIDResult, err := uuid.FromString(sprintIDString.(string))
+		if err == nil {
+			sprintID = &sprintIDResult
+		}
+	}
+
+	s.logger.Debug(fmt.Sprintf("saving estimate session [%s] with choices [%s] and sprint [%s]", title, strings.Join(choices, ", "), sprintID))
+
+	curr, err := s.estimates.GetByID(ch.ID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error loading estimate session [" + ch.ID.String() + "] for update"))
+	}
+
+	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
+
+	err = s.estimates.UpdateSession(ch.ID, title, choices, sprintID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating estimate session"))
 	}
 
 	err = sendEstimateSessionUpdate(s, ch)
-	return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
+	}
+
+	if(sprintChanged) {
+		spr := s.sprints.GetByIDPointer(sprintID)
+		err = sendSprintUpdate(s, ch, spr)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated estimate session"))
+		}
+	}
+
+	return nil
 }
 
 func sendEstimateSessionUpdate(s *Service, ch channel) error {

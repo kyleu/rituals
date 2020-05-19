@@ -3,7 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gofrs/uuid"
 	"net/http"
+	"net/url"
 	"time"
 
 	"emperror.dev/errors"
@@ -79,4 +81,16 @@ func saveSession(w http.ResponseWriter, r *http.Request, ctx web.RequestContext)
 	if err != nil {
 		ctx.Logger.Warn("unable to save session to response")
 	}
+}
+
+func getSprintID(form url.Values) *uuid.UUID {
+	sprintString := form.Get(util.SvcSprint.Key)
+	var sprintID *uuid.UUID
+	if sprintString != "" {
+		s, err := uuid.FromString(sprintString)
+		if err == nil {
+			sprintID = &s
+		}
+	}
+	return sprintID
 }

@@ -8,6 +8,7 @@ namespace events {
       case "session":
         const sessionInput = util.setValue("#model-title-input", util.req("#model-title").innerText);
         delay(() => sessionInput.focus());
+        sprint.refreshSprints();
         break;
 
       // member
@@ -15,7 +16,7 @@ namespace events {
         const selfInput = util.setValue("#self-name-input", util.req("#member-self .member-name").innerText);
         delay(() => selfInput.focus());
         break;
-      case "invite":
+      case "invitation":
         break;
       case "member":
         system.cache.activeMember = id;
@@ -73,7 +74,7 @@ namespace events {
 
       // default
       default:
-        console.debug("unhandled modal [" + key + "]");
+        console.warn("unhandled modal [" + key + "]");
     }
     UIkit.modal("#modal-" + key).show();
     return false;

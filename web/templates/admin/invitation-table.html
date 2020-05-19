@@ -1,0 +1,24 @@
+<%: func AdminInvitationTable(invitations []*invitation.Invitation, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <% ComponentTableHeader(util.KeyInvitation, "key", "Key", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyInvitation, "relation", "Relation", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyInvitation, "source", "Source", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyInvitation, "target", "Target", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyInvitation, "status", "Status", params, ctx, buffer) %>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, i := range invitations { %>
+    <tr>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invitation.detail`, `key`, i.Key) %>"><%= i.Key %></a></td>
+      <td><%= i.K.String() %>:<%= i.V %></td>
+      <td><% ComponentUUID(i.Src, buffer) %></td>
+      <td><% ComponentUUID(i.Tgt, buffer) %></td>
+      <td><%= i.Status.String() %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

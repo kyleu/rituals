@@ -10,7 +10,7 @@ namespace vote {
 
   export function renderVoteMembers(members: member.Member[], votes: Vote[]): JSX.Element {
     return <div class="uk-flex uk-flex-wrap uk-flex-around">
-      {members.map(m => renderVoteMember(m, votes.filter(v => v.userID == m.userID).length > 0))}
+      {members.map(m => renderVoteMember(m, votes.filter(v => v.userID === m.userID).length > 0))}
     </div>;
   }
 
@@ -32,7 +32,7 @@ namespace vote {
   export function renderVoteResults(members: member.Member[], votes: Vote[]): JSX.Element {
     return <div class="uk-flex uk-flex-wrap uk-flex-around">
       {members.map(m => {
-        let vote = votes.filter(v => v.userID == m.userID);
+        let vote = votes.filter(v => v.userID === m.userID);
         return renderVoteResult(m, length > 0 ? vote[0].choice : undefined);
       })}
     </div>;

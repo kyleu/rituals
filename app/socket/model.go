@@ -57,3 +57,14 @@ type OnlineUpdate struct {
 	UserID    uuid.UUID `json:"userID"`
 	Connected bool      `json:"connected"`
 }
+
+func differentPointerValues(l *uuid.UUID, r *uuid.UUID) bool {
+	if l != nil && r != nil {
+		return *l != *r
+	} else if (l == nil && r != nil) {
+		return true
+	} else if (l != nil && r == nil) {
+		return true
+	}
+	return false
+}

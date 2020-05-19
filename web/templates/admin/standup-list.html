@@ -6,8 +6,8 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <h3 class="uk-card-title">Daily Standups</h3>
-      <% AdminStandupTable(standups, params.Get("standup"), ctx, _buffer) %>
+      <h3 class="uk-card-title"><%= util.SvcStandup.PluralTitle %></h3>
+      <% AdminStandupTable(standups, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

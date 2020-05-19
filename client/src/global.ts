@@ -1,3 +1,5 @@
+var debug = true;
+
 namespace system {
   class Cache {
     profile?: rituals.Profile;
@@ -45,6 +47,12 @@ namespace services {
     plural: "systems",
     icon: "close"
   };
+  export const team = {
+    key: "team",
+    title: "Team",
+    plural: "teams",
+    icon: "users"
+  };
   export const sprint = {
     key: "sprint",
     title: "Sprint",
@@ -53,13 +61,13 @@ namespace services {
   };
   export const estimate = {
     key: "estimate",
-    title: "Estimate",
+    title: "Estimate Session",
     plural: "estimates",
     icon: "settings"
   };
   export const standup = {
     key: "standup",
-    title: "Standup",
+    title: "Daily Standup",
     plural: "standups",
     icon: "future"
   };
@@ -77,10 +85,13 @@ namespace command {
     ping: "ping",
 
     connect: "connect",
-    getActions: "get-actions",
-    updateProfile: "update-profile",
-
     updateSession: "update-session",
+
+    getActions: "get-actions",
+    getSprints: "get-sprints",
+    setSprint: "set-sprint",
+
+    updateProfile: "update-profile",
 
     addStory: "add-story",
     updateStory: "update-story",
@@ -101,9 +112,12 @@ namespace command {
     error: "error",
     pong: "pong",
 
-    actions: "actions",
     sessionJoined: "session-joined",
     sessionUpdate: "session-update",
+    sprintUpdate: "sprint-update",
+
+    actions: "actions",
+    sprints: "sprints",
 
     memberUpdate: "member-update",
     onlineUpdate: "online-update",

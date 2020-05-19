@@ -2,14 +2,18 @@ package gql
 
 import (
 	"github.com/graphql-go/graphql"
+	"github.com/kyleu/rituals.dev/app/retro"
+	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 )
 
 var (
-	retroArgs      graphql.FieldConfigArgument
-	retroResolver  Callback
-	retrosResolver Callback
-	retroType      *graphql.Object
+	retroArgs           graphql.FieldConfigArgument
+	retroResolver       Callback
+	retrosResolver      Callback
+	retroSprintResolver Callback
+	retroMemberResolver Callback
+	retroType           *graphql.Object
 )
 
 func initRetro() {
@@ -18,6 +22,14 @@ func initRetro() {
 			Type: graphql.String,
 		},
 	}
+
+	retroStatusType := graphql.NewEnum(graphql.EnumConfig{
+		Name: "RetroStatus",
+		Values: graphql.EnumValueConfigMap{
+			"new": &graphql.EnumValueConfig{Value: "new"},
+			"deleted": &graphql.EnumValueConfig{Value: "deleted"},
+		},
+	})
 
 	retroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		slug, ok := p.Args["key"].(string)
@@ -28,7 +40,19 @@ func initRetro() {
 	}
 
 	retrosResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.List(paramSetFromGraphQLParams("retro", params))
+		return ctx.App.Retro.List(paramSetFromGraphQLParams(util.SvcRetro.Key, params, ctx.Logger))
+	}
+
+	retroMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Retro.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger))
+	}
+
+	retroSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		sess := p.Source.(*retro.Session)
+		if sess.SprintID != nil {
+			return ctx.App.Sprint.GetByID(*sess.SprintID)
+		}
+		return nil, nil
 	}
 
 	retroType = graphql.NewObject(
@@ -51,13 +75,22 @@ func initRetro() {
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"status": &graphql.Field{
-					Type: graphql.String,
+					Type: graphql.NewNonNull(retroStatusType),
+					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+						return p.Source.(*retro.Session).Status.Key, nil
+					},
 				},
 				"categories": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.NewList(graphql.String)),
 				},
 				"created": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
+				},
+				"members": &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
+					Description: "This retro's members",
+					Args:        listArgs,
+					Resolve:     ctxF(retroMemberResolver),
 				},
 			},
 		},

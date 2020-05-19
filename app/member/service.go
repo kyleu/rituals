@@ -3,6 +3,7 @@ package member
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
@@ -31,7 +32,7 @@ func NewService(actions *action.Service, db *sqlx.DB, svc string) *Service {
 const nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
 func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) ([]*Entry, error) {
-	params = query.ParamsWithDefaultOrdering("member", params, &query.Ordering{Column: "lower(name)", Asc: true})
+	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, &query.Ordering{Column: "lower(name)", Asc: true})
 	var dtos []entryDTO
 	q := query.SQLSelect(fmt.Sprintf("user_id, %s, role, created", nameClause), s.tableName, fmt.Sprintf("%s = $1", s.colName), params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, id)
@@ -71,7 +72,7 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, e
 		}
 		dto, err = s.Get(modelID, userID)
 
-		s.actions.Post(s.svc, modelID, userID, "add-member", nil, "")
+		s.actions.Post(s.svc, modelID, userID, action.ActMemberAdd, nil, "")
 
 		return dto, true, err
 	} else {

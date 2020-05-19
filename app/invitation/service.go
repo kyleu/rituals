@@ -1,7 +1,8 @@
-package invite
+package invitation
 
 import (
 	"database/sql"
+	"github.com/kyleu/rituals.dev/app/util"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -18,7 +19,7 @@ type Service struct {
 }
 
 func NewService(service *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyUser})
 
 	return &Service{
 		actions: service,
@@ -49,9 +50,9 @@ func (s *Service) New(key string, k InvitationType, v string, src *uuid.UUID, tg
 }
 
 func (s *Service) List(params *query.Params) ([]*Invitation, error) {
-	params = query.ParamsWithDefaultOrdering("invite", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyInvitation, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []invitationDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "invitation", "", params.OrderByString(), params.Limit, params.Offset))
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyInvitation, "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +65,7 @@ func (s *Service) List(params *query.Params) ([]*Invitation, error) {
 
 func (s *Service) GetByKey(key string) (*Invitation, error) {
 	dto := &invitationDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "invitation", "key = $1", "", 0, 0), key)
+	err := s.db.Get(dto, query.SQLSelect("*", util.KeyInvitation, "key = $1", "", 0, 0), key)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

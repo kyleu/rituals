@@ -3,7 +3,9 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -40,7 +42,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, "connect", nil, "")
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	entry, _, err := s.retros.Members.Register(ch.ID, userID)
 	if err != nil {
@@ -65,6 +67,14 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return err
 	}
 
+	var spr *sprint.Session
+	if sess.SprintID != nil {
+		spr, err = s.sprints.GetByID(*sess.SprintID)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error finding stories"))
+		}
+	}
+
 	feedback, err := s.retros.GetFeedback(ch.ID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding feedback for retro"))
@@ -76,6 +86,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		Param: RetroSessionJoined{
 			Profile:  &conn.Profile,
 			Session:  sess,
+			Sprint:   spr,
 			Members:  members,
 			Online:   online,
 			Feedback: feedback,

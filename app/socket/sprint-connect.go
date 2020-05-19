@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -39,7 +40,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, "connect", nil, "")
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	entry, _, err := s.sprints.Members.Register(ch.ID, userID)
 	if err != nil {

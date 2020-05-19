@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">System Users</h3>
-      <% AdminUserTable(users, params.Get("estimate"), ctx, _buffer) %>
+      <% AdminUserTable(users, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

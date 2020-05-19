@@ -3,7 +3,6 @@ drop table if exists "story";
 drop table if exists "estimate_member";
 drop table if exists "estimate";
 
-drop table if exists "standup_update"; -- Legacy
 drop table if exists "report";
 drop table if exists "standup_member";
 drop table if exists "standup";
@@ -18,12 +17,16 @@ drop table if exists "sprint";
 drop table if exists "invitation";
 drop table if exists "action";
 
+drop table if exists "team_member";
+drop table if exists "team";
+
 drop table if exists "auth";
 drop table if exists "system_user";
 
 drop type if exists "estimate_status";
 drop type if exists "invitation_type";
 drop type if exists "invitation_status";
+drop type if exists "member_status";
 drop type if exists "retro_status";
 drop type if exists "standup_status";
 drop type if exists "story_status";

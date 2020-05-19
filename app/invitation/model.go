@@ -1,4 +1,4 @@
-package invite
+package invitation
 
 import (
 	"encoding/json"
@@ -25,11 +25,12 @@ type InvitationType struct {
 	Key string
 }
 
+var InvitationTypeSprint = InvitationType{Key: util.SvcSprint.Key}
 var InvitationTypeEstimate = InvitationType{Key: util.SvcEstimate.Key}
 var InvitationTypeStandup = InvitationType{Key: util.SvcStandup.Key}
 var InvitationTypeRetro = InvitationType{Key: util.SvcRetro.Key}
 
-var AllInvitationTypes = []InvitationType{InvitationTypeEstimate, InvitationTypeStandup, InvitationTypeRetro}
+var AllInvitationTypes = []InvitationType{InvitationTypeSprint, InvitationTypeEstimate, InvitationTypeStandup, InvitationTypeRetro}
 
 func typeFromString(s string) InvitationType {
 	for _, t := range AllInvitationTypes {
@@ -37,7 +38,7 @@ func typeFromString(s string) InvitationType {
 			return t
 		}
 	}
-	return InvitationTypeEstimate
+	return InvitationTypeSprint
 }
 
 func (t *InvitationType) String() string {

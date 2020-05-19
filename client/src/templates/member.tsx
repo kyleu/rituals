@@ -10,7 +10,7 @@ namespace member {
   export function renderMembers(members: Member[]): JSX.Element {
     if (members.length === 0) {
       return <div>
-        <button class="uk-button uk-button-default" onclick="events.openModal('invite');" type="button">Invite Members</button>
+        <button class="uk-button uk-button-default" onclick="events.openModal('invitation');" type="button">Invite Members</button>
       </div>;
     } else {
       return <ul class="uk-list uk-list-divider">

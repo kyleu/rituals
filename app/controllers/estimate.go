@@ -1,10 +1,9 @@
 package controllers
 
 import (
-	"net/http"
-
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
+	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/gorilla/mux"
@@ -16,12 +15,12 @@ import (
 func EstimateList(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := paramSetFromRequest(r)
-		sessions, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get("estimate"))
+		sessions, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving estimates"))
 		}
 
-		ctx.Title = "Estimation Sessions"
+		ctx.Title = util.SvcEstimate.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key+".list"), util.SvcEstimate.Key)
 		return tmpl(templates.EstimateList(sessions, ctx, w))
 	})
@@ -31,7 +30,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(r.Form.Get("title"))
-		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, nil)
+		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, getSprintID(r.Form))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating estimate session"))
 		}

@@ -20,7 +20,7 @@ type Service struct {
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "user"})
+	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyUser})
 
 	return &Service{
 		actions: actions,
@@ -41,7 +41,7 @@ func (s *Service) New(id uuid.UUID) (*SystemUser, error) {
 }
 
 func (s *Service) List(params *query.Params) ([]*SystemUser, error) {
-	params = query.ParamsWithDefaultOrdering("user", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyUser, params, &query.Ordering{Column: "created", Asc: false})
 	var ret []*SystemUser
 	err := s.db.Select(&ret, query.SQLSelect("*", "system_user", "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {

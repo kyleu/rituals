@@ -1,11 +1,11 @@
 package socket
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/util"
 )
@@ -13,6 +13,7 @@ import (
 type StandupSessionJoined struct {
 	Profile *util.Profile     `json:"profile"`
 	Session *standup.Session  `json:"session"`
+	Sprint  *sprint.Session   `json:"sprint"`
 	Members []*member.Entry   `json:"members"`
 	Online  []uuid.UUID       `json:"online"`
 	Reports []*standup.Report `json:"reports"`
@@ -41,13 +42,44 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 	title := util.ServiceTitle(param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("saving standup session [%s]", title))
 
-	err := s.standups.UpdateSession(ch.ID, title, userID)
+	var sprintID *uuid.UUID
+	sprintIDString, ok := param["sprintID"]
+	if ok {
+		sprintIDResult, err := uuid.FromString(sprintIDString.(string))
+		if err == nil {
+			sprintID = &sprintIDResult
+		}
+	}
+
+	s.logger.Debug(fmt.Sprintf("saving standup session [%s] with sprint [%s]", title, sprintID))
+
+	curr, err := s.standups.GetByID(ch.ID)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error loading standup session [" + ch.ID.String() + "] for update"))
+	}
+
+	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
+
+	err = s.standups.UpdateSession(ch.ID, title, sprintID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating standup session"))
 	}
 
 	err = sendStandupSessionUpdate(s, ch)
-	return errors.WithStack(errors.Wrap(err, "error sending standup session"))
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error sending standup session"))
+	}
+
+	if(sprintChanged) {
+		spr := s.sprints.GetByIDPointer(sprintID)
+		err = sendSprintUpdate(s, ch, spr)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated standup session"))
+		}
+	}
+
+
+	return nil
 }
 
 func sendStandupSessionUpdate(s *Service, ch channel) error {

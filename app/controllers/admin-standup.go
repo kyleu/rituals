@@ -16,13 +16,13 @@ import (
 
 func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = "Daily Standup List"
+		ctx.Title = util.SvcStandup.Title + " List"
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		standups, err := ctx.App.Standup.List(params.Get("standup"))
+		standups, err := ctx.App.Standup.List(params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -49,15 +49,15 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		members, err := ctx.App.Standup.Members.GetByModelID(standupID, params.Get("member"))
+		members, err := ctx.App.Standup.Members.GetByModelID(standupID, params.Get(util.KeyMember, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		reports, err := ctx.App.Standup.GetReports(standupID, params.Get("report"))
+		reports, err := ctx.App.Standup.GetReports(standupID, params.Get(util.KeyReport, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, standupID, params.Get("action"))
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, standupID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}

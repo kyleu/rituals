@@ -3,7 +3,9 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -39,7 +41,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 	}
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, "connect", nil, "")
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	entry, _, err := s.estimates.Members.Register(ch.ID, userID)
 	if err != nil {
@@ -64,6 +66,14 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return err
 	}
 
+	var spr *sprint.Session
+	if sess.SprintID != nil {
+		spr, err = s.sprints.GetByID(*sess.SprintID)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error finding stories"))
+		}
+	}
+
 	stories, err := s.estimates.GetStories(ch.ID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding stories"))
@@ -80,6 +90,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		Param: EstimateSessionJoined{
 			Profile: &conn.Profile,
 			Session: sess,
+			Sprint:  spr,
 			Members: members,
 			Online:  online,
 			Stories: stories,

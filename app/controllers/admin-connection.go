@@ -25,7 +25,7 @@ func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		p := paramSetFromRequest(r)
-		connections, err := ctx.App.Socket.List(p.Get("socket"))
+		connections, err := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
 		if err != nil {
 			return "", err
 		}

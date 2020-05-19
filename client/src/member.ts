@@ -41,7 +41,7 @@ namespace member {
     }
     let x = system.cache.members;
     const curr = x.filter(m => m.userID === member.userID);
-    const nameChanged = curr.length == 1 && curr[0].name != member.name;
+    const nameChanged = curr.length === 1 && curr[0].name !== member.name;
 
     x = x.filter(m => m.userID !== member.userID);
     if(x.length === system.cache.members.length) {
@@ -55,6 +55,8 @@ namespace member {
 
     if (nameChanged) {
       switch (system.cache.currentService) {
+        case services.team.key:
+          break;
         case services.sprint.key:
           break;
         case services.estimate.key:
@@ -91,12 +93,12 @@ namespace member {
 
   function renderOnline() {
     for (const member of system.cache.members) {
-      const els = util.els("#member-" + member.userID + " .online-indicator");
-      if (els.length === 1) {
+      const el = util.opt("#member-" + member.userID + " .online-indicator");
+      if (el) {
         if (system.cache.online.indexOf(member.userID) === -1) {
-          els[0].classList.add("offline");
+          el.classList.add("offline");
         } else {
-          els[0].classList.remove("offline");
+          el.classList.remove("offline");
         }
       }
     }
@@ -105,14 +107,7 @@ namespace member {
   export function onSubmitSelf() {
     const name = util.req<HTMLInputElement>("#self-name-input").value;
     const choice = util.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
-    const msg = {
-      svc: services.system.key,
-      cmd: command.client.updateProfile,
-      param: {
-        name: name,
-        choice: choice,
-      },
-    };
+    const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name: name, choice: choice}};
     socket.send(msg);
   }
 

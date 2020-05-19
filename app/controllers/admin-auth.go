@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -20,7 +21,7 @@ func AdminAuthList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		params := paramSetFromRequest(r)
-		users, err := ctx.App.Auth.List(params.Get("auth"))
+		users, err := ctx.App.Auth.List(params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
 			return "", err
 		}

@@ -14,9 +14,8 @@ type StoryStatus struct {
 var StoryStatusPending = StoryStatus{Key: "pending"}
 var StoryStatusActive = StoryStatus{Key: "active"}
 var StoryStatusComplete = StoryStatus{Key: "complete"}
-var StoryStatusDeleted = StoryStatus{Key: "deleted"}
 
-var AllStoryStatuses = []StoryStatus{StoryStatusPending, StoryStatusActive, StoryStatusComplete, StoryStatusDeleted}
+var AllStoryStatuses = []StoryStatus{StoryStatusPending, StoryStatusActive, StoryStatusComplete}
 
 func StoryStatusFromString(s string) StoryStatus {
 	for _, t := range AllStoryStatuses {

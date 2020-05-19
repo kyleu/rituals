@@ -1,9 +1,12 @@
 <%: func SprintContents(model *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
   <div>
-    <h3 class="left uk-card-title">Estimates</h3>
+    <h3 class="left uk-card-title">
+      <span class="h3-icon" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>;"></span>
+      Estimates
+    </h3>
     <div class="right">
-      <form method="post" action="<%= ctx.Route(`estimate.new`) %>">
+      <form method="post" action="<%= ctx.Route(util.SvcEstimate.Key + `.new`) %>">
         <input type="hidden" name="sprint" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new estimate"></button>
@@ -15,9 +18,12 @@
   <div id="sprint-estimate-list" class="clear"><p>Loading...</p></div>
   <hr />
   <div>
-    <h3 class="left uk-card-title">Standups</h3>
+    <h3 class="left uk-card-title">
+      <span class="h3-icon" data-uk-icon="icon: <%= util.SvcStandup.Icon %>;"></span>
+      Standups
+    </h3>
     <div class="right">
-      <form method="post" action="<%= ctx.Route(`standup.new`) %>">
+      <form method="post" action="<%= ctx.Route(util.SvcStandup.Key + `.new`) %>">
         <input type="hidden" name="sprint" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new standup"></button>
@@ -29,9 +35,12 @@
   <div id="sprint-standup-list" class="clear"><p>Loading...</p></div>
   <hr />
   <div>
-    <h3 class="left uk-card-title">Retros</h3>
+    <h3 class="left uk-card-title">
+      <span class="h3-icon" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
+      Retros
+    </h3>
     <div class="right">
-      <form method="post" action="<%= ctx.Route(`retro.new`) %>">
+      <form method="post" action="<%= ctx.Route(util.SvcRetro.Key + `.new`) %>">
         <input type="hidden" name="sprint" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new retro"></button>

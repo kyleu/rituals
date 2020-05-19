@@ -1,18 +1,21 @@
 namespace standup {
   interface Detail extends rituals.Session {
-
+    status: { key: string };
   }
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
+    sprint?: sprint.Detail;
     reports: report.Report[]
   }
 
   class Cache {
-    detail?: Detail;
-    reports: report.Report[] = [];
-
     activeReport?: string;
+
+    detail?: Detail;
+    sprint?: sprint.Detail;
+
+    reports: report.Report[] = [];
   }
 
   export const cache = new Cache();
@@ -25,11 +28,19 @@ namespace standup {
       case command.server.sessionJoined:
         let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
+        rituals.setSprint(sj.sprint)
         setStandupDetail(sj.session);
         report.setReports(sj.reports)
         break;
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);
+        break;
+      case command.server.sprintUpdate:
+        const x = param as sprint.Detail | undefined
+        if (standup.cache.detail) {
+          standup.cache.detail.sprintID = x?.id;
+        }
+        rituals.setSprint(x)
         break;
       case command.server.reportUpdate:
         onReportUpdate(param as report.Report);
@@ -49,13 +60,8 @@ namespace standup {
 
   export function onSubmitStandupSession() {
     const title = util.req<HTMLInputElement>("#model-title-input").value;
-    const msg = {
-      svc: services.standup.key,
-      cmd: command.client.updateSession,
-      param: {
-        title: title,
-      },
-    };
+    const sprintID = util.req<HTMLSelectElement>("#model-sprint-select select").value;
+    const msg = {svc: services.standup.key, cmd: command.client.updateSession, param: {title: title, sprintID: sprintID}};
     socket.send(msg);
   }
 

@@ -46,17 +46,18 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new standup session"))
 	}
 
-	s.actions.Post(util.SvcStandup.Key, model.ID, userID, "create", nil, "")
+	s.actions.Post(util.SvcStandup.Key, model.ID, userID, action.ActCreate, nil, "")
 	if model.SprintID != nil {
-		s.actions.Post(util.SvcSprint.Key, model.ID, userID, "add-standup", nil, "")
+		actionContent := map[string]interface{}{"svc": util.SvcStandup.Key, "id": model.ID}
+		s.actions.Post(util.SvcSprint.Key, model.ID, userID, action.ActContentAdd, actionContent, "")
 	}
 	return &model, nil
 }
 
 func (s *Service) List(params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.SvcStandup.Key, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "standup", "", params.OrderByString(), params.Limit, params.Offset))
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.SvcStandup.Key, "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +66,7 @@ func (s *Service) List(params *query.Params) ([]*Session, error) {
 
 func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 	dto := &sessionDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "standup", "id = $1", "", 0, 0), id)
+	err := s.db.Get(dto, query.SQLSelect("*", util.SvcStandup.Key, "id = $1", "", 0, 0), id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -77,7 +78,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Session, error) {
 
 func (s *Service) GetBySlug(slug string) (*Session, error) {
 	var dto = &sessionDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", "standup", "slug = $1", "", 0, 0), slug)
+	err := s.db.Get(dto, query.SQLSelect("*", util.SvcStandup.Key, "slug = $1", "", 0, 0), slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -88,9 +89,9 @@ func (s *Service) GetBySlug(slug string) (*Session, error) {
 }
 
 func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.SvcStandup.Key, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", "standup", "owner = $1", params.OrderByString(), params.Limit, params.Offset), userID)
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.SvcStandup.Key, "owner = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +99,7 @@ func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) ([]*Session
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "m.created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.SvcStandup.Key, params, &query.Ordering{Column: "m.created", Asc: false})
 	var dtos []sessionDTO
 	q := query.SQLSelect("x.*", "standup x join standup_member m on x.id = m.standup_id", "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, userID)
@@ -109,9 +110,9 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Sessio
 }
 
 func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering("standup", params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.SvcStandup.Key, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", "standup", "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", util.SvcStandup.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, sprintID)
 	if err != nil {
 		return nil, err
@@ -119,10 +120,10 @@ func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Sess
 	return toSessions(dtos), nil
 }
 
-func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.UUID) error {
-	q := "update standup set title = $1 where id = $2"
-	_, err := s.db.Exec(q, title, sessionID)
-	s.actions.Post(util.SvcStandup.Key, sessionID, userID, "update", nil, "")
+func (s *Service) UpdateSession(sessionID uuid.UUID, title string, sprintID *uuid.UUID, userID uuid.UUID) error {
+	q := "update standup set title = $1, sprint_id = $2 where id = $3"
+	_, err := s.db.Exec(q, title, sprintID, sessionID)
+	s.actions.Post(util.SvcStandup.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating standup session"))
 }
 

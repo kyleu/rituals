@@ -11,11 +11,7 @@ namespace action {
   }
 
   export function loadActions() {
-    const msg = {
-      svc: services.system.key,
-      cmd: command.client.getActions,
-      param: null
-    };
+    const msg = {svc: services.system.key, cmd: command.client.getActions, param: null};
     socket.send(msg);
   }
 
