@@ -27,21 +27,21 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Serv
 	return &Service{
 		actions: actions,
 		db:      db,
-		Members: member.NewService(actions, db, util.SvcStandup.Key),
+		Members: member.NewService(actions, db, logger, util.SvcStandup.Key),
 		logger:  logger,
 	}
 }
 
-func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcStandup.Key, title)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error creating standup slug"))
 	}
 
-	model := NewSession(title, slug, userID, sprintID)
+	model := NewSession(title, slug, userID, teamID, sprintID)
 
-	q := "insert into standup (id, slug, title, sprint_id, owner, status) values ($1, $2, $3, $4, $5, $6)"
-	_, err = s.db.Exec(q, model.ID, slug, model.Title, model.SprintID, model.Owner, model.Status.String())
+	q := "insert into standup (id, slug, title, team_id, sprint_id, owner, status) values ($1, $2, $3, $4, $5, $6)"
+	_, err = s.db.Exec(q, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String())
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new standup session"))
 	}
@@ -50,6 +50,10 @@ func (s *Service) New(title string, userID uuid.UUID, sprintID *uuid.UUID) (*Ses
 	if model.SprintID != nil {
 		actionContent := map[string]interface{}{"svc": util.SvcStandup.Key, "id": model.ID}
 		s.actions.Post(util.SvcSprint.Key, model.ID, userID, action.ActContentAdd, actionContent, "")
+	}
+	if model.TeamID != nil {
+		actionContent := map[string]interface{}{"svc": util.SvcStandup.Key, "id": model.ID}
+		s.actions.Post(util.SvcTeam.Key, model.ID, userID, action.ActContentAdd, actionContent, "")
 	}
 	return &model, nil
 }
@@ -109,6 +113,16 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Sessio
 	return toSessions(dtos), nil
 }
 
+func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) ([]*Session, error) {
+	params = query.ParamsWithDefaultOrdering(util.SvcStandup.Key, params, &query.Ordering{Column: "created", Asc: false})
+	var dtos []sessionDTO
+	err := s.db.Select(&dtos, query.SQLSelect("*", util.SvcStandup.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset), teamID)
+	if err != nil {
+		return nil, err
+	}
+	return toSessions(dtos), nil
+}
+
 func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Session, error) {
 	params = query.ParamsWithDefaultOrdering(util.SvcStandup.Key, params, &query.Ordering{Column: "created", Asc: false})
 	var dtos []sessionDTO
@@ -120,9 +134,9 @@ func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Sess
 	return toSessions(dtos), nil
 }
 
-func (s *Service) UpdateSession(sessionID uuid.UUID, title string, sprintID *uuid.UUID, userID uuid.UUID) error {
-	q := "update standup set title = $1, sprint_id = $2 where id = $3"
-	_, err := s.db.Exec(q, title, sprintID, sessionID)
+func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
+	q := "update standup set title = $1, team_id = $2, sprint_id = $3 where id = $4"
+	_, err := s.db.Exec(q, title, teamID, sprintID, sessionID)
 	s.actions.Post(util.SvcStandup.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating standup session"))
 }

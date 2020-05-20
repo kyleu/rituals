@@ -1,8 +1,8 @@
 namespace profile {
   export function setNavColor(el: HTMLElement, c: string) {
-    util.setValue("#navbar-color", c);
-    let nb = util.req("#navbar");
-    nb.className = (c + "-bg uk-navbar-container uk-navbar");
+    dom.setValue("#navbar-color", c);
+    let nb = dom.req("#navbar");
+    nb.className = `${c}-bg uk-navbar-container uk-navbar`;
     let colors = document.querySelectorAll(".navbar_swatch");
     colors.forEach(function(i) {
       i.classList.remove("active");
@@ -11,14 +11,14 @@ namespace profile {
   }
 
   export function setLinkColor(el: HTMLElement, c: string) {
-    util.setValue("#link-color", c);
-    let links = util.els(".profile-link");
+    dom.setValue("#link-color", c);
+    let links = dom.els(".profile-link");
     links.forEach(l => {
       l.classList.forEach(x => {
         if (x.indexOf("-fg") > -1) {
           l.classList.remove(x);
         }
-        l.classList.add(c + "-fg");
+        l.classList.add(`${c}-fg`);
       });
     });
     let colors = document.querySelectorAll(".link_swatch");
@@ -29,7 +29,7 @@ namespace profile {
   }
 
   export function selectTheme(theme: string) {
-    let card = util.els(".uk-card");
+    let card = dom.els(".uk-card");
     switch (theme) {
       case "light":
         document.documentElement.classList.remove("uk-light");

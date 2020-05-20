@@ -13,17 +13,19 @@ type Session struct {
 	ID        uuid.UUID  `json:"id"`
 	Slug      string     `json:"slug"`
 	Title     string     `json:"title"`
+	TeamID    *uuid.UUID `json:"teamID"`
 	Owner     uuid.UUID  `json:"owner"`
 	StartDate *time.Time `json:"startDate"`
 	EndDate   *time.Time `json:"endDate"`
 	Created   time.Time  `json:"created"`
 }
 
-func NewSession(title string, slug string, userID uuid.UUID, startDate *time.Time, endDate *time.Time) Session {
+func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, startDate *time.Time, endDate *time.Time) Session {
 	return Session{
 		ID:        util.UUID(),
 		Slug:      slug,
 		Title:     strings.TrimSpace(title),
+		TeamID:    teamID,
 		Owner:     userID,
 		StartDate: startDate,
 		EndDate:   endDate,
@@ -35,6 +37,7 @@ type sessionDTO struct {
 	ID        uuid.UUID  `db:"id"`
 	Slug      string     `db:"slug"`
 	Title     string     `db:"title"`
+	TeamID    *uuid.UUID `db:"team_id"`
 	Owner     uuid.UUID  `db:"owner"`
 	Status    string     `db:"status"`
 	StartDate *time.Time `db:"start_date"`
@@ -47,6 +50,7 @@ func (dto *sessionDTO) ToSession() *Session {
 		ID:        dto.ID,
 		Slug:      dto.Slug,
 		Title:     dto.Title,
+		TeamID:    dto.TeamID,
 		Owner:     dto.Owner,
 		StartDate: dto.StartDate,
 		EndDate:   dto.EndDate,

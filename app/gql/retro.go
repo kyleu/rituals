@@ -11,6 +11,7 @@ var (
 	retroArgs           graphql.FieldConfigArgument
 	retroResolver       Callback
 	retrosResolver      Callback
+	retroTeamResolver   Callback
 	retroSprintResolver Callback
 	retroMemberResolver Callback
 	retroType           *graphql.Object
@@ -44,7 +45,15 @@ func initRetro() {
 	}
 
 	retroMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger))
+		return ctx.App.Retro.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
+	}
+
+	retroTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		sess := p.Source.(*retro.Session)
+		if sess.TeamID != nil {
+			return ctx.App.Team.GetByID(*sess.TeamID)
+		}
+		return nil, nil
 	}
 
 	retroSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -67,6 +76,9 @@ func initRetro() {
 				},
 				"title": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
+				},
+				"teamID": &graphql.Field{
+					Type: graphql.String,
 				},
 				"sprintID": &graphql.Field{
 					Type: graphql.String,

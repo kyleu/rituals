@@ -14,16 +14,16 @@ namespace report {
   }
 
   export function onSubmitReport() {
-    const d = util.req<HTMLInputElement>("#standup-report-date").value;
-    const content = util.req<HTMLInputElement>("#standup-report-content").value;
+    const d = dom.req<HTMLInputElement>("#standup-report-date").value;
+    const content = dom.req<HTMLInputElement>("#standup-report-content").value;
     const msg = {svc: services.standup.key, cmd: command.client.addReport, param: {d: d, content: content}};
     socket.send(msg);
     return false;
   }
 
   export function onEditReport() {
-    const d = util.req<HTMLInputElement>("#standup-report-edit-date").value;
-    const content = util.req<HTMLInputElement>("#standup-report-edit-content").value;
+    const d = dom.req<HTMLInputElement>("#standup-report-edit-date").value;
+    const content = dom.req<HTMLInputElement>("#standup-report-edit-content").value;
     const msg = {svc: services.standup.key, cmd: command.client.updateReport, param: {id: standup.cache.activeReport, d: d, content: content}};
     socket.send(msg);
     return false;
@@ -46,7 +46,7 @@ namespace report {
     }
     const curr = standup.cache.reports.filter(x => x.id === standup.cache.activeReport);
     if (curr.length !== 1) {
-      console.warn("cannot load active report [" + standup.cache.activeReport + "]");
+      console.warn(`cannot load active report [${standup.cache.activeReport}]`);
       return undefined;
     }
     return curr[0];
@@ -60,29 +60,29 @@ namespace report {
       return;
     }
 
-    util.setText("#report-title", report.d + " / " + system.getMemberName(report.authorID));
-    const contentEdit = util.req("#modal-report .content-edit");
-    const contentEditDate = util.req<HTMLInputElement>("#standup-report-edit-date", contentEdit);
-    const contentEditTextarea = util.req<HTMLTextAreaElement>("#standup-report-edit-content", contentEdit);
-    const contentView = util.req("#modal-report .content-view");
-    const buttonsEdit = util.req("#modal-report .buttons-edit");
-    const buttonsView = util.req("#modal-report .buttons-view");
+    dom.setText("#report-title", `${report.d} / ${system.getMemberName(report.authorID)}`);
+    const contentEdit = dom.req("#modal-report .content-edit");
+    const contentEditDate = dom.req<HTMLInputElement>("#standup-report-edit-date", contentEdit);
+    const contentEditTextarea = dom.req<HTMLTextAreaElement>("#standup-report-edit-content", contentEdit);
+    const contentView = dom.req("#modal-report .content-view");
+    const buttonsEdit = dom.req("#modal-report .buttons-edit");
+    const buttonsView = dom.req("#modal-report .buttons-view");
 
     if(report.authorID === profile.userID) {
       contentEdit.style.display = "block";
-      util.setValue(contentEditDate, report.d);
-      util.setValue(contentEditTextarea, report.content);
-      util.wireTextarea(contentEditTextarea);
+      dom.setValue(contentEditDate, report.d);
+      dom.setValue(contentEditTextarea, report.content);
+      dom.wireTextarea(contentEditTextarea);
       contentView.style.display = "none";
-      util.setHTML(contentView, "");
+      dom.setHTML(contentView, "");
       buttonsEdit.style.display = "block";
       buttonsView.style.display = "none";
     } else {
       contentEdit.style.display = "none";
-      util.setValue(contentEditDate, "");
-      util.setValue(contentEditTextarea, "");
+      dom.setValue(contentEditDate, "");
+      dom.setValue(contentEditTextarea, "");
       contentView.style.display = "block";
-      util.setHTML(contentView, report.html);
+      dom.setHTML(contentView, report.html);
       buttonsEdit.style.display = "none";
       buttonsView.style.display = "block";
     }
@@ -90,7 +90,7 @@ namespace report {
 
   export function setReports(reports: Report[]) {
     standup.cache.reports = reports;
-    util.setContent("#report-detail", renderReports(reports));
+    dom.setContent("#report-detail", renderReports(reports));
     UIkit.modal("#modal-add-report").hide();
   }
 

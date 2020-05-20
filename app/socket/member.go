@@ -10,7 +10,7 @@ func (s *Service) UpdateName(id uuid.UUID, name string) error {
 	return s.users.UpdateUserName(id, name)
 }
 
-func (s *Service) GetOnline(ch channel) ([]uuid.UUID, error) {
+func (s *Service) GetOnline(ch channel) []uuid.UUID {
 	connections, ok := s.channels[ch]
 	if !ok {
 		connections = make([]uuid.UUID, 0)
@@ -23,7 +23,7 @@ func (s *Service) GetOnline(ch channel) ([]uuid.UUID, error) {
 		}
 	}
 
-	return online, nil
+	return online
 }
 
 func (s *Service) sendOnlineUpdate(ch channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {

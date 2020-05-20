@@ -8,7 +8,7 @@ namespace socket {
     if (l.protocol === "https:") {
       protocol = "wss";
     }
-    return protocol + "://" + l.host + "/s";
+    return protocol + `://${l.host}/s`;
   }
 
   export function setAppUnloading() {
@@ -51,11 +51,7 @@ namespace socket {
   function onSocketClose() {
     function disconnect(seconds: number) {
       if(debug) {
-        if (seconds === 1) {
-          console.info("socket closed, reconnecting in a second");
-        } else {
-          console.info("socket closed, reconnecting in " + seconds + " seconds");
-        }
+        console.info(`socket closed, reconnecting in ${seconds} seconds`);
       }
       setTimeout(() => {
         socketConnect(system.cache.currentService, system.cache.currentID);
@@ -63,12 +59,7 @@ namespace socket {
     }
 
     if (!appUnloading) {
-      const delta = Date.now() - system.cache.connectTime;
-      if (delta < 2000) {
-        disconnect(6);
-      } else {
-        disconnect(1);
-      }
+      disconnect(10);
     }
   }
 }

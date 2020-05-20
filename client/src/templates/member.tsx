@@ -1,9 +1,9 @@
 namespace member {
   function renderMember(member: Member): JSX.Element {
     const profile = system.cache.getProfile();
-    return <div class="section" onclick={"events.openModal('member', '" + member.userID + "');"}>
+    return <div class="section" onclick={`events.openModal('member', '${member.userID}');`}>
       <div title="user is offline" class="right uk-article-meta online-indicator">offline</div>
-      <div class={profile.linkColor + "-fg section-link"}>{member.name}</div>
+      <div class={`${profile.linkColor}-fg section-link`}>{member.name}</div>
     </div>;
   }
 
@@ -14,7 +14,7 @@ namespace member {
       </div>;
     } else {
       return <ul class="uk-list uk-list-divider">
-        {members.map(m => <li id={"member-" + m.userID}>
+        {members.map(m => <li id={`member-${m.userID}`}>
           {renderMember(m)}
         </li>)}
       </ul>;

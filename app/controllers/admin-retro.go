@@ -6,7 +6,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -32,28 +31,25 @@ func AdminRetroList(w http.ResponseWriter, r *http.Request) {
 
 func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		retroIDString := mux.Vars(r)["id"]
-		retroID, err := uuid.FromString(retroIDString)
-		if err != nil {
-			return "", errors.New("invalid retro id [" + retroIDString + "]")
+		retroID := getUUIDPointer(mux.Vars(r), "id")
+		if retroID == nil {
+			return "", errors.New("invalid retro id")
 		}
-		sess, err := ctx.App.Retro.GetByID(retroID)
+		sess, err := ctx.App.Retro.GetByID(*retroID)
 		if err != nil {
 			return "", err
 		}
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load retro [" + retroIDString + "]")
+			ctx.Session.AddFlash("error:Can't load retro [" + retroID.String() + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.retro"), nil
 		}
 
 		params := paramSetFromRequest(r)
 
-		members, err := ctx.App.Retro.Members.GetByModelID(retroID, params.Get(util.KeyMember, ctx.Logger))
-		if err != nil {
-			return "", err
-		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, retroID, params.Get(util.KeyAction, ctx.Logger))
+		members := ctx.App.Retro.Members.GetByModelID(*retroID, params.Get(util.KeyMember, ctx.Logger))
+
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, *retroID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -61,7 +57,7 @@ func AdminRetroDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro"), util.SvcRetro.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroIDString), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.retro.detail", "id", retroID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminRetroDetail(sess, members, actions, params, ctx, w))

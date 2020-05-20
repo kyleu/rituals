@@ -7,10 +7,155 @@ var action;
     }
     action.loadActions = loadActions;
     function viewActions(actions) {
-        util.setContent("#action-list", action.renderActions(actions));
+        dom.setContent("#action-list", action.renderActions(actions));
     }
     action.viewActions = viewActions;
 })(action || (action = {}));
+var date;
+(function (date_1) {
+    function dateToYMD(date) {
+        var d = date.getDate();
+        var m = date.getMonth() + 1;
+        var y = date.getFullYear();
+        return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    }
+    date_1.dateToYMD = dateToYMD;
+    function dateFromYMD(s) {
+        var d = new Date(s);
+        d = new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+        return d;
+    }
+    date_1.dateFromYMD = dateFromYMD;
+    function dow(i) {
+        switch (i) {
+            case 0:
+                return "Sun";
+            case 1:
+                return "Mon";
+            case 2:
+                return "Tue";
+            case 3:
+                return "Wed";
+            case 4:
+                return "Thu";
+            case 5:
+                return "Fri";
+            case 6:
+                return "Sat";
+            default:
+                return "???";
+        }
+    }
+    date_1.dow = dow;
+    function toDateString(d) {
+        return d.toLocaleDateString();
+    }
+    date_1.toDateString = toDateString;
+    function toTimeString(d) {
+        return d.toLocaleTimeString().slice(0, 8);
+    }
+    date_1.toTimeString = toTimeString;
+    function toDateTimeString(d) {
+        return toDateString(d) + " " + toTimeString(d);
+    }
+    date_1.toDateTimeString = toDateTimeString;
+})(date || (date = {}));
+var dom;
+(function (dom) {
+    function els(selector, context) {
+        return UIkit.util.$$(selector, context);
+    }
+    dom.els = els;
+    function opt(selector, context) {
+        var res = els(selector, context);
+        if (res.length === 0) {
+            return null;
+        }
+        return res[0];
+    }
+    dom.opt = opt;
+    function req(selector, context) {
+        var res = opt(selector, context);
+        if (res === null) {
+            console.warn("no element found for selector [" + selector + "]");
+        }
+        return res;
+    }
+    dom.req = req;
+    function setHTML(el, html) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerHTML = html;
+        return el;
+    }
+    dom.setHTML = setHTML;
+    function setContent(el, e) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerHTML = "";
+        el.appendChild(e);
+        return el;
+    }
+    dom.setContent = setContent;
+    function setText(el, text) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerText = text;
+        return el;
+    }
+    dom.setText = setText;
+    function setValue(el, text) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.value = text;
+        return el;
+    }
+    dom.setValue = setValue;
+    function wireTextarea(text) {
+        function resize() {
+            text.style.height = 'auto';
+            text.style.height = (text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)) + 'px';
+        }
+        function delayedResize() {
+            window.setTimeout(resize, 0);
+        }
+        var x = text.dataset["autoresize"];
+        if (x === undefined) {
+            text.dataset["autoresize"] = "true";
+            text.addEventListener('change', resize, false);
+            text.addEventListener('cut', delayedResize, false);
+            text.addEventListener('paste', delayedResize, false);
+            text.addEventListener('drop', delayedResize, false);
+            text.addEventListener('keydown', delayedResize, false);
+            text.focus();
+            text.select();
+        }
+        resize();
+    }
+    dom.wireTextarea = wireTextarea;
+    function setOptions(el, categories) {
+        el.innerHTML = "";
+        for (var _i = 0, categories_1 = categories; _i < categories_1.length; _i++) {
+            var c = categories_1[_i];
+            var opt_1 = document.createElement("option");
+            opt_1.value = c;
+            opt_1.innerText = c;
+            el.appendChild(opt_1);
+        }
+    }
+    dom.setOptions = setOptions;
+    function setSelectOption(el, o) {
+        for (var i = 0; i < el.children.length; i++) {
+            var e = el.children.item(i);
+            e.selected = e.value === o;
+        }
+    }
+    dom.setSelectOption = setSelectOption;
+})(dom || (dom = {}));
 var estimate;
 (function (estimate) {
     var Cache = /** @class */ (function () {
@@ -36,6 +181,7 @@ var estimate;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
+                rituals.setTeam(sj.team);
                 rituals.setSprint(sj.sprint);
                 setEstimateDetail(sj.session);
                 story.setStories(sj.stories);
@@ -44,12 +190,19 @@ var estimate;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
                 break;
-            case command.server.sprintUpdate:
-                var x = param;
+            case command.server.teamUpdate:
+                var tm = param;
                 if (estimate.cache.detail) {
-                    estimate.cache.detail.sprintID = x === null || x === void 0 ? void 0 : x.id;
+                    estimate.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
                 }
-                rituals.setSprint(x);
+                rituals.setTeam(tm);
+                break;
+            case command.server.sprintUpdate:
+                var spr = param;
+                if (estimate.cache.detail) {
+                    estimate.cache.detail.sprintID = spr === null || spr === void 0 ? void 0 : spr.id;
+                }
+                rituals.setSprint(spr);
                 break;
             case command.server.storyUpdate:
                 onStoryUpdate(param);
@@ -70,15 +223,16 @@ var estimate;
     estimate.onEstimateMessage = onEstimateMessage;
     function setEstimateDetail(detail) {
         estimate.cache.detail = detail;
-        util.setValue("#model-choices-input", detail.choices.join(", "));
+        dom.setValue("#model-choices-input", detail.choices.join(", "));
         story.viewActiveStory();
         rituals.setDetail(detail);
     }
     function onSubmitEstimateSession() {
-        var title = util.req("#model-title-input").value;
-        var choices = util.req("#model-choices-input").value;
-        var sprintID = util.req("#model-sprint-select select").value;
-        var msg = { svc: services.estimate.key, cmd: command.client.updateSession, param: { title: title, choices: choices, sprintID: sprintID } };
+        var title = dom.req("#model-title-input").value;
+        var choices = dom.req("#model-choices-input").value;
+        var teamID = dom.req("#model-team-select select").value;
+        var sprintID = dom.req("#model-sprint-select select").value;
+        var msg = { svc: services.estimate.key, cmd: command.client.updateSession, param: { title: title, choices: choices, teamID: teamID, sprintID: sprintID } };
         socket.send(msg);
     }
     estimate.onSubmitEstimateSession = onSubmitEstimateSession;
@@ -86,7 +240,7 @@ var estimate;
         var x = preUpdate(s.id);
         x.push(s);
         if (s.id === estimate.cache.activeStory) {
-            util.setText("#story-title", s.title);
+            dom.setText("#story-title", s.title);
         }
         story.setStories(x);
     }
@@ -112,13 +266,14 @@ var events;
     function openModal(key, id) {
         switch (key) {
             case "session":
-                var sessionInput_1 = util.setValue("#model-title-input", util.req("#model-title").innerText);
+                var sessionInput_1 = dom.setValue("#model-title-input", dom.req("#model-title").innerText);
                 delay(function () { return sessionInput_1.focus(); });
+                team.refreshTeams();
                 sprint.refreshSprints();
                 break;
             // member
             case "self":
-                var selfInput_1 = util.setValue("#self-name-input", util.req("#member-self .member-name").innerText);
+                var selfInput_1 = dom.setValue("#self-name-input", dom.req("#member-self .member-name").innerText);
                 delay(function () { return selfInput_1.focus(); });
                 break;
             case "invitation":
@@ -133,7 +288,7 @@ var events;
                 break;
             // estimate
             case "add-story":
-                var storyInput_1 = util.setValue("#story-title-input", "");
+                var storyInput_1 = dom.setValue("#story-title-input", "");
                 delay(function () { return storyInput_1.focus(); });
                 break;
             case "story":
@@ -142,33 +297,33 @@ var events;
                 break;
             // standup
             case "add-report":
-                util.setValue("#standup-report-date", util.dateToYMD(new Date()));
-                var reportContent_1 = util.setValue("#standup-report-content", "");
-                util.wireTextarea(reportContent_1);
+                dom.setValue("#standup-report-date", date.dateToYMD(new Date()));
+                var reportContent_1 = dom.setValue("#standup-report-content", "");
+                dom.wireTextarea(reportContent_1);
                 delay(function () { return reportContent_1.focus(); });
                 break;
             case "report":
                 standup.cache.activeReport = id;
                 report.viewActiveReport();
-                var reportEditContent_1 = util.req("#standup-report-edit-content");
+                var reportEditContent_1 = dom.req("#standup-report-edit-content");
                 delay(function () {
-                    util.wireTextarea(reportEditContent_1);
+                    dom.wireTextarea(reportEditContent_1);
                     reportEditContent_1.focus();
                 });
                 break;
             // retro
             case "add-feedback":
-                util.setSelectOption(util.req("#retro-feedback-category"), id);
-                var feedbackContent_1 = util.setValue("#retro-feedback-content", "");
-                util.wireTextarea(feedbackContent_1);
+                dom.setSelectOption(dom.req("#retro-feedback-category"), id);
+                var feedbackContent_1 = dom.setValue("#retro-feedback-content", "");
+                dom.wireTextarea(feedbackContent_1);
                 delay(function () { return feedbackContent_1.focus(); });
                 break;
             case "feedback":
                 retro.cache.activeFeedback = id;
                 feedback.viewActiveFeedback();
-                var feedbackEditContent_1 = util.req("#retro-feedback-edit-content");
+                var feedbackEditContent_1 = dom.req("#retro-feedback-edit-content");
                 delay(function () {
-                    util.wireTextarea(feedbackEditContent_1);
+                    dom.wireTextarea(feedbackEditContent_1);
                     feedbackEditContent_1.focus();
                 });
                 break;
@@ -185,13 +340,13 @@ var feedback;
 (function (feedback_1) {
     function setFeedback(feedback) {
         retro.cache.feedback = feedback;
-        util.setContent("#feedback-detail", feedback_1.renderFeedbackArray(feedback));
+        dom.setContent("#feedback-detail", feedback_1.renderFeedbackArray(feedback));
         UIkit.modal("#modal-add-feedback").hide();
     }
     feedback_1.setFeedback = setFeedback;
     function onSubmitFeedback() {
-        var category = util.req("#retro-feedback-category").value;
-        var content = util.req("#retro-feedback-content").value;
+        var category = dom.req("#retro-feedback-category").value;
+        var content = dom.req("#retro-feedback-content").value;
         var msg = { svc: services.retro.key, cmd: command.client.addFeedback, param: { category: category, content: content } };
         socket.send(msg);
         return false;
@@ -199,8 +354,8 @@ var feedback;
     feedback_1.onSubmitFeedback = onSubmitFeedback;
     function onEditFeedback() {
         var id = retro.cache.activeFeedback;
-        var category = util.req("#retro-feedback-edit-category").value;
-        var content = util.req("#retro-feedback-edit-content").value;
+        var category = dom.req("#retro-feedback-edit-category").value;
+        var content = dom.req("#retro-feedback-edit-content").value;
         var msg = { svc: services.retro.key, cmd: command.client.updateFeedback, param: { id: id, category: category, content: content } };
         socket.send(msg);
         return false;
@@ -235,29 +390,29 @@ var feedback;
             console.warn("no active feedback");
             return;
         }
-        util.setText("#feedback-title", fb.category + " / " + system.getMemberName(fb.authorID));
-        var contentEdit = util.req("#modal-feedback .content-edit");
-        var contentEditCategory = util.req("#retro-feedback-edit-category", contentEdit);
-        var contentEditTextarea = util.req("#retro-feedback-edit-content", contentEdit);
-        var contentView = util.req("#modal-feedback .content-view");
-        var buttonsEdit = util.req("#modal-feedback .buttons-edit");
-        var buttonsView = util.req("#modal-feedback .buttons-view");
+        dom.setText("#feedback-title", fb.category + " / " + system.getMemberName(fb.authorID));
+        var contentEdit = dom.req("#modal-feedback .content-edit");
+        var contentEditCategory = dom.req("#retro-feedback-edit-category", contentEdit);
+        var contentEditTextarea = dom.req("#retro-feedback-edit-content", contentEdit);
+        var contentView = dom.req("#modal-feedback .content-view");
+        var buttonsEdit = dom.req("#modal-feedback .buttons-edit");
+        var buttonsView = dom.req("#modal-feedback .buttons-view");
         if (fb.authorID === profile.userID) {
             contentEdit.style.display = "block";
-            util.setSelectOption(contentEditCategory, fb.category);
-            util.setValue(contentEditTextarea, fb.content);
-            util.wireTextarea(contentEditTextarea);
+            dom.setSelectOption(contentEditCategory, fb.category);
+            dom.setValue(contentEditTextarea, fb.content);
+            dom.wireTextarea(contentEditTextarea);
             contentView.style.display = "none";
-            util.setHTML(contentView, "");
+            dom.setHTML(contentView, "");
             buttonsEdit.style.display = "block";
             buttonsView.style.display = "none";
         }
         else {
             contentEdit.style.display = "none";
-            util.setSelectOption(contentEditCategory, undefined);
-            util.setValue(contentEditTextarea, "");
+            dom.setSelectOption(contentEditCategory, undefined);
+            dom.setValue(contentEditTextarea, "");
             contentView.style.display = "block";
-            util.setHTML(contentView, fb.html);
+            dom.setHTML(contentView, fb.html);
             buttonsEdit.style.display = "none";
             buttonsView.style.display = "block";
         }
@@ -374,8 +529,8 @@ var command;
         connect: "connect",
         updateSession: "update-session",
         getActions: "get-actions",
+        getTeams: "get-teams",
         getSprints: "get-sprints",
-        setSprint: "set-sprint",
         updateProfile: "update-profile",
         addStory: "add-story",
         updateStory: "update-story",
@@ -394,8 +549,11 @@ var command;
         pong: "pong",
         sessionJoined: "session-joined",
         sessionUpdate: "session-update",
+        teamUpdate: "team-update",
         sprintUpdate: "sprint-update",
+        contentUpdate: "content-update",
         actions: "actions",
+        teams: "teams",
         sprints: "sprints",
         memberUpdate: "member-update",
         onlineUpdate: "online-update",
@@ -450,9 +608,9 @@ var member;
     function setMembers() {
         var self = system.cache.members.filter(isSelf);
         if (self.length === 1) {
-            util.setText("#member-self .member-name", self[0].name);
-            util.setValue("#self-name-input", self[0].name);
-            util.setText("#member-self .member-role", self[0].role);
+            dom.setText("#member-self .member-name", self[0].name);
+            dom.setValue("#self-name-input", self[0].name);
+            dom.setText("#member-self .member-role", self[0].role);
         }
         else if (self.length === 0) {
             console.warn("self not found among members");
@@ -461,7 +619,7 @@ var member;
             console.warn("multiple self entries found among members");
         }
         var others = system.cache.members.filter(function (x) { return !isSelf(x); });
-        util.setContent("#member-detail", member_1.renderMembers(others));
+        dom.setContent("#member-detail", member_1.renderMembers(others));
         renderOnline();
     }
     member_1.setMembers = setMembers;
@@ -492,13 +650,13 @@ var member;
                     }
                     break;
                 case services.standup.key:
-                    util.setContent("#report-detail", report.renderReports(standup.cache.reports));
+                    dom.setContent("#report-detail", report.renderReports(standup.cache.reports));
                     if (standup.cache.activeReport) {
                         report.viewActiveReport();
                     }
                     break;
                 case services.retro.key:
-                    util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+                    dom.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
                     if (retro.cache.activeFeedback) {
                         feedback.viewActiveFeedback();
                     }
@@ -522,7 +680,7 @@ var member;
     function renderOnline() {
         for (var _i = 0, _a = system.cache.members; _i < _a.length; _i++) {
             var member_2 = _a[_i];
-            var el = util.opt("#member-" + member_2.userID + " .online-indicator");
+            var el = dom.opt("#member-" + member_2.userID + " .online-indicator");
             if (el) {
                 if (system.cache.online.indexOf(member_2.userID) === -1) {
                     el.classList.add("offline");
@@ -534,8 +692,8 @@ var member;
         }
     }
     function onSubmitSelf() {
-        var name = util.req("#self-name-input").value;
-        var choice = util.req("#self-name-choice-global").checked ? "global" : "local";
+        var name = dom.req("#self-name-input").value;
+        var choice = dom.req("#self-name-choice-global").checked ? "global" : "local";
         var msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name: name, choice: choice } };
         socket.send(msg);
     }
@@ -557,17 +715,17 @@ var member;
         if (member === undefined) {
             return;
         }
-        util.setText("#member-modal-name", member.name);
-        util.setText("#member-modal-role", member.role);
+        dom.setText("#member-modal-name", member.name);
+        dom.setText("#member-modal-role", member.role);
     }
     member_1.viewActiveMember = viewActiveMember;
 })(member || (member = {}));
 var profile;
 (function (profile) {
     function setNavColor(el, c) {
-        util.setValue("#navbar-color", c);
-        var nb = util.req("#navbar");
-        nb.className = (c + "-bg uk-navbar-container uk-navbar");
+        dom.setValue("#navbar-color", c);
+        var nb = dom.req("#navbar");
+        nb.className = c + "-bg uk-navbar-container uk-navbar";
         var colors = document.querySelectorAll(".navbar_swatch");
         colors.forEach(function (i) {
             i.classList.remove("active");
@@ -576,8 +734,8 @@ var profile;
     }
     profile.setNavColor = setNavColor;
     function setLinkColor(el, c) {
-        util.setValue("#link-color", c);
-        var links = util.els(".profile-link");
+        dom.setValue("#link-color", c);
+        var links = dom.els(".profile-link");
         links.forEach(function (l) {
             l.classList.forEach(function (x) {
                 if (x.indexOf("-fg") > -1) {
@@ -594,7 +752,7 @@ var profile;
     }
     profile.setLinkColor = setLinkColor;
     function selectTheme(theme) {
-        var card = util.els(".uk-card");
+        var card = dom.els(".uk-card");
         switch (theme) {
             case "light":
                 document.documentElement.classList.remove("uk-light");
@@ -626,16 +784,16 @@ var profile;
 var report;
 (function (report_1) {
     function onSubmitReport() {
-        var d = util.req("#standup-report-date").value;
-        var content = util.req("#standup-report-content").value;
+        var d = dom.req("#standup-report-date").value;
+        var content = dom.req("#standup-report-content").value;
         var msg = { svc: services.standup.key, cmd: command.client.addReport, param: { d: d, content: content } };
         socket.send(msg);
         return false;
     }
     report_1.onSubmitReport = onSubmitReport;
     function onEditReport() {
-        var d = util.req("#standup-report-edit-date").value;
-        var content = util.req("#standup-report-edit-content").value;
+        var d = dom.req("#standup-report-edit-date").value;
+        var content = dom.req("#standup-report-edit-content").value;
         var msg = { svc: services.standup.key, cmd: command.client.updateReport, param: { id: standup.cache.activeReport, d: d, content: content } };
         socket.send(msg);
         return false;
@@ -670,29 +828,29 @@ var report;
             console.warn("no active report");
             return;
         }
-        util.setText("#report-title", report.d + " / " + system.getMemberName(report.authorID));
-        var contentEdit = util.req("#modal-report .content-edit");
-        var contentEditDate = util.req("#standup-report-edit-date", contentEdit);
-        var contentEditTextarea = util.req("#standup-report-edit-content", contentEdit);
-        var contentView = util.req("#modal-report .content-view");
-        var buttonsEdit = util.req("#modal-report .buttons-edit");
-        var buttonsView = util.req("#modal-report .buttons-view");
+        dom.setText("#report-title", report.d + " / " + system.getMemberName(report.authorID));
+        var contentEdit = dom.req("#modal-report .content-edit");
+        var contentEditDate = dom.req("#standup-report-edit-date", contentEdit);
+        var contentEditTextarea = dom.req("#standup-report-edit-content", contentEdit);
+        var contentView = dom.req("#modal-report .content-view");
+        var buttonsEdit = dom.req("#modal-report .buttons-edit");
+        var buttonsView = dom.req("#modal-report .buttons-view");
         if (report.authorID === profile.userID) {
             contentEdit.style.display = "block";
-            util.setValue(contentEditDate, report.d);
-            util.setValue(contentEditTextarea, report.content);
-            util.wireTextarea(contentEditTextarea);
+            dom.setValue(contentEditDate, report.d);
+            dom.setValue(contentEditTextarea, report.content);
+            dom.wireTextarea(contentEditTextarea);
             contentView.style.display = "none";
-            util.setHTML(contentView, "");
+            dom.setHTML(contentView, "");
             buttonsEdit.style.display = "block";
             buttonsView.style.display = "none";
         }
         else {
             contentEdit.style.display = "none";
-            util.setValue(contentEditDate, "");
-            util.setValue(contentEditTextarea, "");
+            dom.setValue(contentEditDate, "");
+            dom.setValue(contentEditTextarea, "");
             contentView.style.display = "block";
-            util.setHTML(contentView, report.html);
+            dom.setHTML(contentView, report.html);
             buttonsEdit.style.display = "none";
             buttonsView.style.display = "block";
         }
@@ -700,7 +858,7 @@ var report;
     report_1.viewActiveReport = viewActiveReport;
     function setReports(reports) {
         standup.cache.reports = reports;
-        util.setContent("#report-detail", report_1.renderReports(reports));
+        dom.setContent("#report-detail", report_1.renderReports(reports));
         UIkit.modal("#modal-add-report").hide();
     }
     report_1.setReports = setReports;
@@ -735,6 +893,7 @@ var retro;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
+                rituals.setTeam(sj.team);
                 rituals.setSprint(sj.sprint);
                 setRetroDetail(sj.session);
                 feedback.setFeedback(sj.feedback);
@@ -742,12 +901,19 @@ var retro;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
                 break;
-            case command.server.sprintUpdate:
-                var x = param;
+            case command.server.teamUpdate:
+                var tm = param;
                 if (retro.cache.detail) {
-                    retro.cache.detail.sprintID = x === null || x === void 0 ? void 0 : x.id;
+                    retro.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
                 }
-                rituals.setSprint(x);
+                rituals.setTeam(tm);
+                break;
+            case command.server.sprintUpdate:
+                var spr = param;
+                if (retro.cache.detail) {
+                    retro.cache.detail.sprintID = spr === null || spr === void 0 ? void 0 : spr.id;
+                }
+                rituals.setSprint(spr);
                 break;
             case command.server.feedbackUpdate:
                 feedback.onFeedbackUpdate(param);
@@ -762,17 +928,18 @@ var retro;
     retro.onRetroMessage = onRetroMessage;
     function setRetroDetail(detail) {
         retro.cache.detail = detail;
-        util.setValue("#model-categories-input", detail.categories.join(", "));
-        util.setOptions(util.req("#retro-feedback-category"), detail.categories);
-        util.setOptions(util.req("#retro-feedback-edit-category"), detail.categories);
+        dom.setValue("#model-categories-input", detail.categories.join(", "));
+        dom.setOptions(dom.req("#retro-feedback-category"), detail.categories);
+        dom.setOptions(dom.req("#retro-feedback-edit-category"), detail.categories);
         feedback.setFeedback(retro.cache.feedback);
         rituals.setDetail(detail);
     }
     function onSubmitRetroSession() {
-        var title = util.req("#model-title-input").value;
-        var categories = util.req("#model-categories-input").value;
-        var sprintID = util.req("#model-sprint-select select").value;
-        var msg = { svc: services.retro.key, cmd: command.client.updateSession, param: { title: title, categories: categories, sprintID: sprintID } };
+        var title = dom.req("#model-title-input").value;
+        var categories = dom.req("#model-categories-input").value;
+        var teamID = dom.req("#model-team-select select").value;
+        var sprintID = dom.req("#model-sprint-select select").value;
+        var msg = { svc: services.retro.key, cmd: command.client.updateSession, param: { title: title, categories: categories, teamID: teamID, sprintID: sprintID } };
         socket.send(msg);
     }
     retro.onSubmitRetroSession = onSubmitRetroSession;
@@ -810,13 +977,9 @@ var rituals;
     rituals.onSocketMessage = onSocketMessage;
     function setDetail(session) {
         system.cache.session = session;
-        util.setText("#model-title", session.title);
-        util.setValue("#model-title-input", session.title);
-        var removeFromSprintButton = util.els("#remove-from-sprint-button");
-        if (removeFromSprintButton.length > 0) {
-            removeFromSprintButton[0].style.display = session.sprintID ? "block" : "none";
-        }
-        var items = util.els("#navbar .uk-navbar-item");
+        dom.setText("#model-title", session.title);
+        dom.setValue("#model-title-input", session.title);
+        var items = dom.els("#navbar .uk-navbar-item");
         if (items.length > 0) {
             items[items.length - 1].innerText = session.title;
         }
@@ -839,6 +1002,9 @@ var rituals;
                 break;
             case command.server.actions:
                 action.viewActions(param);
+                break;
+            case command.server.teams:
+                team.viewTeams(param);
                 break;
             case command.server.sprints:
                 sprint.viewSprints(param);
@@ -868,22 +1034,24 @@ var rituals;
         socket.socketConnect(svc, id);
     }
     rituals.init = init;
-    function removeFromSprint() {
-        if (confirm("Remove this from the current sprint?")) {
-            var msg = { svc: services.system.key, cmd: command.client.setSprint, param: null };
-            socket.send(msg);
-        }
-    }
-    rituals.removeFromSprint = removeFromSprint;
     function setSprint(spr) {
         UIkit.modal("#modal-session").hide();
-        var container = util.req("#sprint-link-container");
+        var container = dom.req("#sprint-link-container");
         container.innerHTML = "";
         if (spr) {
             container.appendChild(sprint.renderSprintLink(spr));
         }
     }
     rituals.setSprint = setSprint;
+    function setTeam(tm) {
+        UIkit.modal("#modal-session").hide();
+        var container = dom.req("#team-link-container");
+        container.innerHTML = "";
+        if (tm) {
+            container.appendChild(team.renderTeamLink(tm));
+        }
+    }
+    rituals.setTeam = setTeam;
 })(rituals || (rituals = {}));
 var socket;
 (function (socket_1) {
@@ -895,7 +1063,7 @@ var socket;
         if (l.protocol === "https:") {
             protocol = "wss";
         }
-        return protocol + "://" + l.host + "/s";
+        return protocol + ("://" + l.host + "/s");
     }
     function setAppUnloading() {
         appUnloading = true;
@@ -936,25 +1104,14 @@ var socket;
     function onSocketClose() {
         function disconnect(seconds) {
             if (debug) {
-                if (seconds === 1) {
-                    console.info("socket closed, reconnecting in a second");
-                }
-                else {
-                    console.info("socket closed, reconnecting in " + seconds + " seconds");
-                }
+                console.info("socket closed, reconnecting in " + seconds + " seconds");
             }
             setTimeout(function () {
                 socketConnect(system.cache.currentService, system.cache.currentID);
             }, seconds * 1000);
         }
         if (!appUnloading) {
-            var delta = Date.now() - system.cache.connectTime;
-            if (delta < 2000) {
-                disconnect(6);
-            }
-            else {
-                disconnect(1);
-            }
+            disconnect(10);
         }
     }
 })(socket || (socket = {}));
@@ -962,9 +1119,6 @@ var sprint;
 (function (sprint) {
     var Cache = /** @class */ (function () {
         function Cache() {
-            this.estimates = [];
-            this.standups = [];
-            this.retros = [];
         }
         return Cache;
     }());
@@ -978,10 +1132,21 @@ var sprint;
                 var sj = param;
                 rituals.onSessionJoin(sj);
                 setSprintDetail(sj.session);
+                rituals.setTeam(sj.team);
                 setSprintContents(sj);
+                break;
+            case command.server.teamUpdate:
+                var tm = param;
+                if (sprint.cache.detail) {
+                    sprint.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
+                }
+                rituals.setTeam(tm);
                 break;
             case command.server.sessionUpdate:
                 setSprintDetail(param);
+                break;
+            case command.server.contentUpdate:
+                socket.socketConnect(system.cache.currentService, system.cache.currentID);
                 break;
             default:
                 console.warn("unhandled command [" + cmd + "] for sprint");
@@ -989,47 +1154,44 @@ var sprint;
     }
     sprint.onSprintMessage = onSprintMessage;
     function setSprintDetail(detail) {
+        var _a, _b;
         sprint.cache.detail = detail;
+        var s = ((_a = detail.startDate) === null || _a === void 0 ? void 0 : _a.length) == 0 ? undefined : new Date(detail.startDate);
+        var e = ((_b = detail.endDate) === null || _b === void 0 ? void 0 : _b.length) == 0 ? undefined : new Date(detail.endDate);
+        dom.setContent("#sprint-date-display", sprint.renderSprintDates(s, e));
+        dom.setValue("#sprint-start-date-input", s ? date.dateToYMD(s) : "");
+        dom.setValue("#sprint-end-date-input", e ? date.dateToYMD(e) : "");
         rituals.setDetail(detail);
     }
     function setSprintContents(sj) {
-        viewEstimates(sj.estimates);
-        viewStandups(sj.standups);
-        viewRetros(sj.retros);
-    }
-    function viewEstimates(estimates) {
-        sprint.cache.estimates = estimates;
-        util.setContent("#sprint-estimate-list", sprint.renderContents(services.estimate, sprint.cache.estimates));
-    }
-    function viewStandups(standups) {
-        sprint.cache.standups = standups;
-        util.setContent("#sprint-standup-list", sprint.renderContents(services.standup, sprint.cache.standups));
-    }
-    function viewRetros(retros) {
-        sprint.cache.retros = retros;
-        util.setContent("#sprint-retro-list", sprint.renderContents(services.retro, sprint.cache.retros));
+        dom.setContent("#sprint-estimate-list", contents.renderContents(services.estimate, sj.estimates));
+        dom.setContent("#sprint-standup-list", contents.renderContents(services.standup, sj.standups));
+        dom.setContent("#sprint-retro-list", contents.renderContents(services.retro, sj.retros));
     }
     function onSubmitSprintSession() {
-        var title = util.req("#model-title-input").value;
-        var msg = { svc: services.sprint.key, cmd: command.client.updateSession, param: { title: title } };
+        var _a, _b;
+        var title = dom.req("#model-title-input").value;
+        var teamID = dom.req("#model-team-select select").value;
+        var startDate = (_a = dom.opt("#model-start-date-input")) === null || _a === void 0 ? void 0 : _a.value;
+        var endDate = (_b = dom.opt("#model-end-date-input")) === null || _b === void 0 ? void 0 : _b.value;
+        var msg = { svc: services.sprint.key, cmd: command.client.updateSession, param: { title: title, startDate: startDate, endDate: endDate, teamID: teamID } };
         socket.send(msg);
     }
     sprint.onSubmitSprintSession = onSubmitSprintSession;
     function refreshSprints() {
-        var sprintSelect = util.opt("#model-sprint-select");
+        var sprintSelect = dom.opt("#model-sprint-select");
         if (sprintSelect) {
-            var msg = { svc: services.system.key, cmd: command.client.getSprints, param: null };
-            socket.send(msg);
+            socket.send({ svc: services.system.key, cmd: command.client.getSprints, param: null });
         }
     }
     sprint.refreshSprints = refreshSprints;
     function viewSprints(sprints) {
         var _a;
-        var c = util.opt("#model-sprint-container");
+        var c = dom.opt("#model-sprint-container");
         if (c) {
-            c.style.display = sprints.length > 0 ? "inline" : "none";
+            c.style.display = sprints.length > 0 ? "block" : "none";
+            dom.setContent("#model-sprint-select", sprint.renderSprintSelect(sprints, (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.sprintID));
         }
-        util.setContent("#model-sprint-select", sprint.renderSprintSelect(sprints, (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.sprintID));
     }
     sprint.viewSprints = viewSprints;
 })(sprint || (sprint = {}));
@@ -1050,12 +1212,20 @@ var standup;
             case command.server.sessionJoined:
                 var sj = param;
                 rituals.onSessionJoin(sj);
+                rituals.setTeam(sj.team);
                 rituals.setSprint(sj.sprint);
                 setStandupDetail(sj.session);
                 report.setReports(sj.reports);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
+                break;
+            case command.server.teamUpdate:
+                var tm = param;
+                if (standup.cache.detail) {
+                    standup.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
+                }
+                rituals.setTeam(tm);
                 break;
             case command.server.sprintUpdate:
                 var x = param;
@@ -1080,9 +1250,10 @@ var standup;
         rituals.setDetail(detail);
     }
     function onSubmitStandupSession() {
-        var title = util.req("#model-title-input").value;
-        var sprintID = util.req("#model-sprint-select select").value;
-        var msg = { svc: services.standup.key, cmd: command.client.updateSession, param: { title: title, sprintID: sprintID } };
+        var title = dom.req("#model-title-input").value;
+        var teamID = dom.req("#model-team-select select").value;
+        var sprintID = dom.req("#model-sprint-select select").value;
+        var msg = { svc: services.standup.key, cmd: command.client.updateSession, param: { title: title, teamID: teamID, sprintID: sprintID } };
         socket.send(msg);
     }
     standup.onSubmitStandupSession = onSubmitStandupSession;
@@ -1118,11 +1289,11 @@ var story;
                 el.classList.remove("active");
             }
         }
-        for (var _i = 0, _a = util.els(".story-status-body"); _i < _a.length; _i++) {
+        for (var _i = 0, _a = dom.els(".story-status-body"); _i < _a.length; _i++) {
             var el = _a[_i];
             setActive(el, status);
         }
-        for (var _b = 0, _c = util.els(".story-status-actions"); _b < _c.length; _b++) {
+        for (var _b = 0, _c = dom.els(".story-status-actions"); _b < _c.length; _b++) {
             var el = _c[_b];
             setActive(el, status);
         }
@@ -1138,7 +1309,7 @@ var story;
                 txt = "Results";
                 break;
         }
-        util.setText("#story-status", txt);
+        dom.setText("#story-status", txt);
         vote.viewVotes();
     }
     story_1.viewStoryStatus = viewStoryStatus;
@@ -1157,7 +1328,7 @@ var story;
                 status = currStory.finalVote;
             }
         }
-        util.setContent("#story-" + storyID + " .story-status", story_1.renderStatus(status));
+        dom.setContent("#story-" + storyID + " .story-status", story_1.renderStatus(status));
         if (calcTotal) {
             story_1.showTotalIfNeeded();
         }
@@ -1183,14 +1354,14 @@ var story;
 (function (story) {
     function setStories(stories) {
         estimate.cache.stories = stories;
-        util.setContent("#story-detail", story.renderStories(stories));
+        dom.setContent("#story-detail", story.renderStories(stories));
         stories.forEach(function (s) { return story.setStoryStatus(s.id, s.status, s, false); });
         showTotalIfNeeded();
         UIkit.modal("#modal-add-story").hide();
     }
     story.setStories = setStories;
     function onSubmitStory() {
-        var title = util.req("#story-title-input").value;
+        var title = dom.req("#story-title-input").value;
         var msg = { svc: services.estimate.key, cmd: command.client.addStory, param: { title: title } };
         socket.send(msg);
         return false;
@@ -1233,7 +1404,7 @@ var story;
         if (s === undefined) {
             return;
         }
-        util.setText("#story-title", s.title);
+        dom.setText("#story-title", s.title);
         story.viewStoryStatus(s.status);
     }
     story.viewActiveStory = viewActiveStory;
@@ -1243,8 +1414,8 @@ var story;
         var floats = strings.map(function (c) { return parseFloat(c); }).filter(function (f) { return !isNaN(f); });
         var sum = 0;
         floats.forEach(function (f) { return sum += f; });
-        var curr = util.opt("#story-total");
-        var panel = util.req("#story-list");
+        var curr = dom.opt("#story-total");
+        var panel = dom.req("#story-list");
         if (curr !== null) {
             panel.removeChild(curr);
         }
@@ -1258,9 +1429,6 @@ var team;
 (function (team) {
     var Cache = /** @class */ (function () {
         function Cache() {
-            this.estimates = [];
-            this.standups = [];
-            this.retros = [];
         }
         return Cache;
     }());
@@ -1279,6 +1447,9 @@ var team;
             case command.server.sessionUpdate:
                 setTeamDetail(param);
                 break;
+            case command.server.contentUpdate:
+                socket.socketConnect(system.cache.currentService, system.cache.currentID);
+                break;
             default:
                 console.warn("unhandled command [" + cmd + "] for team");
         }
@@ -1289,144 +1460,34 @@ var team;
         rituals.setDetail(detail);
     }
     function setTeamHistory(sj) {
+        dom.setContent("#team-sprint-list", contents.renderContents(services.sprint, sj.sprints));
+        dom.setContent("#team-estimate-list", contents.renderContents(services.estimate, sj.estimates));
+        dom.setContent("#team-standup-list", contents.renderContents(services.standup, sj.standups));
+        dom.setContent("#team-retro-list", contents.renderContents(services.retro, sj.retros));
     }
     function onSubmitTeamSession() {
-        var title = util.req("#model-title-input").value;
+        var title = dom.req("#model-title-input").value;
         var msg = { svc: services.team.key, cmd: command.client.updateSession, param: { title: title } };
         socket.send(msg);
     }
     team.onSubmitTeamSession = onSubmitTeamSession;
+    function refreshTeams() {
+        var teamSelect = dom.opt("#model-team-select");
+        if (teamSelect) {
+            socket.send({ svc: services.system.key, cmd: command.client.getTeams, param: null });
+        }
+    }
+    team.refreshTeams = refreshTeams;
+    function viewTeams(teams) {
+        var _a;
+        var c = dom.opt("#model-team-container");
+        if (c) {
+            c.style.display = teams.length > 0 ? "block" : "none";
+            dom.setContent("#model-team-select", team.renderTeamSelect(teams, (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.teamID));
+        }
+    }
+    team.viewTeams = viewTeams;
 })(team || (team = {}));
-var util;
-(function (util) {
-    function els(selector, context) {
-        return UIkit.util.$$(selector, context);
-    }
-    util.els = els;
-    function opt(selector, context) {
-        var res = util.els(selector, context);
-        if (res.length === 0) {
-            return null;
-        }
-        return res[0];
-    }
-    util.opt = opt;
-    function req(selector, context) {
-        var res = util.opt(selector, context);
-        if (res === null) {
-            console.warn("no element found for selector [" + selector + "]");
-        }
-        return res;
-    }
-    util.req = req;
-    function setHTML(el, html) {
-        if (typeof el === "string") {
-            el = util.req(el);
-        }
-        el.innerHTML = html;
-        return el;
-    }
-    util.setHTML = setHTML;
-    function setContent(el, e) {
-        if (typeof el === "string") {
-            el = util.req(el);
-        }
-        el.innerHTML = "";
-        el.appendChild(e);
-        return el;
-    }
-    util.setContent = setContent;
-    function setText(el, text) {
-        if (typeof el === "string") {
-            el = util.req(el);
-        }
-        el.innerText = text;
-        return el;
-    }
-    util.setText = setText;
-    function setValue(el, text) {
-        if (typeof el === "string") {
-            el = util.req(el);
-        }
-        el.value = text;
-        return el;
-    }
-    util.setValue = setValue;
-    function wireTextarea(text) {
-        function resize() {
-            text.style.height = 'auto';
-            text.style.height = (text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)) + 'px';
-        }
-        function delayedResize() {
-            window.setTimeout(resize, 0);
-        }
-        var x = text.dataset["autoresize"];
-        if (x === undefined) {
-            text.dataset["autoresize"] = "true";
-            text.addEventListener('change', resize, false);
-            text.addEventListener('cut', delayedResize, false);
-            text.addEventListener('paste', delayedResize, false);
-            text.addEventListener('drop', delayedResize, false);
-            text.addEventListener('keydown', delayedResize, false);
-            text.focus();
-            text.select();
-        }
-        resize();
-    }
-    util.wireTextarea = wireTextarea;
-    function dateToYMD(date) {
-        var d = date.getDate();
-        var m = date.getMonth() + 1;
-        var y = date.getFullYear();
-        return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-    }
-    util.dateToYMD = dateToYMD;
-    function dateFromYMD(s) {
-        var d = new Date(s);
-        d = new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
-        return d;
-    }
-    util.dateFromYMD = dateFromYMD;
-    function dow(i) {
-        switch (i) {
-            case 0:
-                return "Sun";
-            case 1:
-                return "Mon";
-            case 2:
-                return "Tue";
-            case 3:
-                return "Wed";
-            case 4:
-                return "Thu";
-            case 5:
-                return "Fri";
-            case 6:
-                return "Sat";
-            default:
-                return "???";
-        }
-    }
-    util.dow = dow;
-    function setOptions(el, categories) {
-        el.innerHTML = "";
-        for (var _i = 0, categories_1 = categories; _i < categories_1.length; _i++) {
-            var c = categories_1[_i];
-            var opt_1 = document.createElement("option");
-            opt_1.value = c;
-            opt_1.innerText = c;
-            el.appendChild(opt_1);
-        }
-    }
-    util.setOptions = setOptions;
-    function setSelectOption(el, o) {
-        for (var i = 0; i < el.children.length; i++) {
-            var e = el.children.item(i);
-            e.selected = e.value === o;
-        }
-    }
-    util.setSelectOption = setSelectOption;
-})(util || (util = {}));
 var vote;
 (function (vote) {
     function setVotes(votes) {
@@ -1454,8 +1515,8 @@ var vote;
         switch (s.status) {
             case "pending":
                 var uID = system.cache.getProfile().userID;
-                var e = util.req("#story-edit-section");
-                var v = util.req("#story-view-section");
+                var e = dom.req("#story-edit-section");
+                var v = dom.req("#story-view-section");
                 if (uID === s.authorID) {
                     e.style.display = "block";
                     v.style.display = "none";
@@ -1477,12 +1538,12 @@ var vote;
     }
     vote.viewVotes = viewVotes;
     function viewActiveVotes(votes, activeVote) {
-        util.setContent("#story-vote-members", vote.renderVoteMembers(system.cache.members, votes));
-        util.setContent("#story-vote-choices", vote.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
+        dom.setContent("#story-vote-members", vote.renderVoteMembers(system.cache.members, votes));
+        dom.setContent("#story-vote-choices", vote.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
     }
     function viewVoteResults(votes) {
-        util.setContent("#story-vote-results", vote.renderVoteResults(system.cache.members, votes));
-        util.setContent("#story-vote-summary", vote.renderVoteSummary(votes));
+        dom.setContent("#story-vote-results", vote.renderVoteResults(system.cache.members, votes));
+        dom.setContent("#story-vote-summary", vote.renderVoteSummary(votes));
     }
     // noinspection JSUnusedGlobalSymbols
     function onSubmitVote(choice) {
@@ -1531,10 +1592,7 @@ var action;
             JSX("td", null, action.act),
             JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
             JSX("td", null, action.note),
-            JSX("td", null,
-                new Date(action.occurred).toLocaleDateString(),
-                " ",
-                new Date(action.occurred).toLocaleTimeString().slice(0, 8)));
+            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.occurred))));
     }
     function renderActions(actions) {
         if (actions.length === 0) {
@@ -1554,6 +1612,34 @@ var action;
     }
     action_1.renderActions = renderActions;
 })(action || (action = {}));
+var contents;
+(function (contents_1) {
+    function renderSprintContent(svc, session) {
+        var profile = system.cache.getProfile();
+        return JSX("tr", null,
+            JSX("td", null,
+                JSX("a", { "class": profile.linkColor + "-fg", href: "/" + svc.key + "/" + session.slug }, session.title)),
+            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
+            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created))));
+    }
+    function toContent(svc, sessions) {
+        return sessions.map(function (s) {
+            return { svc: svc, session: s };
+        });
+    }
+    function renderContents(svc, sessions) {
+        var contents = toContent(svc, sessions);
+        contents.sort(function (l, r) { return (l.session.created > r.session.created ? -1 : 1); });
+        if (contents.length === 0) {
+            return JSX("div", null, "No " + svc.plural + " in this sprint");
+        }
+        else {
+            return JSX("table", { "class": "uk-table uk-table-divider uk-text-left" },
+                JSX("tbody", null, contents.map(function (a) { return renderSprintContent(a.svc, a.session); })));
+        }
+    }
+    contents_1.renderContents = renderContents;
+})(contents || (contents = {}));
 var feedback;
 (function (feedback) {
     function renderFeedback(model) {
@@ -1562,7 +1648,7 @@ var feedback;
             JSX("a", { "class": profile.linkColor + "-fg section-link" }, system.getMemberName(model.authorID)),
             JSX("div", { "class": "feedback-content" }, "loading..."));
         if (model.html.length > 0) {
-            util.setHTML(util.req(".feedback-content", ret), model.html).style.display = "block";
+            dom.setHTML(dom.req(".feedback-content", ret), model.html).style.display = "block";
         }
         return ret;
     }
@@ -1612,7 +1698,7 @@ var report;
             JSX("a", { "class": profile.linkColor + "-fg section-link" }, system.getMemberName(model.authorID)),
             JSX("div", { "class": "report-content" }, "loading..."));
         if (model.html.length > 0) {
-            util.setHTML(util.req(".report-content", ret), model.html).style.display = "block";
+            dom.setHTML(dom.req(".report-content", ret), model.html).style.display = "block";
         }
         return ret;
     }
@@ -1625,8 +1711,8 @@ var report;
             var dates = report.getReportDates(reports);
             return JSX("ul", { "class": "uk-list" }, dates.map(function (day) { return JSX("li", { id: "report-date-" + day.d },
                 JSX("h5", null,
-                    JSX("div", { "class": "right uk-article-meta" }, util.dow(util.dateFromYMD(day.d).getDay())),
-                    util.dateFromYMD(day.d).toLocaleDateString()),
+                    JSX("div", { "class": "right uk-article-meta" }, date.dow(date.dateFromYMD(day.d).getDay())),
+                    date.toDateString(date.dateFromYMD(day.d))),
                 JSX("ul", null, day.reports.map(function (r) { return JSX("li", null, renderReport(r)); }))); }));
         }
     }
@@ -1634,32 +1720,36 @@ var report;
 })(report || (report = {}));
 var sprint;
 (function (sprint) {
-    function renderSprintContent(svc, session) {
-        var profile = system.cache.getProfile();
-        return JSX("tr", null,
-            JSX("td", null,
-                JSX("a", { "class": profile.linkColor + "-fg", href: "/" + svc.key + "/" + session.slug }, session.title)),
-            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
-            JSX("td", { "class": "uk-table-shrink uk-text-nowrap" },
-                new Date(session.created).toLocaleDateString(),
+    function renderSprintDates(startDate, endDate) {
+        function f(p, d) {
+            return JSX("span", null,
+                p,
                 " ",
-                new Date(session.created).toLocaleTimeString().slice(0, 8)));
-    }
-    function toContent(svc, sessions) {
-        return sessions.map(function (s) { return { svc: svc, session: s }; });
-    }
-    function renderContents(svc, sessions) {
-        var contents = toContent(svc, sessions);
-        contents.sort(function (l, r) { return (l.session.created > r.session.created ? -1 : 1); });
-        if (contents.length === 0) {
-            return JSX("div", null, "No " + svc.plural + " in this sprint");
+                JSX("span", { "class": "sprint-date", onclick: "events.openModal('session');" }, d ? date.toDateString(d) : ""));
+        }
+        var s = f("starts", startDate);
+        var e = f("ends", endDate);
+        if (startDate) {
+            if (endDate) {
+                return JSX("span", null,
+                    s,
+                    ", ",
+                    e);
+            }
+            else {
+                return s;
+            }
         }
         else {
-            return JSX("table", { "class": "uk-table uk-table-divider uk-text-left" },
-                JSX("tbody", null, contents.map(function (a) { return renderSprintContent(a.svc, a.session); })));
+            if (endDate) {
+                return e;
+            }
+            else {
+                return JSX("span", null, "Sprint");
+            }
         }
     }
-    sprint.renderContents = renderContents;
+    sprint.renderSprintDates = renderSprintDates;
     function renderSprintLink(spr) {
         var profile = system.cache.getProfile();
         return JSX("span", null,
@@ -1713,6 +1803,24 @@ var story;
     }
     story_2.renderTotal = renderTotal;
 })(story || (story = {}));
+var team;
+(function (team) {
+    function renderTeamLink(tm) {
+        var profile = system.cache.getProfile();
+        return JSX("span", null,
+            " in ",
+            JSX("a", { "class": profile.linkColor + "-fg", href: "/team/" + tm.slug }, tm.title));
+    }
+    team.renderTeamLink = renderTeamLink;
+    function renderTeamSelect(teams, activeID) {
+        return JSX("select", { "class": "uk-select" },
+            JSX("option", { value: "" }, "- no team -"),
+            teams.map(function (t) {
+                return t.id === activeID ? JSX("option", { selected: "selected", value: t.id }, t.title) : JSX("option", { value: t.id }, t.title);
+            }));
+    }
+    team.renderTeamSelect = renderTeamSelect;
+})(team || (team = {}));
 var vote;
 (function (vote_1) {
     function renderVoteMember(member, hasVote) {
@@ -1746,8 +1854,10 @@ var vote;
     }
     function renderVoteResults(members, votes) {
         return JSX("div", { "class": "uk-flex uk-flex-wrap uk-flex-around" }, members.map(function (m) {
-            var vote = votes.filter(function (v) { return v.userID === m.userID; });
-            return renderVoteResult(m, length > 0 ? vote[0].choice : undefined);
+            var vote = votes.filter(function (v) {
+                return v.userID === m.userID;
+            });
+            return renderVoteResult(m, vote.length > 0 ? vote[0].choice : undefined);
         }));
     }
     vote_1.renderVoteResults = renderVoteResults;

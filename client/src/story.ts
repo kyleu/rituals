@@ -11,14 +11,14 @@ namespace story {
 
   export function setStories(stories: Story[]) {
     estimate.cache.stories = stories;
-    util.setContent("#story-detail", renderStories(stories));
+    dom.setContent("#story-detail", renderStories(stories));
     stories.forEach(s => setStoryStatus(s.id, s.status, s, false));
     showTotalIfNeeded();
     UIkit.modal("#modal-add-story").hide();
   }
 
   export function onSubmitStory() {
-    const title = util.req<HTMLInputElement>("#story-title-input").value;
+    const title = dom.req<HTMLInputElement>("#story-title-input").value;
     const msg = {svc: services.estimate.key, cmd: command.client.addStory, param: {title: title}};
     socket.send(msg);
     return false;
@@ -50,7 +50,7 @@ namespace story {
     }
     const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory);
     if (curr.length !== 1) {
-      console.warn("cannot load active story [" + estimate.cache.activeStory + "]");
+      console.warn(`cannot load active story [${estimate.cache.activeStory}]`);
       return undefined;
     }
     return curr[0];
@@ -61,7 +61,7 @@ namespace story {
     if (s === undefined) {
       return;
     }
-    util.setText("#story-title", s.title);
+    dom.setText("#story-title", s.title);
     viewStoryStatus(s.status);
   }
 
@@ -71,8 +71,8 @@ namespace story {
     let floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));
     let sum = 0;
     floats.forEach(f => sum += f);
-    let curr = util.opt("#story-total");
-    let panel = util.req("#story-list");
+    let curr = dom.opt("#story-total");
+    let panel = dom.req("#story-list");
     if (curr !== null) {
       panel.removeChild(curr);
     }

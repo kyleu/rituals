@@ -9,10 +9,10 @@ namespace story {
       }
     }
 
-    for (let el of util.els(".story-status-body")) {
+    for (let el of dom.els(".story-status-body")) {
       setActive(el, status);
     }
-    for (let el of util.els(".story-status-actions")) {
+    for (let el of dom.els(".story-status-actions")) {
       setActive(el, status);
     }
 
@@ -28,7 +28,7 @@ namespace story {
         txt = "Results";
         break;
     }
-    util.setText("#story-status", txt);
+    dom.setText("#story-status", txt);
 
     vote.viewVotes();
   }
@@ -48,7 +48,7 @@ namespace story {
         status = currStory!.finalVote;
       }
     }
-    util.setContent("#story-" + storyID + " .story-status", renderStatus(status));
+    dom.setContent(`#story-${storyID} .story-status`, renderStatus(status));
     if (calcTotal) {
       showTotalIfNeeded();
     }

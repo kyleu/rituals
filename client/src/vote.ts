@@ -43,8 +43,8 @@ namespace vote {
     switch (s.status) {
       case "pending":
         const uID = system.cache.getProfile().userID;
-        const e = util.req("#story-edit-section");
-        const v = util.req("#story-view-section")
+        const e = dom.req("#story-edit-section");
+        const v = dom.req("#story-view-section")
         if(uID === s.authorID) {
           e.style.display = "block";
           v.style.display = "none";
@@ -60,18 +60,18 @@ namespace vote {
         viewVoteResults(votes);
         break;
       default:
-        console.warn("invalid story status [" + s.status + "]");
+        console.warn(`invalid story status [${s.status}]`);
     }
   }
 
   function viewActiveVotes(votes: Vote[], activeVote: Vote | undefined) {
-    util.setContent("#story-vote-members", renderVoteMembers(system.cache.members, votes));
-    util.setContent("#story-vote-choices", renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
+    dom.setContent("#story-vote-members", renderVoteMembers(system.cache.members, votes));
+    dom.setContent("#story-vote-choices", renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
   }
 
   function viewVoteResults(votes: Vote[]) {
-    util.setContent("#story-vote-results", renderVoteResults(system.cache.members, votes));
-    util.setContent("#story-vote-summary", renderVoteSummary(votes));
+    dom.setContent("#story-vote-results", renderVoteResults(system.cache.members, votes));
+    dom.setContent("#story-vote-summary", renderVoteSummary(votes));
   }
 
   // noinspection JSUnusedGlobalSymbols

@@ -6,7 +6,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -32,17 +31,16 @@ func AdminActionList(w http.ResponseWriter, r *http.Request) {
 
 func AdminActionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		actionIDString := mux.Vars(r)["id"]
-		actionID, err := uuid.FromString(actionIDString)
-		if err != nil {
-			return "", errors.New("invalid action id [" + actionIDString + "]")
+		actionID := getUUIDPointer(mux.Vars(r), "id")
+		if actionID == nil {
+			return "", errors.New("invalid action id")
 		}
-		act, err := ctx.App.Action.GetByID(actionID)
+		act, err := ctx.App.Action.GetByID(*actionID)
 		if err != nil {
 			return "", err
 		}
 		if act == nil {
-			ctx.Session.AddFlash("error:Can't load action [" + actionIDString + "]")
+			ctx.Session.AddFlash("error:Can't load action [" + actionID.String() + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.action"), nil
 		}
@@ -59,7 +57,7 @@ func AdminActionDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = user.Name
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.action"), "actions")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.action.detail", "id", actionIDString), actionIDString[0:8])...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.action.detail", "id", actionID.String()), actionID.String()[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminActionDetail(act, user, ctx, w))

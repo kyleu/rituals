@@ -1,12 +1,9 @@
 package socket
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -23,10 +20,10 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 		err = saveName(s, conn, userID, param.(map[string]interface{}))
 	case ClientCmdGetActions:
 		err = sendActions(s, conn)
+	case ClientCmdGetTeams:
+		err = sendTeams(s, conn, userID)
 	case ClientCmdGetSprints:
 		err = sendSprints(s, conn, userID)
-	case ClientCmdSetSprint:
-		err = setSprint(s, conn, userID, param)
 	default:
 		err = errors.New("unhandled system command [" + cmd + "]")
 	}
@@ -77,6 +74,15 @@ func sendActions(s *Service, conn *connection) error {
 	return s.WriteMessage(conn.ID, &actionsMsg)
 }
 
+func sendTeams(s *Service, conn *connection, userID uuid.UUID) error {
+	teams, err := s.teams.GetByMember(userID, nil)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "cannot get teams"))
+	}
+	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdTeams, Param: teams}
+	return s.WriteMessage(conn.ID, &actionsMsg)
+}
+
 func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
 	sprints, err := s.sprints.GetByMember(userID, nil)
 	if err != nil {
@@ -84,37 +90,6 @@ func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
 	}
 	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdSprints, Param: sprints}
 	return s.WriteMessage(conn.ID, &actionsMsg)
-}
-
-func setSprint(s *Service, conn *connection, userID uuid.UUID, param interface{}) error {
-	if conn.ModelID == nil {
-		return errors.WithStack(errors.New("no active model"))
-	}
-
-	var spr *sprint.Session
-
-	if param != nil {
-		sprintID, err := uuid.FromString(param.(string))
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "sprintID isn't a valid UUID"))
-		}
-		spr, err = s.sprints.AssignSprint(conn.Svc, conn.ModelID, userID, &sprintID)
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, fmt.Sprintf("cannot remove %v [%v] from sprint [%v]", conn.Svc, conn.ModelID, sprintID)))
-		}
-	} else {
-		sprP, err := s.sprints.AssignSprint(conn.Svc, conn.ModelID, userID, nil)
-		spr = sprP
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, fmt.Sprintf("cannot remove sprint from %v [%v]", conn.Svc, conn.ModelID)))
-		}
-	}
-	return sendSprintUpdate(s, *conn.Channel, spr)
-}
-
-func sendSprintUpdate(s *Service, ch channel, spr *sprint.Session) error {
-	err := s.WriteChannel(ch, &Message{Svc: ch.Svc, Cmd: ServerCmdSprintUpdate, Param: spr})
-	return errors.WithStack(errors.Wrap(err, "error writing sprint update message"))
 }
 
 func memberSvcFor(s *Service, svc string) (*member.Service, error) {
@@ -134,4 +109,12 @@ func memberSvcFor(s *Service, svc string) (*member.Service, error) {
 		return nil, errors.New("invalid service [" + svc + "]")
 	}
 	return ret, nil
+}
+
+func getUUIDPointer(m map[string]interface{}, key string) *uuid.UUID {
+	retOut, ok := m[key]
+	if !ok {
+		return nil
+	}
+	return util.GetUUIDFromString(retOut.(string))
 }

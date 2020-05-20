@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"logur.dev/logur"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
@@ -13,6 +15,7 @@ import (
 )
 
 type Service struct {
+	logger    logur.Logger
 	actions   *action.Service
 	db        *sqlx.DB
 	svc       string
@@ -20,10 +23,11 @@ type Service struct {
 	colName   string
 }
 
-func NewService(actions *action.Service, db *sqlx.DB, svc string) *Service {
+func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, svc string) *Service {
 	return &Service{
 		actions:   actions,
 		db:        db,
+		logger:    logger,
 		svc:       svc,
 		tableName: svc + "_member",
 		colName:   svc + "_id",
@@ -32,19 +36,20 @@ func NewService(actions *action.Service, db *sqlx.DB, svc string) *Service {
 
 const nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
-func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) ([]*Entry, error) {
+func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) []*Entry {
 	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, &query.Ordering{Column: "lower(name)", Asc: true})
 	var dtos []entryDTO
 	q := query.SQLSelect(fmt.Sprintf("user_id, %s, role, created", nameClause), s.tableName, fmt.Sprintf("%s = $1", s.colName), params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving member entries for model [%v]: %+v", id, err))
+		return nil
 	}
 	ret := make([]*Entry, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToEntry())
 	}
-	return ret, nil
+	return ret
 }
 
 func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
@@ -58,27 +63,6 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 		return nil, err
 	}
 	return dto.ToEntry(), nil
-}
-
-func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) (*Entry, bool, error) {
-	dto, err := s.Get(modelID, userID)
-	if err != nil {
-		return nil, false, err
-	}
-	if dto == nil {
-		q := fmt.Sprintf(`insert into %s (%s, user_id, name, role) values ($1, $2, '', 'member')`, s.tableName, s.colName)
-		_, err = s.db.Exec(q, modelID, userID)
-		if err != nil {
-			return nil, false, err
-		}
-		dto, err = s.Get(modelID, userID)
-
-		s.actions.Post(s.svc, modelID, userID, action.ActMemberAdd, nil, "")
-
-		return dto, true, err
-	} else {
-		return dto, false, nil
-	}
 }
 
 func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (*Entry, error) {

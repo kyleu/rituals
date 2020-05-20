@@ -6,7 +6,7 @@ namespace action {
       <td>{action.act}</td>
       <td>{c === "null" ? "" : <pre>{c}</pre>}</td>
       <td>{action.note}</td>
-      <td>{new Date(action.occurred).toLocaleDateString()} {new Date(action.occurred).toLocaleTimeString().slice(0, 8)}</td>
+      <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(action.occurred))}</td>
     </tr>;
   }
 

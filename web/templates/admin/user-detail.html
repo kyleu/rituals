@@ -36,9 +36,7 @@
           <tr>
             <th>Picture</th>
             <td>
-              <% if len(user.Picture) == 0 { %>
-                -
-              <% } else { %>
+              <% if len(user.Picture) > 0 { %>
                 <img src="<%= user.Picture %>" />
               <% } %>
             </td>

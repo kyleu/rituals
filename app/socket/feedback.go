@@ -35,13 +35,9 @@ func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]in
 }
 
 func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	i, ok := param["id"].(string)
-	if !ok {
-		return errors.WithStack(errors.New("Cannot read [%T] as string"))
-	}
-	id, err := uuid.FromString(i)
-	if err != nil {
-		s.logger.Warn(fmt.Sprintf("cannot parse uuid [%v]: %+v", i, err))
+	id := getUUIDPointer(param, "id")
+	if id == nil {
+		return errors.WithStack(errors.New("no id provided"))
 	}
 
 	category, ok := param["category"].(string)
@@ -51,7 +47,7 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 
 	c, ok := param["content"].(string)
 	if !ok {
-		return errors.WithStack(errors.Wrap(err, "cannot read feedback content"))
+		return errors.WithStack(errors.New("cannot read feedback content"))
 	}
 	content := strings.TrimSpace(c)
 	if len(content) == 0 {
@@ -59,7 +55,7 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", category, userID))
-	feedback, err := s.retros.UpdateFeedback(id, category, content, userID)
+	feedback, err := s.retros.UpdateFeedback(*id, category, content, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update feedback"))
 	}

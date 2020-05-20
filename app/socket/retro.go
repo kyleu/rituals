@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/rituals.dev/app/team"
+
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/sprint"
 
@@ -17,6 +19,7 @@ import (
 type RetroSessionJoined struct {
 	Profile  *util.Profile     `json:"profile"`
 	Session  *retro.Session    `json:"session"`
+	Team     *team.Session     `json:"team"`
 	Sprint   *sprint.Session   `json:"sprint"`
 	Members  []*member.Entry   `json:"members"`
 	Online   []uuid.UUID       `json:"online"`
@@ -53,14 +56,8 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		categories = retro.DefaultCategories
 	}
 
-	var sprintID *uuid.UUID
-	sprintIDString, ok := param["sprintID"]
-	if ok {
-		sprintIDResult, err := uuid.FromString(sprintIDString.(string))
-		if err == nil {
-			sprintID = &sprintIDResult
-		}
-	}
+	sprintID := getUUIDPointer(param, "sprintID")
+	teamID := getUUIDPointer(param, "teamID")
 
 	s.logger.Debug(fmt.Sprintf("saving retro session [%s] with categories [%s] and sprint [%s]", title, strings.Join(categories, ", "), sprintID))
 
@@ -69,9 +66,10 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		return errors.WithStack(errors.Wrap(err, "error loading retro session ["+ch.ID.String()+"] for update"))
 	}
 
+	teamChanged := differentPointerValues(curr.TeamID, teamID)
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
-	err = s.retros.UpdateSession(ch.ID, title, categories, sprintID, userID)
+	err = s.retros.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating retro session"))
 	}
@@ -81,9 +79,17 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		return errors.WithStack(errors.Wrap(err, "error sending retro session"))
 	}
 
+	if teamChanged {
+		tm := s.teams.GetByIDPointer(teamID)
+		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error sending team for updated retro session"))
+		}
+	}
+
 	if sprintChanged {
 		spr := s.sprints.GetByIDPointer(sprintID)
-		err = sendSprintUpdate(s, ch, spr)
+		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated retro session"))
 		}

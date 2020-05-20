@@ -11,6 +11,7 @@ var (
 	standupArgs           graphql.FieldConfigArgument
 	standupResolver       Callback
 	standupsResolver      Callback
+	standupTeamResolver   Callback
 	standupSprintResolver Callback
 	standupMemberResolver Callback
 	standupType           *graphql.Object
@@ -44,7 +45,15 @@ func initStandup() {
 	}
 
 	standupMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Standup.Members.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger))
+		return ctx.App.Standup.Members.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
+	}
+
+	standupTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		sess := p.Source.(*standup.Session)
+		if sess.TeamID != nil {
+			return ctx.App.Team.GetByID(*sess.TeamID)
+		}
+		return nil, nil
 	}
 
 	standupSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -67,6 +76,9 @@ func initStandup() {
 				},
 				"title": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
+				},
+				"teamID": &graphql.Field{
+					Type: graphql.String,
 				},
 				"sprintID": &graphql.Field{
 					Type: graphql.String,

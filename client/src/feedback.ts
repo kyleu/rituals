@@ -16,13 +16,13 @@ namespace feedback {
 
   export function setFeedback(feedback: feedback.Feedback[]) {
     retro.cache.feedback = feedback;
-    util.setContent("#feedback-detail", renderFeedbackArray(feedback));
+    dom.setContent("#feedback-detail", renderFeedbackArray(feedback));
     UIkit.modal("#modal-add-feedback").hide();
   }
 
   export function onSubmitFeedback() {
-    const category = util.req<HTMLInputElement>("#retro-feedback-category").value;
-    const content = util.req<HTMLInputElement>("#retro-feedback-content").value;
+    const category = dom.req<HTMLInputElement>("#retro-feedback-category").value;
+    const content = dom.req<HTMLInputElement>("#retro-feedback-content").value;
     const msg = {svc: services.retro.key, cmd: command.client.addFeedback, param: {category: category, content: content}};
     socket.send(msg);
     return false;
@@ -30,8 +30,8 @@ namespace feedback {
 
   export function onEditFeedback() {
     const id = retro.cache.activeFeedback;
-    const category = util.req<HTMLInputElement>("#retro-feedback-edit-category").value;
-    const content = util.req<HTMLInputElement>("#retro-feedback-edit-content").value;
+    const category = dom.req<HTMLInputElement>("#retro-feedback-edit-category").value;
+    const content = dom.req<HTMLInputElement>("#retro-feedback-edit-content").value;
     const msg = {svc: services.retro.key, cmd: command.client.updateFeedback, param: {id: id, category: category, content: content}};
     socket.send(msg);
     return false;
@@ -53,7 +53,7 @@ namespace feedback {
     }
     const curr = retro.cache.feedback.filter(x => x.id === retro.cache.activeFeedback);
     if (curr.length !== 1) {
-      console.warn("cannot load active Feedback [" + retro.cache.activeFeedback + "]");
+      console.warn(`cannot load active Feedback [${retro.cache.activeFeedback}]`);
       return undefined;
     }
     return curr[0];
@@ -67,29 +67,29 @@ namespace feedback {
       return;
     }
 
-    util.setText("#feedback-title", fb.category + " / " + system.getMemberName(fb.authorID));
-    const contentEdit = util.req("#modal-feedback .content-edit");
-    const contentEditCategory = util.req<HTMLSelectElement>("#retro-feedback-edit-category", contentEdit);
-    const contentEditTextarea = util.req<HTMLTextAreaElement>("#retro-feedback-edit-content", contentEdit);
-    const contentView = util.req("#modal-feedback .content-view");
-    const buttonsEdit = util.req("#modal-feedback .buttons-edit");
-    const buttonsView = util.req("#modal-feedback .buttons-view");
+    dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.authorID)}`);
+    const contentEdit = dom.req("#modal-feedback .content-edit");
+    const contentEditCategory = dom.req<HTMLSelectElement>("#retro-feedback-edit-category", contentEdit);
+    const contentEditTextarea = dom.req<HTMLTextAreaElement>("#retro-feedback-edit-content", contentEdit);
+    const contentView = dom.req("#modal-feedback .content-view");
+    const buttonsEdit = dom.req("#modal-feedback .buttons-edit");
+    const buttonsView = dom.req("#modal-feedback .buttons-view");
 
     if(fb.authorID === profile.userID) {
       contentEdit.style.display = "block";
-      util.setSelectOption(contentEditCategory, fb.category);
-      util.setValue(contentEditTextarea, fb.content);
-      util.wireTextarea(contentEditTextarea);
+      dom.setSelectOption(contentEditCategory, fb.category);
+      dom.setValue(contentEditTextarea, fb.content);
+      dom.wireTextarea(contentEditTextarea);
       contentView.style.display = "none";
-      util.setHTML(contentView, "");
+      dom.setHTML(contentView, "");
       buttonsEdit.style.display = "block";
       buttonsView.style.display = "none";
     } else {
       contentEdit.style.display = "none";
-      util.setSelectOption(contentEditCategory, undefined);
-      util.setValue(contentEditTextarea, "");
+      dom.setSelectOption(contentEditCategory, undefined);
+      dom.setValue(contentEditTextarea, "");
       contentView.style.display = "block";
-      util.setHTML(contentView, fb.html);
+      dom.setHTML(contentView, fb.html);
       buttonsEdit.style.display = "none";
       buttonsView.style.display = "block";
     }

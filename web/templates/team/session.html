@@ -19,10 +19,8 @@
     <form class="uk-form-stacked" id="form-detail" onsubmit="team.onSubmitTeamSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
-          <div class="uk-margin">
-            <label class="uk-form-label" for="model-title-input">Title</label>
-            <input class="uk-input" id="model-title-input" type="text" />
-          </div>
+          <% ComponentSessionTitle(model.Title, ctx, buffer) %>
+          <% ComponentSessionPerm(ctx, buffer) %>
         </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">

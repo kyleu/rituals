@@ -28,14 +28,13 @@ func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]inter
 }
 
 func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	storyIDString := param["id"].(string)
-	storyID, err := uuid.FromString(storyIDString)
-	if err != nil {
-		return errors.New("invalid story id [" + storyIDString + "]")
+	storyID := getUUIDPointer(param, "id")
+	if storyID == nil {
+		return errors.New("invalid story id")
 	}
 
 	title := util.ServiceTitle(param["title"].(string))
-	st, err := s.estimates.UpdateStory(storyID, title, userID)
+	st, err := s.estimates.UpdateStory(*storyID, title, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update story"))
 	}

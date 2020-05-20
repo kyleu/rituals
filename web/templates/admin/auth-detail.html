@@ -43,10 +43,8 @@
           <tr>
             <th>Picture</th>
             <td>
-              <% if len(model.Picture) == 0 { %>
-              -
-              <% } else { %>
-              <img src="<%= model.Picture %>" />
+              <% if len(model.Picture) > 0 { %>
+                <img src="<%= model.Picture %>" />
               <% } %>
             </td>
           </tr>

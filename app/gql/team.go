@@ -35,7 +35,7 @@ func initTeam() {
 	}
 
 	teamMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Team.Members.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger))
+		return ctx.App.Team.Members.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
 	teamType = graphql.NewObject(
@@ -66,4 +66,32 @@ func initTeam() {
 			},
 		},
 	)
+
+	estimateType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+		Type:        teamType,
+		Description: "This estimate's team",
+		Args:        listArgs,
+		Resolve:     ctxF(estimateTeamResolver),
+	})
+
+	standupType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+		Type:        teamType,
+		Description: "This standup's team",
+		Args:        listArgs,
+		Resolve:     ctxF(standupTeamResolver),
+	})
+
+	retroType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+		Type:        teamType,
+		Description: "This retro's team",
+		Args:        listArgs,
+		Resolve:     ctxF(retroTeamResolver),
+	})
+
+	sprintType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+		Type:        teamType,
+		Description: "This sprint's team",
+		Args:        listArgs,
+		Resolve:     ctxF(sprintTeamResolver),
+	})
 }

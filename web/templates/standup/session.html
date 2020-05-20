@@ -8,7 +8,7 @@
     <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
   </h3>
-  <p><span id="sprint-link-container"></span><%= util.SvcStandup.Title %></p>
+  <p><span id="sprint-link-container"></span><%= util.SvcStandup.Title %><span id="team-link-container"></span></p>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -19,18 +19,13 @@
     <form class="uk-form-stacked" id="form-detail" onsubmit="standup.onSubmitStandupSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
-          <div class="uk-margin">
-            <label class="uk-form-label" for="model-title-input">Title</label>
-            <input class="uk-input" id="model-title-input" type="text" />
-          </div>
-          <div id="model-sprint-container" class="uk-margin">
-            <label class="uk-form-label" for="model-sprint-select">Sprint</label>
-            <div id="model-sprint-select"><select class="uk-select"></select></div>
-          </div>
+          <% ComponentSessionTitle(model.Title, ctx, buffer) %>
+          <% ComponentSessionTeam(ctx, buffer) %>
+          <% ComponentSessionSprint(ctx, buffer) %>
+          <% ComponentSessionPerm(ctx, buffer) %>
         </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">
-        <button id="remove-from-sprint-button" class="left uk-button uk-button-default" onclick="rituals.removeFromSprint()" type="button">Remove From Sprint</button>
         <button class="uk-button uk-button-default" type="submit">Save</button>
       </div>
     </form>

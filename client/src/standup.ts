@@ -5,8 +5,9 @@ namespace standup {
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
+    team?: team.Detail;
     sprint?: sprint.Detail;
-    reports: report.Report[]
+    reports: report.Report[];
   }
 
   class Cache {
@@ -28,19 +29,27 @@ namespace standup {
       case command.server.sessionJoined:
         let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
-        rituals.setSprint(sj.sprint)
+        rituals.setTeam(sj.team);
+        rituals.setSprint(sj.sprint);
         setStandupDetail(sj.session);
-        report.setReports(sj.reports)
+        report.setReports(sj.reports);
         break;
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);
+        break;
+      case command.server.teamUpdate:
+        const tm = param as team.Detail | undefined
+        if (standup.cache.detail) {
+          standup.cache.detail.teamID = tm?.id;
+        }
+        rituals.setTeam(tm);
         break;
       case command.server.sprintUpdate:
         const x = param as sprint.Detail | undefined
         if (standup.cache.detail) {
           standup.cache.detail.sprintID = x?.id;
         }
-        rituals.setSprint(x)
+        rituals.setSprint(x);
         break;
       case command.server.reportUpdate:
         onReportUpdate(param as report.Report);
@@ -49,7 +58,7 @@ namespace standup {
         onReportRemoved(param as string);
         break;
       default:
-        console.warn("unhandled command [" + cmd + "] for standup");
+        console.warn(`unhandled command [${cmd}] for standup`);
     }
   }
 
@@ -59,21 +68,22 @@ namespace standup {
   }
 
   export function onSubmitStandupSession() {
-    const title = util.req<HTMLInputElement>("#model-title-input").value;
-    const sprintID = util.req<HTMLSelectElement>("#model-sprint-select select").value;
-    const msg = {svc: services.standup.key, cmd: command.client.updateSession, param: {title: title, sprintID: sprintID}};
+    const title = dom.req<HTMLInputElement>("#model-title-input").value;
+    const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
+    const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
+    const msg = {svc: services.standup.key, cmd: command.client.updateSession, param: {title: title, teamID: teamID, sprintID: sprintID}};
     socket.send(msg);
   }
 
   function onReportUpdate(r: report.Report) {
-    const x = preUpdate(r.id)
+    const x = preUpdate(r.id);
     x.push(r);
-    postUpdate(x, r.id)
+    postUpdate(x, r.id);
   }
 
   function onReportRemoved(id: string) {
-    const x = preUpdate(id)
-    postUpdate(x, id)
+    const x = preUpdate(id);
+    postUpdate(x, id);
     UIkit.notification("report has been deleted", {status: "success", pos: "top-right"});
   }
 

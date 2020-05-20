@@ -11,6 +11,7 @@ var (
 	sprintArgs             graphql.FieldConfigArgument
 	sprintResolver         Callback
 	sprintsResolver        Callback
+	sprintTeamResolver     Callback
 	sprintMemberResolver   Callback
 	sprintEstimateResolver Callback
 	sprintStandupResolver  Callback
@@ -37,8 +38,16 @@ func initSprint() {
 		return ctx.App.Sprint.List(paramSetFromGraphQLParams(util.SvcSprint.Key, params, ctx.Logger))
 	}
 
+	sprintTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		sess := p.Source.(*sprint.Session)
+		if sess.TeamID != nil {
+			return ctx.App.Team.GetByID(*sess.TeamID)
+		}
+		return nil, nil
+	}
+
 	sprintMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Sprint.Members.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger))
+		return ctx.App.Sprint.Members.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
 	sprintEstimateResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -65,6 +74,9 @@ func initSprint() {
 				},
 				"title": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
+				},
+				"teamID": &graphql.Field{
+					Type: graphql.String,
 				},
 				"owner": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

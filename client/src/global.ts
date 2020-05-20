@@ -88,8 +88,8 @@ namespace command {
     updateSession: "update-session",
 
     getActions: "get-actions",
+    getTeams: "get-teams",
     getSprints: "get-sprints",
-    setSprint: "set-sprint",
 
     updateProfile: "update-profile",
 
@@ -114,9 +114,12 @@ namespace command {
 
     sessionJoined: "session-joined",
     sessionUpdate: "session-update",
+    teamUpdate: "team-update",
     sprintUpdate: "sprint-update",
+    contentUpdate: "content-update",
 
     actions: "actions",
+    teams: "teams",
     sprints: "sprints",
 
     memberUpdate: "member-update",

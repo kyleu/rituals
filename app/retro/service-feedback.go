@@ -84,7 +84,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	feedback, err := s.GetFeedbackByID(feedbackID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load report ["+feedbackID.String()+"] for removal"))
+		return errors.WithStack(errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for removal"))
 	}
 	if feedback == nil {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")

@@ -6,6 +6,7 @@ namespace team {
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
+    sprints: rituals.Session[];
     estimates: rituals.Session[];
     standups: rituals.Session[];
     retros: rituals.Session[];
@@ -13,9 +14,6 @@ namespace team {
 
   class Cache {
     detail?: Detail;
-    estimates: rituals.Session[] = [];
-    standups: rituals.Session[] = [];
-    retros: rituals.Session[] = [];
   }
 
   export const cache = new Cache();
@@ -34,8 +32,11 @@ namespace team {
       case command.server.sessionUpdate:
         setTeamDetail(param as Detail);
         break;
+      case command.server.contentUpdate:
+        socket.socketConnect(system.cache.currentService, system.cache.currentID);
+        break;
       default:
-        console.warn("unhandled command [" + cmd + "] for team");
+        console.warn(`unhandled command [${cmd}] for team`);
     }
   }
 
@@ -44,12 +45,32 @@ namespace team {
     rituals.setDetail(detail);
   }
 
+
   function setTeamHistory(sj: SessionJoined) {
+    dom.setContent("#team-sprint-list", contents.renderContents(services.sprint, sj.sprints));
+    dom.setContent("#team-estimate-list", contents.renderContents(services.estimate, sj.estimates));
+    dom.setContent("#team-standup-list", contents.renderContents(services.standup, sj.standups));
+    dom.setContent("#team-retro-list", contents.renderContents(services.retro, sj.retros));
   }
 
   export function onSubmitTeamSession() {
-    const title = util.req<HTMLInputElement>("#model-title-input").value;
+    const title = dom.req<HTMLInputElement>("#model-title-input").value;
     const msg = {svc: services.team.key, cmd: command.client.updateSession, param: {title: title}};
     socket.send(msg);
+  }
+
+  export function refreshTeams() {
+    const teamSelect = dom.opt("#model-team-select");
+    if (teamSelect) {
+      socket.send({svc: services.system.key, cmd: command.client.getTeams, param: null});
+    }
+  }
+
+  export function viewTeams(teams: team.Detail[]) {
+    const c = dom.opt("#model-team-container");
+    if(c) {
+      c.style.display = teams.length > 0 ? "block" : "none";
+      dom.setContent("#model-team-select", renderTeamSelect(teams, system.cache.session?.teamID));
+    }
   }
 }

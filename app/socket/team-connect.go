@@ -42,17 +42,22 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 	conn.ModelID = &ch.ID
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
-	entry, _, err := s.teams.Members.Register(ch.ID, userID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining team as member"))
-	}
+	entry := s.teams.Members.Register(ch.ID, userID)
+	members := s.teams.Members.GetByModelID(ch.ID, nil)
 
-	members, err := s.teams.Members.GetByModelID(ch.ID, nil)
+	sprints, err := s.sprints.GetByTeamID(ch.ID, nil)
 	if err != nil {
 		return err
 	}
-
-	online, err := s.GetOnline(ch)
+	estimates, err := s.estimates.GetByTeamID(ch.ID, nil)
+	if err != nil {
+		return err
+	}
+	standups, err := s.standups.GetByTeamID(ch.ID, nil)
+	if err != nil {
+		return err
+	}
+	retros, err := s.retros.GetByTeamID(ch.ID, nil)
 	if err != nil {
 		return err
 	}
@@ -61,10 +66,14 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		Svc: util.SvcTeam.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: TeamSessionJoined{
-			Profile: &conn.Profile,
-			Session: sess,
-			Members: members,
-			Online:  online,
+			Profile:   &conn.Profile,
+			Session:   sess,
+			Members:   members,
+			Online:    s.GetOnline(ch),
+			Sprints:   sprints,
+			Estimates: estimates,
+			Standups:  standups,
+			Retros:    retros,
 		},
 	}
 

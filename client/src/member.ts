@@ -21,9 +21,9 @@ namespace member {
   export function setMembers() {
     const self = system.cache.members.filter(isSelf);
     if (self.length === 1) {
-      util.setText("#member-self .member-name", self[0].name);
-      util.setValue("#self-name-input", self[0].name);
-      util.setText("#member-self .member-role", self[0].role);
+      dom.setText("#member-self .member-name", self[0].name);
+      dom.setValue("#self-name-input", self[0].name);
+      dom.setText("#member-self .member-role", self[0].role);
     } else if (self.length === 0) {
       console.warn("self not found among members");
     } else {
@@ -31,7 +31,7 @@ namespace member {
     }
 
     const others = system.cache.members.filter(x => !isSelf(x));
-    util.setContent("#member-detail", renderMembers(others));
+    dom.setContent("#member-detail", renderMembers(others));
     renderOnline();
   }
 
@@ -45,7 +45,7 @@ namespace member {
 
     x = x.filter(m => m.userID !== member.userID);
     if(x.length === system.cache.members.length) {
-      UIkit.notification(member.name + " has joined", {status: "success", pos: "top-right"});
+      UIkit.notification(`${member.name} has joined`, {status: "success", pos: "top-right"});
     }
     x.push(member);
     x = x.sort((l, r) => (l.name > r.name) ? 1 : -1);
@@ -65,13 +65,13 @@ namespace member {
           }
           break;
         case services.standup.key:
-          util.setContent("#report-detail", report.renderReports(standup.cache.reports));
+          dom.setContent("#report-detail", report.renderReports(standup.cache.reports));
           if (standup.cache.activeReport) {
             report.viewActiveReport();
           }
           break;
         case services.retro.key:
-          util.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
+          dom.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
           if (retro.cache.activeFeedback) {
             feedback.viewActiveFeedback();
           }
@@ -93,7 +93,7 @@ namespace member {
 
   function renderOnline() {
     for (const member of system.cache.members) {
-      const el = util.opt("#member-" + member.userID + " .online-indicator");
+      const el = dom.opt(`#member-${member.userID} .online-indicator`);
       if (el) {
         if (system.cache.online.indexOf(member.userID) === -1) {
           el.classList.add("offline");
@@ -105,8 +105,8 @@ namespace member {
   }
 
   export function onSubmitSelf() {
-    const name = util.req<HTMLInputElement>("#self-name-input").value;
-    const choice = util.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
+    const name = dom.req<HTMLInputElement>("#self-name-input").value;
+    const choice = dom.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
     const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name: name, choice: choice}};
     socket.send(msg);
   }
@@ -118,7 +118,7 @@ namespace member {
     }
     const curr = system.cache.members.filter(x => x.userID === system.cache.activeMember);
     if (curr.length !== 1) {
-      console.warn("cannot load active member [" + system.cache.activeMember + "]");
+      console.warn(`cannot load active member [${system.cache.activeMember}]`);
       return undefined;
     }
     return curr[0];
@@ -129,7 +129,7 @@ namespace member {
     if (member === undefined) {
       return;
     }
-    util.setText("#member-modal-name", member.name);
-    util.setText("#member-modal-role", member.role);
+    dom.setText("#member-modal-name", member.name);
+    dom.setText("#member-modal-role", member.role);
   }
 }

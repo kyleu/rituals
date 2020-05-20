@@ -3,6 +3,8 @@ package socket
 import (
 	"fmt"
 
+	"github.com/kyleu/rituals.dev/app/team"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
@@ -14,6 +16,7 @@ import (
 type StandupSessionJoined struct {
 	Profile *util.Profile     `json:"profile"`
 	Session *standup.Session  `json:"session"`
+	Team    *team.Session     `json:"team"`
 	Sprint  *sprint.Session   `json:"sprint"`
 	Members []*member.Entry   `json:"members"`
 	Online  []uuid.UUID       `json:"online"`
@@ -43,14 +46,8 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 	title := util.ServiceTitle(param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("saving standup session [%s]", title))
 
-	var sprintID *uuid.UUID
-	sprintIDString, ok := param["sprintID"]
-	if ok {
-		sprintIDResult, err := uuid.FromString(sprintIDString.(string))
-		if err == nil {
-			sprintID = &sprintIDResult
-		}
-	}
+	sprintID := getUUIDPointer(param, "sprintID")
+	teamID := getUUIDPointer(param, "teamID")
 
 	s.logger.Debug(fmt.Sprintf("saving standup session [%s] with sprint [%s]", title, sprintID))
 
@@ -59,9 +56,10 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 		return errors.WithStack(errors.Wrap(err, "error loading standup session ["+ch.ID.String()+"] for update"))
 	}
 
+	teamChanged := differentPointerValues(curr.TeamID, teamID)
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
-	err = s.standups.UpdateSession(ch.ID, title, sprintID, userID)
+	err = s.standups.UpdateSession(ch.ID, title, teamID, sprintID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating standup session"))
 	}
@@ -71,9 +69,17 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 		return errors.WithStack(errors.Wrap(err, "error sending standup session"))
 	}
 
+	if teamChanged {
+		tm := s.teams.GetByIDPointer(teamID)
+		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error sending team for updated retro session"))
+		}
+	}
+
 	if sprintChanged {
 		spr := s.sprints.GetByIDPointer(sprintID)
-		err = sendSprintUpdate(s, ch, spr)
+		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated standup session"))
 		}

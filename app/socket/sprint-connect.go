@@ -42,20 +42,8 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 	conn.ModelID = &ch.ID
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
-	entry, _, err := s.sprints.Members.Register(ch.ID, userID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining sprint as member"))
-	}
-
-	members, err := s.sprints.Members.GetByModelID(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-
-	online, err := s.GetOnline(ch)
-	if err != nil {
-		return err
-	}
+	entry := s.sprints.Members.Register(ch.ID, userID)
+	members := s.sprints.Members.GetByModelID(ch.ID, nil)
 
 	estimates, err := s.estimates.GetBySprint(ch.ID, nil)
 	if err != nil {
@@ -76,8 +64,9 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		Param: SprintSessionJoined{
 			Profile:   &conn.Profile,
 			Session:   sess,
+			Team:      getTeamOpt(s, sess.TeamID),
 			Members:   members,
-			Online:    online,
+			Online:    s.GetOnline(ch),
 			Estimates: estimates,
 			Standups:  standups,
 			Retros:    retros,

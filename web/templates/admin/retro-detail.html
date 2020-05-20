@@ -25,6 +25,22 @@
             <td><%= model.Title %></td>
           </tr>
           <tr>
+            <th>Team</th>
+            <td>
+              <% if model.TeamID != nil { %>
+                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.team.detail`, `id`, model.TeamID.String()) %>"><% ComponentUUID(model.TeamID, _buffer) %></a>
+              <% } %>
+            </td>
+          </tr>
+          <tr>
+            <th>Sprint</th>
+            <td>
+              <% if model.SprintID != nil { %>
+                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.sprint.detail`, `id`, model.SprintID.String()) %>"><% ComponentUUID(model.SprintID, _buffer) %></a>
+              <% } %>
+            </td>
+          </tr>
+          <tr>
             <th>Owner</th>
             <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
           </tr>

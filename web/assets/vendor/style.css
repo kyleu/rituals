@@ -12346,6 +12346,10 @@ h3 a:hover {
   text-decoration: underline;
 }
 
+.sprint-date {
+  cursor: pointer;
+}
+
 #story-title {
   text-align: center;
   font-size: 150%;

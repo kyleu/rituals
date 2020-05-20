@@ -12,6 +12,7 @@ var (
 	estimateResolver       Callback
 	estimatesResolver      Callback
 	estimateMemberResolver Callback
+	estimateTeamResolver   Callback
 	estimateSprintResolver Callback
 	estimateType           *graphql.Object
 )
@@ -46,7 +47,15 @@ func initEstimate() {
 	}
 
 	estimateMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.Members.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger))
+		return ctx.App.Estimate.Members.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
+	}
+
+	estimateTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		sess := p.Source.(*estimate.Session)
+		if sess.TeamID != nil {
+			return ctx.App.Team.GetByID(*sess.TeamID)
+		}
+		return nil, nil
 	}
 
 	estimateSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -69,6 +78,9 @@ func initEstimate() {
 				},
 				"title": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
+				},
+				"teamID": &graphql.Field{
+					Type: graphql.String,
 				},
 				"sprintID": &graphql.Field{
 					Type: graphql.String,

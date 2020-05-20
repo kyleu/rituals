@@ -1,4 +1,4 @@
-<%: func AdminTeamDetail(model *team.Session, members []*member.Entry, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminTeamDetail(model *team.Session, members []*member.Entry, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -41,6 +41,38 @@
       <p>No members available</p>
       <% } else { %>
         <% AdminMemberTable(members, params.Get(util.KeyMember, ctx.Logger), ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Sprints</h3>
+      <% if len(sprints) == 0 { %>
+        <p>No sprints available</p>
+      <% } else { %>
+        <% AdminSprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Estimates</h3>
+      <% if len(estimates) == 0 { %>
+        <p>No estimates available</p>
+      <% } else { %>
+        <% AdminEstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Standups</h3>
+      <% if len(standups) == 0 { %>
+        <p>No standups available</p>
+      <% } else { %>
+        <% AdminStandupTable(standups, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, _buffer) %>
+      <% } %>
+    </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Retros</h3>
+      <% if len(retros) == 0 { %>
+        <p>No retros available</p>
+      <% } else { %>
+        <% AdminRetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, _buffer) %>
       <% } %>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">

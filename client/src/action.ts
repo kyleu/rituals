@@ -16,6 +16,6 @@ namespace action {
   }
 
   export function viewActions(actions: action.Action[]) {
-    util.setContent("#action-list", renderActions(actions));
+    dom.setContent("#action-list", renderActions(actions));
   }
 }

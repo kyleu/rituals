@@ -8,8 +8,8 @@ const (
 	ClientCmdUpdateSession = "update-session"
 
 	ClientCmdGetActions = "get-actions"
+	ClientCmdGetTeams   = "get-teams"
 	ClientCmdGetSprints = "get-sprints"
-	ClientCmdSetSprint  = "set-sprint"
 
 	ClientCmdUpdateProfile = "update-profile"
 
@@ -35,9 +35,12 @@ const (
 
 	ServerCmdSessionJoined = "session-joined"
 	ServerCmdSessionUpdate = "session-update"
+	ServerCmdTeamUpdate    = "team-update"
 	ServerCmdSprintUpdate  = "sprint-update"
+	ServerCmdContentUpdate = "content-update"
 
 	ServerCmdActions = "actions"
+	ServerCmdTeams   = "teams"
 	ServerCmdSprints = "sprints"
 
 	ServerCmdMemberUpdate = "member-update"

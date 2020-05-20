@@ -6,7 +6,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -32,17 +31,16 @@ func AdminAuthList(w http.ResponseWriter, r *http.Request) {
 
 func AdminAuthDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		authIDString := mux.Vars(r)["id"]
-		authID, err := uuid.FromString(authIDString)
-		if err != nil {
-			return "", errors.New("invalid auth id [" + authIDString + "]")
+		authID := getUUIDPointer(mux.Vars(r), "id")
+		if authID == nil {
+			return "", errors.New("invalid auth id")
 		}
-		record, err := ctx.App.Auth.GetByID(authID)
+		record, err := ctx.App.Auth.GetByID(*authID)
 		if err != nil {
 			return "", err
 		}
 		if record == nil {
-			ctx.Session.AddFlash("error:Can't load auth [" + authIDString + "]")
+			ctx.Session.AddFlash("error:Can't load auth [" + authID.String() + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.auth"), nil
 		}
@@ -60,7 +58,7 @@ func AdminAuthDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = user.Name
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.auth"), "auths")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.auth.detail", "id", authIDString), authIDString[0:8])...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.auth.detail", "id", authID.String()), authID.String()[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminAuthDetail(record, user, ctx, w))

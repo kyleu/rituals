@@ -27,7 +27,7 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Serv
 	return &Service{
 		actions: actions,
 		db:      db,
-		Members: member.NewService(actions, db, util.SvcTeam.Key),
+		Members: member.NewService(actions, db, logger, util.SvcTeam.Key),
 		logger:  logger,
 	}
 }
@@ -121,6 +121,14 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.U
 	_, err := s.db.Exec(q, title, sessionID)
 	s.actions.Post(util.SvcTeam.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating team session"))
+}
+
+func (s *Service) GetByIDPointer(teamID *uuid.UUID) *Session {
+	if teamID == nil {
+		return nil
+	}
+	tm, _ := s.GetByID(*teamID)
+	return tm
 }
 
 func toSessions(dtos []sessionDTO) []*Session {

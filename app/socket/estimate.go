@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/kyleu/rituals.dev/app/team"
+
 	"github.com/kyleu/rituals.dev/app/sprint"
 
 	"github.com/kyleu/rituals.dev/app/query"
@@ -18,6 +20,7 @@ import (
 type EstimateSessionJoined struct {
 	Profile *util.Profile     `json:"profile"`
 	Session *estimate.Session `json:"session"`
+	Team    *team.Session     `json:"team"`
 	Sprint  *sprint.Session   `json:"sprint"`
 	Members []*member.Entry   `json:"members"`
 	Online  []uuid.UUID       `json:"online"`
@@ -92,25 +95,21 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		choices = estimate.DefaultChoices
 	}
 
-	var sprintID *uuid.UUID
-	sprintIDString, ok := param["sprintID"]
-	if ok {
-		sprintIDResult, err := uuid.FromString(sprintIDString.(string))
-		if err == nil {
-			sprintID = &sprintIDResult
-		}
-	}
+	sprintID := getUUIDPointer(param, "sprintID")
+	teamID := getUUIDPointer(param, "teamID")
 
-	s.logger.Debug(fmt.Sprintf("saving estimate session [%s] with choices [%s] and sprint [%s]", title, strings.Join(choices, ", "), sprintID))
+	msg := "saving estimate session [%s] with choices [%s], team [%s], and sprint [%s]"
+	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(choices, ", "), teamID, sprintID))
 
 	curr, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error loading estimate session ["+ch.ID.String()+"] for update"))
 	}
 
+	teamChanged := differentPointerValues(curr.TeamID, teamID)
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
-	err = s.estimates.UpdateSession(ch.ID, title, choices, sprintID, userID)
+	err = s.estimates.UpdateSession(ch.ID, title, choices, teamID, sprintID, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating estimate session"))
 	}
@@ -120,9 +119,17 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
 	}
 
+	if teamChanged {
+		tm := s.teams.GetByIDPointer(teamID)
+		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
+		if err != nil {
+			return errors.WithStack(errors.Wrap(err, "error sending team for updated estimate session"))
+		}
+	}
+
 	if sprintChanged {
 		spr := s.sprints.GetByIDPointer(sprintID)
-		err = sendSprintUpdate(s, ch, spr)
+		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated estimate session"))
 		}

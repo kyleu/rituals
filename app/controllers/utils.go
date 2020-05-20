@@ -3,6 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"github.com/kyleu/rituals.dev/app/web"
 
 	"github.com/kyleu/rituals.dev/gen/templates"
@@ -33,4 +36,12 @@ func Routes(w http.ResponseWriter, r *http.Request) {
 
 func aboutBC(ctx web.RequestContext) web.Breadcrumbs {
 	return web.BreadcrumbsSimple(ctx.Route("about"), "about")
+}
+
+func getUUIDPointer(m map[string]string, key string) *uuid.UUID {
+	retOut, ok := m[key]
+	if !ok {
+		return nil
+	}
+	return util.GetUUIDFromString(retOut)
 }

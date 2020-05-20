@@ -1,12 +1,12 @@
 declare var UIkit: any;
 
-namespace util {
+namespace dom {
   export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): T[] {
     return UIkit.util.$$(selector, context) as T[];
   }
 
   export function opt<T extends HTMLElement>(selector: string, context?: HTMLElement): T | null {
-    const res = util.els<T>(selector, context);
+    const res = els<T>(selector, context);
     if (res.length === 0) {
       return null;
     }
@@ -14,16 +14,16 @@ namespace util {
   }
 
   export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {
-    const res = util.opt<T>(selector, context);
+    const res = opt<T>(selector, context);
     if (res === null) {
-      console.warn("no element found for selector [" + selector + "]");
+      console.warn(`no element found for selector [${selector}]`);
     }
     return res!;
   }
 
   export function setHTML(el: string | HTMLElement, html: string) {
     if (typeof el === "string") {
-      el = util.req(el);
+      el = req(el);
     }
     el.innerHTML = html;
     return el;
@@ -31,7 +31,7 @@ namespace util {
 
   export function setContent(el: string | HTMLElement, e: JSX.Element) {
     if (typeof el === "string") {
-      el = util.req(el);
+      el = req(el);
     }
     el.innerHTML = "";
     el.appendChild(e);
@@ -40,7 +40,7 @@ namespace util {
 
   export function setText(el: string | HTMLElement, text: string): HTMLElement {
     if (typeof el === "string") {
-      el = util.req(el);
+      el = req(el);
     }
     el.innerText = text;
     return el;
@@ -48,7 +48,7 @@ namespace util {
 
   export function setValue(el: string | HTMLInputElement | HTMLTextAreaElement, text: string): HTMLInputElement | HTMLTextAreaElement {
     if (typeof el === "string") {
-      el = util.req<HTMLInputElement>(el);
+      el = req<HTMLInputElement>(el);
     }
     el.value = text;
     return el;
@@ -79,40 +79,6 @@ namespace util {
     }
 
     resize();
-  }
-
-  export function dateToYMD(date: Date) {
-    var d = date.getDate();
-    var m = date.getMonth() + 1;
-    var y = date.getFullYear();
-    return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-  }
-
-  export function dateFromYMD(s: string) {
-    let d = new Date(s);
-    d = new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
-    return d;
-  }
-
-  export function dow(i: number) {
-    switch (i) {
-      case 0:
-        return "Sun";
-      case 1:
-        return "Mon";
-      case 2:
-        return "Tue";
-      case 3:
-        return "Wed";
-      case 4:
-        return "Thu";
-      case 5:
-        return "Fri";
-      case 6:
-        return "Sat";
-      default:
-        return "???";
-    }
   }
 
   export function setOptions(el: HTMLSelectElement, categories: string[]) {

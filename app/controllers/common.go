@@ -84,14 +84,14 @@ func saveSession(w http.ResponseWriter, r *http.Request, ctx web.RequestContext)
 	}
 }
 
-func getSprintID(form url.Values) *uuid.UUID {
-	sprintString := form.Get(util.SvcSprint.Key)
-	var sprintID *uuid.UUID
-	if sprintString != "" {
-		s, err := uuid.FromString(sprintString)
+func getUUID(m url.Values, key string) *uuid.UUID {
+	retString := m.Get(key)
+	var retID *uuid.UUID
+	if retString != "" {
+		s, err := uuid.FromString(retString)
 		if err == nil {
-			sprintID = &s
+			retID = &s
 		}
 	}
-	return sprintID
+	return retID
 }

@@ -4,8 +4,6 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -34,46 +32,16 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 	}
 	if sess == nil {
 		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdError, Param: "invalid session"})
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing error message"))
-		}
-		return nil
+		return errors.WithStack(errors.Wrap(err, "error writing error message"))
 	}
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
-	entry, _, err := s.retros.Members.Register(ch.ID, userID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining retro as member"))
-	}
-
-	var sprintEntry *member.Entry
-	if sess.SprintID != nil {
-		sprintEntry, _, err = s.sprints.Members.Register(*sess.SprintID, userID)
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error joining sprint as member"))
-		}
-	}
-
-	members, err := s.retros.Members.GetByModelID(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-
-	online, err := s.GetOnline(ch)
-	if err != nil {
-		return err
-	}
-
-	var spr *sprint.Session
-	if sess.SprintID != nil {
-		spr, err = s.sprints.GetByID(*sess.SprintID)
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error finding stories"))
-		}
-	}
+	entry := s.retros.Members.Register(ch.ID, userID)
+	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	members := s.retros.Members.GetByModelID(ch.ID, nil)
 
 	feedback, err := s.retros.GetFeedback(ch.ID, nil)
 	if err != nil {
@@ -86,9 +54,10 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		Param: RetroSessionJoined{
 			Profile:  &conn.Profile,
 			Session:  sess,
-			Sprint:   spr,
+			Team:     getTeamOpt(s, sess.TeamID),
+			Sprint:   getSprintOpt(s, sess.SprintID),
 			Members:  members,
-			Online:   online,
+			Online:   s.GetOnline(ch),
 			Feedback: feedback,
 		},
 	}

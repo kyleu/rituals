@@ -40,13 +40,9 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 }
 
 func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	i, ok := param["id"].(string)
-	if !ok {
-		return errors.WithStack(errors.New("Cannot read [%T] as string"))
-	}
-	id, err := uuid.FromString(i)
-	if err != nil {
-		s.logger.Warn(fmt.Sprintf("cannot parse uuid [%v]: %+v", i, err))
+	id := getUUIDPointer(param, "id")
+	if id == nil {
+		return errors.WithStack(errors.New("invalid id"))
 	}
 
 	d, err := parseDate(param["d"].(string))
@@ -64,7 +60,7 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", d.Format("2006-01-02"), userID))
-	report, err := s.standups.UpdateReport(id, *d, content, userID)
+	report, err := s.standups.UpdateReport(*id, *d, content, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update report"))
 	}

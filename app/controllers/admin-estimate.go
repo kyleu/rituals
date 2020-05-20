@@ -7,7 +7,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -33,32 +32,29 @@ func AdminEstimateList(w http.ResponseWriter, r *http.Request) {
 
 func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		estimateIDString := mux.Vars(r)["id"]
-		estimateID, err := uuid.FromString(estimateIDString)
-		if err != nil {
-			return "", errors.New("invalid estimate id [" + estimateIDString + "]")
+		estimateID := getUUIDPointer(mux.Vars(r), "id")
+		if estimateID == nil {
+			return "", errors.New("invalid estimate id")
 		}
-		sess, err := ctx.App.Estimate.GetByID(estimateID)
+		sess, err := ctx.App.Estimate.GetByID(*estimateID)
 		if err != nil {
 			return "", err
 		}
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load estimate [" + estimateIDString + "]")
+			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
 			saveSession(w, r, ctx)
 			return ctx.Route("admin.estimate"), nil
 		}
 
 		params := paramSetFromRequest(r)
 
-		members, err := ctx.App.Estimate.Members.GetByModelID(estimateID, params.Get(util.KeyMember, ctx.Logger))
+		members := ctx.App.Estimate.Members.GetByModelID(*estimateID, params.Get(util.KeyMember, ctx.Logger))
+
+		stories, err := ctx.App.Estimate.GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
-		stories, err := ctx.App.Estimate.GetStories(estimateID, params.Get(util.KeyStory, ctx.Logger))
-		if err != nil {
-			return "", err
-		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, estimateID, params.Get(util.KeyAction, ctx.Logger))
+		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, *estimateID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -66,7 +62,7 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = sess.Title
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateIDString), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", estimateID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminEstimateDetail(sess, members, stories, actions, params, ctx, w))
@@ -75,16 +71,15 @@ func AdminEstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		storyIDString := mux.Vars(r)["id"]
-		storyID, err := uuid.FromString(storyIDString)
-		if err != nil {
-			return "", errors.New("invalid story id [" + storyIDString + "]")
+		storyID := getUUIDPointer(mux.Vars(r), "id")
+		if storyID == nil {
+			return "", errors.New("invalid story id")
 		}
-		story, err := ctx.App.Estimate.GetStoryByID(storyID)
+		story, err := ctx.App.Estimate.GetStoryByID(*storyID)
 		if err != nil {
 			return "", err
 		}
-		estimateID, err := ctx.App.Estimate.GetStoryEstimateID(storyID)
+		estimateID, err := ctx.App.Estimate.GetStoryEstimateID(*storyID)
 		if err != nil {
 			return "", err
 		}
@@ -100,7 +95,7 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := paramSetFromRequest(r)
 
-		votes, err := ctx.App.Estimate.GetStoryVotes(storyID, params.Get(util.KeyVote, ctx.Logger))
+		votes, err := ctx.App.Estimate.GetStoryVotes(*storyID, params.Get(util.KeyVote, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -108,7 +103,7 @@ func AdminStoryDetail(w http.ResponseWriter, r *http.Request) {
 		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate"), util.SvcEstimate.Key)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.estimate.detail", "id", story.EstimateID.String()), sess.Slug)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyIDString), fmt.Sprint("story ", story.Idx))...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.story.detail", "id", storyID.String()), fmt.Sprint("story ", story.Idx))...)
 		ctx.Breadcrumbs = bc
 		return tmpl(templates.AdminStoryDetail(story, votes, params, ctx, w))
 	})

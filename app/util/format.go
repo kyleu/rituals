@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/gofrs/uuid"
+
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
@@ -51,4 +53,15 @@ func PathParams(s string) []string {
 	}
 
 	return ret
+}
+
+func GetUUIDFromString(s string) *uuid.UUID {
+	var retID *uuid.UUID
+	if len(s) > 0 {
+		s, err := uuid.FromString(s)
+		if err == nil {
+			retID = &s
+		}
+	}
+	return retID
 }

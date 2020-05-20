@@ -1,13 +1,13 @@
 namespace feedback {
   function renderFeedback(model: Feedback): JSX.Element {
     const profile = system.cache.getProfile();
-    const ret = <div id={"feedback-" + model.id} class="feedback-detail uk-border-rounded section" onclick={"events.openModal('feedback', '" + model.id + "');"}>
-      <a class={profile.linkColor + "-fg section-link"}>{system.getMemberName(model.authorID)}</a>
+    const ret = <div id={`feedback-${model.id}`} class="feedback-detail uk-border-rounded section" onclick={`events.openModal('feedback', '${model.id}');`}>
+      <a class={`${profile.linkColor}-fg section-link`}>{system.getMemberName(model.authorID)}</a>
       <div class="feedback-content">loading...</div>
     </div>;
 
     if(model.html.length > 0) {
-      util.setHTML(util.req(".feedback-content", ret), model.html).style.display = "block";
+      dom.setHTML(dom.req(".feedback-content", ret), model.html).style.display = "block";
     }
 
     return ret;
@@ -25,10 +25,10 @@ namespace feedback {
         {cats.map(cat => <div class="feedback-list uk-transition-toggle">
           <div class="feedback-category-header">
             <span class="right">
-              <a class={profile.linkColor + "-fg uk-icon-button uk-transition-fade"} data-uk-icon="plus" onclick={"events.openModal('add-feedback', '" + cat.category + "');"} title="edit session"></a>
+              <a class={`${profile.linkColor}-fg uk-icon-button uk-transition-fade`} data-uk-icon="plus" onclick={`events.openModal('add-feedback', '${cat.category}');`} title="edit session"></a>
             </span>
 
-            <span class="feedback-category-title" onclick={"events.openModal('add-feedback', '" + cat.category + "');"}>{cat.category}</span>
+            <span class="feedback-category-title" onclick={`events.openModal('add-feedback', '${cat.category}');`}>{cat.category}</span>
 
           </div>
           <div>

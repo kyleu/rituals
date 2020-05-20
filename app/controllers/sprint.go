@@ -31,9 +31,14 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 	act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(r.Form.Get("title"))
-		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID)
+		teamID := getUUID(r.Form, util.SvcTeam.Key)
+		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, teamID)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating sprint session"))
+		}
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
+		if err != nil {
+			return "", errors.WithStack(errors.Wrap(err, "cannot send content update"))
 		}
 		return ctx.Route(util.SvcSprint.Key, "key", sess.Slug), nil
 	})

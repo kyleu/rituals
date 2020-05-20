@@ -12,6 +12,7 @@ namespace estimate {
 
   interface SessionJoined extends rituals.SessionJoined {
     session: Detail;
+    team?: team.Detail;
     sprint?: sprint.Detail;
     stories: story.Story[];
     votes: vote.Vote[];
@@ -44,7 +45,8 @@ namespace estimate {
       case command.server.sessionJoined:
         let sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
-        rituals.setSprint(sj.sprint)
+        rituals.setTeam(sj.team);
+        rituals.setSprint(sj.sprint);
         setEstimateDetail(sj.session);
         story.setStories(sj.stories);
         vote.setVotes(sj.votes);
@@ -52,12 +54,19 @@ namespace estimate {
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);
         break;
-      case command.server.sprintUpdate:
-        const x = param as sprint.Detail | undefined
+      case command.server.teamUpdate:
+        const tm = param as team.Detail | undefined;
         if (estimate.cache.detail) {
-          estimate.cache.detail.sprintID = x?.id;
+          estimate.cache.detail.teamID = tm?.id;
         }
-        rituals.setSprint(x)
+        rituals.setTeam(tm);
+        break;
+      case command.server.sprintUpdate:
+        const spr = param as sprint.Detail | undefined;
+        if (estimate.cache.detail) {
+          estimate.cache.detail.sprintID = spr?.id;
+        }
+        rituals.setSprint(spr)
         break;
       case command.server.storyUpdate:
         onStoryUpdate(param as story.Story);
@@ -72,37 +81,38 @@ namespace estimate {
         vote.onVoteUpdate(param as vote.Vote);
         break;
       default:
-        console.warn("unhandled command [" + cmd + "] for estimate");
+        console.warn(`unhandled command [${cmd}] for estimate`);
     }
   }
 
   function setEstimateDetail(detail: Detail) {
     cache.detail = detail;
-    util.setValue("#model-choices-input", detail.choices.join(", "));
+    dom.setValue("#model-choices-input", detail.choices.join(", "));
     story.viewActiveStory();
     rituals.setDetail(detail);
   }
 
   export function onSubmitEstimateSession() {
-    const title = util.req<HTMLInputElement>("#model-title-input").value;
-    const choices = util.req<HTMLInputElement>("#model-choices-input").value;
-    const sprintID = util.req<HTMLSelectElement>("#model-sprint-select select").value;
+    const title = dom.req<HTMLInputElement>("#model-title-input").value;
+    const choices = dom.req<HTMLInputElement>("#model-choices-input").value;
+    const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
+    const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
 
-    const msg = {svc: services.estimate.key, cmd: command.client.updateSession, param: {title: title, choices: choices, sprintID: sprintID}};
+    const msg = {svc: services.estimate.key, cmd: command.client.updateSession, param: {title: title, choices: choices, teamID: teamID, sprintID: sprintID}};
     socket.send(msg);
   }
 
   export function onStoryUpdate(s: story.Story) {
-    const x = preUpdate(s.id)
+    const x = preUpdate(s.id);
     x.push(s);
     if(s.id === estimate.cache.activeStory) {
-      util.setText("#story-title", s.title);
+      dom.setText("#story-title", s.title);
     }
     story.setStories(x);
   }
 
   export function onStoryRemove(id: string) {
-    const x = preUpdate(id)
+    const x = preUpdate(id);
     story.setStories(x);
     if(id === estimate.cache.activeStory) {
       UIkit.modal("#modal-story").hide();
