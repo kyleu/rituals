@@ -25,6 +25,7 @@ func (su *SystemUser) ToProfile() *util.UserProfile {
 	if err != nil {
 		locale = language.AmericanEnglish
 	}
+
 	return &util.UserProfile{
 		UserID:    su.UserID,
 		Name:      su.Name,

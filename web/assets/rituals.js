@@ -11,6 +11,37 @@ var action;
     }
     action.viewActions = viewActions;
 })(action || (action = {}));
+var collection;
+(function (collection) {
+    var Group = /** @class */ (function () {
+        function Group(key) {
+            this.members = [];
+            this.key = key;
+        }
+        return Group;
+    }());
+    collection.Group = Group;
+    function groupBy(list, func) {
+        var res = [];
+        var group = null;
+        list.forEach(function (o) {
+            var groupName = func(o);
+            if (group === null) {
+                group = new Group(groupName);
+            }
+            if (groupName != group.key) {
+                res.push(group);
+                group = new Group(groupName);
+            }
+            group.members.push(o);
+        });
+        if (group != null) {
+            res.push(group);
+        }
+        return res;
+    }
+    collection.groupBy = groupBy;
+})(collection || (collection = {}));
 var date;
 (function (date_1) {
     function dateToYMD(date) {
@@ -186,6 +217,7 @@ var estimate;
                 setEstimateDetail(sj.session);
                 story.setStories(sj.stories);
                 vote.setVotes(sj.votes);
+                rituals.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
@@ -282,6 +314,8 @@ var events;
                 system.cache.activeMember = id;
                 member.viewActiveMember();
                 break;
+            case "welcome":
+                break;
             // actions
             case "actions":
                 action.loadActions();
@@ -363,10 +397,12 @@ var feedback;
     feedback_1.onEditFeedback = onEditFeedback;
     function onRemoveFeedback() {
         var id = retro.cache.activeFeedback;
-        if (id && confirm("Delete this feedback?")) {
-            var msg = { svc: services.retro.key, cmd: command.client.removeFeedback, param: id };
-            socket.send(msg);
-            UIkit.modal("#modal-feedback").hide();
+        if (id) {
+            UIkit.modal.confirm('Delete this feedback?').then(function () {
+                var msg = { svc: services.retro.key, cmd: command.client.removeFeedback, param: id };
+                socket.send(msg);
+                UIkit.modal("#modal-feedback").hide();
+            });
         }
         return false;
     }
@@ -461,6 +497,7 @@ var system;
             this.currentService = "";
             this.currentID = "";
             this.connectTime = 0;
+            this.permissions = [];
             this.members = [];
             this.online = [];
         }
@@ -720,6 +757,13 @@ var member;
     }
     member_1.viewActiveMember = viewActiveMember;
 })(member || (member = {}));
+var permission;
+(function (permission) {
+    function setPermissions() {
+        dom.setContent("#model-perm-form", permission.renderPermissions(system.cache.permissions));
+    }
+    permission.setPermissions = setPermissions;
+})(permission || (permission = {}));
 var profile;
 (function (profile) {
     function setNavColor(el, c) {
@@ -801,10 +845,12 @@ var report;
     report_1.onEditReport = onEditReport;
     function onRemoveReport() {
         var id = standup.cache.activeReport;
-        if (id && confirm("Delete this report?")) {
-            var msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
-            socket.send(msg);
-            UIkit.modal("#modal-report").hide();
+        if (id) {
+            UIkit.modal.confirm('Delete this report?').then(function () {
+                var msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
+                socket.send(msg);
+                UIkit.modal("#modal-report").hide();
+            });
         }
         return false;
     }
@@ -897,6 +943,7 @@ var retro;
                 rituals.setSprint(sj.sprint);
                 setRetroDetail(sj.session);
                 feedback.setFeedback(sj.feedback);
+                rituals.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
@@ -1022,6 +1069,8 @@ var rituals;
     function onSessionJoin(param) {
         system.cache.session = param.session;
         system.cache.profile = param.profile;
+        system.cache.permissions = param.permissions;
+        permission.setPermissions();
         system.cache.members = param.members;
         system.cache.online = param.online;
         member.setMembers();
@@ -1036,10 +1085,16 @@ var rituals;
     rituals.init = init;
     function setSprint(spr) {
         UIkit.modal("#modal-session").hide();
-        var container = dom.req("#sprint-link-container");
-        container.innerHTML = "";
+        var lc = dom.req("#sprint-link-container");
+        var wc = dom.req("#sprint-warning-container");
+        lc.innerHTML = "";
         if (spr) {
-            container.appendChild(sprint.renderSprintLink(spr));
+            lc.appendChild(sprint.renderSprintLink(spr));
+            wc.style.display = "block";
+            dom.req("#sprint-warning-name").innerText = spr.title;
+        }
+        else {
+            wc.style.display = "none";
         }
     }
     rituals.setSprint = setSprint;
@@ -1052,6 +1107,12 @@ var rituals;
         }
     }
     rituals.setTeam = setTeam;
+    function showWelcomeMessage(count) {
+        if (count == 1) {
+            setTimeout(function () { return events.openModal('welcome'); }, 300);
+        }
+    }
+    rituals.showWelcomeMessage = showWelcomeMessage;
 })(rituals || (rituals = {}));
 var socket;
 (function (socket_1) {
@@ -1134,6 +1195,7 @@ var sprint;
                 setSprintDetail(sj.session);
                 rituals.setTeam(sj.team);
                 setSprintContents(sj);
+                rituals.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.teamUpdate:
                 var tm = param;
@@ -1216,6 +1278,7 @@ var standup;
                 rituals.setSprint(sj.sprint);
                 setStandupDetail(sj.session);
                 report.setReports(sj.reports);
+                rituals.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
@@ -1379,10 +1442,12 @@ var story;
     story.beginEditStory = beginEditStory;
     function onRemoveStory() {
         var id = estimate.cache.activeStory;
-        if (id && confirm("Delete this story?")) {
-            var msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
-            socket.send(msg);
-            UIkit.modal("#modal-story").hide();
+        if (id) {
+            UIkit.modal.confirm('Delete this story?').then(function () {
+                var msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
+                socket.send(msg);
+                UIkit.modal("#modal-story").hide();
+            });
         }
         return false;
     }
@@ -1443,6 +1508,7 @@ var team;
                 rituals.onSessionJoin(sj);
                 setTeamDetail(sj.session);
                 setTeamHistory(sj);
+                rituals.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setTeamDetail(param);
@@ -1661,7 +1727,7 @@ var feedback;
         else {
             var cats = feedback.getFeedbackCategories(f, ((_a = retro.cache.detail) === null || _a === void 0 ? void 0 : _a.categories) || []);
             var profile_1 = system.cache.getProfile();
-            return JSX("div", { "class": "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "uk-grid": "" }, cats.map(function (cat) { return JSX("div", { "class": "feedback-list uk-transition-toggle" },
+            return JSX("div", { "class": "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "data-uk-grid": true }, cats.map(function (cat) { return JSX("div", { "class": "feedback-list uk-transition-toggle" },
                 JSX("div", { "class": "feedback-category-header" },
                     JSX("span", { "class": "right" },
                         JSX("a", { "class": profile_1.linkColor + "-fg uk-icon-button uk-transition-fade", "data-uk-icon": "plus", onclick: "events.openModal('add-feedback', '" + cat.category + "');", title: "edit session" })),
@@ -1690,6 +1756,60 @@ var member;
     }
     member_3.renderMembers = renderMembers;
 })(member || (member = {}));
+var permission;
+(function (permission) {
+    function renderPerm(perm) {
+        return JSX("div", null,
+            perm.k,
+            ":",
+            perm.v);
+    }
+    function basicPerms(title, perms) {
+        return JSX("div", null,
+            JSX("div", null, title),
+            perms.map(renderPerm));
+    }
+    function teamPerms(perms) {
+        return basicPerms("Team", perms);
+    }
+    function sprintPerms(perms) {
+        return basicPerms("Sprint", perms);
+    }
+    function invitationPerms(perms) {
+        return basicPerms("Invitation", perms);
+    }
+    function googlePerms(perms) {
+        return basicPerms("Google", perms);
+    }
+    function githubPerms(perms) {
+        return basicPerms("GitHub", perms);
+    }
+    function slackPerms(perms) {
+        return basicPerms("Slack", perms);
+    }
+    function renderPermissions(perms) {
+        var g = collection.groupBy(perms, function (x) { return x.k; });
+        return JSX("ul", { "class": "uk-list uk-list-divider" },
+            teamPerms(findGroup("team", g)),
+            sprintPerms(findGroup("sprint", g)),
+            invitationPerms(findGroup("invitation", g)),
+            googlePerms(findGroup("google", g)),
+            githubPerms(findGroup("github", g)),
+            slackPerms(findGroup("slack", g)));
+    }
+    permission.renderPermissions = renderPermissions;
+    function findGroup(key, groups) {
+        var ret = [];
+        for (var _i = 0, groups_1 = groups; _i < groups_1.length; _i++) {
+            var g = groups_1[_i];
+            if (g.key == key) {
+                ret = g.members;
+                break;
+            }
+        }
+        return ret;
+    }
+})(permission || (permission = {}));
 var report;
 (function (report) {
     function renderReport(model) {

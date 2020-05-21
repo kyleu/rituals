@@ -65,19 +65,19 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, action.ActVoteAdd, actionContent, "")
 
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
-	} else {
-		q := "update vote set choice = $1 where story_id = $2 and user_id = $3"
-		_, err := s.db.Exec(q, choice, storyID, userID)
-		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "error updating vote for story ["+storyID.String()+"]"))
-		}
-		curr.Choice = choice
-
-		actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
-		s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, action.ActVoteUpdate, actionContent, "")
-
-		return curr, nil
 	}
+
+	q := "update vote set choice = $1 where story_id = $2 and user_id = $3"
+	_, err = s.db.Exec(q, choice, storyID, userID)
+	if err != nil {
+		return nil, errors.WithStack(errors.Wrap(err, "error updating vote for story ["+storyID.String()+"]"))
+	}
+	curr.Choice = choice
+
+	actionContent := map[string]interface{}{"storyID": storyID, "choice": choice}
+	s.actions.Post(util.SvcEstimate.Key, *estimateID, userID, action.ActVoteUpdate, actionContent, "")
+
+	return curr, nil
 }
 
 func toVotes(dtos []voteDTO) []*Vote {

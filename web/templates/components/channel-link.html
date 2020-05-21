@@ -5,12 +5,16 @@
   <%
     var url = ""
     switch svc {
+    case util.SvcTeam.Key:
+      url = ctx.Route(util.AdminLink(util.SvcTeam.Key, `detail`), "id", id.String())
+    case util.SvcSprint.Key:
+      url = ctx.Route(util.AdminLink(util.SvcSprint.Key, `detail`), "id", id.String())
     case util.SvcEstimate.Key:
-      url = ctx.Route("admin.estimate.detail", "id", id.String())
+      url = ctx.Route(util.AdminLink(util.SvcEstimate.Key, `detail`), "id", id.String())
     case util.SvcStandup.Key:
-      url = ctx.Route("admin.standup.detail", "id", id.String())
+      url = ctx.Route(util.AdminLink(util.SvcStandup.Key, `detail`), "id", id.String())
     case util.SvcRetro.Key:
-      url = ctx.Route("admin.retro.detail", "id", id.String())
+      url = ctx.Route(util.AdminLink(util.SvcRetro.Key, `detail`), "id", id.String())
     }
   %>
   <% if url == "" { %>

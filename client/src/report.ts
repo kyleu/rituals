@@ -31,10 +31,12 @@ namespace report {
 
   export function onRemoveReport() {
     const id = standup.cache.activeReport;
-    if(id && confirm("Delete this report?")) {
-      const msg = {svc: services.standup.key, cmd: command.client.removeReport, param: id};
-      socket.send(msg);
-      UIkit.modal("#modal-report").hide();
+    if (id) {
+      UIkit.modal.confirm('Delete this report?').then(function () {
+        const msg = {svc: services.standup.key, cmd: command.client.removeReport, param: id};
+        socket.send(msg);
+        UIkit.modal("#modal-report").hide();
+      });
     }
     return false;
   }

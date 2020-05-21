@@ -39,6 +39,7 @@ func RoleFromString(s string) Role {
 			return t
 		}
 	}
+
 	return RoleGuest
 }
 

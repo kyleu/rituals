@@ -21,15 +21,15 @@ var (
 
 func initSprint() {
 	sprintArgs = graphql.FieldConfigArgument{
-		"key": &graphql.ArgumentConfig{
+		util.KeyKey: &graphql.ArgumentConfig{
 			Type: graphql.String,
 		},
 	}
 
 	sprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args["key"].(string)
+		slug, ok := p.Args[util.KeyKey]
 		if ok {
-			return ctx.App.Sprint.GetBySlug(slug)
+			return ctx.App.Sprint.GetBySlug(slug.(string))
 		}
 		return nil, nil
 	}

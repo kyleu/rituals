@@ -1,7 +1,9 @@
-package controllers
+package admin
 
 import (
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/controllers/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -13,14 +15,13 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-func AdminStandupList(w http.ResponseWriter, r *http.Request) {
+func StandupList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = util.SvcStandup.Title + " List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
-		ctx.Breadcrumbs = bc
 
-		params := paramSetFromRequest(r)
+		ctx.Breadcrumbs = adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
+
+		params := act.ParamSetFromRequest(r)
 		standups, err := ctx.App.Standup.List(params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
 			return "", err
@@ -29,9 +30,9 @@ func AdminStandupList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
+func StandupDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		standupID := getUUIDPointer(mux.Vars(r), "id")
+		standupID := util.GetUUIDPointer(mux.Vars(r), "id")
 		if standupID == nil {
 			return "", errors.New("invalid standup id")
 		}
@@ -41,13 +42,14 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + standupID.String() + "]")
-			saveSession(w, r, ctx)
-			return ctx.Route("admin.standup"), nil
+			act.SaveSession(w, r, ctx)
+			return ctx.Route(util.AdminLink(util.SvcStandup.Key)), nil
 		}
 
-		params := paramSetFromRequest(r)
+		params := act.ParamSetFromRequest(r)
 
 		members := ctx.App.Standup.Members.GetByModelID(*standupID, params.Get(util.KeyMember, ctx.Logger))
+		perms := ctx.App.Team.Permissions.GetByModelID(*standupID, params.Get(util.KeyPermission, ctx.Logger))
 
 		reports, err := ctx.App.Standup.GetReports(*standupID, params.Get(util.KeyReport, ctx.Logger))
 		if err != nil {
@@ -59,11 +61,10 @@ func AdminStandupDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup"), util.SvcStandup.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.standup.detail", "id", standupID.String()), sess.Slug)...)
+		bc := adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcStandup.Key, util.KeyDetail), "id", standupID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminStandupDetail(sess, members, reports, actions, params, ctx, w))
+		return tmpl(templates.AdminStandupDetail(sess, members, perms, reports, actions, params, ctx, w))
 	})
 }

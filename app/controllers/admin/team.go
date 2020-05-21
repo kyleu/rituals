@@ -1,7 +1,9 @@
-package controllers
+package admin
 
 import (
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/controllers/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -13,14 +15,12 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-func AdminTeamList(w http.ResponseWriter, r *http.Request) {
+func TeamList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Team List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.team"), util.SvcTeam.Key)...)
-		ctx.Breadcrumbs = bc
+		ctx.Breadcrumbs = adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
 
-		params := paramSetFromRequest(r)
+		params := act.ParamSetFromRequest(r)
 		teams, err := ctx.App.Team.List(params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
 			return "", err
@@ -29,9 +29,9 @@ func AdminTeamList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func AdminTeamDetail(w http.ResponseWriter, r *http.Request) {
+func TeamDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		teamID := getUUIDPointer(mux.Vars(r), "id")
+		teamID := util.GetUUIDPointer(mux.Vars(r), "id")
 		if teamID == nil {
 			return "", errors.New("invalid team id")
 		}
@@ -41,12 +41,13 @@ func AdminTeamDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load team [" + teamID.String() + "]")
-			saveSession(w, r, ctx)
-			return ctx.Route("admin.team"), nil
+			act.SaveSession(w, r, ctx)
+			return ctx.Route(util.AdminLink(util.SvcTeam.Key)), nil
 		}
 
-		params := paramSetFromRequest(r)
+		params := act.ParamSetFromRequest(r)
 		members := ctx.App.Team.Members.GetByModelID(*teamID, params.Get(util.KeyMember, ctx.Logger))
+		perms := ctx.App.Team.Permissions.GetByModelID(*teamID, params.Get(util.KeyPermission, ctx.Logger))
 
 		sprints, err := ctx.App.Sprint.GetByTeamID(*teamID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
@@ -71,11 +72,10 @@ func AdminTeamDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.team"), util.SvcTeam.Key)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.team.detail", "id", teamID.String()), sess.Slug)...)
+		bc := adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcTeam.Key, util.KeyDetail), "id", teamID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminTeamDetail(sess, members, sprints, estimates, standups, retros, actions, params, ctx, w))
+		return tmpl(templates.AdminTeamDetail(sess, members, perms, sprints, estimates, standups, retros, actions, params, ctx, w))
 	})
 }

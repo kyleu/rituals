@@ -4,30 +4,16 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/rituals.dev/app/team"
-
-	"github.com/kyleu/rituals.dev/app/query"
-	"github.com/kyleu/rituals.dev/app/sprint"
-
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type RetroSessionJoined struct {
-	Profile  *util.Profile     `json:"profile"`
-	Session  *retro.Session    `json:"session"`
-	Team     *team.Session     `json:"team"`
-	Sprint   *sprint.Session   `json:"sprint"`
-	Members  []*member.Entry   `json:"members"`
-	Online   []uuid.UUID       `json:"online"`
-	Feedback []*retro.Feedback `json:"feedback"`
-}
-
 func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
+
 	switch cmd {
 	case ClientCmdConnect:
 		err = onRetroConnect(s, conn, userID, param.(string))

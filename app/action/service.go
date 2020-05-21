@@ -24,6 +24,7 @@ func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 		db:     db,
 		logger: logger,
 	}
+
 	return &svc
 }
 
@@ -32,9 +33,11 @@ func (s *Service) New(svc string, modelID uuid.UUID, authorID uuid.UUID, act str
 	q := "insert into action (id, svc, model_id, author_id, act, content, note) values ($1, $2, $3, $4, $5, $6, $7)"
 	contentJSON, _ := json.Marshal(content)
 	_, err := s.db.Exec(q, id, svc, modelID, authorID, act, string(contentJSON), note)
+
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new ["+svc+"] action"))
 	}
+
 	return s.GetByID(id)
 }
 
@@ -49,51 +52,66 @@ func (s *Service) Post(svc string, modelID uuid.UUID, authorID uuid.UUID, act st
 
 func (s *Service) List(params *query.Params) ([]*Action, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
+
 	var dtos []actionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset))
+
 	if err != nil {
 		return nil, err
 	}
+
 	return toActions(dtos), nil
 }
 
 func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 	dto := &actionDTO{}
 	err := s.db.Get(dto, query.SQLSelect("*", util.KeyAction, "id = $1", "", 0, 0), id)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
+
 		return nil, err
 	}
+
 	return dto.ToAction(), nil
 }
 
 func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) ([]*Action, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
+
 	var dtos []actionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset), id)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return toActions(dtos), nil
 }
 
 func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Params) ([]*Action, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
+
 	var dtos []actionDTO
+
 	q := query.SQLSelect("*", util.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, svc, modelID)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return toActions(dtos), nil
 }
 
 func toActions(dtos []actionDTO) []*Action {
 	ret := make([]*Action, 0, len(dtos))
+
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToAction())
 	}
+
 	return ret
 }

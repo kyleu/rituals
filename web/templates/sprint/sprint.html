@@ -5,7 +5,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-grid-match uk-grid-small" uk-grid>
+    <div class="uk-grid-match uk-grid-small" data-uk-grid>
       <div class="uk-width-2-3@m">
         <% SprintSession(model, ctx, _buffer) %>
         <% ActionsModal(ctx, _buffer) %>
@@ -17,10 +17,11 @@
         <% SprintContents(model, ctx, _buffer) %>
       </div>
       <div class="uk-width-1-3@m">
-        <% MemberOthers(nil, ctx, _buffer) %>
+        <% MemberOthers(ctx, _buffer) %>
       </div>
     </div>
   </div>
 </div>
+<% ComponentSessionWelcome(util.SvcSprint, ctx, _buffer) %>
 <script>window.onload = function() { rituals.init(services.sprint.key, "<%= model.ID.String() %>") }</script>
 <% } %>

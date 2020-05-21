@@ -11,6 +11,7 @@ type Service struct {
 }
 
 // Services
+
 var SvcSystem = Service{
 	Key:         "system",
 	Title:       "System",
@@ -55,17 +56,28 @@ var SvcRetro = Service{
 }
 
 const (
+	KeyAbout      = "about"
 	KeyAction     = "action"
+	KeyAdmin      = "admin"
 	KeyAuth       = "auth"
 	KeyConnection = "connection"
+	KeyDetail     = "detail"
 	KeyFeedback   = "feedback"
+	KeyGraphQL    = "graphql"
+	KeyGraphiQL   = "graphiql"
 	KeyInvitation = "invitation"
+	KeyKey        = "key"
 	KeyMember     = "member"
+	KeyNoText     = "-no text-"
+	KeyProfile    = "profile"
 	KeyReport     = "report"
+	KeyPermission = "permission"
+	KeySandbox    = "sandbox"
 	KeySocket     = "socket"
 	KeyStory      = "story"
 	KeyUser       = "user"
 	KeyVote       = "vote"
+	KeyVoyager    = "voyager"
 )
 
 func ServiceTitle(title string) string {
@@ -73,5 +85,6 @@ func ServiceTitle(title string) string {
 	if title == "" {
 		title = "Untitled"
 	}
+
 	return title
 }

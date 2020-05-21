@@ -1,0 +1,24 @@
+<%: func GraphQLVoyager(root string, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+  <div id="<%= util.KeyVoyager %>" style="height: calc(100vh - 54px);">TODO</div>
+  <script src="/assets/vendor/react/react.production.min.js"></script>
+  <script src="/assets/vendor/react/react-dom.production.min.js"></script>
+
+  <link rel="stylesheet" media="screen" href="/assets/vendor/graphql-voyager/voyager.css")>
+  <script src="/assets/vendor/graphql-voyager/voyager.min.js"></script>
+
+  <script>
+    function introspectionProvider(query) {
+      return fetch('<%= ctx.Route(util.AdminLink(util.KeyGraphQL)) %>', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({query: query}),
+      }).then(response => response.json());
+    }
+
+    GraphQLVoyager.init(document.getElementById('<%= util.KeyVoyager %>'), {introspection: introspectionProvider, displayOptions: { rootType: '<%= root %>' }})
+  </script>
+<% } %>

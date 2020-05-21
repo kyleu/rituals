@@ -4,6 +4,8 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
+const MutationName = "RitualsMutation"
+
 func mutationFields() graphql.Fields {
 	return graphql.Fields{
 		"ping": &graphql.Field{

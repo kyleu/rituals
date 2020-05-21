@@ -9,17 +9,17 @@
       <h3 class="uk-card-title">Administration</h3>
       <p>Privileged actions for <%= util.AppName %></p>
       <ul class="uk-list uk-list-divider">
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user`) %>">Users</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.auth`) %>">Auth</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.action`) %>">Actions</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.team`) %>">Teams</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.sprint`) %>">Sprints</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invitation`) %>">Invitations</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.estimate`) %>">Estimates</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.standup`) %>"><%= util.SvcStandup.PluralTitle %></a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.retro`) %>"><%= util.SvcRetro.PluralTitle %></a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.connection`) %>">Connections</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`graphql`) %>">GraphQL</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser)) %>">Users</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyAuth)) %>">Auth</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyAction)) %>">Actions</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key)) %>">Teams</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcSprint.Key)) %>">Sprints</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyInvitation)) %>">Invitations</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcEstimate.Key)) %>">Estimates</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcStandup.Key)) %>"><%= util.SvcStandup.PluralTitle %></a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcRetro.Key)) %>"><%= util.SvcRetro.PluralTitle %></a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyConnection)) %>">Connections</a></li>
+        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyGraphQL)) %>">GraphQL</a></li>
       </ul>
     </div>
   </div>

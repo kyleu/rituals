@@ -10,5 +10,6 @@ func UUID() uuid.UUID {
 	if err != nil {
 		panic(errors.WithStack(errors.New("unable to create random UUID")))
 	}
+
 	return ret
 }

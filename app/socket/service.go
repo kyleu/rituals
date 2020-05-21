@@ -66,7 +66,7 @@ func (s *Service) List(params *query.Params) ([]*Status, error) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret = append(ret, conn.ToStatus())
 		}
-		idx += 1
+		idx++
 	}
 	return ret, nil
 }
@@ -93,6 +93,7 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
 	}
 	var err error
+
 	switch message.Svc {
 	case util.SvcSystem.Key:
 		err = onSystemMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)

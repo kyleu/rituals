@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"runtime/debug"
 	"strings"
 
@@ -14,7 +15,8 @@ type RouteDescription struct {
 }
 
 func ExtractRoutes(r *mux.Router) []RouteDescription {
-	ret := []RouteDescription{}
+	var ret []RouteDescription
+
 	var _ = r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		methods, _ := route.GetMethods()
 		pathTemplate, _ := route.GetPathTemplate()
@@ -23,6 +25,7 @@ func ExtractRoutes(r *mux.Router) []RouteDescription {
 		ret = append(ret, RouteDescription{name, m, pathTemplate})
 		return nil
 	})
+
 	return ret
 }
 
@@ -31,5 +34,15 @@ func ExtractModules() *debug.BuildInfo {
 	if !ok {
 		return nil
 	}
+
 	return bi
+}
+
+func AdminLink(params ...string) string {
+	ret := fmt.Sprintf("admin")
+	for _, p := range params {
+		ret = ret + "." + p
+	}
+
+	return ret
 }

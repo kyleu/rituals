@@ -29,7 +29,7 @@ func NewService(service *action.Service, db *sqlx.DB, logger logur.Logger) *Serv
 	}
 }
 
-func (s *Service) New(key string, k InvitationType, v string, src *uuid.UUID, tgt *uuid.UUID, note string) (*Invitation, error) {
+func (s *Service) New(key string, k Type, v string, src *uuid.UUID, tgt *uuid.UUID, note string) (*Invitation, error) {
 	s.logger.Info("creating invitation [" + key + "]")
 	q := "insert into invitation (key, k, v, src, tgt, note, status, redeemed, created) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 	dto := invitationDTO{
@@ -39,7 +39,7 @@ func (s *Service) New(key string, k InvitationType, v string, src *uuid.UUID, tg
 		Src:      src,
 		Tgt:      tgt,
 		Note:     note,
-		Status:   InvitationStatusPending.String(),
+		Status:   StatusPending.String(),
 		Redeemed: nil,
 		Created:  time.Now(),
 	}
@@ -52,15 +52,21 @@ func (s *Service) New(key string, k InvitationType, v string, src *uuid.UUID, tg
 
 func (s *Service) List(params *query.Params) ([]*Invitation, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyInvitation, params, &query.Ordering{Column: "created", Asc: false})
+
 	var dtos []invitationDTO
+
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyInvitation, "", params.OrderByString(), params.Limit, params.Offset))
+
 	if err != nil {
 		return nil, err
 	}
+
 	ret := make([]*Invitation, 0, len(dtos))
+
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToInvitation())
 	}
+
 	return ret, nil
 }
 
@@ -70,8 +76,10 @@ func (s *Service) GetByKey(key string) (*Invitation, error) {
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	return dto.ToInvitation(), nil
 }

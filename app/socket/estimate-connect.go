@@ -4,8 +4,25 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/estimate"
+	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
+
+type EstimateSessionJoined struct {
+	Profile     *util.Profile            `json:"profile"`
+	Session     *estimate.Session        `json:"session"`
+	Permissions []*permission.Permission `json:"permissions"`
+	Team        *team.Session            `json:"team"`
+	Sprint      *sprint.Session          `json:"sprint"`
+	Members     []*member.Entry          `json:"members"`
+	Online      []uuid.UUID              `json:"online"`
+	Stories     []*estimate.Story        `json:"stories"`
+	Votes       []*estimate.Vote         `json:"votes"`
+}
 
 func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	estimateID, err := uuid.FromString(param)
@@ -43,6 +60,7 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 
 	entry := s.estimates.Members.Register(ch.ID, userID)
 	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	perms := s.estimates.Permissions.GetByModelID(ch.ID, nil)
 	members := s.estimates.Members.GetByModelID(ch.ID, nil)
 
 	stories, err := s.estimates.GetStories(ch.ID, nil)
@@ -59,14 +77,15 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		Svc: util.SvcEstimate.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: EstimateSessionJoined{
-			Profile: &conn.Profile,
-			Session: sess,
-			Team:    getTeamOpt(s, sess.TeamID),
-			Sprint:  getSprintOpt(s, sess.SprintID),
-			Members: members,
-			Online:  s.GetOnline(ch),
-			Stories: stories,
-			Votes:   votes,
+			Profile:     &conn.Profile,
+			Session:     sess,
+			Permissions: perms,
+			Team:        getTeamOpt(s, sess.TeamID),
+			Sprint:      getSprintOpt(s, sess.SprintID),
+			Members:     members,
+			Online:      s.GetOnline(ch),
+			Stories:     stories,
+			Votes:       votes,
 		},
 	}
 

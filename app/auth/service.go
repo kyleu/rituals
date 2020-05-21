@@ -55,24 +55,28 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 		if err != nil {
 			return nil, errors.WithStack(errors.Wrap(err, "error saving new auth record"))
 		}
+
 		return s.mergeProfile(profile, record)
-	} else {
-		if curr.UserID == profile.UserID {
-			record.ID = curr.ID
-			err = s.UpdateRecord(record)
-			if err != nil {
-				return nil, errors.WithStack(errors.Wrap(err, "error updating auth record"))
-			}
-			return s.mergeProfile(profile, record)
-		} else {
-			s.logger.Warn("TODO insert auth record with conflicting users")
-			record, err = s.NewRecord(record)
-			if err != nil {
-				return nil, errors.WithStack(errors.Wrap(err, "error saving new auth record"))
-			}
-			return s.mergeProfile(profile, record)
-		}
 	}
+	if curr.UserID == profile.UserID {
+		record.ID = curr.ID
+
+		err = s.UpdateRecord(record)
+		if err != nil {
+			return nil, errors.WithStack(errors.Wrap(err, "error updating auth record"))
+		}
+
+		return s.mergeProfile(profile, record)
+	}
+
+	s.logger.Warn("TODO insert auth record with conflicting users")
+
+	record, err = s.NewRecord(record)
+	if err != nil {
+		return nil, errors.WithStack(errors.Wrap(err, "error saving new auth record"))
+	}
+
+	return s.mergeProfile(profile, record)
 }
 
 func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, error) {
@@ -86,5 +90,6 @@ func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, er
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving user profile"))
 	}
+
 	return record, nil
 }

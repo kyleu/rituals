@@ -3,7 +3,7 @@
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
-  <div id="graphiql" style="height: calc(100vh - 54px);"></div>
+  <div id="<%= util.KeyGraphiQL %>" style="height: calc(100vh - 54px);"></div>
   <% if ctx.App.Debug { %>
   <link rel="stylesheet" media="screen" href="/assets/vendor/graphiql/graphiql.css">
   <script src="/assets/vendor/react/react.development.js"></script>
@@ -18,7 +18,7 @@
 
   <script>
     function graphQLFetcher(graphQLParams) {
-      return fetch("<%= ctx.Route(`graphql.run`) %>", {
+      return fetch("<%= ctx.Route(util.AdminLink(util.KeyGraphQL)) %>", {
         method: "post",
         headers: {
           "Accept": "application/json",
@@ -36,17 +36,34 @@
       });
     }
 
+    function voyagerLink(t, icon, route) {
+      return React.createElement("a", {
+        className: "<%= ctx.Profile.LinkClass() %> profile-link uk-icon-link",
+        "data-uk-icon": "icon: " + icon,
+        href: route,
+        title: "explore the " + t + " schema"
+      });
+    }
+
     window.onload = function() {
+      var q = voyagerLink("query", "settings", "<%= ctx.Route(util.AdminLink(util.KeyVoyager, `query`)) %>");
+      var s = React.createElement("span", { style: { display: "inline-block", width: "16px" } });
+      var m = voyagerLink("mutation", "cog", "<%= ctx.Route(util.AdminLink(util.KeyVoyager, `mutation`)) %>");
       ReactDOM.render(
         React.createElement(GraphiQL, {
           fetcher: graphQLFetcher,
           defaultVariableEditorOpen: true,
           editorTheme: "darcula"
-        }, React.createElement(GraphiQL.Logo, {}, " ")),
-        document.getElementById("graphiql")
+        }, React.createElement(GraphiQL.Logo, {}, q, s, m)),
+        document.getElementById("<%= util.KeyGraphiQL %>")
       )
     };
   </script>
+  <style>
+    .graphiql-container .execute-button-wrap {
+      margin-left: 16px;
+    }
+  </style>
   <% if ctx.Profile.Theme == util.ThemeDark { %>
   <style>
     .cm-s-darcula  { font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, serif;}

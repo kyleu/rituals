@@ -4,32 +4,17 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/kyleu/rituals.dev/app/team"
-
-	"github.com/kyleu/rituals.dev/app/sprint"
-
 	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type EstimateSessionJoined struct {
-	Profile *util.Profile     `json:"profile"`
-	Session *estimate.Session `json:"session"`
-	Team    *team.Session     `json:"team"`
-	Sprint  *sprint.Session   `json:"sprint"`
-	Members []*member.Entry   `json:"members"`
-	Online  []uuid.UUID       `json:"online"`
-	Stories []*estimate.Story `json:"stories"`
-	Votes   []*estimate.Vote  `json:"votes"`
-}
-
 func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
+
 	switch cmd {
 	case ClientCmdConnect:
 		p, ok := param.(string)

@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/kyleu/rituals.dev/app/controllers/act"
+
 	"emperror.dev/errors"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -13,20 +15,20 @@ import (
 )
 
 func Profile(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
-		params := paramSetFromRequest(r)
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		params := act.ParamSetFromRequest(r)
 		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "cannot load auth records for user ["+ctx.Profile.UserID.String()+"]"))
 		}
 		ctx.Title = "User Profile"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("profile"), "profile")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
 		return tmpl(templates.Profile(auths, ctx, w))
 	})
 }
 
 func ProfileSave(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		ctx.Profile.Name = strings.TrimSpace(r.Form.Get("username"))
 		if ctx.Profile.Name == "" {
@@ -40,7 +42,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Session.AddFlash("success:Profile saved")
-		saveSession(w, r, ctx)
+		act.SaveSession(w, r, ctx)
 		return ctx.Route("home"), nil
 	})
 }

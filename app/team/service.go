@@ -3,6 +3,8 @@ package team
 import (
 	"database/sql"
 
+	"github.com/kyleu/rituals.dev/app/permission"
+
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/query"
 
@@ -15,20 +17,22 @@ import (
 )
 
 type Service struct {
-	actions *action.Service
-	db      *sqlx.DB
-	Members *member.Service
-	logger  logur.Logger
+	actions     *action.Service
+	db          *sqlx.DB
+	Members     *member.Service
+	Permissions *permission.Service
+	logger      logur.Logger
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcTeam.Key})
 
 	return &Service{
-		actions: actions,
-		db:      db,
-		Members: member.NewService(actions, db, logger, util.SvcTeam.Key),
-		logger:  logger,
+		actions:     actions,
+		db:          db,
+		Members:     member.NewService(actions, db, logger, util.SvcTeam.Key),
+		Permissions: permission.NewService(actions, db, logger, util.SvcTeam.Key),
+		logger:      logger,
 	}
 }
 
@@ -45,6 +49,8 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new team session"))
 	}
+
+	s.Members.Register(model.ID, userID)
 
 	s.actions.Post(util.SvcTeam.Key, model.ID, userID, action.ActCreate, nil, "")
 	return &model, nil
@@ -103,6 +109,16 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Sessio
 		return nil, err
 	}
 	return toSessions(dtos), nil
+}
+
+func (s *Service) GetIdsByMember(userID uuid.UUID) ([]uuid.UUID, error) {
+	var ids []uuid.UUID
+	q := query.SQLSelect("x.id", "team x join team_member m on x.id = m.team_id", "m.user_id = $1", "", 0, 0)
+	err := s.db.Select(&ids, q, userID)
+	if err != nil {
+		return nil, err
+	}
+	return ids, nil
 }
 
 func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Session, error) {

@@ -3,28 +3,14 @@ package socket
 import (
 	"fmt"
 
-	"github.com/kyleu/rituals.dev/app/team"
-
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type StandupSessionJoined struct {
-	Profile *util.Profile     `json:"profile"`
-	Session *standup.Session  `json:"session"`
-	Team    *team.Session     `json:"team"`
-	Sprint  *sprint.Session   `json:"sprint"`
-	Members []*member.Entry   `json:"members"`
-	Online  []uuid.UUID       `json:"online"`
-	Reports []*standup.Report `json:"reports"`
-}
-
 func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
+
 	switch cmd {
 	case ClientCmdConnect:
 		err = onStandupConnect(s, conn, userID, param.(string))

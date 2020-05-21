@@ -19,7 +19,7 @@ var (
 
 func initStandup() {
 	standupArgs = graphql.FieldConfigArgument{
-		"key": &graphql.ArgumentConfig{
+		util.KeyKey: &graphql.ArgumentConfig{
 			Type: graphql.String,
 		},
 	}
@@ -33,9 +33,9 @@ func initStandup() {
 	})
 
 	standupResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args["key"].(string)
+		slug, ok := p.Args[util.KeyKey]
 		if ok {
-			return ctx.App.Standup.GetBySlug(slug)
+			return ctx.App.Standup.GetBySlug(slug.(string))
 		}
 		return nil, nil
 	}

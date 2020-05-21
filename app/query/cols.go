@@ -5,7 +5,7 @@ import "github.com/kyleu/rituals.dev/app/util"
 var allowedActionSortColumns = []string{"id", "svc", "model_id", "author_id", "act", "content", "note", "occurred"}
 var allowedAuthSortColumns = []string{"id", "user_id", "provider", "provider_id", "expires", "name", "email", "picture", "created"}
 var allowedEstimateSortColumns = []string{"id", "slug", "title", "sprint_id", "owner", "status", "choices", "options", "created"}
-var allowedInvitationSortColumns = []string{"key", "k", "v", "src", "tgt", "note", "status", "redeemed", "created"}
+var allowedInvitationSortColumns = []string{util.KeyKey, "k", "v", "src", "tgt", "note", "status", "redeemed", "created"}
 var allowedMemberSortColumns = []string{"user_id", "name", "role", "created"}
 var allowedReportSortColumns = []string{"id", "standup_id", "d", "author_id", "content", "html", "created"}
 var allowedRetroSortColumns = []string{"id", "slug", "title", "sprint_id", "owner", "status", "categories", "created"}

@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/controllers/act"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -12,14 +12,14 @@ import (
 )
 
 func Health(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_, _ = w.Write([]byte("OK"))
 		return "", nil
 	})
 }
 
 func Modules(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Modules"
 		ctx.Breadcrumbs = append(aboutBC(ctx), web.Breadcrumb{Path: ctx.Route("modules"), Title: "modules"})
 		return tmpl(templates.ModulesList(ctx, w))
@@ -27,7 +27,7 @@ func Modules(w http.ResponseWriter, r *http.Request) {
 }
 
 func Routes(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Routes"
 		ctx.Breadcrumbs = append(aboutBC(ctx), web.Breadcrumb{Path: ctx.Route("routes"), Title: "routes"})
 		return tmpl(templates.RoutesList(ctx, w))
@@ -35,13 +35,5 @@ func Routes(w http.ResponseWriter, r *http.Request) {
 }
 
 func aboutBC(ctx web.RequestContext) web.Breadcrumbs {
-	return web.BreadcrumbsSimple(ctx.Route("about"), "about")
-}
-
-func getUUIDPointer(m map[string]string, key string) *uuid.UUID {
-	retOut, ok := m[key]
-	if !ok {
-		return nil
-	}
-	return util.GetUUIDFromString(retOut)
+	return web.BreadcrumbsSimple(ctx.Route(util.KeyAbout), util.KeyAbout)
 }

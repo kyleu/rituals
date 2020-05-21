@@ -28,6 +28,7 @@ namespace team {
         rituals.onSessionJoin(sj);
         setTeamDetail(sj.session);
         setTeamHistory(sj);
+        rituals.showWelcomeMessage(sj.members.length);
         break;
       case command.server.sessionUpdate:
         setTeamDetail(param as Detail);

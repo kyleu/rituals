@@ -4,8 +4,24 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/retro"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
+
+type RetroSessionJoined struct {
+	Profile     *util.Profile            `json:"profile"`
+	Session     *retro.Session           `json:"session"`
+	Permissions []*permission.Permission `json:"permissions"`
+	Team        *team.Session            `json:"team"`
+	Sprint      *sprint.Session          `json:"sprint"`
+	Members     []*member.Entry          `json:"members"`
+	Online      []uuid.UUID              `json:"online"`
+	Feedback    []*retro.Feedback        `json:"feedback"`
+}
 
 func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	retroID, err := uuid.FromString(param)
@@ -41,6 +57,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 
 	entry := s.retros.Members.Register(ch.ID, userID)
 	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	perms := s.retros.Permissions.GetByModelID(ch.ID, nil)
 	members := s.retros.Members.GetByModelID(ch.ID, nil)
 
 	feedback, err := s.retros.GetFeedback(ch.ID, nil)
@@ -52,13 +69,14 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		Svc: util.SvcRetro.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: RetroSessionJoined{
-			Profile:  &conn.Profile,
-			Session:  sess,
-			Team:     getTeamOpt(s, sess.TeamID),
-			Sprint:   getSprintOpt(s, sess.SprintID),
-			Members:  members,
-			Online:   s.GetOnline(ch),
-			Feedback: feedback,
+			Profile:     &conn.Profile,
+			Session:     sess,
+			Permissions: perms,
+			Team:        getTeamOpt(s, sess.TeamID),
+			Sprint:      getSprintOpt(s, sess.SprintID),
+			Members:     members,
+			Online:      s.GetOnline(ch),
+			Feedback:    feedback,
 		},
 	}
 

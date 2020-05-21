@@ -33,22 +33,28 @@ type githubUser struct {
 func githubAuth(tok *oauth2.Token) (*Record, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+
 	if err != nil {
 		return nil, err
 	}
+
 	req.Header.Add("Authorization", "token "+tok.AccessToken)
 	response, err := client.Do(req)
+
 	if err != nil {
 		return nil, err
 	}
+
 	defer func() { _ = response.Body.Close() }()
 
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error reading GitHub response"))
 	}
+
 	var user = githubUser{}
 	err = json.Unmarshal(contents, &user)
+
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error marshalling GitHub user"))
 	}

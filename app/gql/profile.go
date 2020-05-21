@@ -8,6 +8,7 @@ import (
 
 var (
 	profileResolver         Callback
+	profileTeamResolver     Callback
 	profileSprintResolver   Callback
 	profileEstimateResolver Callback
 	profileStandupResolver  Callback
@@ -18,6 +19,10 @@ var (
 func initProfile() {
 	profileResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.Profile.ToProfile(), nil
+	}
+
+	profileTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Team.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger))
 	}
 
 	profileSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -63,6 +68,12 @@ func initProfile() {
 				},
 				"locale": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
+				},
+				util.SvcTeam.Plural: &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(teamType)),
+					Description: "Your current teams",
+					Args:        listArgs,
+					Resolve:     ctxF(profileTeamResolver),
 				},
 				util.SvcSprint.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(sprintType)),

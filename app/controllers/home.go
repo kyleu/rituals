@@ -3,6 +3,8 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/kyleu/rituals.dev/app/controllers/act"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -11,8 +13,8 @@ import (
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
-		params := paramSetFromRequest(r)
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		params := act.ParamSetFromRequest(r)
 
 		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
@@ -41,9 +43,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func About(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "About " + util.AppName
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("about"), "about")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyAbout), util.KeyAbout)
 		return tmpl(templates.About(ctx, w))
 	})
 }

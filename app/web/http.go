@@ -43,6 +43,7 @@ func ParseFlash(s string) (string, string) {
 	split := strings.SplitN(s, ":", 2)
 	severity := split[0]
 	content := split[1]
+
 	switch severity {
 	case "status":
 		return "uk-alert-primary", content

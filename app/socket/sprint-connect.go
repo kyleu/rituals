@@ -4,8 +4,27 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/estimate"
+	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/retro"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/standup"
+	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
+
+type SprintSessionJoined struct {
+	Profile     *util.Profile            `json:"profile"`
+	Session     *sprint.Session          `json:"session"`
+	Permissions []*permission.Permission `json:"permissions"`
+	Team        *team.Session            `json:"team"`
+	Members     []*member.Entry          `json:"members"`
+	Online      []uuid.UUID              `json:"online"`
+	Estimates   []*estimate.Session      `json:"estimates"`
+	Standups    []*standup.Session       `json:"standups"`
+	Retros      []*retro.Session         `json:"retros"`
+}
 
 func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	sprintID, err := uuid.FromString(param)
@@ -43,6 +62,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	entry := s.sprints.Members.Register(ch.ID, userID)
+	perms := s.sprints.Permissions.GetByModelID(ch.ID, nil)
 	members := s.sprints.Members.GetByModelID(ch.ID, nil)
 
 	estimates, err := s.estimates.GetBySprint(ch.ID, nil)
@@ -62,14 +82,15 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		Svc: util.SvcSprint.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: SprintSessionJoined{
-			Profile:   &conn.Profile,
-			Session:   sess,
-			Team:      getTeamOpt(s, sess.TeamID),
-			Members:   members,
-			Online:    s.GetOnline(ch),
-			Estimates: estimates,
-			Standups:  standups,
-			Retros:    retros,
+			Profile:     &conn.Profile,
+			Session:     sess,
+			Permissions: perms,
+			Team:        getTeamOpt(s, sess.TeamID),
+			Members:     members,
+			Online:      s.GetOnline(ch),
+			Estimates:   estimates,
+			Standups:    standups,
+			Retros:      retros,
 		},
 	}
 

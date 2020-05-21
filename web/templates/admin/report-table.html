@@ -15,7 +15,7 @@
     <tr>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentUUID(&model.ID, buffer) %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.D %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.AuthorID.String()) %>"><% ComponentUUID(&model.AuthorID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.AuthorID.String()) %>"><% ComponentUUID(&model.AuthorID, buffer) %></a></td>
       <td><%== model.HTML %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
     </tr>

@@ -42,11 +42,11 @@ func (r *RequestContext) Route(act string, pairs ...string) string {
 }
 
 func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
-	ai, ok := r.Context().Value("info").(*config.AppInfo)
+	ai, ok := r.Context().Value(util.InfoKey).(*config.AppInfo)
 	if !ok {
 		ai.Logger.Warn("cannot load AppInfo")
 	}
-	routes, ok := r.Context().Value("routes").(*mux.Router)
+	routes, ok := r.Context().Value(util.RoutesKey).(*mux.Router)
 	if !ok {
 		ai.Logger.Warn("cannot load Router")
 	}

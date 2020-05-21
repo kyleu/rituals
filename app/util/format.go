@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"regexp"
 
 	"github.com/gofrs/uuid"
@@ -11,12 +10,17 @@ import (
 )
 
 func MicrosToMillis(l language.Tag, i int) string {
-	ms := i / 1000
-	if ms >= 20 {
+	div := 1000
+	min := 20
+
+	ms := i / div
+	if ms >= min {
 		return FormatInteger(l, ms) + "ms"
 	}
-	x := float64(ms) + (float64(i%1000) / 1000)
+
+	x := float64(ms) + (float64(i%div) / float64(div))
 	p := message.NewPrinter(l)
+
 	return p.Sprintf("%.3f", x) + "ms"
 }
 
@@ -25,26 +29,13 @@ func FormatInteger(l language.Tag, v int) string {
 	return p.Sprintf("%d", v)
 }
 
-func PluralChoice(single string, plural string, v int) string {
-	if v == 1 || v == -1 {
-		return fmt.Sprint(v, " ", single)
-	}
-	return fmt.Sprint(v, " ", plural)
-}
-
-func BoolUnicode(b bool) string {
-	if b {
-		return "✓"
-	}
-	return "✗"
-}
-
 var re *regexp.Regexp
 
 func PathParams(s string) []string {
 	if re == nil {
 		re = regexp.MustCompile("{([^}]*)}")
 	}
+
 	matches := re.FindAll([]byte(s), -1)
 
 	ret := make([]string, 0, len(matches))
@@ -57,11 +48,24 @@ func PathParams(s string) []string {
 
 func GetUUIDFromString(s string) *uuid.UUID {
 	var retID *uuid.UUID
+
 	if len(s) > 0 {
 		s, err := uuid.FromString(s)
+
 		if err == nil {
 			retID = &s
 		}
 	}
+
 	return retID
+}
+
+func GetUUIDPointer(m map[string]string, key string) *uuid.UUID {
+	retOut, ok := m[key]
+
+	if !ok {
+		return nil
+	}
+
+	return GetUUIDFromString(retOut)
 }

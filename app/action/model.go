@@ -13,7 +13,8 @@ const (
 	ActConnect = "connect"
 	ActUpdate  = "update"
 
-	ActAssignSprint = "assign-sprint"
+	ActMemberAdd     = "member-add"
+	ActPermissionAdd = "permission-add"
 
 	ActContentAdd    = "content-add"
 	ActContentUpdate = "content-update"
@@ -22,10 +23,6 @@ const (
 	ActFeedbackAdd    = "feedback-add"
 	ActFeedbackUpdate = "feedback-update"
 	ActFeedbackRemove = "feedback-remove"
-
-	ActMemberAdd    = "member-add"
-	ActMemberUpdate = "member-update"
-	ActMemberRemove = "member-remove"
 
 	ActReportAdd    = "report-add"
 	ActReportUpdate = "report-update"
@@ -53,9 +50,11 @@ type Action struct {
 
 func (a *Action) ContentJSON() (string, error) {
 	bytes, err := json.MarshalIndent(a.Content, "", "  ")
+
 	if err != nil {
 		return "", errors.WithStack(errors.Wrap(err, "error marshalling action content"))
 	}
+
 	return string(bytes), nil
 }
 
@@ -73,6 +72,7 @@ type actionDTO struct {
 func (dto *actionDTO) ToAction() *Action {
 	var param interface{}
 	_ = json.Unmarshal([]byte(dto.Content), &param)
+
 	return &Action{
 		ID:       dto.ID,
 		Svc:      dto.Svc,

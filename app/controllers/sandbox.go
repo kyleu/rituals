@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/kyleu/rituals.dev/app/controllers/act"
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"github.com/kyleu/rituals.dev/app/sandbox"
 
-	web "github.com/kyleu/rituals.dev/app/web"
+	"github.com/kyleu/rituals.dev/app/web"
 
 	"emperror.dev/errors"
 
@@ -15,17 +18,17 @@ import (
 )
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Sandboxes"
-		ctx.Breadcrumbs = append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")...)
+		ctx.Breadcrumbs = append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route(util.KeySandbox), util.KeySandbox)...)
 		return tmpl(templates.SandboxList(sandbox.AllSandboxes, ctx, w))
 	})
 }
 
 func SandboxRun(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
-		key := mux.Vars(r)["key"]
-		sb := sandbox.SandboxFromString(key)
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		key := mux.Vars(r)[util.KeyKey]
+		sb := sandbox.FromString(key)
 		if sb == nil {
 			return "", errors.New("invalid sandbox [" + key + "]")
 		}
@@ -40,9 +43,9 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sb.Title + " Sandbox"
-		bc := append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("sandbox"), "sandbox")...)
-		bc = append(bc, web.Breadcrumb{Path: ctx.Route("sandbox.run", "key", key), Title: key})
+		bc := append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route(util.KeySandbox), util.KeySandbox)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.KeySandbox), util.KeySandbox)...)
+		bc = append(bc, web.Breadcrumb{Path: ctx.Route(util.KeySandbox+".run", util.KeyKey, key), Title: key})
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.SandboxRun(sb, string(js), ctx, w))

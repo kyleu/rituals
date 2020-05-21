@@ -59,12 +59,14 @@ type OnlineUpdate struct {
 }
 
 func differentPointerValues(l *uuid.UUID, r *uuid.UUID) bool {
-	if l != nil && r != nil {
+	switch {
+	case l != nil && r != nil:
 		return *l != *r
-	} else if l == nil && r != nil {
+	case l == nil && r != nil:
 		return true
-	} else if l != nil && r == nil {
+	case l != nil && r == nil:
 		return true
+	default:
+		return false
 	}
-	return false
 }

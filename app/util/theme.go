@@ -41,6 +41,7 @@ func ThemeFromString(s string) Theme {
 			return t
 		}
 	}
+
 	return ThemeLight
 }
 

@@ -34,6 +34,8 @@ create table if not exists "team" (
   "created" timestamp not null default now()
 );
 
+create unique index if not exists idx_team_slug on team(slug);
+
 create table if not exists "team_member" (
   "team_id" uuid not null references "team"("id"),
   "user_id" uuid not null references "system_user"("id"),
@@ -42,6 +44,17 @@ create table if not exists "team_member" (
   "created" timestamp not null default now(),
   primary key ("team_id", "user_id")
 );
+
+create table if not exists "team_permission" (
+  "id" uuid not null primary key,
+  "team_id" uuid not null references "team"("id"),
+  "k" varchar(128) not null,
+  "v" varchar(2048) not null,
+  "access" member_status not null,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_team_permission_team_id on team_permission(team_id);
 
 -- Sprint
 create table if not exists "sprint" (
@@ -55,6 +68,8 @@ create table if not exists "sprint" (
   "created" timestamp not null default now()
 );
 
+create unique index if not exists idx_sprint_slug on sprint(slug);
+
 create table if not exists "sprint_member" (
   "sprint_id" uuid not null references "sprint"("id"),
   "user_id" uuid not null references "system_user"("id"),
@@ -63,6 +78,18 @@ create table if not exists "sprint_member" (
   "created" timestamp not null default now(),
   primary key ("sprint_id", "user_id")
 );
+
+
+create table if not exists "sprint_permission" (
+  "id" uuid not null primary key,
+  "sprint_id" uuid not null references "sprint"("id"),
+  "k" varchar(128) not null,
+  "v" varchar(2048) not null,
+  "access" member_status not null,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_sprint_permission_sprint_id on sprint_permission(sprint_id);
 
 -- Estimate
 create table if not exists "estimate" (
@@ -77,7 +104,7 @@ create table if not exists "estimate" (
   "created" timestamp not null default now()
 );
 
-create index if not exists idx_estimate_slug on estimate(slug);
+create unique index if not exists idx_estimate_slug on estimate(slug);
 
 create table if not exists "estimate_member" (
   "estimate_id" uuid not null references "estimate"("id"),
@@ -87,6 +114,17 @@ create table if not exists "estimate_member" (
   "created" timestamp not null default now(),
   primary key ("estimate_id", "user_id")
 );
+
+create table if not exists "estimate_permission" (
+  "id" uuid not null primary key,
+  "estimate_id" uuid not null references "estimate"("id"),
+  "k" varchar(128) not null,
+  "v" varchar(2048) not null,
+  "access" member_status not null,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_estimate_permission_estimate_id on estimate_permission(estimate_id);
 
 create table if not exists "story" (
   "id" uuid not null primary key,
@@ -120,7 +158,7 @@ create table if not exists "standup" (
   "created" timestamp not null default now()
 );
 
-create index if not exists idx_standup_slug on standup(slug);
+create unique index if not exists idx_standup_slug on standup(slug);
 
 create table if not exists "standup_member" (
   "standup_id" uuid not null references "standup"("id"),
@@ -130,6 +168,17 @@ create table if not exists "standup_member" (
   "created" timestamp not null default now(),
   primary key ("standup_id", "user_id")
 );
+
+create table if not exists "standup_permission" (
+  "id" uuid not null primary key,
+  "standup_id" uuid not null references "standup"("id"),
+  "k" varchar(128) not null,
+  "v" varchar(2048) not null,
+  "access" member_status not null,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_standup_permission_standup_id on standup_permission(standup_id);
 
 create table "report" (
   "id" uuid not null primary key,
@@ -154,7 +203,7 @@ create table if not exists "retro" (
   "created" timestamp not null default now()
 );
 
-create index if not exists idx_retro_slug on retro(slug);
+create unique index if not exists idx_retro_slug on retro(slug);
 
 create table if not exists "retro_member" (
   "retro_id" uuid not null references "retro"("id"),
@@ -164,6 +213,17 @@ create table if not exists "retro_member" (
   "created" timestamp not null default now(),
   primary key ("retro_id", "user_id")
 );
+
+create table if not exists "retro_permission" (
+  "id" uuid not null primary key,
+  "retro_id" uuid not null references "retro"("id"),
+  "k" varchar(128) not null,
+  "v" varchar(2048) not null,
+  "access" member_status not null,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_retro_permission_retro_id on retro_permission(retro_id);
 
 create table if not exists "feedback" (
   "id" uuid not null primary key,
@@ -200,5 +260,7 @@ create table if not exists "action" (
   "note" text,
   "occurred" timestamp not null default now()
 );
+
+create index if not exists idx_action_svc_model_id on action(svc, model_id);
 
 -- <%: func CreateTables(w io.Writer) %>

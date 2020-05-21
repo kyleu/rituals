@@ -18,6 +18,7 @@ func (s *Service) getConfig(secure bool, host string, key string) *oauth2.Config
 	if len(host) == 0 {
 		host = "localhost:6660"
 	}
+
 	switch key {
 	case ProviderGoogle.Key:
 		return googleConf(secure, host)
@@ -53,6 +54,7 @@ func (s *Service) decodeRecord(key string, code string) (*Record, error) {
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error getting token"))
 	}
+
 	switch key {
 	case ProviderGoogle.Key:
 		return googleAuth(tok)

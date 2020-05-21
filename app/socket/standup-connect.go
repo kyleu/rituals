@@ -4,8 +4,24 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/standup"
+	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
+
+type StandupSessionJoined struct {
+	Profile     *util.Profile            `json:"profile"`
+	Session     *standup.Session         `json:"session"`
+	Permissions []*permission.Permission `json:"permissions"`
+	Team        *team.Session            `json:"team"`
+	Sprint      *sprint.Session          `json:"sprint"`
+	Members     []*member.Entry          `json:"members"`
+	Online      []uuid.UUID              `json:"online"`
+	Reports     []*standup.Report        `json:"reports"`
+}
 
 func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	standupID, err := uuid.FromString(param)
@@ -44,6 +60,7 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 
 	entry := s.standups.Members.Register(ch.ID, userID)
 	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	perms := s.standups.Permissions.GetByModelID(ch.ID, nil)
 	members := s.standups.Members.GetByModelID(ch.ID, nil)
 
 	reports, err := s.standups.GetReports(ch.ID, nil)
@@ -55,13 +72,14 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		Svc: util.SvcStandup.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: StandupSessionJoined{
-			Profile: &conn.Profile,
-			Session: sess,
-			Team:    getTeamOpt(s, sess.TeamID),
-			Sprint:  getSprintOpt(s, sess.SprintID),
-			Members: members,
-			Online:  s.GetOnline(ch),
-			Reports: reports,
+			Profile:     &conn.Profile,
+			Session:     sess,
+			Permissions: perms,
+			Team:        getTeamOpt(s, sess.TeamID),
+			Sprint:      getSprintOpt(s, sess.SprintID),
+			Members:     members,
+			Online:      s.GetOnline(ch),
+			Reports:     reports,
 		},
 	}
 

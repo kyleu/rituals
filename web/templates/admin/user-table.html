@@ -14,7 +14,7 @@
   <tbody>
   <% for _, u := range users { %>
     <tr>
-      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, u.UserID.String()) %>"><% ComponentUUID(&u.UserID, buffer) %></a></td>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, u.UserID.String()) %>"><% ComponentUUID(&u.UserID, buffer) %></a></td>
       <td><%= u.Name %></td>
       <td><%= u.Role %></td>
       <td><%= u.Theme %></td>

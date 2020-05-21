@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/web"
@@ -20,14 +22,14 @@ type Service struct {
 }
 
 func NewService(app *config.AppInfo) (*Service, error) {
-	logger := logur.WithFields(app.Logger, map[string]interface{}{"service": "graphql"})
+	logger := logur.WithFields(app.Logger, map[string]interface{}{"service": util.KeyGraphQL})
 
 	initSchema()
 
 	// Schema
 	schemaConfig := graphql.SchemaConfig{
-		Query:        graphql.NewObject(graphql.ObjectConfig{Name: "Query", Fields: queryFields()}),
-		Mutation:     graphql.NewObject(graphql.ObjectConfig{Name: "Mutation", Fields: mutationFields()}),
+		Query:        graphql.NewObject(graphql.ObjectConfig{Name: QueryName, Fields: queryFields()}),
+		Mutation:     graphql.NewObject(graphql.ObjectConfig{Name: MutationName, Fields: mutationFields()}),
 		Subscription: nil,
 		Types:        nil,
 		Directives:   nil,
@@ -38,6 +40,7 @@ func NewService(app *config.AppInfo) (*Service, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "failed to create new schema"))
 	}
 	svc := Service{Logger: logger, cfg: schemaConfig, schema: schema, app: app}
+
 	logger.Debug("initialized GraphQL service")
 	return &svc, nil
 }
@@ -48,7 +51,7 @@ func (s *Service) Run(operationName string, doc string, variables map[string]int
 		RequestString:  doc,
 		VariableValues: variables,
 		OperationName:  operationName,
-		Context:        context.WithValue(context.Background(), "ctx", ctx),
+		Context:        context.WithValue(context.Background(), util.ContextKey, ctx),
 	}
 	r := graphql.Do(params)
 	if len(r.Errors) > 0 {
@@ -66,7 +69,7 @@ func (s *Service) Run(operationName string, doc string, variables map[string]int
 
 func ctxF(f func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error)) func(graphql.ResolveParams) (interface{}, error) {
 	return func(p graphql.ResolveParams) (interface{}, error) {
-		c, ok := p.Context.Value("ctx").(web.RequestContext)
+		c, ok := p.Context.Value(util.ContextKey).(web.RequestContext)
 		if !ok {
 			return nil, errors.New("no ctx in GraphQL resolve params")
 		}
@@ -87,6 +90,8 @@ func initSchema() {
 		initSprint()
 		initTeam()
 		initProfile()
+		initUser()
+
 		initSandbox()
 	}
 }

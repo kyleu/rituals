@@ -4,8 +4,27 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/estimate"
+	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/retro"
+	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/standup"
+	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
+
+type TeamSessionJoined struct {
+	Profile     *util.Profile            `json:"profile"`
+	Session     *team.Session            `json:"session"`
+	Permissions []*permission.Permission `json:"permissions"`
+	Members     []*member.Entry          `json:"members"`
+	Online      []uuid.UUID              `json:"online"`
+	Sprints     []*sprint.Session        `json:"sprints"`
+	Estimates   []*estimate.Session      `json:"estimates"`
+	Standups    []*standup.Session       `json:"standups"`
+	Retros      []*retro.Session         `json:"retros"`
+}
 
 func onTeamConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	teamID, err := uuid.FromString(param)
@@ -43,6 +62,7 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	entry := s.teams.Members.Register(ch.ID, userID)
+	perms := s.teams.Permissions.GetByModelID(ch.ID, nil)
 	members := s.teams.Members.GetByModelID(ch.ID, nil)
 
 	sprints, err := s.sprints.GetByTeamID(ch.ID, nil)
@@ -66,14 +86,15 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		Svc: util.SvcTeam.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: TeamSessionJoined{
-			Profile:   &conn.Profile,
-			Session:   sess,
-			Members:   members,
-			Online:    s.GetOnline(ch),
-			Sprints:   sprints,
-			Estimates: estimates,
-			Standups:  standups,
-			Retros:    retros,
+			Profile:     &conn.Profile,
+			Session:     sess,
+			Permissions: perms,
+			Members:     members,
+			Online:      s.GetOnline(ch),
+			Sprints:     sprints,
+			Estimates:   estimates,
+			Standups:    standups,
+			Retros:      retros,
 		},
 	}
 

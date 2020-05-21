@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/permission"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/jmoiron/sqlx"
@@ -15,20 +17,22 @@ import (
 )
 
 type Service struct {
-	actions *action.Service
-	db      *sqlx.DB
-	Members *member.Service
-	logger  logur.Logger
+	actions     *action.Service
+	db          *sqlx.DB
+	Members     *member.Service
+	Permissions *permission.Service
+	logger      logur.Logger
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcRetro.Key})
 
 	return &Service{
-		actions: actions,
-		db:      db,
-		Members: member.NewService(actions, db, logger, util.SvcSprint.Key),
-		logger:  logger,
+		actions:     actions,
+		db:          db,
+		Members:     member.NewService(actions, db, logger, util.SvcSprint.Key),
+		Permissions: permission.NewService(actions, db, logger, util.SvcSprint.Key),
+		logger:      logger,
 	}
 }
 
@@ -45,6 +49,8 @@ func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID) (*Sessi
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new sprint session"))
 	}
+
+	s.Members.Register(model.ID, userID)
 
 	s.actions.Post(util.SvcSprint.Key, model.ID, userID, action.ActCreate, nil, "")
 	return &model, nil
@@ -120,19 +126,6 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.
 	_, err := s.db.Exec(q, title, teamID, startDate, endDate, sessionID)
 	s.actions.Post(util.SvcSprint.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.WithStack(errors.Wrap(err, "error updating sprint session"))
-}
-
-func (s *Service) AssignSprint(svc string, sessionID *uuid.UUID, userID uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
-	q := "update " + svc + " set sprint_id = $1 where id = $2"
-	_, err := s.db.Exec(q, sprintID, sessionID)
-	s.actions.Post(svc, *sessionID, userID, action.ActAssignSprint, sprintID, "")
-	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error updating sprint for "+svc+" session"))
-	}
-	if sprintID == nil {
-		return nil, nil
-	}
-	return s.GetByID(*sprintID)
 }
 
 func (s *Service) GetByIDPointer(sprintID *uuid.UUID) *Session {

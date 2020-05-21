@@ -36,10 +36,12 @@ namespace story {
 
   export function onRemoveStory() {
     const id = estimate.cache.activeStory;
-    if(id && confirm("Delete this story?")) {
-      const msg = {svc: services.estimate.key, cmd: command.client.removeStory, param: id};
-      socket.send(msg);
-      UIkit.modal("#modal-story").hide();
+    if (id) {
+      UIkit.modal.confirm('Delete this story?').then(function () {
+        const msg = {svc: services.estimate.key, cmd: command.client.removeStory, param: id};
+        socket.send(msg);
+        UIkit.modal("#modal-story").hide();
+      });
     }
     return false;
   }

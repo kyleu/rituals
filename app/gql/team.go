@@ -17,15 +17,15 @@ var (
 
 func initTeam() {
 	teamArgs = graphql.FieldConfigArgument{
-		"key": &graphql.ArgumentConfig{
+		util.KeyKey: &graphql.ArgumentConfig{
 			Type: graphql.String,
 		},
 	}
 
 	teamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args["key"].(string)
+		slug, ok := p.Args[util.KeyKey]
 		if ok {
-			return ctx.App.Team.GetBySlug(slug)
+			return ctx.App.Team.GetBySlug(slug.(string))
 		}
 		return nil, nil
 	}

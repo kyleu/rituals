@@ -110,6 +110,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 	}
 
 	finalVote := ""
+
 	if status == StoryStatusComplete {
 		votes, err := s.GetStoryVotes(storyID, nil)
 		if err != nil {
@@ -145,7 +146,8 @@ func calcFinalVote(votes []*Vote) string {
 		final = sum / float64(len(choices))
 	}
 	ret := fmt.Sprint(final)
-	if len(ret) < 4 {
+	min := 4
+	if len(ret) < min {
 		return ret
 	}
 	return ret[0:4]

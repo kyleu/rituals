@@ -31,22 +31,29 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Serv
 
 func (s *Service) New(id uuid.UUID) (*SystemUser, error) {
 	s.logger.Info("creating user [" + id.String() + "]")
+
 	q := "insert into system_user (id, name, role, theme, nav_color, link_color, picture, locale, created) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 	prof := util.NewUserProfile(id)
 	_, err := s.db.Exec(q, prof.UserID, prof.Name, util.RoleGuest.Key, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), time.Now())
+
 	if err != nil {
 		return nil, err
 	}
+
 	return s.GetByID(id, false)
 }
 
 func (s *Service) List(params *query.Params) ([]*SystemUser, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyUser, params, &query.Ordering{Column: "created", Asc: false})
+
 	var ret []*SystemUser
+
 	err := s.db.Select(&ret, query.SQLSelect("*", "system_user", "", params.OrderByString(), params.Limit, params.Offset))
+
 	if err != nil {
 		return nil, err
 	}
+
 	return ret, nil
 }
 
@@ -56,9 +63,8 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) 
 	if err == sql.ErrNoRows {
 		if addIfMissing {
 			return s.New(id)
-		} else {
-			return nil, nil
 		}
+		return nil, nil
 	}
 	if err != nil {
 		return nil, err

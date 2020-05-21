@@ -50,6 +50,7 @@ namespace estimate {
         setEstimateDetail(sj.session);
         story.setStories(sj.stories);
         vote.setVotes(sj.votes);
+        rituals.showWelcomeMessage(sj.members.length);
         break;
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);

@@ -46,7 +46,10 @@ func slackAuth(tok *oauth2.Token) (*Record, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = response.Body.Close() }()
+
+	defer func() {
+		_ = response.Body.Close()
+	}()
 
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {

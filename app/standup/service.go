@@ -3,6 +3,8 @@ package standup
 import (
 	"database/sql"
 
+	"github.com/kyleu/rituals.dev/app/permission"
+
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/query"
 
@@ -15,20 +17,22 @@ import (
 )
 
 type Service struct {
-	actions *action.Service
-	db      *sqlx.DB
-	Members *member.Service
-	logger  logur.Logger
+	actions     *action.Service
+	db          *sqlx.DB
+	Members     *member.Service
+	Permissions *permission.Service
+	logger      logur.Logger
 }
 
 func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.SvcStandup.Key})
 
 	return &Service{
-		actions: actions,
-		db:      db,
-		Members: member.NewService(actions, db, logger, util.SvcStandup.Key),
-		logger:  logger,
+		actions:     actions,
+		db:          db,
+		Members:     member.NewService(actions, db, logger, util.SvcStandup.Key),
+		Permissions: permission.NewService(actions, db, logger, util.SvcStandup.Key),
+		logger:      logger,
 	}
 }
 
@@ -45,6 +49,8 @@ func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintI
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new standup session"))
 	}
+
+	s.Members.Register(model.ID, userID)
 
 	s.actions.Post(util.SvcStandup.Key, model.ID, userID, action.ActCreate, nil, "")
 	if model.SprintID != nil {

@@ -1,0 +1,9 @@
+<%: func AdminSprintCard(sprints []*sprint.Session, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+  <h3 class="uk-card-title">Sprints</h3>
+  <% if len(sprints) == 0 { %>
+    <p>No sprints available</p>
+  <% } else { %>
+    <% AdminSprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, buffer) %>
+  <% } %>
+</div>

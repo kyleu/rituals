@@ -1,8 +1,10 @@
-package controllers
+package admin
 
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/controllers/act"
 
 	"emperror.dev/errors"
 
@@ -16,14 +18,12 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
+func ConnectionList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Connection List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
-		ctx.Breadcrumbs = bc
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyConnection, "connections")
 
-		p := paramSetFromRequest(r)
+		p := act.ParamSetFromRequest(r)
 		connections, err := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
 		if err != nil {
 			return "", err
@@ -32,9 +32,9 @@ func AdminConnectionList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
+func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		connectionID := getUUIDPointer(mux.Vars(r), "id")
+		connectionID := util.GetUUIDPointer(mux.Vars(r), "id")
 		if connectionID == nil {
 			return "", errors.New("invalid connection id")
 		}
@@ -43,9 +43,8 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Title = connection.ID.String()
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionID.String()), connectionID.String()[0:8])...)
+		bc := adminBC(ctx, util.KeyConnection, "connections")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyConnection, util.KeyDetail), "id", connectionID.String()), connectionID.String()[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		msg := socket.Message{Svc: util.SvcSystem.Key, Cmd: socket.ServerCmdPong, Param: nil}
@@ -53,10 +52,10 @@ func AdminConnectionDetail(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func AdminConnectionPost(w http.ResponseWriter, r *http.Request) {
+func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		connectionID := getUUIDPointer(mux.Vars(r), "id")
+		connectionID := util.GetUUIDPointer(mux.Vars(r), "id")
 		if connectionID == nil {
 			return "", errors.New("invalid connection id")
 		}
@@ -77,9 +76,8 @@ func AdminConnectionPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = connectionID.String()
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection"), "connections")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.connection.detail", "id", connectionID.String()), connectionID.String()[0:8])...)
+		bc := adminBC(ctx, util.KeyConnection, "connections")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyConnection, util.KeyDetail), "id", connectionID.String()), connectionID.String()[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))

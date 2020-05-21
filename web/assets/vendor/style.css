@@ -12346,8 +12346,16 @@ h3 a:hover {
   text-decoration: underline;
 }
 
+#team-warning-container {
+  display: none;
+}
+
 .sprint-date {
   cursor: pointer;
+}
+
+#sprint-warning-container {
+  display: none;
 }
 
 #story-title {

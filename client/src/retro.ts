@@ -34,6 +34,7 @@ namespace retro {
         rituals.setSprint(sj.sprint);
         setRetroDetail(sj.session);
         feedback.setFeedback(sj.feedback);
+        rituals.showWelcomeMessage(sj.members.length);
         break;
       case command.server.sessionUpdate:
         setRetroDetail(param as Detail);

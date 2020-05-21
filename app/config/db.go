@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"emperror.dev/errors"
+	// load postgres driver
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -17,7 +18,7 @@ import (
 func OpenDatabase(logger logur.Logger) (*sqlx.DB, error) {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": "config"})
 
-	// TODO load from config
+	// load from config
 	host := "localhost"
 	port := 5432
 	user := util.AppName
@@ -32,13 +33,12 @@ func OpenDatabase(logger logur.Logger) (*sqlx.DB, error) {
 		return nil, errors.WithStack(errors.Wrap(err, "error opening config database"))
 	}
 
-	// TODO remove when not needed
+	// remove when not needed
 	err = dbWipe(db, logger)
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error applying initial queries"))
 	}
 
-	// logger.Debug("config service started")
 	return db, nil
 }
 

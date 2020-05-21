@@ -1,4 +1,4 @@
-<%: func MemberOthers(sprint *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberOthers(ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
@@ -17,9 +17,9 @@
     </div>
     <div class="uk-modal-body" data-uk-overflow-auto>
       <p>For now, just share the url of this page from your address bar</p>
-      <% if sprint != nil{ %>
-        <p>Joining this session will also join the current sprint, <%= sprint.Title %></p>
-      <% } %>
+      <p id="sprint-warning-container">
+        Joining this session will also join the current sprint, <span id="sprint-warning-name"></span>
+      </p>
     </div>
   </div>
 </div>
@@ -31,6 +31,10 @@
     </div>
     <div class="uk-modal-body" data-uk-overflow-auto>
       <p><span id="member-modal-role"></span></p>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="left uk-button uk-button-default" type="button" onclick="alert('TODO')">Remove Member</button>
+      <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-member').hide();">Close</button>
     </div>
   </div>
 </div>

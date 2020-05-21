@@ -1,0 +1,9 @@
+<%: func AdminStoryCard(stories []*estimate.Story, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+  <h3 class="uk-card-title">Stories</h3>
+  <% if len(stories) == 0 { %>
+    <p>No stories available</p>
+  <% } else { %>
+    <% AdminStoryTable(stories, params.Get(util.KeyStory, ctx.Logger), ctx, buffer) %>
+  <% } %>
+</div>

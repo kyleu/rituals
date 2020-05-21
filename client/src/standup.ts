@@ -33,6 +33,7 @@ namespace standup {
         rituals.setSprint(sj.sprint);
         setStandupDetail(sj.session);
         report.setReports(sj.reports);
+        rituals.showWelcomeMessage(sj.members.length);
         break;
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);

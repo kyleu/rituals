@@ -17,7 +17,7 @@ var RoleObserver = Role{Key: "observer"}
 
 var AllRoles = []Role{RoleOwner, RoleMember, RoleObserver}
 
-func roleFromString(s string) Role {
+func RoleFromString(s string) Role {
 	for _, t := range AllRoles {
 		if t.Key == s {
 			return t
@@ -45,7 +45,7 @@ func (dto *entryDTO) ToEntry() *Entry {
 	return &Entry{
 		UserID:  dto.UserID,
 		Name:    dto.Name,
-		Role:    roleFromString(dto.Role),
+		Role:    RoleFromString(dto.Role),
 		Created: dto.Created,
 	}
 }

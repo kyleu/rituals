@@ -15,13 +15,13 @@
         </tr>
         <tr>
           <th>User ID</th>
-          <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.user.detail`, `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
+          <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
         </tr>
         </tbody>
       </table>
     </div>
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <form class="uk-form-stacked" action="<%= ctx.Route(`admin.connection.post`) %>" method="post">
+      <form class="uk-form-stacked" action="<%= ctx.Route(util.AdminLink(util.KeyConnection, `post`)) %>" method="post">
         <input name="id" type="hidden" value="<%=v model.ID %>" />
         <fieldset class="uk-fieldset">
           <div class="uk-margin-small">

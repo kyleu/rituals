@@ -5,28 +5,13 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/retro"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type TeamSessionJoined struct {
-	Profile   *util.Profile       `json:"profile"`
-	Session   *team.Session       `json:"session"`
-	Members   []*member.Entry     `json:"members"`
-	Online    []uuid.UUID         `json:"online"`
-	Sprints   []*sprint.Session   `json:"sprints"`
-	Estimates []*estimate.Session `json:"estimates"`
-	Standups  []*standup.Session  `json:"standups"`
-	Retros    []*retro.Session    `json:"retros"`
-}
-
 func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
+
 	switch cmd {
 	case ClientCmdConnect:
 		err = onTeamConnect(s, conn, userID, param.(string))

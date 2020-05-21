@@ -9,10 +9,12 @@ import (
 
 func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) *Entry {
 	dto, err := s.Get(modelID, userID)
+
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error getting existing member for user [%v] and model [%v]: %+v", modelID, userID, err))
 		return nil
 	}
+
 	if dto == nil {
 		q := fmt.Sprintf(`insert into %s (%s, user_id, name, role) values ($1, $2, '', 'member')`, s.tableName, s.colName)
 		_, err = s.db.Exec(q, modelID, userID)
@@ -25,11 +27,9 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) *Entry {
 		}
 
 		s.actions.Post(s.svc, modelID, userID, action.ActMemberAdd, nil, "")
-
-		return dto
-	} else {
-		return dto
 	}
+
+	return dto
 }
 
 func (s *Service) RegisterRef(modelID *uuid.UUID, userID uuid.UUID) *Entry {

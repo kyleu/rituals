@@ -15,9 +15,9 @@ import (
 )
 
 type Service struct {
-	logger    logur.Logger
 	actions   *action.Service
 	db        *sqlx.DB
+	logger    logur.Logger
 	svc       string
 	tableName string
 	colName   string
@@ -39,29 +39,38 @@ const nameClause = "case when name = '' then (select name from system_user su wh
 func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) []*Entry {
 	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, &query.Ordering{Column: "lower(name)", Asc: true})
 	var dtos []entryDTO
-	q := query.SQLSelect(fmt.Sprintf("user_id, %s, role, created", nameClause), s.tableName, fmt.Sprintf("%s = $1", s.colName), params.OrderByString(), params.Limit, params.Offset)
+	where := fmt.Sprintf("%s = $1", s.colName)
+	cols := fmt.Sprintf("user_id, %s, role, created", nameClause)
+	q := query.SQLSelect(cols, s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving member entries for model [%v]: %+v", id, err))
 		return nil
 	}
 	ret := make([]*Entry, 0, len(dtos))
+
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToEntry())
 	}
+
 	return ret
 }
 
 func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	dto := entryDTO{}
-	q := query.SQLSelect(fmt.Sprintf("user_id, %s, role, created", nameClause), s.tableName, fmt.Sprintf("%s = $1 and user_id = $2", s.colName), "", 0, 0)
+	cols := fmt.Sprintf("user_id, %s, role, created", nameClause)
+	where := fmt.Sprintf("%s = $1 and user_id = $2", s.colName)
+	q := query.SQLSelect(cols, s.tableName, where, "", 0, 0)
 	err := s.db.Get(&dto, q, modelID, userID)
+
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	return dto.ToEntry(), nil
 }
 

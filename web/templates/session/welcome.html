@@ -1,0 +1,19 @@
+<%: func ComponentSessionWelcome(svc util.Service, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div id="modal-welcome" data-uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Welcome</h2>
+    </div>
+    <div class="uk-modal-body" data-uk-overflow-auto>
+      <p>Enjoy your new <%= svc.Key %>!</p>
+      <p>
+        Invite new members by sharing this page's url, or restrict access to this <%= svc.Key %> by
+        <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="UIkit.modal('#modal-welcome').hide();events.openModal('session');return false;">editing permissions</a>.
+      </p>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-welcome').hide();">Close</button>
+    </div>
+  </div>
+</div>

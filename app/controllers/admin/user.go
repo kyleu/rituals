@@ -1,7 +1,9 @@
-package controllers
+package admin
 
 import (
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/controllers/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -13,14 +15,12 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-func AdminUserList(w http.ResponseWriter, r *http.Request) {
+func UserList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "User List"
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
-		ctx.Breadcrumbs = bc
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, "users")
 
-		params := paramSetFromRequest(r)
+		params := act.ParamSetFromRequest(r)
 		users, err := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
 		if err != nil {
 			return "", err
@@ -29,9 +29,9 @@ func AdminUserList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
+func UserDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		userID := getUUIDPointer(mux.Vars(r), "id")
+		userID := util.GetUUIDPointer(mux.Vars(r), "id")
 		if userID == nil {
 			return "", errors.New("invalid user id")
 		}
@@ -41,11 +41,11 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		if u == nil {
 			ctx.Session.AddFlash("error:Can't load user [" + userID.String() + "]")
-			saveSession(w, r, ctx)
-			return ctx.Route("admin.user"), nil
+			act.SaveSession(w, r, ctx)
+			return ctx.Route(util.AdminLink(util.KeyUser)), nil
 		}
 
-		params := paramSetFromRequest(r)
+		params := act.ParamSetFromRequest(r)
 
 		auths, err := ctx.App.Auth.GetByUserID(*userID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
@@ -77,9 +77,8 @@ func AdminUserDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = u.Name
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user"), "users")...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("admin.user.detail", "id", userID.String()), u.Name)...)
+		bc := adminBC(ctx, util.KeyUser, "users")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), "id", userID.String()), u.Name)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminUserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))

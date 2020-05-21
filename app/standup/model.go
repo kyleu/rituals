@@ -25,6 +25,7 @@ func statusFromString(s string) Status {
 			return t
 		}
 	}
+
 	return StatusNew
 }
 

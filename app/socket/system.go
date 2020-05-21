@@ -12,6 +12,7 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 		return errors.WithStack(errors.New("received name change for wrong user [" + userID.String() + "]"))
 	}
 	var err error
+
 	switch cmd {
 	case ClientCmdPing:
 		msg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdPong, Param: param}
@@ -94,6 +95,7 @@ func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
 
 func memberSvcFor(s *Service, svc string) (*member.Service, error) {
 	var ret *member.Service
+
 	switch svc {
 	case util.SvcTeam.Key:
 		ret = s.teams.Members

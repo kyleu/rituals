@@ -6,28 +6,13 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type SprintSessionJoined struct {
-	Profile   *util.Profile       `json:"profile"`
-	Session   *sprint.Session     `json:"session"`
-	Team      *team.Session       `json:"team"`
-	Members   []*member.Entry     `json:"members"`
-	Online    []uuid.UUID         `json:"online"`
-	Estimates []*estimate.Session `json:"estimates"`
-	Standups  []*standup.Session  `json:"standups"`
-	Retros    []*retro.Session    `json:"retros"`
-}
-
 func onSprintMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	var err error
+
 	switch cmd {
 	case ClientCmdConnect:
 		err = onSprintConnect(s, conn, userID, param.(string))
@@ -71,7 +56,7 @@ func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[str
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
 
-	err = s.sprints.UpdateSession(ch.ID, title, getUUIDPointer(param, "teamID"), startDate, endDate, userID)
+	err = s.sprints.UpdateSession(ch.ID, title, teamID, startDate, endDate, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error updating sprint session"))
 	}

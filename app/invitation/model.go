@@ -21,69 +21,69 @@ type invitationDTO struct {
 	Created  time.Time  `db:"created"`
 }
 
-type InvitationType struct {
+type Type struct {
 	Key string
 }
 
-var InvitationTypeSprint = InvitationType{Key: util.SvcSprint.Key}
-var InvitationTypeEstimate = InvitationType{Key: util.SvcEstimate.Key}
-var InvitationTypeStandup = InvitationType{Key: util.SvcStandup.Key}
-var InvitationTypeRetro = InvitationType{Key: util.SvcRetro.Key}
+var TypeSprint = Type{Key: util.SvcSprint.Key}
+var TypeEstimate = Type{Key: util.SvcEstimate.Key}
+var TypeStandup = Type{Key: util.SvcStandup.Key}
+var TypeRetro = Type{Key: util.SvcRetro.Key}
 
-var AllInvitationTypes = []InvitationType{InvitationTypeSprint, InvitationTypeEstimate, InvitationTypeStandup, InvitationTypeRetro}
+var AllTypes = []Type{TypeSprint, TypeEstimate, TypeStandup, TypeRetro}
 
-func typeFromString(s string) InvitationType {
-	for _, t := range AllInvitationTypes {
+func typeFromString(s string) Type {
+	for _, t := range AllTypes {
 		if t.Key == s {
 			return t
 		}
 	}
-	return InvitationTypeSprint
+	return TypeSprint
 }
 
-func (t *InvitationType) String() string {
+func (t *Type) String() string {
 	return t.Key
 }
 
-func (t InvitationType) MarshalJSON() ([]byte, error) {
+func (t Type) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
-type InvitationStatus struct {
+type Status struct {
 	Key string
 }
 
-var InvitationStatusPending = InvitationStatus{Key: "pending"}
-var InvitationStatusRedeemed = InvitationStatus{Key: "redeemed"}
-var InvitationStatusDeleted = InvitationStatus{Key: "deleted"}
+var StatusPending = Status{Key: "pending"}
+var StatusRedeemed = Status{Key: "redeemed"}
+var StatusDeleted = Status{Key: "deleted"}
 
-var AllInvitationStatuses = []InvitationStatus{InvitationStatusPending, InvitationStatusRedeemed, InvitationStatusDeleted}
+var AllStatuses = []Status{StatusPending, StatusRedeemed, StatusDeleted}
 
-func statusFromString(s string) InvitationStatus {
-	for _, t := range AllInvitationStatuses {
+func statusFromString(s string) Status {
+	for _, t := range AllStatuses {
 		if t.Key == s {
 			return t
 		}
 	}
-	return InvitationStatusPending
+	return StatusPending
 }
 
-func (t *InvitationStatus) String() string {
+func (t *Status) String() string {
 	return t.Key
 }
 
-func (t InvitationStatus) MarshalJSON() ([]byte, error) {
+func (t Status) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
 type Invitation struct {
 	Key      string
-	K        InvitationType
+	K        Type
 	V        string
 	Src      *uuid.UUID
 	Tgt      *uuid.UUID
 	Note     string
-	Status   InvitationStatus
+	Status   Status
 	Redeemed *time.Time
 	Created  time.Time
 }

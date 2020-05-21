@@ -12,44 +12,53 @@ cd $project_dir
 
 echo "=== linting ==="
 golangci-lint run \
-  -E deadcode \
-  -E errcheck \
-  -E gosimple \
-  -E govet \
-  -E ineffassign \
-  -E structcheck \
-  -E typecheck \
-  -E unused \
-  -E varcheck \
+  -E asciicheck \
   -E bodyclose \
+  -E deadcode \
   -E depguard \
   -E dogsled \
   -D dupl \
-  -E funlen \
+  -E errcheck \
+  -D funlen \
   -D gochecknoglobals \
-  -D gochecknoinits \
-  -E gocognit \
-  -D goconst \
+  -E gochecknoinits \
+  -E gosimple \
+  -D gocognit \
+  -E goconst \
   -E gocritic \
   -E gocyclo \
+  -D godot \
   -E godox \
+  -D goerr113 \
   -E gofmt \
   -E goimports \
-  -D golint \
-  -D gomnd \
+  -E golint \
+  -E gomnd \
+  -E gomodguard \
   -E goprintffuncname \
   -D gosec \
-  -E interfacer \
+  -E gosimple \
+  -E govet \
+  -E ineffassign \
+  -D interfacer \
   -D lll \
   -E maligned \
   -E misspell \
   -E nakedret \
-  -D prealloc \
+  -E nestif \
+  -E nolintlint \
+  -E prealloc \
   -E rowserrcheck \
   -E scopelint \
+  -E staticcheck \
+  -E structcheck \
   -E stylecheck \
+  -E testpackage \
+  -E typecheck \
   -E unconvert \
   -E unparam \
+  -E unused \
+  -E varcheck \
   -E whitespace \
   -D wsl \
 ./...

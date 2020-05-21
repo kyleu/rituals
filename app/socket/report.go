@@ -27,7 +27,7 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 	}
 	content := strings.TrimSpace(c)
 	if len(content) == 0 {
-		content = "-no text-"
+		content = util.KeyNoText
 	}
 
 	s.logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", d.Format("2006-01-02"), userID))
@@ -56,7 +56,7 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 	}
 	content := strings.TrimSpace(c)
 	if len(content) == 0 {
-		content = "-no text-"
+		content = util.KeyNoText
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", d.Format("2006-01-02"), userID))
@@ -70,9 +70,11 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 
 func onRemoveReport(s *Service, ch channel, userID uuid.UUID, param string) error {
 	reportID, err := uuid.FromString(param)
+
 	if err != nil {
 		return errors.New("invalid report id [" + param + "]")
 	}
+
 	s.logger.Debug(fmt.Sprintf("removing report [%s]", reportID))
 	err = s.standups.RemoveReport(reportID, userID)
 	if err != nil {
@@ -91,9 +93,11 @@ func sendReportUpdate(s *Service, ch channel, report *standup.Report) error {
 
 func parseDate(s string) (*time.Time, error) {
 	dString := strings.TrimSpace(s)
+
 	if dString == "" {
 		dString = time.Now().Format("2006-01-02")
 	}
+
 	t, err := time.Parse("2006-01-02", dString)
 	if err != nil {
 		return nil, errors.WithStack(errors.New("invalid date [" + dString + "] (expected 2020-01-15)"))

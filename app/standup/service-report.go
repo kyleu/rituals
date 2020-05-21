@@ -21,6 +21,7 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
     $1, $2, $3, $4, $5, $6
 	)`
 	_, err := s.db.Exec(q, id, standupID, d, authorID, content, html)
+
 	if err != nil {
 		return nil, err
 	}
@@ -37,9 +38,11 @@ func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Repo
 	params = query.ParamsWithDefaultOrdering(util.KeyReport, params, defaultReportOrdering...)
 	var dtos []reportDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyReport, "standup_id = $1", params.OrderByString(), params.Limit, params.Offset), standupID)
+
 	if err != nil {
 		return nil, err
 	}
+
 	ret := make([]*Report, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToReport())
@@ -50,9 +53,11 @@ func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Repo
 func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	dto := &reportDTO{}
 	err := s.db.Get(dto, query.SQLSelect("*", util.KeyReport, "id = $1", "", 0, 0), reportID)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return dto.ToReport(), nil
 }
 
@@ -60,9 +65,11 @@ func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
 	q := query.SQLSelect("standup_id", util.KeyReport, "id = $1", "", 0, 0)
 	err := s.db.Get(&ret, q, reportID)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return &ret, nil
 }
 
@@ -71,6 +78,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 
 	q := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
 	_, err := s.db.Exec(q, d, authorID, content, html, reportID)
+
 	if err != nil {
 		return nil, err
 	}

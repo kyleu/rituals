@@ -5,18 +5,19 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/kyleu/rituals.dev/app/controllers/routes"
+
 	"github.com/kyleu/rituals.dev/app/invitation"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/team"
 
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
-	logurhandler "emperror.dev/handler/logur"
+	"emperror.dev/handler/logur"
 	"github.com/gorilla/handlers"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/config"
-	"github.com/kyleu/rituals.dev/app/controllers"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/socket"
@@ -24,7 +25,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/spf13/cobra"
-	"logur.dev/logur"
+	log "logur.dev/logur"
 )
 
 var verbose bool
@@ -58,12 +59,10 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	_ = os.Setenv("TZ", "UTC")
 
 	logger := initLogging(verbose)
-	logger = logur.WithFields(logger, map[string]interface{}{"debug": verbose, "version": version, "commit": commitHash})
+	logger = log.WithFields(logger, map[string]interface{}{"debug": verbose, "version": version, "commit": commitHash})
 
-	errorHandler := logurhandler.New(logger)
+	errorHandler := logur.New(logger)
 	defer emperror.HandleRecover(errorHandler)
-
-	handler := emperror.WithDetails(&util.AppErrorHandler{Logger: logger}, "key", "value")
 
 	db, err := config.OpenDatabase(logger)
 	if err != nil {
@@ -86,7 +85,6 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Version:    version,
 		Commit:     commitHash,
 		Logger:     logger,
-		Errors:     handler,
 		User:       userSvc,
 		Auth:       authSvc,
 		Action:     actionService,
@@ -103,7 +101,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 }
 
 func MakeServer(info *config.AppInfo, address string, port uint16) error {
-	routes, err := controllers.BuildRouter(info)
+	r, err := routes.BuildRouter(info)
 	if err != nil {
 		return errors.WithStack(errors.WithMessage(err, "unable to construct routes"))
 	}
@@ -112,6 +110,6 @@ func MakeServer(info *config.AppInfo, address string, port uint16) error {
 		msg += " (verbose)"
 	}
 	info.Logger.Info(msg, map[string]interface{}{"address": address, "port": port})
-	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(routes))
+	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(r))
 	return errors.WithStack(errors.Wrap(err, "unable to run http server"))
 }

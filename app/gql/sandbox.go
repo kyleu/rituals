@@ -4,6 +4,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/rituals.dev/app/sandbox"
+	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 )
 
@@ -18,15 +19,15 @@ var (
 
 func initSandbox() {
 	sandboxArgs = graphql.FieldConfigArgument{
-		"key": &graphql.ArgumentConfig{
+		util.KeyKey: &graphql.ArgumentConfig{
 			Type: graphql.NewNonNull(graphql.String),
 		},
 	}
 
 	sandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, ok := p.Args["key"].(string)
+		key, ok := p.Args[util.KeyKey]
 		if ok {
-			return sandbox.SandboxFromString(key), nil
+			return sandbox.FromString(key.(string)), nil
 		}
 		return nil, nil
 	}
@@ -36,14 +37,14 @@ func initSandbox() {
 	}
 
 	callSandboxArgs = graphql.FieldConfigArgument{
-		"key": &graphql.ArgumentConfig{
+		util.KeyKey: &graphql.ArgumentConfig{
 			Type: graphql.NewNonNull(graphql.String),
 		},
 	}
 
 	callSandboxResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, _ := params.Args["key"].(string)
-		sb := sandbox.SandboxFromString(key)
+		key, _ := params.Args[util.KeyKey].(string)
+		sb := sandbox.FromString(key)
 		if sb == nil {
 			return "", errors.New("invalid sandbox [" + key + "]")
 		}
@@ -54,7 +55,7 @@ func initSandbox() {
 		graphql.ObjectConfig{
 			Name: "Sandbox",
 			Fields: graphql.Fields{
-				"key": &graphql.Field{
+				util.KeyKey: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"title": &graphql.Field{

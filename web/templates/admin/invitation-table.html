@@ -3,7 +3,7 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.KeyInvitation, "key", "Key", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyInvitation, util.KeyKey, "Key", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyInvitation, "relation", "Relation", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyInvitation, "source", "Source", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyInvitation, "target", "Target", params, ctx, buffer) %>
@@ -13,7 +13,7 @@
   <tbody>
   <% for _, i := range invitations { %>
     <tr>
-      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`admin.invitation.detail`, `key`, i.Key) %>"><%= i.Key %></a></td>
+      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyInvitation, `detail`), `key`, i.Key) %>"><%= i.Key %></a></td>
       <td><%= i.K.String() %>:<%= i.V %></td>
       <td><% ComponentUUID(i.Src, buffer) %></td>
       <td><% ComponentUUID(i.Tgt, buffer) %></td>

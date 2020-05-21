@@ -1,0 +1,9 @@
+<%: func AdminEstimateCard(estimates []*estimate.Session, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+  <h3 class="uk-card-title">Estimates</h3>
+  <% if len(estimates) == 0 { %>
+    <p>No estimates available</p>
+  <% } else { %>
+    <% AdminEstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, buffer) %>
+  <% } %>
+</div>

@@ -11,6 +11,7 @@ namespace system {
     currentID = "";
     connectTime = 0;
 
+    permissions: permission.Permission[] = [];
     members: member.Member[] = [];
     online: string[] = [];
 

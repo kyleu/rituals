@@ -28,6 +28,7 @@ namespace rituals {
   export interface SessionJoined {
     profile: Profile;
     session: Session;
+    permissions: permission.Permission[];
     members: member.Member[];
     online: string[];
   }
@@ -111,9 +112,11 @@ namespace rituals {
     system.cache.session = param.session;
     system.cache.profile = param.profile;
 
+    system.cache.permissions = param.permissions;
+    permission.setPermissions();
+
     system.cache.members = param.members;
     system.cache.online = param.online;
-
     member.setMembers();
   }
 
@@ -127,10 +130,17 @@ namespace rituals {
 
   export function setSprint(spr: sprint.Detail | undefined) {
     UIkit.modal("#modal-session").hide();
-    const container = dom.req("#sprint-link-container");
-    container.innerHTML = "";
+
+    const lc = dom.req("#sprint-link-container");
+    const wc = dom.req("#sprint-warning-container");
+
+    lc.innerHTML = "";
     if(spr) {
-      container.appendChild(sprint.renderSprintLink(spr))
+      lc.appendChild(sprint.renderSprintLink(spr))
+      wc.style.display = "block";
+      dom.req("#sprint-warning-name").innerText = spr.title;
+    } else {
+      wc.style.display = "none";
     }
   }
 
@@ -140,6 +150,12 @@ namespace rituals {
     container.innerHTML = "";
     if(tm) {
       container.appendChild(team.renderTeamLink(tm))
+    }
+  }
+
+  export function showWelcomeMessage(count: number) {
+    if (count == 1) {
+      setTimeout(() => events.openModal('welcome'), 300);
     }
   }
 }

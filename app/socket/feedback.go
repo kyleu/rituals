@@ -22,7 +22,7 @@ func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]in
 	}
 	content := strings.TrimSpace(c)
 	if len(content) == 0 {
-		content = "-no text-"
+		content = util.KeyNoText
 	}
 
 	s.logger.Debug(fmt.Sprintf("adding [%s] feedback for [%s]", category, userID))
@@ -51,7 +51,7 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 	}
 	content := strings.TrimSpace(c)
 	if len(content) == 0 {
-		content = "-no text-"
+		content = util.KeyNoText
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", category, userID))

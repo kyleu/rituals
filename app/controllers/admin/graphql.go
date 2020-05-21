@@ -1,41 +1,19 @@
-package controllers
+package admin
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/gql"
-	"logur.dev/logur"
-
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-var svc *gql.Service
-
-func GraphQLHome(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		err := prepareService(ctx.App)
-		if err != nil {
-			return "", err
-		}
-
-		bc := web.BreadcrumbsSimple(ctx.Route("admin"), "admin")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route("graphql"), "graphql")...)
-		ctx.Breadcrumbs = bc
-
-		ctx.Title = "GraphiQL"
-		return tmpl(templates.GraphiQL(ctx, w))
-	})
-}
+var graphQLService *gql.Service
 
 func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
@@ -45,17 +23,17 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		}
 		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "cannot read JSON body for GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "cannot read JSON body for GraphQL"))))
 		}
 		err = r.Body.Close()
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "cannot close body for GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "cannot close body for GraphQL"))))
 		}
 
 		var req map[string]interface{}
 		err = json.Unmarshal(body, &req)
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))))
 		}
 		op := ""
 		opParam, ok := req["operationName"]
@@ -74,9 +52,9 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 			v = variables.(map[string]interface{})
 		}
 
-		res, err := svc.Run(op, query, v, ctx)
+		res, err := graphQLService.Run(op, query, v, ctx)
 		if err != nil {
-			return graphQLResponse(w, errorResponseJSON(svc.Logger, errors.WithStack(errors.Wrap(err, "error running GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "error running GraphQL"))))
 		}
 
 		return graphQLResponse(w, res)
@@ -99,23 +77,12 @@ func graphQLResponse(w http.ResponseWriter, res *graphql.Result) (string, error)
 }
 
 func prepareService(app *config.AppInfo) error {
-	if svc == nil {
+	if graphQLService == nil {
 		s, err := gql.NewService(app)
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "unable to initialize GraphQL schema"))
 		}
-		svc = s
+		graphQLService = s
 	}
 	return nil
-}
-
-func errorResponseJSON(logger logur.Logger, errors ...error) *graphql.Result {
-	var errs []gqlerrors.FormattedError
-	for _, err := range errors {
-		logger.Warn(fmt.Sprintf("error running GraphQL: %+v", err))
-		errs = append(errs, gqlerrors.FormattedError{Message: err.Error()})
-	}
-	return &graphql.Result{
-		Errors: errs,
-	}
 }

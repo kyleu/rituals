@@ -29,6 +29,7 @@ func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, 
 		socket:  c,
 		mu:      sync.Mutex{},
 	}
+
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 
@@ -104,10 +105,10 @@ func (s *Service) Leave(connID uuid.UUID, ch channel) error {
 	if len(filtered) == 0 {
 		delete(s.channels, ch)
 		return nil
-	} else {
-		s.channels[ch] = filtered
-		return s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, false)
 	}
+
+	s.channels[ch] = filtered
+	return s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, false)
 }
 
 func contains(s []uuid.UUID, e uuid.UUID) bool {

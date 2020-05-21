@@ -29,6 +29,7 @@ namespace sprint {
         setSprintDetail(sj.session);
         rituals.setTeam(sj.team)
         setSprintContents(sj);
+        rituals.showWelcomeMessage(sj.members.length);
         break;
       case command.server.teamUpdate:
         const tm = param as team.Detail | undefined

@@ -23,6 +23,8 @@ namespace events {
         system.cache.activeMember = id;
         member.viewActiveMember();
         break;
+      case "welcome":
+        break;
 
       // actions
       case "actions":

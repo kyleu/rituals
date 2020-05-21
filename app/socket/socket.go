@@ -55,6 +55,7 @@ func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid
 	for _, conn := range conns {
 		if !contains(except, conn) {
 			connID := conn
+
 			go func() {
 				_ = s.Write(connID, string(data))
 			}()
@@ -68,6 +69,7 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 	if !ok {
 		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
 	}
+
 	defer func() {
 		_ = c.socket.Close()
 		_, _ = s.Disconnect(connID)

@@ -39,10 +39,12 @@ namespace feedback {
 
   export function onRemoveFeedback() {
     const id = retro.cache.activeFeedback;
-    if(id && confirm("Delete this feedback?")) {
-      const msg = {svc: services.retro.key, cmd: command.client.removeFeedback, param: id};
-      socket.send(msg);
-      UIkit.modal("#modal-feedback").hide();
+    if (id) {
+      UIkit.modal.confirm('Delete this feedback?').then(function () {
+        const msg = {svc: services.retro.key, cmd: command.client.removeFeedback, param: id};
+        socket.send(msg);
+        UIkit.modal("#modal-feedback").hide();
+      });
     }
     return false;
   }

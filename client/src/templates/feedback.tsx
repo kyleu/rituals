@@ -21,7 +21,7 @@ namespace feedback {
     } else {
       const cats = getFeedbackCategories(f, retro.cache.detail?.categories || []);
       const profile = system.cache.getProfile();
-      return <div class="uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider" uk-grid="">
+      return <div class="uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider" data-uk-grid>
         {cats.map(cat => <div class="feedback-list uk-transition-toggle">
           <div class="feedback-category-header">
             <span class="right">

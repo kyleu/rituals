@@ -31,7 +31,7 @@ var Testbed = Sandbox{
 
 var AllSandboxes = []*Sandbox{&Gallery, &Testbed}
 
-func SandboxFromString(s string) *Sandbox {
+func FromString(s string) *Sandbox {
 	for _, t := range AllSandboxes {
 		if t.Key == s {
 			return t

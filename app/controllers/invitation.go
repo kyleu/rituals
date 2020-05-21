@@ -1,16 +1,19 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 
-	web "github.com/kyleu/rituals.dev/app/web"
+	"github.com/kyleu/rituals.dev/app/controllers/act"
+
+	"github.com/kyleu/rituals.dev/app/web"
 
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func JoinPost(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Join Session"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("join.post"), "join")
 		return tmpl(templates.Todo("JoinPost", ctx, w))
@@ -18,10 +21,10 @@ func JoinPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func JoinGet(w http.ResponseWriter, r *http.Request) {
-	act(w, r, func(ctx web.RequestContext) (string, error) {
-		key := mux.Vars(r)["key"]
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		key := mux.Vars(r)[util.KeyKey]
 		ctx.Title = "[" + key + "]"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("join.form", "key", key), "join")
+		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("join.form", util.KeyKey, key), "join")
 		return tmpl(templates.Todo("JoinGet", ctx, w))
 	})
 }

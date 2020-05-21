@@ -7,6 +7,9 @@
     </h3>
     <div class="right">
       <form method="post" action="<%= ctx.Route(util.SvcEstimate.Key + `.new`) %>">
+        <% if model.TeamID != nil { %>
+          <input type="hidden" name="team" value="<%=v model.TeamID %>" />
+        <% } %>
         <input type="hidden" name="sprint" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new estimate"></button>
@@ -24,6 +27,9 @@
     </h3>
     <div class="right">
       <form method="post" action="<%= ctx.Route(util.SvcStandup.Key + `.new`) %>">
+        <% if model.TeamID != nil { %>
+          <input type="hidden" name="team" value="<%=v model.TeamID %>" />
+        <% } %>
         <input type="hidden" name="sprint" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new standup"></button>
@@ -41,6 +47,9 @@
     </h3>
     <div class="right">
       <form method="post" action="<%= ctx.Route(util.SvcRetro.Key + `.new`) %>">
+        <% if model.TeamID != nil { %>
+          <input type="hidden" name="team" value="<%=v model.TeamID %>" />
+        <% } %>
         <input type="hidden" name="sprint" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new retro"></button>
