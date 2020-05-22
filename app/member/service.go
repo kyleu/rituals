@@ -36,8 +36,9 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, svc s
 
 const nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
-func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) []*Entry {
-	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, &query.Ordering{Column: "lower(name)", Asc: true})
+func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
+	var defaultOrdering = query.Orderings{{Column: "name", Asc: true}}
+	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, defaultOrdering...)
 	var dtos []entryDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
 	cols := fmt.Sprintf("user_id, %s, role, created", nameClause)
@@ -47,7 +48,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) []*Entry {
 		s.logger.Error(fmt.Sprintf("error retrieving member entries for model [%v]: %+v", id, err))
 		return nil
 	}
-	ret := make([]*Entry, 0, len(dtos))
+	ret := make(Entries, 0, len(dtos))
 
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToEntry())

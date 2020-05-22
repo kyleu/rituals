@@ -40,7 +40,7 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 }
 
 func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	id := getUUIDPointer(param, "id")
+	id := getUUIDPointer(param, util.KeyID)
 	if id == nil {
 		return errors.WithStack(errors.New("invalid id"))
 	}

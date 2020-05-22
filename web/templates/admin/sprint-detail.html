@@ -1,4 +1,4 @@
-<%: func AdminSprintDetail(model *sprint.Session, members []*member.Entry, perms []*permission.Permission, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminSprintDetail(model *sprint.Session, members member.Entries, perms permission.Permissions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 

@@ -5,10 +5,7 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 
-	"github.com/kyleu/rituals.dev/app/team"
-
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
@@ -67,32 +64,15 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcStandup.Key + ".list"), nil
 		}
 
-		var tm *team.Session
-		var tmTitle string
-		if sess.TeamID != nil {
-			tm, _ = ctx.App.Team.GetByID(*sess.TeamID)
-			tmTitle = tm.Title
-		}
+		permErrors, bc := check(&ctx, ctx.App.Standup.Permissions, util.SvcStandup, sess.ID, key, sess.Title, sess.TeamID, sess.SprintID)
 
-		var spr *sprint.Session
-		if sess.SprintID != nil {
-			spr, _ = ctx.App.Sprint.GetByID(*sess.SprintID)
-		}
+		ctx.Breadcrumbs = bc
 
-		auths, currTeams, err := authsAndTeams(ctx, sess.TeamID)
-		permErrors := ctx.App.Standup.Permissions.Check(util.SvcEstimate, sess.ID, auths, sess.TeamID, tmTitle, currTeams)
 		if len(permErrors) > 0 {
-			return permErrorTemplate(permErrors, ctx, w)
+			return permErrorTemplate(util.SvcStandup, permErrors, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Key)
-		if spr != nil {
-			bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, util.KeyKey, spr.Slug), spr.Title)
-		}
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key, util.KeyKey, key), sess.Title)...)
-		ctx.Breadcrumbs = bc
-
 		return tmpl(templates.StandupWorkspace(sess, ctx, w))
 	})
 }

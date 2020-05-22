@@ -27,8 +27,8 @@ func (s *Service) UpdateRecord(r *Record) error {
 	return err
 }
 
-func (s *Service) List(params *query.Params) ([]*Record, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, &query.Ordering{Column: "created", Asc: false})
+func (s *Service) List(params *query.Params) (Records, error) {
+	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAuth, "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
@@ -58,8 +58,8 @@ func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
 	return dto.ToRecord(), nil
 }
 
-func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) ([]*Record, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, &query.Ordering{Column: "created", Asc: false})
+func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) (Records, error) {
+	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
@@ -68,8 +68,8 @@ func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) ([]*Record
 	return toRecords(dtos), nil
 }
 
-func toRecords(dtos []recordDTO) []*Record {
-	ret := make([]*Record, 0, len(dtos))
+func toRecords(dtos []recordDTO) Records {
+	ret := make(Records, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToRecord())
 	}

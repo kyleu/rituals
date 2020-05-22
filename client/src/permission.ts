@@ -7,7 +7,11 @@ namespace permission {
   }
 
   export function setPermissions() {
-    dom.setContent("#model-perm-form", permission.renderPermissions(system.cache.permissions));
+    const teamID = system.cache.session?.teamID;
+    const sprintID = system.cache.session?.sprintID;
+    const permissions = system.cache.permissions;
+    const auths = system.cache.auths;
+    dom.setContent("#model-perm-form", permission.renderPermissions(teamID, sprintID, permissions, auths));
   }
 }
 

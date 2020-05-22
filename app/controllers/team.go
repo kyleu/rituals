@@ -54,20 +54,15 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcTeam.Key + ".list"), nil
 		}
 
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, nil)
-		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "unable to retrieve current auth records"))
-		}
+		permErrors, bc := check(&ctx, ctx.App.Team.Permissions, util.SvcTeam, sess.ID, key, sess.Title, nil, nil)
 
-		permErrors := ctx.App.Team.Permissions.Check(util.SvcEstimate, sess.ID, auths, nil, "", nil)
+		ctx.Breadcrumbs = bc
+
 		if len(permErrors) > 0 {
-			return permErrorTemplate(permErrors, ctx, w)
+			return permErrorTemplate(util.SvcTeam, permErrors, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key+".list"), util.SvcTeam.Key)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key, util.KeyKey, key), sess.Title)...)
-		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.TeamWorkspace(sess, ctx, w))
 	})

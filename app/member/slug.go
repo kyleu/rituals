@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
@@ -18,7 +20,7 @@ func NewSlugFor(db *sqlx.DB, svc string, str string) (string, error) {
 		str = strings.ToLower(randomString(randomStrLength))
 	}
 	slug := slugify(str)
-	q := query.SQLSelect("id", svc, "slug = $1", "", 0, 0)
+	q := query.SQLSelect(util.KeyID, svc, "slug = $1", "", 0, 0)
 
 	x, err := db.Queryx(q, slug)
 	if err != nil {

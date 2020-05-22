@@ -2,7 +2,6 @@ package action
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 
 	"emperror.dev/errors"
@@ -18,6 +17,8 @@ type Service struct {
 	logger logur.Logger
 }
 
+var defaultActionOrdering = query.Orderings{{Column: "occurred", Asc: false}}
+
 func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAction})
 	svc := Service{
@@ -31,14 +32,20 @@ func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 func (s *Service) New(svc string, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
 	id := util.UUID()
 	q := "insert into action (id, svc, model_id, author_id, act, content, note) values ($1, $2, $3, $4, $5, $6, $7)"
-	contentJSON, _ := json.Marshal(content)
-	_, err := s.db.Exec(q, id, svc, modelID, authorID, act, string(contentJSON), note)
+	_, err := s.db.Exec(q, id, svc, modelID, authorID, act, util.ToJSON(content), note)
 
 	if err != nil {
 		return nil, errors.WithStack(errors.Wrap(err, "error saving new ["+svc+"] action"))
 	}
 
 	return s.GetByID(id)
+}
+
+func (s *Service) PostRef(svc string, modelID *uuid.UUID, refSvc string, refID uuid.UUID, userID uuid.UUID, act string, note string) {
+	if modelID != nil {
+		actionContent := map[string]interface{}{util.KeySvc: refSvc, util.KeyID: refID}
+		s.Post(svc, *modelID, userID, act, actionContent, note)
+	}
 }
 
 func (s *Service) Post(svc string, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) {
@@ -50,8 +57,8 @@ func (s *Service) Post(svc string, modelID uuid.UUID, authorID uuid.UUID, act st
 	}()
 }
 
-func (s *Service) List(params *query.Params) ([]*Action, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
+func (s *Service) List(params *query.Params) (Actions, error) {
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, defaultActionOrdering...)
 
 	var dtos []actionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset))
@@ -78,8 +85,8 @@ func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 	return dto.ToAction(), nil
 }
 
-func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) ([]*Action, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
+func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) (Actions, error) {
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, defaultActionOrdering...)
 
 	var dtos []actionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset), id)
@@ -91,8 +98,8 @@ func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) ([]*Action, er
 	return toActions(dtos), nil
 }
 
-func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Params) ([]*Action, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, &query.Ordering{Column: "occurred", Asc: false})
+func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Params) (Actions, error) {
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, defaultActionOrdering...)
 
 	var dtos []actionDTO
 
@@ -106,8 +113,8 @@ func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Par
 	return toActions(dtos), nil
 }
 
-func toActions(dtos []actionDTO) []*Action {
-	ret := make([]*Action, 0, len(dtos))
+func toActions(dtos []actionDTO) Actions {
+	ret := make(Actions, 0, len(dtos))
 
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToAction())

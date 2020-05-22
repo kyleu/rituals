@@ -3,11 +3,11 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.KeyReport, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyReport, util.KeyID, "ID", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyReport, "d", "Date", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyReport, "authorID", "Author", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyReport, "content", "Content", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyReport, "created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyReport, util.KeyCreated, "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
 	"net/http"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 

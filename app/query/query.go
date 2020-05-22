@@ -5,6 +5,8 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"logur.dev/logur"
 )
 
@@ -13,9 +15,14 @@ type Ordering struct {
 	Asc    bool   `json:"asc"`
 }
 
+type Orderings []*Ordering
+
+var DefaultCreatedOrdering = Orderings{{Column: util.KeyCreated, Asc: false}}
+var DefaultMCreatedOrdering = Orderings{{Column: "m." + util.KeyCreated, Asc: false}}
+
 type Params struct {
 	Key       string
-	Orderings []*Ordering
+	Orderings Orderings
 	Limit     int
 	Offset    int
 }
@@ -56,8 +63,8 @@ func (p *Params) OrderByString() string {
 		if !o.Asc {
 			dir = " desc"
 		}
-
-		ret[i] = o.Column + dir
+		snake := util.ToSnakeCase(o.Column)
+		ret[i] = snake + dir
 	}
 
 	return strings.Join(ret, ", ")
@@ -101,7 +108,7 @@ func (p *Params) ToQueryString(u *url.URL) string {
 
 func (p *Params) Filtered(logger logur.Logger) *Params {
 	if len(p.Orderings) > 0 {
-		allowed := make([]*Ordering, 0)
+		allowed := make(Orderings, 0)
 
 		for _, o := range p.Orderings {
 			containsCol := false
@@ -120,7 +127,8 @@ func (p *Params) Filtered(logger logur.Logger) *Params {
 			if containsCol {
 				allowed = append(allowed, o)
 			} else {
-				logger.Warn("no column [" + o.Column + "] available in allowed columns for [" + p.Key + "]")
+				msg := "no column [%v] for [%v] available in allowed columns [%v]"
+				logger.Warn(fmt.Sprintf(msg, o.Column, p.Key, strings.Join(available, ", ")))
 			}
 		}
 

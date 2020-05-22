@@ -32,7 +32,7 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	return s.GetReportByID(id)
 }
 
-var defaultReportOrdering = []*query.Ordering{{Column: "d", Asc: false}, {Column: "created", Asc: false}}
+var defaultReportOrdering = query.Orderings{{Column: "d", Asc: false}, {Column: util.KeyCreated, Asc: false}}
 
 func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Report, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyReport, params, defaultReportOrdering...)

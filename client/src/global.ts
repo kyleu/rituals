@@ -12,11 +12,12 @@ namespace system {
     connectTime = 0;
 
     permissions: permission.Permission[] = [];
+    auths: auth.Auth[] = [];
     members: member.Member[] = [];
     online: string[] = [];
 
     public getProfile(): rituals.Profile {
-      if(this.profile === undefined) {
+      if (this.profile === undefined) {
         throw "no active profile";
       }
       return this.profile;
@@ -24,11 +25,11 @@ namespace system {
   }
 
   export function getMemberName(id: string) {
-    const ret = cache.members.filter(m => m.userID === id);
-    if(ret.length === 0) {
-      return id;
+    const ret = cache.members.filter(m => m.userID === id).shift();
+    if (ret) {
+      return ret.name;
     }
-    return ret[0].name;
+    return id;
   }
 
   export const cache = new Cache();

@@ -68,7 +68,7 @@ func initRetro() {
 		graphql.ObjectConfig{
 			Name: "Retro",
 			Fields: graphql.Fields{
-				"id": &graphql.Field{
+				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"slug": &graphql.Field{
@@ -95,7 +95,7 @@ func initRetro() {
 				"categories": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.NewList(graphql.String)),
 				},
-				"created": &graphql.Field{
+				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
 				"members": &graphql.Field{

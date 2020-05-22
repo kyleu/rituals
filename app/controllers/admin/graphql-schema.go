@@ -32,7 +32,8 @@ func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyVoyager, "query")), util.KeyVoyager)...)
+		link := util.AdminLink(util.KeyVoyager, "query")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link), util.KeyVoyager)...)
 		ctx.Breadcrumbs = bc
 		ctx.Title = "GraphQL Voyager"
 		return tmpl(templates.GraphQLVoyager(gql.QueryName, ctx, w))
@@ -47,7 +48,8 @@ func GraphQLVoyagerMutation(w http.ResponseWriter, r *http.Request) {
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyVoyager, "mutation")), util.KeyVoyager)...)
+		link := util.AdminLink(util.KeyVoyager, "mutation")
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link), util.KeyVoyager)...)
 		ctx.Breadcrumbs = bc
 		ctx.Title = "GraphQL Voyager"
 		return tmpl(templates.GraphQLVoyager(gql.MutationName, ctx, w))

@@ -41,6 +41,13 @@ func ProviderFromString(s string) *Provider {
 	return &ProviderGitHub
 }
 
+type Display struct {
+	Provider string `json:"provider"`
+	Email    string `json:"email"`
+}
+
+type Displays []*Display
+
 type Record struct {
 	ID         uuid.UUID
 	UserID     uuid.UUID
@@ -51,6 +58,25 @@ type Record struct {
 	Email      string
 	Picture    string
 	Created    time.Time
+}
+
+type Records []*Record
+
+func (r *Record) ToDisplay() *Display {
+	return &Display{
+		Provider: r.Provider.Key,
+		Email:    r.Email,
+	}
+}
+
+func (es Records) FindByProvider(code string) Records {
+	var ret Records
+	for _, e := range es {
+		if e.Provider.Key == code {
+			ret = append(ret, e)
+		}
+	}
+	return ret
 }
 
 type recordDTO struct {

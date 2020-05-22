@@ -33,19 +33,10 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 }
 
 func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
-	data, err := json.Marshal(message)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error marshalling websocket message"))
-	}
-	return s.Write(connID, string(data))
+	return s.Write(connID, util.ToJSON(message))
 }
 
 func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid.UUID) error {
-	data, err := json.Marshal(message)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error marshalling websocket message"))
-	}
-
 	conns, ok := s.channels[channel]
 	if !ok {
 		return nil
@@ -57,7 +48,7 @@ func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid
 			connID := conn
 
 			go func() {
-				_ = s.Write(connID, string(data))
+				_ = s.Write(connID, util.ToJSON(message))
 			}()
 		}
 	}

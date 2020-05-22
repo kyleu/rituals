@@ -1,4 +1,4 @@
-<%: func AuthSigninLink(p *auth.Provider, current []*auth.Record, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AuthSigninLink(p *auth.Provider, current auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <li>
   <% if len(current) == 0 { %>
     <a class="<%= ctx.Profile.LinkClass() %> profile-link uk-icon-link signin-icon" data-uk-icon="icon: <%= p.Icon %>" href="<%= ctx.Route(`auth.submit`, `key`, p.Key) %>"></a>

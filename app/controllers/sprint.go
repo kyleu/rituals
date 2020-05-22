@@ -3,10 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/kyleu/rituals.dev/app/controllers/act"
-	"github.com/kyleu/rituals.dev/app/team"
-
 	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/app/controllers/act"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
@@ -60,24 +58,15 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcSprint.Key + ".list"), nil
 		}
 
-		var tm *team.Session
-		var tmTitle string
-		if sess.TeamID != nil {
-			tm, _ = ctx.App.Team.GetByID(*sess.TeamID)
-			tmTitle = tm.Title
-		}
+		permErrors, bc := check(&ctx, ctx.App.Sprint.Permissions, util.SvcSprint, sess.ID, key, sess.Title, sess.TeamID, nil)
 
-		auths, currTeams, err := authsAndTeams(ctx, sess.TeamID)
-		permErrors := ctx.App.Sprint.Permissions.Check(util.SvcEstimate, sess.ID, auths, sess.TeamID, tmTitle, currTeams)
+		ctx.Breadcrumbs = bc
+
 		if len(permErrors) > 0 {
-			return permErrorTemplate(permErrors, ctx, w)
+			return permErrorTemplate(util.SvcSprint, permErrors, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		bc := web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, util.KeyKey, key), sess.Title)...)
-		ctx.Breadcrumbs = bc
-
 		return tmpl(templates.SprintWorkspace(sess, ctx, w))
 	})
 }

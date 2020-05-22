@@ -1,13 +1,13 @@
-<%: func AdminRetroTable(retros []*retro.Session, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminRetroTable(retros retro.Sessions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.SvcRetro.Key, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcRetro.Key, util.KeyID, "ID", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcRetro.Key, "slug", "Slug", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcRetro.Key, "title", "Title", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcRetro.Key, "owner", "Owner", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.SvcRetro.Key, "created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcRetro.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

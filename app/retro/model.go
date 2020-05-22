@@ -60,12 +60,7 @@ type Session struct {
 	Created    time.Time  `json:"created"`
 }
 
-func (s *Session) GetSlug() string {
-	return s.Slug
-}
-func (s *Session) GetTitle() string {
-	return s.Title
-}
+type Sessions []*Session
 
 func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) Session {
 	return Session{

@@ -38,7 +38,8 @@ func InvitationDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = sess.Key
 		bc := adminBC(ctx, util.KeyInvitation, "invitations")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyInvitation, util.KeyDetail), util.KeyKey, key), key)...)
+		link := util.AdminLink(util.KeyInvitation, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyKey, key), key)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminInvitationDetail(sess, ctx, w))

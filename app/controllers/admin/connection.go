@@ -34,7 +34,7 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 
 func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		connectionID := util.GetUUIDPointer(mux.Vars(r), "id")
+		connectionID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if connectionID == nil {
 			return "", errors.New("invalid connection id")
 		}
@@ -44,7 +44,9 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = connection.ID.String()
 		bc := adminBC(ctx, util.KeyConnection, "connections")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyConnection, util.KeyDetail), "id", connectionID.String()), connectionID.String()[0:8])...)
+		link := util.AdminLink(util.KeyConnection, util.KeyDetail)
+		str := connectionID.String()
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		msg := socket.Message{Svc: util.SvcSystem.Key, Cmd: socket.ServerCmdPong, Param: nil}
@@ -55,7 +57,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		connectionID := util.GetUUIDPointer(mux.Vars(r), "id")
+		connectionID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if connectionID == nil {
 			return "", errors.New("invalid connection id")
 		}
@@ -64,7 +66,7 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 
-		svc := r.Form.Get("svc")
+		svc := r.Form.Get(util.KeySvc)
 		cmd := r.Form.Get("cmd")
 		paramString := r.Form.Get("param")
 		var param []map[string]interface{}
@@ -77,7 +79,9 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = connectionID.String()
 		bc := adminBC(ctx, util.KeyConnection, "connections")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyConnection, util.KeyDetail), "id", connectionID.String()), connectionID.String()[0:8])...)
+		link := util.AdminLink(util.KeyConnection, util.KeyDetail)
+		str := connectionID.String()
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))

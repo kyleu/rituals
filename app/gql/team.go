@@ -42,7 +42,7 @@ func initTeam() {
 		graphql.ObjectConfig{
 			Name: "Team",
 			Fields: graphql.Fields{
-				"id": &graphql.Field{
+				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"slug": &graphql.Field{
@@ -54,7 +54,7 @@ func initTeam() {
 				"owner": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"created": &graphql.Field{
+				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
 				"members": &graphql.Field{

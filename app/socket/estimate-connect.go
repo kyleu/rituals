@@ -4,6 +4,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -13,15 +14,16 @@ import (
 )
 
 type EstimateSessionJoined struct {
-	Profile     *util.Profile            `json:"profile"`
-	Session     *estimate.Session        `json:"session"`
-	Permissions []*permission.Permission `json:"permissions"`
-	Team        *team.Session            `json:"team"`
-	Sprint      *sprint.Session          `json:"sprint"`
-	Members     []*member.Entry          `json:"members"`
-	Online      []uuid.UUID              `json:"online"`
-	Stories     []*estimate.Story        `json:"stories"`
-	Votes       []*estimate.Vote         `json:"votes"`
+	Profile     *util.Profile          `json:"profile"`
+	Session     *estimate.Session      `json:"session"`
+	Auths       auth.Displays          `json:"auths"`
+	Permissions permission.Permissions `json:"permissions"`
+	Team        *team.Session          `json:"team"`
+	Sprint      *sprint.Session        `json:"sprint"`
+	Members     member.Entries         `json:"members"`
+	Online      []uuid.UUID            `json:"online"`
+	Stories     []*estimate.Story      `json:"stories"`
+	Votes       []*estimate.Vote       `json:"votes"`
 }
 
 func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -54,13 +56,11 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		}
 		return nil
 	}
-	conn.Svc = ch.Svc
-	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	entry := s.estimates.Members.Register(ch.ID, userID)
 	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
 	perms := s.estimates.Permissions.GetByModelID(ch.ID, nil)
+	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
 	members := s.estimates.Members.GetByModelID(ch.ID, nil)
 
 	stories, err := s.estimates.GetStories(ch.ID, nil)
@@ -73,12 +73,25 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return errors.WithStack(errors.Wrap(err, "error finding votes"))
 	}
 
+	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcEstimate, ch.ID)
+	if err != nil {
+		return err
+	}
+	if len(permErrors) > 0 {
+		return s.sendPermErrors(util.SvcEstimate, ch, permErrors)
+	}
+
+	conn.Svc = ch.Svc
+	conn.ModelID = &ch.ID
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
+
 	msg := Message{
 		Svc: util.SvcEstimate.Key,
 		Cmd: ServerCmdSessionJoined,
 		Param: EstimateSessionJoined{
 			Profile:     &conn.Profile,
 			Session:     sess,
+			Auths:       displays,
 			Permissions: perms,
 			Team:        getTeamOpt(s, sess.TeamID),
 			Sprint:      getSprintOpt(s, sess.SprintID),
@@ -89,23 +102,5 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		},
 	}
 
-	err = s.WriteMessage(conn.ID, &msg)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial estimate message"))
-	}
-
-	if sprintEntry != nil {
-		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint.Key, ID: *sess.SprintID}, sprintEntry, conn.ID)
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing member update to sprint"))
-		}
-	}
-
-	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing member update"))
-	}
-
-	err = s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, true)
-	return errors.WithStack(errors.Wrap(err, "error writing online update"))
+	return s.sendInitial(ch, conn, entry, msg, sess.SprintID, sprintEntry)
 }

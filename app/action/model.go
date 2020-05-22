@@ -58,6 +58,8 @@ func (a *Action) ContentJSON() (string, error) {
 	return string(bytes), nil
 }
 
+type Actions []*Action
+
 type actionDTO struct {
 	ID       uuid.UUID `db:"id"`
 	Svc      string    `db:"svc"`

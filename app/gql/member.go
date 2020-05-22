@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 )
 
@@ -41,7 +42,7 @@ func initMember() {
 						return p.Source.(*member.Entry).Role.Key, nil
 					},
 				},
-				"created": &graphql.Field{
+				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
 			},

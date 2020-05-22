@@ -51,8 +51,8 @@ namespace sprint {
 
   function setSprintDetail(detail: Detail) {
     cache.detail = detail;
-    const s = detail.startDate?.length == 0 ? undefined : new Date(detail.startDate);
-    const e = detail.endDate?.length == 0 ? undefined : new Date(detail.endDate);
+    const s = detail.startDate?.length === 0 ? undefined : new Date(detail.startDate);
+    const e = detail.endDate?.length === 0 ? undefined : new Date(detail.endDate);
     dom.setContent("#sprint-date-display", renderSprintDates(s, e));
     dom.setValue("#sprint-start-date-input", s ? date.dateToYMD(s) : "");
     dom.setValue("#sprint-end-date-input", e ? date.dateToYMD(e) : "");

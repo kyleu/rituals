@@ -30,7 +30,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 
 func RetroDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		retroID := util.GetUUIDPointer(mux.Vars(r), "id")
+		retroID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if retroID == nil {
 			return "", errors.New("invalid retro id")
 		}
@@ -47,7 +47,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 
 		members := ctx.App.Retro.Members.GetByModelID(*retroID, params.Get(util.KeyMember, ctx.Logger))
-		perms := ctx.App.Team.Permissions.GetByModelID(*retroID, params.Get(util.KeyPermission, ctx.Logger))
+		perms := ctx.App.Retro.Permissions.GetByModelID(*retroID, params.Get(util.KeyPermission, ctx.Logger))
 
 		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, *retroID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
@@ -56,7 +56,8 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcRetro.Key, util.KeyDetail), "id", retroID.String()), sess.Slug)...)
+		link := util.AdminLink(util.SvcRetro.Key, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, retroID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminRetroDetail(sess, members, perms, actions, params, ctx, w))

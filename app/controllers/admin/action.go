@@ -30,7 +30,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 
 func ActionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		actionID := util.GetUUIDPointer(mux.Vars(r), "id")
+		actionID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if actionID == nil {
 			return "", errors.New("invalid action id")
 		}
@@ -55,7 +55,9 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = user.Name
 		bc := adminBC(ctx, util.KeyAction, "actions")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyAction, util.KeyDetail), "id", actionID.String()), actionID.String()[0:8])...)
+		link := util.AdminLink(util.KeyAction, util.KeyDetail)
+		s := actionID.String()
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, s), s[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminActionDetail(a, user, ctx, w))

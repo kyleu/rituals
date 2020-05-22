@@ -29,6 +29,7 @@ namespace rituals {
     profile: Profile;
     session: Session;
     permissions: permission.Permission[];
+    auths: auth.Auth[];
     members: member.Member[];
     online: string[];
   }
@@ -113,6 +114,7 @@ namespace rituals {
     system.cache.profile = param.profile;
 
     system.cache.permissions = param.permissions;
+    system.cache.auths = param.auths;
     permission.setPermissions();
 
     system.cache.members = param.members;
@@ -136,12 +138,13 @@ namespace rituals {
 
     lc.innerHTML = "";
     if(spr) {
-      lc.appendChild(sprint.renderSprintLink(spr))
+      lc.appendChild(sprint.renderSprintLink(spr));
       wc.style.display = "block";
       dom.req("#sprint-warning-name").innerText = spr.title;
     } else {
       wc.style.display = "none";
     }
+    permission.setPermissions();
   }
 
   export function setTeam(tm: team.Detail | undefined) {
@@ -149,13 +152,14 @@ namespace rituals {
     const container = dom.req("#team-link-container");
     container.innerHTML = "";
     if(tm) {
-      container.appendChild(team.renderTeamLink(tm))
+      container.appendChild(team.renderTeamLink(tm));
     }
+    permission.setPermissions();
   }
 
   export function showWelcomeMessage(count: number) {
-    if (count == 1) {
-      setTimeout(() => events.openModal('welcome'), 300);
+    if (count === 1) {
+      setTimeout(() => events.openModal("welcome"), 300);
     }
   }
 }

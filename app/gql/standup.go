@@ -68,7 +68,7 @@ func initStandup() {
 		graphql.ObjectConfig{
 			Name: "Standup",
 			Fields: graphql.Fields{
-				"id": &graphql.Field{
+				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"slug": &graphql.Field{
@@ -92,7 +92,7 @@ func initStandup() {
 						return p.Source.(*standup.Session).Status.Key, nil
 					},
 				},
-				"created": &graphql.Field{
+				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
 				"members": &graphql.Field{

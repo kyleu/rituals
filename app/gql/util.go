@@ -15,14 +15,14 @@ var graphQLInitialized = false
 type Callback func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error)
 
 func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger logur.Logger) *query.Params {
-	orderings := make([]*query.Ordering, 0)
+	orderings := make(query.Orderings, 0)
 	o, ok := params.Args["orders"]
 	if ok {
 		for _, x := range o.([]interface{}) {
 			m := x.(map[string]interface{})
 			col := m["col"].(string)
-
-			orderings = append(orderings, &query.Ordering{Column: col, Asc: m["asc"].(bool)})
+			var defaultOrdering = query.Orderings{{Column: col, Asc: m["asc"].(bool)}}
+			orderings = append(orderings, defaultOrdering...)
 		}
 	}
 

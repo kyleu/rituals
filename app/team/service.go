@@ -56,8 +56,8 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 	return &model, nil
 }
 
-func (s *Service) List(params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, &query.Ordering{Column: "created", Asc: false})
+func (s *Service) List(params *query.Params) (Sessions, error) {
+	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.SvcTeam.Key, "", params.OrderByString(), params.Limit, params.Offset))
 	if err != nil {
@@ -90,8 +90,8 @@ func (s *Service) GetBySlug(slug string) (*Session, error) {
 	return dto.ToSession(), nil
 }
 
-func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, &query.Ordering{Column: "created", Asc: false})
+func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) (Sessions, error) {
+	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.SvcTeam.Key, "owner = $1", params.OrderByString(), params.Limit, params.Offset), userID)
 	if err != nil {
@@ -100,8 +100,8 @@ func (s *Service) GetByOwner(userID uuid.UUID, params *query.Params) ([]*Session
 	return toSessions(dtos), nil
 }
 
-func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, &query.Ordering{Column: "m.created", Asc: false})
+func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) (Sessions, error) {
+	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, query.DefaultMCreatedOrdering...)
 	var dtos []sessionDTO
 	q := query.SQLSelect("x.*", "team x join team_member m on x.id = m.team_id", "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, userID)
@@ -121,8 +121,8 @@ func (s *Service) GetIdsByMember(userID uuid.UUID) ([]uuid.UUID, error) {
 	return ids, nil
 }
 
-func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) ([]*Session, error) {
-	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, &query.Ordering{Column: "created", Asc: false})
+func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) (Sessions, error) {
+	params = query.ParamsWithDefaultOrdering(util.SvcTeam.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
 	q := query.SQLSelect("*", util.SvcTeam.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, sprintID)
@@ -147,8 +147,8 @@ func (s *Service) GetByIDPointer(teamID *uuid.UUID) *Session {
 	return tm
 }
 
-func toSessions(dtos []sessionDTO) []*Session {
-	ret := make([]*Session, 0, len(dtos))
+func toSessions(dtos []sessionDTO) Sessions {
+	ret := make(Sessions, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToSession())
 	}

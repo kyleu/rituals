@@ -1,4 +1,4 @@
-<%: func AdminEstimateDetail(model *estimate.Session, members []*member.Entry, perms []*permission.Permission, stories []*estimate.Story, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminEstimateDetail(model *estimate.Session, members member.Entries, perms permission.Permissions, stories []*estimate.Story, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 

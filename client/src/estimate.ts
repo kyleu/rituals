@@ -106,7 +106,7 @@ namespace estimate {
   export function onStoryUpdate(s: story.Story) {
     const x = preUpdate(s.id);
     x.push(s);
-    if(s.id === estimate.cache.activeStory) {
+    if (s.id === estimate.cache.activeStory) {
       dom.setText("#story-title", s.title);
     }
     story.setStories(x);
@@ -115,7 +115,7 @@ namespace estimate {
   export function onStoryRemove(id: string) {
     const x = preUpdate(id);
     story.setStories(x);
-    if(id === estimate.cache.activeStory) {
+    if (id === estimate.cache.activeStory) {
       UIkit.modal("#modal-story").hide();
     }
     UIkit.notification("story has been deleted", {status: "success", pos: "top-right"});

@@ -4,6 +4,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -15,15 +16,16 @@ import (
 )
 
 type TeamSessionJoined struct {
-	Profile     *util.Profile            `json:"profile"`
-	Session     *team.Session            `json:"session"`
-	Permissions []*permission.Permission `json:"permissions"`
-	Members     []*member.Entry          `json:"members"`
-	Online      []uuid.UUID              `json:"online"`
-	Sprints     []*sprint.Session        `json:"sprints"`
-	Estimates   []*estimate.Session      `json:"estimates"`
-	Standups    []*standup.Session       `json:"standups"`
-	Retros      []*retro.Session         `json:"retros"`
+	Profile     *util.Profile          `json:"profile"`
+	Session     *team.Session          `json:"session"`
+	Permissions permission.Permissions `json:"permissions"`
+	Auths       auth.Displays          `json:"auths"`
+	Members     member.Entries         `json:"members"`
+	Online      []uuid.UUID            `json:"online"`
+	Sprints     sprint.Sessions        `json:"sprints"`
+	Estimates   estimate.Sessions      `json:"estimates"`
+	Standups    standup.Sessions       `json:"standups"`
+	Retros      retro.Sessions         `json:"retros"`
 }
 
 func onTeamConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -57,13 +59,22 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		return nil
 	}
 
+	entry := s.teams.Members.Register(ch.ID, userID)
+	perms := s.teams.Permissions.GetByModelID(ch.ID, nil)
+	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
+	members := s.teams.Members.GetByModelID(ch.ID, nil)
+
+	permErrors, err := s.check(conn.Profile.UserID, auths, nil, nil, util.SvcTeam, ch.ID)
+	if err != nil {
+		return err
+	}
+	if len(permErrors) > 0 {
+		return s.sendPermErrors(util.SvcTeam, ch, permErrors)
+	}
+
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
-	entry := s.teams.Members.Register(ch.ID, userID)
-	perms := s.teams.Permissions.GetByModelID(ch.ID, nil)
-	members := s.teams.Members.GetByModelID(ch.ID, nil)
 
 	sprints, err := s.sprints.GetByTeamID(ch.ID, nil)
 	if err != nil {
@@ -89,6 +100,7 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 			Profile:     &conn.Profile,
 			Session:     sess,
 			Permissions: perms,
+			Auths:       displays,
 			Members:     members,
 			Online:      s.GetOnline(ch),
 			Sprints:     sprints,
@@ -98,16 +110,5 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		},
 	}
 
-	err = s.WriteMessage(conn.ID, &msg)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial team message"))
-	}
-
-	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing member update"))
-	}
-
-	err = s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, true)
-	return errors.WithStack(errors.Wrap(err, "error writing online update"))
+	return s.sendInitial(ch, conn, entry, msg, nil, nil)
 }

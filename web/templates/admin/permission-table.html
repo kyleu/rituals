@@ -1,4 +1,4 @@
-<%: func AdminPermissionTable(members []*permission.Permission, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminPermissionTable(members permission.Permissions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
@@ -6,7 +6,7 @@
       <% ComponentTableHeader(util.KeyPermission, "k", "K", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyPermission, "v", "V", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyPermission, "access", "Access", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyPermission, "created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyPermission, util.KeyCreated, "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

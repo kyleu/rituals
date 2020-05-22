@@ -32,7 +32,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 
 func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		estimateID := util.GetUUIDPointer(mux.Vars(r), "id")
+		estimateID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if estimateID == nil {
 			return "", errors.New("invalid estimate id")
 		}
@@ -49,7 +49,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 
 		members := ctx.App.Estimate.Members.GetByModelID(*estimateID, params.Get(util.KeyMember, ctx.Logger))
-		perms := ctx.App.Team.Permissions.GetByModelID(*estimateID, params.Get(util.KeyPermission, ctx.Logger))
+		perms := ctx.App.Estimate.Permissions.GetByModelID(*estimateID, params.Get(util.KeyPermission, ctx.Logger))
 
 		stories, err := ctx.App.Estimate.GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
 		if err != nil {
@@ -62,7 +62,8 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcEstimate.Key, util.KeyDetail), "id", estimateID.String()), sess.Slug)...)
+		link := util.AdminLink(util.SvcEstimate.Key, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, estimateID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminEstimateDetail(sess, members, perms, stories, actions, params, ctx, w))
@@ -71,7 +72,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 func StoryDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		storyID := util.GetUUIDPointer(mux.Vars(r), "id")
+		storyID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if storyID == nil {
 			return "", errors.New("invalid story id")
 		}
@@ -101,8 +102,11 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = fmt.Sprint(sess.Slug, ":", story.Idx)
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcEstimate.Key, util.KeyDetail), "id", story.EstimateID.String()), sess.Slug)...)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyStory, util.KeyDetail), "id", storyID.String()), fmt.Sprint("story ", story.Idx))...)
+		el := util.AdminLink(util.SvcEstimate.Key, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(el, util.KeyID, story.EstimateID.String()), sess.Slug)...)
+		sl := util.AdminLink(util.KeyStory, util.KeyDetail)
+		str := fmt.Sprint("story ", story.Idx)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(sl, util.KeyID, storyID.String()), str)...)
 		ctx.Breadcrumbs = bc
 		return tmpl(templates.AdminStoryDetail(story, votes, params, ctx, w))
 	})

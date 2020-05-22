@@ -30,7 +30,7 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 
 func AuthDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		authID := util.GetUUIDPointer(mux.Vars(r), "id")
+		authID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if authID == nil {
 			return "", errors.New("invalid auth id")
 		}
@@ -56,7 +56,8 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = user.Name
 		bc := adminBC(ctx, util.KeyAuth, "auths")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyAuth, util.KeyDetail), "id", authID.String()), authID.String()[0:8])...)
+		link := util.AdminLink(util.KeyAuth, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, authID.String()), authID.String()[0:8])...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminAuthDetail(record, user, ctx, w))

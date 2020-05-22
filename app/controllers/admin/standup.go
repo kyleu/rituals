@@ -32,7 +32,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 
 func StandupDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		standupID := util.GetUUIDPointer(mux.Vars(r), "id")
+		standupID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if standupID == nil {
 			return "", errors.New("invalid standup id")
 		}
@@ -49,7 +49,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 
 		members := ctx.App.Standup.Members.GetByModelID(*standupID, params.Get(util.KeyMember, ctx.Logger))
-		perms := ctx.App.Team.Permissions.GetByModelID(*standupID, params.Get(util.KeyPermission, ctx.Logger))
+		perms := ctx.App.Standup.Permissions.GetByModelID(*standupID, params.Get(util.KeyPermission, ctx.Logger))
 
 		reports, err := ctx.App.Standup.GetReports(*standupID, params.Get(util.KeyReport, ctx.Logger))
 		if err != nil {
@@ -62,7 +62,8 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcStandup.Key, util.KeyDetail), "id", standupID.String()), sess.Slug)...)
+		link := util.AdminLink(util.SvcStandup.Key, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, standupID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminStandupDetail(sess, members, perms, reports, actions, params, ctx, w))

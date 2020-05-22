@@ -51,7 +51,7 @@ func (s *Service) New(key string, k Type, v string, src *uuid.UUID, tgt *uuid.UU
 }
 
 func (s *Service) List(params *query.Params) ([]*Invitation, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyInvitation, params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyInvitation, params, query.DefaultCreatedOrdering...)
 
 	var dtos []invitationDTO
 

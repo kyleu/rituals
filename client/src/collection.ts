@@ -20,11 +20,19 @@ namespace collection {
         res.push(group);
         group = new Group<T>(groupName);
       }
-      group.members.push(o)
+      group.members.push(o);
     });
     if (group != null) {
       res.push(group);
     }
-    return res
+    return res;
+  }
+
+  export function find<T>(list: T[], f: (x: T) => boolean): T | undefined {
+    for (const x of list) {
+      if (f(x)) {
+        return x;
+      }
+    }
   }
 }

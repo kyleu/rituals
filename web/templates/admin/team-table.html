@@ -1,13 +1,13 @@
-<%: func AdminTeamTable(teams []*team.Session, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminTeamTable(teams team.Sessions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.SvcTeam.Key, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcTeam.Key, util.KeyID, "ID", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcTeam.Key, "slug", "Slug", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcTeam.Key, "title", "Title", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcTeam.Key, "owner", "Owner", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.SvcTeam.Key, "created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcTeam.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

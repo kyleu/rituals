@@ -19,15 +19,13 @@ namespace member {
   }
 
   export function setMembers() {
-    const self = system.cache.members.filter(isSelf);
-    if (self.length === 1) {
-      dom.setText("#member-self .member-name", self[0].name);
-      dom.setValue("#self-name-input", self[0].name);
-      dom.setText("#member-self .member-role", self[0].role);
-    } else if (self.length === 0) {
-      console.warn("self not found among members");
+    const self = system.cache.members.filter(isSelf).shift();
+    if (self) {
+      dom.setText("#member-self .member-name", self.name);
+      dom.setValue("#self-name-input", self.name);
+      dom.setText("#member-self .member-role", self.role);
     } else {
-      console.warn("multiple self entries found among members");
+      console.warn("self not found among members");
     }
 
     const others = system.cache.members.filter(x => !isSelf(x));
@@ -40,11 +38,11 @@ namespace member {
       UIkit.modal("#modal-self").hide();
     }
     let x = system.cache.members;
-    const curr = x.filter(m => m.userID === member.userID);
-    const nameChanged = curr.length === 1 && curr[0].name !== member.name;
+    const curr = x.filter(m => m.userID === member.userID).shift();
+    const nameChanged = curr?.name !== member.name;
 
     x = x.filter(m => m.userID !== member.userID);
-    if(x.length === system.cache.members.length) {
+    if (x.length === system.cache.members.length) {
       UIkit.notification(`${member.name} has joined`, {status: "success", pos: "top-right"});
     }
     x.push(member);
@@ -82,7 +80,7 @@ namespace member {
 
   export function onOnlineUpdate(update: OnlineUpdate) {
     if (update.connected) {
-      if (system.cache.online.indexOf(update.userID) === -1) {
+      if (!collection.find(system.cache.online, x => x === update.userID)) {
         system.cache.online.push(update.userID);
       }
     } else {
@@ -95,7 +93,7 @@ namespace member {
     for (const member of system.cache.members) {
       const el = dom.opt(`#member-${member.userID} .online-indicator`);
       if (el) {
-        if (system.cache.online.indexOf(member.userID) === -1) {
+        if (!collection.find(system.cache.online, x => x === member.userID)) {
           el.classList.add("offline");
         } else {
           el.classList.remove("offline");
@@ -116,12 +114,11 @@ namespace member {
       console.warn("no active member");
       return undefined;
     }
-    const curr = system.cache.members.filter(x => x.userID === system.cache.activeMember);
-    if (curr.length !== 1) {
+    const curr = system.cache.members.filter(x => x.userID === system.cache.activeMember).shift();
+    if (curr) {
       console.warn(`cannot load active member [${system.cache.activeMember}]`);
-      return undefined;
     }
-    return curr[0];
+    return curr;
   }
 
   export function viewActiveMember() {

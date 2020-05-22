@@ -6,7 +6,7 @@ namespace profile {
     let colors = document.querySelectorAll(".navbar_swatch");
     colors.forEach(function(i) {
       i.classList.remove("active");
-    })
+    });
     el.classList.add("active");
   }
 
@@ -24,7 +24,7 @@ namespace profile {
     let colors = document.querySelectorAll(".link_swatch");
     colors.forEach(function(i) {
       i.classList.remove("active");
-    })
+    });
     el.classList.add("active");
   }
 

@@ -31,7 +31,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 
 func SprintDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		sprintID := util.GetUUIDPointer(mux.Vars(r), "id")
+		sprintID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if sprintID == nil {
 			return "", errors.New("invalid sprint id")
 		}
@@ -48,7 +48,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 
 		members := ctx.App.Sprint.Members.GetByModelID(*sprintID, params.Get(util.KeyMember, ctx.Logger))
-		perms := ctx.App.Team.Permissions.GetByModelID(*sprintID, params.Get(util.KeyPermission, ctx.Logger))
+		perms := ctx.App.Sprint.Permissions.GetByModelID(*sprintID, params.Get(util.KeyPermission, ctx.Logger))
 
 		estimates, err := ctx.App.Estimate.GetBySprint(*sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
@@ -69,7 +69,8 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcSprint.Key, util.SvcSprint.Plural)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcSprint.Key, util.KeyDetail), "id", sprintID.String()), sess.Slug)...)
+		link := util.AdminLink(util.SvcSprint.Key, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, sprintID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminSprintDetail(sess, members, perms, estimates, standups, retros, actions, params, ctx, w))

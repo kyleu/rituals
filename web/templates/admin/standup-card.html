@@ -1,4 +1,4 @@
-<%: func AdminStandupCard(standups []*standup.Session, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminStandupCard(standups standup.Sessions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Standups</h3>
   <% if len(standups) == 0 { %>

@@ -9,7 +9,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-var defaultFeedbackOrdering = []*query.Ordering{{Column: "category", Asc: true}, {Column: "idx", Asc: true}, {Column: "created", Asc: false}}
+var defaultFeedbackOrdering = query.Orderings{{Column: "category", Asc: true}, {Column: "idx", Asc: true}, {Column: util.KeyCreated, Asc: false}}
 
 func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) ([]*Feedback, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)

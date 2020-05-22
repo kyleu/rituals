@@ -66,7 +66,7 @@ func initSprint() {
 		graphql.ObjectConfig{
 			Name: "Sprint",
 			Fields: graphql.Fields{
-				"id": &graphql.Field{
+				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"slug": &graphql.Field{
@@ -87,7 +87,7 @@ func initSprint() {
 				"endDate": &graphql.Field{
 					Type: graphql.String,
 				},
-				"created": &graphql.Field{
+				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
 				"members": &graphql.Field{

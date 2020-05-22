@@ -41,6 +41,15 @@ var collection;
         return res;
     }
     collection.groupBy = groupBy;
+    function find(list, f) {
+        for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
+            var x = list_1[_i];
+            if (f(x)) {
+                return x;
+            }
+        }
+    }
+    collection.find = find;
 })(collection || (collection = {}));
 var date;
 (function (date_1) {
@@ -48,7 +57,7 @@ var date;
         var d = date.getDate();
         var m = date.getMonth() + 1;
         var y = date.getFullYear();
-        return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+        return "" + y + "-" + (m <= 9 ? "0" + m : m) + "-" + (d <= 9 ? "0" + d : d);
     }
     date_1.dateToYMD = dateToYMD;
     function dateFromYMD(s) {
@@ -98,16 +107,12 @@ var dom;
     }
     dom.els = els;
     function opt(selector, context) {
-        var res = els(selector, context);
-        if (res.length === 0) {
-            return null;
-        }
-        return res[0];
+        return els(selector, context).shift();
     }
     dom.opt = opt;
     function req(selector, context) {
         var res = opt(selector, context);
-        if (res === null) {
+        if (res === undefined) {
             console.warn("no element found for selector [" + selector + "]");
         }
         return res;
@@ -148,8 +153,8 @@ var dom;
     dom.setValue = setValue;
     function wireTextarea(text) {
         function resize() {
-            text.style.height = 'auto';
-            text.style.height = (text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)) + 'px';
+            text.style.height = "auto";
+            text.style.height = (text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)) + "px";
         }
         function delayedResize() {
             window.setTimeout(resize, 0);
@@ -157,11 +162,11 @@ var dom;
         var x = text.dataset["autoresize"];
         if (x === undefined) {
             text.dataset["autoresize"] = "true";
-            text.addEventListener('change', resize, false);
-            text.addEventListener('cut', delayedResize, false);
-            text.addEventListener('paste', delayedResize, false);
-            text.addEventListener('drop', delayedResize, false);
-            text.addEventListener('keydown', delayedResize, false);
+            text.addEventListener("change", resize, false);
+            text.addEventListener("cut", delayedResize, false);
+            text.addEventListener("paste", delayedResize, false);
+            text.addEventListener("drop", delayedResize, false);
+            text.addEventListener("keydown", delayedResize, false);
             text.focus();
             text.select();
         }
@@ -398,7 +403,7 @@ var feedback;
     function onRemoveFeedback() {
         var id = retro.cache.activeFeedback;
         if (id) {
-            UIkit.modal.confirm('Delete this feedback?').then(function () {
+            UIkit.modal.confirm("Delete this feedback?").then(function () {
                 var msg = { svc: services.retro.key, cmd: command.client.removeFeedback, param: id };
                 socket.send(msg);
                 UIkit.modal("#modal-feedback").hide();
@@ -411,12 +416,11 @@ var feedback;
         if (retro.cache.activeFeedback === undefined) {
             return undefined;
         }
-        var curr = retro.cache.feedback.filter(function (x) { return x.id === retro.cache.activeFeedback; });
-        if (curr.length !== 1) {
+        var curr = retro.cache.feedback.filter(function (x) { return x.id === retro.cache.activeFeedback; }).shift();
+        if (!curr) {
             console.warn("cannot load active Feedback [" + retro.cache.activeFeedback + "]");
-            return undefined;
         }
-        return curr[0];
+        return curr;
     }
     feedback_1.getActiveFeedback = getActiveFeedback;
     function viewActiveFeedback() {
@@ -481,7 +485,7 @@ var feedback;
             return { category: c, feedback: reports };
         }
         var ret = categories.map(toCollection);
-        var extras = feedback.filter(function (r) { return categories.indexOf(r.category) === -1; });
+        var extras = feedback.filter(function (r) { return collection.find(categories, function (x) { return x === r.category; }) === undefined; });
         if (extras.length > 0) {
             ret.push({ category: "unknown", feedback: extras });
         }
@@ -498,6 +502,7 @@ var system;
             this.currentID = "";
             this.connectTime = 0;
             this.permissions = [];
+            this.auths = [];
             this.members = [];
             this.online = [];
         }
@@ -510,11 +515,11 @@ var system;
         return Cache;
     }());
     function getMemberName(id) {
-        var ret = system.cache.members.filter(function (m) { return m.userID === id; });
-        if (ret.length === 0) {
-            return id;
+        var ret = system.cache.members.filter(function (m) { return m.userID === id; }).shift();
+        if (ret) {
+            return ret.name;
         }
-        return ret[0].name;
+        return id;
     }
     system.getMemberName = getMemberName;
     system.cache = new Cache();
@@ -643,17 +648,14 @@ var member;
         return x.userID === system.cache.profile.userID;
     }
     function setMembers() {
-        var self = system.cache.members.filter(isSelf);
-        if (self.length === 1) {
-            dom.setText("#member-self .member-name", self[0].name);
-            dom.setValue("#self-name-input", self[0].name);
-            dom.setText("#member-self .member-role", self[0].role);
-        }
-        else if (self.length === 0) {
-            console.warn("self not found among members");
+        var self = system.cache.members.filter(isSelf).shift();
+        if (self) {
+            dom.setText("#member-self .member-name", self.name);
+            dom.setValue("#self-name-input", self.name);
+            dom.setText("#member-self .member-role", self.role);
         }
         else {
-            console.warn("multiple self entries found among members");
+            console.warn("self not found among members");
         }
         var others = system.cache.members.filter(function (x) { return !isSelf(x); });
         dom.setContent("#member-detail", member_1.renderMembers(others));
@@ -665,8 +667,8 @@ var member;
             UIkit.modal("#modal-self").hide();
         }
         var x = system.cache.members;
-        var curr = x.filter(function (m) { return m.userID === member.userID; });
-        var nameChanged = curr.length === 1 && curr[0].name !== member.name;
+        var curr = x.filter(function (m) { return m.userID === member.userID; }).shift();
+        var nameChanged = (curr === null || curr === void 0 ? void 0 : curr.name) !== member.name;
         x = x.filter(function (m) { return m.userID !== member.userID; });
         if (x.length === system.cache.members.length) {
             UIkit.notification(member.name + " has joined", { status: "success", pos: "top-right" });
@@ -704,7 +706,7 @@ var member;
     member_1.onMemberUpdate = onMemberUpdate;
     function onOnlineUpdate(update) {
         if (update.connected) {
-            if (system.cache.online.indexOf(update.userID) === -1) {
+            if (!collection.find(system.cache.online, function (x) { return x === update.userID; })) {
                 system.cache.online.push(update.userID);
             }
         }
@@ -715,17 +717,20 @@ var member;
     }
     member_1.onOnlineUpdate = onOnlineUpdate;
     function renderOnline() {
-        for (var _i = 0, _a = system.cache.members; _i < _a.length; _i++) {
-            var member_2 = _a[_i];
+        var _loop_1 = function (member_2) {
             var el = dom.opt("#member-" + member_2.userID + " .online-indicator");
             if (el) {
-                if (system.cache.online.indexOf(member_2.userID) === -1) {
+                if (!collection.find(system.cache.online, function (x) { return x === member_2.userID; })) {
                     el.classList.add("offline");
                 }
                 else {
                     el.classList.remove("offline");
                 }
             }
+        };
+        for (var _i = 0, _a = system.cache.members; _i < _a.length; _i++) {
+            var member_2 = _a[_i];
+            _loop_1(member_2);
         }
     }
     function onSubmitSelf() {
@@ -740,12 +745,11 @@ var member;
             console.warn("no active member");
             return undefined;
         }
-        var curr = system.cache.members.filter(function (x) { return x.userID === system.cache.activeMember; });
-        if (curr.length !== 1) {
+        var curr = system.cache.members.filter(function (x) { return x.userID === system.cache.activeMember; }).shift();
+        if (curr) {
             console.warn("cannot load active member [" + system.cache.activeMember + "]");
-            return undefined;
         }
-        return curr[0];
+        return curr;
     }
     function viewActiveMember() {
         var member = getActiveMember();
@@ -760,7 +764,12 @@ var member;
 var permission;
 (function (permission) {
     function setPermissions() {
-        dom.setContent("#model-perm-form", permission.renderPermissions(system.cache.permissions));
+        var _a, _b;
+        var teamID = (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.teamID;
+        var sprintID = (_b = system.cache.session) === null || _b === void 0 ? void 0 : _b.sprintID;
+        var permissions = system.cache.permissions;
+        var auths = system.cache.auths;
+        dom.setContent("#model-perm-form", permission.renderPermissions(teamID, sprintID, permissions, auths));
     }
     permission.setPermissions = setPermissions;
 })(permission || (permission = {}));
@@ -846,7 +855,7 @@ var report;
     function onRemoveReport() {
         var id = standup.cache.activeReport;
         if (id) {
-            UIkit.modal.confirm('Delete this report?').then(function () {
+            UIkit.modal.confirm("Delete this report?").then(function () {
                 var msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
                 socket.send(msg);
                 UIkit.modal("#modal-report").hide();
@@ -860,12 +869,11 @@ var report;
             console.warn("no active report");
             return undefined;
         }
-        var curr = standup.cache.reports.filter(function (x) { return x.id === standup.cache.activeReport; });
-        if (curr.length !== 1) {
+        var curr = standup.cache.reports.filter(function (x) { return x.id === standup.cache.activeReport; }).shift();
+        if (!curr) {
             console.warn("cannot load active report [" + standup.cache.activeReport + "]");
-            return undefined;
         }
-        return curr[0];
+        return curr;
     }
     function viewActiveReport() {
         var profile = system.cache.getProfile();
@@ -875,31 +883,7 @@ var report;
             return;
         }
         dom.setText("#report-title", report.d + " / " + system.getMemberName(report.authorID));
-        var contentEdit = dom.req("#modal-report .content-edit");
-        var contentEditDate = dom.req("#standup-report-edit-date", contentEdit);
-        var contentEditTextarea = dom.req("#standup-report-edit-content", contentEdit);
-        var contentView = dom.req("#modal-report .content-view");
-        var buttonsEdit = dom.req("#modal-report .buttons-edit");
-        var buttonsView = dom.req("#modal-report .buttons-view");
-        if (report.authorID === profile.userID) {
-            contentEdit.style.display = "block";
-            dom.setValue(contentEditDate, report.d);
-            dom.setValue(contentEditTextarea, report.content);
-            dom.wireTextarea(contentEditTextarea);
-            contentView.style.display = "none";
-            dom.setHTML(contentView, "");
-            buttonsEdit.style.display = "block";
-            buttonsView.style.display = "none";
-        }
-        else {
-            contentEdit.style.display = "none";
-            dom.setValue(contentEditDate, "");
-            dom.setValue(contentEditTextarea, "");
-            contentView.style.display = "block";
-            dom.setHTML(contentView, report.html);
-            buttonsEdit.style.display = "none";
-            buttonsView.style.display = "block";
-        }
+        setFor(report, profile.userID);
     }
     report_1.viewActiveReport = viewActiveReport;
     function setReports(reports) {
@@ -913,14 +897,27 @@ var report;
             return s.indexOf(v) === i;
         }
         function toCollection(d) {
-            return {
-                "d": d,
-                "reports": reports.filter(function (r) { return r.d === d; }).sort(function (l, r) { return (l.created > r.created ? -1 : 1); })
-            };
+            var sorted = reports.filter(function (r) { return r.d === d; }).sort(function (l, r) { return (l.created > r.created ? -1 : 1); });
+            return { "d": d, "reports": sorted };
         }
         return reports.map(function (r) { return r.d; }).filter(distinct).sort().reverse().map(toCollection);
     }
     report_1.getReportDates = getReportDates;
+    function setFor(report, userID) {
+        var same = report.authorID === userID;
+        dom.req("#modal-report .content-edit").style.display = same ? "block" : "none";
+        dom.setValue(dom.req("#standup-report-edit-date"), same ? report.d : "");
+        var contentEditTextarea = dom.req("#standup-report-edit-content");
+        dom.setValue(contentEditTextarea, same ? report.content : "");
+        if (same) {
+            dom.wireTextarea(contentEditTextarea);
+        }
+        var contentView = dom.req("#modal-report .content-view");
+        contentView.style.display = same ? "none" : "block";
+        dom.setHTML(contentView, same ? "" : report.html);
+        dom.req("#modal-report .buttons-edit").style.display = same ? "block" : "none";
+        dom.req("#modal-report .buttons-view").style.display = same ? "none" : "block";
+    }
 })(report || (report = {}));
 var retro;
 (function (retro) {
@@ -1070,6 +1067,7 @@ var rituals;
         system.cache.session = param.session;
         system.cache.profile = param.profile;
         system.cache.permissions = param.permissions;
+        system.cache.auths = param.auths;
         permission.setPermissions();
         system.cache.members = param.members;
         system.cache.online = param.online;
@@ -1096,6 +1094,7 @@ var rituals;
         else {
             wc.style.display = "none";
         }
+        permission.setPermissions();
     }
     rituals.setSprint = setSprint;
     function setTeam(tm) {
@@ -1105,11 +1104,12 @@ var rituals;
         if (tm) {
             container.appendChild(team.renderTeamLink(tm));
         }
+        permission.setPermissions();
     }
     rituals.setTeam = setTeam;
     function showWelcomeMessage(count) {
-        if (count == 1) {
-            setTimeout(function () { return events.openModal('welcome'); }, 300);
+        if (count === 1) {
+            setTimeout(function () { return events.openModal("welcome"); }, 300);
         }
     }
     rituals.showWelcomeMessage = showWelcomeMessage;
@@ -1218,8 +1218,8 @@ var sprint;
     function setSprintDetail(detail) {
         var _a, _b;
         sprint.cache.detail = detail;
-        var s = ((_a = detail.startDate) === null || _a === void 0 ? void 0 : _a.length) == 0 ? undefined : new Date(detail.startDate);
-        var e = ((_b = detail.endDate) === null || _b === void 0 ? void 0 : _b.length) == 0 ? undefined : new Date(detail.endDate);
+        var s = ((_a = detail.startDate) === null || _a === void 0 ? void 0 : _a.length) === 0 ? undefined : new Date(detail.startDate);
+        var e = ((_b = detail.endDate) === null || _b === void 0 ? void 0 : _b.length) === 0 ? undefined : new Date(detail.endDate);
         dom.setContent("#sprint-date-display", sprint.renderSprintDates(s, e));
         dom.setValue("#sprint-start-date-input", s ? date.dateToYMD(s) : "");
         dom.setValue("#sprint-end-date-input", e ? date.dateToYMD(e) : "");
@@ -1443,7 +1443,7 @@ var story;
     function onRemoveStory() {
         var id = estimate.cache.activeStory;
         if (id) {
-            UIkit.modal.confirm('Delete this story?').then(function () {
+            UIkit.modal.confirm("Delete this story?").then(function () {
                 var msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
                 socket.send(msg);
                 UIkit.modal("#modal-story").hide();
@@ -1456,12 +1456,11 @@ var story;
         if (estimate.cache.activeStory === undefined) {
             return undefined;
         }
-        var curr = estimate.cache.stories.filter(function (x) { return x.id === estimate.cache.activeStory; });
-        if (curr.length !== 1) {
+        var curr = estimate.cache.stories.filter(function (x) { return x.id === estimate.cache.activeStory; }).shift();
+        if (curr) {
             console.warn("cannot load active story [" + estimate.cache.activeStory + "]");
-            return undefined;
         }
-        return curr[0];
+        return curr;
     }
     story.getActiveStory = getActiveStory;
     function viewActiveStory() {
@@ -1481,7 +1480,7 @@ var story;
         floats.forEach(function (f) { return sum += f; });
         var curr = dom.opt("#story-total");
         var panel = dom.req("#story-list");
-        if (curr !== null) {
+        if (curr !== undefined) {
             panel.removeChild(curr);
         }
         if (sum > 0) {
@@ -1764,45 +1763,61 @@ var permission;
             ":",
             perm.v);
     }
-    function basicPerms(title, perms) {
-        return JSX("div", null,
+    function basicPerms(title, perms, auths) {
+        return JSX("li", null,
             JSX("div", null, title),
             perms.map(renderPerm));
     }
-    function teamPerms(perms) {
-        return basicPerms("Team", perms);
+    function teamPerms(teamID, perms) {
+        if (teamID) {
+            return basicPerms("Team", perms, []);
+        }
+        return JSX("span", null);
     }
-    function sprintPerms(perms) {
-        return basicPerms("Sprint", perms);
+    function sprintPerms(sprintID, perms) {
+        if (sprintID) {
+            return basicPerms("Sprint", perms, []);
+        }
+        return JSX("span", null);
     }
     function invitationPerms(perms) {
-        return basicPerms("Invitation", perms);
+        return basicPerms("Invitation", perms, []);
     }
-    function googlePerms(perms) {
-        return basicPerms("Google", perms);
+    function googlePerms(perms, auths) {
+        return basicPerms("Google", perms, auths);
     }
-    function githubPerms(perms) {
-        return basicPerms("GitHub", perms);
+    function githubPerms(perms, auths) {
+        return basicPerms("GitHub", perms, auths);
     }
-    function slackPerms(perms) {
-        return basicPerms("Slack", perms);
+    function slackPerms(perms, auths) {
+        return basicPerms("Slack", perms, auths);
     }
-    function renderPermissions(perms) {
+    function dumpAuth(auths) {
+        if (auths.length === 0) {
+            return JSX("li", null, "Not signed in");
+        }
+        return JSX("li", null,
+            "Signed in on ",
+            auths.map(function (x) { return x.provider; }).join(", "));
+    }
+    function renderPermissions(teamID, sprintID, perms, auths) {
+        var p = auths.map(function (x) { return x.provider; });
         var g = collection.groupBy(perms, function (x) { return x.k; });
-        return JSX("ul", { "class": "uk-list uk-list-divider" },
-            teamPerms(findGroup("team", g)),
-            sprintPerms(findGroup("sprint", g)),
+        return JSX("ul", { "class": "uk-list" },
+            teamPerms(teamID, findGroup("team", g)),
+            sprintPerms(sprintID, findGroup("sprint", g)),
             invitationPerms(findGroup("invitation", g)),
-            googlePerms(findGroup("google", g)),
-            githubPerms(findGroup("github", g)),
-            slackPerms(findGroup("slack", g)));
+            googlePerms(findGroup("google", g), auths.filter(function (a) { return a.provider == "google"; })),
+            githubPerms(findGroup("github", g), auths.filter(function (a) { return a.provider == "google"; })),
+            slackPerms(findGroup("slack", g), auths.filter(function (a) { return a.provider == "google"; })),
+            dumpAuth(auths));
     }
     permission.renderPermissions = renderPermissions;
     function findGroup(key, groups) {
         var ret = [];
         for (var _i = 0, groups_1 = groups; _i < groups_1.length; _i++) {
             var g = groups_1[_i];
-            if (g.key == key) {
+            if (g.key === key) {
                 ret = g.members;
                 break;
             }

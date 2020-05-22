@@ -27,8 +27,7 @@
           </tr>
           <tr>
             <th>Content</th>
-            <% j, _ := model.ContentJSON() %>
-            <td><pre><%= j %></pre></td>
+            <td><pre><%= util.ToJSON(model) %></pre></td>
           </tr>
           <tr>
             <th>Note</th>

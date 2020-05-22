@@ -39,14 +39,14 @@ namespace standup {
         setStandupDetail(param as Detail);
         break;
       case command.server.teamUpdate:
-        const tm = param as team.Detail | undefined
+        const tm = param as team.Detail | undefined;
         if (standup.cache.detail) {
           standup.cache.detail.teamID = tm?.id;
         }
         rituals.setTeam(tm);
         break;
       case command.server.sprintUpdate:
-        const x = param as sprint.Detail | undefined
+        const x = param as sprint.Detail | undefined;
         if (standup.cache.detail) {
           standup.cache.detail.sprintID = x?.id;
         }

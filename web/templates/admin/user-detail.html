@@ -1,4 +1,4 @@
-<%: func AdminUserDetail(user *user.SystemUser, auths []*auth.Record, teams []*team.Session, sprints []*sprint.Session, estimates []*estimate.Session, standups []*standup.Session, retros []*retro.Session, actions []*action.Action, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminUserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 

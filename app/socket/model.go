@@ -1,7 +1,6 @@
 package socket
 
 import (
-	"encoding/json"
 	"fmt"
 	"sync"
 
@@ -43,14 +42,6 @@ type Message struct {
 
 func (m *Message) String() string {
 	return fmt.Sprintf("%s/%s", m.Svc, m.Cmd)
-}
-
-func (m *Message) ParamJSON() string {
-	data, err := json.Marshal(m.Param)
-	if err != nil {
-		return "error: " + err.Error()
-	}
-	return string(data)
 }
 
 type OnlineUpdate struct {

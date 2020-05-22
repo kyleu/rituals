@@ -1,10 +1,10 @@
-<%: func AuthSigninList(auths []*auth.Record, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AuthSigninList(auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div id="signin-card" class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
   <h3 class="uk-card-title">Sign In</h3>
   <ul class="uk-list uk-list-divider uk-margin-top">
     <% for _, p := range auth.AllProviders { %>
       <%
-        var curr []*auth.Record
+        var curr auth.Records
         for _, a := range auths {
           if a.Provider == p {
             curr = append(curr, a)

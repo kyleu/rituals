@@ -31,7 +31,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 func TeamDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		teamID := util.GetUUIDPointer(mux.Vars(r), "id")
+		teamID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if teamID == nil {
 			return "", errors.New("invalid team id")
 		}
@@ -49,7 +49,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		members := ctx.App.Team.Members.GetByModelID(*teamID, params.Get(util.KeyMember, ctx.Logger))
 		perms := ctx.App.Team.Permissions.GetByModelID(*teamID, params.Get(util.KeyPermission, ctx.Logger))
 
-		sprints, err := ctx.App.Sprint.GetByTeamID(*teamID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		sprints, err := ctx.App.Sprint.GetByTeamID(*teamID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
 			return "", err
 		}
@@ -73,7 +73,8 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.SvcTeam.Key, util.KeyDetail), "id", teamID.String()), sess.Slug)...)
+		link := util.AdminLink(util.SvcTeam.Key, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, teamID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminTeamDetail(sess, members, perms, sprints, estimates, standups, retros, actions, params, ctx, w))

@@ -22,11 +22,6 @@ func BreadcrumbsSimple(path string, title string) Breadcrumbs {
 	}
 }
 
-type SlugAndTitle interface {
-	GetSlug() string
-	GetTitle() string
-}
-
 var sessionKey = func() string {
 	x := os.Getenv("SESSION_KEY")
 	if x == "" {

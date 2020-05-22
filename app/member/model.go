@@ -56,3 +56,5 @@ type Entry struct {
 	Role    Role      `json:"role"`
 	Created time.Time `json:"created"`
 }
+
+type Entries []*Entry

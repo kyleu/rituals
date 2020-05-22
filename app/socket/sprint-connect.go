@@ -4,6 +4,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -15,15 +16,16 @@ import (
 )
 
 type SprintSessionJoined struct {
-	Profile     *util.Profile            `json:"profile"`
-	Session     *sprint.Session          `json:"session"`
-	Permissions []*permission.Permission `json:"permissions"`
-	Team        *team.Session            `json:"team"`
-	Members     []*member.Entry          `json:"members"`
-	Online      []uuid.UUID              `json:"online"`
-	Estimates   []*estimate.Session      `json:"estimates"`
-	Standups    []*standup.Session       `json:"standups"`
-	Retros      []*retro.Session         `json:"retros"`
+	Profile     *util.Profile          `json:"profile"`
+	Session     *sprint.Session        `json:"session"`
+	Permissions permission.Permissions `json:"permissions"`
+	Auths       auth.Displays          `json:"auths"`
+	Team        *team.Session          `json:"team"`
+	Members     member.Entries         `json:"members"`
+	Online      []uuid.UUID            `json:"online"`
+	Estimates   estimate.Sessions      `json:"estimates"`
+	Standups    standup.Sessions       `json:"standups"`
+	Retros      retro.Sessions         `json:"retros"`
 }
 
 func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -57,13 +59,22 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return nil
 	}
 
+	entry := s.sprints.Members.Register(ch.ID, userID)
+	perms := s.sprints.Permissions.GetByModelID(ch.ID, nil)
+	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
+	members := s.sprints.Members.GetByModelID(ch.ID, nil)
+
+	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, nil, util.SvcSprint, ch.ID)
+	if err != nil {
+		return err
+	}
+	if len(permErrors) > 0 {
+		return s.sendPermErrors(util.SvcSprint, ch, permErrors)
+	}
+
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
 	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
-	entry := s.sprints.Members.Register(ch.ID, userID)
-	perms := s.sprints.Permissions.GetByModelID(ch.ID, nil)
-	members := s.sprints.Members.GetByModelID(ch.ID, nil)
 
 	estimates, err := s.estimates.GetBySprint(ch.ID, nil)
 	if err != nil {
@@ -85,6 +96,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 			Profile:     &conn.Profile,
 			Session:     sess,
 			Permissions: perms,
+			Auths:       displays,
 			Team:        getTeamOpt(s, sess.TeamID),
 			Members:     members,
 			Online:      s.GetOnline(ch),
@@ -94,16 +106,5 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		},
 	}
 
-	err = s.WriteMessage(conn.ID, &msg)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial sprint message"))
-	}
-
-	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing member update"))
-	}
-
-	err = s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, true)
-	return errors.WithStack(errors.Wrap(err, "error writing online update"))
+	return s.sendInitial(ch, conn, entry, msg, nil, nil)
 }

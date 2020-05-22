@@ -26,7 +26,7 @@ namespace story {
 
   export function beginEditStory() {
     const s = getActiveStory()!;
-    const newTitle = prompt("Edit your story", s.title)
+    const newTitle = prompt("Edit your story", s.title);
     if(newTitle !== null && newTitle !== s.title) {
       const msg = {svc: services.estimate.key, cmd: command.client.updateStory, param: { id: s.id, title: newTitle }};
       socket.send(msg);
@@ -37,7 +37,7 @@ namespace story {
   export function onRemoveStory() {
     const id = estimate.cache.activeStory;
     if (id) {
-      UIkit.modal.confirm('Delete this story?').then(function () {
+      UIkit.modal.confirm("Delete this story?").then(function () {
         const msg = {svc: services.estimate.key, cmd: command.client.removeStory, param: id};
         socket.send(msg);
         UIkit.modal("#modal-story").hide();
@@ -50,12 +50,11 @@ namespace story {
     if (estimate.cache.activeStory === undefined) {
       return undefined;
     }
-    const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory);
-    if (curr.length !== 1) {
+    const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory).shift();
+    if (curr) {
       console.warn(`cannot load active story [${estimate.cache.activeStory}]`);
-      return undefined;
     }
-    return curr[0];
+    return curr;
   }
 
   export function viewActiveStory() {
@@ -75,7 +74,7 @@ namespace story {
     floats.forEach(f => sum += f);
     let curr = dom.opt("#story-total");
     let panel = dom.req("#story-list");
-    if (curr !== null) {
+    if (curr !== undefined) {
       panel.removeChild(curr);
     }
     if(sum > 0) {

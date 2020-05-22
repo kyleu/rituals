@@ -16,13 +16,13 @@ var (
 
 func initUser() {
 	userArgs = graphql.FieldConfigArgument{
-		"id": &graphql.ArgumentConfig{
+		util.KeyID: &graphql.ArgumentConfig{
 			Type: graphql.String,
 		},
 	}
 
 	userResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		idString, ok := p.Args["id"]
+		idString, ok := p.Args[util.KeyID]
 		if !ok {
 			return nil, nil
 		}

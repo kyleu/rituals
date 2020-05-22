@@ -14,7 +14,9 @@ import (
 )
 
 func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) ([]*Story, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyStory, params, &query.Ordering{Column: "idx", Asc: true})
+	var defaultOrdering = query.Orderings{{Column: "idx", Asc: true}}
+
+	params = query.ParamsWithDefaultOrdering(util.KeyStory, params, defaultOrdering...)
 	var dtos []storyDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyStory, "estimate_id = $1", params.OrderByString(), params.Limit, params.Offset), estimateID)
 	if err != nil {
@@ -53,10 +55,12 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUI
 		return nil, err
 	}
 
-	actionContent := map[string]interface{}{"storyID": id}
-	s.actions.Post(util.SvcEstimate.Key, estimateID, authorID, action.ActStoryAdd, actionContent, "")
+	ret, err := s.GetStoryByID(id)
+	if err == nil && ret != nil {
+		postStory(s.actions, ret, authorID, action.ActStoryAdd)
+	}
 
-	return s.GetStoryByID(id)
+	return ret, err
 }
 
 func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID) (*Story, error) {
@@ -70,9 +74,7 @@ func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID)
 		return nil, errors.New("cannot load newly-updated story")
 	}
 
-	actionContent := map[string]interface{}{"storyID": storyID}
-	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, action.ActStoryUpdate, actionContent, "")
-
+	postStory(s.actions, story, userID, action.ActStoryUpdate)
 	return story, err
 }
 
@@ -94,10 +96,13 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 	q2 := "delete from story where id = $1"
 	_, err = s.db.Exec(q2, storyID)
 
-	actionContent := map[string]interface{}{"storyID": storyID}
-	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, action.ActStoryRemove, actionContent, "")
-
+	postStory(s.actions, story, userID, action.ActStoryRemove)
 	return err
+}
+
+func postStory(actions *action.Service, story *Story, userID uuid.UUID, act string) {
+	actionContent := map[string]interface{}{"storyID": story.ID}
+	actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, act, actionContent, "")
 }
 
 func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID uuid.UUID) (bool, string, error) {

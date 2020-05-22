@@ -1,4 +1,4 @@
-<%: func AdminActionCard(actions []*action.Action, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminActionCard(actions action.Actions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Actions</h3>
   <% if len(actions) == 0 { %>

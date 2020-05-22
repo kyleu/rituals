@@ -35,7 +35,7 @@ func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]in
 }
 
 func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	id := getUUIDPointer(param, "id")
+	id := getUUIDPointer(param, util.KeyID)
 	if id == nil {
 		return errors.WithStack(errors.New("no id provided"))
 	}

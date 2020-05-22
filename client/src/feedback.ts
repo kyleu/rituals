@@ -40,7 +40,7 @@ namespace feedback {
   export function onRemoveFeedback() {
     const id = retro.cache.activeFeedback;
     if (id) {
-      UIkit.modal.confirm('Delete this feedback?').then(function () {
+      UIkit.modal.confirm("Delete this feedback?").then(function () {
         const msg = {svc: services.retro.key, cmd: command.client.removeFeedback, param: id};
         socket.send(msg);
         UIkit.modal("#modal-feedback").hide();
@@ -53,12 +53,11 @@ namespace feedback {
     if (retro.cache.activeFeedback === undefined) {
       return undefined;
     }
-    const curr = retro.cache.feedback.filter(x => x.id === retro.cache.activeFeedback);
-    if (curr.length !== 1) {
+    const curr = retro.cache.feedback.filter(x => x.id === retro.cache.activeFeedback).shift();
+    if (!curr) {
       console.warn(`cannot load active Feedback [${retro.cache.activeFeedback}]`);
-      return undefined;
     }
-    return curr[0];
+    return curr;
   }
 
   export function viewActiveFeedback() {
@@ -77,7 +76,7 @@ namespace feedback {
     const buttonsEdit = dom.req("#modal-feedback .buttons-edit");
     const buttonsView = dom.req("#modal-feedback .buttons-view");
 
-    if(fb.authorID === profile.userID) {
+    if (fb.authorID === profile.userID) {
       contentEdit.style.display = "block";
       dom.setSelectOption(contentEditCategory, fb.category);
       dom.setValue(contentEditTextarea, fb.content);
@@ -98,14 +97,14 @@ namespace feedback {
   }
 
   export function onFeedbackUpdate(r: feedback.Feedback) {
-    const x = preUpdate(r.id)
+    const x = preUpdate(r.id);
     x.push(r);
-    postUpdate(x, r.id)
+    postUpdate(x, r.id);
   }
 
   export function onFeedbackRemoved(id: string) {
-    const x = preUpdate(id)
-    postUpdate(x, id)
+    const x = preUpdate(id);
+    postUpdate(x, id);
     UIkit.notification("feedback has been deleted", {status: "success", pos: "top-right"});
   }
 
@@ -115,7 +114,7 @@ namespace feedback {
 
   function postUpdate(x: feedback.Feedback[], id: string) {
     feedback.setFeedback(x);
-    if(id === retro.cache.activeFeedback) {
+    if (id === retro.cache.activeFeedback) {
       UIkit.modal("#modal-feedback").hide();
     }
   }
@@ -127,9 +126,9 @@ namespace feedback {
     }
 
     let ret = categories.map(toCollection);
-    const extras = feedback.filter(r => categories.indexOf(r.category) === -1);
+    const extras = feedback.filter(r => collection.find(categories, x => x === r.category) === undefined);
     if (extras.length > 0) {
-      ret.push({category: "unknown", feedback: extras})
+      ret.push({category: "unknown", feedback: extras});
     }
     return ret;
   }

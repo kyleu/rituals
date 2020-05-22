@@ -3,7 +3,7 @@ package permission
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/auth"
+
 	"github.com/kyleu/rituals.dev/app/member"
 	"logur.dev/logur"
 
@@ -35,8 +35,8 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, svc s
 	}
 }
 
-func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) []*Permission {
-	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, &query.Ordering{Column: "created", Asc: false})
+func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
+	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, query.DefaultCreatedOrdering...)
 	var dtos []permissionDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
 	q := query.SQLSelect(fmt.Sprintf("k, v, access, created"), s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
@@ -45,7 +45,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) []*Permission
 		s.logger.Error(fmt.Sprintf("error retrieving permission entries for model [%v]: %+v", id, err))
 		return nil
 	}
-	ret := make([]*Permission, 0, len(dtos))
+	ret := make(Permissions, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToPermission())
 	}
@@ -95,56 +95,4 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 	s.actions.Post(s.svc, modelID, userID, action.ActPermissionAdd, actionContent, "")
 
 	return dto
-}
-
-func (s *Service) Check(svc util.Service, modelID uuid.UUID, auths []*auth.Record, teamID *uuid.UUID, teamTitle string, teams []uuid.UUID) Errors {
-	a := s.CheckAuths(svc, modelID, auths)
-	t := s.CheckTeam(svc, teamID, teamTitle, teams)
-
-	if t != nil {
-		return append(a, *t)
-	}
-	return a
-}
-
-func (s *Service) CheckAuths(svc util.Service, modelID uuid.UUID, auths []*auth.Record) Errors {
-	var ret []Error
-
-	perms := s.GetByModelID(modelID, nil)
-	for _, p := range perms {
-		switch p.K {
-		case auth.ProviderGitHub.Key:
-			ret = append(ret, providerError(svc, p.V, auth.ProviderGitHub))
-		case auth.ProviderGoogle.Key:
-			ret = append(ret, providerError(svc, p.V, auth.ProviderGoogle))
-		case auth.ProviderSlack.Key:
-			ret = append(ret, providerError(svc, p.V, auth.ProviderSlack))
-		default:
-			ret = append(ret, Error{K: p.K, V: p.V, Code: "missing", Message: "unhandled permission key [" + p.K + "]"})
-		}
-	}
-	return ret
-}
-
-func (s *Service) CheckTeam(svc util.Service, teamID *uuid.UUID, teamTitle string, teams []uuid.UUID) *Error {
-	if teamID != nil {
-		hasTeam := false
-
-		for _, t := range teams {
-			if t == *teamID {
-				hasTeam = true
-				break
-			}
-		}
-		if !hasTeam {
-			msg := fmt.Sprintf("you are not a member of [%v], this %v's team", teamTitle, svc.Key)
-			return &Error{K: "team", V: teamID.String(), Code: "team", Message: msg}
-		}
-	}
-	return nil
-}
-
-func providerError(svc util.Service, v string, p auth.Provider) Error {
-	msg := "you must log in with " + p.Title + " to access this " + svc.Key
-	return Error{K: svc.Key, V: v, Code: p.Key, Message: msg}
 }

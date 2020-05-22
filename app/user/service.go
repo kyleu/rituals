@@ -44,7 +44,7 @@ func (s *Service) New(id uuid.UUID) (*SystemUser, error) {
 }
 
 func (s *Service) List(params *query.Params) ([]*SystemUser, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyUser, params, &query.Ordering{Column: "created", Asc: false})
+	params = query.ParamsWithDefaultOrdering(util.KeyUser, params, query.DefaultCreatedOrdering...)
 
 	var ret []*SystemUser
 

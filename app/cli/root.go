@@ -78,7 +78,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	estimateSvc := estimate.NewService(actionService, db, logger)
 	standupSvc := standup.NewService(actionService, db, logger)
 	retroSvc := retro.NewService(actionService, db, logger)
-	socketSvc := socket.NewService(actionService, logger, userSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
+	socketSvc := socket.NewService(logger, actionService, userSvc, authSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{
 		Debug:      verbose,

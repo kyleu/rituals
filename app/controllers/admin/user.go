@@ -31,7 +31,7 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 
 func UserDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		userID := util.GetUUIDPointer(mux.Vars(r), "id")
+		userID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
 		if userID == nil {
 			return "", errors.New("invalid user id")
 		}
@@ -78,7 +78,8 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = u.Name
 		bc := adminBC(ctx, util.KeyUser, "users")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), "id", userID.String()), u.Name)...)
+		link := util.AdminLink(util.KeyUser, util.KeyDetail)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, userID.String()), u.Name)...)
 		ctx.Breadcrumbs = bc
 
 		return tmpl(templates.AdminUserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))

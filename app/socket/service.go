@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/kyleu/rituals.dev/app/auth"
+
 	"github.com/kyleu/rituals.dev/app/team"
 
 	"github.com/kyleu/rituals.dev/app/action"
@@ -29,6 +31,7 @@ type Service struct {
 	logger        logur.Logger
 	actions       *action.Service
 	users         *user.Service
+	auths         *auth.Service
 	teams         *team.Service
 	sprints       *sprint.Service
 	estimates     *estimate.Service
@@ -36,7 +39,10 @@ type Service struct {
 	retros        *retro.Service
 }
 
-func NewService(actions *action.Service, logger logur.Logger, users *user.Service, teams *team.Service, sprints *sprint.Service, estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+func NewService(
+	logger logur.Logger, actions *action.Service, users *user.Service, auths *auth.Service,
+	teams *team.Service, sprints *sprint.Service,
+	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeySocket})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
@@ -46,6 +52,7 @@ func NewService(actions *action.Service, logger logur.Logger, users *user.Servic
 		logger:        logger,
 		actions:       actions,
 		users:         users,
+		auths:         auths,
 		teams:         teams,
 		sprints:       sprints,
 		estimates:     estimates,

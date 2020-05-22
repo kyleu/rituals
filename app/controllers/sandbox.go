@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
@@ -37,17 +36,12 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 			return "", errors.WithStack(errors.Wrap(err, "error running sandbox ["+key+"]"))
 		}
 
-		js, err := json.Marshal(content)
-		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error marshalling sandbox ["+key+"] response"))
-		}
-
 		ctx.Title = sb.Title + " Sandbox"
 		bc := append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route(util.KeySandbox), util.KeySandbox)...)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.KeySandbox), util.KeySandbox)...)
 		bc = append(bc, web.Breadcrumb{Path: ctx.Route(util.KeySandbox+".run", util.KeyKey, key), Title: key})
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.SandboxRun(sb, string(js), ctx, w))
+		return tmpl(templates.SandboxRun(sb, util.ToJSON(content), ctx, w))
 	})
 }

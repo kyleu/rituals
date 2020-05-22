@@ -1,15 +1,15 @@
-<%: func AdminSprintTable(sprints []*sprint.Session, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminSprintTable(sprints sprint.Sessions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.SvcSprint.Key, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcSprint.Key, util.KeyID, "ID", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcSprint.Key, "slug", "Slug", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcSprint.Key, "title", "Title", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcSprint.Key, "owner", "Owner", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcSprint.Key, "startDate", "Start Date", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcSprint.Key, "endDate", "End Date", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.SvcSprint.Key, "created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcSprint.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

@@ -9,7 +9,7 @@
       <form method="post" action="<%= ctx.Route(util.SvcSprint.Key + `.new`) %>">
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
-          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new sprint"></button>
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new sprint"></button>
           <input class="uk-input" type="text" id="sprint-title" name="title" placeholder="Title" />
         </div>
       </form>
@@ -26,7 +26,7 @@
       <form method="post" action="<%= ctx.Route(util.SvcEstimate.Key + `.new`) %>">
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
-          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new estimate"></button>
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new estimate"></button>
           <input class="uk-input" type="text" id="estimate-title" name="title" placeholder="Title" />
         </div>
       </form>
@@ -43,7 +43,7 @@
       <form method="post" action="<%= ctx.Route(util.SvcStandup.Key + `.new`) %>">
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
-          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new standup"></button>
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new standup"></button>
           <input class="uk-input" type="text" id="standup-title" name="title" placeholder="Title" />
         </div>
       </form>
@@ -60,7 +60,7 @@
       <form method="post" action="<%= ctx.Route(util.SvcRetro.Key + `.new`) %>">
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
-          <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: plus" title="new retro"></button>
+          <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new retro"></button>
           <input class="uk-input" type="text" id="retro-title" name="title" placeholder="Title" />
         </div>
       </form>

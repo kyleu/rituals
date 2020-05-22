@@ -4,6 +4,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -13,14 +14,15 @@ import (
 )
 
 type RetroSessionJoined struct {
-	Profile     *util.Profile            `json:"profile"`
-	Session     *retro.Session           `json:"session"`
-	Permissions []*permission.Permission `json:"permissions"`
-	Team        *team.Session            `json:"team"`
-	Sprint      *sprint.Session          `json:"sprint"`
-	Members     []*member.Entry          `json:"members"`
-	Online      []uuid.UUID              `json:"online"`
-	Feedback    []*retro.Feedback        `json:"feedback"`
+	Profile     *util.Profile          `json:"profile"`
+	Session     *retro.Session         `json:"session"`
+	Permissions permission.Permissions `json:"permissions"`
+	Auths       auth.Displays          `json:"auths"`
+	Team        *team.Session          `json:"team"`
+	Sprint      *sprint.Session        `json:"sprint"`
+	Members     member.Entries         `json:"members"`
+	Online      []uuid.UUID            `json:"online"`
+	Feedback    []*retro.Feedback      `json:"feedback"`
 }
 
 func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -51,14 +53,23 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return errors.WithStack(errors.Wrap(err, "error writing error message"))
 	}
 
-	conn.Svc = ch.Svc
-	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
 	entry := s.retros.Members.Register(ch.ID, userID)
 	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
 	perms := s.retros.Permissions.GetByModelID(ch.ID, nil)
+	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
 	members := s.retros.Members.GetByModelID(ch.ID, nil)
+
+	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcRetro, ch.ID)
+	if err != nil {
+		return err
+	}
+	if len(permErrors) > 0 {
+		return s.sendPermErrors(util.SvcRetro, ch, permErrors)
+	}
+
+	conn.Svc = ch.Svc
+	conn.ModelID = &ch.ID
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
 	feedback, err := s.retros.GetFeedback(ch.ID, nil)
 	if err != nil {
@@ -72,6 +83,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 			Profile:     &conn.Profile,
 			Session:     sess,
 			Permissions: perms,
+			Auths:       displays,
 			Team:        getTeamOpt(s, sess.TeamID),
 			Sprint:      getSprintOpt(s, sess.SprintID),
 			Members:     members,
@@ -80,23 +92,5 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		},
 	}
 
-	err = s.WriteMessage(conn.ID, &msg)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial retro message"))
-	}
-
-	if sprintEntry != nil {
-		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint.Key, ID: *sess.SprintID}, sprintEntry, conn.ID)
-		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing member update to sprint"))
-		}
-	}
-
-	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)
-	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing member update"))
-	}
-
-	err = s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, true)
-	return errors.WithStack(errors.Wrap(err, "error writing online update"))
+	return s.sendInitial(ch, conn, entry, msg, sess.SprintID, sprintEntry)
 }

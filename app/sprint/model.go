@@ -20,6 +20,8 @@ type Session struct {
 	Created   time.Time  `json:"created"`
 }
 
+type Sessions []*Session
+
 func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, startDate *time.Time, endDate *time.Time) Session {
 	return Session{
 		ID:        util.UUID(),

@@ -44,8 +44,8 @@ namespace vote {
       case "pending":
         const uID = system.cache.getProfile().userID;
         const e = dom.req("#story-edit-section");
-        const v = dom.req("#story-view-section")
-        if(uID === s.authorID) {
+        const v = dom.req("#story-view-section");
+        if (uID === s.authorID) {
           e.style.display = "block";
           v.style.display = "none";
         } else {
@@ -96,7 +96,7 @@ namespace vote {
 
     let sum = floats.reduce((x, y) => x + y, 0);
 
-    const mode = floats.reduce(function(current: any, item) {
+    const mode = floats.reduce(function (current: any, item) {
       const val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
       if (val > current.greatestFreq) {
         current.greatestFreq = val;

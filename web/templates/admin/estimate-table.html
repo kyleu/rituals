@@ -1,13 +1,13 @@
-<%: func AdminEstimateTable(estimates []*estimate.Session, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AdminEstimateTable(estimates estimate.Sessions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.SvcEstimate.Key, "id", "ID", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcEstimate.Key, util.KeyID, "ID", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcEstimate.Key, "slug", "Slug", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcEstimate.Key, "title", "Title", params, ctx, buffer) %>
       <% ComponentTableHeader(util.SvcEstimate.Key, "owner", "Owner", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.SvcEstimate.Key, "created", "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcEstimate.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>

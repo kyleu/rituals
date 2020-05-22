@@ -28,7 +28,7 @@ func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]inter
 }
 
 func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	storyID := getUUIDPointer(param, "id")
+	storyID := getUUIDPointer(param, util.KeyID)
 	if storyID == nil {
 		return errors.New("invalid story id")
 	}

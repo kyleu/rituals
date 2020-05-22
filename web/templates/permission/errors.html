@@ -1,4 +1,4 @@
-<%: func PermissionErrors(errors permission.Errors, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func PermissionErrors(svc util.Service, errors permission.Errors, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -7,7 +7,7 @@
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Authorization Error</h3>
-      TODO
+      <pre><%= util.ToJSON(errors) %></pre>
     </div>
   </div>
 </div>
