@@ -1,21 +1,18 @@
 namespace member {
   export interface Member {
-    userID: string;
-    name: string;
-    role: string;
-    created: string;
+    readonly userID: string;
+    readonly name: string;
+    readonly role: string;
+    readonly created: string;
   }
 
   export interface OnlineUpdate {
-    userID: string;
-    connected: boolean;
+    readonly userID: string;
+    readonly connected: boolean;
   }
 
   function isSelf(x: Member) {
-    if (system.cache.profile === undefined) {
-      return false;
-    }
-    return x.userID === system.cache.profile.userID;
+    return x.userID === system.cache.profile?.userID;
   }
 
   export function setMembers() {
@@ -24,8 +21,6 @@ namespace member {
       dom.setText("#member-self .member-name", self.name);
       dom.setValue("#self-name-input", self.name);
       dom.setText("#member-self .member-role", self.role);
-    } else {
-      console.warn("self not found among members");
     }
 
     const others = system.cache.members.filter(x => !isSelf(x));
@@ -37,18 +32,28 @@ namespace member {
     if (isSelf(member)) {
       UIkit.modal("#modal-self").hide();
     }
-    let x = system.cache.members;
-    const curr = x.filter(m => m.userID === member.userID).shift();
+    const unfiltered = system.cache.members;
+    const curr = unfiltered.filter(m => m.userID === member.userID).shift();
     const nameChanged = curr?.name !== member.name;
 
-    x = x.filter(m => m.userID !== member.userID);
-    if (x.length === system.cache.members.length) {
+    const ms = unfiltered.filter(m => m.userID !== member.userID);
+    if (ms.length === system.cache.members.length) {
       UIkit.notification(`${member.name} has joined`, {status: "success", pos: "top-right"});
     }
-    x.push(member);
-    x = x.sort((l, r) => (l.name > r.name) ? 1 : -1);
+    if (member.name === "::delete") {
+      if (member.userID === system.cache.profile?.userID) {
+        UIkit.modal("#modal-self").hide();
+        UIkit.notification(`you have left this ${system.cache.currentService}`, {status: "success", pos: "top-right"});
+        document.location.href = "/";
+      } else {
+        UIkit.modal("#modal-member").hide();
+      }
+    } else {
+      ms.push(member);
+    }
+    ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
 
-    system.cache.members = x;
+    system.cache.members = ms;
     setMembers();
 
     if (nameChanged) {
@@ -80,7 +85,7 @@ namespace member {
 
   export function onOnlineUpdate(update: OnlineUpdate) {
     if (update.connected) {
-      if (!collection.find(system.cache.online, x => x === update.userID)) {
+      if (!system.cache.online.find(x => x === update.userID)) {
         system.cache.online.push(update.userID);
       }
     } else {
@@ -93,7 +98,7 @@ namespace member {
     for (const member of system.cache.members) {
       const el = dom.opt(`#member-${member.userID} .online-indicator`);
       if (el) {
-        if (!collection.find(system.cache.online, x => x === member.userID)) {
+        if (!system.cache.online.find(x => x === member.userID)) {
           el.classList.add("offline");
         } else {
           el.classList.remove("offline");
@@ -105,12 +110,12 @@ namespace member {
   export function onSubmitSelf() {
     const name = dom.req<HTMLInputElement>("#self-name-input").value;
     const choice = dom.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
-    const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name: name, choice: choice}};
+    const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name, choice}};
     socket.send(msg);
   }
 
   function getActiveMember() {
-    if (system.cache.activeMember === undefined) {
+    if (!system.cache.activeMember) {
       console.warn("no active member");
       return undefined;
     }
@@ -123,10 +128,23 @@ namespace member {
 
   export function viewActiveMember() {
     const member = getActiveMember();
-    if (member === undefined) {
+    if (!member) {
       return;
     }
     dom.setText("#member-modal-name", member.name);
     dom.setText("#member-modal-role", member.role);
+  }
+
+  export function removeMember(id: string | undefined = system.cache.activeMember) {
+    if (!id) {
+      console.warn(`cannot load active member [${system.cache.activeMember}]`);
+    }
+    if (id == "self") {
+      id = system.cache.profile?.userID
+    }
+    if(confirm(`Are you sure you wish to leave this ${system.cache.currentService}?`)) {
+      const msg = {svc: system.cache.currentService, cmd: command.client.removeMember, param: id};
+      socket.send(msg);
+    }
   }
 }

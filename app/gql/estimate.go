@@ -35,11 +35,11 @@ func initEstimate() {
 	})
 
 	estimateResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args[util.KeyKey]
-		if ok {
-			return ctx.App.Estimate.GetBySlug(slug.(string))
+		slug, err := paramString(p, util.KeyKey)
+		if err != nil {
+			return nil, err
 		}
-		return nil, nil
+		return ctx.App.Estimate.GetBySlug(slug)
 	}
 
 	estimatesResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -88,7 +88,7 @@ func initEstimate() {
 				"owner": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"status": &graphql.Field{
+				util.KeyStatus: &graphql.Field{
 					Type: graphql.NewNonNull(estimateStatusType),
 					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 						return p.Source.(*estimate.Session).Status.Key, nil
@@ -100,7 +100,7 @@ func initEstimate() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				"members": &graphql.Field{
+				util.KeyPlural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This estimate's members",
 					Args:        listArgs,

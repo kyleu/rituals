@@ -84,7 +84,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Status, error) {
 	}
 	conn, ok := s.connections[id]
 	if !ok {
-		return nil, errors.New("invalid connection [" + id.String() + "]")
+		return nil, invalidConnection(id)
 	}
 	return conn.ToStatus(), nil
 }
@@ -97,7 +97,7 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	}
 	c, ok := s.connections[connID]
 	if !ok {
-		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
+		return invalidConnection(connID)
 	}
 	var err error
 

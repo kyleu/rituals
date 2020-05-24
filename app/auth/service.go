@@ -14,15 +14,17 @@ import (
 )
 
 type Service struct {
+	Enabled bool
 	actions *action.Service
 	db      *sqlx.DB
 	logger  logur.Logger
 	users   *user.Service
 }
 
-func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
+func NewService(enabled bool, actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAuth})
 	svc := Service{
+		Enabled: enabled,
 		actions: actions,
 		db:      db,
 		logger:  logger,
@@ -32,6 +34,10 @@ func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, users
 }
 
 func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Records, Displays) {
+	if !s.Enabled {
+		return nil, nil
+	}
+
 	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
@@ -52,6 +58,10 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 }
 
 func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*Record, error) {
+	if !s.Enabled {
+		return nil, ErrorAuthDisabled
+	}
+
 	if profile == nil {
 		return nil, errors.New("no user profile for auth")
 	}

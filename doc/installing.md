@@ -8,13 +8,11 @@ Compiled binaries are available at [GitHub Releases](https://github.com/kyleu/ri
 
 `brew install kyleu/kyleu/rituals.dev`
 
-## App Stores
-
-Mobile apps are coming soon!
 
 ## Go
 
 `go get -u github.com/kyleu/rituals.dev`
+
 
 ## Build From Source
 

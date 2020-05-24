@@ -126,7 +126,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 	q := "update story set status = $1, final_vote = $2 where id = $3"
 	_, err = s.db.Exec(q, status.String(), finalVote, storyID)
 
-	actionContent := map[string]interface{}{"storyID": storyID, "status": status, "finalVote": finalVote}
+	actionContent := map[string]interface{}{"storyID": storyID, util.KeyStatus: status, "finalVote": finalVote}
 	s.actions.Post(util.SvcEstimate.Key, story.EstimateID, userID, action.ActStoryStatus, actionContent, "")
 
 	return true, finalVote, errors.WithStack(errors.Wrap(err, "error updating story status"))

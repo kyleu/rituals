@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -18,7 +17,7 @@ import (
 func ActionList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Action List"
-		ctx.Breadcrumbs = adminBC(ctx, util.KeyAction, "actions")
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyAction, util.KeyPlural(util.KeyAction))
 		params := act.ParamSetFromRequest(r)
 		actions, err := ctx.App.Action.List(params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
@@ -30,9 +29,9 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 
 func ActionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		actionID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if actionID == nil {
-			return "", errors.New("invalid action id")
+		actionID, err := idFromParams(util.KeyAction, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		a, err := ctx.App.Action.GetByID(*actionID)
 		if err != nil {
@@ -54,7 +53,7 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = user.Name
-		bc := adminBC(ctx, util.KeyAction, "actions")
+		bc := adminBC(ctx, util.KeyAction, util.KeyPlural(util.KeyAction))
 		link := util.AdminLink(util.KeyAction, util.KeyDetail)
 		s := actionID.String()
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, s), s[0:8])...)

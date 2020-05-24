@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"emperror.dev/errors"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -104,3 +105,5 @@ func (dto *recordDTO) ToRecord() *Record {
 		Created:    dto.Created,
 	}
 }
+
+var ErrorAuthDisabled = errors.New("authorization is disabled")

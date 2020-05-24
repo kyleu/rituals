@@ -65,6 +65,6 @@ func SaveSession(w http.ResponseWriter, r *http.Request, ctx web.RequestContext)
 func logComplete(startNanos int64, ctx web.RequestContext, status int, r *http.Request) {
 	delta := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
 	ms := util.MicrosToMillis(language.AmericanEnglish, int(delta))
-	args := map[string]interface{}{"elapsed": delta, "status": status}
+	args := map[string]interface{}{"elapsed": delta, util.KeyStatus: status}
 	ctx.Logger.Debug(fmt.Sprintf("[%v %v] returned [%v] in [%v]", r.Method, r.URL.Path, status, ms), args)
 }

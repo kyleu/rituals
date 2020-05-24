@@ -31,6 +31,7 @@ import (
 var verbose bool
 var port uint16
 var addr string
+var authEnabled bool
 
 // Configure configures a root command.
 func Configure(version string, commitHash string) cobra.Command {
@@ -51,6 +52,7 @@ func Configure(version string, commitHash string) cobra.Command {
 	flags.StringVarP(&addr, "address", "a", "127.0.0.1", "interface address to listen on")
 	flags.Uint16VarP(&port, "port", "p", 6660, "port for http server to listen on")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "verbose output")
+	flags.BoolVar(&authEnabled, "auth", true, "enable authentication")
 
 	return rootCmd
 }
@@ -71,7 +73,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 
 	actionService := action.NewService(db, logger)
 	userSvc := user.NewService(actionService, db, logger)
-	authSvc := auth.NewService(actionService, db, logger, userSvc)
+	authSvc := auth.NewService(authEnabled, actionService, db, logger, userSvc)
 	invitationSvc := invitation.NewService(actionService, db, logger)
 	teamSvc := team.NewService(actionService, db, logger)
 	sprintSvc := sprint.NewService(actionService, db, logger)

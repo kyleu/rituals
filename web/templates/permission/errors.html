@@ -6,9 +6,26 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-      <h3 class="uk-card-title">Authorization Error</h3>
+      <h3 class="uk-card-title">
+        <span class="h3-icon" data-uk-icon="icon: lock;"></span>
+        Authorization Error<% if len(errors) > 1 { %>s<% } %>
+      </h3>
+      <% if len(errors) > 0 { %>
+        <ul class="uk-list uk-list-divider">
+          <% PermissionTeamError(svc, errors.FindByProvider(util.SvcTeam.Key), ctx, _buffer) %>
+          <% PermissionSprintError(svc, errors.FindByProvider(util.SvcSprint.Key), ctx, _buffer) %>
+          <% for _, p := range auth.AllProviders { %>
+            <% PermissionProviderError(svc, p, errors.FindByProvider(p.Key), ctx, _buffer) %>
+          <% } %>
+        </ul>
+      <% } %>
+    </div>
+    <!--
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">Details</h3>
       <pre><%= util.ToJSON(errors) %></pre>
     </div>
+    -->
   </div>
 </div>
 <% } %>

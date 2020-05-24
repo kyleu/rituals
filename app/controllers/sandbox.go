@@ -18,7 +18,7 @@ import (
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = "Sandboxes"
+		ctx.Title = util.KeyPluralTitle(util.KeySandbox)
 		ctx.Breadcrumbs = append(aboutBC(ctx), web.BreadcrumbsSimple(ctx.Route(util.KeySandbox), util.KeySandbox)...)
 		return tmpl(templates.SandboxList(sandbox.AllSandboxes, ctx, w))
 	})
@@ -29,7 +29,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sb := sandbox.FromString(key)
 		if sb == nil {
-			return "", errors.New("invalid sandbox [" + key + "]")
+			return "", util.IDError(util.KeySandbox, key)
 		}
 		content, err := sb.Resolve(ctx)
 		if err != nil {

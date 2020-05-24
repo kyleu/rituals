@@ -12323,6 +12323,10 @@ h3 a:hover {
   margin-right: 6px;
 }
 
+.auth-link {
+  margin-top: 8px;
+}
+
 .online-indicator {
   display: none;
   cursor: default;

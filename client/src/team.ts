@@ -1,15 +1,15 @@
 namespace team {
   export interface Detail extends rituals.Session {
-    startDate: string;
-    endDate: string;
+    readonly startDate: string;
+    readonly endDate: string;
   }
 
   interface SessionJoined extends rituals.SessionJoined {
-    session: Detail;
-    sprints: rituals.Session[];
-    estimates: rituals.Session[];
-    standups: rituals.Session[];
-    retros: rituals.Session[];
+    readonly session: Detail;
+    readonly sprints: rituals.Session[];
+    readonly estimates: rituals.Session[];
+    readonly standups: rituals.Session[];
+    readonly retros: rituals.Session[];
   }
 
   class Cache {
@@ -24,7 +24,7 @@ namespace team {
         rituals.onError(services.team.key, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined;
+        const sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         setTeamDetail(sj.session);
         setTeamHistory(sj);
@@ -32,6 +32,12 @@ namespace team {
         break;
       case command.server.sessionUpdate:
         setTeamDetail(param as Detail);
+        break;
+      case command.server.permissionsUpdate:
+        system.setPermissions(param as permission.Permission[]);
+        break;
+      case command.server.authUpdate:
+        system.setAuth(param as permission.Auth[]);
         break;
       case command.server.contentUpdate:
         socket.socketConnect(system.cache.currentService, system.cache.currentID);
@@ -56,7 +62,9 @@ namespace team {
 
   export function onSubmitTeamSession() {
     const title = dom.req<HTMLInputElement>("#model-title-input").value;
-    const msg = {svc: services.team.key, cmd: command.client.updateSession, param: {title: title}};
+    const permissions = permission.readPermissions();
+
+    const msg = {svc: services.team.key, cmd: command.client.updateSession, param: {title, permissions}};
     socket.send(msg);
   }
 
@@ -70,8 +78,9 @@ namespace team {
   export function viewTeams(teams: team.Detail[]) {
     const c = dom.opt("#model-team-container");
     if(c) {
-      c.style.display = teams.length > 0 ? "block" : "none";
+      dom.setDisplay(c, teams.length > 0)
       dom.setContent("#model-team-select", renderTeamSelect(teams, system.cache.session?.teamID));
+      permission.setModelPerms("team");
     }
   }
 }

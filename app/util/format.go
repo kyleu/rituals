@@ -61,16 +61,6 @@ func GetUUIDFromString(s string) *uuid.UUID {
 	return retID
 }
 
-func GetUUIDPointer(m map[string]string, key string) *uuid.UUID {
-	retOut, ok := m[key]
-
-	if !ok {
-		return nil
-	}
-
-	return GetUUIDFromString(retOut)
-}
-
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
 var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
 

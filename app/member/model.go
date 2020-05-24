@@ -23,7 +23,7 @@ func RoleFromString(s string) Role {
 			return t
 		}
 	}
-	return RoleMember
+	return RoleObserver
 }
 
 func (t *Role) String() string {

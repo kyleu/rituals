@@ -28,6 +28,7 @@ drop table if exists "action";
 drop table if exists "auth";
 drop table if exists "system_user";
 
+drop type if exists "auth_provider";
 drop type if exists "estimate_status";
 drop type if exists "invitation_type";
 drop type if exists "invitation_status";

@@ -31,7 +31,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(r.Form.Get("title"))
+		title := util.ServiceTitle(util.SvcEstimate.Title, r.Form.Get("title"))
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sprintID := getUUID(r.Form, util.SvcSprint.Key)
 		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, teamID, sprintID)
@@ -63,7 +63,8 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcEstimate.Key + ".list"), nil
 		}
 
-		permErrors, bc := check(&ctx, ctx.App.Estimate.Permissions, util.SvcEstimate, sess.ID, key, sess.Title, sess.TeamID, sess.SprintID)
+		params := PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		permErrors, bc := check(&ctx, ctx.App.Estimate.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 

@@ -1,9 +1,8 @@
 package socket
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -17,6 +16,8 @@ func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, p
 		err = onTeamConnect(s, conn, userID, param.(string))
 	case ClientCmdUpdateSession:
 		err = onTeamSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case ClientCmdRemoveMember:
+		err = onRemoveMember(s, s.teams.Members, *conn.Channel, userID, param.(string))
 	default:
 		err = errors.New("unhandled team command [" + cmd + "]")
 	}
@@ -24,7 +25,7 @@ func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, p
 }
 
 func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(param["title"].(string))
+	title := util.ServiceTitle(util.SvcTeam.Title, param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("saving team session [%s]", title))
 
 	err := s.teams.UpdateSession(ch.ID, title, userID)
@@ -33,7 +34,16 @@ func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[strin
 	}
 
 	err = sendTeamSessionUpdate(s, ch)
-	return errors.WithStack(errors.Wrap(err, "error sending team session"))
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error sending team session"))
+	}
+
+	err = s.updatePerms(ch, userID, s.teams.Permissions, param)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
+	}
+
+	return nil
 }
 
 func sendTeamUpdate(s *Service, ch channel, curr *uuid.UUID, tm *team.Session) error {

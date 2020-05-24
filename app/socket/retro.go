@@ -19,6 +19,8 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 		err = onRetroConnect(s, conn, userID, param.(string))
 	case ClientCmdUpdateSession:
 		err = onRetroSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case ClientCmdRemoveMember:
+		err = onRemoveMember(s, s.retros.Members, *conn.Channel, userID, param.(string))
 	case ClientCmdAddFeedback:
 		err = onAddFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case ClientCmdUpdateFeedback:
@@ -32,7 +34,7 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 }
 
 func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(param["title"].(string))
+	title := util.ServiceTitle(util.SvcRetro.Title, param["title"].(string))
 	categoriesString, ok := param["categories"].(string)
 	if !ok {
 		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"])))
@@ -45,7 +47,8 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 	sprintID := getUUIDPointer(param, "sprintID")
 	teamID := getUUIDPointer(param, "teamID")
 
-	s.logger.Debug(fmt.Sprintf("saving retro session [%s] with categories [%s] and sprint [%s]", title, strings.Join(categories, ", "), sprintID))
+	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
+	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(categories, ", "), sprintID, teamID))
 
 	curr, err := s.retros.GetByID(ch.ID)
 	if err != nil {
@@ -79,6 +82,11 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated retro session"))
 		}
+	}
+
+	err = s.updatePerms(ch, userID, s.retros.Permissions, param)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
 	}
 
 	return nil

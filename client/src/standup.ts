@@ -1,13 +1,13 @@
 namespace standup {
   interface Detail extends rituals.Session {
-    status: { key: string };
+    readonly status: { readonly key: string };
   }
 
   interface SessionJoined extends rituals.SessionJoined {
-    session: Detail;
-    team?: team.Detail;
-    sprint?: sprint.Detail;
-    reports: report.Report[];
+    readonly session: Detail;
+    readonly team?: team.Detail;
+    readonly sprint?: sprint.Detail;
+    readonly reports: report.Report[];
   }
 
   class Cache {
@@ -27,7 +27,7 @@ namespace standup {
         rituals.onError(services.standup.key, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined;
+        const sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         rituals.setTeam(sj.team);
         rituals.setSprint(sj.sprint);
@@ -37,6 +37,12 @@ namespace standup {
         break;
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);
+        break;
+      case command.server.permissionsUpdate:
+        system.setPermissions(param as permission.Permission[]);
+        break;
+      case command.server.authUpdate:
+        system.setAuth(param as permission.Auth[]);
         break;
       case command.server.teamUpdate:
         const tm = param as team.Detail | undefined;
@@ -72,7 +78,9 @@ namespace standup {
     const title = dom.req<HTMLInputElement>("#model-title-input").value;
     const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
     const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
-    const msg = {svc: services.standup.key, cmd: command.client.updateSession, param: {title: title, teamID: teamID, sprintID: sprintID}};
+    const permissions = permission.readPermissions();
+
+    const msg = {svc: services.standup.key, cmd: command.client.updateSession, param: {title, teamID, sprintID, permissions}};
     socket.send(msg);
   }
 

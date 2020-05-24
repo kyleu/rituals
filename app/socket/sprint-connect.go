@@ -31,7 +31,7 @@ type SprintSessionJoined struct {
 func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	sprintID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
+		return util.IDError(util.SvcTeam.Key, param)
 	}
 	ch := channel{Svc: util.SvcSprint.Key, ID: sprintID}
 	err = s.Join(conn.ID, ch)
@@ -59,18 +59,17 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return nil
 	}
 
-	entry := s.sprints.Members.Register(ch.ID, userID)
-	perms := s.sprints.Permissions.GetByModelID(ch.ID, nil)
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	members := s.sprints.Members.GetByModelID(ch.ID, nil)
-
-	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, nil, util.SvcSprint, ch.ID)
+	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, nil, util.SvcSprint, ch.ID)
 	if err != nil {
 		return err
 	}
 	if len(permErrors) > 0 {
 		return s.sendPermErrors(util.SvcSprint, ch, permErrors)
 	}
+
+	entry := s.sprints.Members.Register(ch.ID, userID)
+	members := s.sprints.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID

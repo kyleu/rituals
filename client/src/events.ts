@@ -43,15 +43,15 @@ namespace events {
 
       // standup
       case "add-report":
-        dom.setValue("#standup-report-date", date.dateToYMD(new Date()));
-        const reportContent = dom.setValue("#standup-report-content", "");
+        dom.setValue("#report-date", date.dateToYMD(new Date()));
+        const reportContent = dom.setValue("#report-content", "");
         dom.wireTextarea(reportContent as HTMLTextAreaElement);
         delay(() => reportContent.focus());
         break;
       case "report":
         standup.cache.activeReport = id;
         report.viewActiveReport();
-        const reportEditContent = dom.req("#standup-report-edit-content");
+        const reportEditContent = dom.req("#report-edit-content");
         delay(() => {
           dom.wireTextarea(reportEditContent as HTMLTextAreaElement);
           reportEditContent.focus();
@@ -60,15 +60,15 @@ namespace events {
 
       // retro
       case "add-feedback":
-        dom.setSelectOption(dom.req("#retro-feedback-category"), id);
-        const feedbackContent = dom.setValue("#retro-feedback-content", "");
+        dom.setSelectOption("#feedback-category", id);
+        const feedbackContent = dom.setValue("#feedback-content", "");
         dom.wireTextarea(feedbackContent as HTMLTextAreaElement);
         delay(() => feedbackContent.focus());
         break;
       case "feedback":
         retro.cache.activeFeedback = id;
         feedback.viewActiveFeedback();
-        const feedbackEditContent = dom.req("#retro-feedback-edit-content");
+        const feedbackEditContent = dom.req("#feedback-edit-content");
         delay(() => {
           dom.wireTextarea(feedbackEditContent as HTMLTextAreaElement);
           feedbackEditContent.focus();

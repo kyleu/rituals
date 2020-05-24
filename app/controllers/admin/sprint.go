@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -31,9 +30,9 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 
 func SprintDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		sprintID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if sprintID == nil {
-			return "", errors.New("invalid sprint id")
+		sprintID, err := idFromParams(util.SvcSprint.Key, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		sess, err := ctx.App.Sprint.GetByID(*sprintID)
 		if err != nil {

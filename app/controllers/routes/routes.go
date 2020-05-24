@@ -81,8 +81,8 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	_ = r.Path(p("utils")).Subrouter()
 	r.Path(p(util.KeyAbout)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.About))).Name(n(util.KeyAbout))
 	r.Path(p("health")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Health))).Name(n("health"))
-	r.Path(p("modules")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Modules))).Name(n("modules"))
-	r.Path(p("routes")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Routes))).Name(n("routes"))
+	r.Path(p(util.KeyModules)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Modules))).Name(n(util.KeyModules))
+	r.Path(p(util.KeyRoutes)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Routes))).Name(n(util.KeyRoutes))
 
 	// Assets
 	r.Path(p("favicon.ico")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Favicon))).Name(n("favicon"))

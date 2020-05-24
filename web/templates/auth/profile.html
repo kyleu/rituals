@@ -1,4 +1,4 @@
-<%: func Profile(auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func Profile(authEnabled bool, auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -6,7 +6,13 @@
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-grid-match uk-grid-small" data-uk-grid>
-      <div class="uk-width-3-4@m">
+      <%
+        var width = "1-1"
+        if authEnabled {
+          width = "3-4"
+        }
+      %>
+      <div class="uk-width-<%= width %>@m">
         <div id="profile-card" class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
           <h3 class="uk-card-title">Profile</h3>
           <form class="uk-form-horizontal" action="<%= ctx.Route(`profile.save`) %>" method="post">
@@ -42,9 +48,11 @@
           </form>
         </div>
       </div>
-      <div class="uk-width-1-4@m">
-        <% AuthSigninList(auths, ctx, _buffer) %>
-      </div>
+      <% if authEnabled { %>
+        <div class="uk-width-1-4@m">
+          <% AuthSigninList(auths, ctx, _buffer) %>
+        </div>
+      <% } %>
     </div>
   </div>
 </div>

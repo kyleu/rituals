@@ -1,20 +1,20 @@
 namespace vote {
   export interface Vote {
-    storyID: string;
-    userID: string;
-    choice: string;
-    updated: string;
-    created: string;
+    readonly storyID: string;
+    readonly userID: string;
+    readonly choice: string;
+    readonly updated: string;
+    readonly created: string;
   }
 
   export interface VoteResults {
-    count: number;
-    min: number;
-    max: number;
-    sum: number;
-    mean: number;
-    median: number;
-    mode: number;
+    readonly count: number;
+    readonly min: number;
+    readonly max: number;
+    readonly sum: number;
+    readonly mean: number;
+    readonly median: number;
+    readonly mode: number;
   }
 
   export function setVotes(votes: Vote[]) {
@@ -34,7 +34,7 @@ namespace vote {
 
   export function viewVotes() {
     const s = story.getActiveStory();
-    if (s === undefined) {
+    if (!s) {
       return;
     }
     const votes = estimate.cache.activeVotes();
@@ -42,16 +42,9 @@ namespace vote {
 
     switch (s.status) {
       case "pending":
-        const uID = system.cache.getProfile().userID;
-        const e = dom.req("#story-edit-section");
-        const v = dom.req("#story-view-section");
-        if (uID === s.authorID) {
-          e.style.display = "block";
-          v.style.display = "none";
-        } else {
-          e.style.display = "none";
-          v.style.display = "block";
-        }
+        const same = system.cache.profile?.userID === s.authorID
+        dom.setDisplay("#story-edit-section", same)
+        dom.setDisplay("#story-view-section", !same)
         break;
       case "active":
         viewActiveVotes(votes, activeVote);
@@ -76,25 +69,25 @@ namespace vote {
 
   // noinspection JSUnusedGlobalSymbols
   export function onSubmitVote(choice: string) {
-    const msg = {svc: services.estimate.key, cmd: command.client.submitVote, param: {storyID: estimate.cache.activeStory, choice: choice}};
+    const msg = {svc: services.estimate.key, cmd: command.client.submitVote, param: {storyID: estimate.cache.activeStory, choice}};
     socket.send(msg);
   }
 
   export function getVoteResults(votes: Vote[]): VoteResults {
-    let floats = votes.map(v => {
-      let n = parseFloat(v.choice);
+    const floats = votes.map(v => {
+      const n = parseFloat(v.choice);
       if (isNaN(n)) {
         return -1;
       }
       return n;
     }).filter(x => x !== -1).sort();
 
-    let count = floats.length;
+    const count = floats.length;
 
-    let min = Math.min(...floats);
-    let max = Math.max(...floats);
+    const min = Math.min(...floats);
+    const max = Math.max(...floats);
 
-    let sum = floats.reduce((x, y) => x + y, 0);
+    const sum = floats.reduce((x, y) => x + y, 0);
 
     const mode = floats.reduce(function (current: any, item) {
       const val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
@@ -106,10 +99,7 @@ namespace vote {
     }, {mode: null, greatestFreq: -Infinity, numMapping: {}}).mode;
 
     return {
-      count: count,
-      min: min,
-      max: max,
-      sum: sum,
+      count, min, max, sum,
       mean: count === 0 ? 0 : sum / count,
       median: count === 0 ? 0 : floats[Math.floor(floats.length / 2)],
       mode: count === 0 ? 0 : mode

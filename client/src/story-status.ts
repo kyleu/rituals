@@ -9,10 +9,10 @@ namespace story {
       }
     }
 
-    for (let el of dom.els(".story-status-body")) {
+    for (const el of dom.els(".story-status-body")) {
       setActive(el, status);
     }
-    for (let el of dom.els(".story-status-actions")) {
+    for (const el of dom.els(".story-status-actions")) {
       setActive(el, status);
     }
 
@@ -33,17 +33,17 @@ namespace story {
     vote.viewVotes();
   }
 
-  export function requestStoryStatus(s: string) {
+  export function requestStoryStatus(status: string) {
     const story = getActiveStory();
-    if (story === undefined) {
+    if (!story) {
       return;
     }
-    const msg = {svc: services.estimate.key, cmd: command.client.setStoryStatus, param: {storyID: story.id, status: s}};
+    const msg = {svc: services.estimate.key, cmd: command.client.setStoryStatus, param: {storyID: story.id, status}};
     socket.send(msg);
   }
 
-  export function setStoryStatus(storyID: string, status: string, currStory: story.Story | null, calcTotal: boolean) {
-    if (currStory !== null && currStory!.status === "complete") {
+  export function setStoryStatus(storyID: string, status: string, currStory: story.Story | undefined, calcTotal: boolean) {
+    if (currStory && currStory!.status === "complete") {
       if (currStory!.finalVote.length > 0) {
         status = currStory!.finalVote;
       }
@@ -55,7 +55,7 @@ namespace story {
   }
 
   export function onStoryStatusChange(u: estimate.StoryStatusChange) {
-    let currStory: Story | null = null;
+    let currStory: Story | undefined;
     estimate.cache.stories.forEach(s => {
       if (s.id === u.storyID) {
         currStory = s;

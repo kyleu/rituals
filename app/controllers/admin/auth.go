@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -18,7 +17,7 @@ import (
 func AuthList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Auth List"
-		ctx.Breadcrumbs = adminBC(ctx, util.KeyAuth, "auths")
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyAuth, util.KeyPlural(util.KeyAuth))
 		params := act.ParamSetFromRequest(r)
 		users, err := ctx.App.Auth.List(params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
@@ -30,9 +29,9 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 
 func AuthDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		authID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if authID == nil {
-			return "", errors.New("invalid auth id")
+		authID, err := idFromParams(util.KeyAuth, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		record, err := ctx.App.Auth.GetByID(*authID)
 		if err != nil {
@@ -55,7 +54,7 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = user.Name
-		bc := adminBC(ctx, util.KeyAuth, "auths")
+		bc := adminBC(ctx, util.KeyAuth, util.KeyPlural(util.KeyAuth))
 		link := util.AdminLink(util.KeyAuth, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, authID.String()), authID.String()[0:8])...)
 		ctx.Breadcrumbs = bc

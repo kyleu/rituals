@@ -1,0 +1,8 @@
+<%: func PermissionTeamError(svc util.Service, errors permission.Errors, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<% for _, e := range errors { %>
+  <li>
+    <p>
+      To access this <%= svc.Key %>, you must be a member of team <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(util.SvcTeam.Key, `key`, e.Match) %>"><%= e.Message %></a>
+    </p>
+  </li>
+<% } %>

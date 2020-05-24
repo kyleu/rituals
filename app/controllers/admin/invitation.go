@@ -17,7 +17,7 @@ import (
 func InvitationList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Invitation List"
-		bc := adminBC(ctx, util.KeyInvitation, "invitations")
+		bc := adminBC(ctx, util.KeyInvitation, util.KeyPlural(util.KeyInvitation))
 		ctx.Breadcrumbs = bc
 
 		params := act.ParamSetFromRequest(r)
@@ -37,7 +37,7 @@ func InvitationDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ctx.Title = sess.Key
-		bc := adminBC(ctx, util.KeyInvitation, "invitations")
+		bc := adminBC(ctx, util.KeyInvitation, util.KeyPlural(util.KeyInvitation))
 		link := util.AdminLink(util.KeyInvitation, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyKey, key), key)...)
 		ctx.Breadcrumbs = bc

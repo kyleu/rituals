@@ -2,9 +2,8 @@ package socket
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/kyleu/rituals.dev/app/query"
+	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -17,47 +16,21 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 
 	switch cmd {
 	case ClientCmdConnect:
-		p, ok := param.(string)
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as string"))
-		}
-		err = onEstimateConnect(s, conn, userID, p)
+		err = onEstimateConnect(s, conn, userID, param.(string))
 	case ClientCmdUpdateSession:
-		p, ok := param.(map[string]interface{})
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
-		}
-		err = onEstimateSessionSave(s, *conn.Channel, userID, p)
+		err = onEstimateSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case ClientCmdRemoveMember:
+		err = onRemoveMember(s, s.estimates.Members, *conn.Channel, userID, param.(string))
 	case ClientCmdAddStory:
-		p, ok := param.(map[string]interface{})
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
-		}
-		err = onAddStory(s, *conn.Channel, userID, p)
+		err = onAddStory(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case ClientCmdUpdateStory:
-		p, ok := param.(map[string]interface{})
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
-		}
-		err = onUpdateStory(s, *conn.Channel, userID, p)
+		err = onUpdateStory(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case ClientCmdRemoveStory:
-		p, ok := param.(string)
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as string"))
-		}
-		err = onRemoveStory(s, *conn.Channel, userID, p)
+		err = onRemoveStory(s, *conn.Channel, userID, param.(string))
 	case ClientCmdSetStoryStatus:
-		p, ok := param.(map[string]interface{})
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
-		}
-		err = onSetStoryStatus(s, *conn.Channel, userID, p)
+		err = onSetStoryStatus(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case ClientCmdSubmitVote:
-		p, ok := param.(map[string]interface{})
-		if !ok {
-			return errors.WithStack(errors.New("cannot read parameter as map[string]interface{}"))
-		}
-		err = onSubmitVote(s, *conn.Channel, userID, p)
+		err = onSubmitVote(s, *conn.Channel, userID, param.(map[string]interface{}))
 	default:
 		err = errors.New("unhandled estimate command [" + cmd + "]")
 	}
@@ -69,7 +42,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 	if !ok {
 		return errors.WithStack(errors.New("cannot read choices as string"))
 	}
-	title := util.ServiceTitle(titleString)
+	title := util.ServiceTitle(util.SvcEstimate.Title, titleString)
 
 	choicesString, ok := param["choices"].(string)
 	if !ok {
@@ -83,7 +56,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 	sprintID := getUUIDPointer(param, "sprintID")
 	teamID := getUUIDPointer(param, "teamID")
 
-	msg := "saving estimate session [%s] with choices [%s], team [%s], and sprint [%s]"
+	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
 	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(choices, ", "), teamID, sprintID))
 
 	curr, err := s.estimates.GetByID(ch.ID)
@@ -118,6 +91,11 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated estimate session"))
 		}
+	}
+
+	err = s.updatePerms(ch, userID, s.estimates.Permissions, param)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
 	}
 
 	return nil

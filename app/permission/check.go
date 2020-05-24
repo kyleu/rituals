@@ -6,28 +6,32 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) Check(
-	svc util.Service, modelID uuid.UUID, auths auth.Records,
-	teamID *uuid.UUID, teamName string, currentTeams []uuid.UUID,
-	sprintID *uuid.UUID, sprintName string, sprints []uuid.UUID) Errors {
+type Params struct {
+	ID      uuid.UUID
+	Slug    string
+	Title   string
+	Current []uuid.UUID
+}
+
+func (s *Service) Check(authEnabled bool, svc util.Service, modelID uuid.UUID, auths auth.Records, teamP *Params, sprintP *Params) (Permissions, Errors) {
 	perms := s.GetByModelID(modelID, nil)
 
 	var ret Errors
 
-	authResult := s.checkAuths(svc, perms, auths)
+	authResult := s.checkAuths(authEnabled, svc, perms, auths)
 	if authResult != nil {
 		ret = append(ret, authResult...)
 	}
 
-	teamResult := s.checkTeam(svc, perms, teamID, teamName, currentTeams)
+	teamResult := s.checkModel(util.SvcTeam.Key, svc, perms, teamP)
 	if teamResult != nil {
 		ret = append(ret, teamResult)
 	}
 
-	sprintResult := s.checkSprint(svc, perms, sprintID, sprintName, sprints)
+	sprintResult := s.checkModel(util.SvcSprint.Key, svc, perms, sprintP)
 	if sprintResult != nil {
 		ret = append(ret, sprintResult)
 	}
 
-	return ret
+	return perms, ret
 }

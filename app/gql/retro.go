@@ -33,11 +33,11 @@ func initRetro() {
 	})
 
 	retroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args[util.KeyKey]
-		if ok {
-			return ctx.App.Retro.GetBySlug(slug.(string))
+		slug, err := paramString(p, util.KeyKey)
+		if err != nil {
+			return nil, err
 		}
-		return nil, nil
+		return ctx.App.Retro.GetBySlug(slug)
 	}
 
 	retrosResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -86,7 +86,7 @@ func initRetro() {
 				"owner": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"status": &graphql.Field{
+				util.KeyStatus: &graphql.Field{
 					Type: graphql.NewNonNull(retroStatusType),
 					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 						return p.Source.(*retro.Session).Status.Key, nil
@@ -98,7 +98,7 @@ func initRetro() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				"members": &graphql.Field{
+				util.KeyPlural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This retro's members",
 					Args:        listArgs,

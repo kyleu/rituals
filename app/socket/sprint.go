@@ -18,6 +18,8 @@ func onSprintMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 		err = onSprintConnect(s, conn, userID, param.(string))
 	case ClientCmdUpdateSession:
 		err = onSprintSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case ClientCmdRemoveMember:
+		err = onRemoveMember(s, s.sprints.Members, *conn.Channel, userID, param.(string))
 	default:
 		err = errors.New("unhandled sprint command [" + cmd + "]")
 	}
@@ -25,8 +27,7 @@ func onSprintMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 }
 
 func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(param["title"].(string))
-	s.logger.Debug(fmt.Sprintf("saving sprint session [%s]", title))
+	title := util.ServiceTitle(util.SvcSprint.Title, param["title"].(string))
 
 	curr, err := s.sprints.GetByID(ch.ID)
 	if err != nil {
@@ -72,6 +73,11 @@ func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[str
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending team for updated sprint session"))
 		}
+	}
+
+	err = s.updatePerms(ch, userID, s.sprints.Permissions, param)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
 	}
 
 	return nil

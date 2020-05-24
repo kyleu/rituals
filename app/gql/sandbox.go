@@ -1,7 +1,6 @@
 package gql
 
 import (
-	"emperror.dev/errors"
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/rituals.dev/app/sandbox"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -25,11 +24,11 @@ func initSandbox() {
 	}
 
 	sandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, ok := p.Args[util.KeyKey]
-		if ok {
-			return sandbox.FromString(key.(string)), nil
+		key, err := paramString(p, util.KeyKey)
+		if err != nil {
+			return nil, err
 		}
-		return nil, nil
+		return sandbox.FromString(key), nil
 	}
 
 	sandboxesResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -43,10 +42,10 @@ func initSandbox() {
 	}
 
 	callSandboxResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, _ := params.Args[util.KeyKey].(string)
+		key, _ := paramString(params, util.KeyKey)
 		sb := sandbox.FromString(key)
 		if sb == nil {
-			return "", errors.New("invalid sandbox [" + key + "]")
+			return nil, util.IDError(util.KeySandbox, key)
 		}
 		return sb.Resolve(ctx)
 	}

@@ -33,11 +33,11 @@ func initStandup() {
 	})
 
 	standupResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args[util.KeyKey]
-		if ok {
-			return ctx.App.Standup.GetBySlug(slug.(string))
+		slug, err := paramString(p, util.KeyKey)
+		if err != nil {
+			return nil, err
 		}
-		return nil, nil
+		return ctx.App.Standup.GetBySlug(slug)
 	}
 
 	standupsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -86,7 +86,7 @@ func initStandup() {
 				"owner": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"status": &graphql.Field{
+				util.KeyStatus: &graphql.Field{
 					Type: graphql.NewNonNull(standupStatusType),
 					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 						return p.Source.(*standup.Session).Status.Key, nil
@@ -95,7 +95,7 @@ func initStandup() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				"members": &graphql.Field{
+				util.KeyPlural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This standup's members",
 					Args:        listArgs,

@@ -1,30 +1,30 @@
 namespace report {
   export interface Report {
-    id: string;
-    d: string;
-    authorID: string;
-    content: string;
-    html: string;
-    created: string;
+    readonly id: string;
+    readonly d: string;
+    readonly authorID: string;
+    readonly content: string;
+    readonly html: string;
+    readonly created: string;
   }
 
   export interface DayReports {
-    d: string;
-    reports: Report[];
+    readonly d: string;
+    readonly reports: Report[];
   }
 
   export function onSubmitReport() {
-    const d = dom.req<HTMLInputElement>("#standup-report-date").value;
-    const content = dom.req<HTMLInputElement>("#standup-report-content").value;
-    const msg = {svc: services.standup.key, cmd: command.client.addReport, param: {d: d, content: content}};
+    const d = dom.req<HTMLInputElement>("#report-date").value;
+    const content = dom.req<HTMLInputElement>("#report-content").value;
+    const msg = {svc: services.standup.key, cmd: command.client.addReport, param: {d, content}};
     socket.send(msg);
     return false;
   }
 
   export function onEditReport() {
-    const d = dom.req<HTMLInputElement>("#standup-report-edit-date").value;
-    const content = dom.req<HTMLInputElement>("#standup-report-edit-content").value;
-    const msg = {svc: services.standup.key, cmd: command.client.updateReport, param: {id: standup.cache.activeReport, d: d, content: content}};
+    const d = dom.req<HTMLInputElement>("#report-edit-date").value;
+    const content = dom.req<HTMLInputElement>("#report-edit-content").value;
+    const msg = {svc: services.standup.key, cmd: command.client.updateReport, param: {id: standup.cache.activeReport, d, content}};
     socket.send(msg);
     return false;
   }
@@ -42,7 +42,7 @@ namespace report {
   }
 
   function getActiveReport() {
-    if (standup.cache.activeReport === undefined) {
+    if (!standup.cache.activeReport) {
       console.warn("no active report");
       return undefined;
     }
@@ -56,7 +56,7 @@ namespace report {
   export function viewActiveReport() {
     const profile = system.cache.getProfile();
     const report = getActiveReport();
-    if (report === undefined) {
+    if (!report) {
       console.warn("no active report");
       return;
     }
@@ -87,21 +87,7 @@ namespace report {
 
   function setFor(report: report.Report, userID: string) {
     const same = report.authorID === userID;
-
-    dom.req("#modal-report .content-edit").style.display = same ? "block" : "none";
-    dom.setValue(dom.req<HTMLInputElement>("#standup-report-edit-date"), same ? report.d : "");
-
-    const contentEditTextarea = dom.req<HTMLTextAreaElement>("#standup-report-edit-content");
-    dom.setValue(contentEditTextarea, same ? report.content : "");
-    if (same) {
-      dom.wireTextarea(contentEditTextarea);
-    }
-
-    const contentView = dom.req("#modal-report .content-view");
-    contentView.style.display = same ? "none" : "block";
-    dom.setHTML(contentView, same ? "" : report.html);
-
-    dom.req("#modal-report .buttons-edit").style.display = same ? "block" : "none";
-    dom.req("#modal-report .buttons-view").style.display = same ? "none" : "block";
+    contents.onContentDisplay("report", same, report.content, report.html)
+    dom.setValue(dom.req<HTMLInputElement>("#report-edit-date"), same ? report.d : "");
   }
 }

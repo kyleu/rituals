@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"emperror.dev/errors"
+	"github.com/gofrs/uuid"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
@@ -38,4 +40,20 @@ func adminBC(ctx web.RequestContext, action string, s string) web.Breadcrumbs {
 	bc := web.BreadcrumbsSimple(ctx.Route(util.AdminLink()), util.KeyAdmin)
 	bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(action)), s)...)
 	return bc
+}
+
+func idFromParams(svc string, m map[string]string) (*uuid.UUID, error) {
+	retOut, ok := m[util.KeyID]
+
+	if !ok {
+		return nil, errors.New("params do not contain \"id\"")
+	}
+
+	ret := util.GetUUIDFromString(retOut)
+
+	if ret == nil {
+		return nil, util.IDError(svc, retOut)
+	}
+
+  return ret, nil
 }

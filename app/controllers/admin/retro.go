@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -30,9 +29,9 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 
 func RetroDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		retroID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if retroID == nil {
-			return "", errors.New("invalid retro id")
+		retroID, err := idFromParams(util.SvcRetro.Key, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		sess, err := ctx.App.Retro.GetByID(*retroID)
 		if err != nil {

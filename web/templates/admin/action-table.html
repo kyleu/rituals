@@ -19,7 +19,7 @@
       <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.ID.String()) %>"><% ComponentUUID(&model.AuthorID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Act %></td>
       <td><%= model.Note %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Occurred, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

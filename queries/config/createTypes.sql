@@ -1,5 +1,6 @@
 create type system_role as enum ('guest', 'user', 'admin');
 
+create type auth_provider as enum ('team', 'sprint', 'github', 'google', 'slack');
 create type member_status as enum ('owner', 'member', 'observer');
 
 create type estimate_status as enum ('new', 'active', 'complete', 'deleted');

@@ -2,6 +2,8 @@ package util
 
 const AppName = "rituals.dev"
 
+var AuthEnabled = false
+
 type key int
 
 const (

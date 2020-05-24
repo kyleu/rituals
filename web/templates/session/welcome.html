@@ -9,7 +9,7 @@
       <p>Enjoy your new <%= svc.Key %>!</p>
       <p>
         Invite new members by sharing this page's url, or restrict access to this <%= svc.Key %> by
-        <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="UIkit.modal('#modal-welcome').hide();events.openModal('session');return false;">editing permissions</a>.
+        <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="UIkit.modal('#modal-welcome').hide();events.openModal('<%= util.KeySession %>');return false;">editing permissions</a>.
       </p>
     </div>
     <div class="uk-modal-footer uk-text-right">

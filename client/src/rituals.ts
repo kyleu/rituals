@@ -1,37 +1,37 @@
 namespace rituals {
   export interface Message {
-    svc: string;
-    cmd: string;
-    param: any;
+    readonly svc: string;
+    readonly cmd: string;
+    readonly param: any;
   }
 
   export interface Profile {
-    userID: string;
-    name: string;
-    role: string;
-    theme: string;
-    navColor: string;
-    linkColor: string;
-    locale: string;
+    readonly userID: string;
+    readonly name: string;
+    readonly role: string;
+    readonly theme: string;
+    readonly navColor: string;
+    readonly linkColor: string;
+    readonly locale: string;
   }
 
   export interface Session {
-    id: string;
-    slug: string;
-    title: string;
+    readonly id: string;
+    readonly slug: string;
+    readonly title: string;
     teamID?: string;
     sprintID?: string;
-    owner: string;
-    created: string;
+    readonly owner: string;
+    readonly created: string;
   }
 
   export interface SessionJoined {
-    profile: Profile;
-    session: Session;
-    permissions: permission.Permission[];
-    auths: auth.Auth[];
-    members: member.Member[];
-    online: string[];
+    readonly profile: Profile;
+    readonly session: Session;
+    readonly permissions: permission.Permission[];
+    readonly auths: permission.Auth[];
+    readonly members: member.Member[];
+    readonly online: string[];
   }
 
   export function onSocketMessage(msg: Message) {
@@ -67,7 +67,7 @@ namespace rituals {
     system.cache.session = session;
     dom.setText("#model-title", session.title);
     dom.setValue("#model-title-input", session.title);
-    let items = dom.els("#navbar .uk-navbar-item");
+    const items = dom.els("#navbar .uk-navbar-item");
     if (items.length > 0) {
       items[items.length - 1].innerText = session.title;
     }
@@ -113,9 +113,9 @@ namespace rituals {
     system.cache.session = param.session;
     system.cache.profile = param.profile;
 
-    system.cache.permissions = param.permissions;
+    system.cache.permissions = collection.groupBy(param.permissions, x => x.k);
     system.cache.auths = param.auths;
-    permission.setPermissions();
+    permission.setPerms();
 
     system.cache.members = param.members;
     system.cache.online = param.online;
@@ -134,17 +134,12 @@ namespace rituals {
     UIkit.modal("#modal-session").hide();
 
     const lc = dom.req("#sprint-link-container");
-    const wc = dom.req("#sprint-warning-container");
 
     lc.innerHTML = "";
     if(spr) {
       lc.appendChild(sprint.renderSprintLink(spr));
-      wc.style.display = "block";
       dom.req("#sprint-warning-name").innerText = spr.title;
-    } else {
-      wc.style.display = "none";
     }
-    permission.setPermissions();
   }
 
   export function setTeam(tm: team.Detail | undefined) {
@@ -154,7 +149,6 @@ namespace rituals {
     if(tm) {
       container.appendChild(team.renderTeamLink(tm));
     }
-    permission.setPermissions();
   }
 
   export function showWelcomeMessage(count: number) {

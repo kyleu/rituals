@@ -23,7 +23,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
-		return tmpl(templates.Profile(auths, ctx, w))
+		return tmpl(templates.Profile(ctx.App.Auth.Enabled, auths, ctx, w))
 	})
 }
 

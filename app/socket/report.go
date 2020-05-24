@@ -21,13 +21,9 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 		return errors.WithStack(err)
 	}
 
-	c, ok := param["content"].(string)
+	content, ok := getContent(param)
 	if !ok {
-		return errors.WithStack(errors.New("cannot read content"))
-	}
-	content := strings.TrimSpace(c)
-	if len(content) == 0 {
-		content = util.KeyNoText
+		return errors.WithStack(errors.New(fmt.Sprintf("can't read content from [%v]", param["content"])))
 	}
 
 	s.logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", d.Format("2006-01-02"), userID))
@@ -42,7 +38,7 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	id := getUUIDPointer(param, util.KeyID)
 	if id == nil {
-		return errors.WithStack(errors.New("invalid id"))
+		return util.IDError(util.KeyReport, "")
 	}
 
 	d, err := parseDate(param["d"].(string))
@@ -50,13 +46,9 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 		return errors.WithStack(err)
 	}
 
-	c, ok := param["content"].(string)
+	content, ok := getContent(param)
 	if !ok {
-		return errors.WithStack(errors.Wrap(err, "cannot read report content"))
-	}
-	content := strings.TrimSpace(c)
-	if len(content) == 0 {
-		content = util.KeyNoText
+		return errors.WithStack(errors.New(fmt.Sprintf("can't read content from [%v]", param["content"])))
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", d.Format("2006-01-02"), userID))
@@ -70,9 +62,8 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 
 func onRemoveReport(s *Service, ch channel, userID uuid.UUID, param string) error {
 	reportID, err := uuid.FromString(param)
-
 	if err != nil {
-		return errors.New("invalid report id [" + param + "]")
+		return util.IDError(util.KeyReport, param)
 	}
 
 	s.logger.Debug(fmt.Sprintf("removing report [%s]", reportID))

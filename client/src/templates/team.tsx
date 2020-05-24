@@ -5,7 +5,7 @@ namespace team {
   }
 
   export function renderTeamSelect(teams: team.Detail[], activeID: string | undefined) {
-    return <select class="uk-select">
+    return <select class="uk-select" onchange="permission.setModelPerms('team')">
       <option value="">- no team -</option>
       { teams.map(t => {
         return t.id === activeID ? <option selected="selected" value={t.id}>{t.title}</option> : <option value={t.id}>{t.title}</option>;

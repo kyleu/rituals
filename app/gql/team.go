@@ -23,11 +23,11 @@ func initTeam() {
 	}
 
 	teamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args[util.KeyKey]
-		if ok {
-			return ctx.App.Team.GetBySlug(slug.(string))
+		slug, err := paramString(p, util.KeyKey)
+		if err != nil {
+			return nil, err
 		}
-		return nil, nil
+		return ctx.App.Team.GetBySlug(slug)
 	}
 
 	teamsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -57,7 +57,7 @@ func initTeam() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				"members": &graphql.Field{
+				util.KeyPlural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This team's members",
 					Args:        listArgs,

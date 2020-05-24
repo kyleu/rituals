@@ -23,7 +23,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving teams"))
 		}
 
-		ctx.Title = "Teams"
+		ctx.Title = util.KeyPluralTitle(util.SvcTeam.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key+".list"), util.SvcTeam.Key)
 		return tmpl(templates.TeamList(sessions, ctx, w))
 	})
@@ -32,7 +32,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 func TeamNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(r.Form.Get("title"))
+		title := util.ServiceTitle(util.SvcTeam.Title, r.Form.Get("title"))
 		sess, err := ctx.App.Team.New(title, ctx.Profile.UserID)
 		if err != nil {
 			return "", errors.WithStack(errors.Wrap(err, "error creating team session"))
@@ -54,7 +54,8 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcTeam.Key + ".list"), nil
 		}
 
-		permErrors, bc := check(&ctx, ctx.App.Team.Permissions, util.SvcTeam, sess.ID, key, sess.Title, nil, nil)
+		params := PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
+		permErrors, bc := check(&ctx, ctx.App.Team.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 

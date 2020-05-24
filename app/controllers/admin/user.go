@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -18,7 +17,7 @@ import (
 func UserList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "User List"
-		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, "users")
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, util.KeyPlural(util.KeyUser))
 
 		params := act.ParamSetFromRequest(r)
 		users, err := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
@@ -31,9 +30,9 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 
 func UserDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		userID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if userID == nil {
-			return "", errors.New("invalid user id")
+		userID, err := idFromParams(util.KeyUser, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		u, err := ctx.App.User.GetByID(*userID, false)
 		if err != nil {
@@ -77,7 +76,7 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = u.Name
-		bc := adminBC(ctx, util.KeyUser, "users")
+		bc := adminBC(ctx, util.KeyUser, util.KeyPlural(util.KeyUser))
 		link := util.AdminLink(util.KeyUser, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, userID.String()), u.Name)...)
 		ctx.Breadcrumbs = bc

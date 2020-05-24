@@ -48,7 +48,7 @@ func internalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 		}
 
 		_, _ = templates.InternalServerError(util.GetErrorDetail(e), r, ctx, w)
-		args := map[string]interface{}{"status": st}
+		args := map[string]interface{}{util.KeyStatus: st}
 
 		ctx.Logger.Warn(fmt.Sprintf("[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, e), args)
 	}

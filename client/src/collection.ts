@@ -1,7 +1,7 @@
 namespace collection {
   export class Group<T> {
-    key: string;
-    members: T[] = [];
+    readonly key: string;
+    readonly members: T[] = [];
 
     constructor(key: string) {
       this.key = key;
@@ -9,11 +9,11 @@ namespace collection {
   }
 
   export function groupBy<T>(list: T[], func: (x: T) => string): Group<T>[] {
-    let res: Group<T>[] = [];
-    let group: Group<T> | null = null;
+    const res: Group<T>[] = [];
+    let group: Group<T> | undefined;
     list.forEach((o) => {
-      let groupName = func(o);
-      if (group === null) {
+      const groupName = func(o);
+      if (!group) {
         group = new Group<T>(groupName);
       }
       if (groupName != group.key) {
@@ -22,17 +22,24 @@ namespace collection {
       }
       group.members.push(o);
     });
-    if (group != null) {
+    if (group) {
       res.push(group);
     }
     return res;
   }
 
-  export function find<T>(list: T[], f: (x: T) => boolean): T | undefined {
-    for (const x of list) {
-      if (f(x)) {
-        return x;
+  export function findGroup<T>(groups: collection.Group<T>[], key: string): T[] {
+    for (const g of groups) {
+      if (g.key === key) {
+        return g.members;
       }
     }
+    return []
+  }
+
+  export function flatten<T>(a: T[][]): T[] {
+    const ret: T[] = [];
+    a.forEach(v => ret.push(...v));
+    return ret;
   }
 }

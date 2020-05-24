@@ -1,14 +1,14 @@
 namespace retro {
   interface Detail extends rituals.Session {
-    status: { key: string };
-    categories: string[];
+    readonly status: { readonly key: string };
+    readonly categories: string[];
   }
 
   interface SessionJoined extends rituals.SessionJoined {
-    session: Detail;
-    team?: team.Detail;
-    sprint?: sprint.Detail;
-    feedback: feedback.Feedback[];
+    readonly session: Detail;
+    readonly team?: team.Detail;
+    readonly sprint?: sprint.Detail;
+    readonly feedback: feedback.Feedback[];
   }
 
   class Cache {
@@ -28,7 +28,7 @@ namespace retro {
         rituals.onError(services.retro.key, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined;
+        const sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         rituals.setTeam(sj.team);
         rituals.setSprint(sj.sprint);
@@ -38,6 +38,12 @@ namespace retro {
         break;
       case command.server.sessionUpdate:
         setRetroDetail(param as Detail);
+        break;
+      case command.server.permissionsUpdate:
+        system.setPermissions(param as permission.Permission[]);
+        break;
+      case command.server.authUpdate:
+        system.setAuth(param as permission.Auth[]);
         break;
       case command.server.teamUpdate:
         const tm = param as team.Detail | undefined;
@@ -67,8 +73,8 @@ namespace retro {
   function setRetroDetail(detail: Detail) {
     cache.detail = detail;
     dom.setValue("#model-categories-input", detail.categories.join(", "));
-    dom.setOptions(dom.req("#retro-feedback-category"), detail.categories);
-    dom.setOptions(dom.req("#retro-feedback-edit-category"), detail.categories);
+    dom.setOptions("#feedback-category", detail.categories);
+    dom.setOptions("#feedback-edit-category", detail.categories);
     feedback.setFeedback(retro.cache.feedback);
     rituals.setDetail(detail);
   }
@@ -78,8 +84,9 @@ namespace retro {
     const categories = dom.req<HTMLInputElement>("#model-categories-input").value;
     const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
     const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
+    const permissions = permission.readPermissions();
 
-    const msg = {svc: services.retro.key, cmd: command.client.updateSession, param: {title: title, categories: categories, teamID: teamID, sprintID: sprintID}};
+    const msg = {svc: services.retro.key, cmd: command.client.updateSession, param: {title, categories, teamID, sprintID, permissions}};
     socket.send(msg);
   }
 }

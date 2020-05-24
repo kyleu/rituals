@@ -1,0 +1,18 @@
+<%: func PermissionProviderError(svc util.Service, provider *auth.Provider, errors permission.Errors, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<% if len(errors) > 0 { %>
+  <li>
+    <p>
+      To access this <%= svc.Key %>, you must sign in to <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(`auth.submit`, `key`, provider.Key) %>"><%= provider.Title %></a>
+      <% var ms = errors.GetMatches() %>
+      <% if len(ms) > 0 { %>
+        using an email address from
+        <% for idx, m := range ms { %>
+          <%= m %>
+          <% if idx < len(ms) - 1 { %>
+            or
+          <% } %>
+        <% } %>
+      <% } %>
+    </p>
+  </li>
+<% } %>

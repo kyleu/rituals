@@ -20,16 +20,16 @@ func Health(w http.ResponseWriter, r *http.Request) {
 
 func Modules(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = "Modules"
-		ctx.Breadcrumbs = append(aboutBC(ctx), web.Breadcrumb{Path: ctx.Route("modules"), Title: "modules"})
+		ctx.Title = util.KeyTitle(util.KeyModules)
+		ctx.Breadcrumbs = append(aboutBC(ctx), web.Breadcrumb{Path: ctx.Route(util.KeyModules), Title: util.KeyModules})
 		return tmpl(templates.ModulesList(ctx, w))
 	})
 }
 
 func Routes(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = "Routes"
-		ctx.Breadcrumbs = append(aboutBC(ctx), web.Breadcrumb{Path: ctx.Route("routes"), Title: "routes"})
+		ctx.Title = util.KeyTitle(util.KeyRoutes)
+		ctx.Breadcrumbs = append(aboutBC(ctx), web.Breadcrumb{Path: ctx.Route(util.KeyRoutes), Title: util.KeyRoutes})
 		return tmpl(templates.RoutesList(ctx, w))
 	})
 }

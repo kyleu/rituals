@@ -1,15 +1,15 @@
 namespace sprint {
   export interface Detail extends rituals.Session {
-    startDate: string;
-    endDate: string;
+    readonly startDate: string;
+    readonly endDate: string;
   }
 
   interface SessionJoined extends rituals.SessionJoined {
-    session: Detail;
-    team?: team.Detail;
-    estimates: rituals.Session[];
-    standups: rituals.Session[];
-    retros: rituals.Session[];
+    readonly session: Detail;
+    readonly team?: team.Detail;
+    readonly estimates: rituals.Session[];
+    readonly standups: rituals.Session[];
+    readonly retros: rituals.Session[];
   }
 
   class Cache {
@@ -24,7 +24,7 @@ namespace sprint {
         rituals.onError(services.sprint.key, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined;
+        const sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         setSprintDetail(sj.session);
         rituals.setTeam(sj.team)
@@ -40,6 +40,12 @@ namespace sprint {
         break;
       case command.server.sessionUpdate:
         setSprintDetail(param as Detail);
+        break;
+      case command.server.permissionsUpdate:
+        system.setPermissions(param as permission.Permission[]);
+        break;
+      case command.server.authUpdate:
+        system.setAuth(param as permission.Auth[]);
         break;
       case command.server.contentUpdate:
         socket.socketConnect(system.cache.currentService, system.cache.currentID);
@@ -70,7 +76,9 @@ namespace sprint {
     const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
     const startDate = dom.opt<HTMLInputElement>("#model-start-date-input")?.value;
     const endDate = dom.opt<HTMLInputElement>("#model-end-date-input")?.value;
-    const msg = {svc: services.sprint.key, cmd: command.client.updateSession, param: {title: title, startDate: startDate, endDate: endDate, teamID: teamID}};
+    const permissions = permission.readPermissions();
+
+    const msg = {svc: services.sprint.key, cmd: command.client.updateSession, param: {title, startDate, endDate, teamID, permissions}};
     socket.send(msg);
   }
 
@@ -84,8 +92,9 @@ namespace sprint {
   export function viewSprints(sprints: sprint.Detail[]) {
     const c = dom.opt("#model-sprint-container");
     if(c) {
-      c.style.display = sprints.length > 0 ? "block" : "none";
+      dom.setDisplay(c, sprints.length > 0)
       dom.setContent("#model-sprint-select", renderSprintSelect(sprints, system.cache.session?.sprintID));
+      permission.setModelPerms("sprint");
     }
   }
 }

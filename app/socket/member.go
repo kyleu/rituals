@@ -1,9 +1,11 @@
 package socket
 
 import (
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
+	"time"
 )
 
 func (s *Service) UpdateName(id uuid.UUID, name string) error {
@@ -35,4 +37,25 @@ func (s *Service) sendOnlineUpdate(ch channel, connID uuid.UUID, userID uuid.UUI
 func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...uuid.UUID) error {
 	onlineMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdMemberUpdate, Param: current}
 	return s.WriteChannel(ch, &onlineMsg, except...)
+}
+
+func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, userID uuid.UUID, targetString string) error {
+	target, err := uuid.FromString(targetString)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "invalid target id [" + targetString + "]"))
+	}
+
+	err = memberSvc.RemoveMember(ch.ID, target)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "unable to remove member from team"))
+	}
+
+	err = s.sendMemberUpdate(ch, &member.Entry{
+		UserID:  target,
+		Name:    "::delete",
+		Role:    member.Role{},
+		Created: time.Time{},
+	})
+
+	return errors.WithStack(errors.Wrap(err, "unable to send member update from team"))
 }

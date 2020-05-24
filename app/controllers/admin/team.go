@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -31,9 +30,9 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 func TeamDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		teamID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if teamID == nil {
-			return "", errors.New("invalid team id")
+		teamID, err := idFromParams(util.SvcTeam.Key, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		sess, err := ctx.App.Team.GetByID(*teamID)
 		if err != nil {

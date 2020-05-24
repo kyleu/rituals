@@ -1,21 +1,21 @@
 namespace estimate {
   interface Detail extends rituals.Session {
-    status: { key: string };
-    choices: string[];
+    readonly status: { key: string };
+    readonly choices: string[];
   }
 
   export interface StoryStatusChange {
-    storyID: string;
-    status: string;
-    finalVote: string;
+    readonly storyID: string;
+    readonly status: string;
+    readonly finalVote: string;
   }
 
   interface SessionJoined extends rituals.SessionJoined {
-    session: Detail;
-    team?: team.Detail;
-    sprint?: sprint.Detail;
-    stories: story.Story[];
-    votes: vote.Vote[];
+    readonly session: Detail;
+    readonly team?: team.Detail;
+    readonly sprint?: sprint.Detail;
+    readonly stories: story.Story[];
+    readonly votes: vote.Vote[];
   }
 
   class Cache {
@@ -28,7 +28,7 @@ namespace estimate {
     votes: vote.Vote[] = [];
 
     public activeVotes(): vote.Vote[] {
-      if (this.activeStory === undefined) {
+      if (!this.activeStory) {
         return [];
       }
       return this.votes.filter(x => x.storyID === this.activeStory);
@@ -43,7 +43,7 @@ namespace estimate {
         rituals.onError(services.estimate.key, param as string);
         break;
       case command.server.sessionJoined:
-        let sj = param as SessionJoined;
+        const sj = param as SessionJoined;
         rituals.onSessionJoin(sj);
         rituals.setTeam(sj.team);
         rituals.setSprint(sj.sprint);
@@ -54,6 +54,12 @@ namespace estimate {
         break;
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);
+        break;
+      case command.server.permissionsUpdate:
+        system.setPermissions(param as permission.Permission[]);
+        break;
+      case command.server.authUpdate:
+        system.setAuth(param as permission.Auth[]);
         break;
       case command.server.teamUpdate:
         const tm = param as team.Detail | undefined;
@@ -98,8 +104,9 @@ namespace estimate {
     const choices = dom.req<HTMLInputElement>("#model-choices-input").value;
     const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
     const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
+    const permissions = permission.readPermissions();
 
-    const msg = {svc: services.estimate.key, cmd: command.client.updateSession, param: {title: title, choices: choices, teamID: teamID, sprintID: sprintID}};
+    const msg = {svc: services.estimate.key, cmd: command.client.updateSession, param: {title, choices, teamID, sprintID, permissions}};
     socket.send(msg);
   }
 

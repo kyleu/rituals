@@ -16,7 +16,7 @@ type StoryStatusChange struct {
 }
 
 func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(param["title"].(string))
+	title := util.ServiceTitle("Story", param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("adding story [%s]", title))
 
 	story, err := s.estimates.NewStory(ch.ID, title, userID)
@@ -30,10 +30,10 @@ func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]inter
 func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	storyID := getUUIDPointer(param, util.KeyID)
 	if storyID == nil {
-		return errors.New("invalid story id")
+		return util.IDError(util.KeyStory, "")
 	}
 
-	title := util.ServiceTitle(param["title"].(string))
+	title := util.ServiceTitle("Story", param["title"].(string))
 	st, err := s.estimates.UpdateStory(*storyID, title, userID)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "cannot update story"))
@@ -45,7 +45,7 @@ func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]in
 func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error {
 	storyID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.New("invalid story id [" + param + "]")
+		return util.IDError(util.KeyStory, param)
 	}
 	s.logger.Debug(fmt.Sprintf("removing report [%s]", storyID))
 	err = s.estimates.RemoveStory(storyID, userID)
@@ -61,10 +61,10 @@ func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, m map[string]int
 	storyIDString := m["storyID"].(string)
 	storyID, err := uuid.FromString(storyIDString)
 	if err != nil {
-		return errors.WithStack(errors.New("invalid story id [" + storyIDString + "]"))
+		return util.IDError(util.KeyStory, storyIDString)
 	}
 
-	statusString := m["status"].(string)
+	statusString := m[util.KeyStatus].(string)
 	status := estimate.StoryStatusFromString(statusString)
 	changed, finalVote, err := s.estimates.SetStoryStatus(storyID, status, userID)
 	if err != nil {

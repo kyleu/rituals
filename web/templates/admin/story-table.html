@@ -5,7 +5,7 @@
     <tr>
       <% ComponentTableHeader(util.KeyStory, util.KeyID, "ID", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyStory, "idx", "Index", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyStory, "status", "Status", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyStory, util.KeyStatus, util.KeyTitle(util.KeyStatus), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyStory, "title", "Title", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyStory, "authorID", "Author", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyStory, util.KeyCreated, "Created", params, ctx, buffer) %>

@@ -3,6 +3,8 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/util"
+	"strings"
 )
 
 func (s *Service) SendContentUpdate(svc string, id *uuid.UUID) error {
@@ -13,4 +15,16 @@ func (s *Service) SendContentUpdate(svc string, id *uuid.UUID) error {
 		}
 	}
 	return nil
+}
+
+func getContent(param map[string]interface{}) (string, bool) {
+	c, ok := param["content"].(string)
+	if !ok {
+		return "", false
+	}
+	c = strings.TrimSpace(c)
+	if len(c) == 0 {
+		c = util.KeyNoText
+	}
+	return c, true
 }

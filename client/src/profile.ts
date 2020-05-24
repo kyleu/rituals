@@ -1,18 +1,20 @@
 namespace profile {
+  // noinspection JSUnusedGlobalSymbols
   export function setNavColor(el: HTMLElement, c: string) {
     dom.setValue("#navbar-color", c);
-    let nb = dom.req("#navbar");
+    const nb = dom.req("#navbar");
     nb.className = `${c}-bg uk-navbar-container uk-navbar`;
-    let colors = document.querySelectorAll(".navbar_swatch");
+    const colors = document.querySelectorAll(".navbar_swatch");
     colors.forEach(function(i) {
       i.classList.remove("active");
     });
     el.classList.add("active");
   }
 
+  // noinspection JSUnusedGlobalSymbols
   export function setLinkColor(el: HTMLElement, c: string) {
     dom.setValue("#link-color", c);
-    let links = dom.els(".profile-link");
+    const links = dom.els(".profile-link");
     links.forEach(l => {
       l.classList.forEach(x => {
         if (x.indexOf("-fg") > -1) {
@@ -21,7 +23,7 @@ namespace profile {
         l.classList.add(`${c}-fg`);
       });
     });
-    let colors = document.querySelectorAll(".link_swatch");
+    const colors = document.querySelectorAll(".link_swatch");
     colors.forEach(function(i) {
       i.classList.remove("active");
     });
@@ -29,7 +31,7 @@ namespace profile {
   }
 
   export function selectTheme(theme: string) {
-    let card = dom.els(".uk-card");
+    const card = dom.els(".uk-card");
     switch (theme) {
       case "light":
         document.documentElement.classList.remove("uk-light");

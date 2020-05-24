@@ -115,7 +115,7 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) (Sessions,
 
 func (s *Service) GetIdsByMember(userID uuid.UUID) ([]uuid.UUID, error) {
 	var ids []uuid.UUID
-	q := query.SQLSelect("x.id", "team x join team_member m on x.id = m.team_id", "m.user_id = $1", "", 0, 0)
+	q := query.SQLSelect("x.id", "sprint x join sprint_member m on x.id = m.sprint_id", "m.user_id = $1", "", 0, 0)
 	err := s.db.Select(&ids, q, userID)
 	if err != nil {
 		return nil, err

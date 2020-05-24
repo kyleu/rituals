@@ -25,7 +25,7 @@ namespace feedback {
         {cats.map(cat => <div class="feedback-list uk-transition-toggle">
           <div class="feedback-category-header">
             <span class="right">
-              <a class={`${profile.linkColor}-fg uk-icon-button uk-transition-fade`} data-uk-icon="plus" onclick={`events.openModal('add-feedback', '${cat.category}');`} title="edit session"></a>
+              <a class={`${profile.linkColor}-fg uk-icon-button uk-transition-fade`} data-uk-icon="plus" onclick={`events.openModal('add-feedback', '${cat.category}');`} title="edit feedback" />
             </span>
 
             <span class="feedback-category-title" onclick={`events.openModal('add-feedback', '${cat.category}');`}>{cat.category}</span>

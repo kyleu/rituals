@@ -40,7 +40,7 @@ func ParseFlash(s string) (string, string) {
 	content := split[1]
 
 	switch severity {
-	case "status":
+	case util.KeyStatus:
 		return "uk-alert-primary", content
 	case "success":
 		return "uk-alert-success", content

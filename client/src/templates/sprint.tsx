@@ -26,7 +26,7 @@ namespace sprint {
   }
 
   export function renderSprintSelect(sprints: sprint.Detail[], activeID: string | undefined) {
-    return <select class="uk-select">
+    return <select class="uk-select" onchange="permission.setModelPerms('sprint')">
       <option value="">- no sprint -</option>
       {sprints.map(s => {
         return s.id === activeID ? <option selected="selected" value={s.id}>{s.title}</option> : <option value={s.id}>{s.title}</option>;

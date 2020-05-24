@@ -16,6 +16,8 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 		err = onStandupConnect(s, conn, userID, param.(string))
 	case ClientCmdUpdateSession:
 		err = onStandupSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+	case ClientCmdRemoveMember:
+		err = onRemoveMember(s, s.standups.Members, *conn.Channel, userID, param.(string))
 	case ClientCmdAddReport:
 		err = onAddReport(s, *conn.Channel, userID, param.(map[string]interface{}))
 	case ClientCmdUpdateReport:
@@ -29,13 +31,13 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 }
 
 func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(param["title"].(string))
-	s.logger.Debug(fmt.Sprintf("saving standup session [%s]", title))
+	title := util.ServiceTitle(util.SvcStandup.Title, param["title"].(string))
 
 	sprintID := getUUIDPointer(param, "sprintID")
 	teamID := getUUIDPointer(param, "teamID")
 
-	s.logger.Debug(fmt.Sprintf("saving standup session [%s] with sprint [%s]", title, sprintID))
+	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
+	s.logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
 
 	curr, err := s.standups.GetByID(ch.ID)
 	if err != nil {
@@ -69,6 +71,11 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 		if err != nil {
 			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated standup session"))
 		}
+	}
+
+	err = s.updatePerms(ch, userID, s.standups.Permissions, param)
+	if err != nil {
+		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
 	}
 
 	return nil

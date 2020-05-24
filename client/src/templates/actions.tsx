@@ -1,6 +1,6 @@
 namespace action {
   function renderAction(action: Action): JSX.Element {
-    let c = JSON.stringify(action.content, null, 2);
+    const c = JSON.stringify(action.content, null, 2);
     return <tr>
       <td>{system.getMemberName(action.authorID)}</td>
       <td>{action.act}</td>

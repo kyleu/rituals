@@ -7,49 +7,52 @@ import (
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-func check(
-	ctx *web.RequestContext, permSvc *permission.Service, svc util.Service,
-	modelID uuid.UUID, slug string, title string,
-	teamID *uuid.UUID, sprintID *uuid.UUID) (permission.Errors, web.Breadcrumbs) {
-	var tmTitle, sprTitle string
+type PermissionParams struct {
+	Svc util.Service
+	ModelID uuid.UUID
+	Slug string
+	Title string
+	TeamID *uuid.UUID
+	SprintID *uuid.UUID
+}
 
-	var tm *team.Session
-	if teamID != nil {
-		tm, _ = ctx.App.Team.GetByID(*teamID)
-		tmTitle = tm.Title
-	}
-
-	var spr *sprint.Session
-	if sprintID != nil {
-		spr, _ = ctx.App.Sprint.GetByID(*sprintID)
-		sprTitle = spr.Title
-	}
+func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionParams) (permission.Errors, web.Breadcrumbs) {
 
 	var bc web.Breadcrumbs
-	if spr == nil {
-		bc = web.BreadcrumbsSimple(ctx.Route(svc.Key+".list"), svc.Key)
-	} else {
-		bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, util.KeyKey, spr.Slug), spr.Title)
-	}
+	bc = web.BreadcrumbsSimple(ctx.Route(p.Svc.Key+".list"), p.Svc.Plural)
 
-	auths, currTeams, currSprints, err := authsTeamsAndSprints(ctx, teamID, sprintID)
+	auths, currTeams, currSprints, err := authsTeamsAndSprints(ctx, p.TeamID, p.SprintID)
 	if err != nil {
-		return permission.Errors{{K: "system", V: "00000000-0000-0000-0000-000000000000", Code: "error", Message: err.Error()}}, bc
+		return permission.Errors{{Svc: "system", Provider: "error", Message: err.Error()}}, bc
 	}
 
-	permErrors := permSvc.Check(svc, modelID, auths, teamID, tmTitle, currTeams, sprintID, sprTitle, currSprints)
+	var tp *permission.Params
+	if p.TeamID != nil {
+		tm, _ := ctx.App.Team.GetByID(*p.TeamID)
+		tp = &permission.Params{ID: tm.ID, Slug: tm.Slug, Title: tm.Title, Current: currTeams}
+	}
+
+	var sp *permission.Params
+	if p.SprintID != nil {
+		spr, _ := ctx.App.Sprint.GetByID(*p.SprintID)
+		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
+	}
+
+	if sp != nil {
+		bc = append(web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, util.KeyKey, sp.Slug), sp.Title), bc...)
+	}
+
+	_, permErrors := permSvc.Check(ctx.App.Auth.Enabled, p.Svc, p.ModelID, auths, tp, sp)
 
 	if len(permErrors) == 0 {
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(svc.Key, util.KeyKey, slug), title)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(p.Svc.Key, util.KeyKey, p.Slug), p.Title)...)
 	} else {
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(svc.Key, util.KeyKey, slug), slug)...)
+		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(p.Svc.Key, util.KeyKey, p.Slug), p.Slug)...)
 	}
 
 	return permErrors, bc

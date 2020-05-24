@@ -2,6 +2,7 @@ package permission
 
 import (
 	"database/sql"
+	"emperror.dev/errors"
 	"fmt"
 
 	"github.com/kyleu/rituals.dev/app/member"
@@ -92,7 +93,67 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 	}
 
 	actionContent := map[string]interface{}{"k": k, "access": access}
-	s.actions.Post(s.svc, modelID, userID, action.ActPermissionAdd, actionContent, "")
+	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, actionContent, "")
 
 	return dto
+}
+
+func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID) (Permissions, error) {
+	tx, err := s.db.Beginx()
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("error starting transaction for model [%v] permissions: %+v", modelID, err))
+	}
+	defer func() { _ = tx.Commit() }()
+
+	current := s.GetByModelID(modelID, nil)
+	var i, u, r Permissions
+
+	for _, p := range perms {
+		if current.FindByK(p.K) == nil {
+			i = append(i, p)
+		} else {
+			u = append(u, p)
+		}
+	}
+
+	for _, c := range current {
+		if perms.FindByK(c.K) == nil {
+			r = append(r, c)
+		}
+	}
+
+	s.logger.Debug(fmt.Sprintf(" ===== Current[%v], Insert[%v], Update[%v], Remove[[%v]]", len(current), len(i), len(u), len(r)))
+
+	for _, p := range u {
+		q := fmt.Sprintf(`update %s set access = $1 where %s = $2 and k = $3 and v = $4`, s.tableName, s.colName)
+		_, err := tx.Exec(q, p.Access.Key, modelID, p.K, p.V)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))
+		}
+	}
+
+	for _, p := range i {
+		q := fmt.Sprintf(`insert into %s (%s, k, v, access) values ($1, $2, $3, $4)`, s.tableName, s.colName)
+		_, err := tx.Exec(q, modelID, p.K, p.V, p.Access.Key)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))
+		}
+	}
+
+	for _, p := range r {
+		q := fmt.Sprintf(`delete from %s where %s = $1 and k = $2`, s.tableName, s.colName)
+		_, err := tx.Exec(q, modelID, p.K)
+		if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error removing existing permission from model [%v]: %+v", modelID, err))
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+			return nil, errors.Wrap(err, fmt.Sprintf("error committing permissions transaction for model [%v]: %+v", modelID, err))
+	}
+
+	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, perms, "")
+
+	return perms, nil
 }

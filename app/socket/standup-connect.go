@@ -28,7 +28,7 @@ type StandupSessionJoined struct {
 func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	standupID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
+		return util.IDError(util.SvcStandup.Key, param)
 	}
 	ch := channel{Svc: util.SvcStandup.Key, ID: standupID}
 	err = s.Join(conn.ID, ch)
@@ -56,19 +56,19 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return nil
 	}
 
-	entry := s.standups.Members.Register(ch.ID, userID)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
-	perms := s.standups.Permissions.GetByModelID(ch.ID, nil)
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	members := s.standups.Members.GetByModelID(ch.ID, nil)
 
-	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcStandup, ch.ID)
+	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcStandup, ch.ID)
 	if err != nil {
 		return err
 	}
 	if len(permErrors) > 0 {
 		return s.sendPermErrors(util.SvcStandup, ch, permErrors)
 	}
+
+	entry := s.standups.Members.Register(ch.ID, userID)
+	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	members := s.standups.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID

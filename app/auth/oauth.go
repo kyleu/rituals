@@ -31,12 +31,12 @@ func (s *Service) getConfig(secure bool, host string, key string) *oauth2.Config
 	}
 }
 
-func (s *Service) URLFor(secure bool, host string, key string) string {
+func (s *Service) URLFor(state string, secure bool, host string, key string) string {
 	cfg := s.getConfig(secure, host, key)
 	if cfg == nil {
 		return ""
 	}
-	return cfg.AuthCodeURL("state")
+	return cfg.AuthCodeURL(state)
 }
 
 func (s *Service) getToken(key string, code string) (*oauth2.Token, error) {

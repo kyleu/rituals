@@ -33,9 +33,9 @@ type Permission struct {
 
 type Permissions []*Permission
 
-func (es Permissions) FindByK(code string) Permissions {
+func (ps Permissions) FindByK(code string) Permissions {
 	var ret Permissions
-	for _, e := range es {
+	for _, e := range ps {
 		if e.K == code {
 			ret = append(ret, e)
 		}
@@ -44,10 +44,10 @@ func (es Permissions) FindByK(code string) Permissions {
 }
 
 type Error struct {
-	K       string `json:"k"`
-	V       string `json:"v"`
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Svc      string `json:"svc"`
+	Provider string `json:"provider"`
+	Match    string `json:"match"`
+	Message  string `json:"message"`
 }
 
 type Errors []*Error
@@ -61,4 +61,22 @@ func (es Errors) ToError() error {
 		msgs[i] = e.Message
 	}
 	return errors.WithStack(errors.New("permission error: " + strings.Join(msgs, ", ")))
+}
+
+func (es Errors) FindByProvider(p string) Errors {
+	var ret Errors
+	for _, e := range es {
+		if e.Provider == p {
+			ret = append(ret, e)
+		}
+	}
+	return ret
+}
+
+func (es Errors) GetMatches() []string {
+	var ret []string
+	for _, e := range es {
+		ret = append(ret, strings.Split(e.Match, ",")...)
+	}
+	return ret
 }

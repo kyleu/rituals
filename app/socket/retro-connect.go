@@ -28,7 +28,7 @@ type RetroSessionJoined struct {
 func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	retroID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
+		return util.IDError(util.SvcRetro.Key, param)
 	}
 	ch := channel{Svc: util.SvcRetro.Key, ID: retroID}
 	err = s.Join(conn.ID, ch)
@@ -53,19 +53,18 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return errors.WithStack(errors.Wrap(err, "error writing error message"))
 	}
 
-	entry := s.retros.Members.Register(ch.ID, userID)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
-	perms := s.retros.Permissions.GetByModelID(ch.ID, nil)
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	members := s.retros.Members.GetByModelID(ch.ID, nil)
-
-	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcRetro, ch.ID)
+	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcRetro, ch.ID)
 	if err != nil {
 		return err
 	}
 	if len(permErrors) > 0 {
 		return s.sendPermErrors(util.SvcRetro, ch, permErrors)
 	}
+
+	entry := s.retros.Members.Register(ch.ID, userID)
+	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	members := s.retros.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID

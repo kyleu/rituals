@@ -22,7 +22,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 			return "", errors.WithStack(errors.Wrap(err, "error retrieving sprints"))
 		}
 
-		ctx.Title = "Sprints"
+		ctx.Title = util.KeyPluralTitle(util.SvcSprint.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
 		return tmpl(templates.SprintList(sessions, ctx, w))
 	})
@@ -31,7 +31,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 func SprintNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(r.Form.Get("title"))
+		title := util.ServiceTitle(util.SvcSprint.Title, r.Form.Get("title"))
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, teamID)
 		if err != nil {
@@ -58,7 +58,8 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcSprint.Key + ".list"), nil
 		}
 
-		permErrors, bc := check(&ctx, ctx.App.Sprint.Permissions, util.SvcSprint, sess.ID, key, sess.Title, sess.TeamID, nil)
+		params := PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
+		permErrors, bc := check(&ctx, ctx.App.Sprint.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 

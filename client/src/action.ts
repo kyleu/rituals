@@ -1,13 +1,13 @@
 namespace action {
   export interface Action {
-    id: string;
-    svc: string;
-    modelID: string;
-    authorID: string;
-    act: string;
-    content: any;
-    note: string;
-    occurred: string;
+    readonly id: string;
+    readonly svc: string;
+    readonly modelID: string;
+    readonly authorID: string;
+    readonly act: string;
+    readonly content: any;
+    readonly note: string;
+    readonly occurred: string;
   }
 
   export function loadActions() {

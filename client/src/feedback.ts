@@ -1,17 +1,17 @@
 namespace feedback {
   export interface Feedback {
-    id: string;
-    idx: number;
-    authorID: string;
-    category: string;
-    content: string;
-    html: string;
-    created: string;
+    readonly id: string;
+    readonly idx: number;
+    readonly authorID: string;
+    readonly category: string;
+    readonly content: string;
+    readonly html: string;
+    readonly created: string;
   }
 
   export interface FeedbackCategory {
-    category: string;
-    feedback: Feedback[];
+    readonly category: string;
+    readonly feedback: Feedback[];
   }
 
   export function setFeedback(feedback: feedback.Feedback[]) {
@@ -21,18 +21,18 @@ namespace feedback {
   }
 
   export function onSubmitFeedback() {
-    const category = dom.req<HTMLInputElement>("#retro-feedback-category").value;
-    const content = dom.req<HTMLInputElement>("#retro-feedback-content").value;
-    const msg = {svc: services.retro.key, cmd: command.client.addFeedback, param: {category: category, content: content}};
+    const category = dom.req<HTMLInputElement>("#feedback-category").value;
+    const content = dom.req<HTMLInputElement>("#feedback-content").value;
+    const msg = {svc: services.retro.key, cmd: command.client.addFeedback, param: {category, content}};
     socket.send(msg);
     return false;
   }
 
   export function onEditFeedback() {
     const id = retro.cache.activeFeedback;
-    const category = dom.req<HTMLInputElement>("#retro-feedback-edit-category").value;
-    const content = dom.req<HTMLInputElement>("#retro-feedback-edit-content").value;
-    const msg = {svc: services.retro.key, cmd: command.client.updateFeedback, param: {id: id, category: category, content: content}};
+    const category = dom.req<HTMLInputElement>("#feedback-edit-category").value;
+    const content = dom.req<HTMLInputElement>("#feedback-edit-content").value;
+    const msg = {svc: services.retro.key, cmd: command.client.updateFeedback, param: {id, category, content}};
     socket.send(msg);
     return false;
   }
@@ -50,7 +50,7 @@ namespace feedback {
   }
 
   export function getActiveFeedback() {
-    if (retro.cache.activeFeedback === undefined) {
+    if (!retro.cache.activeFeedback) {
       return undefined;
     }
     const curr = retro.cache.feedback.filter(x => x.id === retro.cache.activeFeedback).shift();
@@ -62,38 +62,18 @@ namespace feedback {
 
   export function viewActiveFeedback() {
     const profile = system.cache.getProfile();
+
     const fb = getActiveFeedback();
-    if (fb === undefined) {
+    if (!fb) {
       console.warn("no active feedback");
       return;
     }
 
-    dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.authorID)}`);
-    const contentEdit = dom.req("#modal-feedback .content-edit");
-    const contentEditCategory = dom.req<HTMLSelectElement>("#retro-feedback-edit-category", contentEdit);
-    const contentEditTextarea = dom.req<HTMLTextAreaElement>("#retro-feedback-edit-content", contentEdit);
-    const contentView = dom.req("#modal-feedback .content-view");
-    const buttonsEdit = dom.req("#modal-feedback .buttons-edit");
-    const buttonsView = dom.req("#modal-feedback .buttons-view");
+    const same = fb.authorID === profile.userID;
 
-    if (fb.authorID === profile.userID) {
-      contentEdit.style.display = "block";
-      dom.setSelectOption(contentEditCategory, fb.category);
-      dom.setValue(contentEditTextarea, fb.content);
-      dom.wireTextarea(contentEditTextarea);
-      contentView.style.display = "none";
-      dom.setHTML(contentView, "");
-      buttonsEdit.style.display = "block";
-      buttonsView.style.display = "none";
-    } else {
-      contentEdit.style.display = "none";
-      dom.setSelectOption(contentEditCategory, undefined);
-      dom.setValue(contentEditTextarea, "");
-      contentView.style.display = "block";
-      dom.setHTML(contentView, fb.html);
-      buttonsEdit.style.display = "none";
-      buttonsView.style.display = "block";
-    }
+    dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.authorID)}`);
+    dom.setSelectOption("#feedback-edit-category", same ? fb.category : undefined);
+    contents.onContentDisplay("report", same, fb.content, fb.html);
   }
 
   export function onFeedbackUpdate(r: feedback.Feedback) {
@@ -125,8 +105,8 @@ namespace feedback {
       return {category: c, feedback: reports};
     }
 
-    let ret = categories.map(toCollection);
-    const extras = feedback.filter(r => collection.find(categories, x => x === r.category) === undefined);
+    const ret = categories.map(toCollection);
+    const extras = feedback.filter(r => !categories.find(x => x === r.category));
     if (extras.length > 0) {
       ret.push({category: "unknown", feedback: extras});
     }

@@ -34,8 +34,8 @@
             <td><%= model.Note %></td>
           </tr>
           <tr>
-            <th>Occurred</th>
-            <td><% ComponentDateTime(&model.Occurred, _buffer) %></td>
+            <th><%= util.KeyTitle(util.KeyCreated) %></th>
+            <td><% ComponentDateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

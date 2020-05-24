@@ -6,8 +6,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -35,28 +33,14 @@ func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry,
 
 func (s *Service) check(
 	userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID,
-	svc util.Service, modelID uuid.UUID) (permission.Errors, error) {
-	var tmTitle, sprTitle string
-
-	var tm *team.Session
-	if teamID != nil {
-		tm, _ = s.teams.GetByID(*teamID)
-		tmTitle = tm.Title
-	}
-
+	svc util.Service, modelID uuid.UUID) (permission.Permissions, permission.Errors, error) {
 	var err error
-
-	var spr *sprint.Session
-	if sprintID != nil {
-		spr, _ = s.sprints.GetByID(*sprintID)
-		sprTitle = spr.Title
-	}
 
 	var currTeams []uuid.UUID
 	if teamID != nil {
 		currTeams, err = s.teams.GetIdsByMember(userID)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current teams"))
+			return nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current teams"))
 		}
 	}
 
@@ -64,8 +48,20 @@ func (s *Service) check(
 	if sprintID != nil {
 		currSprints, err = s.sprints.GetIdsByMember(userID)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current sprints"))
+			return nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current sprints"))
 		}
+	}
+
+	var tp *permission.Params
+	if teamID != nil {
+		tm, _ := s.teams.GetByID(*teamID)
+		tp = &permission.Params{ID: tm.ID, Slug: tm.Slug, Title: tm.Title, Current: currTeams}
+	}
+
+	var sp *permission.Params
+	if sprintID != nil {
+		spr, _ := s.sprints.GetByID(*sprintID)
+		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
 	}
 
 	var permSvc *permission.Service
@@ -83,10 +79,11 @@ func (s *Service) check(
 	}
 
 	if permSvc == nil {
-		return nil, errors.New("Invalid service [" + svc.Key + "]")
+		return nil, nil, errors.New("Invalid service [" + svc.Key + "]")
 	}
 
-	return permSvc.Check(svc, modelID, auths, teamID, tmTitle, currTeams, sprintID, sprTitle, currSprints), nil
+	perms, e := permSvc.Check(s.auths.Enabled, svc, modelID, auths, tp, sp)
+	return perms, e, nil
 }
 
 func (s *Service) sendPermErrors(svc util.Service, ch channel, permErrors permission.Errors) error {

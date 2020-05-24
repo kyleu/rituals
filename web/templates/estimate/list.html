@@ -10,7 +10,7 @@
         <div class="h1-icon" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>; ratio: 1.6;"></div>
         <%= util.SvcEstimate.PluralTitle %>
       </h1>
-      <div class="uk-text-lead">Planning poker for any stories you need to work on</div>
+      <div class="uk-text-lead">Planning poker for any <%= util.KeyPlural(util.KeyStory) %> you need to work on</div>
       <div class="uk-margin-top">
         <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
           <h3 class="uk-card-title">New <%= util.SvcEstimate.Title %></h3>

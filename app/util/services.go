@@ -55,38 +55,10 @@ var SvcRetro = Service{
 	Icon:        "history",
 }
 
-const (
-	KeyAbout      = "about"
-	KeyAction     = "action"
-	KeyAdmin      = "admin"
-	KeyAuth       = "auth"
-	KeyCreated    = "created"
-	KeyConnection = "connection"
-	KeyDetail     = "detail"
-	KeyFeedback   = "feedback"
-	KeyGraphQL    = "graphql"
-	KeyGraphiQL   = "graphiql"
-	KeyID         = "id"
-	KeyInvitation = "invitation"
-	KeyKey        = "key"
-	KeyMember     = "member"
-	KeyNoText     = "-no text-"
-	KeyProfile    = "profile"
-	KeyReport     = "report"
-	KeyPermission = "permission"
-	KeySandbox    = "sandbox"
-	KeySocket     = "socket"
-	KeyStory      = "story"
-	KeySvc        = "svc"
-	KeyUser       = "user"
-	KeyVote       = "vote"
-	KeyVoyager    = "voyager"
-)
-
-func ServiceTitle(title string) string {
+func ServiceTitle(svc string, title string) string {
 	title = strings.TrimSpace(title)
 	if title == "" {
-		title = "Untitled"
+		title = "Untitled " + svc
 	}
 
 	return title

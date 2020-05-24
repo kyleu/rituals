@@ -6,8 +6,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 
-	"emperror.dev/errors"
-
 	"github.com/kyleu/rituals.dev/app/socket"
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -21,7 +19,7 @@ import (
 func ConnectionList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Connection List"
-		ctx.Breadcrumbs = adminBC(ctx, util.KeyConnection, "connections")
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyConnection, util.KeyPlural(util.KeyConnection))
 
 		p := act.ParamSetFromRequest(r)
 		connections, err := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
@@ -34,16 +32,16 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 
 func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		connectionID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if connectionID == nil {
-			return "", errors.New("invalid connection id")
+		connectionID, err := idFromParams(util.KeyConnection, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		connection, err := ctx.App.Socket.GetByID(*connectionID)
 		if err != nil {
 			return "", err
 		}
 		ctx.Title = connection.ID.String()
-		bc := adminBC(ctx, util.KeyConnection, "connections")
+		bc := adminBC(ctx, util.KeyConnection, util.KeyPlural(util.KeyConnection))
 		link := util.AdminLink(util.KeyConnection, util.KeyDetail)
 		str := connectionID.String()
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
@@ -56,16 +54,16 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 
 func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		_ = r.ParseForm()
-		connectionID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if connectionID == nil {
-			return "", errors.New("invalid connection id")
+		connectionID, err := idFromParams(util.KeyConnection, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		connection, err := ctx.App.Socket.GetByID(*connectionID)
 		if err != nil {
 			return "", err
 		}
 
+		_ = r.ParseForm()
 		svc := r.Form.Get(util.KeySvc)
 		cmd := r.Form.Get("cmd")
 		paramString := r.Form.Get("param")
@@ -78,7 +76,7 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = connectionID.String()
-		bc := adminBC(ctx, util.KeyConnection, "connections")
+		bc := adminBC(ctx, util.KeyConnection, util.KeyPlural(util.KeyConnection))
 		link := util.AdminLink(util.KeyConnection, util.KeyDetail)
 		str := connectionID.String()
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)

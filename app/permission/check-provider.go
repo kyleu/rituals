@@ -7,12 +7,14 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) checkAuths(svc util.Service, perms Permissions, auths auth.Records) Errors {
+func (s *Service) checkAuths(authEnabled bool, svc util.Service, perms Permissions, auths auth.Records) Errors {
 	var ret Errors
 
-	ret = append(ret, providerCheck(svc, auth.ProviderGitHub, perms, auths)...)
-	ret = append(ret, providerCheck(svc, auth.ProviderGoogle, perms, auths)...)
-	ret = append(ret, providerCheck(svc, auth.ProviderSlack, perms, auths)...)
+	if authEnabled {
+		ret = append(ret, providerCheck(svc, auth.ProviderGitHub, perms, auths)...)
+		ret = append(ret, providerCheck(svc, auth.ProviderGoogle, perms, auths)...)
+		ret = append(ret, providerCheck(svc, auth.ProviderSlack, perms, auths)...)
+	}
 
 	return ret
 }
@@ -51,5 +53,5 @@ func providerCheck(svc util.Service, p auth.Provider, perms Permissions, auths a
 	}
 
 	msg += " to access this " + svc.Key
-	return Errors{{K: svc.Key, V: strings.Join(emailDomains, ","), Code: p.Key, Message: msg}}
+	return Errors{{Svc: svc.Key, Provider: p.Key, Match: strings.Join(emailDomains, ","), Message: msg}}
 }

@@ -17,8 +17,6 @@ type Service struct {
 	logger logur.Logger
 }
 
-var defaultActionOrdering = query.Orderings{{Column: "occurred", Asc: false}}
-
 func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAction})
 	svc := Service{
@@ -58,7 +56,7 @@ func (s *Service) Post(svc string, modelID uuid.UUID, authorID uuid.UUID, act st
 }
 
 func (s *Service) List(params *query.Params) (Actions, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, defaultActionOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset))
@@ -86,7 +84,7 @@ func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 }
 
 func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) (Actions, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, defaultActionOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset), id)
@@ -99,7 +97,7 @@ func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) (Actions, erro
 }
 
 func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Params) (Actions, error) {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, defaultActionOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 

@@ -2,7 +2,6 @@ package gql
 
 import (
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
@@ -22,17 +21,17 @@ func initUser() {
 	}
 
 	userResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		idString, ok := p.Args[util.KeyID]
-		if !ok {
-			return nil, nil
-		}
-		id, err := uuid.FromString(idString.(string))
+		idString, err := paramString(p, util.KeyID)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "invalid user id ["+idString.(string)+"]"))
+			return nil, err
 		}
-		ret, err := ctx.App.User.GetByID(id, false)
+		id := util.GetUUIDFromString(idString)
+		if id == nil {
+			return nil, errors.WithStack(errors.New("invalid user id ["+idString+"]"))
+		}
+		ret, err := ctx.App.User.GetByID(*id, false)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "error retrieving user with id ["+idString.(string)+"]"))
+			return nil, errors.WithStack(errors.Wrap(err, "error retrieving user with id ["+idString+"]"))
 		}
 		if ret == nil {
 			return nil, nil

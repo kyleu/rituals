@@ -27,11 +27,11 @@ func initSprint() {
 	}
 
 	sprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, ok := p.Args[util.KeyKey]
-		if ok {
-			return ctx.App.Sprint.GetBySlug(slug.(string))
+		slug, err := paramString(p, util.KeyKey)
+		if err != nil {
+			return nil, err
 		}
-		return nil, nil
+		return ctx.App.Sprint.GetBySlug(slug)
 	}
 
 	sprintsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -90,7 +90,7 @@ func initSprint() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				"members": &graphql.Field{
+				util.KeyPlural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This sprint's members",
 					Args:        listArgs,

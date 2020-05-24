@@ -1,10 +1,8 @@
 package socket
 
 import (
-	"fmt"
-	"strings"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -16,13 +14,9 @@ func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]in
 		return errors.WithStack(errors.New(fmt.Sprintf("can't read string from [%v]", param["category"])))
 	}
 
-	c, ok := param["content"].(string)
+	content, ok := getContent(param)
 	if !ok {
-		return errors.WithStack(errors.New("cannot read content"))
-	}
-	content := strings.TrimSpace(c)
-	if len(content) == 0 {
-		content = util.KeyNoText
+		return errors.WithStack(errors.New(fmt.Sprintf("can't read content from [%v]", param["content"])))
 	}
 
 	s.logger.Debug(fmt.Sprintf("adding [%s] feedback for [%s]", category, userID))
@@ -45,13 +39,9 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 		return errors.New("cannot read category")
 	}
 
-	c, ok := param["content"].(string)
+	content, ok := getContent(param)
 	if !ok {
-		return errors.WithStack(errors.New("cannot read feedback content"))
-	}
-	content := strings.TrimSpace(c)
-	if len(content) == 0 {
-		content = util.KeyNoText
+		return errors.WithStack(errors.New(fmt.Sprintf("can't read content from [%v]", param["content"])))
 	}
 
 	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", category, userID))

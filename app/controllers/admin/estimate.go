@@ -8,7 +8,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -32,9 +31,9 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 
 func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		estimateID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if estimateID == nil {
-			return "", errors.New("invalid estimate id")
+		estimateID, err := idFromParams(util.SvcEstimate.Key, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		sess, err := ctx.App.Estimate.GetByID(*estimateID)
 		if err != nil {
@@ -72,9 +71,9 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 func StoryDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		storyID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if storyID == nil {
-			return "", errors.New("invalid story id")
+		storyID, err := idFromParams(util.KeyStory, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		story, err := ctx.App.Estimate.GetStoryByID(*storyID)
 		if err != nil {

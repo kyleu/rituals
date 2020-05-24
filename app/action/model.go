@@ -13,12 +13,10 @@ const (
 	ActConnect = "connect"
 	ActUpdate  = "update"
 
-	ActMemberAdd     = "member-add"
-	ActPermissionAdd = "permission-add"
+	ActMemberAdd   = "member-add"
+	ActPermissions = "permissions"
 
-	ActContentAdd    = "content-add"
-	ActContentUpdate = "content-update"
-	ActContentRemove = "content-remove"
+	ActContentAdd = "content-add"
 
 	ActFeedbackAdd    = "feedback-add"
 	ActFeedbackUpdate = "feedback-update"
@@ -45,7 +43,7 @@ type Action struct {
 	Act      string      `json:"act"`
 	Content  interface{} `json:"content"`
 	Note     string      `json:"note"`
-	Occurred time.Time   `json:"occurred"`
+	Created  time.Time   `json:"created"`
 }
 
 func (a *Action) ContentJSON() (string, error) {
@@ -68,7 +66,7 @@ type actionDTO struct {
 	Act      string    `db:"act"`
 	Content  string    `db:"content"`
 	Note     string    `db:"note"`
-	Occurred time.Time `db:"occurred"`
+	Created  time.Time `db:"created"`
 }
 
 func (dto *actionDTO) ToAction() *Action {
@@ -83,6 +81,6 @@ func (dto *actionDTO) ToAction() *Action {
 		Act:      dto.Act,
 		Content:  param,
 		Note:     dto.Note,
-		Occurred: dto.Occurred,
+		Created:  dto.Created,
 	}
 }

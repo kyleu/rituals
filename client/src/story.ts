@@ -1,12 +1,12 @@
 namespace story {
   export interface Story {
-    id: string;
-    idx: number;
-    authorID: string;
-    title: string;
+    readonly id: string;
+    readonly idx: number;
+    readonly authorID: string;
+    readonly title: string;
     status: string;
     finalVote: string;
-    created: string;
+    readonly created: string;
   }
 
   export function setStories(stories: Story[]) {
@@ -19,16 +19,16 @@ namespace story {
 
   export function onSubmitStory() {
     const title = dom.req<HTMLInputElement>("#story-title-input").value;
-    const msg = {svc: services.estimate.key, cmd: command.client.addStory, param: {title: title}};
+    const msg = {svc: services.estimate.key, cmd: command.client.addStory, param: {title}};
     socket.send(msg);
     return false;
   }
 
   export function beginEditStory() {
     const s = getActiveStory()!;
-    const newTitle = prompt("Edit your story", s.title);
-    if(newTitle !== null && newTitle !== s.title) {
-      const msg = {svc: services.estimate.key, cmd: command.client.updateStory, param: { id: s.id, title: newTitle }};
+    const title = prompt("Edit your story", s.title);
+    if(title && title !== s.title) {
+      const msg = {svc: services.estimate.key, cmd: command.client.updateStory, param: { id: s.id, title }};
       socket.send(msg);
     }
     return false;
@@ -47,7 +47,7 @@ namespace story {
   }
 
   export function getActiveStory() {
-    if (estimate.cache.activeStory === undefined) {
+    if (!estimate.cache.activeStory) {
       return undefined;
     }
     const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory).shift();
@@ -59,7 +59,7 @@ namespace story {
 
   export function viewActiveStory() {
     const s = getActiveStory();
-    if (s === undefined) {
+    if (!s) {
       return;
     }
     dom.setText("#story-title", s.title);
@@ -67,13 +67,13 @@ namespace story {
   }
 
   export function showTotalIfNeeded() {
-    let stories = estimate.cache.stories;
-    let strings = stories.filter(s => s.status === "complete").map(s => s.finalVote).filter(c => c.length > 0);
-    let floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));
+    const stories = estimate.cache.stories;
+    const strings = stories.filter(s => s.status === "complete").map(s => s.finalVote).filter(c => c.length > 0);
+    const floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));
     let sum = 0;
     floats.forEach(f => sum += f);
-    let curr = dom.opt("#story-total");
-    let panel = dom.req("#story-list");
+    const curr = dom.opt("#story-total");
+    const panel = dom.req("#story-list");
     if (curr !== undefined) {
       panel.removeChild(curr);
     }

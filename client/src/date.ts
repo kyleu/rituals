@@ -1,15 +1,14 @@
 namespace date {
   export function dateToYMD(date: Date) {
-    var d = date.getDate();
-    var m = date.getMonth() + 1;
-    var y = date.getFullYear();
-    return "" + y + "-" + (m <= 9 ? "0" + m : m) + "-" + (d <= 9 ? "0" + d : d);
+    const d = date.getDate();
+    const m = date.getMonth() + 1;
+    const y = date.getFullYear();
+    return `${y}-${m <= 9 ? `0${m}` : m}-${d <= 9 ? `0${d}` : d}`;
   }
 
   export function dateFromYMD(s: string) {
-    let d = new Date(s);
-    d = new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
-    return d;
+    const d = new Date(s);
+    return new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
   }
 
   export function dow(i: number) {

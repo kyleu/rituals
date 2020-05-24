@@ -12,6 +12,7 @@ const (
 	ClientCmdGetSprints = "get-sprints"
 
 	ClientCmdUpdateProfile = "update-profile"
+	ClientCmdRemoveMember  = "remove-member"
 
 	ClientCmdAddStory       = "add-story"
 	ClientCmdUpdateStory    = "update-story"
@@ -33,11 +34,12 @@ const (
 	ServerCmdError = "error"
 	ServerCmdPong  = "pong"
 
-	ServerCmdSessionJoined = "session-joined"
-	ServerCmdSessionUpdate = "session-update"
-	ServerCmdTeamUpdate    = "team-update"
-	ServerCmdSprintUpdate  = "sprint-update"
-	ServerCmdContentUpdate = "content-update"
+	ServerCmdSessionJoined     = "session-joined"
+	ServerCmdSessionUpdate     = "session-update"
+	ServerCmdPermissionsUpdate = "permissions-update"
+	ServerCmdTeamUpdate        = "team-update"
+	ServerCmdSprintUpdate      = "sprint-update"
+	ServerCmdContentUpdate     = "content-update"
 
 	ServerCmdActions = "actions"
 	ServerCmdTeams   = "teams"

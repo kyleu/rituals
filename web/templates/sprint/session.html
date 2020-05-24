@@ -2,11 +2,11 @@
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('session');return false;" title="edit sprint"></a>
+      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('<%= util.KeySession %>');return false;" title="edit sprint"></a>
     </span>
-    <span class="model-icon h3-icon" onclick="events.openModal('session');" data-uk-icon="icon: <%= util.SvcSprint.Icon %>;"></span>
-    <span id="model-title" onclick="events.openModal('session');"><%= model.Title %></span>
-    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('actions');return false;" title="view history"></a>
+    <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcSprint.Icon %>;"></span>
+    <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
+    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.KeyPlural(util.KeyAction) %>');return false;" title="view history"></a>
   </h3>
   <p>
     <span id="sprint-date-display">Sprint</span>
@@ -32,7 +32,7 @@
             <input class="uk-input" id="sprint-end-date-input" type="date" />
           </div>
           <% ComponentSessionTeam(ctx, buffer) %>
-          <% ComponentSessionPerm(ctx, buffer) %>
+          <% ComponentSessionPerm(util.SvcSprint, ctx, buffer) %>
         </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">

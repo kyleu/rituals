@@ -29,7 +29,7 @@ type EstimateSessionJoined struct {
 func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	estimateID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.New("error reading estimate id [" + param + "]"))
+		return util.IDError(util.SvcEstimate.Key, param)
 	}
 	ch := channel{Svc: util.SvcEstimate.Key, ID: estimateID}
 	err = s.Join(conn.ID, ch)
@@ -57,10 +57,17 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return nil
 	}
 
+	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
+	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcEstimate, ch.ID)
+	if err != nil {
+		return err
+	}
+	if len(permErrors) > 0 {
+		return s.sendPermErrors(util.SvcEstimate, ch, permErrors)
+	}
+
 	entry := s.estimates.Members.Register(ch.ID, userID)
 	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
-	perms := s.estimates.Permissions.GetByModelID(ch.ID, nil)
-	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
 	members := s.estimates.Members.GetByModelID(ch.ID, nil)
 
 	stories, err := s.estimates.GetStories(ch.ID, nil)
@@ -71,14 +78,6 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 	votes, err := s.estimates.GetEstimateVotes(ch.ID, nil)
 	if err != nil {
 		return errors.WithStack(errors.Wrap(err, "error finding votes"))
-	}
-
-	permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcEstimate, ch.ID)
-	if err != nil {
-		return err
-	}
-	if len(permErrors) > 0 {
-		return s.sendPermErrors(util.SvcEstimate, ch, permErrors)
 	}
 
 	conn.Svc = ch.Svc

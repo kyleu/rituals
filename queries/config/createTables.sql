@@ -14,7 +14,7 @@ create table if not exists "system_user" (
 create table if not exists "auth" (
   "id" uuid not null primary key,
   "user_id" uuid not null references "system_user"("id"),
-  "provider" varchar(32) not null,
+  "provider" auth_provider not null,
   "provider_id" text not null,
   "expires" timestamp,
   "name" varchar(2048),
@@ -46,12 +46,12 @@ create table if not exists "team_member" (
 );
 
 create table if not exists "team_permission" (
-  "id" uuid not null primary key,
   "team_id" uuid not null references "team"("id"),
   "k" varchar(128) not null,
   "v" varchar(2048) not null,
   "access" member_status not null,
-  "created" timestamp not null default now()
+  "created" timestamp not null default now(),
+  primary key (team_id, k, v)
 );
 
 create index if not exists idx_team_permission_team_id on team_permission(team_id);
@@ -79,14 +79,13 @@ create table if not exists "sprint_member" (
   primary key ("sprint_id", "user_id")
 );
 
-
 create table if not exists "sprint_permission" (
-  "id" uuid not null primary key,
   "sprint_id" uuid not null references "sprint"("id"),
   "k" varchar(128) not null,
   "v" varchar(2048) not null,
   "access" member_status not null,
-  "created" timestamp not null default now()
+  "created" timestamp not null default now(),
+  primary key (sprint_id, k, v)
 );
 
 create index if not exists idx_sprint_permission_sprint_id on sprint_permission(sprint_id);
@@ -116,12 +115,12 @@ create table if not exists "estimate_member" (
 );
 
 create table if not exists "estimate_permission" (
-  "id" uuid not null primary key,
   "estimate_id" uuid not null references "estimate"("id"),
   "k" varchar(128) not null,
   "v" varchar(2048) not null,
   "access" member_status not null,
-  "created" timestamp not null default now()
+  "created" timestamp not null default now(),
+  primary key (estimate_id, k, v)
 );
 
 create index if not exists idx_estimate_permission_estimate_id on estimate_permission(estimate_id);
@@ -170,12 +169,12 @@ create table if not exists "standup_member" (
 );
 
 create table if not exists "standup_permission" (
-  "id" uuid not null primary key,
   "standup_id" uuid not null references "standup"("id"),
   "k" varchar(128) not null,
   "v" varchar(2048) not null,
   "access" member_status not null,
-  "created" timestamp not null default now()
+  "created" timestamp not null default now(),
+  primary key (standup_id, k, v)
 );
 
 create index if not exists idx_standup_permission_standup_id on standup_permission(standup_id);
@@ -215,12 +214,12 @@ create table if not exists "retro_member" (
 );
 
 create table if not exists "retro_permission" (
-  "id" uuid not null primary key,
   "retro_id" uuid not null references "retro"("id"),
   "k" varchar(128) not null,
   "v" varchar(2048) not null,
   "access" member_status not null,
-  "created" timestamp not null default now()
+  "created" timestamp not null default now(),
+  primary key (retro_id, k, v)
 );
 
 create index if not exists idx_retro_permission_retro_id on retro_permission(retro_id);
@@ -258,7 +257,7 @@ create table if not exists "action" (
   "act" varchar(64) not null,
   "content" json,
   "note" text,
-  "occurred" timestamp not null default now()
+  "created" timestamp not null default now()
 );
 
 create index if not exists idx_action_svc_model_id on action(svc, model_id);

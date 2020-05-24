@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
@@ -32,9 +31,9 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 
 func StandupDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		standupID := util.GetUUIDPointer(mux.Vars(r), util.KeyID)
-		if standupID == nil {
-			return "", errors.New("invalid standup id")
+		standupID, err := idFromParams(util.SvcStandup.Key, mux.Vars(r))
+		if err != nil {
+			return "", err
 		}
 		sess, err := ctx.App.Standup.GetByID(*standupID)
 		if err != nil {

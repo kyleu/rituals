@@ -31,7 +31,7 @@ type TeamSessionJoined struct {
 func onTeamConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
 	teamID, err := uuid.FromString(param)
 	if err != nil {
-		return errors.WithStack(errors.New("error reading channel id [" + param + "]"))
+		return util.IDError(util.SvcTeam.Key, param)
 	}
 	ch := channel{Svc: util.SvcTeam.Key, ID: teamID}
 	err = s.Join(conn.ID, ch)
@@ -59,18 +59,17 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		return nil
 	}
 
-	entry := s.teams.Members.Register(ch.ID, userID)
-	perms := s.teams.Permissions.GetByModelID(ch.ID, nil)
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	members := s.teams.Members.GetByModelID(ch.ID, nil)
-
-	permErrors, err := s.check(conn.Profile.UserID, auths, nil, nil, util.SvcTeam, ch.ID)
+	perms, permErrors, err := s.check(conn.Profile.UserID, auths, nil, nil, util.SvcTeam, ch.ID)
 	if err != nil {
 		return err
 	}
 	if len(permErrors) > 0 {
 		return s.sendPermErrors(util.SvcTeam, ch, permErrors)
 	}
+
+	entry := s.teams.Members.Register(ch.ID, userID)
+	members := s.teams.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID

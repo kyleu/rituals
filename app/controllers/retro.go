@@ -32,7 +32,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 func RetroNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(r.Form.Get("title"))
+		title := util.ServiceTitle(util.SvcRetro.Title, r.Form.Get("title"))
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sprintID := getUUID(r.Form, util.SvcSprint.Key)
 		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, teamID, sprintID)
@@ -64,7 +64,8 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcRetro.Key + ".list"), nil
 		}
 
-		permErrors, bc := check(&ctx, ctx.App.Retro.Permissions, util.SvcRetro, sess.ID, key, sess.Title, sess.TeamID, sess.SprintID)
+		params := PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		permErrors, bc := check(&ctx, ctx.App.Retro.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
