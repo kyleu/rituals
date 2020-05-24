@@ -31,7 +31,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 
 func StandupDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		standupID, err := idFromParams(util.SvcStandup.Key, mux.Vars(r))
+		standupID, err := act.IDFromParams(util.SvcStandup.Key, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

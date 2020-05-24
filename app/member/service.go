@@ -2,8 +2,9 @@ package member
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 
 	"logur.dev/logur"
 
@@ -88,5 +89,5 @@ func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (
 func (s *Service) RemoveMember(modelID uuid.UUID, target uuid.UUID) error {
 	q := fmt.Sprintf("delete from %s where %s = $1 and user_id = $2", s.tableName, s.colName)
 	_, err := s.db.Exec(q, modelID, target)
-	return errors.WithStack(errors.Wrap(err, "unable to remove member [" + target.String() + "]"))
+	return errors.WithStack(errors.Wrap(err, "unable to remove member ["+target.String()+"]"))
 }

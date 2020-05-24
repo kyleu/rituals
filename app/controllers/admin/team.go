@@ -30,7 +30,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 func TeamDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		teamID, err := idFromParams(util.SvcTeam.Key, mux.Vars(r))
+		teamID, err := act.IDFromParams(util.SvcTeam.Key, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

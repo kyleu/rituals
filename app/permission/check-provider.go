@@ -14,6 +14,7 @@ func (s *Service) checkAuths(authEnabled bool, svc util.Service, perms Permissio
 		ret = append(ret, providerCheck(svc, auth.ProviderGitHub, perms, auths)...)
 		ret = append(ret, providerCheck(svc, auth.ProviderGoogle, perms, auths)...)
 		ret = append(ret, providerCheck(svc, auth.ProviderSlack, perms, auths)...)
+		ret = append(ret, providerCheck(svc, auth.ProviderAmazon, perms, auths)...)
 	}
 
 	return ret

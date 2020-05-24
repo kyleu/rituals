@@ -26,6 +26,8 @@ func (s *Service) getConfig(secure bool, host string, key string) *oauth2.Config
 		return githubConf(secure, host)
 	case ProviderSlack.Key:
 		return slackConf(secure, host)
+	case ProviderAmazon.Key:
+		return amazonConf(secure, host)
 	default:
 		return nil
 	}
@@ -62,6 +64,8 @@ func (s *Service) decodeRecord(key string, code string) (*Record, error) {
 		return githubAuth(tok)
 	case ProviderSlack.Key:
 		return slackAuth(tok)
+	case ProviderAmazon.Key:
+		return amazonAuth(tok)
 	default:
 		return nil, nil
 	}

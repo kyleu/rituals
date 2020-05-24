@@ -2,8 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/query"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"

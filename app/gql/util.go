@@ -1,8 +1,9 @@
 package gql
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/kyleu/rituals.dev/app/query"
@@ -42,7 +43,7 @@ func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger 
 	return ret.Filtered(logger)
 }
 
-func paramString(p graphql.ResolveParams, key string) (string, error){
+func paramString(p graphql.ResolveParams, key string) (string, error) {
 	arg, ok := p.Args[key]
 	if !ok {
 		return "", errors.WithStack(errors.New(fmt.Sprintf("parameter %v is not present", key)))

@@ -29,7 +29,7 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 
 func AuthDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		authID, err := idFromParams(util.KeyAuth, mux.Vars(r))
+		authID, err := act.IDFromParams(util.KeyAuth, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

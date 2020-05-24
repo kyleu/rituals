@@ -40,5 +40,3 @@ func sendPermissionsUpdate(s *Service, ch channel, perms permission.Permissions)
 
 	return err
 }
-
-

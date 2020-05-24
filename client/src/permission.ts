@@ -18,8 +18,9 @@ namespace permission {
   const github: Provider = {key: "github", title: "GitHub"};
   const google: Provider = {key: "google", title: "Google"};
   const slack: Provider = {key: "slack", title: "Slack"};
+  const amazon: Provider = {key: "amazon", title: "Amazon"};
 
-  export const allProviders = [github, google, slack];
+  export const allProviders = [github, google, slack, amazon];
 
   export interface Email {
     readonly matched: boolean,

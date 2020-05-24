@@ -29,14 +29,10 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	profile.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Profile))).Name(n(util.KeyProfile))
 	profile.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(controllers.ProfileSave))).Name(n(util.KeyProfile, "save"))
 
-	// Sandbox
-	sandbox := r.Path(p(util.KeySandbox)).Subrouter()
-	sandbox.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SandboxList))).Name(n(util.KeySandbox))
-	r.Path(p(util.KeySandbox, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SandboxRun))).Name(n(util.KeySandbox, "run"))
-
 	// Auth
 	_ = r.Path(p(util.KeyAuth)).Subrouter()
 	r.Path(p(util.KeyAuth, "callback", "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.AuthCallback))).Name(n(util.KeyAuth, "callback"))
+	r.Path(p(util.KeyAuth, "signout", "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.AuthSignout))).Name(n(util.KeyAuth, "signout"))
 	r.Path(p(util.KeyAuth, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.AuthSubmit))).Name(n(util.KeyAuth, "submit"))
 
 	// Join
@@ -73,6 +69,11 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	retro.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.RetroList))).Name(n(util.SvcRetro.Key, "list"))
 	retro.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(controllers.RetroNew))).Name(n(util.SvcRetro.Key, "new"))
 	r.Path(p(util.SvcRetro.Key, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.RetroWorkspace))).Name(n(util.SvcRetro.Key))
+
+	// Sandbox
+	sandbox := r.Path(p(util.KeySandbox)).Subrouter()
+	sandbox.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SandboxList))).Name(n(util.KeySandbox))
+	r.Path(p(util.KeySandbox, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SandboxRun))).Name(n(util.KeySandbox, "run"))
 
 	// Admin
 	r = adminRoutes(app, r)

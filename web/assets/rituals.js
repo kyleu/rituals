@@ -732,7 +732,8 @@ var permission;
     const github = { key: "github", title: "GitHub" };
     const google = { key: "google", title: "Google" };
     const slack = { key: "slack", title: "Slack" };
-    permission.allProviders = [github, google, slack];
+    const amazon = { key: "amazon", title: "Amazon" };
+    permission.allProviders = [github, google, slack, amazon];
     function setPerms() {
         ["team", "sprint"].forEach(setModelPerms);
         if (system.cache.auths != null) {
@@ -1855,6 +1856,7 @@ var permission;
         ret.push(...readPermission("github"));
         ret.push(...readPermission("google"));
         ret.push(...readPermission("slack"));
+        ret.push(...readPermission("amazon"));
         return ret;
     }
     permission.readPermissions = readPermissions;

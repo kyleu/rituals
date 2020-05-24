@@ -32,7 +32,7 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 
 func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		connectionID, err := idFromParams(util.KeyConnection, mux.Vars(r))
+		connectionID, err := act.IDFromParams(util.KeyConnection, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}
@@ -54,7 +54,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 
 func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		connectionID, err := idFromParams(util.KeyConnection, mux.Vars(r))
+		connectionID, err := act.IDFromParams(util.KeyConnection, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

@@ -30,7 +30,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 
 func SprintDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		sprintID, err := idFromParams(util.SvcSprint.Key, mux.Vars(r))
+		sprintID, err := act.IDFromParams(util.SvcSprint.Key, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

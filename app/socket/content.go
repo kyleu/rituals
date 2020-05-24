@@ -1,10 +1,11 @@
 package socket
 
 import (
+	"strings"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
 func (s *Service) SendContentUpdate(svc string, id *uuid.UUID) error {

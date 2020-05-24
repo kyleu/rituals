@@ -29,7 +29,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 
 func RetroDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		retroID, err := idFromParams(util.SvcRetro.Key, mux.Vars(r))
+		retroID, err := act.IDFromParams(util.SvcRetro.Key, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

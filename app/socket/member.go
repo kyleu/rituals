@@ -1,11 +1,12 @@
 package socket
 
 import (
+	"time"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
-	"time"
 )
 
 func (s *Service) UpdateName(id uuid.UUID, name string) error {
@@ -39,10 +40,10 @@ func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...
 	return s.WriteChannel(ch, &onlineMsg, except...)
 }
 
-func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, userID uuid.UUID, targetString string) error {
+func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, _ uuid.UUID, targetString string) error {
 	target, err := uuid.FromString(targetString)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "invalid target id [" + targetString + "]"))
+		return errors.WithStack(errors.Wrap(err, "invalid target id ["+targetString+"]"))
 	}
 
 	err = memberSvc.RemoveMember(ch.ID, target)

@@ -52,10 +52,7 @@ func KeyTitle(k string) string {
 	if len(k) == 0 {
 		return k
 	}
-	switch k {
-	default:
-		return strings.ToUpper(k[0:1]) + k[1:]
-	}
+	return strings.ToUpper(k[0:1]) + k[1:]
 }
 
 func KeyPluralTitle(k string) string {

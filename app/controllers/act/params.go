@@ -5,6 +5,10 @@ import (
 	"strconv"
 	"strings"
 
+	"emperror.dev/errors"
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"github.com/kyleu/rituals.dev/app/query"
 )
 
@@ -63,4 +67,18 @@ func getCurr(q query.ParamSet, key string) *query.Params {
 		q[key] = curr
 	}
 	return curr
+}
+
+func IDFromParams(svc string, m map[string]string) (*uuid.UUID, error) {
+	retOut, ok := m[util.KeyID]
+	if !ok {
+		return nil, errors.New("params do not contain \"id\"")
+	}
+
+	ret := util.GetUUIDFromString(retOut)
+	if ret == nil {
+		return nil, util.IDError(svc, retOut)
+	}
+
+	return ret, nil
 }

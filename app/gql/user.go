@@ -27,7 +27,7 @@ func initUser() {
 		}
 		id := util.GetUUIDFromString(idString)
 		if id == nil {
-			return nil, errors.WithStack(errors.New("invalid user id ["+idString+"]"))
+			return nil, errors.WithStack(errors.New("invalid user id [" + idString + "]"))
 		}
 		ret, err := ctx.App.User.GetByID(*id, false)
 		if err != nil {

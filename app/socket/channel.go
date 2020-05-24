@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/gofrs/uuid"
 )
 

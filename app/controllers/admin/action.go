@@ -29,7 +29,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 
 func ActionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		actionID, err := idFromParams(util.KeyAction, mux.Vars(r))
+		actionID, err := act.IDFromParams(util.KeyAction, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

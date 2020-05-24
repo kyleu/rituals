@@ -31,7 +31,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 
 func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		estimateID, err := idFromParams(util.SvcEstimate.Key, mux.Vars(r))
+		estimateID, err := act.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}
@@ -71,7 +71,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 func StoryDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		storyID, err := idFromParams(util.KeyStory, mux.Vars(r))
+		storyID, err := act.IDFromParams(util.KeyStory, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}

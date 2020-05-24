@@ -68,6 +68,12 @@ func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) (Records, 
 	return toRecords(dtos), nil
 }
 
+func (s *Service) Delete(authID uuid.UUID) error {
+	q := "delete from auth where id = $1"
+	_, err := s.db.Exec(q, authID)
+	return err
+}
+
 func toRecords(dtos []recordDTO) Records {
 	ret := make(Records, 0, len(dtos))
 	for _, dto := range dtos {

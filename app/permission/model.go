@@ -74,7 +74,7 @@ func (es Errors) FindByProvider(p string) Errors {
 }
 
 func (es Errors) GetMatches() []string {
-	var ret []string
+	ret := make([]string, 0)
 	for _, e := range es {
 		ret = append(ret, strings.Split(e.Match, ",")...)
 	}

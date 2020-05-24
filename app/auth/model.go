@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"emperror.dev/errors"
 	"time"
+
+	"emperror.dev/errors"
 
 	"github.com/gofrs/uuid"
 )
@@ -13,25 +14,12 @@ type Provider struct {
 	Icon  string
 }
 
-var ProviderGitHub = Provider{
-	Key:   "github",
-	Title: "GitHub",
-	Icon:  "github-alt",
-}
+var ProviderGitHub = Provider{Key: "github", Title: "GitHub", Icon: "github-alt"}
+var ProviderGoogle = Provider{Key: "google", Title: "Google", Icon: "google"}
+var ProviderSlack = Provider{Key: "slack", Title: "Slack", Icon: "hashtag"}
+var ProviderAmazon = Provider{Key: "amazon", Title: "Amazon", Icon: "cart"}
 
-var ProviderGoogle = Provider{
-	Key:   "google",
-	Title: "Google",
-	Icon:  "google",
-}
-
-var ProviderSlack = Provider{
-	Key:   "slack",
-	Title: "Slack",
-	Icon:  "hashtag",
-}
-
-var AllProviders = []*Provider{&ProviderGitHub, &ProviderGoogle, &ProviderSlack}
+var AllProviders = []*Provider{&ProviderGitHub, &ProviderGoogle, &ProviderSlack, &ProviderAmazon}
 
 func ProviderFromString(s string) *Provider {
 	for _, t := range AllProviders {

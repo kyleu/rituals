@@ -13,16 +13,15 @@ import (
 )
 
 type PermissionParams struct {
-	Svc util.Service
-	ModelID uuid.UUID
-	Slug string
-	Title string
-	TeamID *uuid.UUID
+	Svc      util.Service
+	ModelID  uuid.UUID
+	Slug     string
+	Title    string
+	TeamID   *uuid.UUID
 	SprintID *uuid.UUID
 }
 
 func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionParams) (permission.Errors, web.Breadcrumbs) {
-
 	var bc web.Breadcrumbs
 	bc = web.BreadcrumbsSimple(ctx.Route(p.Svc.Key+".list"), p.Svc.Plural)
 

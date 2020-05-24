@@ -2,8 +2,9 @@ package permission
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 
 	"github.com/kyleu/rituals.dev/app/member"
 	"logur.dev/logur"
@@ -150,7 +151,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 
 	err = tx.Commit()
 	if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error committing permissions transaction for model [%v]: %+v", modelID, err))
+		return nil, errors.Wrap(err, fmt.Sprintf("error committing permissions transaction for model [%v]: %+v", modelID, err))
 	}
 
 	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, perms, "")

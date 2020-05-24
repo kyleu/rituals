@@ -30,7 +30,7 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 
 func UserDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		userID, err := idFromParams(util.KeyUser, mux.Vars(r))
+		userID, err := act.IDFromParams(util.KeyUser, mux.Vars(r))
 		if err != nil {
 			return "", err
 		}
