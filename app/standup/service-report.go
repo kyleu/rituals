@@ -17,11 +17,8 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	id := util.UUID()
 	html := markdown.ToHTML(content)
 
-	q := `insert into report (id, standup_id, d, author_id, content, html) values (
-    $1, $2, $3, $4, $5, $6
-	)`
-	_, err := s.db.Exec(q, id, standupID, d, authorID, content, html)
-
+	q := "insert into report (id, standup_id, d, author_id, content, html) values ($1, $2, $3, $4, $5, $6)"
+	err := s.db.Insert(q, nil, id, standupID, d, authorID, content, html)
 	if err != nil {
 		return nil, err
 	}
@@ -34,16 +31,17 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 
 var defaultReportOrdering = query.Orderings{{Column: "d", Asc: false}, {Column: util.KeyCreated, Asc: false}}
 
-func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Report, error) {
+func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) (Reports, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyReport, params, defaultReportOrdering...)
 	var dtos []reportDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyReport, "standup_id = $1", params.OrderByString(), params.Limit, params.Offset), standupID)
+	q := query.SQLSelect("*", util.KeyReport, "standup_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, standupID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	ret := make([]*Report, 0, len(dtos))
+	ret := make(Reports, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToReport())
 	}
@@ -52,7 +50,8 @@ func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) ([]*Repo
 
 func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	dto := &reportDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", util.KeyReport, "id = $1", "", 0, 0), reportID)
+	q := query.SQLSelect("*", util.KeyReport, "id = $1", "", 0, 0)
+	err := s.db.Get(dto, q, nil, reportID)
 
 	if err != nil {
 		return nil, err
@@ -64,7 +63,7 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
 	q := query.SQLSelect("standup_id", util.KeyReport, "id = $1", "", 0, 0)
-	err := s.db.Get(&ret, q, reportID)
+	err := s.db.Get(&ret, q, nil, reportID)
 
 	if err != nil {
 		return nil, err
@@ -77,8 +76,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	html := markdown.ToHTML(content)
 
 	q := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
-	_, err := s.db.Exec(q, d, authorID, content, html, reportID)
-
+	err := s.db.UpdateOne(q, nil, d, authorID, content, html, reportID)
 	if err != nil {
 		return nil, err
 	}
@@ -97,14 +95,14 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 	report, err := s.GetReportByID(reportID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load report ["+reportID.String()+"] for removal"))
+		return errors.Wrap(err, "cannot load report ["+reportID.String()+"] for removal")
 	}
 	if report == nil {
 		return errors.New("cannot load report [" + reportID.String() + "] for removal")
 	}
 
 	q := "delete from report where id = $1"
-	_, err = s.db.Exec(q, reportID)
+	_, err = s.db.Delete(q, nil, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
 	s.actions.Post(util.SvcStandup.Key, report.StandupID, userID, action.ActReportRemove, actionContent, "")

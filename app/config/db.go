@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/database"
 	"strings"
 	"time"
 
@@ -15,8 +16,8 @@ import (
 	"logur.dev/logur"
 )
 
-func OpenDatabase(logger logur.Logger) (*sqlx.DB, error) {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": "config"})
+func OpenDatabase(logger logur.Logger) (*database.Service, error) {
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: "config"})
 
 	// load from config
 	host := "localhost"
@@ -30,19 +31,21 @@ func OpenDatabase(logger logur.Logger) (*sqlx.DB, error) {
 
 	db, err := sqlx.Open("pgx", url)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error opening config database"))
+		return nil, errors.Wrap(err, "error opening config database")
 	}
+
+	svc := database.New(db)
 
 	// remove when not needed
-	err = dbWipe(db, logger)
+	err = dbWipe(svc, logger)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error applying initial queries"))
+		return nil, errors.Wrap(err, "error applying initial queries")
 	}
 
-	return db, nil
+	return svc, nil
 }
 
-func dbWipe(db *sqlx.DB, logger logur.Logger) error {
+func dbWipe(db *database.Service, logger logur.Logger) error {
 	err := exec("reset", db, logger, func(sb *strings.Builder) { queries.ResetDatabase(sb) })
 	if err != nil {
 		return err
@@ -63,15 +66,15 @@ func dbWipe(db *sqlx.DB, logger logur.Logger) error {
 	return nil
 }
 
-func exec(name string, db *sqlx.DB, logger logur.Logger, f func(*strings.Builder)) error {
+func exec(name string, db *database.Service, logger logur.Logger, f func(*strings.Builder)) error {
 	sb := &strings.Builder{}
 	f(sb)
 	sqls := strings.Split(sb.String(), ";")
 	startNanos := time.Now().UnixNano()
 	for _, q := range sqls {
-		_, err := db.Exec(q)
+		_, err := db.Exec(q, nil)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "cannot execute ["+name+"]"))
+			return errors.Wrap(err, "cannot execute ["+name+"]")
 		}
 	}
 	elapsed := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)

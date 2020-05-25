@@ -9,7 +9,7 @@ import (
 
 func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
 	if conn.Profile.UserID != userID {
-		return errors.WithStack(errors.New("received name change for wrong user [" + userID.String() + "]"))
+		return errors.New("received name change for wrong user [" + userID.String() + "]")
 	}
 	var err error
 
@@ -28,7 +28,7 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 	default:
 		err = errors.New("unhandled system command [" + cmd + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling system message"))
+	return errors.Wrap(err, "error handling system message")
 }
 
 func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]interface{}) error {
@@ -69,7 +69,7 @@ func sendActions(s *Service, conn *connection) error {
 	}
 	actions, err := s.actions.GetBySvcModel(conn.Svc, *conn.ModelID, nil)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot get actions"))
+		return errors.Wrap(err, "cannot get actions")
 	}
 	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdActions, Param: actions}
 	return s.WriteMessage(conn.ID, &actionsMsg)
@@ -78,7 +78,7 @@ func sendActions(s *Service, conn *connection) error {
 func sendTeams(s *Service, conn *connection, userID uuid.UUID) error {
 	teams, err := s.teams.GetByMember(userID, nil)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot get teams"))
+		return errors.Wrap(err, "cannot get teams")
 	}
 	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdTeams, Param: teams}
 	return s.WriteMessage(conn.ID, &actionsMsg)
@@ -87,7 +87,7 @@ func sendTeams(s *Service, conn *connection, userID uuid.UUID) error {
 func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
 	sprints, err := s.sprints.GetByMember(userID, nil)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot get sprints"))
+		return errors.Wrap(err, "cannot get sprints")
 	}
 	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdSprints, Param: sprints}
 	return s.WriteMessage(conn.ID, &actionsMsg)
@@ -108,7 +108,7 @@ func memberSvcFor(s *Service, svc string) (*member.Service, error) {
 	case util.SvcRetro.Key:
 		ret = s.retros.Members
 	default:
-		return nil, errors.New("invalid service [" + svc + "]")
+		return nil, errors.New(util.IDErrorString(util.KeyService, svc))
 	}
 	return ret, nil
 }

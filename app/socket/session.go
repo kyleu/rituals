@@ -12,23 +12,23 @@ import (
 func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry, msg Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
 	err := s.WriteMessage(conn.ID, &msg)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing initial estimate message"))
+		return errors.Wrap(err, "error writing initial estimate message")
 	}
 
 	if sprintEntry != nil {
 		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint.Key, ID: *sprintID}, sprintEntry, conn.ID)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing member update to sprint"))
+			return errors.Wrap(err, "error writing member update to sprint")
 		}
 	}
 
 	err = s.sendMemberUpdate(*conn.Channel, entry, conn.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing member update"))
+		return errors.Wrap(err, "error writing member update")
 	}
 
 	err = s.sendOnlineUpdate(ch, conn.ID, conn.Profile.UserID, true)
-	return errors.WithStack(errors.Wrap(err, "error writing online update"))
+	return errors.Wrap(err, "error writing online update")
 }
 
 func (s *Service) check(
@@ -40,7 +40,7 @@ func (s *Service) check(
 	if teamID != nil {
 		currTeams, err = s.teams.GetIdsByMember(userID)
 		if err != nil {
-			return nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current teams"))
+			return nil, nil, errors.Wrap(err, "unable to retrieve current teams")
 		}
 	}
 
@@ -48,7 +48,7 @@ func (s *Service) check(
 	if sprintID != nil {
 		currSprints, err = s.sprints.GetIdsByMember(userID)
 		if err != nil {
-			return nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current sprints"))
+			return nil, nil, errors.Wrap(err, "unable to retrieve current sprints")
 		}
 	}
 

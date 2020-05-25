@@ -1,0 +1,11 @@
+<%: func EstimateForm(title string, choices []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<fieldset class="uk-fieldset">
+  <% ComponentSessionTitle(title, ctx, buffer) %>
+  <div class="uk-margin">
+    <label class="uk-form-label" for="model-choices-input">Choices</label>
+    <input class="uk-input" id="model-choices-input" name="choices" type="text" value="<%= strings.Join(choices, `,`) %>" />
+  </div>
+  <% ComponentSessionTeam(teams, ctx, buffer) %>
+  <% ComponentSessionSprint(sprints, ctx, buffer) %>
+  <% ComponentSessionPerm(util.SvcEstimate, true, true, auths, ctx, buffer) %>
+</fieldset>

@@ -89,7 +89,8 @@ values
   ('30000001-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'google', '@gmail.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member'),
-  ('30000001-0000-0000-0000-000000000000', 'amazon', '@gmail.com', 'member')
+  ('30000001-0000-0000-0000-000000000000', 'amazon', '@gmail.com', 'member'),
+  ('30000001-0000-0000-0000-000000000000', 'microsoft', '@gmail.com', 'member')
 ;
 
 insert into estimate_member

@@ -1,14 +1,14 @@
-<%: func RetroSession(model *retro.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+<%: func RetroSession(model *retro.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
   <h3 class="uk-card-title">
-    <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('<%= util.KeySession %>');return false;" title="edit session"></a>
-    </span>
+    <% ComponentSessionPublic(util.SvcRetro, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
     <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.KeyPlural(util.KeyAction) %>');return false;" title="view history"></a>
   </h3>
-  <p><span id="sprint-link-container"></span><%= util.SvcRetro.Title %><span id="team-link-container"></span></p>
+  <span id="sprint-link-container"></span>
+  <%= util.SvcRetro.Key %>
+  <span id="team-link-container"></span>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -19,14 +19,7 @@
     <form class="uk-form-stacked" id="form-detail" onsubmit="retro.onSubmitRetroSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
-          <% ComponentSessionTitle(model.Title, ctx, buffer) %>
-          <div class="uk-margin">
-            <label class="uk-form-label" for="model-categories-input">Categories</label>
-            <input class="uk-input" id="model-categories-input" type="text" />
-          </div>
-          <% ComponentSessionTeam(ctx, buffer) %>
-          <% ComponentSessionSprint(ctx, buffer) %>
-          <% ComponentSessionPerm(util.SvcRetro, ctx, buffer) %>
+          <% RetroForm(model.Title, model.Categories, nil, nil, auths, ctx, buffer) %>
         </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">

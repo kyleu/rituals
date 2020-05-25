@@ -45,6 +45,8 @@ type Story struct {
 	Created    time.Time   `json:"created"`
 }
 
+type Stories = []*Story
+
 type storyDTO struct {
 	ID         uuid.UUID `db:"id"`
 	EstimateID uuid.UUID `db:"estimate_id"`

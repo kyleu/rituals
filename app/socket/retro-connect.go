@@ -22,7 +22,7 @@ type RetroSessionJoined struct {
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
-	Feedback    []*retro.Feedback      `json:"feedback"`
+	Feedback    retro.Feedbacks      `json:"feedback"`
 }
 
 func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -33,24 +33,24 @@ func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string
 	ch := channel{Svc: util.SvcRetro.Key, ID: retroID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining channel"))
+		return errors.Wrap(err, "error joining channel")
 	}
 	err = joinRetroSession(s, conn, userID, ch)
-	return errors.WithStack(errors.Wrap(err, "error joining retro session"))
+	return errors.Wrap(err, "error joining retro session")
 }
 
 func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
 	if ch.Svc != util.SvcRetro.Key {
-		return errors.WithStack(errors.New("retro cannot handle [" + ch.Svc + "] message"))
+		return errors.New("retro cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess, err := s.retros.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding retro session"))
+		return errors.Wrap(err, "error finding retro session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdError, Param: "invalid session"})
-		return errors.WithStack(errors.Wrap(err, "error writing error message"))
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, ch.ID.String())})
+		return errors.Wrap(err, "error writing error message")
 	}
 
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
@@ -72,7 +72,7 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 
 	feedback, err := s.retros.GetFeedback(ch.ID, nil)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding feedback for retro"))
+		return errors.Wrap(err, "error finding feedback for retro")
 	}
 
 	msg := Message{

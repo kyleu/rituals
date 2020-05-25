@@ -113,7 +113,7 @@ namespace rituals {
     system.cache.session = param.session;
     system.cache.profile = param.profile;
 
-    system.cache.permissions = collection.groupBy(param.permissions, x => x.k);
+    permission.applyPermissions(param.permissions);
     system.cache.auths = param.auths;
     permission.setPerms();
 

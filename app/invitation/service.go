@@ -2,12 +2,12 @@ package invitation
 
 import (
 	"database/sql"
+	"github.com/kyleu/rituals.dev/app/database"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/query"
 	"logur.dev/logur"
@@ -15,12 +15,12 @@ import (
 
 type Service struct {
 	actions *action.Service
-	db      *sqlx.DB
+	db      *database.Service
 	logger  logur.Logger
 }
 
-func NewService(service *action.Service, db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyUser})
+func NewService(service *action.Service, db *database.Service, logger logur.Logger) *Service {
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeyUser})
 
 	return &Service{
 		actions: service,
@@ -43,25 +43,24 @@ func (s *Service) New(key string, k Type, v string, src *uuid.UUID, tgt *uuid.UU
 		Redeemed: nil,
 		Created:  time.Now(),
 	}
-	_, err := s.db.Exec(q, dto.Key, dto.K, dto.V, dto.Src, dto.Tgt, dto.Note, dto.Status, dto.Redeemed, dto.Created)
+	err := s.db.Insert(q, nil, dto.Key, dto.K, dto.V, dto.Src, dto.Tgt, dto.Note, dto.Status, dto.Redeemed, dto.Created)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ToInvitation(), nil
 }
 
-func (s *Service) List(params *query.Params) ([]*Invitation, error) {
+func (s *Service) List(params *query.Params) (Invitations, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyInvitation, params, query.DefaultCreatedOrdering...)
 
 	var dtos []invitationDTO
-
-	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyInvitation, "", params.OrderByString(), params.Limit, params.Offset))
-
+	q := query.SQLSelect("*", util.KeyInvitation, "", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	ret := make([]*Invitation, 0, len(dtos))
+	ret := make(Invitations, 0, len(dtos))
 
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToInvitation())
@@ -72,7 +71,8 @@ func (s *Service) List(params *query.Params) ([]*Invitation, error) {
 
 func (s *Service) GetByKey(key string) (*Invitation, error) {
 	dto := &invitationDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", util.KeyInvitation, "key = $1", "", 0, 0), key)
+	q := query.SQLSelect("*", util.KeyInvitation, "key = $1", "", 0, 0)
+	err := s.db.Get(dto, q, nil, key)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

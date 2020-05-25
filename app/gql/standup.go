@@ -11,9 +11,10 @@ var (
 	standupArgs           graphql.FieldConfigArgument
 	standupResolver       Callback
 	standupsResolver      Callback
+	standupMemberResolver Callback
+	standupPermissionResolver Callback
 	standupTeamResolver   Callback
 	standupSprintResolver Callback
-	standupMemberResolver Callback
 	standupType           *graphql.Object
 )
 
@@ -48,6 +49,10 @@ func initStandup() {
 		return ctx.App.Standup.Members.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
+	standupPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Standup.Permissions.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
 	standupTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		sess := p.Source.(*standup.Session)
 		if sess.TeamID != nil {
@@ -66,10 +71,10 @@ func initStandup() {
 
 	standupType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: "Standup",
+			Name: util.SvcStandup.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(graphql.String),
+					Type: graphql.NewNonNull(scalarUUID),
 				},
 				"slug": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

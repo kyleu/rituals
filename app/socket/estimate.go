@@ -35,19 +35,19 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 	default:
 		err = errors.New("unhandled estimate command [" + cmd + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling estimate message"))
+	return errors.Wrap(err, "error handling estimate message")
 }
 
 func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
 	titleString, ok := param["title"].(string)
 	if !ok {
-		return errors.WithStack(errors.New("cannot read choices as string"))
+		return errors.New("cannot read choices as string")
 	}
-	title := util.ServiceTitle(util.SvcEstimate.Title, titleString)
+	title := util.ServiceTitle(util.SvcEstimate, titleString)
 
 	choicesString, ok := param["choices"].(string)
 	if !ok {
-		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"])))
+		return errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"]))
 	}
 	choices := query.StringToArray(choicesString)
 	if len(choices) == 0 {
@@ -62,7 +62,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 
 	curr, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading estimate session ["+ch.ID.String()+"] for update"))
+		return errors.Wrap(err, "error loading estimate session ["+ch.ID.String()+"] for update")
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -70,19 +70,19 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 
 	err = s.estimates.UpdateSession(ch.ID, title, choices, teamID, sprintID, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating estimate session"))
+		return errors.Wrap(err, "error updating estimate session")
 	}
 
 	err = sendEstimateSessionUpdate(s, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
+		return errors.Wrap(err, "error sending estimate session")
 	}
 
 	if teamChanged {
 		tm := s.teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending team for updated estimate session"))
+			return errors.Wrap(err, "error sending team for updated estimate session")
 		}
 	}
 
@@ -90,13 +90,13 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		spr := s.sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated estimate session"))
+			return errors.Wrap(err, "error sending sprint for updated estimate session")
 		}
 	}
 
 	err = s.updatePerms(ch, userID, s.estimates.Permissions, param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
+		return errors.Wrap(err, "error updating permissions")
 	}
 
 	return nil
@@ -105,13 +105,13 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 func sendEstimateSessionUpdate(s *Service, ch channel) error {
 	est, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding estimate session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "error finding estimate session ["+ch.ID.String()+"]")
 	}
 	if est == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load estimate session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "cannot load estimate session ["+ch.ID.String()+"]")
 	}
 
 	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdSessionUpdate, Param: est}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending estimate session"))
+	return errors.Wrap(err, "error sending estimate session")
 }

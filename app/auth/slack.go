@@ -7,21 +7,11 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/slack"
 )
 
-func slackConf(secure bool, host string) *oauth2.Config {
-	return &oauth2.Config{
-		ClientID:     secrets.SlackClientID,
-		ClientSecret: secrets.SlackClientSecret,
-		Endpoint:     slack.Endpoint,
-		RedirectURL:  callbackURL(secure, host, ProviderSlack.Key),
-		Scopes:       []string{"users.profile:read"},
-	}
-}
+var slackScopes = []string{"users.profile:read"}
 
 type slackResponse struct {
 	Ok      bool          `json:"ok"`
@@ -53,12 +43,12 @@ func slackAuth(tok *oauth2.Token) (*Record, error) {
 
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error reading response from Slack"))
+		return nil, errors.Wrap(err, "error reading response from Slack")
 	}
 	var rsp = slackResponse{}
 	err = json.Unmarshal(contents, &rsp)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error marshalling slack user"))
+		return nil, errors.Wrap(err, "error marshalling slack user")
 	}
 
 	ret := Record{

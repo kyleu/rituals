@@ -23,17 +23,19 @@ var collection;
     function groupBy(list, func) {
         const res = [];
         let group;
-        list.forEach((o) => {
-            const groupName = func(o);
-            if (!group) {
-                group = new Group(groupName);
-            }
-            if (groupName != group.key) {
-                res.push(group);
-                group = new Group(groupName);
-            }
-            group.members.push(o);
-        });
+        if (list) {
+            list.forEach((o) => {
+                const groupName = func(o);
+                if (!group) {
+                    group = new Group(groupName);
+                }
+                if (groupName != group.key) {
+                    res.push(group);
+                    group = new Group(groupName);
+                }
+                group.members.push(o);
+            });
+        }
         if (group) {
             res.push(group);
         }
@@ -85,7 +87,6 @@ var command;
         pong: "pong",
         sessionJoined: "session-joined",
         sessionUpdate: "session-update",
-        authUpdate: "auth-update",
         permissionsUpdate: "permissions-update",
         teamUpdate: "team-update",
         sprintUpdate: "sprint-update",
@@ -308,9 +309,6 @@ var estimate;
                 break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
-                break;
-            case command.server.authUpdate:
-                system.setAuth(param);
                 break;
             case command.server.teamUpdate:
                 const tm = param;
@@ -733,23 +731,25 @@ var permission;
     const google = { key: "google", title: "Google" };
     const slack = { key: "slack", title: "Slack" };
     const amazon = { key: "amazon", title: "Amazon" };
-    permission.allProviders = [github, google, slack, amazon];
+    const microsoft = { key: "microsoft", title: "Microsoft" };
+    permission.allProviders = [github, google, slack, amazon, microsoft];
     function setPerms() {
         ["team", "sprint"].forEach(setModelPerms);
         if (system.cache.auths != null) {
             permission.allProviders.forEach(setProviderPerms);
         }
-        console.log(permission.readPermissions());
     }
     permission.setPerms = setPerms;
     function setModelPerms(key) {
         const el = dom.opt(`#model-${key}-select select`);
         if (el) {
             const perms = collection.findGroup(system.cache.permissions, key);
-            const section = dom.req(`#perm-${key}-section`);
-            const checkbox = dom.req(`#perm-${key}-checkbox`);
-            checkbox.checked = perms.length > 0;
-            dom.setDisplay(section, el.value != "");
+            const section = dom.opt(`#perm-${key}-section`);
+            if (section) {
+                const checkbox = dom.req(`#perm-${key}-checkbox`);
+                checkbox.checked = perms.length > 0;
+                dom.setDisplay(section, el.value != "");
+            }
             collection.findGroup(system.cache.permissions, key);
         }
     }
@@ -764,8 +764,8 @@ var permission;
     }
     permission.onChanged = onChanged;
     function onEmailChanged(key, checked) {
-        const checkbox = dom.req(`#perm-${key}-checkbox`);
-        if (checked && !checkbox.checked) {
+        const checkbox = dom.opt(`#perm-${key}-checkbox`);
+        if (checkbox && checked && !checkbox.checked) {
             checkbox.checked = true;
         }
     }
@@ -780,17 +780,20 @@ var permission;
     function setProviderPerms(p) {
         const perms = collection.findGroup(system.cache.permissions, p.key);
         const auths = system.cache.auths.filter(a => a.provider == p.key);
-        const checkbox = dom.req(`#perm-${p.key}-checkbox`);
-        checkbox.checked = perms.length > 0;
-        const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-        const emails = collection.flatten(perms.map(x => x.v.split(","))).map(x => ({ matched: true, domain: x }));
-        const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length == 0).map(m => {
-            return { matched: false, domain: getDomain(m.email) };
-        });
-        emails.push(...additional);
-        emails.sort();
-        dom.setDisplay(emailContainer, emails.length > 0);
-        dom.setContent(emailContainer, emails.length == 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
+        const section = dom.opt(`#perm-${p.key}-section`);
+        if (section) {
+            const checkbox = dom.req(`#perm-${p.key}-checkbox`);
+            checkbox.checked = perms.length > 0;
+            const emailContainer = dom.req(`#perm-${p.key}-email-container`);
+            const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({ matched: true, domain: x }));
+            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length == 0).map(m => {
+                return { matched: false, domain: getDomain(m.email) };
+            });
+            emails.push(...additional);
+            emails.sort();
+            dom.setDisplay(emailContainer, emails.length > 0);
+            dom.setContent(emailContainer, emails.length == 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
+        }
     }
     function getDomain(email) {
         const idx = email.lastIndexOf("@");
@@ -966,9 +969,6 @@ var retro;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
                 break;
-            case command.server.authUpdate:
-                system.setAuth(param);
-                break;
             case command.server.teamUpdate:
                 const tm = param;
                 if (retro.cache.detail) {
@@ -1091,7 +1091,7 @@ var rituals;
     function onSessionJoin(param) {
         system.cache.session = param.session;
         system.cache.profile = param.profile;
-        system.cache.permissions = collection.groupBy(param.permissions, x => x.k);
+        permission.applyPermissions(param.permissions);
         system.cache.auths = param.auths;
         permission.setPerms();
         system.cache.members = param.members;
@@ -1234,9 +1234,6 @@ var sprint;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
                 break;
-            case command.server.authUpdate:
-                system.setAuth(param);
-                break;
             case command.server.contentUpdate:
                 socket.socketConnect(system.cache.currentService, system.cache.currentID);
                 break;
@@ -1316,9 +1313,6 @@ var standup;
                 break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
-                break;
-            case command.server.authUpdate:
-                system.setAuth(param);
                 break;
             case command.server.teamUpdate:
                 const tm = param;
@@ -1555,7 +1549,7 @@ var system;
     system.getMemberName = getMemberName;
     system.cache = new Cache();
     function setPermissions(perms) {
-        system.cache.permissions = collection.groupBy(perms, x => x.k);
+        permission.applyPermissions(perms);
         permission.setPerms();
     }
     system.setPermissions = setPermissions;
@@ -1587,9 +1581,6 @@ var team;
                 break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
-                break;
-            case command.server.authUpdate:
-                system.setAuth(param);
                 break;
             case command.server.contentUpdate:
                 socket.socketConnect(system.cache.currentService, system.cache.currentID);
@@ -1834,14 +1825,15 @@ var permission;
         return JSX("ul", null, emails.map(e => {
             return JSX("li", null,
                 JSX("label", null,
-                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onclick: oc }),
+                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc }),
                     "Using email address ",
                     e.domain));
         }));
     }
     permission.renderEmails = renderEmails;
     function readPermission(k) {
-        if (!dom.req(`#perm-${k}-checkbox`).checked) {
+        const checkbox = dom.opt(`#perm-${k}-checkbox`);
+        if (!checkbox || !checkbox.checked) {
             return [];
         }
         const emails = dom.els(`.perm-${k}-email`);
@@ -1857,9 +1849,17 @@ var permission;
         ret.push(...readPermission("google"));
         ret.push(...readPermission("slack"));
         ret.push(...readPermission("amazon"));
+        ret.push(...readPermission("microsoft"));
         return ret;
     }
     permission.readPermissions = readPermissions;
+    function applyPermissions(perms) {
+        console.log("!!!!");
+        system.cache.permissions = collection.groupBy(perms, x => x.k);
+        dom.setDisplay("#public-link-container", perms === null || perms.length === 0);
+        dom.setDisplay("#private-link-container", perms !== null && perms.length > 0);
+    }
+    permission.applyPermissions = applyPermissions;
 })(permission || (permission = {}));
 var report;
 (function (report) {

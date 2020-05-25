@@ -19,8 +19,9 @@ namespace permission {
   const google: Provider = {key: "google", title: "Google"};
   const slack: Provider = {key: "slack", title: "Slack"};
   const amazon: Provider = {key: "amazon", title: "Amazon"};
+  const microsoft: Provider = {key: "microsoft", title: "Microsoft"};
 
-  export const allProviders = [github, google, slack, amazon];
+  export const allProviders = [github, google, slack, amazon, microsoft];
 
   export interface Email {
     readonly matched: boolean,
@@ -32,17 +33,18 @@ namespace permission {
     if (system.cache.auths != null) {
       allProviders.forEach(setProviderPerms);
     }
-    console.log(readPermissions());
   }
 
   export function setModelPerms(key: string) {
     const el = dom.opt<HTMLSelectElement>(`#model-${key}-select select`);
     if (el) {
       const perms = collection.findGroup(system.cache.permissions, key);
-      const section = dom.req(`#perm-${key}-section`);
-      const checkbox = dom.req<HTMLInputElement>(`#perm-${key}-checkbox`);
-      checkbox.checked = perms.length > 0;
-      dom.setDisplay(section, el.value != "");
+      const section = dom.opt(`#perm-${key}-section`);
+      if (section) {
+        const checkbox = dom.req<HTMLInputElement>(`#perm-${key}-checkbox`);
+        checkbox.checked = perms.length > 0;
+        dom.setDisplay(section, el.value != "");
+      }
       collection.findGroup(system.cache.permissions, key);
     }
   }
@@ -57,8 +59,8 @@ namespace permission {
   }
 
   function onEmailChanged(key: string, checked: boolean) {
-    const checkbox = dom.req<HTMLInputElement>(`#perm-${key}-checkbox`);
-    if(checked && !checkbox.checked) {
+    const checkbox = dom.opt<HTMLInputElement>(`#perm-${key}-checkbox`);
+    if(checkbox && checked && !checkbox.checked) {
       checkbox.checked = true;
     }
   }
@@ -76,20 +78,23 @@ namespace permission {
     const perms = collection.findGroup(system.cache.permissions, p.key);
     const auths = system.cache.auths.filter(a => a.provider == p.key);
 
-    const checkbox = dom.req<HTMLInputElement>(`#perm-${p.key}-checkbox`);
-    checkbox.checked = perms.length > 0;
+    const section = dom.opt(`#perm-${p.key}-section`);
+    if (section) {
+      const checkbox = dom.req<HTMLInputElement>(`#perm-${p.key}-checkbox`);
+      checkbox.checked = perms.length > 0;
 
-    const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-    const emails = collection.flatten(perms.map(x => x.v.split(","))).map(x => ({matched: true, domain: x}));
+      const emailContainer = dom.req(`#perm-${p.key}-email-container`);
+      const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({matched: true, domain: x}));
 
-    const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length == 0).map(m => {
-      return {matched: false, domain: getDomain(m.email)};
-    });
-    emails.push(...additional);
-    emails.sort();
+      const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length == 0).map(m => {
+        return {matched: false, domain: getDomain(m.email)};
+      });
+      emails.push(...additional);
+      emails.sort();
 
-    dom.setDisplay(emailContainer, emails.length > 0);
-    dom.setContent(emailContainer, emails.length == 0 ? document.createElement("span") : permission.renderEmails(p.key, emails))
+      dom.setDisplay(emailContainer, emails.length > 0);
+      dom.setContent(emailContainer, emails.length == 0 ? document.createElement("span") : permission.renderEmails(p.key, emails))
+    }
   }
 
   function getDomain(email: string) {

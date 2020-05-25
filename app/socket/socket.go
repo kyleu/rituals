@@ -20,14 +20,14 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 
 	c, ok := s.connections[connID]
 	if !ok {
-		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
+		return errors.New("cannot load connection [" + connID.String() + "]")
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	err := c.socket.WriteMessage(websocket.TextMessage, []byte(message))
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "unable to write to websocket"))
+		return errors.Wrap(err, "unable to write to websocket")
 	}
 	return nil
 }
@@ -58,7 +58,7 @@ func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid
 func (s *Service) ReadLoop(connID uuid.UUID) error {
 	c, ok := s.connections[connID]
 	if !ok {
-		return errors.WithStack(errors.New("cannot load connection [" + connID.String() + "]"))
+		return errors.New("cannot load connection [" + connID.String() + "]")
 	}
 
 	defer func() {
@@ -76,13 +76,13 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 		var m Message
 		err = json.Unmarshal(message, &m)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error decoding websocket message"))
+			return errors.Wrap(err, "error decoding websocket message")
 		}
 
 		err = onMessage(s, connID, m)
 		if err != nil {
 			_ = s.WriteMessage(c.ID, &Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdError, Param: err.Error()})
-			return errors.WithStack(errors.Wrap(err, "error handling websocket message"))
+			return errors.Wrap(err, "error handling websocket message")
 		}
 	}
 	return nil

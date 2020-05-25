@@ -12327,6 +12327,10 @@ h3 a:hover {
   margin-top: 8px;
 }
 
+#public-link-container, #private-link-container {
+  display: none;
+}
+
 .online-indicator {
   display: none;
   cursor: default;

@@ -1,5 +1,12 @@
-<%: func ComponentSessionTeam(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ComponentSessionTeam(teams team.Sessions, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div id="model-team-container" class="uk-margin">
-  <label class="uk-form-label" for="model-team-select">Team</label>
-  <div id="model-team-select"><select class="uk-select"></select></div>
+  <label class="uk-form-label" for="model-team-select" name="team">Team</label>
+  <div id="model-team-select">
+    <select class="uk-select" name="team">
+      <option value="">- no team -</option>
+      <% for _, t := range teams { %>
+        <option value="<%= t.ID.String() %>"><%= t.Title %></option>
+      <% } %>
+    </select>
+  </div>
 </div>

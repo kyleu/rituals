@@ -27,11 +27,11 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 	default:
 		err = errors.New("unhandled standup command [" + cmd + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling standup message"))
+	return errors.Wrap(err, "error handling standup message")
 }
 
 func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcStandup.Title, param["title"].(string))
+	title := util.ServiceTitle(util.SvcStandup, param["title"].(string))
 
 	sprintID := getUUIDPointer(param, "sprintID")
 	teamID := getUUIDPointer(param, "teamID")
@@ -41,7 +41,7 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 
 	curr, err := s.standups.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading standup session ["+ch.ID.String()+"] for update"))
+		return errors.Wrap(err, "error loading standup session ["+ch.ID.String()+"] for update")
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -49,19 +49,19 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 
 	err = s.standups.UpdateSession(ch.ID, title, teamID, sprintID, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating standup session"))
+		return errors.Wrap(err, "error updating standup session")
 	}
 
 	err = sendStandupSessionUpdate(s, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error sending standup session"))
+		return errors.Wrap(err, "error sending standup session")
 	}
 
 	if teamChanged {
 		tm := s.teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending team for updated retro session"))
+			return errors.Wrap(err, "error sending team for updated retro session")
 		}
 	}
 
@@ -69,13 +69,13 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 		spr := s.sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated standup session"))
+			return errors.Wrap(err, "error sending sprint for updated standup session")
 		}
 	}
 
 	err = s.updatePerms(ch, userID, s.standups.Permissions, param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
+		return errors.Wrap(err, "error updating permissions")
 	}
 
 	return nil
@@ -84,12 +84,12 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 func sendStandupSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.standups.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding standup session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "error finding standup session ["+ch.ID.String()+"]")
 	}
 	if sess == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load standup session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "cannot load standup session ["+ch.ID.String()+"]")
 	}
 	msg := Message{Svc: util.SvcStandup.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending standup session"))
+	return errors.Wrap(err, "error sending standup session")
 }

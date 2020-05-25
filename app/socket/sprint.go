@@ -23,15 +23,15 @@ func onSprintMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 	default:
 		err = errors.New("unhandled sprint command [" + cmd + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling sprint message"))
+	return errors.Wrap(err, "error handling sprint message")
 }
 
 func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcSprint.Title, param["title"].(string))
+	title := util.ServiceTitle(util.SvcSprint, param["title"].(string))
 
 	curr, err := s.sprints.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading sprint session ["+ch.ID.String()+"] for update"))
+		return errors.Wrap(err, "error loading sprint session ["+ch.ID.String()+"] for update")
 	}
 
 	teamID := getUUIDPointer(param, "teamID")
@@ -59,25 +59,25 @@ func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[str
 
 	err = s.sprints.UpdateSession(ch.ID, title, teamID, startDate, endDate, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating sprint session"))
+		return errors.Wrap(err, "error updating sprint session")
 	}
 
 	err = sendSprintSessionUpdate(s, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error sending sprint session"))
+		return errors.Wrap(err, "error sending sprint session")
 	}
 
 	if teamChanged {
 		tm := s.teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending team for updated sprint session"))
+			return errors.Wrap(err, "error sending team for updated sprint session")
 		}
 	}
 
 	err = s.updatePerms(ch, userID, s.sprints.Permissions, param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
+		return errors.Wrap(err, "error updating permissions")
 	}
 
 	return nil
@@ -86,7 +86,7 @@ func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[str
 func sendSprintUpdate(s *Service, ch channel, curr *uuid.UUID, spr *sprint.Session) error {
 	err := s.WriteChannel(ch, &Message{Svc: ch.Svc, Cmd: ServerCmdSprintUpdate, Param: spr})
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing sprint update message"))
+		return errors.Wrap(err, "error writing sprint update message")
 	}
 	err = s.SendContentUpdate(util.SvcSprint.Key, curr)
 	if err != nil {
@@ -101,14 +101,14 @@ func sendSprintUpdate(s *Service, ch channel, curr *uuid.UUID, spr *sprint.Sessi
 func sendSprintSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.sprints.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding sprint session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "error finding sprint session ["+ch.ID.String()+"]")
 	}
 	if sess == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load sprint session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "cannot load sprint session ["+ch.ID.String()+"]")
 	}
 	msg := Message{Svc: util.SvcSprint.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending sprint session"))
+	return errors.Wrap(err, "error sending sprint session")
 }
 
 func getSprintOpt(s *Service, sprintID *uuid.UUID) *sprint.Session {

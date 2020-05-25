@@ -22,8 +22,8 @@ type EstimateSessionJoined struct {
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
-	Stories     []*estimate.Story      `json:"stories"`
-	Votes       []*estimate.Vote       `json:"votes"`
+	Stories     estimate.Stories      `json:"stories"`
+	Votes       estimate.Votes       `json:"votes"`
 }
 
 func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -34,25 +34,25 @@ func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param str
 	ch := channel{Svc: util.SvcEstimate.Key, ID: estimateID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining channel"))
+		return errors.Wrap(err, "error joining channel")
 	}
 	err = joinEstimateSession(s, conn, userID, ch)
-	return errors.WithStack(errors.Wrap(err, "error joining estimate session"))
+	return errors.Wrap(err, "error joining estimate session")
 }
 
 func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
 	if ch.Svc != util.SvcEstimate.Key {
-		return errors.WithStack(errors.New("estimate cannot handle [" + ch.Svc + "] message"))
+		return errors.New("estimate cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding estimate session"))
+		return errors.Wrap(err, "error finding estimate session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, ch.ID.String())})
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing error message"))
+			return errors.Wrap(err, "error writing error message")
 		}
 		return nil
 	}
@@ -72,12 +72,12 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 
 	stories, err := s.estimates.GetStories(ch.ID, nil)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding stories"))
+		return errors.Wrap(err, "error finding stories")
 	}
 
 	votes, err := s.estimates.GetEstimateVotes(ch.ID, nil)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding votes"))
+		return errors.Wrap(err, "error finding votes")
 	}
 
 	conn.Svc = ch.Svc

@@ -11,6 +11,8 @@ type Sandbox struct {
 	Resolve     func(ctx web.RequestContext) (interface{}, error) `json:"-"`
 }
 
+type Sandboxes = []*Sandbox
+
 var Gallery = Sandbox{
 	Key:         "gallery",
 	Title:       "Gallery",
@@ -29,7 +31,7 @@ var Testbed = Sandbox{
 	},
 }
 
-var AllSandboxes = []*Sandbox{&Gallery, &Testbed}
+var AllSandboxes = Sandboxes{&Gallery, &Testbed}
 
 func FromString(s string) *Sandbox {
 	for _, t := range AllSandboxes {

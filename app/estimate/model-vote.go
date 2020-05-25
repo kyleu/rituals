@@ -14,6 +14,8 @@ type Vote struct {
 	Created time.Time `json:"created"`
 }
 
+type Votes = []*Vote
+
 type voteDTO struct {
 	StoryID uuid.UUID `db:"story_id"`
 	UserID  uuid.UUID `db:"user_id"`

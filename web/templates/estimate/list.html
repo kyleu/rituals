@@ -1,44 +1,26 @@
-<%: func EstimateList(sessions estimate.Sessions, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func EstimateList(sessions estimate.Sessions, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div>
-      <h1 class="uk-heading-hero">
-        <div class="h1-icon" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>; ratio: 1.6;"></div>
-        <%= util.SvcEstimate.PluralTitle %>
-      </h1>
-      <div class="uk-text-lead">Planning poker for any <%= util.KeyPlural(util.KeyStory) %> you need to work on</div>
-      <div class="uk-margin-top">
-        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
-          <h3 class="uk-card-title">New <%= util.SvcEstimate.Title %></h3>
-          <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcEstimate.Key + `.new`) %>" method="post">
-            <fieldset class="uk-fieldset">
-              <div class="uk-margin-small">
-                <label class="uk-form-label" for="title">Title</label>
-                <input class="uk-input" name="title" type="text" placeholder="Name your session" value="" />
-              </div>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>"></span> <%= util.SvcEstimate.PluralTitle %></h3>
+      <p>Planning poker for any <%= util.KeyPlural(util.KeyStory) %> you need to work on</p>
+      <% if len(sessions) > 0 { %>
+        <% EstimateTable(sessions, params, ctx, _buffer) %>
+      <% } %>
+    </div>
 
-              <div class="uk-margin-top">
-                <button class="uk-button uk-button-default" type="submit">Start</button>
-              </div>
-            </fieldset>
-          </form>
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+      <h3 class="uk-card-title">New <%= util.SvcEstimate.Title %></h3>
+      <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcEstimate.Key + `.new`) %>" method="post">
+        <% EstimateForm("", estimate.DefaultChoices, teams, sprints, auths, ctx, _buffer) %>
+        <div class="uk-margin-top">
+          <button class="uk-button uk-button-default" type="submit">Start</button>
         </div>
-
-        <% if len(sessions) > 0 { %>
-          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
-            <h3 class="uk-card-title">Prior Sessions</h3>
-            <% for _, s := range sessions { %>
-            <div>
-              <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcEstimate.Key, `key`, s.Slug) %>"><%= s.Title %></a>
-            </div>
-            <% } %>
-          </div>
-        <% } %>
-      </div>
+      </form>
     </div>
   </div>
 </div>

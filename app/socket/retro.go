@@ -30,14 +30,14 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling retro message"))
+	return errors.Wrap(err, "error handling retro message")
 }
 
 func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcRetro.Title, param["title"].(string))
+	title := util.ServiceTitle(util.SvcRetro, param["title"].(string))
 	categoriesString, ok := param["categories"].(string)
 	if !ok {
-		return errors.WithStack(errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"])))
+		return errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"]))
 	}
 	categories := query.StringToArray(categoriesString)
 	if len(categories) == 0 {
@@ -52,7 +52,7 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 
 	curr, err := s.retros.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error loading retro session ["+ch.ID.String()+"] for update"))
+		return errors.Wrap(err, "error loading retro session ["+ch.ID.String()+"] for update")
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -60,19 +60,19 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 
 	err = s.retros.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating retro session"))
+		return errors.Wrap(err, "error updating retro session")
 	}
 
 	err = sendRetroSessionUpdate(s, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error sending retro session"))
+		return errors.Wrap(err, "error sending retro session")
 	}
 
 	if teamChanged {
 		tm := s.teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending team for updated retro session"))
+			return errors.Wrap(err, "error sending team for updated retro session")
 		}
 	}
 
@@ -80,13 +80,13 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		spr := s.sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error sending sprint for updated retro session"))
+			return errors.Wrap(err, "error sending sprint for updated retro session")
 		}
 	}
 
 	err = s.updatePerms(ch, userID, s.retros.Permissions, param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
+		return errors.Wrap(err, "error updating permissions")
 	}
 
 	return nil
@@ -95,13 +95,13 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 func sendRetroSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.retros.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding retro session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "error finding retro session ["+ch.ID.String()+"]")
 	}
 	if sess == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load retro session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "cannot load retro session ["+ch.ID.String()+"]")
 	}
 
 	msg := Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending retro session"))
+	return errors.Wrap(err, "error sending retro session")
 }

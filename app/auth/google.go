@@ -7,23 +7,13 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 )
 
-func googleConf(secure bool, host string) *oauth2.Config {
-	return &oauth2.Config{
-		ClientID:     secrets.GoogleClientID,
-		ClientSecret: secrets.GoogleClientSecret,
-		Endpoint:     google.Endpoint,
-		RedirectURL:  callbackURL(secure, host, ProviderGoogle.Key),
-		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.profile",
-			"https://www.googleapis.com/auth/userinfo.email",
-		},
-	}
+var googleScopes = []string{
+	"https://www.googleapis.com/auth/userinfo.profile",
+	"https://www.googleapis.com/auth/userinfo.email",
 }
 
 type googleUser struct {
@@ -43,12 +33,12 @@ func googleAuth(tok *oauth2.Token) (*Record, error) {
 
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error reading Google response"))
+		return nil, errors.Wrap(err, "error reading Google response")
 	}
 	var user = googleUser{}
 	err = json.Unmarshal(contents, &user)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error marshalling Google user"))
+		return nil, errors.Wrap(err, "error marshalling Google user")
 	}
 
 	ret := Record{

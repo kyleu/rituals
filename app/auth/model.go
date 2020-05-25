@@ -1,6 +1,12 @@
 package auth
 
 import (
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/amazon"
+	"golang.org/x/oauth2/github"
+	"golang.org/x/oauth2/google"
+	"golang.org/x/oauth2/microsoft"
+	"golang.org/x/oauth2/slack"
 	"time"
 
 	"emperror.dev/errors"
@@ -9,17 +15,30 @@ import (
 )
 
 type Provider struct {
-	Key   string
-	Title string
-	Icon  string
+	Key      string
+	Title    string
+	Icon     string
+	Endpoint oauth2.Endpoint
+	Scopes   []string
 }
 
-var ProviderGitHub = Provider{Key: "github", Title: "GitHub", Icon: "github-alt"}
-var ProviderGoogle = Provider{Key: "google", Title: "Google", Icon: "google"}
-var ProviderSlack = Provider{Key: "slack", Title: "Slack", Icon: "hashtag"}
-var ProviderAmazon = Provider{Key: "amazon", Title: "Amazon", Icon: "cart"}
+type Providers []*Provider
 
-var AllProviders = []*Provider{&ProviderGitHub, &ProviderGoogle, &ProviderSlack, &ProviderAmazon}
+func (p Providers) Names() []string {
+	ret := make([]string, len(p))
+	for i, prv := range p {
+		ret[i] = prv.Title
+	}
+	return ret
+}
+
+var ProviderGitHub = Provider{Key: "github", Title: "GitHub", Icon: "github-alt", Endpoint: github.Endpoint, Scopes: githubScopes}
+var ProviderGoogle = Provider{Key: "google", Title: "Google", Icon: "google", Endpoint: google.Endpoint, Scopes: googleScopes}
+var ProviderSlack = Provider{Key: "slack", Title: "Slack", Icon: "hashtag", Endpoint: slack.Endpoint, Scopes: slackScopes}
+var ProviderAmazon = Provider{Key: "amazon", Title: "Amazon", Icon: "cart", Endpoint: amazon.Endpoint, Scopes: amazonScopes}
+var ProviderMicrosoft = Provider{Key: "microsoft", Title: "Microsoft", Icon: "world", Endpoint: microsoft.AzureADEndpoint(""), Scopes: microsoftScopes}
+
+var AllProviders = Providers{&ProviderGitHub, &ProviderGoogle, &ProviderSlack, &ProviderAmazon, &ProviderMicrosoft}
 
 func ProviderFromString(s string) *Provider {
 	for _, t := range AllProviders {
@@ -58,12 +77,20 @@ func (r *Record) ToDisplay() *Display {
 	}
 }
 
-func (es Records) FindByProvider(code string) Records {
+func (r Records) FindByProvider(key string) Records {
 	var ret Records
-	for _, e := range es {
-		if e.Provider.Key == code {
+	for _, e := range r {
+		if e.Provider.Key == key {
 			ret = append(ret, e)
 		}
+	}
+	return ret
+}
+
+func (r Records) Emails() []string {
+	ret := make([]string, len(r))
+	for i, e := range r {
+		ret[i] = e.Email
 	}
 	return ret
 }

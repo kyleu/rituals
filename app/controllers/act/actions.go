@@ -1,12 +1,12 @@
 package act
 
 import (
+	"emperror.dev/errors"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
-	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
@@ -28,7 +28,7 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 
 	redir, err := f(ctx)
 	if err != nil {
-		ctx.Logger.Warn(fmt.Sprintf("error running action: %+v", errors.WithStack(err)))
+		ctx.Logger.Warn(fmt.Sprintf("%+v", errors.Wrap(err, "error running action")))
 		if ctx.Title == "" {
 			ctx.Title = "Error"
 		}

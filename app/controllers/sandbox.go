@@ -33,7 +33,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		}
 		content, err := sb.Resolve(ctx)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error running sandbox ["+key+"]"))
+			return "", errors.Wrap(err, "error running sandbox ["+key+"]")
 		}
 
 		ctx.Title = sb.Title + " Sandbox"

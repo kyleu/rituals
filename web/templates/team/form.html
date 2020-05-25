@@ -1,0 +1,5 @@
+<%: func TeamForm(title string, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<fieldset class="uk-fieldset">
+  <% ComponentSessionTitle(title, ctx, buffer) %>
+  <% ComponentSessionPerm(util.SvcTeam, false, false, auths, ctx, buffer) %>
+</fieldset>

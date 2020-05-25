@@ -1,5 +1,8 @@
 <%: func IndexPanel(svc util.Service, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <h3 class="uk-card-title">
+  <span class="right">
+    <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="list" href="<%= ctx.Route(svc.Key + `.list`) %>" title="show <%= svc.Key %> list"></a>
+  </span>
   <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(svc.Key + `.list`) %>"><span class="h3-icon" data-uk-icon="icon: <%= svc.Icon %>;"></span></a>
   <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(svc.Key + `.list`) %>"><%= svc.PluralTitle %></a>
 </h3>

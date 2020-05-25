@@ -29,8 +29,9 @@ import (
 )
 
 var verbose bool
-var port uint16
+var redir string
 var addr string
+var port uint16
 var authEnabled bool
 
 // Configure configures a root command.
@@ -41,7 +42,7 @@ func Configure(version string, commitHash string) cobra.Command {
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			info, err := InitApp(version, commitHash)
 			if err != nil {
-				return errors.WithStack(errors.Wrap(err, "error initializing application"))
+				return errors.Wrap(err, "error initializing application")
 			}
 
 			return MakeServer(info, addr, port)
@@ -49,6 +50,7 @@ func Configure(version string, commitHash string) cobra.Command {
 	}
 
 	flags := rootCmd.PersistentFlags()
+	flags.StringVarP(&redir, "redir", "r", "http://localhost:6660", "redirect for signin, defaults to localhost")
 	flags.StringVarP(&addr, "address", "a", "127.0.0.1", "interface address to listen on")
 	flags.Uint16VarP(&port, "port", "p", 6660, "port for http server to listen on")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "verbose output")
@@ -68,12 +70,12 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 
 	db, err := config.OpenDatabase(logger)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error creating config service"))
+		return nil, errors.Wrap(err, "error opening database pool")
 	}
 
 	actionService := action.NewService(db, logger)
 	userSvc := user.NewService(actionService, db, logger)
-	authSvc := auth.NewService(authEnabled, actionService, db, logger, userSvc)
+	authSvc := auth.NewService(authEnabled, redir, actionService, db, logger, userSvc)
 	invitationSvc := invitation.NewService(actionService, db, logger)
 	teamSvc := team.NewService(actionService, db, logger)
 	sprintSvc := sprint.NewService(actionService, db, logger)
@@ -105,7 +107,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 func MakeServer(info *config.AppInfo, address string, port uint16) error {
 	r, err := routes.BuildRouter(info)
 	if err != nil {
-		return errors.WithStack(errors.WithMessage(err, "unable to construct routes"))
+		return errors.WithMessage(err, "unable to construct routes")
 	}
 	var msg = fmt.Sprintf("%v is starting on [%v:%v]", util.AppName, address, port)
 	if info.Debug {
@@ -113,5 +115,5 @@ func MakeServer(info *config.AppInfo, address string, port uint16) error {
 	}
 	info.Logger.Info(msg, map[string]interface{}{"address": address, "port": port})
 	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(r))
-	return errors.WithStack(errors.Wrap(err, "unable to run http server"))
+	return errors.Wrap(err, "unable to run http server")
 }

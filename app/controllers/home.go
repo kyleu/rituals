@@ -12,6 +12,21 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
+// func Temp(w http.ResponseWriter, r *http.Request) {
+// 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+// 		s := `{
+// 	"associatedApplications": [
+// 		{
+// 			"applicationId": "f2187a97-e0ee-4f52-8e58-ab527a84fc69"
+// 		}
+// 	]
+// }`
+// 		w.Header().Set("Content-Type", "application/json")
+// 		_, _ = w.Write([]byte(s))
+// 		return "", nil
+// 	})
+// }
+
 func Home(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)

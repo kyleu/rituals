@@ -9,11 +9,12 @@ import (
 
 var (
 	memberProfileResolver Callback
+	memberRoleType        *graphql.Enum
 	memberType            *graphql.Object
 )
 
 func initMember() {
-	memberRoleType := graphql.NewEnum(graphql.EnumConfig{
+	memberRoleType = graphql.NewEnum(graphql.EnumConfig{
 		Name: "MemberRole",
 		Values: graphql.EnumValueConfigMap{
 			"owner":    &graphql.EnumValueConfig{Value: "owner"},
@@ -28,7 +29,7 @@ func initMember() {
 
 	memberType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: "Member",
+			Name: util.KeyTitle(util.KeyMember),
 			Fields: graphql.Fields{
 				"userID": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

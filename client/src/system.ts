@@ -35,7 +35,7 @@ namespace system {
   export const cache = new Cache();
 
   export function setPermissions(perms: permission.Permission[]) {
-    system.cache.permissions = collection.groupBy(perms, x => x.k);
+    permission.applyPermissions(perms);
     permission.setPerms();
   }
 

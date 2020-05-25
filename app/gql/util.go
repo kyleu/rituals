@@ -1,9 +1,9 @@
 package gql
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
+	"fmt"
+	"github.com/gofrs/uuid"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/kyleu/rituals.dev/app/query"
@@ -46,13 +46,25 @@ func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger 
 func paramString(p graphql.ResolveParams, key string) (string, error) {
 	arg, ok := p.Args[key]
 	if !ok {
-		return "", errors.WithStack(errors.New(fmt.Sprintf("parameter %v is not present", key)))
+		return "", errors.New(fmt.Sprintf("parameter %v is not present", key))
 	}
 	ret, ok := arg.(string)
 	if !ok {
-		return "", errors.WithStack(errors.New(fmt.Sprintf("parameter %v is not a string: %v", key, arg)))
+		return "", errors.New(fmt.Sprintf("parameter %v is not a string: %v", key, arg))
 	}
 	return ret, nil
+}
+
+func paramUUID(p graphql.ResolveParams, key string) (*uuid.UUID, error) {
+	arg, ok := p.Args[key]
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("parameter %v is not present", key))
+	}
+	ret, ok := arg.(uuid.UUID)
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("parameter %v is not a UUID: %v", key, arg))
+	}
+	return &ret, nil
 }
 
 func ErrorResponseJSON(logger logur.Logger, errors ...error) *graphql.Result {

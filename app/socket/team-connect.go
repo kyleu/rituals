@@ -36,25 +36,25 @@ func onTeamConnect(s *Service, conn *connection, userID uuid.UUID, param string)
 	ch := channel{Svc: util.SvcTeam.Key, ID: teamID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining channel"))
+		return errors.Wrap(err, "error joining channel")
 	}
 	err = joinTeamSession(s, conn, userID, ch)
-	return errors.WithStack(errors.Wrap(err, "error joining team session"))
+	return errors.Wrap(err, "error joining team session")
 }
 
 func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
 	if ch.Svc != util.SvcTeam.Key {
-		return errors.WithStack(errors.New("team cannot handle [" + ch.Svc + "] message"))
+		return errors.New("team cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess, err := s.teams.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding team session"))
+		return errors.Wrap(err, "error finding team session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcTeam.Key, Cmd: ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcTeam.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, "")})
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing team error message"))
+			return errors.Wrap(err, "error writing team error message")
 		}
 		return nil
 	}

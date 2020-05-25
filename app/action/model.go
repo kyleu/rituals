@@ -50,7 +50,7 @@ func (a *Action) ContentJSON() (string, error) {
 	bytes, err := json.MarshalIndent(a.Content, "", "  ")
 
 	if err != nil {
-		return "", errors.WithStack(errors.Wrap(err, "error marshalling action content"))
+		return "", errors.Wrap(err, "error marshalling action content")
 	}
 
 	return string(bytes), nil

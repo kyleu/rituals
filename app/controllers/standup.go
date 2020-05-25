@@ -20,32 +20,45 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error retrieving standups"))
+			return "", errors.Wrap(err, "error retrieving standups")
+		}
+
+		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		if err != nil {
+			return "", err
+		}
+		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		if err != nil {
+			return "", err
+		}
+		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
+		if err != nil {
+			return "", err
 		}
 
 		ctx.Title = util.SvcStandup.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Key)
-		return tmpl(templates.StandupList(sessions, ctx, w))
+		return tmpl(templates.StandupList(sessions, teams, sprints, auths, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, w))
 	})
 }
 
 func StandupNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(util.SvcStandup.Title, r.Form.Get("title"))
+		title := util.ServiceTitle(util.SvcStandup, r.Form.Get("title"))
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sprintID := getUUID(r.Form, util.SvcSprint.Key)
 		sess, err := ctx.App.Standup.New(title, ctx.Profile.UserID, teamID, sprintID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error creating standup session"))
+			return "", errors.Wrap(err, "error creating standup session")
 		}
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot send content update"))
+			return "", errors.Wrap(err, "cannot send content update")
 		}
 		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint.Key, sprintID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot send content update"))
+			return "", errors.Wrap(err, "cannot send content update")
 		}
 		return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
 	})
@@ -56,7 +69,7 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess, err := ctx.App.Standup.GetBySlug(key)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot load standup session"))
+			return "", errors.Wrap(err, "cannot load standup session")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + key + "]")
@@ -65,15 +78,15 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		permErrors, bc := check(&ctx, ctx.App.Standup.Permissions, params)
+		auths, permErrors, bc := check(&ctx, ctx.App.Standup.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcStandup, permErrors, ctx, w)
+			return permErrorTemplate(util.SvcStandup, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		return tmpl(templates.StandupWorkspace(sess, ctx, w))
+		return tmpl(templates.StandupWorkspace(sess, auths, ctx, w))
 	})
 }

@@ -1,0 +1,18 @@
+<%: func EstimateTable(estimates estimate.Sessions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <% ComponentTableHeader(util.SvcEstimate.Key, "title", "Title", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcEstimate.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range estimates { %>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcEstimate.Key, `key`, model.Slug) %>"><%= model.Title %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

@@ -11,9 +11,10 @@ var (
 	retroArgs           graphql.FieldConfigArgument
 	retroResolver       Callback
 	retrosResolver      Callback
+	retroMemberResolver Callback
+	retroPermissionResolver Callback
 	retroTeamResolver   Callback
 	retroSprintResolver Callback
-	retroMemberResolver Callback
 	retroType           *graphql.Object
 )
 
@@ -48,6 +49,10 @@ func initRetro() {
 		return ctx.App.Retro.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
+	retroPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Retro.Permissions.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
 	retroTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		sess := p.Source.(*retro.Session)
 		if sess.TeamID != nil {
@@ -66,10 +71,10 @@ func initRetro() {
 
 	retroType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: "Retro",
+			Name: util.SvcRetro.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(graphql.String),
+					Type: graphql.NewNonNull(scalarUUID),
 				},
 				"slug": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

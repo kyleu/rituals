@@ -8,7 +8,7 @@ import (
 func UUID() uuid.UUID {
 	ret, err := uuid.NewV4()
 	if err != nil {
-		panic(errors.WithStack(errors.New("unable to create random UUID")))
+		panic(errors.New("unable to create random UUID"))
 	}
 
 	return ret

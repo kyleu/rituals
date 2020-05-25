@@ -22,7 +22,7 @@ type Service struct {
 }
 
 func NewService(app *config.AppInfo) (*Service, error) {
-	logger := logur.WithFields(app.Logger, map[string]interface{}{"service": util.KeyGraphQL})
+	logger := logur.WithFields(app.Logger, map[string]interface{}{util.KeyService: util.KeyGraphQL})
 
 	initSchema()
 
@@ -37,7 +37,7 @@ func NewService(app *config.AppInfo) (*Service, error) {
 	}
 	schema, err := graphql.NewSchema(schemaConfig)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "failed to create new schema"))
+		return nil, errors.Wrap(err, "failed to create new schema")
 	}
 	svc := Service{Logger: logger, cfg: schemaConfig, schema: schema, app: app}
 
@@ -57,12 +57,12 @@ func (s *Service) Run(operationName string, doc string, variables map[string]int
 	if len(r.Errors) > 0 {
 		errString := ""
 		for i, e := range r.Errors {
-			errString += fmt.Sprintf("%v: %v", i, e)
+			errString += fmt.Sprintf("%v: %v@%v", i, e.Message, e.Path)
 			if i < len(r.Errors)-1 {
 				errString += ", "
 			}
 		}
-		return nil, errors.WithStack(errors.New("graphql errors [" + errString + "]"))
+		return nil, errors.New("graphql errors [" + errString + "]")
 	}
 	return r, nil
 }
@@ -89,6 +89,9 @@ func initSchema() {
 
 		initSprint()
 		initTeam()
+
+		initPermission()
+
 		initProfile()
 		initUser()
 

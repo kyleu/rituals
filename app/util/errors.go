@@ -70,6 +70,13 @@ func TraceDetail(trace errors.StackTrace) []ErrorFrame {
 	return ret
 }
 
+func IDErrorString(k string, v string) string {
+	if v == "" {
+		return fmt.Sprintf("invalid %v id", k)
+	}
+	return fmt.Sprintf("invalid %v id \"%v\"", k, v)
+}
+
 func IDError(k string, v string) error {
-	return errors.WithStack(errors.New(strings.TrimSpace(fmt.Sprintf("invalid %v id %v", k, v))))
+	return errors.New(IDErrorString(k, v))
 }

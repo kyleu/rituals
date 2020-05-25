@@ -17,7 +17,7 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) *Entry {
 
 	if dto == nil {
 		q := fmt.Sprintf(`insert into %s (%s, user_id, name, role) values ($1, $2, '', 'member')`, s.tableName, s.colName)
-		_, err = s.db.Exec(q, modelID, userID)
+		err = s.db.Insert(q, nil, modelID, userID)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting member for user [%v] and model [%v]: %+v", modelID, userID, err))
 		}

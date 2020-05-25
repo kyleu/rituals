@@ -6,23 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/oauth2/amazon"
-
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/secrets"
 	"github.com/kyleu/rituals.dev/app/util"
 	"golang.org/x/oauth2"
 )
 
-func amazonConf(secure bool, host string) *oauth2.Config {
-	return &oauth2.Config{
-		ClientID:     secrets.AmazonClientID,
-		ClientSecret: secrets.AmazonClientSecret,
-		Endpoint:     amazon.Endpoint,
-		RedirectURL:  callbackURL(secure, host, ProviderAmazon.Key),
-		Scopes:       []string{"profile"},
-	}
-}
+var amazonScopes = []string{"profile"}
 
 type amazonUser struct {
 	ID      string `json:"login"`
@@ -50,14 +39,14 @@ func amazonAuth(tok *oauth2.Token) (*Record, error) {
 
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error reading Amazon response"))
+		return nil, errors.Wrap(err, "error reading Amazon response")
 	}
 
 	var user = amazonUser{}
 	err = json.Unmarshal(contents, &user)
 
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error marshalling Amazon user"))
+		return nil, errors.Wrap(err, "error marshalling Amazon user")
 	}
 
 	ret := Record{

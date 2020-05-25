@@ -88,6 +88,8 @@ type Invitation struct {
 	Created  time.Time
 }
 
+type Invitations = []*Invitation
+
 func (dto *invitationDTO) ToInvitation() *Invitation {
 	return &Invitation{
 		Key:      dto.Key,

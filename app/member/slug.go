@@ -1,6 +1,7 @@
 package member
 
 import (
+	"github.com/kyleu/rituals.dev/app/database"
 	"math/rand"
 	"regexp"
 	"strings"
@@ -11,10 +12,9 @@ import (
 	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
-	"github.com/jmoiron/sqlx"
 )
 
-func NewSlugFor(db *sqlx.DB, svc string, str string) (string, error) {
+func NewSlugFor(db *database.Service, svc string, str string) (string, error) {
 	randomStrLength := 4
 	if len(str) == 0 {
 		str = strings.ToLower(randomString(randomStrLength))
@@ -22,16 +22,16 @@ func NewSlugFor(db *sqlx.DB, svc string, str string) (string, error) {
 	slug := slugify(str)
 	q := query.SQLSelect(util.KeyID, svc, "slug = $1", "", 0, 0)
 
-	x, err := db.Queryx(q, slug)
+	x, err := db.Query(q, nil, slug)
 	if err != nil {
-		return slug, errors.WithStack(errors.Wrap(err, "error fetching existing slug"))
+		return slug, errors.Wrap(err, "error fetching existing slug")
 	}
 
 	if x.Next() {
 		junk := strings.ToLower(randomString(randomStrLength))
 		slug, err = NewSlugFor(db, svc, slug+"-"+junk)
 		if err != nil {
-			return slug, errors.WithStack(errors.Wrap(err, "error finding slug for new "+svc+" session"))
+			return slug, errors.Wrap(err, "error finding slug for new "+svc+" session")
 		}
 	}
 

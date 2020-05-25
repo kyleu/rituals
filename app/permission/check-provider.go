@@ -11,16 +11,17 @@ func (s *Service) checkAuths(authEnabled bool, svc util.Service, perms Permissio
 	var ret Errors
 
 	if authEnabled {
-		ret = append(ret, providerCheck(svc, auth.ProviderGitHub, perms, auths)...)
-		ret = append(ret, providerCheck(svc, auth.ProviderGoogle, perms, auths)...)
-		ret = append(ret, providerCheck(svc, auth.ProviderSlack, perms, auths)...)
-		ret = append(ret, providerCheck(svc, auth.ProviderAmazon, perms, auths)...)
+		ret = append(ret, providerCheck(svc, &auth.ProviderGitHub, perms, auths)...)
+		ret = append(ret, providerCheck(svc, &auth.ProviderGoogle, perms, auths)...)
+		ret = append(ret, providerCheck(svc, &auth.ProviderSlack, perms, auths)...)
+		ret = append(ret, providerCheck(svc, &auth.ProviderAmazon, perms, auths)...)
+		ret = append(ret, providerCheck(svc, &auth.ProviderMicrosoft, perms, auths)...)
 	}
 
 	return ret
 }
 
-func providerCheck(svc util.Service, p auth.Provider, perms Permissions, auths auth.Records) Errors {
+func providerCheck(svc util.Service, p *auth.Provider, perms Permissions, auths auth.Records) Errors {
 	var authMatches = auths.FindByProvider(p.Key)
 	var permMatches = perms.FindByK(p.Key)
 	if len(permMatches) == 0 {

@@ -23,17 +23,17 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		}
 		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 		if err != nil {
-			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "cannot read JSON body for GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.Wrap(err, "cannot read JSON body for GraphQL")))
 		}
 		err = r.Body.Close()
 		if err != nil {
-			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "cannot close body for GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.Wrap(err, "cannot close body for GraphQL")))
 		}
 
 		var req map[string]interface{}
 		err = json.Unmarshal(body, &req)
 		if err != nil {
-			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "error decoding JSON body for GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.Wrap(err, "error decoding JSON body for GraphQL")))
 		}
 		op := ""
 		opParam, ok := req["operationName"]
@@ -54,7 +54,7 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 
 		res, err := graphQLService.Run(op, query, v, ctx)
 		if err != nil {
-			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.WithStack(errors.Wrap(err, "error running GraphQL"))))
+			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.Wrap(err, "error running GraphQL")))
 		}
 
 		return graphQLResponse(w, res)
@@ -64,14 +64,14 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 func graphQLResponse(w http.ResponseWriter, res *graphql.Result) (string, error) {
 	b, err := json.MarshalIndent(res, "", "  ")
 	if err != nil {
-		return "", errors.WithStack(errors.Wrap(err, "error encoding GraphQL results"))
+		return "", errors.Wrap(err, "error encoding GraphQL results")
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	_, err = w.Write(b)
 	if err != nil {
-		return "", errors.WithStack(errors.Wrap(err, "error writing GraphQL response"))
+		return "", errors.Wrap(err, "error writing GraphQL response")
 	}
 	return "", nil
 }
@@ -80,7 +80,7 @@ func prepareService(app *config.AppInfo) error {
 	if graphQLService == nil {
 		s, err := gql.NewService(app)
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "unable to initialize GraphQL schema"))
+			return errors.Wrap(err, "unable to initialize GraphQL schema")
 		}
 		graphQLService = s
 	}

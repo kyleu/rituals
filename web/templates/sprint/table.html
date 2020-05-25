@@ -1,0 +1,22 @@
+<%: func SprintTable(sprints sprint.Sessions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <% ComponentTableHeader(util.SvcSprint.Key, "title", "Title", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcSprint.Key, "startDate", "Start Date", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcSprint.Key, "endDate", "End Date", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcSprint.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range sprints { %>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcSprint.Key, `key`, model.Slug) %>"><%= model.Title %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDate(model.StartDate, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDate(model.EndDate, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

@@ -1,14 +1,12 @@
-<%: func TeamSession(model *team.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func TeamSession(model *team.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
-    <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('<%= util.KeySession %>');return false;" title="edit team"></a>
-    </span>
+    <% ComponentSessionPublic(util.SvcTeam, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcTeam.Icon %>;"></span>
     <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.KeyPlural(util.KeyAction) %>');return false;" title="view history"></a>
   </h3>
-  <p>Team</p>
+  <%= util.SvcTeam.Key %>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -19,8 +17,7 @@
     <form class="uk-form-stacked" id="form-detail" onsubmit="team.onSubmitTeamSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
-          <% ComponentSessionTitle(model.Title, ctx, buffer) %>
-          <% ComponentSessionPerm(util.SvcTeam, ctx, buffer) %>
+          <% TeamForm(model.Title, auths, ctx, buffer) %>
         </fieldset>
       </div>
       <div class="uk-modal-footer uk-text-right">

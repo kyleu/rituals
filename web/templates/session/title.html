@@ -1,5 +1,5 @@
 <%: func ComponentSessionTitle(v string, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-margin">
   <label class="uk-form-label" for="model-title-input">Title</label>
-  <input class="uk-input" id="model-title-input" type="text" value="<%= v %>" />
+  <input class="uk-input" id="model-title-input" type="text" name="title" placeholder="Name your session" value="<%= v %>" />
 </div>

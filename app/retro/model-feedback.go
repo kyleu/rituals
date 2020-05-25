@@ -17,6 +17,8 @@ type Feedback struct {
 	Created  time.Time `json:"created"`
 }
 
+type Feedbacks = []*Feedback
+
 type feedbackDTO struct {
 	ID       uuid.UUID `db:"id"`
 	RetroID  uuid.UUID `db:"retro_id"`

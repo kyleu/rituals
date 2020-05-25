@@ -1,4 +1,4 @@
-<%: func PermissionErrors(svc util.Service, errors permission.Errors, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func PermissionErrors(svc util.Service, errors permission.Errors, auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -15,7 +15,7 @@
           <% PermissionTeamError(svc, errors.FindByProvider(util.SvcTeam.Key), ctx, _buffer) %>
           <% PermissionSprintError(svc, errors.FindByProvider(util.SvcSprint.Key), ctx, _buffer) %>
           <% for _, p := range auth.AllProviders { %>
-            <% PermissionProviderError(svc, p, errors.FindByProvider(p.Key), ctx, _buffer) %>
+            <% PermissionProviderError(svc, p, errors.FindByProvider(p.Key), auths.FindByProvider(p.Key), ctx, _buffer) %>
           <% } %>
         </ul>
       <% } %>

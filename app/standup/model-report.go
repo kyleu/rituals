@@ -16,6 +16,8 @@ type Report struct {
 	Created   time.Time `json:"created"`
 }
 
+type Reports = []*Report
+
 type reportDTO struct {
 	ID        uuid.UUID `db:"id"`
 	StandupID uuid.UUID `db:"standup_id"`

@@ -43,7 +43,7 @@ func NewService(
 	logger logur.Logger, actions *action.Service, users *user.Service, auths *auth.Service,
 	teams *team.Service, sprints *sprint.Service,
 	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeySocket})
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeySocket})
 	return Service{
 		connections:   make(map[uuid.UUID]*connection),
 		connectionsMu: sync.Mutex{},
@@ -64,9 +64,9 @@ func NewService(
 var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
 var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem.Key, ChannelID: &systemID}
 
-func (s *Service) List(params *query.Params) ([]*Status, error) {
+func (s *Service) List(params *query.Params) (Statuses, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyConnection, params)
-	ret := make([]*Status, 0)
+	ret := make(Statuses, 0)
 	ret = append(ret, &systemStatus)
 	var idx = 0
 	for _, conn := range s.connections {
@@ -115,7 +115,7 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	case util.SvcRetro.Key:
 		err = onRetroMessage(s, c, c.Profile.UserID, message.Cmd, message.Param)
 	default:
-		err = errors.New("invalid service [" + message.Svc + "]")
+		err = errors.New(util.IDErrorString(util.KeyService, message.Svc))
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling socket message ["+message.String()+"]"))
+	return errors.Wrap(err, "error handling socket message ["+message.String()+"]")
 }

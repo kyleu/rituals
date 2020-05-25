@@ -1,35 +1,56 @@
 package auth
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
 	"logur.dev/logur"
+	"strings"
 )
 
 type Service struct {
-	Enabled bool
-	actions *action.Service
-	db      *sqlx.DB
-	logger  logur.Logger
-	users   *user.Service
+	Enabled          bool
+	EnabledProviders Providers
+	redir            string
+	actions          *action.Service
+	db               *database.Service
+	logger           logur.Logger
+	users            *user.Service
 }
 
-func NewService(enabled bool, actions *action.Service, db *sqlx.DB, logger logur.Logger, users *user.Service) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAuth})
+func NewService(enabled bool, redir string, actions *action.Service, db *database.Service, logger logur.Logger, users *user.Service) *Service {
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeyAuth})
+
+	if !strings.HasPrefix(redir, "http") {
+		redir = "https://" + redir
+	}
+
 	svc := Service{
 		Enabled: enabled,
+		redir:   redir,
 		actions: actions,
 		db:      db,
 		logger:  logger,
 		users:   users,
 	}
+
+	for _, p := range AllProviders {
+		cfg := svc.getConfig(false, p)
+		if cfg != nil {
+			svc.EnabledProviders = append(svc.EnabledProviders, p)
+		}
+	}
+	if len(svc.EnabledProviders) == 0 {
+		svc.Enabled = false
+	} else {
+		logger.Info("auth service started for [" + strings.Join(svc.EnabledProviders.Names(), ", ") + "]")
+	}
+
 	return &svc
 }
 
@@ -41,7 +62,7 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, userID)
+	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving auth entries for user [%v]: %+v", userID, err))
 		return nil, nil
@@ -57,7 +78,7 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 	return rec, disp
 }
 
-func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*Record, error) {
+func (s *Service) Handle(profile *util.UserProfile, prv *Provider, code string) (*Record, error) {
 	if !s.Enabled {
 		return nil, ErrorAuthDisabled
 	}
@@ -66,28 +87,28 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 		return nil, errors.New("no user profile for auth")
 	}
 
-	cfg := s.getConfig(false, "", key)
+	cfg := s.getConfig(false, prv)
 	if cfg == nil {
-		return nil, errors.New("no auth config for [" + key + "]")
+		return nil, errors.New("no auth config for [" + prv.Key + "]")
 	}
 
-	record, err := s.decodeRecord(key, code)
+	record, err := s.decodeRecord(prv, code)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error retrieving auth profile"))
+		return nil, errors.Wrap(err, "error retrieving auth profile")
 	}
 	if record == nil {
-		return nil, errors.WithStack(errors.New("cannot retrieve auth profile"))
+		return nil, errors.New("cannot retrieve auth profile")
 	}
 	record.UserID = profile.UserID
 
 	curr, err := s.GetByProviderID(record.Provider.Key, record.ProviderID)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error retrieving auth record"))
+		return nil, errors.Wrap(err, "error retrieving auth record")
 	}
 	if curr == nil {
 		record, err = s.NewRecord(record)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "error saving new auth record"))
+			return nil, errors.Wrap(err, "error saving new auth record")
 		}
 
 		return s.mergeProfile(profile, record)
@@ -97,7 +118,7 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 
 		err = s.UpdateRecord(record)
 		if err != nil {
-			return nil, errors.WithStack(errors.Wrap(err, "error updating auth record"))
+			return nil, errors.Wrap(err, "error updating auth record")
 		}
 
 		return s.mergeProfile(profile, record)
@@ -107,7 +128,7 @@ func (s *Service) Handle(profile *util.UserProfile, key string, code string) (*R
 
 	record, err = s.NewRecord(record)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error saving new auth record"))
+		return nil, errors.Wrap(err, "error saving new auth record")
 	}
 
 	return s.mergeProfile(profile, record)
@@ -122,7 +143,7 @@ func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, er
 
 	_, err := s.users.SaveProfile(p)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error saving user profile"))
+		return nil, errors.Wrap(err, "error saving user profile")
 	}
 
 	return record, nil

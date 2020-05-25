@@ -21,13 +21,13 @@ type PermissionParams struct {
 	SprintID *uuid.UUID
 }
 
-func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionParams) (permission.Errors, web.Breadcrumbs) {
+func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionParams) (auth.Records, permission.Errors, web.Breadcrumbs) {
 	var bc web.Breadcrumbs
 	bc = web.BreadcrumbsSimple(ctx.Route(p.Svc.Key+".list"), p.Svc.Plural)
 
 	auths, currTeams, currSprints, err := authsTeamsAndSprints(ctx, p.TeamID, p.SprintID)
 	if err != nil {
-		return permission.Errors{{Svc: "system", Provider: "error", Message: err.Error()}}, bc
+		return nil, permission.Errors{{Svc: "system", Provider: "error", Message: err.Error()}}, bc
 	}
 
 	var tp *permission.Params
@@ -54,20 +54,20 @@ func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionPar
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(p.Svc.Key, util.KeyKey, p.Slug), p.Slug)...)
 	}
 
-	return permErrors, bc
+	return auths, permErrors, bc
 }
 
 func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID) (auth.Records, []uuid.UUID, []uuid.UUID, error) {
 	auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, nil)
 	if err != nil {
-		return nil, nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current auth records"))
+		return nil, nil, nil, errors.Wrap(err, "unable to retrieve current auth records")
 	}
 
 	var currTeams []uuid.UUID
 	if tm != nil {
 		currTeams, err = ctx.App.Team.GetIdsByMember(ctx.Profile.UserID)
 		if err != nil {
-			return nil, nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current teams"))
+			return nil, nil, nil, errors.Wrap(err, "unable to retrieve current teams")
 		}
 	}
 
@@ -75,13 +75,13 @@ func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID
 	if spr != nil {
 		currSprints, err = ctx.App.Sprint.GetIdsByMember(ctx.Profile.UserID)
 		if err != nil {
-			return nil, nil, nil, errors.WithStack(errors.Wrap(err, "unable to retrieve current sprints"))
+			return nil, nil, nil, errors.Wrap(err, "unable to retrieve current sprints")
 		}
 	}
 
 	return auths, currTeams, currSprints, nil
 }
 
-func permErrorTemplate(svc util.Service, errors permission.Errors, ctx web.RequestContext, w http.ResponseWriter) (string, error) {
-	return tmpl(templates.PermissionErrors(svc, errors, ctx, w))
+func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records, ctx web.RequestContext, w http.ResponseWriter) (string, error) {
+	return tmpl(templates.PermissionErrors(svc, errors, auths, ctx, w))
 }

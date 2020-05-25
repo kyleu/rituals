@@ -6,7 +6,7 @@ namespace permission {
       {emails.map(e => {
         return <li>
           <label>
-            {e.matched ? <input class={cls} type="checkbox" value={e.domain} checked="checked" onchange={oc} /> : <input class={cls} type="checkbox" value={e.domain} onclick={oc} />}
+            {e.matched ? <input class={cls} type="checkbox" value={e.domain} checked="checked" onchange={oc} /> : <input class={cls} type="checkbox" value={e.domain} onchange={oc} />}
             Using email address {e.domain}
           </label>
         </li>;
@@ -15,7 +15,8 @@ namespace permission {
   }
 
   function readPermission(k: string): Permission[] {
-    if(!dom.req<HTMLInputElement>(`#perm-${k}-checkbox`).checked) {
+    const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`)
+    if(!checkbox || !checkbox.checked) {
       return [];
     }
 
@@ -36,7 +37,15 @@ namespace permission {
     ret.push(...readPermission("google"));
     ret.push(...readPermission("slack"));
     ret.push(...readPermission("amazon"));
+    ret.push(...readPermission("microsoft"));
 
     return ret;
+  }
+
+  export function applyPermissions(perms: permission.Permission[] | null) {
+    console.log("!!!!");
+    system.cache.permissions = collection.groupBy(perms, x => x.k);
+    dom.setDisplay("#public-link-container", perms === null || perms.length === 0)
+    dom.setDisplay("#private-link-container", perms !== null && perms.length > 0)
   }
 }

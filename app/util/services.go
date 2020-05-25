@@ -35,16 +35,16 @@ var SvcSprint = Service{
 }
 var SvcEstimate = Service{
 	Key:         "estimate",
-	Title:       "Estimation Session",
+	Title:       "Estimate",
 	Plural:      "estimates",
-	PluralTitle: "Estimation Sessions",
+	PluralTitle: "Estimates",
 	Icon:        "settings",
 }
 var SvcStandup = Service{
 	Key:         "standup",
-	Title:       "Daily Standup",
+	Title:       "Standup",
 	Plural:      "standups",
-	PluralTitle: "Daily Standups",
+	PluralTitle: "Standups",
 	Icon:        "future",
 }
 var SvcRetro = Service{
@@ -55,10 +55,10 @@ var SvcRetro = Service{
 	Icon:        "history",
 }
 
-func ServiceTitle(svc string, title string) string {
+func ServiceTitle(svc Service, title string) string {
 	title = strings.TrimSpace(title)
 	if title == "" {
-		title = "Untitled " + svc
+		title = "Untitled " + svc.Title
 	}
 
 	return title

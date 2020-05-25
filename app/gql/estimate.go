@@ -8,13 +8,14 @@ import (
 )
 
 var (
-	estimateArgs           graphql.FieldConfigArgument
-	estimateResolver       Callback
-	estimatesResolver      Callback
-	estimateMemberResolver Callback
-	estimateTeamResolver   Callback
-	estimateSprintResolver Callback
-	estimateType           *graphql.Object
+	estimateArgs               graphql.FieldConfigArgument
+	estimateResolver           Callback
+	estimatesResolver          Callback
+	estimateMemberResolver     Callback
+	estimatePermissionResolver Callback
+	estimateTeamResolver       Callback
+	estimateSprintResolver     Callback
+	estimateType               *graphql.Object
 )
 
 func initEstimate() {
@@ -50,6 +51,10 @@ func initEstimate() {
 		return ctx.App.Estimate.Members.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
+	estimatePermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Estimate.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
 	estimateTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		sess := p.Source.(*estimate.Session)
 		if sess.TeamID != nil {
@@ -68,10 +73,10 @@ func initEstimate() {
 
 	estimateType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: "Estimate",
+			Name: util.SvcEstimate.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(graphql.String),
+					Type: graphql.NewNonNull(scalarUUID),
 				},
 				"slug": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

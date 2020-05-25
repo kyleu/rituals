@@ -3,22 +3,22 @@ package action
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/util"
 	"logur.dev/logur"
 )
 
 type Service struct {
-	db     *sqlx.DB
+	db     *database.Service
 	logger logur.Logger
 }
 
-func NewService(db *sqlx.DB, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{"service": util.KeyAction})
+func NewService(db *database.Service, logger logur.Logger) *Service {
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeyAction})
 	svc := Service{
 		db:     db,
 		logger: logger,
@@ -30,10 +30,10 @@ func NewService(db *sqlx.DB, logger logur.Logger) *Service {
 func (s *Service) New(svc string, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
 	id := util.UUID()
 	q := "insert into action (id, svc, model_id, author_id, act, content, note) values ($1, $2, $3, $4, $5, $6, $7)"
-	_, err := s.db.Exec(q, id, svc, modelID, authorID, act, util.ToJSON(content), note)
+	err := s.db.Insert(q, nil, id, svc, modelID, authorID, act, util.ToJSON(content), note)
 
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "error saving new ["+svc+"] action"))
+		return nil, errors.Wrap(err, "error saving new ["+svc+"] action")
 	}
 
 	return s.GetByID(id)
@@ -59,7 +59,8 @@ func (s *Service) List(params *query.Params) (Actions, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset))
+	q := query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil)
 
 	if err != nil {
 		return nil, err
@@ -69,8 +70,9 @@ func (s *Service) List(params *query.Params) (Actions, error) {
 }
 
 func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
-	dto := &actionDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", util.KeyAction, "id = $1", "", 0, 0), id)
+	dto := actionDTO{}
+	q := query.SQLSelect("*", util.KeyAction, "id = $1", "", 0, 0)
+	err := s.db.Get(&dto, q, nil, id)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -87,7 +89,8 @@ func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) (Actions, erro
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset), id)
+	q := query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, id)
 
 	if err != nil {
 		return nil, err
@@ -102,7 +105,7 @@ func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Par
 	var dtos []actionDTO
 
 	q := query.SQLSelect("*", util.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, svc, modelID)
+	err := s.db.Select(&dtos, q, nil, svc, modelID)
 
 	if err != nil {
 		return nil, err

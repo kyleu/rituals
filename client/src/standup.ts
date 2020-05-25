@@ -41,9 +41,6 @@ namespace standup {
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
         break;
-      case command.server.authUpdate:
-        system.setAuth(param as permission.Auth[]);
-        break;
       case command.server.teamUpdate:
         const tm = param as team.Detail | undefined;
         if (standup.cache.detail) {

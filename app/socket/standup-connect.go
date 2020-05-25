@@ -22,7 +22,7 @@ type StandupSessionJoined struct {
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
-	Reports     []*standup.Report      `json:"reports"`
+	Reports     standup.Reports      `json:"reports"`
 }
 
 func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -33,25 +33,25 @@ func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param stri
 	ch := channel{Svc: util.SvcStandup.Key, ID: standupID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining channel"))
+		return errors.Wrap(err, "error joining channel")
 	}
 	err = joinStandupSession(s, conn, userID, ch)
-	return errors.WithStack(errors.Wrap(err, "error joining standup session"))
+	return errors.Wrap(err, "error joining standup session")
 }
 
 func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
 	if ch.Svc != util.SvcStandup.Key {
-		return errors.WithStack(errors.New("standup cannot handle [" + ch.Svc + "] message"))
+		return errors.New("standup cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess, err := s.standups.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding standup session"))
+		return errors.Wrap(err, "error finding standup session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup.Key, Cmd: ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcStandup.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, "")})
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing standup error message"))
+			return errors.Wrap(err, "error writing standup error message")
 		}
 		return nil
 	}

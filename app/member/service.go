@@ -3,6 +3,7 @@ package member
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
 
@@ -11,21 +12,20 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/query"
 )
 
 type Service struct {
 	actions   *action.Service
-	db        *sqlx.DB
+	db        *database.Service
 	logger    logur.Logger
 	svc       string
 	tableName string
 	colName   string
 }
 
-func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, svc string) *Service {
+func NewService(actions *action.Service, db *database.Service, logger logur.Logger, svc string) *Service {
 	return &Service{
 		actions:   actions,
 		db:        db,
@@ -45,7 +45,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
 	where := fmt.Sprintf("%s = $1", s.colName)
 	cols := fmt.Sprintf("user_id, %s, role, created", nameClause)
 	q := query.SQLSelect(cols, s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, id)
+	err := s.db.Select(&dtos, q, nil, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving member entries for model [%v]: %+v", id, err))
 		return nil
@@ -64,7 +64,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	cols := fmt.Sprintf("user_id, %s, role, created", nameClause)
 	where := fmt.Sprintf("%s = $1 and user_id = $2", s.colName)
 	q := query.SQLSelect(cols, s.tableName, where, "", 0, 0)
-	err := s.db.Get(&dto, q, modelID, userID)
+	err := s.db.Get(&dto, q, nil, modelID, userID)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -79,7 +79,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 
 func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (*Entry, error) {
 	q := fmt.Sprintf("update %s set name = $1 where %s = $2 and user_id = $3", s.tableName, s.colName)
-	_, err := s.db.Exec(q, name, modelID, userID)
+	err := s.db.Insert(q, nil, name, modelID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +88,6 @@ func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (
 
 func (s *Service) RemoveMember(modelID uuid.UUID, target uuid.UUID) error {
 	q := fmt.Sprintf("delete from %s where %s = $1 and user_id = $2", s.tableName, s.colName)
-	_, err := s.db.Exec(q, modelID, target)
-	return errors.WithStack(errors.Wrap(err, "unable to remove member ["+target.String()+"]"))
+	_, err := s.db.Delete(q, nil, modelID, target)
+	return errors.Wrap(err, "unable to remove member ["+target.String()+"]")
 }

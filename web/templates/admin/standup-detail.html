@@ -1,4 +1,4 @@
-<%: func AdminStandupDetail(model *standup.Session, members member.Entries, perms permission.Permissions, reports []*standup.Report, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminStandupDetail(model *standup.Session, members member.Entries, perms permission.Permissions, reports standup.Reports, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 

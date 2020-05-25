@@ -1,0 +1,7 @@
+<%: func ComponentSessionPublic(svc util.Service, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<% cls := ctx.Profile.LinkClass() + " uk-icon left uk-margin-small-left" %>
+<% oc := "events.openModal('session');" %>
+<div class="right">
+  <a id="public-link-container" class="<%= cls %>" onclick="<%= oc %>" data-uk-icon="unlock" title="public <%= svc.Key %>"></a>
+  <a id="private-link-container" class="<%= cls %>" onclick="<%= oc %>" data-uk-icon="lock" title="private <%= svc.Key %>"></a>
+</div>

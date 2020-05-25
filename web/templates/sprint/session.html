@@ -1,17 +1,14 @@
-<%: func SprintSession(model *sprint.Session, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintSession(model *sprint.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
-    <span class="right">
-      <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('<%= util.KeySession %>');return false;" title="edit sprint"></a>
-    </span>
+    <% ComponentSessionPublic(util.SvcSprint, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcSprint.Icon %>;"></span>
     <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
     <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.KeyPlural(util.KeyAction) %>');return false;" title="view history"></a>
   </h3>
-  <p>
-    <span id="sprint-date-display">Sprint</span>
-    <span id="team-link-container"></span>
-  </p>
+  <span class="right" id="sprint-date-display"></span>
+  <%= util.SvcSprint.Key %>
+  <span id="team-link-container"></span>
 </div>
 <div id="modal-session" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -21,19 +18,7 @@
     </div>
     <form class="uk-form-stacked" id="form-detail" onsubmit="sprint.onSubmitSprintSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>
-        <fieldset class="uk-fieldset">
-          <% ComponentSessionTitle(model.Title, ctx, buffer) %>
-          <div class="uk-margin">
-            <label class="uk-form-label" for="sprint-start-date-input">Start Date</label>
-            <input class="uk-input" id="sprint-start-date-input" type="date" />
-          </div>
-          <div class="uk-margin">
-            <label class="uk-form-label" for="sprint-end-date-input">End Date</label>
-            <input class="uk-input" id="sprint-end-date-input" type="date" />
-          </div>
-          <% ComponentSessionTeam(ctx, buffer) %>
-          <% ComponentSessionPerm(util.SvcSprint, ctx, buffer) %>
-        </fieldset>
+        <% SprintForm(model.Title, model.StartDate, model.EndDate, nil, auths, ctx, buffer) %>
       </div>
       <div class="uk-modal-footer uk-text-right">
         <button class="uk-button uk-button-default" type="submit">Save</button>

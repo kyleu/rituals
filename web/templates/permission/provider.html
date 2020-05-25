@@ -1,4 +1,4 @@
-<%: func PermissionProviderError(svc util.Service, provider *auth.Provider, errors permission.Errors, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func PermissionProviderError(svc util.Service, provider *auth.Provider, errors permission.Errors, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <% if len(errors) > 0 { %>
   <li>
     <p>
@@ -12,6 +12,9 @@
             or
           <% } %>
         <% } %>
+      <% } %>
+      <% if len(auths) > 0 { %>
+        (you are currently signed in as <%= strings.Join(auths.Emails(), ", ") %>)
       <% } %>
     </p>
   </li>

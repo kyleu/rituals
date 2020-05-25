@@ -11,10 +11,11 @@ import (
 
 var defaultFeedbackOrdering = query.Orderings{{Column: "category", Asc: true}, {Column: "idx", Asc: true}, {Column: util.KeyCreated, Asc: false}}
 
-func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) ([]*Feedback, error) {
+func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) (Feedbacks, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)
 	var dtos []feedbackDTO
-	err := s.db.Select(&dtos, query.SQLSelect("*", util.KeyFeedback, "retro_id = $1", params.OrderByString(), params.Limit, params.Offset), retroID)
+	q := query.SQLSelect("*", util.KeyFeedback, "retro_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, retroID)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +24,8 @@ func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) ([]*Feedb
 
 func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	dto := &feedbackDTO{}
-	err := s.db.Get(dto, query.SQLSelect("*", util.KeyFeedback, "id = $1", "", 0, 0), feedbackID)
+	q := query.SQLSelect("*", util.KeyFeedback, "id = $1", "", 0, 0)
+	err := s.db.Get(dto, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +35,7 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
 	q := query.SQLSelect("retro_id", util.KeyFeedback, "id = $1", "", 0, 0)
-	err := s.db.Get(&ret, q, feedbackID)
+	err := s.db.Get(&ret, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +49,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 	q := `insert into feedback (id, retro_id, idx, author_id, category, content, html) values (
     $1, $2, coalesce((select max(idx) + 1 from feedback p2 where p2.retro_id = $3 and p2.category = $4), 0), $5, $6, $7, $8
 	)`
-	_, err := s.db.Exec(q, id, retroID, retroID, category, authorID, category, content, html)
+	err := s.db.Insert(q, nil, id, retroID, retroID, category, authorID, category, content, html)
 	if err != nil {
 		return nil, err
 	}
@@ -62,14 +64,14 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	html := markdown.ToHTML(content)
 
 	q := `update feedback set category = $1, content = $2, html = $3 where id = $4`
-	_, err := s.db.Exec(q, category, content, html, feedbackID)
+	err := s.db.UpdateOne(q, nil, category, content, html, feedbackID)
 	if err != nil {
 		return nil, err
 	}
 
 	fb, err := s.GetFeedbackByID(feedbackID)
 	if err != nil {
-		return nil, errors.WithStack(errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for update"))
+		return nil, errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for update")
 	}
 	if fb == nil {
 		return nil, errors.New("cannot load newly-updated feedback")
@@ -84,14 +86,14 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	feedback, err := s.GetFeedbackByID(feedbackID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for removal"))
+		return errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for removal")
 	}
 	if feedback == nil {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
 	}
 
 	q := "delete from feedback where id = $1"
-	_, err = s.db.Exec(q, feedbackID)
+	_, err = s.db.Delete(q, nil, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
 	s.actions.Post(util.SvcRetro.Key, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
@@ -99,8 +101,8 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	return err
 }
 
-func toFeedbacks(dtos []feedbackDTO) []*Feedback {
-	ret := make([]*Feedback, 0, len(dtos))
+func toFeedbacks(dtos []feedbackDTO) Feedbacks {
+	ret := make(Feedbacks, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToFeedback())
 	}

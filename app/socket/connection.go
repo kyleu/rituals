@@ -30,7 +30,7 @@ func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, 
 func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
-		return false, errors.WithStack(errors.New("invalid connection [" + connID.String() + "]"))
+		return false, errors.New(util.IDErrorString(util.KeyConnection, connID.String()))
 	}
 	left := false
 
@@ -38,7 +38,7 @@ func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
 		left = true
 		err := s.Leave(connID, *conn.Channel)
 		if err != nil {
-			return left, errors.WithStack(errors.Wrap(err, "error leaving channel ["+conn.Channel.String()+"]"))
+			return left, errors.Wrap(err, "error leaving channel ["+conn.Channel.String()+"]")
 		}
 	}
 
@@ -50,5 +50,5 @@ func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
 }
 
 func invalidConnection(id uuid.UUID) error {
-	return errors.WithStack(errors.New("invalid connection [" + id.String() + "]"))
+	return errors.New(util.IDErrorString(util.KeyConnection, id.String()))
 }

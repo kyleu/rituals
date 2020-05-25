@@ -22,26 +22,26 @@ func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, p
 	default:
 		err = errors.New("unhandled team command [" + cmd + "]")
 	}
-	return errors.WithStack(errors.Wrap(err, "error handling team message"))
+	return errors.Wrap(err, "error handling team message")
 }
 
 func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcTeam.Title, param["title"].(string))
+	title := util.ServiceTitle(util.SvcTeam, param["title"].(string))
 	s.logger.Debug(fmt.Sprintf("saving team session [%s]", title))
 
 	err := s.teams.UpdateSession(ch.ID, title, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating team session"))
+		return errors.Wrap(err, "error updating team session")
 	}
 
 	err = sendTeamSessionUpdate(s, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error sending team session"))
+		return errors.Wrap(err, "error sending team session")
 	}
 
 	err = s.updatePerms(ch, userID, s.teams.Permissions, param)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error updating permissions"))
+		return errors.Wrap(err, "error updating permissions")
 	}
 
 	return nil
@@ -50,7 +50,7 @@ func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[strin
 func sendTeamUpdate(s *Service, ch channel, curr *uuid.UUID, tm *team.Session) error {
 	err := s.WriteChannel(ch, &Message{Svc: ch.Svc, Cmd: ServerCmdTeamUpdate, Param: tm})
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error writing team update message"))
+		return errors.Wrap(err, "error writing team update message")
 	}
 
 	err = s.SendContentUpdate(util.SvcTeam.Key, curr)
@@ -66,14 +66,14 @@ func sendTeamUpdate(s *Service, ch channel, curr *uuid.UUID, tm *team.Session) e
 func sendTeamSessionUpdate(s *Service, ch channel) error {
 	sess, err := s.teams.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding team session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "error finding team session ["+ch.ID.String()+"]")
 	}
 	if sess == nil {
-		return errors.WithStack(errors.Wrap(err, "cannot load team session ["+ch.ID.String()+"]"))
+		return errors.Wrap(err, "cannot load team session ["+ch.ID.String()+"]")
 	}
 	msg := Message{Svc: util.SvcTeam.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending team session"))
+	return errors.Wrap(err, "error sending team session")
 }
 
 func getTeamOpt(s *Service, teamID *uuid.UUID) *team.Session {

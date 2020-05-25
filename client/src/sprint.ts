@@ -44,9 +44,6 @@ namespace sprint {
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
         break;
-      case command.server.authUpdate:
-        system.setAuth(param as permission.Auth[]);
-        break;
       case command.server.contentUpdate:
         socket.socketConnect(system.cache.currentService, system.cache.currentID);
         break;

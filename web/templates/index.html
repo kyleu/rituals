@@ -20,7 +20,7 @@
             Join Now
           </h3>
           <form method="post" action="<%= ctx.Route(`join.post`) %>">
-            <div class="uk-inline">
+            <div class="uk-inline uk-display-block">
               <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: forward"></button>
               <input class="uk-input" type="text" name="i" placeholder="Invite Code" />
             </div>
@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
           <% IndexPanel(util.SvcTeam, ctx, _buffer) %>
           <% if len(teams) > 0 { %>
           <ul class="uk-list uk-list-divider uk-margin-top">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
           <% IndexPanel(util.SvcSprint, ctx, _buffer) %>
           <% if len(sprints) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
           <% IndexPanel(util.SvcEstimate, ctx, _buffer) %>
           <% if len(estimates) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
@@ -70,7 +70,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
           <% IndexPanel(util.SvcStandup, ctx, _buffer) %>
           <% if len(standups) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
@@ -84,7 +84,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+        <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
           <% IndexPanel(util.SvcRetro, ctx, _buffer) %>
           <% if len(retros) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">

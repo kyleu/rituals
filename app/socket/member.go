@@ -43,12 +43,12 @@ func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...
 func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, _ uuid.UUID, targetString string) error {
 	target, err := uuid.FromString(targetString)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "invalid target id ["+targetString+"]"))
+		return errors.Wrap(err, util.IDErrorString(util.KeyMember, targetString))
 	}
 
 	err = memberSvc.RemoveMember(ch.ID, target)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "unable to remove member from team"))
+		return errors.Wrap(err, "unable to remove member from team")
 	}
 
 	err = s.sendMemberUpdate(ch, &member.Entry{
@@ -58,5 +58,5 @@ func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, _ uuid.UU
 		Created: time.Time{},
 	})
 
-	return errors.WithStack(errors.Wrap(err, "unable to send member update from team"))
+	return errors.Wrap(err, "unable to send member update from team")
 }

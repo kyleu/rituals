@@ -16,15 +16,18 @@ type StoryStatusChange struct {
 }
 
 func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle("Story", param["title"].(string))
+	title := param["title"].(string)
+	if title == "" {
+		title = "Untitled " + util.KeyTitle(util.KeyStory)
+	}
 	s.logger.Debug(fmt.Sprintf("adding story [%s]", title))
 
 	story, err := s.estimates.NewStory(ch.ID, title, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot save new story"))
+		return errors.Wrap(err, "cannot save new story")
 	}
 	err = sendStoryUpdate(s, ch, story)
-	return errors.WithStack(errors.Wrap(err, "error sending story update"))
+	return errors.Wrap(err, "error sending story update")
 }
 
 func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
@@ -33,10 +36,13 @@ func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]in
 		return util.IDError(util.KeyStory, "")
 	}
 
-	title := util.ServiceTitle("Story", param["title"].(string))
+	title := param["title"].(string)
+	if title == "" {
+		title = "Untitled " + util.KeyTitle(util.KeyStory)
+	}
 	st, err := s.estimates.UpdateStory(*storyID, title, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot update story"))
+		return errors.Wrap(err, "cannot update story")
 	}
 	err = sendStoryUpdate(s, ch, st)
 	return errors.WithStack(err)
@@ -50,11 +56,11 @@ func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error
 	s.logger.Debug(fmt.Sprintf("removing report [%s]", storyID))
 	err = s.estimates.RemoveStory(storyID, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot remove story"))
+		return errors.Wrap(err, "cannot remove story")
 	}
 	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdStoryRemove, Param: storyID}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending story removal notification"))
+	return errors.Wrap(err, "error sending story removal notification")
 }
 
 func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, m map[string]interface{}) error {
@@ -68,14 +74,14 @@ func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, m map[string]int
 	status := estimate.StoryStatusFromString(statusString)
 	changed, finalVote, err := s.estimates.SetStoryStatus(storyID, status, userID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot update status of story ["+storyIDString+"]"))
+		return errors.Wrap(err, "cannot update status of story ["+storyIDString+"]")
 	}
 
 	if changed {
 		param := StoryStatusChange{StoryID: storyID, Status: status, FinalVote: finalVote}
 		msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdStoryStatusChange, Param: param}
 		err := s.WriteChannel(ch, &msg)
-		return errors.WithStack(errors.Wrap(err, "error sending story update"))
+		return errors.Wrap(err, "error sending story update")
 	}
 
 	return nil
@@ -85,22 +91,22 @@ func onSubmitVote(s *Service, ch channel, userID uuid.UUID, param map[string]int
 	storyIDString := param["storyID"].(string)
 	storyID, err := uuid.FromString(storyIDString)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot parse story ["+storyIDString+"]"))
+		return errors.Wrap(err, "cannot parse story ["+storyIDString+"]")
 	}
 	choice := param["choice"].(string)
 
 	vote, err := s.estimates.UpdateVote(storyID, userID, choice)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "cannot update vote"))
+		return errors.Wrap(err, "cannot update vote")
 	}
 
 	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdVoteUpdate, Param: vote}
 	err = s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending story update"))
+	return errors.Wrap(err, "error sending story update")
 }
 
 func sendStoryUpdate(s *Service, ch channel, story *estimate.Story) error {
 	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdStoryUpdate, Param: story}
 	err := s.WriteChannel(ch, &msg)
-	return errors.WithStack(errors.Wrap(err, "error sending story update"))
+	return errors.Wrap(err, "error sending story update")
 }

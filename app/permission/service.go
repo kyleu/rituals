@@ -3,6 +3,7 @@ package permission
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
 
@@ -12,21 +13,23 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/query"
 )
 
 type Service struct {
 	actions   *action.Service
-	db        *sqlx.DB
+	db        *database.Service
 	logger    logur.Logger
 	svc       string
 	tableName string
 	colName   string
 }
 
-func NewService(actions *action.Service, db *sqlx.DB, logger logur.Logger, svc string) *Service {
+const insertSQL = `insert into %s (%s, k, v, access) values ($1, $2, $3, $4)`
+const updateSQL = `update %s set access = $1, v = $2 where %s = $3 and k = $4`
+
+func NewService(actions *action.Service, db *database.Service, logger logur.Logger, svc string) *Service {
 	return &Service{
 		actions:   actions,
 		db:        db,
@@ -42,7 +45,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
 	var dtos []permissionDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
 	q := query.SQLSelect(fmt.Sprintf("k, v, access, created"), s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, id)
+	err := s.db.Select(&dtos, q, nil, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving permission entries for model [%v]: %+v", id, err))
 		return nil
@@ -58,7 +61,7 @@ func (s *Service) Get(modelID uuid.UUID, k string, v string) (*Permission, error
 	dto := permissionDTO{}
 	where := fmt.Sprintf("%s = $1 and k = $2 and v = $3", s.colName)
 	q := query.SQLSelect("k, v, access, created", s.tableName, where, "", 0, 0)
-	err := s.db.Get(&dto, q, modelID, modelID, k, v)
+	err := s.db.Get(&dto, q, nil, modelID, modelID, k, v)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}
@@ -75,14 +78,14 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 		return nil
 	}
 	if dto == nil {
-		q := fmt.Sprintf(`insert into %s (%s, k, v, access) values ($1, $2, $3, $4)`, s.tableName, s.colName)
-		_, err = s.db.Exec(q, modelID, k, v, access.Key)
+		q := fmt.Sprintf(insertSQL, s.tableName, s.colName)
+		err = s.db.Insert(q, nil, modelID, k, v, access.Key)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
 		}
 	} else {
-		q := fmt.Sprintf(`update %s set access = $1 where %s = $2 and k = $3 and v = $4`, s.tableName, s.colName)
-		_, err = s.db.Exec(q, access.Key, modelID, k, v)
+		q := fmt.Sprintf(updateSQL, s.tableName, s.colName)
+		err = s.db.UpdateOne(q, nil, access.Key, v, modelID, k)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
 		}
@@ -100,7 +103,7 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 }
 
 func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID) (Permissions, error) {
-	tx, err := s.db.Beginx()
+	tx, err := s.db.StartTransaction()
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("error starting transaction for model [%v] permissions: %+v", modelID, err))
 	}
@@ -123,19 +126,17 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 		}
 	}
 
-	s.logger.Debug(fmt.Sprintf(" ===== Current[%v], Insert[%v], Update[%v], Remove[[%v]]", len(current), len(i), len(u), len(r)))
-
 	for _, p := range u {
-		q := fmt.Sprintf(`update %s set access = $1 where %s = $2 and k = $3 and v = $4`, s.tableName, s.colName)
-		_, err := tx.Exec(q, p.Access.Key, modelID, p.K, p.V)
+		q := fmt.Sprintf(updateSQL, s.tableName, s.colName)
+		err := s.db.UpdateOne(q, tx, p.Access.Key, p.V, modelID, p.K)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))
 		}
 	}
 
 	for _, p := range i {
-		q := fmt.Sprintf(`insert into %s (%s, k, v, access) values ($1, $2, $3, $4)`, s.tableName, s.colName)
-		_, err := tx.Exec(q, modelID, p.K, p.V, p.Access.Key)
+		q := fmt.Sprintf(insertSQL, s.tableName, s.colName)
+		err := s.db.Insert(q, tx, modelID, p.K, p.V, p.Access.Key)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))
 		}
@@ -143,7 +144,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 
 	for _, p := range r {
 		q := fmt.Sprintf(`delete from %s where %s = $1 and k = $2`, s.tableName, s.colName)
-		_, err := tx.Exec(q, modelID, p.K)
+		_, err := s.db.Delete(q, tx, modelID, p.K)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error removing existing permission from model [%v]: %+v", modelID, err))
 		}

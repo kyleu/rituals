@@ -19,27 +19,36 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		sessions, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error retrieving sprints"))
+			return "", errors.Wrap(err, "error retrieving sprints")
+		}
+
+		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		if err != nil {
+			return "", err
+		}
+		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
+		if err != nil {
+			return "", err
 		}
 
 		ctx.Title = util.KeyPluralTitle(util.SvcSprint.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
-		return tmpl(templates.SprintList(sessions, ctx, w))
+		return tmpl(templates.SprintList(sessions, teams, auths, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, w))
 	})
 }
 
 func SprintNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(util.SvcSprint.Title, r.Form.Get("title"))
+		title := util.ServiceTitle(util.SvcSprint, r.Form.Get("title"))
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, teamID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "error creating sprint session"))
+			return "", errors.Wrap(err, "error creating sprint session")
 		}
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot send content update"))
+			return "", errors.Wrap(err, "cannot send content update")
 		}
 		return ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug), nil
 	})
@@ -50,7 +59,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess, err := ctx.App.Sprint.GetBySlug(key)
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot load sprint session"))
+			return "", errors.Wrap(err, "cannot load sprint session")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")
@@ -59,15 +68,15 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
-		permErrors, bc := check(&ctx, ctx.App.Sprint.Permissions, params)
+		auths, permErrors, bc := check(&ctx, ctx.App.Sprint.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcSprint, permErrors, ctx, w)
+			return permErrorTemplate(util.SvcSprint, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		return tmpl(templates.SprintWorkspace(sess, ctx, w))
+		return tmpl(templates.SprintWorkspace(sess, auths, ctx, w))
 	})
 }

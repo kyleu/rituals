@@ -34,6 +34,8 @@ type Status struct {
 	ChannelID  *uuid.UUID
 }
 
+type Statuses = []*Status
+
 type Message struct {
 	Svc   string      `json:"svc"`
 	Cmd   string      `json:"cmd"`

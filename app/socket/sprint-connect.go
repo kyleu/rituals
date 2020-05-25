@@ -36,25 +36,25 @@ func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param strin
 	ch := channel{Svc: util.SvcSprint.Key, ID: sprintID}
 	err = s.Join(conn.ID, ch)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error joining channel"))
+		return errors.Wrap(err, "error joining channel")
 	}
 	err = joinSprintSession(s, conn, userID, ch)
-	return errors.WithStack(errors.Wrap(err, "error joining sprint session"))
+	return errors.Wrap(err, "error joining sprint session")
 }
 
 func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
 	if ch.Svc != util.SvcSprint.Key {
-		return errors.WithStack(errors.New("sprint cannot handle [" + ch.Svc + "] message"))
+		return errors.New("sprint cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess, err := s.sprints.GetByID(ch.ID)
 	if err != nil {
-		return errors.WithStack(errors.Wrap(err, "error finding sprint session"))
+		return errors.Wrap(err, "error finding sprint session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint.Key, Cmd: ServerCmdError, Param: "invalid session"})
+		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, "")})
 		if err != nil {
-			return errors.WithStack(errors.Wrap(err, "error writing sprint error message"))
+			return errors.Wrap(err, "error writing sprint error message")
 		}
 		return nil
 	}

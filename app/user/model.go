@@ -20,6 +20,8 @@ type SystemUser struct {
 	Created   time.Time `db:"created"`
 }
 
+type SystemUsers = []*SystemUser
+
 func (su *SystemUser) ToProfile() *util.UserProfile {
 	locale, err := language.Parse(su.Locale)
 	if err != nil {

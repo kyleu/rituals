@@ -54,7 +54,7 @@ func initProfile() {
 				"role": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"theme": &graphql.Field{
+				util.KeyTheme: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"navColor": &graphql.Field{

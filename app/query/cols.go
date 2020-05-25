@@ -16,7 +16,7 @@ var (
 	allowedStandupSortColumns    = []string{util.KeyID, "slug", "title", "sprintID", "owner", util.KeyStatus, util.KeyCreated}
 	allowedStorySortColumns      = []string{util.KeyID, "estimateID", "idx", "authorID", "title", util.KeyStatus, "finalVote", util.KeyCreated}
 	allowedTeamSortColumns       = []string{util.KeyID, "slug", "title", "owner", util.KeyCreated}
-	allowedUserSortColumns       = []string{util.KeyID, "name", "role", "theme", "navColor", "linkColor", "picture", "locale", util.KeyCreated}
+	allowedUserSortColumns       = []string{util.KeyID, "name", "role", util.KeyTheme, "navColor", "linkColor", "picture", "locale", util.KeyCreated}
 	allowedVoteSortColumns       = []string{"storyID", "userID", "choice", "updated", util.KeyCreated}
 )
 

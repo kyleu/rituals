@@ -52,7 +52,7 @@ func initSandbox() {
 
 	sandboxType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: "Sandbox",
+			Name: util.KeyTitle(util.KeySandbox),
 			Fields: graphql.Fields{
 				util.KeyKey: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

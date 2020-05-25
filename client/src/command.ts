@@ -34,7 +34,6 @@ namespace command {
 
     sessionJoined: "session-joined",
     sessionUpdate: "session-update",
-    authUpdate: "auth-update",
     permissionsUpdate: "permissions-update",
     teamUpdate: "team-update",
     sprintUpdate: "sprint-update",

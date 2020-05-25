@@ -19,7 +19,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
-			return "", errors.WithStack(errors.Wrap(err, "cannot load auth records for user ["+ctx.Profile.UserID.String()+"]"))
+			return "", errors.Wrap(err, "cannot load auth records for user ["+ctx.Profile.UserID.String()+"]")
 		}
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
@@ -34,7 +34,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 		if ctx.Profile.Name == "" {
 			ctx.Profile.Name = "Guest"
 		}
-		ctx.Profile.Theme = util.ThemeFromString(r.Form.Get("theme"))
+		ctx.Profile.Theme = util.ThemeFromString(r.Form.Get(util.KeyTheme))
 		ctx.Profile.NavColor = r.Form.Get("navbar-color")
 		ctx.Profile.LinkColor = r.Form.Get("link-color")
 		_, err := ctx.App.User.SaveProfile(ctx.Profile)

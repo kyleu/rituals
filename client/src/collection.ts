@@ -8,20 +8,23 @@ namespace collection {
     }
   }
 
-  export function groupBy<T>(list: T[], func: (x: T) => string): Group<T>[] {
+  export function groupBy<T>(list: T[] | null, func: (x: T) => string): Group<T>[] {
     const res: Group<T>[] = [];
     let group: Group<T> | undefined;
-    list.forEach((o) => {
-      const groupName = func(o);
-      if (!group) {
-        group = new Group<T>(groupName);
-      }
-      if (groupName != group.key) {
-        res.push(group);
-        group = new Group<T>(groupName);
-      }
-      group.members.push(o);
-    });
+
+    if (list) {
+      list.forEach((o) => {
+        const groupName = func(o);
+        if (!group) {
+          group = new Group<T>(groupName);
+        }
+        if (groupName != group.key) {
+          res.push(group);
+          group = new Group<T>(groupName);
+        }
+        group.members.push(o);
+      });
+    }
     if (group) {
       res.push(group);
     }

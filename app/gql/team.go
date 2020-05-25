@@ -12,6 +12,7 @@ var (
 	teamResolver       Callback
 	teamsResolver      Callback
 	teamMemberResolver Callback
+	teamPermissionResolver Callback
 	teamType           *graphql.Object
 )
 
@@ -38,12 +39,16 @@ func initTeam() {
 		return ctx.App.Team.Members.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
+	teamPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Team.Permissions.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
 	teamType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: "Team",
+			Name: util.SvcTeam.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(graphql.String),
+					Type: graphql.NewNonNull(scalarUUID),
 				},
 				"slug": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
