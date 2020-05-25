@@ -38,10 +38,18 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(util.SvcTeam, r.Form.Get("title"))
+		perms := parsePerms(r.Form, nil, nil)
+
 		sess, err := ctx.App.Team.New(title, ctx.Profile.UserID)
 		if err != nil {
 			return "", errors.Wrap(err, "error creating team session")
 		}
+
+		_, err = ctx.App.Team.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		if err != nil {
+			return "", errors.Wrap(err, "error setting permissions for new session")
+		}
+
 		return ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug), nil
 	})
 }

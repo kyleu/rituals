@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"net/http"
-
 	"github.com/kyleu/rituals.dev/app/controllers/act"
+	"github.com/kyleu/rituals.dev/app/query"
+	"github.com/kyleu/rituals.dev/app/retro"
+	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -46,12 +47,25 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(util.SvcRetro, r.Form.Get("title"))
+		categoriesString := r.Form.Get("categories")
+		categories := query.StringToArray(categoriesString)
+		if len(categories) == 0 {
+			categories = retro.DefaultCategories
+		}
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sprintID := getUUID(r.Form, util.SvcSprint.Key)
-		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, teamID, sprintID)
+		perms := parsePerms(r.Form, teamID, sprintID)
+
+		sess, err := ctx.App.Retro.New(title, ctx.Profile.UserID, categories, teamID, sprintID)
 		if err != nil {
 			return "", errors.Wrap(err, "error creating retro session")
 		}
+
+		_, err = ctx.App.Retro.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		if err != nil {
+			return "", errors.Wrap(err, "error setting permissions for new session")
+		}
+
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")
@@ -60,6 +74,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")
 		}
+
 		return ctx.Route(util.SvcRetro.Key, util.KeyKey, sess.Slug), nil
 	})
 }

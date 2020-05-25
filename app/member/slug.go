@@ -2,12 +2,9 @@ package member
 
 import (
 	"github.com/kyleu/rituals.dev/app/database"
-	"math/rand"
+	"github.com/kyleu/rituals.dev/app/util"
 	"regexp"
 	"strings"
-	"time"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/query"
 
@@ -17,7 +14,7 @@ import (
 func NewSlugFor(db *database.Service, svc string, str string) (string, error) {
 	randomStrLength := 4
 	if len(str) == 0 {
-		str = strings.ToLower(randomString(randomStrLength))
+		str = strings.ToLower(util.RandomString(randomStrLength))
 	}
 	slug := slugify(str)
 	q := query.SQLSelect(util.KeyID, svc, "slug = $1", "", 0, 0)
@@ -28,7 +25,7 @@ func NewSlugFor(db *database.Service, svc string, str string) (string, error) {
 	}
 
 	if x.Next() {
-		junk := strings.ToLower(randomString(randomStrLength))
+		junk := strings.ToLower(util.RandomString(randomStrLength))
 		slug, err = NewSlugFor(db, svc, slug+"-"+junk)
 		if err != nil {
 			return slug, errors.Wrap(err, "error finding slug for new "+svc+" session")
@@ -36,18 +33,6 @@ func NewSlugFor(db *database.Service, svc string, str string) (string, error) {
 	}
 
 	return slug, nil
-}
-
-const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-
-var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-func randomString(length int) string {
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
-	}
-	return string(b)
 }
 
 var regexpNonAuthorizedChars = regexp.MustCompile("[^a-zA-Z0-9-_]")

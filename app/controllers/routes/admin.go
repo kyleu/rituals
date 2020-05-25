@@ -16,6 +16,8 @@ func adminRoutes(app *config.AppInfo, r *mux.Router) *mux.Router {
 	admr := r.Path(adm()).Subrouter()
 	admr.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Home))).Name(util.KeyAdmin)
 
+	r.Path(adm("enable")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Enable))).Name(util.AdminLink("enable"))
+
 	r.Path(adm(util.KeyUser)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.UserList))).Name(util.AdminLink(util.KeyUser))
 	r.Path(adm(util.KeyUser, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.UserDetail))).Name(util.AdminLink(util.KeyUser, util.KeyDetail))
 

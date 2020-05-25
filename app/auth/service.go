@@ -16,7 +16,7 @@ import (
 type Service struct {
 	Enabled          bool
 	EnabledProviders Providers
-	redir            string
+	Redir            string
 	actions          *action.Service
 	db               *database.Service
 	logger           logur.Logger
@@ -32,7 +32,7 @@ func NewService(enabled bool, redir string, actions *action.Service, db *databas
 
 	svc := Service{
 		Enabled: enabled,
-		redir:   redir,
+		Redir:   redir,
 		actions: actions,
 		db:      db,
 		logger:  logger,

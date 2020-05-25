@@ -16,6 +16,10 @@ import (
 
 func Profile(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		if !securityCheck(&ctx) {
+			return tmpl(templates.Todo("Coming soon!", ctx, w))
+		}
+
 		params := act.ParamSetFromRequest(r)
 		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {

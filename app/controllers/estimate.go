@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"github.com/kyleu/rituals.dev/app/controllers/act"
+	"github.com/kyleu/rituals.dev/app/estimate"
+	"github.com/kyleu/rituals.dev/app/query"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -44,12 +46,25 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(util.SvcEstimate, r.Form.Get("title"))
+		choicesString := r.Form.Get("choices")
+		choices := query.StringToArray(choicesString)
+		if len(choices) == 0 {
+			choices = estimate.DefaultChoices
+		}
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sprintID := getUUID(r.Form, util.SvcSprint.Key)
-		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, teamID, sprintID)
+		perms := parsePerms(r.Form, teamID, sprintID)
+
+		sess, err := ctx.App.Estimate.New(title, ctx.Profile.UserID, choices, teamID, sprintID)
 		if err != nil {
 			return "", errors.Wrap(err, "error creating estimate session")
 		}
+
+		_, err = ctx.App.Estimate.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		if err != nil {
+			return "", errors.Wrap(err, "error setting permissions for new session")
+		}
+
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")
@@ -58,6 +73,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")
 		}
+
 		return ctx.Route(util.SvcEstimate.Key, util.KeyKey, sess.Slug), nil
 	})
 }

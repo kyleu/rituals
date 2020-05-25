@@ -48,10 +48,18 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 		title := util.ServiceTitle(util.SvcStandup, r.Form.Get("title"))
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
 		sprintID := getUUID(r.Form, util.SvcSprint.Key)
+		perms := parsePerms(r.Form, teamID, sprintID)
+
 		sess, err := ctx.App.Standup.New(title, ctx.Profile.UserID, teamID, sprintID)
 		if err != nil {
 			return "", errors.Wrap(err, "error creating standup session")
 		}
+
+		_, err = ctx.App.Standup.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		if err != nil {
+			return "", errors.Wrap(err, "error setting permissions for new session")
+		}
+
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")
@@ -60,6 +68,7 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")
 		}
+
 		return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
 	})
 }

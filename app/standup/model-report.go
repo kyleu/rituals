@@ -1,6 +1,7 @@
 package standup
 
 import (
+	"github.com/kyleu/rituals.dev/app/util"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -32,7 +33,7 @@ func (dto *reportDTO) ToReport() *Report {
 	return &Report{
 		ID:        dto.ID,
 		StandupID: dto.StandupID,
-		D:         dto.D.Format("2006-01-02"),
+		D:         util.ToYMD(&dto.D),
 		AuthorID:  dto.AuthorID,
 		Content:   dto.Content,
 		HTML:      dto.HTML,

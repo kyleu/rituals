@@ -9,9 +9,9 @@ import (
 
 func (s *Service) callbackURL(secure bool, k string) string {
 	if secure {
-		return s.redir + "/auth/callback/" + k
+		return s.Redir + "/auth/callback/" + k
 	}
-	return s.redir + "/auth/callback/" + k
+	return s.Redir + "/auth/callback/" + k
 }
 
 func (s *Service) getConfig(secure bool, prv *Provider) *oauth2.Config {

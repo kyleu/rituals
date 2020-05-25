@@ -24,8 +24,8 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Methods(http.MethodGet).Path("/").Handler(addContext(r, app, http.HandlerFunc(controllers.Home))).Name(n("home"))
 	r.Methods(http.MethodGet).Path(p("s")).Handler(addContext(r, app, http.HandlerFunc(controllers.Socket))).Name(n("websocket"))
 
-	// r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("xxxx")
-	// r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association.json").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("xxxx.json")
+	r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("msworkaround")
+	r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association.json").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("msworkaround.json")
 
 	// Profile
 	profile := r.Path(p(util.KeyProfile)).Subrouter()

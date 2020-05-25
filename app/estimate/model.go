@@ -63,7 +63,7 @@ type Session struct {
 
 type Sessions []*Session
 
-func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) Session {
+func NewSession(title string, slug string, userID uuid.UUID, choices []string, teamID *uuid.UUID, sprintID *uuid.UUID) Session {
 	return Session{
 		ID:       util.UUID(),
 		Slug:     slug,
@@ -72,7 +72,7 @@ func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, 
 		SprintID: sprintID,
 		Owner:    userID,
 		Status:   StatusNew,
-		Choices:  nil,
+		Choices:  choices,
 		Created:  time.Time{},
 	}
 }

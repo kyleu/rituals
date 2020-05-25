@@ -84,9 +84,16 @@ func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error)
 	return prof, nil
 }
 
-func (s *Service) UpdateUserName(id uuid.UUID, name string) error {
-	s.logger.Info("updating user [" + id.String() + "]")
+func (s *Service) UpdateUserName(userID uuid.UUID, name string) error {
+	s.logger.Info("updating user [" + userID.String() + "]")
 	q := "update system_user set name = $1 where id = $2"
-	err := s.db.UpdateOne(q, nil, name, id)
+	err := s.db.UpdateOne(q, nil, name, userID)
+	return err
+}
+
+func (s *Service) SetRole(userID uuid.UUID, role util.Role) error {
+	s.logger.Info("updating user role [" + userID.String() + "]")
+	q := "update system_user set role = $1 where id = $2"
+	err := s.db.UpdateOne(q, nil, role.Key, userID)
 	return err
 }

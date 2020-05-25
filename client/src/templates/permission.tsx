@@ -43,7 +43,6 @@ namespace permission {
   }
 
   export function applyPermissions(perms: permission.Permission[] | null) {
-    console.log("!!!!");
     system.cache.permissions = collection.groupBy(perms, x => x.k);
     dom.setDisplay("#public-link-container", perms === null || perms.length === 0)
     dom.setDisplay("#private-link-container", perms !== null && perms.length > 0)

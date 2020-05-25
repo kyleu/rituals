@@ -40,16 +40,16 @@ func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[str
 
 	startDateP, sok := param["startDate"]
 	if sok {
-		d, e := time.Parse("2006-01-02", startDateP.(string))
+		d, e := util.FromYMD(startDateP.(string))
 		if e == nil {
-			startDate = &d
+			startDate = d
 		}
 	}
 	endDateP, eok := param["endDate"]
 	if eok {
-		d, e := time.Parse("2006-01-02", endDateP.(string))
+		d, e := util.FromYMD(endDateP.(string))
 		if e == nil {
-			endDate = &d
+			endDate = d
 		}
 	}
 

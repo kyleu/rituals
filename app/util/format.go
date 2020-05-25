@@ -1,6 +1,7 @@
 package util
 
 import (
+	"emperror.dev/errors"
 	"regexp"
 	"strings"
 	"time"
@@ -62,11 +63,28 @@ func GetUUIDFromString(s string) *uuid.UUID {
 	return retID
 }
 
+
+const YMD = "2006-01-02"
 func ToYMD(d *time.Time) string {
 	if d == nil {
 		return ""
 	}
-	return d.Format(`2006-01-02`)
+	return d.Format(YMD)
+}
+func FromYMD(s string) (*time.Time, error) {
+	ret, err := time.Parse(YMD, s)
+	if err != nil {
+		return nil, errors.New("invalid date [" + s + "] (expected 2020-01-15)")
+	}
+	return &ret, nil
+}
+
+const DateFull = "2006-01-02 15:04:05"
+func ToDateString(d *time.Time) string {
+	if d == nil {
+		return ""
+	}
+	return d.Format(DateFull)
 }
 
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")

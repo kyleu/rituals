@@ -37,13 +37,13 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 	}
 }
 
-func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, categories []string, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcRetro.Key, title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating retro slug")
 	}
 
-	model := NewSession(title, slug, userID, teamID, sprintID)
+	model := NewSession(title, slug, userID, categories, teamID, sprintID)
 
 	q := "insert into retro (id, slug, title, team_id, sprint_id, owner, status, categories) values ($1, $2, $3, $4, $5, $6, $7, $8)"
 	categoriesString := "{" + strings.Join(model.Categories, ",") + "}"

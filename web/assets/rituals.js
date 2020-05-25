@@ -1854,7 +1854,6 @@ var permission;
     }
     permission.readPermissions = readPermissions;
     function applyPermissions(perms) {
-        console.log("!!!!");
         system.cache.permissions = collection.groupBy(perms, x => x.k);
         dom.setDisplay("#public-link-container", perms === null || perms.length === 0);
         dom.setDisplay("#private-link-container", perms !== null && perms.length > 0);

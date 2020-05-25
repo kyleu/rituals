@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 
@@ -12,23 +13,12 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
-// func Temp(w http.ResponseWriter, r *http.Request) {
-// 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-// 		s := `{
-// 	"associatedApplications": [
-// 		{
-// 			"applicationId": "f2187a97-e0ee-4f52-8e58-ab527a84fc69"
-// 		}
-// 	]
-// }`
-// 		w.Header().Set("Content-Type", "application/json")
-// 		_, _ = w.Write([]byte(s))
-// 		return "", nil
-// 	})
-// }
-
 func Home(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		if !securityCheck(&ctx) {
+			return tmpl(templates.Todo("Coming soon!", ctx, w))
+		}
+
 		params := act.ParamSetFromRequest(r)
 
 		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
@@ -62,5 +52,33 @@ func About(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "About " + util.AppName
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyAbout), util.KeyAbout)
 		return tmpl(templates.About(ctx, w))
+	})
+}
+
+func securityCheck(ctx *web.RequestContext) bool {
+	if ctx.Profile.Role == util.RoleAdmin {
+		return true
+	}
+	if strings.Contains(ctx.App.Auth.Redir, "localhost") {
+		return true
+	}
+	if strings.Contains(ctx.Request.RawQuery, "p=np") {
+		return true
+	}
+	return false
+}
+
+func Temp(w http.ResponseWriter, r *http.Request) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		s := `{
+	"associatedApplications": [
+		{
+			"applicationId": "f2187a97-e0ee-4f52-8e58-ab527a84fc69"
+		}
+	]
+}`
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(s))
+		return "", nil
 	})
 }

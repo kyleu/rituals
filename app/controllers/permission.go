@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"net/http"
-
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
+	"net/http"
+	"strings"
 )
 
 type PermissionParams struct {
@@ -84,4 +85,32 @@ func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID
 
 func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records, ctx web.RequestContext, w http.ResponseWriter) (string, error) {
 	return tmpl(templates.PermissionErrors(svc, errors, auths, ctx, w))
+}
+
+func parsePerms(form map[string][]string, teamID *uuid.UUID, sprintID *uuid.UUID) permission.Permissions {
+	var ret permission.Permissions
+	if teamID != nil {
+		t, ok := form["perm-team"]
+		if ok && len(t) > 0 && t[0] == "true" {
+			ret = append(ret, &permission.Permission{K: util.SvcTeam.Key, Access: member.RoleMember})
+		}
+	}
+	if sprintID != nil {
+		s, ok := form["perm-sprint"]
+		if ok && len(s) > 0 && s[0] == "true" {
+			ret = append(ret, &permission.Permission{K: util.SvcSprint.Key, Access: member.RoleMember})
+		}
+	}
+	for _, prv := range auth.AllProviders {
+		s, ok := form["perm-" + prv.Key]
+		if ok && len(s) > 0 && s[0] == "true" {
+			var emails []string
+			emailArray, _ := form["perm-" + prv.Key + "-email"]
+			for _, e := range emailArray {
+				emails = append(emails, strings.TrimSpace(e))
+			}
+			ret = append(ret, &permission.Permission{K: prv.Key, V: strings.Join(emails, ","), Access: member.RoleMember})
+		}
+	}
+	return ret
 }

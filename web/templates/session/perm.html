@@ -6,20 +6,22 @@
       <% if showTeam { %>
         <li id="perm-team-section">
           <label>
-            <input id="perm-team-checkbox" class="uk-checkbox uk-margin-small-right" type="checkbox" />Must be a member of this <%= svc.Key %>'s <%= util.SvcTeam.Key %>
+            <input id="perm-team-checkbox" name="perm-team" class="uk-checkbox uk-margin-small-right" type="checkbox" value="true" />Must be a member of this <%= svc.Key %>'s <%= util.SvcTeam.Key %>
           </label>
         </li>
       <% } %>
       <% if showSprint { %>
         <li id="perm-sprint-section">
           <label>
-            <input id="perm-sprint-checkbox" class="uk-checkbox uk-margin-small-right" type="checkbox" />Must be a member of this <%= svc.Key %>'s <%= util.SvcSprint.Key %>
+            <input id="perm-sprint-checkbox" name="perm-sprint" class="uk-checkbox uk-margin-small-right" type="checkbox" value="true" />Must be a member of this <%= svc.Key %>'s <%= util.SvcSprint.Key %>
           </label>
         </li>
       <% } %>
       <% if ctx.App.Auth.Enabled { %>
         <% for _, p := range ctx.App.Auth.EnabledProviders { %>
           <%
+            pcls := "uk-checkbox uk-margin-small-right"
+            poc := "permission.onChanged('provider', '" +  p.Key + "', this.checked)"
             cls := "uk-checkbox uk-margin-small-right perm-" + p.Key + "-email"
             oc := "permission.onChanged('email', '" + p.Key + "', this.checked)"
             a := auths.FindByProvider(p.Key)
@@ -31,7 +33,7 @@
           %>
           <li id="perm-<%= p.Key %>-section" style="<%= style %>">
             <label>
-              <input id="perm-<%= p.Key %>-checkbox" class="uk-checkbox uk-margin-small-right" onchange="permission.onChanged('provider', '<%= p.Key %>', this.checked)" type="checkbox" />Must sign in with <%= p.Title %>
+              <input id="perm-<%= p.Key %>-checkbox" name="perm-<%= p.Key %>" class="<%= pcls %>" onchange="<%= poc %>" type="checkbox" value="true" />Must sign in with <%= p.Title %>
             </label>
             <div id="perm-<%= p.Key %>-email-container">
               <ul>
@@ -39,7 +41,7 @@
                   <% domain := util.GetDomain(e) %>
                   <li>
                     <label>
-                      <input class="<%= cls %>" type="checkbox" value="<%= domain %>" onchange="<%= oc %>" />
+                      <input class="<%= cls %>" type="checkbox" name="perm-<%= p.Key %>-email" value="<%= domain %>" onchange="<%= oc %>" />
                       Using email address <%= domain %>
                     </label>
                   </li>

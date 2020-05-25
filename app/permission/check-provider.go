@@ -11,11 +11,9 @@ func (s *Service) checkAuths(authEnabled bool, svc util.Service, perms Permissio
 	var ret Errors
 
 	if authEnabled {
-		ret = append(ret, providerCheck(svc, &auth.ProviderGitHub, perms, auths)...)
-		ret = append(ret, providerCheck(svc, &auth.ProviderGoogle, perms, auths)...)
-		ret = append(ret, providerCheck(svc, &auth.ProviderSlack, perms, auths)...)
-		ret = append(ret, providerCheck(svc, &auth.ProviderAmazon, perms, auths)...)
-		ret = append(ret, providerCheck(svc, &auth.ProviderMicrosoft, perms, auths)...)
+		for _, prv := range auth.AllProviders {
+			ret = append(ret, providerCheck(svc, prv, perms, auths)...)
+		}
 	}
 
 	return ret
@@ -31,8 +29,11 @@ func providerCheck(svc util.Service, p *auth.Provider, perms Permissions, auths 
 	var ok = false
 	for _, a := range authMatches {
 		for _, p := range permMatches {
-			if strings.HasSuffix(a.Email, p.V) {
-				ok = true
+			split := strings.Split(p.V, ",")
+			for _, domain := range split {
+				if strings.HasSuffix(a.Email, domain) {
+					ok = true
+				}
 			}
 		}
 	}

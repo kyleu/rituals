@@ -37,13 +37,13 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 	}
 }
 
-func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, choices []string, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcEstimate.Key, title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating estimate slug")
 	}
 
-	model := NewSession(title, slug, userID, teamID, sprintID)
+	model := NewSession(title, slug, userID, choices, teamID, sprintID)
 
 	q := "insert into estimate (id, slug, title, team_id, sprint_id, owner, status, choices) values ($1, $2, $3, $4, $5, $6, $7, $8)"
 	choiceString := "{" + strings.Join(model.Choices, ",") + "}"

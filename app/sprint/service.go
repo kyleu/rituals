@@ -36,13 +36,13 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 	}
 }
 
-func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, startDate *time.Time, endDate *time.Time, teamID *uuid.UUID) (*Session, error) {
 	slug, err := member.NewSlugFor(s.db, util.SvcSprint.Key, title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating sprint slug")
 	}
 
-	model := NewSession(title, slug, userID, teamID, nil, nil)
+	model := NewSession(title, slug, userID, teamID, startDate, endDate)
 
 	q := "insert into sprint (id, slug, title, team_id, owner, start_date, end_date) values ($1, $2, $3, $4, $5, $6, $7)"
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.Owner, model.StartDate, model.EndDate)

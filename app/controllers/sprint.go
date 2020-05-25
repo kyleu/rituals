@@ -41,11 +41,27 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 		title := util.ServiceTitle(util.SvcSprint, r.Form.Get("title"))
+		startDate, err := util.FromYMD(r.Form.Get("startDate"))
+		if err != nil {
+			return "", err
+		}
+		endDate, err := util.FromYMD(r.Form.Get("endDate"))
+		if err != nil {
+			return "", err
+		}
 		teamID := getUUID(r.Form, util.SvcTeam.Key)
-		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, teamID)
+		perms := parsePerms(r.Form, teamID, nil)
+
+		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, startDate, endDate, teamID)
 		if err != nil {
 			return "", errors.Wrap(err, "error creating sprint session")
 		}
+
+		_, err = ctx.App.Sprint.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		if err != nil {
+			return "", errors.Wrap(err, "error setting permissions for new session")
+		}
+
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
 		if err != nil {
 			return "", errors.Wrap(err, "cannot send content update")

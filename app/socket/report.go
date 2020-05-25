@@ -26,7 +26,7 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 		return errors.New(fmt.Sprintf("can't read content from [%v]", param["content"]))
 	}
 
-	s.logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", d.Format("2006-01-02"), userID))
+	s.logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", util.ToYMD(d), userID))
 	report, err := s.standups.NewReport(ch.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new report")
@@ -51,7 +51,7 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 		return errors.New(fmt.Sprintf("can't read content from [%v]", param["content"]))
 	}
 
-	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", d.Format("2006-01-02"), userID))
+	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", util.ToYMD(d), userID))
 	report, err := s.standups.UpdateReport(*id, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update report")
@@ -84,14 +84,9 @@ func sendReportUpdate(s *Service, ch channel, report *standup.Report) error {
 
 func parseDate(s string) (*time.Time, error) {
 	dString := strings.TrimSpace(s)
-
 	if dString == "" {
-		dString = time.Now().Format("2006-01-02")
+		t := time.Now()
+		dString = util.ToYMD(&t)
 	}
-
-	t, err := time.Parse("2006-01-02", dString)
-	if err != nil {
-		return nil, errors.New("invalid date [" + dString + "] (expected 2020-01-15)")
-	}
-	return &t, nil
+	return util.FromYMD(dString)
 }
