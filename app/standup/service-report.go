@@ -17,7 +17,7 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	id := util.UUID()
 	html := markdown.ToHTML(content)
 
-	q := "insert into report (id, standup_id, d, author_id, content, html) values ($1, $2, $3, $4, $5, $6)"
+	q := query.SQLInsert(util.KeyReport, []string{"id", "standup_id", "d", "author_id", "content", "html"}, 1)
 	err := s.db.Insert(q, nil, id, standupID, d, authorID, content, html)
 	if err != nil {
 		return nil, err
@@ -101,8 +101,7 @@ func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load report [" + reportID.String() + "] for removal")
 	}
 
-	q := "delete from report where id = $1"
-	_, err = s.db.Delete(q, nil, reportID)
+	_, err = s.db.Delete(query.SQLDelete(util.KeyReport, "id = $1"), nil, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
 	s.actions.Post(util.SvcStandup.Key, report.StandupID, userID, action.ActReportRemove, actionContent, "")

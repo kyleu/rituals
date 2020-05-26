@@ -1,10 +1,11 @@
 package gql
 
 import (
+	"time"
+
 	"github.com/gofrs/uuid"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/language/ast"
-	"time"
 )
 
 func serializeUUID(value interface{}) interface{} {
@@ -53,7 +54,7 @@ func unserializeUUID(value interface{}) interface{} {
 var scalarUUID = graphql.NewScalar(graphql.ScalarConfig{
 	Name: "UUID",
 	Description: "The `UUID` scalar type represents a 128-bit value, represented as hex-encoded " +
-			"character sequences, such as [00000000-0000-0000-0123-456789ABCDEF].",
+		"character sequences, such as [00000000-0000-0000-0123-456789ABCDEF].",
 	Serialize:  serializeUUID,
 	ParseValue: unserializeUUID,
 	ParseLiteral: func(valueAST ast.Value) interface{} {

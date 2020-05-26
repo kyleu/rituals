@@ -9,7 +9,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-var defaultFeedbackOrdering = query.Orderings{{Column: "category", Asc: true}, {Column: "idx", Asc: true}, {Column: util.KeyCreated, Asc: false}}
+var defaultFeedbackOrdering = query.Orderings{{Column: "category", Asc: true}, {Column: util.KeyIdx, Asc: true}, {Column: util.KeyCreated, Asc: false}}
 
 func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) (Feedbacks, error) {
 	params = query.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)
@@ -92,7 +92,7 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
 	}
 
-	q := "delete from feedback where id = $1"
+	q := query.SQLDelete(util.KeyFeedback, "id = $1")
 	_, err = s.db.Delete(q, nil, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}

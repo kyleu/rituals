@@ -26,7 +26,7 @@ func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, p
 }
 
 func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcTeam, param["title"].(string))
+	title := util.ServiceTitle(util.SvcTeam, param[util.KeyTitle].(string))
 	s.logger.Debug(fmt.Sprintf("saving team session [%s]", title))
 
 	err := s.teams.UpdateSession(ch.ID, title, userID)

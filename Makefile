@@ -37,7 +37,9 @@ endif
 
 .PHONY: compile-templates
 compile-templates:
+	rm -rf ./gen/templates
 	hero -extensions .html -source web/templates -pkgname templates -dest gen/templates
+	rm -rf ./gen/queries
 	hero -extensions .sql -pkgname queries -source queries -dest gen/queries
 
 .PHONY: build-%

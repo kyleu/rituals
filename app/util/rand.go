@@ -1,10 +1,11 @@
 package util
 
 import (
-	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"math/rand"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/gofrs/uuid"
 )
 
 func UUID() uuid.UUID {
@@ -17,6 +18,7 @@ func UUID() uuid.UUID {
 }
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
+
 var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func RandomString(length int) string {

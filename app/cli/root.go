@@ -98,7 +98,8 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Estimate:   estimateSvc,
 		Standup:    standupSvc,
 		Retro:      retroSvc,
-		Socket:     &socketSvc,
+		Socket:     socketSvc,
+		Database:   db,
 	}
 
 	return &ai, nil

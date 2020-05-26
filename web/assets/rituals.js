@@ -11,6 +11,15 @@ var action;
     }
     action.viewActions = viewActions;
 })(action || (action = {}));
+var auth;
+(function (auth) {
+    const github = { key: "github", title: "GitHub" };
+    const google = { key: "google", title: "Google" };
+    const slack = { key: "slack", title: "Slack" };
+    const amazon = { key: "amazon", title: "Amazon" };
+    const microsoft = { key: "microsoft", title: "Microsoft" };
+    auth.allProviders = [github, google, slack, amazon, microsoft];
+})(auth || (auth = {}));
 var collection;
 (function (collection) {
     class Group {
@@ -727,16 +736,10 @@ var member;
 })(member || (member = {}));
 var permission;
 (function (permission) {
-    const github = { key: "github", title: "GitHub" };
-    const google = { key: "google", title: "Google" };
-    const slack = { key: "slack", title: "Slack" };
-    const amazon = { key: "amazon", title: "Amazon" };
-    const microsoft = { key: "microsoft", title: "Microsoft" };
-    permission.allProviders = [github, google, slack, amazon, microsoft];
     function setPerms() {
         ["team", "sprint"].forEach(setModelPerms);
         if (system.cache.auths != null) {
-            permission.allProviders.forEach(setProviderPerms);
+            auth.allProviders.forEach(setProviderPerms);
         }
     }
     permission.setPerms = setPerms;
@@ -1091,8 +1094,8 @@ var rituals;
     function onSessionJoin(param) {
         system.cache.session = param.session;
         system.cache.profile = param.profile;
-        permission.applyPermissions(param.permissions);
         system.cache.auths = param.auths;
+        permission.applyPermissions(param.permissions);
         permission.setPerms();
         system.cache.members = param.members;
         system.cache.online = param.online;
@@ -1253,9 +1256,9 @@ var sprint;
         rituals.setDetail(detail);
     }
     function setSprintContents(sj) {
-        dom.setContent("#sprint-estimate-list", contents.renderContents(services.estimate, sj.estimates));
-        dom.setContent("#sprint-standup-list", contents.renderContents(services.standup, sj.standups));
-        dom.setContent("#sprint-retro-list", contents.renderContents(services.retro, sj.retros));
+        dom.setContent("#sprint-estimate-list", contents.renderContents(services.sprint, services.estimate, sj.estimates));
+        dom.setContent("#sprint-standup-list", contents.renderContents(services.sprint, services.standup, sj.standups));
+        dom.setContent("#sprint-retro-list", contents.renderContents(services.sprint, services.retro, sj.retros));
     }
     function onSubmitSprintSession() {
         var _a, _b;
@@ -1553,11 +1556,11 @@ var system;
         permission.setPerms();
     }
     system.setPermissions = setPermissions;
-    function setAuth(auths) {
+    function setAuths(auths) {
         system.cache.auths = auths;
         permission.setPerms();
     }
-    system.setAuth = setAuth;
+    system.setAuths = setAuths;
 })(system || (system = {}));
 var team;
 (function (team) {
@@ -1595,10 +1598,10 @@ var team;
         rituals.setDetail(detail);
     }
     function setTeamHistory(sj) {
-        dom.setContent("#team-sprint-list", contents.renderContents(services.sprint, sj.sprints));
-        dom.setContent("#team-estimate-list", contents.renderContents(services.estimate, sj.estimates));
-        dom.setContent("#team-standup-list", contents.renderContents(services.standup, sj.standups));
-        dom.setContent("#team-retro-list", contents.renderContents(services.retro, sj.retros));
+        dom.setContent("#team-sprint-list", contents.renderContents(services.team, services.sprint, sj.sprints));
+        dom.setContent("#team-estimate-list", contents.renderContents(services.team, services.estimate, sj.estimates));
+        dom.setContent("#team-standup-list", contents.renderContents(services.team, services.standup, sj.standups));
+        dom.setContent("#team-retro-list", contents.renderContents(services.team, services.retro, sj.retros));
     }
     function onSubmitTeamSession() {
         const title = dom.req("#model-title-input").value;
@@ -1754,11 +1757,11 @@ var contents;
             return { svc: svc, session: s };
         });
     }
-    function renderContents(svc, sessions) {
-        const contents = toContent(svc, sessions);
+    function renderContents(src, tgt, sessions) {
+        const contents = toContent(tgt, sessions);
         contents.sort((l, r) => (l.session.created > r.session.created ? -1 : 1));
         if (contents.length === 0) {
-            return JSX("div", null, `No ${svc.plural} in this sprint`);
+            return JSX("div", null, `No ${tgt.plural} in this ${src.key}`);
         }
         else {
             return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },

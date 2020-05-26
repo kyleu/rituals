@@ -26,10 +26,10 @@ func queryFields() graphql.Fields {
 		util.SvcRetro.Key:    &graphql.Field{Type: retroType, Description: "Get retro", Args: retroArgs, Resolve: ctxF(retroResolver)},
 		util.SvcRetro.Plural: &graphql.Field{Type: graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(retroType))), Description: "Get available retros", Args: listArgs, Resolve: ctxF(retrosResolver)},
 
-		util.KeyUser:                 &graphql.Field{Type: profileType, Description: "Get user", Args: userArgs, Resolve: ctxF(userResolver)},
-		util.KeyPlural(util.KeyUser): &graphql.Field{Type: graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(profileType))), Description: "Get available users", Args: listArgs, Resolve: ctxF(usersResolver)},
+		util.KeyUser:              &graphql.Field{Type: profileType, Description: "Get user", Args: userArgs, Resolve: ctxF(userResolver)},
+		util.Plural(util.KeyUser): &graphql.Field{Type: graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(profileType))), Description: "Get available users", Args: listArgs, Resolve: ctxF(usersResolver)},
 
-		util.KeySandbox:                 &graphql.Field{Type: sandboxType, Description: "Get sandbox by key", Args: sandboxArgs, Resolve: ctxF(sandboxResolver)},
-		util.KeyPlural(util.KeySandbox): &graphql.Field{Type: graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(sandboxType))), Description: "Get sandbox list", Args: listArgs, Resolve: ctxF(sandboxesResolver)},
+		util.KeySandbox:              &graphql.Field{Type: sandboxType, Description: "Get sandbox by key", Args: sandboxArgs, Resolve: ctxF(sandboxResolver)},
+		util.Plural(util.KeySandbox): &graphql.Field{Type: graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(sandboxType))), Description: "Get sandbox list", Args: listArgs, Resolve: ctxF(sandboxesResolver)},
 	}
 }

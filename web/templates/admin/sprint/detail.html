@@ -1,0 +1,62 @@
+<%: func AdminSprintDetail(model *sprint.Session, members member.Entries, perms permission.Permissions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <h3 class="uk-card-title">
+        <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcSprint.Key, util.KeyKey, model.Slug) %>">Join</a></div>
+        Sprint
+      </h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= model.ID.String() %></td>
+          </tr>
+          <tr>
+            <th>Slug</th>
+            <td><%= model.Slug %></td>
+          </tr>
+          <tr>
+            <th>Title</th>
+            <td><%= model.Title %></td>
+          </tr>
+          <tr>
+            <th>Team</th>
+            <td>
+              <% if model.TeamID != nil { %>
+                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key, `detail`), `id`, model.TeamID.String()) %>"><% ComponentUUID(model.TeamID, _buffer) %></a>
+              <% } %>
+            </td>
+          </tr>
+          <tr>
+            <th>Owner</th>
+            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
+          </tr>
+          <tr>
+            <th>Start Date</th>
+            <td><% ComponentDate(model.StartDate, _buffer) %></td>
+          </tr>
+          <tr>
+            <th>End Date</th>
+            <td><% ComponentDate(model.EndDate, _buffer) %></td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td><% ComponentDateTime(&model.Created, _buffer) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <% AdminMemberCard(members, params, ctx, _buffer) %>
+    <% AdminPermissionCard(perms, params, ctx, _buffer) %>
+    <% AdminEstimateCard(estimates, params, ctx, _buffer) %>
+    <% AdminStandupCard(standups, params, ctx, _buffer) %>
+    <% AdminRetroCard(retros, params, ctx, _buffer) %>
+    <% AdminActionCard(actions, params, ctx, _buffer) %>
+  </div>
+</div>
+<% } %>

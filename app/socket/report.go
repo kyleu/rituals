@@ -18,7 +18,7 @@ func onAddReport(s *Service, ch channel, userID uuid.UUID, param map[string]inte
 	}
 	d, err := parseDate(dString)
 	if err != nil {
-		return errors.WithStack(err)
+		return err
 	}
 
 	content, ok := getContent(param)
@@ -43,7 +43,7 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 
 	d, err := parseDate(param["d"].(string))
 	if err != nil {
-		return errors.WithStack(err)
+		return err
 	}
 
 	content, ok := getContent(param)
@@ -57,7 +57,7 @@ func onEditReport(s *Service, ch channel, userID uuid.UUID, param map[string]int
 		return errors.Wrap(err, "cannot update report")
 	}
 	err = sendReportUpdate(s, ch, report)
-	return errors.WithStack(err)
+	return err
 }
 
 func onRemoveReport(s *Service, ch channel, userID uuid.UUID, param string) error {

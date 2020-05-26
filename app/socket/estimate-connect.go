@@ -22,8 +22,8 @@ type EstimateSessionJoined struct {
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
-	Stories     estimate.Stories      `json:"stories"`
-	Votes       estimate.Votes       `json:"votes"`
+	Stories     estimate.Stories       `json:"stories"`
+	Votes       estimate.Votes         `json:"votes"`
 }
 
 func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -66,8 +66,8 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return s.sendPermErrors(util.SvcEstimate, ch, permErrors)
 	}
 
-	entry := s.estimates.Members.Register(ch.ID, userID)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	entry := s.estimates.Members.Register(ch.ID, userID, member.RoleMember)
+	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID, member.RoleMember)
 	members := s.estimates.Members.GetByModelID(ch.ID, nil)
 
 	stories, err := s.estimates.GetStories(ch.ID, nil)

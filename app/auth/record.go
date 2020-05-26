@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -10,10 +11,8 @@ import (
 )
 
 func (s *Service) NewRecord(r *Record) (*Record, error) {
-	q := `insert into auth (id, user_id, provider, provider_id, expires, name, email, picture) values (
-    $1, $2, $3, $4, $5, $6, $7, $8
-	)`
-	err := s.db.Insert(q, nil, r.ID, r.UserID, r.Provider.Key, r.ProviderID, r.Expires, r.Name, r.Email, r.Picture)
+	q := query.SQLInsert(util.KeyAuth, []string{"id", "user_id", "provider", "provider_id", "user_list_id", "user_list_name", "access_token", "expires", "name", "email", "picture"}, 1)
+	err := s.db.Insert(q, nil, r.ID, r.UserID, r.Provider.Key, r.ProviderID, r.UserListID, r.UserListName, r.AccessToken, r.Expires, r.Name, r.Email, r.Picture)
 	if err != nil {
 		return nil, err
 	}
@@ -22,8 +21,9 @@ func (s *Service) NewRecord(r *Record) (*Record, error) {
 }
 
 func (s *Service) UpdateRecord(r *Record) error {
-	q := "update auth set expires = $1, name = $2, email = $3, picture = $4 where id = $5"
-	return s.db.UpdateOne(q, nil, r.Expires, r.Name, r.Email, r.Picture, r.ID)
+	cols := []string{"user_list_id", "user_list_name", "access_token", "expires", "name", "email", "picture"}
+	q := query.SQLUpdate(util.KeyAuth, cols, fmt.Sprintf("id = $%v", len(cols)+1))
+	return s.db.UpdateOne(q, nil, r.UserListID, r.UserListName, r.AccessToken, r.Expires, r.Name, r.Email, r.Picture, r.ID)
 }
 
 func (s *Service) List(params *query.Params) (Records, error) {
@@ -72,7 +72,7 @@ func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) (Records, 
 }
 
 func (s *Service) Delete(authID uuid.UUID) error {
-	q := "delete from auth where id = $1"
+	q := query.SQLDelete(util.KeyAuth, "id = $1")
 	_, err := s.db.Delete(q, nil, authID)
 	return err
 }

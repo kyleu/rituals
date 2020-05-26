@@ -2,8 +2,10 @@ package sprint
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/database"
+	"fmt"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"github.com/kyleu/rituals.dev/app/permission"
 
@@ -44,13 +46,13 @@ func (s *Service) New(title string, userID uuid.UUID, startDate *time.Time, endD
 
 	model := NewSession(title, slug, userID, teamID, startDate, endDate)
 
-	q := "insert into sprint (id, slug, title, team_id, owner, start_date, end_date) values ($1, $2, $3, $4, $5, $6, $7)"
+	q := query.SQLInsert(util.SvcSprint.Key, []string{"id", "slug", "title", "team_id", "owner", "start_date", "end_date"}, 1)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.Owner, model.StartDate, model.EndDate)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new sprint session")
 	}
 
-	s.Members.Register(model.ID, userID)
+	s.Members.Register(model.ID, userID, member.RoleOwner)
 
 	s.actions.Post(util.SvcSprint.Key, model.ID, userID, action.ActCreate, nil, "")
 	s.actions.PostRef(util.SvcTeam.Key, model.TeamID, util.SvcSprint.Key, model.ID, userID, action.ActContentAdd, "")
@@ -141,8 +143,9 @@ func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) (Sessions,
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.UUID, startDate *time.Time, endDate *time.Time, userID uuid.UUID) error {
-	q := "update sprint set title = $1, team_id = $2, start_date = $3, end_date = $4 where id = $5"
-	err := s.db.UpdateOne(q, nil, title, teamID, startDate, endDate, sessionID)
+	cols := []string{"title", "start_date", "end_date", "team_id"}
+	q := query.SQLUpdate(util.SvcSprint.Key, cols, fmt.Sprintf("id = $%v", len(cols)+1))
+	err := s.db.UpdateOne(q, nil, title, startDate, endDate, teamID, sessionID)
 	s.actions.Post(util.SvcSprint.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating sprint session")
 }

@@ -34,7 +34,7 @@
           <ul class="uk-list uk-list-divider uk-margin-top">
             <% for _, t := range teams { %>
             <li>
-              <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcTeam.Key, `key`, t.Slug) %>"><%= t.Title %></a>
+              <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcTeam.Key, util.KeyKey, t.Slug) %>"><%= t.Title %></a>
             </li>
             <% } %>
           </ul>
@@ -48,7 +48,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range sprints { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcSprint.Key, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcSprint.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -62,7 +62,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range estimates { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcEstimate.Key, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcEstimate.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -76,7 +76,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range standups { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcStandup.Key, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcStandup.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -90,7 +90,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range retros { %>
                 <li>
-                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcRetro.Key, `key`, s.Slug) %>"><%= s.Title %></a>
+                  <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcRetro.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>

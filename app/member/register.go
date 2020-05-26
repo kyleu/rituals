@@ -5,9 +5,10 @@ import (
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/query"
 )
 
-func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) *Entry {
+func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, role Role) *Entry {
 	dto, err := s.Get(modelID, userID)
 
 	if err != nil {
@@ -16,8 +17,8 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) *Entry {
 	}
 
 	if dto == nil {
-		q := fmt.Sprintf(`insert into %s (%s, user_id, name, role) values ($1, $2, '', 'member')`, s.tableName, s.colName)
-		err = s.db.Insert(q, nil, modelID, userID)
+		q := query.SQLInsert(s.tableName, []string{s.colName, "user_id", "name", "role"}, 1)
+		err = s.db.Insert(q, nil, modelID, userID, "", role.String())
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting member for user [%v] and model [%v]: %+v", modelID, userID, err))
 		}
@@ -32,9 +33,9 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID) *Entry {
 	return dto
 }
 
-func (s *Service) RegisterRef(modelID *uuid.UUID, userID uuid.UUID) *Entry {
+func (s *Service) RegisterRef(modelID *uuid.UUID, userID uuid.UUID, role Role) *Entry {
 	if modelID == nil {
 		return nil
 	}
-	return s.Register(*modelID, userID)
+	return s.Register(*modelID, userID, role)
 }

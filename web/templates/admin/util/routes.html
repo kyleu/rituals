@@ -1,0 +1,42 @@
+<%: func AdminRoutesList(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+      <table class="uk-table uk-table-divider uk-table-small">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Methods</th>
+            <th>Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for _, r := range util.ExtractRoutes(ctx.Routes) { %>
+            <% if r.Methods == "" { %>
+            <tr>
+              <th colspan="3"><div class="uk-margin-top"><%= strings.TrimPrefix(r.Path, "/") %></div></th>
+            </tr>
+            <% } else {%>
+            <tr>
+              <td><%= r.Name %></td>
+              <td><%= r.Methods %></td>
+              <td>
+              <% if strings.Contains(r.Methods, "GET") && len(util.PathParams(r.Path)) == 0 { %>
+                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= r.Path %>"><%= r.Path %></a>
+              <% } else {%>
+                <%= r.Path %>
+              <% } %>
+              </td>
+            </tr>
+            <% } %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% } %>

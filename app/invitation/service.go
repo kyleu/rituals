@@ -2,8 +2,9 @@ package invitation
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/database"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -31,7 +32,7 @@ func NewService(service *action.Service, db *database.Service, logger logur.Logg
 
 func (s *Service) New(key string, k Type, v string, src *uuid.UUID, tgt *uuid.UUID, note string) (*Invitation, error) {
 	s.logger.Info("creating invitation [" + key + "]")
-	q := "insert into invitation (key, k, v, src, tgt, note, status, redeemed, created) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	q := query.SQLInsert(util.KeyInvitation, []string{"key", "k", "v", "src", "tgt", "note", "status", "redeemed", "created"}, 1)
 	dto := invitationDTO{
 		Key:      key,
 		K:        k.String(),

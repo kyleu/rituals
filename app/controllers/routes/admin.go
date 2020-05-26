@@ -13,10 +13,15 @@ import (
 )
 
 func adminRoutes(app *config.AppInfo, r *mux.Router) *mux.Router {
-	admr := r.Path(adm()).Subrouter()
-	admr.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Home))).Name(util.KeyAdmin)
+	r.Path(adm()).Subrouter().Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Home))).Name(util.KeyAdmin)
 
 	r.Path(adm("enable")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Enable))).Name(util.AdminLink("enable"))
+
+	r.Path(adm(util.KeySandbox)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.SandboxList))).Name(util.AdminLink(util.KeySandbox))
+	r.Path(adm(util.KeySandbox, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.SandboxRun))).Name(util.AdminLink(util.KeySandbox, "run"))
+
+	r.Path(adm(util.KeyModules)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Modules))).Name(util.AdminLink(util.KeyModules))
+	r.Path(adm(util.KeyRoutes)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Routes))).Name(util.AdminLink(util.KeyRoutes))
 
 	r.Path(adm(util.KeyUser)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.UserList))).Name(util.AdminLink(util.KeyUser))
 	r.Path(adm(util.KeyUser, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.UserDetail))).Name(util.AdminLink(util.KeyUser, util.KeyDetail))

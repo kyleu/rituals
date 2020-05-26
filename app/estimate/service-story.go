@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) (Stories, error) {
-	var defaultOrdering = query.Orderings{{Column: "idx", Asc: true}}
+	var defaultOrdering = query.Orderings{{Column: util.KeyIdx, Asc: true}}
 
 	params = query.ParamsWithDefaultOrdering(util.KeyStory, params, defaultOrdering...)
 	var dtos []storyDTO
@@ -49,9 +49,7 @@ func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 func (s *Service) NewStory(estimateID uuid.UUID, title string, authorID uuid.UUID) (*Story, error) {
 	id := util.UUID()
 
-	q := `insert into story (id, estimate_id, idx, author_id, title) values (
-    $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5
-	)`
+	q := query.SQLInsert(util.KeyStory, []string{"id", "estimate_id", "idx", "author_id", "title"}, 1)
 	err := s.db.Insert(q, nil, id, estimateID, estimateID, authorID, title)
 	if err != nil {
 		return nil, err
@@ -125,7 +123,8 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 		}
 		finalVote = calcFinalVote(votes)
 	}
-	q := "update story set status = $1, final_vote = $2 where id = $3"
+	cols := []string{"status", "final_vote"}
+	q := query.SQLUpdate(util.KeyStory, cols, fmt.Sprintf("id = $%v", len(cols)+1))
 	err = s.db.UpdateOne(q, nil, status.String(), finalVote, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID, util.KeyStatus: status, "finalVote": finalVote}

@@ -4,7 +4,7 @@
     <% ComponentSessionPublic(util.SvcTeam, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcTeam.Icon %>;"></span>
     <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
-    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.KeyPlural(util.KeyAction) %>');return false;" title="view history"></a>
+    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.Plural(util.KeyAction) %>');return false;" title="view history"></a>
   </h3>
   <%= util.SvcTeam.Key %>
 </div>

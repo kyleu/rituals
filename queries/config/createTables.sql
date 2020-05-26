@@ -16,10 +16,13 @@ create table if not exists "auth" (
   "user_id" uuid not null references "system_user"("id"),
   "provider" auth_provider not null,
   "provider_id" text not null,
+  "user_list_id" varchar(512) not null,
+  "user_list_name" varchar(2048) not null,
+  "access_token" text not null,
   "expires" timestamp,
-  "name" varchar(2048),
-  "email" varchar(2048),
-  "picture" text,
+  "name" varchar(2048) not null,
+  "email" varchar(2048) not null,
+  "picture" text not null,
   "created" timestamp not null default now()
 );
 
@@ -132,7 +135,7 @@ create table if not exists "story" (
   "author_id" uuid not null references "system_user"("id"),
   "title" varchar(2048) not null,
   "status" story_status not null default 'pending',
-  "final_vote" varchar(2048) not null default '',
+  "final_vote" varchar(2048) not null,
   "created" timestamp not null default now()
 );
 

@@ -10,10 +10,10 @@ values
 
 -- Auth
 insert into auth
-  (id, user_id, provider, provider_id, expires, name, email, picture)
+  (id, user_id, provider, provider_id, user_list_id, user_list_name, access_token, expires, name, email, picture)
 values
-  ('03000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'google', '105933957667429955106', now(), 'Kyle Unverferth', 'kyle@kyleu.com', 'https://lh3.googleusercontent.com/a-/AOh14GiTXL-FkFruVKRTqLxdDmM7RqKe2CZxWRR57xLC27GP9YozCdan2ZUli-y6VoqruMMo2p3-AMNgNnh07l22NtQtRtJ1Y8nm1yi8C4udJft1vp90XwjULbfCT-e8yJJkpkqrb5BcsS_c2u3FI8TmL5zglH_IeUAJ5GPcFh8wV4-n0Ljf9IRLsNb0iinEPjYQKOifp_OpbexnQU1dn7SN3b0I2ygl9JWOZMIZeIP8dDY5JzUO0DZniYGgrX6BuWQpOvydcwxPw9YkagvSEez9dM_OZGget-cXm58nNOMytABeJu7GUbxO60MJm0fM7nYHFwJXzLazYQZNdLQDCnAMvI_HquWL-kzOvTeEt7jQXFTiSddXTeqx-YW4avE-fYvDC71pz0vK9UE8mE-5FIH0WqrFI7xOwTEif4oxAeDWnNLU6MPbSeusNw4Rxn-eIB-TShP-ZHYoUNJ0pm3n2HeRfISXv8STyvLl80SbqeumnS7yPluwseZBXyBDMXv9C1cL3JXS6HhNoTUrGC8sXU2WN5FVbBrh52ZZQEwcvWefQylTJbNKhYh46plQfqbPXByTWzU71YzLRRhhO1uqcVJOy1U1mGPj3X6pHKw3xxAtHQEc4C9u1Z-fayOHZormz6jb1hAKOJHgynZrgi9pb0OKysrhDx3zpgvLbtSpZnNHKuAywUU-gWVOZth0GjbQnVhEHhxRFcZTp-VNIlAwsRrr5Q36vDcqeQlm8nJPKHc7SklCjxG-TV2I6nSLzd0UeKZN80H_ng'),
-  ('03000001-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'slack', 'kyle@kyleu.com', now(), 'Kyle Unverferth', 'kyle@kyleu.com', 'https://secure.gravatar.com/avatar/c693fdc9e93d89bba0bfb012fa4a1d76.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-192.png')
+  ('01000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'google', '105933957667429955106', '', '', 'seed-data', now(), 'Kyle Unverferth', 'kyle@kyleu.com', 'https://placekitten.com/100/100'),
+  ('01000001-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'slack', 'kyle@kyleu.com', ' T013NH3CSCB', 'rituals.dev', 'xoxp-1124581434419-1148209542112-1109658115543-c510da45e8c8481be7f2b06b7b04122f', now(), 'Kyle Unverferth', 'kyle@kyleu.com', 'https://placekitten.com/100/100')
 ;
 
 -- Team
@@ -27,8 +27,7 @@ values
 insert into team_permission
   (team_id, k, v, access)
 values
-  ('10000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
-  ('10000000-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member')
+  ('10000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member')
 ;
 
 insert into team_member
@@ -53,8 +52,7 @@ insert into sprint_permission
   (sprint_id, k, v, access)
 values
   ('20000000-0000-0000-0000-000000000000', 'team', '', 'member'),
-  ('20000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
-  ('20000000-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member')
+  ('20000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member')
 ;
 
 insert into sprint_member
@@ -82,7 +80,6 @@ insert into estimate_permission
 values
   ('30000000-0000-0000-0000-000000000000', 'team', '', 'member'),
   ('30000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
-  ('30000000-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'team', '', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'sprint', '', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'github', '@kyleu.com', 'member'),
@@ -136,8 +133,7 @@ insert into standup_permission
   (standup_id, k, v, access)
 values
   ('40000000-0000-0000-0000-000000000000', 'team', '', 'member'),
-  ('40000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
-  ('40000000-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member')
+  ('40000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member')
 ;
 
 insert into standup_member
@@ -169,8 +165,7 @@ insert into retro_permission
   (retro_id, k, v, access)
 values
   ('50000000-0000-0000-0000-000000000000', 'team', '', 'member'),
-  ('50000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
-  ('50000000-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member')
+  ('50000000-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member')
 ;
 
 insert into retro_member

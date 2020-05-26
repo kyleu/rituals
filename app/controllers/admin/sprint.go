@@ -22,7 +22,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		sprints, err := ctx.App.Sprint.List(params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		return tmpl(templates.AdminSprintList(sprints, params, ctx, w))
 	})
@@ -32,11 +32,11 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		sprintID, err := act.IDFromParams(util.SvcSprint.Key, mux.Vars(r))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sess, err := ctx.App.Sprint.GetByID(*sprintID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + sprintID.String() + "]")
@@ -51,19 +51,19 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 
 		estimates, err := ctx.App.Estimate.GetBySprint(*sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		standups, err := ctx.App.Standup.GetBySprint(*sprintID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		retros, err := ctx.App.Retro.GetBySprint(*sprintID, params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		actions, err := ctx.App.Action.GetBySvcModel(util.SvcSprint.Key, *sprintID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = sess.Title

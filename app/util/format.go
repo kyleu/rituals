@@ -1,10 +1,11 @@
 package util
 
 import (
-	"emperror.dev/errors"
 	"regexp"
 	"strings"
 	"time"
+
+	"emperror.dev/errors"
 
 	"github.com/gofrs/uuid"
 
@@ -63,8 +64,8 @@ func GetUUIDFromString(s string) *uuid.UUID {
 	return retID
 }
 
-
 const YMD = "2006-01-02"
+
 func ToYMD(d *time.Time) string {
 	if d == nil {
 		return ""
@@ -80,6 +81,7 @@ func FromYMD(s string) (*time.Time, error) {
 }
 
 const DateFull = "2006-01-02 15:04:05"
+
 func ToDateString(d *time.Time) string {
 	if d == nil {
 		return ""

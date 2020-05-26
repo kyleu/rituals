@@ -63,9 +63,9 @@ namespace sprint {
   }
 
   function setSprintContents(sj: SessionJoined) {
-    dom.setContent("#sprint-estimate-list", contents.renderContents(services.estimate, sj.estimates));
-    dom.setContent("#sprint-standup-list", contents.renderContents(services.standup, sj.standups));
-    dom.setContent("#sprint-retro-list", contents.renderContents(services.retro, sj.retros));
+    dom.setContent("#sprint-estimate-list", contents.renderContents(services.sprint, services.estimate, sj.estimates));
+    dom.setContent("#sprint-standup-list", contents.renderContents(services.sprint, services.standup, sj.standups));
+    dom.setContent("#sprint-retro-list", contents.renderContents(services.sprint, services.retro, sj.retros));
   }
 
   export function onSubmitSprintSession() {

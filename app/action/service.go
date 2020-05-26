@@ -3,6 +3,7 @@ package action
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
@@ -29,7 +30,7 @@ func NewService(db *database.Service, logger logur.Logger) *Service {
 
 func (s *Service) New(svc string, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
 	id := util.UUID()
-	q := "insert into action (id, svc, model_id, author_id, act, content, note) values ($1, $2, $3, $4, $5, $6, $7)"
+	q := query.SQLInsert(util.KeyAction, []string{"id", "svc", "model_id", "author_id", "act", "content", "note"}, 1)
 	err := s.db.Insert(q, nil, id, svc, modelID, authorID, act, util.ToJSON(content), note)
 
 	if err != nil {

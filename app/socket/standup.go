@@ -31,10 +31,10 @@ func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string
 }
 
 func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcStandup, param["title"].(string))
+	title := util.ServiceTitle(util.SvcStandup, param[util.KeyTitle].(string))
 
-	sprintID := getUUIDPointer(param, "sprintID")
-	teamID := getUUIDPointer(param, "teamID")
+	sprintID := getUUIDPointer(param, util.WithID(util.SvcSprint.Key))
+	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
 
 	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
 	s.logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))

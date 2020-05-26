@@ -23,7 +23,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		standups, err := ctx.App.Standup.List(params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		return tmpl(templates.AdminStandupList(standups, params, ctx, w))
 	})
@@ -33,11 +33,11 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		standupID, err := act.IDFromParams(util.SvcStandup.Key, mux.Vars(r))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sess, err := ctx.App.Standup.GetByID(*standupID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + standupID.String() + "]")
@@ -52,11 +52,11 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 
 		reports, err := ctx.App.Standup.GetReports(*standupID, params.Get(util.KeyReport, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, *standupID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = sess.Title

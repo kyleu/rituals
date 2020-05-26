@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/util"
+
 	"github.com/gofrs/uuid"
 )
 
@@ -11,8 +13,8 @@ type Role struct {
 	Key string `json:"key"`
 }
 
-var RoleOwner = Role{Key: "owner"}
-var RoleMember = Role{Key: "member"}
+var RoleOwner = Role{Key: util.KeyOwner}
+var RoleMember = Role{Key: util.KeyMember}
 var RoleObserver = Role{Key: "observer"}
 
 var AllRoles = []Role{RoleOwner, RoleMember, RoleObserver}

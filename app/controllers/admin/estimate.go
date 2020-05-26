@@ -23,7 +23,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		estimates, err := ctx.App.Estimate.List(params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		return tmpl(templates.AdminEstimateList(estimates, params, ctx, w))
 	})
@@ -33,11 +33,11 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		estimateID, err := act.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sess, err := ctx.App.Estimate.GetByID(*estimateID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
@@ -52,11 +52,11 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 		stories, err := ctx.App.Estimate.GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, *estimateID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = sess.Title
@@ -73,19 +73,19 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		storyID, err := act.IDFromParams(util.KeyStory, mux.Vars(r))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		story, err := ctx.App.Estimate.GetStoryByID(*storyID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		estimateID, err := ctx.App.Estimate.GetStoryEstimateID(*storyID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sess, err := ctx.App.Estimate.GetByID(*estimateID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
@@ -97,7 +97,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		votes, err := ctx.App.Estimate.GetStoryVotes(*storyID, params.Get(util.KeyVote, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		ctx.Title = fmt.Sprint(sess.Slug, ":", story.Idx)
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)

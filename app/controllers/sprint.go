@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -19,19 +18,19 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		sessions, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
-			return "", errors.Wrap(err, "error retrieving sprints")
+			return eresp(err, "error retrieving sprints")
 		}
 
 		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
-		ctx.Title = util.KeyPluralTitle(util.SvcSprint.Key)
+		ctx.Title = util.PluralProper(util.SvcSprint.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
 		return tmpl(templates.SprintList(sessions, teams, auths, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, w))
 	})
@@ -40,31 +39,34 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 func SprintNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(util.SvcSprint, r.Form.Get("title"))
+
 		startDate, err := util.FromYMD(r.Form.Get("startDate"))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		endDate, err := util.FromYMD(r.Form.Get("endDate"))
 		if err != nil {
-			return "", err
-		}
-		teamID := getUUID(r.Form, util.SvcTeam.Key)
-		perms := parsePerms(r.Form, teamID, nil)
-
-		sess, err := ctx.App.Sprint.New(title, ctx.Profile.UserID, startDate, endDate, teamID)
-		if err != nil {
-			return "", errors.Wrap(err, "error creating sprint session")
+			return eresp(err, "")
 		}
 
-		_, err = ctx.App.Sprint.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
 		if err != nil {
-			return "", errors.Wrap(err, "error setting permissions for new session")
+			return eresp(err, "cannot parse form")
 		}
 
-		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
+		sess, err := ctx.App.Sprint.New(r.Title, ctx.Profile.UserID, startDate, endDate, r.TeamID)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot send content update")
+			return eresp(err, "error creating sprint session")
+		}
+
+		_, err = ctx.App.Sprint.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		if err != nil {
+			return eresp(err, "error setting permissions for new session")
+		}
+
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, r.TeamID)
+		if err != nil {
+			return eresp(err, "cannot send content update")
 		}
 		return ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug), nil
 	})
@@ -75,7 +77,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess, err := ctx.App.Sprint.GetBySlug(key)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot load sprint session")
+			return eresp(err, "cannot load sprint session")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")

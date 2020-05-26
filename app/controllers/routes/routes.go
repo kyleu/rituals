@@ -21,8 +21,10 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Use(ocmux.Middleware())
 
 	// Home
-	r.Methods(http.MethodGet).Path("/").Handler(addContext(r, app, http.HandlerFunc(controllers.Home))).Name(n("home"))
-	r.Methods(http.MethodGet).Path(p("s")).Handler(addContext(r, app, http.HandlerFunc(controllers.Socket))).Name(n("websocket"))
+	r.Path("/").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Home))).Name(n("home"))
+	r.Path(p(util.KeyAbout)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.About))).Name(n(util.KeyAbout))
+	r.Path(p("health")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Health))).Name(n("health"))
+	r.Path(p("s")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Socket))).Name(n("websocket"))
 
 	r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("msworkaround")
 	r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association.json").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("msworkaround.json")
@@ -73,20 +75,8 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	retro.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(controllers.RetroNew))).Name(n(util.SvcRetro.Key, "new"))
 	r.Path(p(util.SvcRetro.Key, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.RetroWorkspace))).Name(n(util.SvcRetro.Key))
 
-	// Sandbox
-	sandbox := r.Path(p(util.KeySandbox)).Subrouter()
-	sandbox.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SandboxList))).Name(n(util.KeySandbox))
-	r.Path(p(util.KeySandbox, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SandboxRun))).Name(n(util.KeySandbox, "run"))
-
 	// Admin
 	r = adminRoutes(app, r)
-
-	// Utils
-	_ = r.Path(p("utils")).Subrouter()
-	r.Path(p(util.KeyAbout)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.About))).Name(n(util.KeyAbout))
-	r.Path(p("health")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Health))).Name(n("health"))
-	r.Path(p(util.KeyModules)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Modules))).Name(n(util.KeyModules))
-	r.Path(p(util.KeyRoutes)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Routes))).Name(n(util.KeyRoutes))
 
 	// Assets
 	r.Path(p("favicon.ico")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Favicon))).Name(n("favicon"))

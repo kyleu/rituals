@@ -11,7 +11,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 
-	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/app/web"
 )
@@ -34,7 +33,7 @@ func AuthSubmit(w http.ResponseWriter, r *http.Request) {
 
 		u := ctx.App.Auth.URLFor(state, secure, prv)
 		if len(u) == 0 {
-			return "", errors.New(prv.Title + " is disabled")
+			return enew(prv.Title + " is disabled")
 		}
 		return u, nil
 	})
@@ -48,7 +47,7 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 		prv := auth.ProviderFromString(mux.Vars(r)[util.KeyKey])
 		code, ok := r.URL.Query()["code"]
 		if !ok || len(code) == 0 {
-			return "", errors.New("no auth code provided")
+			return enew("no auth code provided")
 		}
 		stateS, ok := r.URL.Query()["state"]
 		u := "/"
@@ -57,7 +56,7 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 		}
 		record, err := ctx.App.Auth.Handle(ctx.Profile, prv, code[0])
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Session.AddFlash("success:Signed in as " + record.Name)
@@ -74,12 +73,12 @@ func AuthSignout(w http.ResponseWriter, r *http.Request) {
 		}
 		id, err := act.IDFromParams(util.KeyAuth, mux.Vars(r))
 		if err != nil {
-			return "", errors.Wrap(err, util.IDErrorString(util.KeyAuth, ""))
+			return eresp(err, util.IDErrorString(util.KeyAuth, ""))
 		}
 
 		err = ctx.App.Auth.Delete(*id)
 		if err != nil {
-			return "", errors.Wrap(err, "unable to delete auth record")
+			return eresp(err, "unable to delete auth record")
 		}
 
 		ref := r.Header.Get("Referer")

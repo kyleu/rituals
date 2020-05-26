@@ -3,6 +3,12 @@
   <label class="uk-form-label" for="model-perm-form">Permissions</label>
   <div id="model-perm-form">
     <ul class="uk-list">
+      <% if !(showTeam || showSprint || len(auths) > 0){ %>
+        <li>
+          Control access to this <%= svc.Key %> by
+          <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.KeyProfile) %>">signing in</a>
+        </li>
+      <% } %>
       <% if showTeam { %>
         <li id="perm-team-section">
           <label>

@@ -15,7 +15,7 @@ func GraphiQL(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
@@ -28,7 +28,7 @@ func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
@@ -44,7 +44,7 @@ func GraphQLVoyagerMutation(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)

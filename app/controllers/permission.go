@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"net/http"
+	"strings"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/auth"
@@ -9,8 +12,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
-	"net/http"
-	"strings"
 )
 
 type PermissionParams struct {
@@ -87,30 +88,29 @@ func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Re
 	return tmpl(templates.PermissionErrors(svc, errors, auths, ctx, w))
 }
 
+func parsePerm(form map[string][]string, key string, ret permission.Permissions) permission.Permissions {
+	t, ok := form["perm-"+key]
+	if ok && len(t) > 0 && t[0] == "true" {
+		var emails []string
+		emailArray := form["perm-"+key+"-email"]
+		for _, e := range emailArray {
+			emails = append(emails, strings.TrimSpace(e))
+		}
+		ret = append(ret, &permission.Permission{K: key, V: strings.Join(emails, ","), Access: member.RoleMember})
+	}
+	return ret
+}
+
 func parsePerms(form map[string][]string, teamID *uuid.UUID, sprintID *uuid.UUID) permission.Permissions {
 	var ret permission.Permissions
 	if teamID != nil {
-		t, ok := form["perm-team"]
-		if ok && len(t) > 0 && t[0] == "true" {
-			ret = append(ret, &permission.Permission{K: util.SvcTeam.Key, Access: member.RoleMember})
-		}
+		ret = parsePerm(form, util.SvcTeam.Key, ret)
 	}
 	if sprintID != nil {
-		s, ok := form["perm-sprint"]
-		if ok && len(s) > 0 && s[0] == "true" {
-			ret = append(ret, &permission.Permission{K: util.SvcSprint.Key, Access: member.RoleMember})
-		}
+		ret = parsePerm(form, util.SvcSprint.Key, ret)
 	}
 	for _, prv := range auth.AllProviders {
-		s, ok := form["perm-" + prv.Key]
-		if ok && len(s) > 0 && s[0] == "true" {
-			var emails []string
-			emailArray, _ := form["perm-" + prv.Key + "-email"]
-			for _, e := range emailArray {
-				emails = append(emails, strings.TrimSpace(e))
-			}
-			ret = append(ret, &permission.Permission{K: prv.Key, V: strings.Join(emails, ","), Access: member.RoleMember})
-		}
+		ret = parsePerm(form, prv.Key, ret)
 	}
 	return ret
 }

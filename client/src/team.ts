@@ -51,10 +51,10 @@ namespace team {
 
 
   function setTeamHistory(sj: SessionJoined) {
-    dom.setContent("#team-sprint-list", contents.renderContents(services.sprint, sj.sprints));
-    dom.setContent("#team-estimate-list", contents.renderContents(services.estimate, sj.estimates));
-    dom.setContent("#team-standup-list", contents.renderContents(services.standup, sj.standups));
-    dom.setContent("#team-retro-list", contents.renderContents(services.retro, sj.retros));
+    dom.setContent("#team-sprint-list", contents.renderContents(services.team, services.sprint, sj.sprints));
+    dom.setContent("#team-estimate-list", contents.renderContents(services.team, services.estimate, sj.estimates));
+    dom.setContent("#team-standup-list", contents.renderContents(services.team, services.standup, sj.standups));
+    dom.setContent("#team-retro-list", contents.renderContents(services.team, services.retro, sj.retros));
   }
 
   export function onSubmitTeamSession() {

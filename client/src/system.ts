@@ -12,7 +12,7 @@ namespace system {
     connectTime = 0;
 
     permissions: collection.Group<permission.Permission>[] = [];
-    auths: permission.Auth[] = [];
+    auths: auth.Auth[] = [];
     members: member.Member[] = [];
     online: string[] = [];
 
@@ -39,7 +39,7 @@ namespace system {
     permission.setPerms();
   }
 
-  export function setAuth(auths: permission.Auth[]) {
+  export function setAuths(auths: auth.Auth[]) {
     system.cache.auths = auths;
     permission.setPerms();
   }

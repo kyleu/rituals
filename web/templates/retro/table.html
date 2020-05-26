@@ -3,14 +3,14 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% ComponentTableHeader(util.SvcRetro.Key, "title", "Title", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.SvcRetro.Key, util.KeyCreated, "Created", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcRetro.Key, util.KeyTitle, util.Title(util.KeyTitle), params, ctx, buffer) %>
+      <% ComponentTableHeader(util.SvcRetro.Key, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range retros { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcRetro.Key, `key`, model.Slug) %>"><%= model.Title %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcRetro.Key, util.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>

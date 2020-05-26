@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	teamArgs           graphql.FieldConfigArgument
-	teamResolver       Callback
-	teamsResolver      Callback
-	teamMemberResolver Callback
+	teamArgs               graphql.FieldConfigArgument
+	teamResolver           Callback
+	teamsResolver          Callback
+	teamMemberResolver     Callback
 	teamPermissionResolver Callback
-	teamType           *graphql.Object
+	teamType               *graphql.Object
 )
 
 func initTeam() {
@@ -24,7 +24,7 @@ func initTeam() {
 	}
 
 	teamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, err := paramString(p, util.KeyKey)
+		slug, err := paramKeyString(p)
 		if err != nil {
 			return nil, err
 		}
@@ -50,19 +50,19 @@ func initTeam() {
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),
 				},
-				"slug": &graphql.Field{
+				util.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"title": &graphql.Field{
+				util.KeyTitle: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"owner": &graphql.Field{
+				util.KeyOwner: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				util.KeyPlural(util.KeyMember): &graphql.Field{
+				util.Plural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This team's members",
 					Args:        listArgs,

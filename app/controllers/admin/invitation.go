@@ -17,13 +17,13 @@ import (
 func InvitationList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "Invitation List"
-		bc := adminBC(ctx, util.KeyInvitation, util.KeyPlural(util.KeyInvitation))
+		bc := adminBC(ctx, util.KeyInvitation, util.Plural(util.KeyInvitation))
 		ctx.Breadcrumbs = bc
 
 		params := act.ParamSetFromRequest(r)
 		invitations, err := ctx.App.Invitation.List(params.Get(util.KeyInvitation, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		return tmpl(templates.AdminInvitationList(invitations, params, ctx, w))
 	})
@@ -34,10 +34,10 @@ func InvitationDetail(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess, err := ctx.App.Invitation.GetByKey(key)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		ctx.Title = sess.Key
-		bc := adminBC(ctx, util.KeyInvitation, util.KeyPlural(util.KeyInvitation))
+		bc := adminBC(ctx, util.KeyInvitation, util.Plural(util.KeyInvitation))
 		link := util.AdminLink(util.KeyInvitation, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyKey, key), key)...)
 		ctx.Breadcrumbs = bc

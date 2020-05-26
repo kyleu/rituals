@@ -8,14 +8,14 @@ import (
 )
 
 var (
-	retroArgs           graphql.FieldConfigArgument
-	retroResolver       Callback
-	retrosResolver      Callback
-	retroMemberResolver Callback
+	retroArgs               graphql.FieldConfigArgument
+	retroResolver           Callback
+	retrosResolver          Callback
+	retroMemberResolver     Callback
 	retroPermissionResolver Callback
-	retroTeamResolver   Callback
-	retroSprintResolver Callback
-	retroType           *graphql.Object
+	retroTeamResolver       Callback
+	retroSprintResolver     Callback
+	retroType               *graphql.Object
 )
 
 func initRetro() {
@@ -34,7 +34,7 @@ func initRetro() {
 	})
 
 	retroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, err := paramString(p, util.KeyKey)
+		slug, err := paramKeyString(p)
 		if err != nil {
 			return nil, err
 		}
@@ -76,19 +76,19 @@ func initRetro() {
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),
 				},
-				"slug": &graphql.Field{
+				util.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"title": &graphql.Field{
+				util.KeyTitle: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"teamID": &graphql.Field{
+				util.WithID(util.SvcTeam.Key): &graphql.Field{
 					Type: graphql.String,
 				},
-				"sprintID": &graphql.Field{
+				util.WithID(util.SvcSprint.Key): &graphql.Field{
 					Type: graphql.String,
 				},
-				"owner": &graphql.Field{
+				util.KeyOwner: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				util.KeyStatus: &graphql.Field{
@@ -103,7 +103,7 @@ func initRetro() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				util.KeyPlural(util.KeyMember): &graphql.Field{
+				util.Plural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This retro's members",
 					Args:        listArgs,

@@ -14,12 +14,12 @@ namespace contents {
     })
   }
 
-  export function renderContents(svc: services.Service, sessions: rituals.Session[]): JSX.Element {
-    const contents = toContent(svc, sessions);
+  export function renderContents(src: services.Service, tgt: services.Service, sessions: rituals.Session[]): JSX.Element {
+    const contents = toContent(tgt, sessions);
     contents.sort((l, r) => (l.session.created > r.session.created ? -1 : 1));
 
     if (contents.length === 0) {
-      return <div>{`No ${svc.plural} in this sprint`}</div>;
+      return <div>{`No ${tgt.plural} in this ${src.key}`}</div>;
     } else {
       return <table class="uk-table uk-table-divider uk-text-left">
         <tbody>

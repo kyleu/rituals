@@ -1,11 +1,12 @@
 package act
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+
+	"emperror.dev/errors"
 
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
@@ -20,7 +21,7 @@ type errorResult struct {
 
 func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
 	startNanos := time.Now().UnixNano()
-	ctx := web.ExtractContext(w, r)
+	ctx := web.ExtractContext(w, r, false)
 
 	if len(ctx.Flashes) > 0 {
 		SaveSession(w, r, ctx)

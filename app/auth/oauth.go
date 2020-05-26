@@ -2,9 +2,10 @@ package auth
 
 import (
 	"context"
+	"os"
+
 	"emperror.dev/errors"
 	"golang.org/x/oauth2"
-	"os"
 )
 
 func (s *Service) callbackURL(secure bool, k string) string {

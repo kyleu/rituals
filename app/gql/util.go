@@ -1,8 +1,11 @@
 package gql
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"github.com/kyleu/rituals.dev/app/util"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
@@ -43,14 +46,14 @@ func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger 
 	return ret.Filtered(logger)
 }
 
-func paramString(p graphql.ResolveParams, key string) (string, error) {
-	arg, ok := p.Args[key]
+func paramKeyString(p graphql.ResolveParams) (string, error) {
+	arg, ok := p.Args[util.KeyKey]
 	if !ok {
-		return "", errors.New(fmt.Sprintf("parameter %v is not present", key))
+		return "", errors.New(fmt.Sprintf("parameter %v is not present", util.KeyKey))
 	}
 	ret, ok := arg.(string)
 	if !ok {
-		return "", errors.New(fmt.Sprintf("parameter %v is not a string: %v", key, arg))
+		return "", errors.New(fmt.Sprintf("parameter %v is not a string: %v", util.KeyKey, arg))
 	}
 	return ret, nil
 }

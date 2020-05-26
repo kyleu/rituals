@@ -21,7 +21,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		retros, err := ctx.App.Retro.List(params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		return tmpl(templates.AdminRetroList(retros, params, ctx, w))
 	})
@@ -31,11 +31,11 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		retroID, err := act.IDFromParams(util.SvcRetro.Key, mux.Vars(r))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sess, err := ctx.App.Retro.GetByID(*retroID)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load retro [" + retroID.String() + "]")
@@ -50,7 +50,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 
 		actions, err := ctx.App.Action.GetBySvcModel(util.SvcRetro.Key, *retroID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = sess.Title

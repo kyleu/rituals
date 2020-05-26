@@ -5,41 +5,38 @@ import (
 	"strings"
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
-
 	"github.com/kyleu/rituals.dev/app/util"
-
 	"github.com/kyleu/rituals.dev/app/web"
-
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		if !securityCheck(&ctx) {
-			return tmpl(templates.Todo("Coming soon!", ctx, w))
+		if !tempSecurityCheck(&ctx) {
+			return tmpl(templates.Message("Coming soon!", ctx, w))
 		}
 
 		params := act.ParamSetFromRequest(r)
 
 		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		standups, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		retros, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = "Home"
@@ -55,7 +52,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func securityCheck(ctx *web.RequestContext) bool {
+func tempSecurityCheck(ctx *web.RequestContext) bool {
 	if ctx.Profile.Role == util.RoleAdmin {
 		return true
 	}

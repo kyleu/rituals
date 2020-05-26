@@ -41,7 +41,7 @@ func (r *RequestContext) Route(act string, pairs ...string) string {
 	return u.Path
 }
 
-func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
+func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) RequestContext {
 	ai, ok := r.Context().Value(util.InfoKey).(*config.AppInfo)
 	if !ok {
 		ai.Logger.Warn("cannot load AppInfo")
@@ -63,19 +63,14 @@ func ExtractContext(w http.ResponseWriter, r *http.Request) RequestContext {
 			ai.Logger.Warn(fmt.Sprintf("cannot parse uuid [%v]: %+v", userIDValue, err))
 		}
 	} else {
-		userID = util.UUID()
-		_, err := ai.User.New(userID)
-		if err != nil {
-			ai.Logger.Warn(fmt.Sprintf("cannot save user: %+v", err))
-		}
-		session.Values[util.KeyUser] = userID.String()
+		session.Values[util.KeyUser] = util.UUID().String()
 		err = session.Save(r, w)
 		if err != nil {
 			ai.Logger.Warn(fmt.Sprintf("cannot save session: %+v", err))
 		}
 	}
 
-	user, err := ai.User.GetByID(userID, true)
+	user, err := ai.User.GetByID(userID, addIfMissing)
 	if err != nil {
 		ai.Logger.Warn(fmt.Sprintf("unable to load user profile: %+v", err))
 	}

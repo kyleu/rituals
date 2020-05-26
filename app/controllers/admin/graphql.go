@@ -19,7 +19,7 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 		if err != nil {
@@ -64,14 +64,14 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 func graphQLResponse(w http.ResponseWriter, res *graphql.Result) (string, error) {
 	b, err := json.MarshalIndent(res, "", "  ")
 	if err != nil {
-		return "", errors.Wrap(err, "error encoding GraphQL results")
+		return eresp(err, "error encoding GraphQL results")
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	_, err = w.Write(b)
 	if err != nil {
-		return "", errors.Wrap(err, "error writing GraphQL response")
+		return eresp(err, "error writing GraphQL response")
 	}
 	return "", nil
 }

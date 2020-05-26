@@ -29,7 +29,7 @@ namespace rituals {
     readonly profile: Profile;
     readonly session: Session;
     readonly permissions: permission.Permission[];
-    readonly auths: permission.Auth[];
+    readonly auths: auth.Auth[];
     readonly members: member.Member[];
     readonly online: string[];
   }
@@ -113,8 +113,8 @@ namespace rituals {
     system.cache.session = param.session;
     system.cache.profile = param.profile;
 
-    permission.applyPermissions(param.permissions);
     system.cache.auths = param.auths;
+    permission.applyPermissions(param.permissions);
     permission.setPerms();
 
     system.cache.members = param.members;

@@ -42,9 +42,9 @@ type Service struct {
 func NewService(
 	logger logur.Logger, actions *action.Service, users *user.Service, auths *auth.Service,
 	teams *team.Service, sprints *sprint.Service,
-	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) Service {
+	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeySocket})
-	return Service{
+	return &Service{
 		connections:   make(map[uuid.UUID]*connection),
 		connectionsMu: sync.Mutex{},
 		channels:      make(map[channel][]uuid.UUID),
@@ -87,6 +87,10 @@ func (s *Service) GetByID(id uuid.UUID) (*Status, error) {
 		return nil, invalidConnection(id)
 	}
 	return conn.ToStatus(), nil
+}
+
+func (s *Service) Count() int {
+	return len(s.connections)
 }
 
 func onMessage(s *Service, connID uuid.UUID, message Message) error {

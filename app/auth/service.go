@@ -1,8 +1,10 @@
 package auth
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/database"
@@ -10,7 +12,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
 	"logur.dev/logur"
-	"strings"
 )
 
 type Service struct {

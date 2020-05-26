@@ -27,14 +27,14 @@ func onSprintMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 }
 
 func onSprintSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcSprint, param["title"].(string))
+	title := util.ServiceTitle(util.SvcSprint, param[util.KeyTitle].(string))
 
 	curr, err := s.sprints.GetByID(ch.ID)
 	if err != nil {
 		return errors.Wrap(err, "error loading sprint session ["+ch.ID.String()+"] for update")
 	}
 
-	teamID := getUUIDPointer(param, "teamID")
+	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
 	var startDate *time.Time
 	var endDate *time.Time
 

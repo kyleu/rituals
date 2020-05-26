@@ -3,6 +3,7 @@ package permission
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
@@ -26,7 +27,6 @@ type Service struct {
 	colName   string
 }
 
-const insertSQL = `insert into %s (%s, k, v, access) values ($1, $2, $3, $4)`
 const updateSQL = `update %s set access = $1, v = $2 where %s = $3 and k = $4`
 
 func NewService(actions *action.Service, db *database.Service, logger logur.Logger, svc string) *Service {
@@ -78,7 +78,7 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 		return nil
 	}
 	if dto == nil {
-		q := fmt.Sprintf(insertSQL, s.tableName, s.colName)
+		q := query.SQLInsert(s.tableName, []string{s.colName, "k", "v", "access"}, 1)
 		err = s.db.Insert(q, nil, modelID, k, v, access.Key)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
@@ -135,7 +135,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 	}
 
 	for _, p := range i {
-		q := fmt.Sprintf(insertSQL, s.tableName, s.colName)
+		q := query.SQLInsert(s.tableName, []string{s.colName, "k", "v", "access"}, 1)
 		err := s.db.Insert(q, tx, modelID, p.K, p.V, p.Access.Key)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))

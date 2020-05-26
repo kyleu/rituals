@@ -28,7 +28,9 @@ func githubAuth(tok *oauth2.Token) (*Record, error) {
 		return nil, err
 	}
 
-	req.Header.Add("Authorization", "token "+tok.AccessToken)
+	req.Header.Add("Authorization", "Bearer "+tok.AccessToken)
+
+	// req.Header.Add("Authorization", "token "+tok.AccessToken)
 	response, err := client.Do(req)
 
 	if err != nil {

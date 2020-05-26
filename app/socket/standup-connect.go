@@ -22,7 +22,7 @@ type StandupSessionJoined struct {
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
-	Reports     standup.Reports      `json:"reports"`
+	Reports     standup.Reports        `json:"reports"`
 }
 
 func onStandupConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -66,8 +66,8 @@ func joinStandupSession(s *Service, conn *connection, userID uuid.UUID, ch chann
 		return s.sendPermErrors(util.SvcStandup, ch, permErrors)
 	}
 
-	entry := s.standups.Members.Register(ch.ID, userID)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	entry := s.standups.Members.Register(ch.ID, userID, member.RoleMember)
+	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID, member.RoleMember)
 	members := s.standups.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc

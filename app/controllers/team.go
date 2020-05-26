@@ -5,7 +5,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 
-	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
@@ -20,15 +19,15 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		sessions, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
-			return "", errors.Wrap(err, "error retrieving teams")
+			return eresp(err, "error retrieving teams")
 		}
 
 		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
-		ctx.Title = util.KeyPluralTitle(util.SvcTeam.Key)
+		ctx.Title = util.PluralProper(util.SvcTeam.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key+".list"), util.SvcTeam.Key)
 		return tmpl(templates.TeamList(sessions, auths, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, w))
 	})
@@ -37,17 +36,20 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 func TeamNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(util.SvcTeam, r.Form.Get("title"))
-		perms := parsePerms(r.Form, nil, nil)
 
-		sess, err := ctx.App.Team.New(title, ctx.Profile.UserID)
+		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
 		if err != nil {
-			return "", errors.Wrap(err, "error creating team session")
+			return eresp(err, "cannot parse form")
 		}
 
-		_, err = ctx.App.Team.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		sess, err := ctx.App.Team.New(r.Title, ctx.Profile.UserID)
 		if err != nil {
-			return "", errors.Wrap(err, "error setting permissions for new session")
+			return eresp(err, "error creating team session")
+		}
+
+		_, err = ctx.App.Team.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		if err != nil {
+			return eresp(err, "error setting permissions for new session")
 		}
 
 		return ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug), nil
@@ -59,7 +61,7 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess, err := ctx.App.Team.GetBySlug(key)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot load team session")
+			return eresp(err, "cannot load team session")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load team [" + key + "]")

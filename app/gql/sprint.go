@@ -8,16 +8,16 @@ import (
 )
 
 var (
-	sprintArgs             graphql.FieldConfigArgument
-	sprintResolver         Callback
-	sprintsResolver        Callback
-	sprintMemberResolver   Callback
-	sprintPermissionResolver   Callback
-	sprintTeamResolver     Callback
-	sprintEstimateResolver Callback
-	sprintStandupResolver  Callback
-	sprintRetroResolver    Callback
-	sprintType             *graphql.Object
+	sprintArgs               graphql.FieldConfigArgument
+	sprintResolver           Callback
+	sprintsResolver          Callback
+	sprintMemberResolver     Callback
+	sprintPermissionResolver Callback
+	sprintTeamResolver       Callback
+	sprintEstimateResolver   Callback
+	sprintStandupResolver    Callback
+	sprintRetroResolver      Callback
+	sprintType               *graphql.Object
 )
 
 func initSprint() {
@@ -28,7 +28,7 @@ func initSprint() {
 	}
 
 	sprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, err := paramString(p, util.KeyKey)
+		slug, err := paramKeyString(p)
 		if err != nil {
 			return nil, err
 		}
@@ -74,16 +74,16 @@ func initSprint() {
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),
 				},
-				"slug": &graphql.Field{
+				util.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"title": &graphql.Field{
+				util.KeyTitle: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"teamID": &graphql.Field{
+				util.WithID(util.SvcTeam.Key): &graphql.Field{
 					Type: graphql.String,
 				},
-				"owner": &graphql.Field{
+				util.KeyOwner: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"startDate": &graphql.Field{
@@ -95,7 +95,7 @@ func initSprint() {
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
 				},
-				util.KeyPlural(util.KeyMember): &graphql.Field{
+				util.Plural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This sprint's members",
 					Args:        listArgs,

@@ -17,12 +17,12 @@ import (
 func UserList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = "User List"
-		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, util.KeyPlural(util.KeyUser))
+		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, util.Plural(util.KeyUser))
 
 		params := act.ParamSetFromRequest(r)
 		users, err := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		return tmpl(templates.AdminUserList(users, params, ctx, w))
 	})
@@ -32,11 +32,11 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		userID, err := act.IDFromParams(util.KeyUser, mux.Vars(r))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		u, err := ctx.App.User.GetByID(*userID, false)
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		if u == nil {
 			ctx.Session.AddFlash("error:Can't load user [" + userID.String() + "]")
@@ -48,35 +48,35 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 
 		auths, err := ctx.App.Auth.GetByUserID(*userID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		teams, err := ctx.App.Team.GetByMember(*userID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sprints, err := ctx.App.Sprint.GetByMember(*userID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		estimates, err := ctx.App.Estimate.GetByMember(*userID, params.Get(util.SvcEstimate.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		standups, err := ctx.App.Standup.GetByMember(*userID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		retros, err := ctx.App.Retro.GetByMember(*userID, params.Get(util.SvcRetro.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		actions, err := ctx.App.Action.GetByAuthor(*userID, params.Get(util.KeyAction, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = u.Name
-		bc := adminBC(ctx, util.KeyUser, util.KeyPlural(util.KeyUser))
+		bc := adminBC(ctx, util.KeyUser, util.Plural(util.KeyUser))
 		link := util.AdminLink(util.KeyUser, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, userID.String()), u.Name)...)
 		ctx.Breadcrumbs = bc

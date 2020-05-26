@@ -13,25 +13,7 @@ type Sandbox struct {
 
 type Sandboxes = []*Sandbox
 
-var Gallery = Sandbox{
-	Key:         "gallery",
-	Title:       "Gallery",
-	Description: "An HTML demo showing available components",
-	Resolve: func(ctx web.RequestContext) (interface{}, error) {
-		return nil, nil
-	},
-}
-
-var Testbed = Sandbox{
-	Key:         "testbed",
-	Title:       "Testbed",
-	Description: "This could do anything, be careful",
-	Resolve: func(ctx web.RequestContext) (interface{}, error) {
-		return "Testbed!", nil
-	},
-}
-
-var AllSandboxes = Sandboxes{&Gallery, &Testbed}
+var AllSandboxes = Sandboxes{&Gallery, &Testbed, &Error}
 
 func FromString(s string) *Sandbox {
 	for _, t := range AllSandboxes {

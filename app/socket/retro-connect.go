@@ -22,7 +22,7 @@ type RetroSessionJoined struct {
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
-	Feedback    retro.Feedbacks      `json:"feedback"`
+	Feedback    retro.Feedbacks        `json:"feedback"`
 }
 
 func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
@@ -62,8 +62,8 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return s.sendPermErrors(util.SvcRetro, ch, permErrors)
 	}
 
-	entry := s.retros.Members.Register(ch.ID, userID)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID)
+	entry := s.retros.Members.Register(ch.ID, userID, member.RoleMember)
+	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID, member.RoleMember)
 	members := s.retros.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc

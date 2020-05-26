@@ -5,24 +5,6 @@ namespace permission {
     readonly access: string;
   }
 
-  export interface Auth {
-    readonly provider: string;
-    readonly email: string;
-  }
-
-  export interface Provider {
-    readonly key: string,
-    readonly title: string
-  }
-
-  const github: Provider = {key: "github", title: "GitHub"};
-  const google: Provider = {key: "google", title: "Google"};
-  const slack: Provider = {key: "slack", title: "Slack"};
-  const amazon: Provider = {key: "amazon", title: "Amazon"};
-  const microsoft: Provider = {key: "microsoft", title: "Microsoft"};
-
-  export const allProviders = [github, google, slack, amazon, microsoft];
-
   export interface Email {
     readonly matched: boolean,
     readonly domain: string
@@ -31,7 +13,7 @@ namespace permission {
   export function setPerms() {
     ["team", "sprint"].forEach(setModelPerms);
     if (system.cache.auths != null) {
-      allProviders.forEach(setProviderPerms);
+      auth.allProviders.forEach(setProviderPerms);
     }
   }
 
@@ -74,7 +56,7 @@ namespace permission {
     })
   }
 
-  function setProviderPerms(p: Provider) {
+  function setProviderPerms(p: auth.Provider) {
     const perms = collection.findGroup(system.cache.permissions, p.key);
     const auths = system.cache.auths.filter(a => a.provider == p.key);
 

@@ -2,6 +2,8 @@ package team
 
 import (
 	"database/sql"
+	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -44,13 +46,13 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 
 	model := NewSession(title, slug, userID)
 
-	q := "insert into team (id, slug, title, owner) values ($1, $2, $3, $4)"
+	q := query.SQLInsert(util.SvcTeam.Key, []string{"id", "slug", "title", "owner"}, 1)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.Owner)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new team session")
 	}
 
-	s.Members.Register(model.ID, userID)
+	s.Members.Register(model.ID, userID, member.RoleOwner)
 
 	s.actions.Post(util.SvcTeam.Key, model.ID, userID, action.ActCreate, nil, "")
 	return &model, nil
@@ -139,7 +141,8 @@ func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) (Session
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.UUID) error {
-	q := "update team set title = $1 where id = $2"
+	cols := []string{"title"}
+	q := query.SQLUpdate(util.SvcTeam.Key, cols, fmt.Sprintf("id = $%v", len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, sessionID)
 	s.actions.Post(util.SvcTeam.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating team session")

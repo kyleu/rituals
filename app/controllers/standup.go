@@ -5,7 +5,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 
-	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
@@ -20,20 +19,20 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
 		if err != nil {
-			return "", errors.Wrap(err, "error retrieving standups")
+			return eresp(err, "error retrieving standups")
 		}
 
 		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		if err != nil {
-			return "", err
+			return eresp(err, "")
 		}
 
 		ctx.Title = util.SvcStandup.PluralTitle
@@ -45,28 +44,29 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 func StandupNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
-		title := util.ServiceTitle(util.SvcStandup, r.Form.Get("title"))
-		teamID := getUUID(r.Form, util.SvcTeam.Key)
-		sprintID := getUUID(r.Form, util.SvcSprint.Key)
-		perms := parsePerms(r.Form, teamID, sprintID)
 
-		sess, err := ctx.App.Standup.New(title, ctx.Profile.UserID, teamID, sprintID)
+		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcStandup, r.Form, ctx.App.User)
 		if err != nil {
-			return "", errors.Wrap(err, "error creating standup session")
+			return eresp(err, "cannot parse form")
 		}
 
-		_, err = ctx.App.Standup.Permissions.SetAll(sess.ID, perms, ctx.Profile.UserID)
+		sess, err := ctx.App.Standup.New(r.Title, ctx.Profile.UserID, r.TeamID, r.SprintID)
 		if err != nil {
-			return "", errors.Wrap(err, "error setting permissions for new session")
+			return eresp(err, "error creating standup session")
 		}
 
-		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, teamID)
+		_, err = ctx.App.Standup.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot send content update")
+			return eresp(err, "error setting permissions for new session")
 		}
-		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint.Key, sprintID)
+
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, r.TeamID)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot send content update")
+			return eresp(err, "cannot send content update")
+		}
+		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint.Key, r.SprintID)
+		if err != nil {
+			return eresp(err, "cannot send content update")
 		}
 
 		return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
@@ -78,7 +78,7 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess, err := ctx.App.Standup.GetBySlug(key)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot load standup session")
+			return eresp(err, "cannot load standup session")
 		}
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + key + "]")

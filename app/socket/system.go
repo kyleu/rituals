@@ -32,7 +32,7 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 }
 
 func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]interface{}) error {
-	name := o["name"].(string)
+	name := o[util.KeyName].(string)
 	choice := o["choice"].(string)
 	if choice == "global" {
 		err := s.UpdateName(userID, name)

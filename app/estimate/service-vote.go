@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/kyleu/rituals.dev/app/action"
 
@@ -57,7 +58,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		return nil, errors.Wrap(err, "error getting current votes for story ["+storyID.String()+"]")
 	}
 	if curr == nil {
-		q := "insert into vote (story_id, user_id, choice) values ($1, $2, $3)"
+		q := query.SQLInsert(util.KeyVote, []string{"story_id", "user_id", "choice"}, 1)
 		err = s.db.Insert(q, nil, storyID, userID, choice)
 		if err != nil {
 			return nil, errors.Wrap(err, "error saving new vote for story ["+storyID.String()+"]")
@@ -69,7 +70,8 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
 	}
 
-	q := "update vote set choice = $1 where story_id = $2 and user_id = $3"
+	cols := []string{"choice"}
+	q := query.SQLUpdate(util.KeyVote, cols, fmt.Sprintf("story_id = $%v and user_id = $%v", len(cols)+1, len(cols)+1+1))
 	err = s.db.UpdateOne(q, nil, choice, storyID, userID)
 	if err != nil {
 		return nil, errors.Wrap(err, "error updating vote for story ["+storyID.String()+"]")

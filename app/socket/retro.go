@@ -34,7 +34,7 @@ func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, 
 }
 
 func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcRetro, param["title"].(string))
+	title := util.ServiceTitle(util.SvcRetro, param[util.KeyTitle].(string))
 	categoriesString, ok := param["categories"].(string)
 	if !ok {
 		return errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"]))
@@ -44,8 +44,8 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		categories = retro.DefaultCategories
 	}
 
-	sprintID := getUUIDPointer(param, "sprintID")
-	teamID := getUUIDPointer(param, "teamID")
+	sprintID := getUUIDPointer(param, util.WithID(util.SvcSprint.Key))
+	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
 
 	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
 	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(categories, ", "), sprintID, teamID))

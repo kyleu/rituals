@@ -39,7 +39,7 @@ func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd strin
 }
 
 func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	titleString, ok := param["title"].(string)
+	titleString, ok := param[util.KeyTitle].(string)
 	if !ok {
 		return errors.New("cannot read choices as string")
 	}
@@ -54,8 +54,8 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		choices = estimate.DefaultChoices
 	}
 
-	sprintID := getUUIDPointer(param, "sprintID")
-	teamID := getUUIDPointer(param, "teamID")
+	sprintID := getUUIDPointer(param, util.WithID(util.SvcSprint.Key))
+	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
 
 	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
 	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(choices, ", "), teamID, sprintID))

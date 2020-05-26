@@ -1,10 +1,11 @@
 package member
 
 import (
-	"github.com/kyleu/rituals.dev/app/database"
-	"github.com/kyleu/rituals.dev/app/util"
 	"regexp"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/database"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/query"
 

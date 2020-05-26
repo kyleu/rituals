@@ -16,9 +16,9 @@ type StoryStatusChange struct {
 }
 
 func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := param["title"].(string)
+	title := param[util.KeyTitle].(string)
 	if title == "" {
-		title = "Untitled " + util.KeyTitle(util.KeyStory)
+		title = "Untitled " + util.Title(util.KeyStory)
 	}
 	s.logger.Debug(fmt.Sprintf("adding story [%s]", title))
 
@@ -36,16 +36,16 @@ func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]in
 		return util.IDError(util.KeyStory, "")
 	}
 
-	title := param["title"].(string)
+	title := param[util.KeyTitle].(string)
 	if title == "" {
-		title = "Untitled " + util.KeyTitle(util.KeyStory)
+		title = "Untitled " + util.Title(util.KeyStory)
 	}
 	st, err := s.estimates.UpdateStory(*storyID, title, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update story")
 	}
 	err = sendStoryUpdate(s, ch, st)
-	return errors.WithStack(err)
+	return err
 }
 
 func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error {

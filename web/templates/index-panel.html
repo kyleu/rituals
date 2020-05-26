@@ -9,6 +9,6 @@
 <form method="post" action="<%= ctx.Route(svc.Key + `.new`) %>">
   <div class="uk-inline uk-display-block">
     <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new <%= svc.Key %>"></button>
-    <input class="uk-input" type="text" id="team-title" name="title" placeholder="Title" />
+    <input class="uk-input" type="text" id="team-title" name="<%= util.KeyTitle %>" placeholder="Title" />
   </div>
 </form>

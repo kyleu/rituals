@@ -1,0 +1,20 @@
+<%: func AdminSandboxList(sandboxes sandbox.Sandboxes, ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-grid-small uk-grid-match uk-child-width-expand@s" data-uk-grid>
+      <% for _, s := range sandboxes { %>
+        <div>
+          <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+            <h3 class="uk-card-title"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeySandbox, `run`), util.KeyKey, s.Key) %>"><%= s.Title %></a></h3>
+            <p><%= s.Description %></p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<% } %>

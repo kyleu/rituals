@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/gofrs/uuid"
 	"net/url"
+
+	"github.com/gofrs/uuid"
 )
 
 func tmpl(_ int, err error) (string, error) {

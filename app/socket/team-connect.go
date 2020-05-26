@@ -68,7 +68,7 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		return s.sendPermErrors(util.SvcTeam, ch, permErrors)
 	}
 
-	entry := s.teams.Members.Register(ch.ID, userID)
+	entry := s.teams.Members.Register(ch.ID, userID, member.RoleMember)
 	members := s.teams.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc

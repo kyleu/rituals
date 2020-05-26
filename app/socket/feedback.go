@@ -51,7 +51,7 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 		return errors.Wrap(err, "cannot update feedback")
 	}
 	err = sendFeedbackUpdate(s, ch, feedback)
-	return errors.WithStack(err)
+	return err
 }
 
 func onRemoveFeedback(s *Service, ch channel, userID uuid.UUID, param string) error {

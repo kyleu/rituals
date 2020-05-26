@@ -2,6 +2,8 @@ package standup
 
 import (
 	"database/sql"
+	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -44,13 +46,13 @@ func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintI
 
 	model := NewSession(title, slug, userID, teamID, sprintID)
 
-	q := "insert into standup (id, slug, title, team_id, sprint_id, owner, status) values ($1, $2, $3, $4, $5, $6, $7)"
+	q := query.SQLInsert(util.SvcStandup.Key, []string{"id", "slug", "title", "team_id", "sprint_id", "owner", "status"}, 1)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String())
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new standup session")
 	}
 
-	s.Members.Register(model.ID, userID)
+	s.Members.Register(model.ID, userID, member.RoleOwner)
 
 	s.actions.Post(util.SvcStandup.Key, model.ID, userID, action.ActCreate, nil, "")
 	s.actions.PostRef(util.SvcSprint.Key, model.SprintID, util.SvcStandup.Key, model.ID, userID, action.ActContentAdd, "")
@@ -142,7 +144,8 @@ func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) (Session
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
-	q := "update standup set title = $1, team_id = $2, sprint_id = $3 where id = $4"
+	cols := []string{"title", "team_id", "sprint_id"}
+	q := query.SQLUpdate(util.SvcStandup.Key, cols, fmt.Sprintf("id = $%v", len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, teamID, sprintID, sessionID)
 	s.actions.Post(util.SvcStandup.Key, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating standup session")

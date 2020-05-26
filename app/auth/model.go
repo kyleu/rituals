@@ -1,13 +1,14 @@
 package auth
 
 import (
+	"time"
+
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/amazon"
 	"golang.org/x/oauth2/github"
 	"golang.org/x/oauth2/google"
 	"golang.org/x/oauth2/microsoft"
 	"golang.org/x/oauth2/slack"
-	"time"
 
 	"emperror.dev/errors"
 
@@ -50,30 +51,37 @@ func ProviderFromString(s string) *Provider {
 }
 
 type Display struct {
-	Provider string `json:"provider"`
-	Email    string `json:"email"`
+	ID            uuid.UUID `json:"id"`
+	Provider      string    `json:"provider"`
+	Email         string    `json:"email"`
+	ProvidesUsers string    `json:"providesUsers"`
 }
 
 type Displays []*Display
 
 type Record struct {
-	ID         uuid.UUID
-	UserID     uuid.UUID
-	Provider   *Provider
-	ProviderID string
-	Expires    *time.Time
-	Name       string
-	Email      string
-	Picture    string
-	Created    time.Time
+	ID           uuid.UUID
+	UserID       uuid.UUID
+	Provider     *Provider
+	ProviderID   string
+	UserListID   string
+	UserListName string
+	AccessToken  string
+	Expires      *time.Time
+	Name         string
+	Email        string
+	Picture      string
+	Created      time.Time
 }
 
 type Records []*Record
 
 func (r *Record) ToDisplay() *Display {
 	return &Display{
-		Provider: r.Provider.Key,
-		Email:    r.Email,
+		ID:            r.ID,
+		Provider:      r.Provider.Key,
+		Email:         r.Email,
+		ProvidesUsers: r.UserListName,
 	}
 }
 
@@ -96,28 +104,34 @@ func (r Records) Emails() []string {
 }
 
 type recordDTO struct {
-	ID         uuid.UUID  `db:"id"`
-	UserID     uuid.UUID  `db:"user_id"`
-	Provider   string     `db:"provider"`
-	ProviderID string     `db:"provider_id"`
-	Expires    *time.Time `db:"expires"`
-	Name       string     `db:"name"`
-	Email      string     `db:"email"`
-	Picture    string     `db:"picture"`
-	Created    time.Time  `db:"created"`
+	ID           uuid.UUID  `db:"id"`
+	UserID       uuid.UUID  `db:"user_id"`
+	Provider     string     `db:"provider"`
+	ProviderID   string     `db:"provider_id"`
+	UserListID   string     `db:"user_list_id"`
+	UserListName string     `db:"user_list_name"`
+	AccessToken  string     `db:"access_token"`
+	Expires      *time.Time `db:"expires"`
+	Name         string     `db:"name"`
+	Email        string     `db:"email"`
+	Picture      string     `db:"picture"`
+	Created      time.Time  `db:"created"`
 }
 
 func (dto *recordDTO) ToRecord() *Record {
 	return &Record{
-		ID:         dto.ID,
-		UserID:     dto.UserID,
-		Provider:   ProviderFromString(dto.Provider),
-		ProviderID: dto.ProviderID,
-		Expires:    dto.Expires,
-		Name:       dto.Name,
-		Email:      dto.Email,
-		Picture:    dto.Picture,
-		Created:    dto.Created,
+		ID:           dto.ID,
+		UserID:       dto.UserID,
+		Provider:     ProviderFromString(dto.Provider),
+		ProviderID:   dto.ProviderID,
+		UserListID:   dto.UserListID,
+		UserListName: dto.UserListName,
+		AccessToken:  dto.AccessToken,
+		Expires:      dto.Expires,
+		Name:         dto.Name,
+		Email:        dto.Email,
+		Picture:      dto.Picture,
+		Created:      dto.Created,
 	}
 }
 

@@ -14,33 +14,42 @@ const (
 	KeyGraphQL    = "graphql"
 	KeyGraphiQL   = "graphiql"
 	KeyID         = "id"
+	KeyIdx        = "idx"
 	KeyInvitation = "invitation"
 	KeyKey        = "key"
 	KeyMember     = "member"
 	KeyModules    = "modules"
+	KeyName       = "name"
 	KeyNoText     = "-no text-"
 	KeyProfile    = "profile"
+	KeyOwner      = "owner"
 	KeyReport     = "report"
+	KeyRole       = "role"
 	KeyRoutes     = "routes"
 	KeyPermission = "permission"
 	KeySandbox    = "sandbox"
 	KeyService    = "service"
 	KeySession    = "session"
+	KeySlug       = "slug"
 	KeySocket     = "socket"
 	KeyStatus     = "status"
 	KeyStory      = "story"
 	KeySvc        = "svc"
+	KeySystemUser = "system_user"
 	KeyTheme      = "theme"
+	KeyTitle      = "title"
 	KeyUser       = "user"
 	KeyVote       = "vote"
 	KeyVoyager    = "voyager"
 )
 
-func KeyPlural(k string) string {
+func Plural(k string) string {
 	if len(k) == 0 {
 		return k
 	}
 	switch k {
+	case KeyGraphQL, KeyRoutes, KeyModules:
+		return k
 	case KeyStory:
 		return "stories"
 	case KeySandbox:
@@ -50,13 +59,25 @@ func KeyPlural(k string) string {
 	}
 }
 
-func KeyTitle(k string) string {
+func Title(k string) string {
 	if len(k) == 0 {
 		return k
+	}
+	switch k {
+	case KeyID:
+		return "ID"
+	case KeyIdx:
+		return "Index"
+	case KeyGraphQL:
+		return "GraphQL"
 	}
 	return strings.ToUpper(k[0:1]) + k[1:]
 }
 
-func KeyPluralTitle(k string) string {
-	return KeyTitle(KeyPlural(k))
+func PluralProper(k string) string {
+	return Title(Plural(k))
+}
+
+func WithID(k string) string {
+	return k + "ID"
 }

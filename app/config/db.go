@@ -2,9 +2,10 @@ package config
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/database"
 	"strings"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
 	// load postgres driver

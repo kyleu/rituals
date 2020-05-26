@@ -3,6 +3,7 @@ package admin
 import (
 	"net/http"
 
+	"github.com/kyleu/rituals.dev/app/adhoc"
 	"github.com/kyleu/rituals.dev/app/controllers/act"
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -11,31 +12,21 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
+var homeSections = []string{
+	util.KeyUser, util.KeyAuth, util.KeyAction, util.KeyInvitation,
+	util.SvcTeam.Key, util.SvcSprint.Key, util.SvcEstimate.Key, util.SvcStandup.Key, util.SvcRetro.Key,
+	util.KeyConnection, util.KeySandbox, util.KeyRoutes, util.KeyModules, util.KeyGraphQL,
+}
+
 func Home(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+		params := act.ParamSetFromRequest(r)
 		ctx.Title = "Admin"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.AdminLink()), util.KeyAdmin)
-		return tmpl(templates.AdminHome(ctx, w))
-	})
-}
-
-func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		if ctx.Profile.Role != util.RoleAdmin {
-			ctx.Session.AddFlash("error:You're not an administrator, silly")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route("home"), nil
+		countMap, recentMap, err := adhoc.SectionCounts(homeSections, util.ExtractRoutes(ctx.Routes), ctx.App.Database, ctx.App.Socket)
+		if err != nil {
+			return eresp(err, "error getting section counts")
 		}
-		return f(ctx)
+		return tmpl(templates.AdminHome(ctx, homeSections, countMap, recentMap, params.Get(util.KeyAdmin, ctx.Logger), w))
 	})
-}
-
-func tmpl(_ int, err error) (string, error) {
-	return "", err
-}
-
-func adminBC(ctx web.RequestContext, action string, s string) web.Breadcrumbs {
-	bc := web.BreadcrumbsSimple(ctx.Route(util.AdminLink()), util.KeyAdmin)
-	bc = append(bc, web.BreadcrumbsSimple(ctx.Route(util.AdminLink(action)), s)...)
-	return bc
 }

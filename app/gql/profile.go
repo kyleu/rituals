@@ -45,13 +45,13 @@ func initProfile() {
 		graphql.ObjectConfig{
 			Name: "Profile",
 			Fields: graphql.Fields{
-				"userID": &graphql.Field{
+				util.WithID(util.KeyUser): &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"name": &graphql.Field{
+				util.KeyName: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"role": &graphql.Field{
+				util.KeyRole: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				util.KeyTheme: &graphql.Field{

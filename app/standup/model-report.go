@@ -1,8 +1,9 @@
 package standup
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )

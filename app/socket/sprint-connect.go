@@ -68,7 +68,7 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return s.sendPermErrors(util.SvcSprint, ch, permErrors)
 	}
 
-	entry := s.sprints.Members.Register(ch.ID, userID)
+	entry := s.sprints.Members.Register(ch.ID, userID, member.RoleMember)
 	members := s.sprints.Members.GetByModelID(ch.ID, nil)
 
 	conn.Svc = ch.Svc

@@ -7,13 +7,13 @@ import (
 )
 
 var (
-	permissionType           *graphql.Object
+	permissionType *graphql.Object
 )
 
 func initPermission() {
 	permissionType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.KeyTitle(util.KeyPermission),
+			Name: util.Title(util.KeyPermission),
 			Fields: graphql.Fields{
 				"k": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
@@ -34,35 +34,35 @@ func initPermission() {
 		},
 	)
 
-	estimateType.AddFieldConfig(util.KeyPlural(util.KeyPermission), &graphql.Field{
+	estimateType.AddFieldConfig(util.Plural(util.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This estimate's permissions",
 		Args:        listArgs,
 		Resolve:     ctxF(estimatePermissionResolver),
 	})
 
-	standupType.AddFieldConfig(util.KeyPlural(util.KeyPermission), &graphql.Field{
+	standupType.AddFieldConfig(util.Plural(util.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This standup's permissions",
 		Args:        listArgs,
 		Resolve:     ctxF(standupPermissionResolver),
 	})
 
-	retroType.AddFieldConfig(util.KeyPlural(util.KeyPermission), &graphql.Field{
+	retroType.AddFieldConfig(util.Plural(util.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This retro's permissions",
 		Args:        listArgs,
 		Resolve:     ctxF(retroPermissionResolver),
 	})
 
-	sprintType.AddFieldConfig(util.KeyPlural(util.KeyPermission), &graphql.Field{
+	sprintType.AddFieldConfig(util.Plural(util.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This sprint's permissions",
 		Args:        listArgs,
 		Resolve:     ctxF(sprintPermissionResolver),
 	})
 
-	teamType.AddFieldConfig(util.KeyPlural(util.KeyPermission), &graphql.Field{
+	teamType.AddFieldConfig(util.Plural(util.KeyPermission), &graphql.Field{
 		Type:        graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(permissionType))),
 		Description: "This team's permissions",
 		Args:        listArgs,

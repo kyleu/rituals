@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/invitation"
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -29,6 +30,7 @@ type AppInfo struct {
 	Standup    *standup.Service
 	Retro      *retro.Service
 	Socket     *socket.Service
+	Database   *database.Service
 }
 
 func (a *AppInfo) Valid() bool {

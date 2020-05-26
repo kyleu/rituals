@@ -2,8 +2,10 @@ package retro
 
 import (
 	"database/sql"
-	"github.com/kyleu/rituals.dev/app/database"
+	"fmt"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/database"
 
 	"github.com/kyleu/rituals.dev/app/permission"
 
@@ -45,14 +47,14 @@ func (s *Service) New(title string, userID uuid.UUID, categories []string, teamI
 
 	model := NewSession(title, slug, userID, categories, teamID, sprintID)
 
-	q := "insert into retro (id, slug, title, team_id, sprint_id, owner, status, categories) values ($1, $2, $3, $4, $5, $6, $7, $8)"
+	q := query.SQLInsert(util.SvcRetro.Key, []string{"id", "slug", "title", "team_id", "sprint_id", "owner", "status", "categories"}, 1)
 	categoriesString := "{" + strings.Join(model.Categories, ",") + "}"
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String(), categoriesString)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new retro session")
 	}
 
-	s.Members.Register(model.ID, userID)
+	s.Members.Register(model.ID, userID, member.RoleOwner)
 
 	s.actions.Post(util.SvcRetro.Key, model.ID, userID, action.ActCreate, nil, "")
 	s.actions.PostRef(util.SvcSprint.Key, model.SprintID, util.SvcRetro.Key, model.ID, userID, action.ActContentAdd, "")
@@ -144,7 +146,8 @@ func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) (Session
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
-	q := "update retro set title = $1, categories = $2, team_id = $3, sprint_id = $4 where id = $5"
+	cols := []string{"title", "categories", "team_id", "sprint_id"}
+	q := query.SQLUpdate(util.SvcRetro.Key, cols, fmt.Sprintf("id = $%v", len(cols)+1))
 	categoriesString := "{" + strings.Join(categories, ",") + "}"
 	err := s.db.UpdateOne(q, nil, title, categoriesString, teamID, sprintID, sessionID)
 	s.actions.Post(util.SvcRetro.Key, sessionID, userID, action.ActUpdate, nil, "")

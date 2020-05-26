@@ -1,4 +1,4 @@
-<%: func AdminHome(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminHome(ctx web.RequestContext, sections []string, countMap map[string]int64, recentMap map[string]*time.Time, params *query.Params, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -8,19 +8,20 @@
     <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
       <h3 class="uk-card-title">Administration</h3>
       <p>Privileged actions for <%= util.AppName %></p>
-      <ul class="uk-list uk-list-divider">
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser)) %>">Users</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyAuth)) %>">Auth</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyAction)) %>">Actions</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key)) %>">Teams</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcSprint.Key)) %>">Sprints</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyInvitation)) %>">Invitations</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcEstimate.Key)) %>">Estimates</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcStandup.Key)) %>"><%= util.SvcStandup.PluralTitle %></a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcRetro.Key)) %>"><%= util.SvcRetro.PluralTitle %></a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyConnection)) %>">Connections</a></li>
-        <li><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyGraphQL)) %>">GraphQL</a></li>
-      </ul>
+      <table class="uk-table uk-table-divider">
+        <thead>
+          <tr>
+            <% ComponentTableHeader(util.KeyAdmin, util.KeyName, util.Title(util.KeyName), params, ctx, _buffer) %>
+            <% ComponentTableHeader(util.KeyAdmin, "recent", "Most Recent", params, ctx, _buffer) %>
+            <% ComponentTableHeader(util.KeyAdmin, "count", "#", params, ctx, _buffer) %>
+          </tr>
+        </thead>
+        <tbody>
+          <% for _, section := range sections { %>
+            <% AdminHomeLink(section, countMap[section], recentMap[section], ctx, _buffer) %>
+          <% } %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

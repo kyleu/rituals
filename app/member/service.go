@@ -3,6 +3,7 @@ package member
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
@@ -39,7 +40,7 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 const nameClause = "case when name = '' then (select name from system_user su where su.id = user_id) else name end as name"
 
 func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
-	var defaultOrdering = query.Orderings{{Column: "name", Asc: true}}
+	var defaultOrdering = query.Orderings{{Column: util.KeyName, Asc: true}}
 	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, defaultOrdering...)
 	var dtos []entryDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
@@ -78,7 +79,8 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 }
 
 func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (*Entry, error) {
-	q := fmt.Sprintf("update %s set name = $1 where %s = $2 and user_id = $3", s.tableName, s.colName)
+	cols := []string{"name"}
+	q := query.SQLUpdate(s.tableName, cols, fmt.Sprintf("%v = $%v and user_id = $%v", s.colName, len(cols)+1, len(cols)+1+1))
 	err := s.db.Insert(q, nil, name, modelID, userID)
 	if err != nil {
 		return nil, err

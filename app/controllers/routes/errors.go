@@ -37,7 +37,7 @@ func internalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 
 		rc := context.WithValue(r.Context(), util.RoutesKey, router)
 		rc = context.WithValue(rc, util.InfoKey, info)
-		ctx := web.ExtractContext(w, r.WithContext(rc))
+		ctx := web.ExtractContext(w, r.WithContext(rc), false)
 
 		ctx.Title = "Server Error"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(r.URL.Path, "error")

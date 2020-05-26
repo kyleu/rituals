@@ -24,7 +24,7 @@ func initSandbox() {
 	}
 
 	sandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, err := paramString(p, util.KeyKey)
+		key, err := paramKeyString(p)
 		if err != nil {
 			return nil, err
 		}
@@ -42,7 +42,7 @@ func initSandbox() {
 	}
 
 	callSandboxResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, _ := paramString(params, util.KeyKey)
+		key, _ := paramKeyString(params)
 		sb := sandbox.FromString(key)
 		if sb == nil {
 			return nil, util.IDError(util.KeySandbox, key)
@@ -52,12 +52,12 @@ func initSandbox() {
 
 	sandboxType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.KeyTitle(util.KeySandbox),
+			Name: util.Title(util.KeySandbox),
 			Fields: graphql.Fields{
 				util.KeyKey: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
-				"title": &graphql.Field{
+				util.KeyTitle: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"description": &graphql.Field{
