@@ -14,7 +14,7 @@
         <% } %>
       <% } %>
       <% if len(auths) > 0 { %>
-        (you are currently signed in as <%= strings.Join(auths.Emails(), ", ") %>)
+        (you are currently signed in as <%= util.OxfordComma(auths.Emails(), "and") %>)
       <% } %>
     </p>
   </li>

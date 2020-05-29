@@ -25,6 +25,15 @@ var RoleAdmin = Role{
 
 var AllRoles = []Role{RoleGuest, RoleUser, RoleAdmin}
 
+func RoleFromString(s string) Role {
+	for _, t := range AllRoles {
+		if t.Key == s {
+			return t
+		}
+	}
+	return RoleGuest
+}
+
 func (t *Role) String() string {
 	return t.Key
 }
@@ -33,14 +42,13 @@ func (t Role) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
-func RoleFromString(s string) Role {
-	for _, t := range AllRoles {
-		if t.Key == s {
-			return t
-		}
+func (t *Role) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
 	}
-
-	return RoleGuest
+	*t = RoleFromString(s)
+	return nil
 }
 
 type UserProfile struct {
@@ -63,7 +71,7 @@ func NewUserProfile(id uuid.UUID) *UserProfile {
 		UserID:    id,
 		Name:      "Guest",
 		Role:      RoleGuest,
-		Theme:     ThemeLight,
+		Theme:     ThemeDefault,
 		NavColor:  "bluegrey",
 		LinkColor: "bluegrey",
 		Picture:   "",

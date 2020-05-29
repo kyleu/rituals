@@ -12,13 +12,13 @@ import (
 	"emperror.dev/errors"
 )
 
-func NewSlugFor(db *database.Service, svc string, str string) (string, error) {
+func NewSlugFor(db *database.Service, svc util.Service, str string) (string, error) {
 	randomStrLength := 4
 	if len(str) == 0 {
 		str = strings.ToLower(util.RandomString(randomStrLength))
 	}
 	slug := slugify(str)
-	q := query.SQLSelect(util.KeyID, svc, "slug = $1", "", 0, 0)
+	q := query.SQLSelectSimple(util.KeyID, svc.Key, "slug = $1")
 
 	x, err := db.Query(q, nil, slug)
 	if err != nil {
@@ -29,7 +29,7 @@ func NewSlugFor(db *database.Service, svc string, str string) (string, error) {
 		junk := strings.ToLower(util.RandomString(randomStrLength))
 		slug, err = NewSlugFor(db, svc, slug+"-"+junk)
 		if err != nil {
-			return slug, errors.Wrap(err, "error finding slug for new "+svc+" session")
+			return slug, errors.Wrap(err, "error finding slug for new "+svc.Key+" session")
 		}
 	}
 

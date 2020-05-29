@@ -3,7 +3,6 @@ package action
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
@@ -28,35 +27,35 @@ func NewService(db *database.Service, logger logur.Logger) *Service {
 	return &svc
 }
 
-func (s *Service) New(svc string, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
+func (s *Service) New(svc util.Service, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
 	id := util.UUID()
-	q := query.SQLInsert(util.KeyAction, []string{"id", "svc", "model_id", "author_id", "act", "content", "note"}, 1)
-	err := s.db.Insert(q, nil, id, svc, modelID, authorID, act, util.ToJSON(content), note)
+	q := query.SQLInsert(util.KeyAction, []string{util.KeyID, util.KeySvc, util.WithDBID(util.KeyModel), util.WithDBID(util.KeyAuthor), util.KeyAct, util.KeyContent, util.KeyNote}, 1)
+	err := s.db.Insert(q, nil, id, svc.Key, modelID, authorID, act, util.ToJSON(content), note)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "error saving new ["+svc+"] action")
+		return nil, errors.Wrap(err, "error saving new ["+svc.Key+"] action")
 	}
 
 	return s.GetByID(id)
 }
 
-func (s *Service) PostRef(svc string, modelID *uuid.UUID, refSvc string, refID uuid.UUID, userID uuid.UUID, act string, note string) {
+func (s *Service) PostRef(svc util.Service, modelID *uuid.UUID, refSvc util.Service, refID uuid.UUID, userID uuid.UUID, act string, note string) {
 	if modelID != nil {
-		actionContent := map[string]interface{}{util.KeySvc: refSvc, util.KeyID: refID}
+		actionContent := map[string]interface{}{util.KeySvc: refSvc.Key, util.KeyID: refID}
 		s.Post(svc, *modelID, userID, act, actionContent, note)
 	}
 }
 
-func (s *Service) Post(svc string, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) {
+func (s *Service) Post(svc util.Service, modelID uuid.UUID, authorID uuid.UUID, act string, content interface{}, note string) {
 	go func() {
 		_, err := s.New(svc, modelID, authorID, act, content, note)
 		if err != nil {
-			s.logger.Warn(fmt.Sprintf("unable to save new action: %+v", err))
+			s.logger.Warn("unable to save new action", util.ToMap(util.KeyError, err))
 		}
 	}()
 }
 
-func (s *Service) List(params *query.Params) (Actions, error) {
+func (s *Service) List(params *query.Params) Actions {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
@@ -64,15 +63,16 @@ func (s *Service) List(params *query.Params) (Actions, error) {
 	err := s.db.Select(&dtos, q, nil)
 
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving actions: %+v", err))
+		return nil
 	}
 
-	return toActions(dtos), nil
+	return toActions(dtos)
 }
 
 func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 	dto := actionDTO{}
-	q := query.SQLSelect("*", util.KeyAction, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeyAction, util.KeyID + " = $1")
 	err := s.db.Get(&dto, q, nil, id)
 
 	if err != nil {
@@ -86,33 +86,34 @@ func (s *Service) GetByID(id uuid.UUID) (*Action, error) {
 	return dto.ToAction(), nil
 }
 
-func (s *Service) GetByAuthor(id uuid.UUID, params *query.Params) (Actions, error) {
+func (s *Service) GetByAuthor(userID uuid.UUID, params *query.Params) Actions {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 	q := query.SQLSelect("*", util.KeyAction, "author_id = $1", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, nil, id)
+	err := s.db.Select(&dtos, q, nil, userID)
 
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving actions for user [%v]: %+v", userID, err))
+		return nil
 	}
-
-	return toActions(dtos), nil
+	return toActions(dtos)
 }
 
-func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *query.Params) (Actions, error) {
+func (s *Service) GetBySvcModel(svc util.Service, modelID uuid.UUID, params *query.Params) Actions {
 	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 
 	q := query.SQLSelect("*", util.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, nil, svc, modelID)
+	err := s.db.Select(&dtos, q, nil, svc.Key, modelID)
 
 	if err != nil {
-		return nil, err
+		s.logger.Warn("unable to get actions", util.ToMap(util.KeyError, err, util.KeySvc, svc, util.WithID(util.KeyModel), modelID))
+		return nil
 	}
 
-	return toActions(dtos), nil
+	return toActions(dtos)
 }
 
 func toActions(dtos []actionDTO) Actions {

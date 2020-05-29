@@ -73,7 +73,7 @@ namespace feedback {
 
     dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.authorID)}`);
     dom.setSelectOption("#feedback-edit-category", same ? fb.category : undefined);
-    contents.onContentDisplay("report", same, fb.content, fb.html);
+    contents.onContentDisplay("feedback", same, fb.content, fb.html);
   }
 
   export function onFeedbackUpdate(r: feedback.Feedback) {

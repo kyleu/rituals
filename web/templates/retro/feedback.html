@@ -1,5 +1,5 @@
 <%: func RetroFeedback(ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+<div class="uk-card uk-card-body">
   <h3 class="uk-card-title">
     <span class="model-icon h3-icon" onclick="events.openModal('add-<%= util.KeyFeedback %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
     <span class="modal-title" onclick="events.openModal('add-<%= util.KeyFeedback %>');">Feedback</span>
@@ -16,11 +16,11 @@
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
           <div class="uk-margin">
-            <label class="uk-form-label" for="feedback-category">Category</label>
+            <label class="uk-form-label" for="feedback-category"><%= util.Title(util.KeyCategory) %></label>
             <select class="uk-select" id="feedback-category"></select>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label" for="feedback-content">Feedback</label>
+            <label class="uk-form-label" for="feedback-content"><%= util.Title(util.KeyFeedback) %></label>
             <textarea class="uk-textarea" id="feedback-content" placeholder="Markdown and HTML supported"></textarea>
           </div>
         </fieldset>
@@ -40,11 +40,11 @@
     <div class="uk-modal-body" data-uk-overflow-auto>
       <div class="content-edit">
         <div class="uk-margin">
-          <label class="uk-form-label" for="feedback-edit-category">Category</label>
+          <label class="uk-form-label" for="feedback-edit-category"><%= util.Title(util.KeyCategory) %></label>
           <select class="uk-select" id="feedback-edit-category"></select>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label" for="feedback-edit-content">Content</label>
+          <label class="uk-form-label" for="feedback-edit-content"><%= util.Title(util.KeyContent) %></label>
           <textarea class="uk-textarea" id="feedback-edit-content"></textarea>
         </div>
       </div>
@@ -56,7 +56,7 @@
         <button class="uk-button uk-button-default" type="button" onclick="feedback.onEditFeedback();">Save</button>
       </div>
       <div class="buttons-view">
-        <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-feedback').hide();">Close</button>
+        <button class="uk-button uk-button-default" type="button" onclick="events.hideModal('feedback');">Close</button>
       </div>
     </div>
   </div>

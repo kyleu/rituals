@@ -2,6 +2,7 @@ package member
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
@@ -17,7 +18,7 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, role Role) *Entr
 	}
 
 	if dto == nil {
-		q := query.SQLInsert(s.tableName, []string{s.colName, "user_id", "name", "role"}, 1)
+		q := query.SQLInsert(s.tableName, []string{s.colName, util.WithDBID(util.KeyUser), util.KeyName, util.KeyRole}, 1)
 		err = s.db.Insert(q, nil, modelID, userID, "", role.String())
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting member for user [%v] and model [%v]: %+v", modelID, userID, err))

@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/json"
+	"github.com/kyleu/rituals.dev/app/util"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -35,22 +36,10 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return graphQLResponse(w, gql.ErrorResponseJSON(graphQLService.Logger, errors.Wrap(err, "error decoding JSON body for GraphQL")))
 		}
-		op := ""
-		opParam, ok := req["operationName"]
-		if ok {
-			op = opParam.(string)
-		}
-		query := ""
-		queryParam, ok := req["query"]
-		if ok {
-			query = queryParam.(string)
-		}
 
-		var v map[string]interface{}
-		variables, ok := req["variables"]
-		if ok {
-			v = variables.(map[string]interface{})
-		}
+		op := util.MapGetString(req, "operationName", ctx.Logger)
+		query := util.MapGetString(req, "query", ctx.Logger)
+		v := util.MapGetMap(req, "variables", ctx.Logger)
 
 		res, err := graphQLService.Run(op, query, v, ctx)
 		if err != nil {

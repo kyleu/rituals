@@ -20,10 +20,7 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, util.Plural(util.KeyUser))
 
 		params := act.ParamSetFromRequest(r)
-		users, err := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		users := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
 		return tmpl(templates.AdminUserList(users, params, ctx, w))
 	})
 }
@@ -46,34 +43,13 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 
-		auths, err := ctx.App.Auth.GetByUserID(*userID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		teams, err := ctx.App.Team.GetByMember(*userID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		sprints, err := ctx.App.Sprint.GetByMember(*userID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		estimates, err := ctx.App.Estimate.GetByMember(*userID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		standups, err := ctx.App.Standup.GetByMember(*userID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		retros, err := ctx.App.Retro.GetByMember(*userID, params.Get(util.SvcRetro.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		actions, err := ctx.App.Action.GetByAuthor(*userID, params.Get(util.KeyAction, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		auths := ctx.App.Auth.GetByUserID(*userID, params.Get(util.KeyAuth, ctx.Logger))
+		teams := ctx.App.Team.GetByMember(*userID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := ctx.App.Sprint.GetByMember(*userID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		estimates := ctx.App.Estimate.GetByMember(*userID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := ctx.App.Standup.GetByMember(*userID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := ctx.App.Retro.GetByMember(*userID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		actions := ctx.App.Action.GetByAuthor(*userID, params.Get(util.KeyAction, ctx.Logger))
 
 		ctx.Title = u.Name
 		bc := adminBC(ctx, util.KeyUser, util.Plural(util.KeyUser))

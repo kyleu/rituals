@@ -5,7 +5,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+    <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>"></span> <%= util.SvcEstimate.PluralTitle %></h3>
       <p>Planning poker for any <%= util.Plural(util.KeyStory) %> you need to work on</p>
       <% if len(sessions) > 0 { %>
@@ -13,7 +13,7 @@
       <% } %>
     </div>
 
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+    <div class="uk-card uk-card-body uk-margin-top">
       <h3 class="uk-card-title">New <%= util.SvcEstimate.Title %></h3>
       <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcEstimate.Key + `.new`) %>" method="post">
         <% EstimateForm("", estimate.DefaultChoices, teams, sprints, auths, ctx, _buffer) %>

@@ -3,8 +3,8 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -18,33 +18,30 @@ import (
 type TeamSessionJoined struct {
 	Profile     *util.Profile          `json:"profile"`
 	Session     *team.Session          `json:"session"`
-	Permissions permission.Permissions `json:"permissions"`
-	Auths       auth.Displays          `json:"auths"`
+	Comments    comment.Comments       `json:"comments"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
 	Sprints     sprint.Sessions        `json:"sprints"`
 	Estimates   estimate.Sessions      `json:"estimates"`
 	Standups    standup.Sessions       `json:"standups"`
 	Retros      retro.Sessions         `json:"retros"`
+	Auths       auth.Displays          `json:"auths"`
+	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onTeamConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
-	teamID, err := uuid.FromString(param)
-	if err != nil {
-		return util.IDError(util.SvcTeam.Key, param)
-	}
-	ch := channel{Svc: util.SvcTeam.Key, ID: teamID}
-	err = s.Join(conn.ID, ch)
+func onTeamConnect(s *Service, conn *connection, teamID uuid.UUID) error {
+	ch := channel{Svc: util.SvcTeam, ID: teamID}
+	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
 	}
-	err = joinTeamSession(s, conn, userID, ch)
+	err = joinTeamSession(s, conn, ch)
 	return errors.Wrap(err, "error joining team session")
 }
 
-func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcTeam.Key {
-		return errors.New("team cannot handle [" + ch.Svc + "] message")
+func joinTeamSession(s *Service, conn *connection, ch channel) error {
+	if ch.Svc != util.SvcTeam {
+		return errors.New("team cannot handle [" + ch.Svc.Key + "] message")
 	}
 
 	sess, err := s.teams.GetByID(ch.ID)
@@ -52,62 +49,26 @@ func joinTeamSession(s *Service, conn *connection, userID uuid.UUID, ch channel)
 		return errors.Wrap(err, "error finding team session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcTeam.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, "")})
-		if err != nil {
-			return errors.Wrap(err, "error writing team error message")
-		}
-		return nil
+		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
+	}
+	res := getSessionResult(s, nil, nil, ch, conn)
+	if res.Error != nil {
+		return res.Error
 	}
 
-	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	perms, permErrors, err := s.check(conn.Profile.UserID, auths, nil, nil, util.SvcTeam, ch.ID)
-	if err != nil {
-		return err
+	sj := TeamSessionJoined{
+		Profile:     &conn.Profile,
+		Session:     sess,
+		Comments:    s.teams.Comments.GetByModelID(ch.ID, nil),
+		Members:     s.teams.Members.GetByModelID(ch.ID, nil),
+		Online:      s.GetOnline(ch),
+		Sprints:     s.sprints.GetByTeamID(ch.ID, nil),
+		Estimates:   s.estimates.GetByTeamID(ch.ID, nil),
+		Standups:    s.standups.GetByTeamID(ch.ID, nil),
+		Retros:      s.retros.GetByTeamID(ch.ID, nil),
+		Auths:       res.Auth,
+		Permissions: res.Perms,
 	}
-	if len(permErrors) > 0 {
-		return s.sendPermErrors(util.SvcTeam, ch, permErrors)
-	}
-
-	entry := s.teams.Members.Register(ch.ID, userID, member.RoleMember)
-	members := s.teams.Members.GetByModelID(ch.ID, nil)
-
-	conn.Svc = ch.Svc
-	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
-	sprints, err := s.sprints.GetByTeamID(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-	estimates, err := s.estimates.GetByTeamID(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-	standups, err := s.standups.GetByTeamID(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-	retros, err := s.retros.GetByTeamID(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-
-	msg := Message{
-		Svc: util.SvcTeam.Key,
-		Cmd: ServerCmdSessionJoined,
-		Param: TeamSessionJoined{
-			Profile:     &conn.Profile,
-			Session:     sess,
-			Permissions: perms,
-			Auths:       displays,
-			Members:     members,
-			Online:      s.GetOnline(ch),
-			Sprints:     sprints,
-			Estimates:   estimates,
-			Standups:    standups,
-			Retros:      retros,
-		},
-	}
-
-	return s.sendInitial(ch, conn, entry, msg, nil, nil)
+	msg := NewMessage(util.SvcTeam, ServerCmdSessionJoined, sj)
+	return s.sendInitial(ch, conn, res.Entry, msg, nil, nil)
 }

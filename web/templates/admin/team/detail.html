@@ -1,11 +1,11 @@
-<%: func AdminTeamDetail(model *team.Session, members member.Entries, perms permission.Permissions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminTeamDetail(model *team.Session, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, comments comment.Comments, members member.Entries, perms permission.Permissions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+    <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">
         <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcTeam.Key, util.KeyKey, model.Slug) %>">Join</a></div>
         Team
@@ -35,6 +35,7 @@
         </tbody>
       </table>
     </div>
+    <% AdminCommentCard(comments, params, ctx, _buffer) %>
     <% AdminMemberCard(members, params, ctx, _buffer) %>
     <% AdminPermissionCard(perms, params, ctx, _buffer) %>
     <% AdminSprintCard(sprints, params, ctx, _buffer) %>

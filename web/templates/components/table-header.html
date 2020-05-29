@@ -1,6 +1,6 @@
-<%: func ComponentTableHeader(svc string, key string, title string, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ComponentTableHeader(section string, key string, title string, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <% if params == nil { %>
-  <% params = &query.Params{Key: svc} %>
+  <% params = &query.Params{Key: section} %>
   <th class="uk-transition-toggle uk-text-nowrap">
     <a class="<%= ctx.Profile.LinkClass() %>" href="?<%= params.Clone(&query.Ordering{Column: key, Asc: true}).ToQueryString(ctx.Request) %>">
       <%= title %> <span class="uk-transition-fade" data-uk-icon="icon: chevron-down"></span>

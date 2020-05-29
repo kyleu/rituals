@@ -1,11 +1,11 @@
 <%: func EstimateStories(ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+<div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="events.openModal('add-<%= util.KeyStory %>');return false;" title="add story"></a>
     </span>
     <span class="model-icon h3-icon" onclick="events.openModal('add-<%= util.KeyStory %>');" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>;"></span>
-    <span class="modal-title" onclick="events.openModal('add-<%= util.KeyStory %>');"><%= util.PluralProper(util.KeyStory) %></span>
+    <span class="modal-title" onclick="events.openModal('add-<%= util.KeyStory %>');"><%= util.PluralTitle(util.KeyStory) %></span>
   </h3>
   <p id="story-detail">Loading...</p>
 </div>
@@ -41,13 +41,13 @@
       <div class="modal-body-height">
         <div id="story-status-body-pending" class="story-status-body active">
           <p id="story-view-section">
-            Your story is ready to <a class="<%= ctx.Profile.LinkColor %>-fg" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
+            Your story is ready to <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
           </p>
           <p id="story-edit-section">
             Your story is available to
-            <a class="<%= ctx.Profile.LinkColor %>-fg" href="" onclick="story.beginEditStory();return false;">edit</a>
+            <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="story.beginEditStory();return false;">edit</a>
             and ready to
-            <a class="<%= ctx.Profile.LinkColor %>-fg" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
+            <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
           </p>
         </div>
         <div id="story-status-body-active" class="story-status-body">
@@ -75,7 +75,7 @@
 
       <div id="story-status-actions-complete" class="story-status-actions">
         <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Reopen</button>
-        <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-story').hide();">Close</button>
+        <button class="uk-button uk-button-default" type="button" onclick="events.hideModal('story');">Close</button>
       </div>
     </div>
   </div>

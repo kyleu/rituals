@@ -5,10 +5,15 @@
   <% for _, a := range current { %>
     <% if a.Provider == p { %>
       <div class="uk-article-meta auth-link">
-        <a class="right <%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`auth.signout`, util.KeyID, a.ID.String()) %>" title="sign out from <%= p.Title %>">
+        <a class="profile-remove right <%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(`auth.signout`, util.KeyID, a.ID.String()) %>" title="sign out from <%= p.Title %>">
           <span data-uk-icon="icon: close;"></span>
         </a>
-        <%= a.Email %>
+        <% if len(a.Picture) > 0 { %>
+          <div class="left uk-margin-small-right">
+            <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.KeyProfile + `.pic`, util.KeyID, a.ID.String()) %>"><img class="profile-pic uk-border-circle" alt="set profile picture" src="<%= a.Picture %>" /></a>
+          </div>
+        <% } %>
+        <div class="profile-title"><%= a.Email %></div>
       </div>
     <% } %>
   <% } %>

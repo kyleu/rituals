@@ -1,5 +1,5 @@
 <%: func AdminEstimateCard(estimates estimate.Sessions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+<div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Estimates</h3>
   <% if len(estimates) == 0 { %>
     <p>No estimates available</p>

@@ -1,5 +1,5 @@
 <%: func ProfileColors(key string, title string, current string, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<input id="<%= key %>-color" name="<%= key %>-color" type="hidden" value="<%= current %>" />
+<input id="<%= key %>-color" name="<%= key %>Color" type="hidden" value="<%= current %>" />
 <div class="uk-margin">
   <label class="uk-form-label">
     <% if key == "link" { %>

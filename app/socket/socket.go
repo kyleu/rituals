@@ -81,7 +81,7 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 
 		err = onMessage(s, connID, m)
 		if err != nil {
-			_ = s.WriteMessage(c.ID, &Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdError, Param: err.Error()})
+			_ = s.WriteMessage(c.ID, NewMessage(util.SvcSystem, ServerCmdError, err.Error()))
 			return errors.Wrap(err, "error handling websocket message")
 		}
 	}

@@ -13,7 +13,7 @@ func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, 
 	conn := &connection{
 		ID:      util.UUID(),
 		Profile: profile,
-		Svc:     "",
+		Svc:     util.SvcSystem,
 		ModelID: nil,
 		Channel: nil,
 		socket:  c,

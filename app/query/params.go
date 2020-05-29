@@ -45,15 +45,15 @@ func (p *Params) GetOrdering(col string) *Ordering {
 }
 
 func (p *Params) OrderByString() string {
-	var ret = make([]string, len(p.Orderings))
+	var ret = make([]string, 0, len(p.Orderings))
 
-	for i, o := range p.Orderings {
+	for _, o := range p.Orderings {
 		dir := ""
 		if !o.Asc {
 			dir = " desc"
 		}
 		snake := util.ToSnakeCase(o.Column)
-		ret[i] = snake + dir
+		ret = append(ret, snake + dir)
 	}
 
 	return strings.Join(ret, ", ")
@@ -81,7 +81,7 @@ func (p *Params) Filtered(logger logur.Logger) *Params {
 				allowed = append(allowed, o)
 			} else {
 				msg := "no column [%v] for [%v] available in allowed columns [%v]"
-				logger.Warn(fmt.Sprintf(msg, o.Column, p.Key, strings.Join(available, ", ")))
+				logger.Warn(fmt.Sprintf(msg, o.Column, p.Key, util.OxfordComma(available, "and")))
 			}
 		}
 
@@ -99,9 +99,9 @@ func (p *Params) String() string {
 	if p.Limit > 0 {
 		ol += fmt.Sprintf("%v", p.Limit)
 	}
-	ord := make([]string, len(p.Orderings))
-	for i, o := range p.Orderings {
-		ord[i] = o.String()
+	ord := make([]string, 0, len(p.Orderings))
+	for _, o := range p.Orderings {
+		ord = append(ord, o.String())
 	}
 	return fmt.Sprintf("%v(%v): %v", p.Key, ol, strings.Join(ord, " / "))
 }

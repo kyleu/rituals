@@ -28,11 +28,13 @@ import (
 	log "logur.dev/logur"
 )
 
+const debugSQL = false
 var verbose bool
 var redir string
 var addr string
 var port uint16
 var authEnabled bool
+var wipeDatabase bool
 
 // Configure configures a root command.
 func Configure(version string, commitHash string) cobra.Command {
@@ -55,6 +57,7 @@ func Configure(version string, commitHash string) cobra.Command {
 	flags.Uint16VarP(&port, "port", "p", 6660, "port for http server to listen on")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	flags.BoolVar(&authEnabled, "auth", true, "enable authentication")
+	flags.BoolVarP(&wipeDatabase, "wipe", "w", false, "wipe and rebuild the database")
 
 	return rootCmd
 }
@@ -68,7 +71,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	errorHandler := logur.New(logger)
 	defer emperror.HandleRecover(errorHandler)
 
-	db, err := config.OpenDatabase(logger)
+	db, err := config.OpenDatabase(verbose && debugSQL, logger, wipeDatabase)
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database pool")
 	}
@@ -114,7 +117,7 @@ func MakeServer(info *config.AppInfo, address string, port uint16) error {
 	if info.Debug {
 		msg += " (verbose)"
 	}
-	info.Logger.Info(msg, map[string]interface{}{"address": address, "port": port})
+	info.Logger.Info(msg, util.ToMap("address", address, "port", port))
 	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(r))
 	return errors.Wrap(err, "unable to run http server")
 }

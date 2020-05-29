@@ -1,6 +1,11 @@
 declare const UIkit: any;
 
 namespace dom {
+  export function initDom(t: string) {
+    style.setTheme(t);
+    document.body.style.visibility = "visible";
+  }
+
   export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): T[] {
     return UIkit.util.$$(selector, context) as T[];
   }

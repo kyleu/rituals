@@ -36,6 +36,15 @@ func (t Role) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
+func (t *Role) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = RoleFromString(s)
+	return nil
+}
+
 type entryDTO struct {
 	UserID  uuid.UUID `db:"user_id"`
 	Name    string    `db:"name"`

@@ -21,10 +21,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
 
 		params := act.ParamSetFromRequest(r)
-		estimates, err := ctx.App.Estimate.List(params.Get(util.SvcEstimate.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		estimates := ctx.App.Estimate.List(params.Get(util.SvcEstimate.Key, ctx.Logger))
 		return tmpl(templates.AdminEstimateList(estimates, params, ctx, w))
 	})
 }
@@ -47,17 +44,11 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 
+		stories := ctx.App.Estimate.GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
+		comments := ctx.App.Estimate.Comments.GetByModelID(*estimateID, params.Get(util.KeyComment, ctx.Logger))
 		members := ctx.App.Estimate.Members.GetByModelID(*estimateID, params.Get(util.KeyMember, ctx.Logger))
 		perms := ctx.App.Estimate.Permissions.GetByModelID(*estimateID, params.Get(util.KeyPermission, ctx.Logger))
-
-		stories, err := ctx.App.Estimate.GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcEstimate.Key, *estimateID, params.Get(util.KeyAction, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		actions := ctx.App.Action.GetBySvcModel(util.SvcEstimate, *estimateID, params.Get(util.KeyAction, ctx.Logger))
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
@@ -65,7 +56,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, estimateID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminEstimateDetail(sess, members, perms, stories, actions, params, ctx, w))
+		return tmpl(templates.AdminEstimateDetail(sess, stories, comments, members, perms, actions, params, ctx, w))
 	})
 }
 
@@ -95,10 +86,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 
-		votes, err := ctx.App.Estimate.GetStoryVotes(*storyID, params.Get(util.KeyVote, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		votes := ctx.App.Estimate.GetStoryVotes(*storyID, params.Get(util.KeyVote, ctx.Logger))
 		ctx.Title = fmt.Sprint(sess.Slug, ":", story.Idx)
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
 		el := util.AdminLink(util.SvcEstimate.Key, util.KeyDetail)

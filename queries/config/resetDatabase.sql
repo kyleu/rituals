@@ -24,6 +24,7 @@ drop table if exists "team";
 
 drop table if exists "invitation";
 drop table if exists "action";
+drop table if exists "comment";
 
 drop table if exists "auth";
 drop table if exists "system_user";
@@ -33,6 +34,7 @@ drop type if exists "estimate_status";
 drop type if exists "invitation_type";
 drop type if exists "invitation_status";
 drop type if exists "member_status";
+drop type if exists "model_service";
 drop type if exists "retro_status";
 drop type if exists "standup_status";
 drop type if exists "story_status";

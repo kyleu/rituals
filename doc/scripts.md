@@ -1,6 +1,6 @@
 # Scripts
 
-There's scripts in the `./scripts` directory to help you build, run, test, and publish rituals.dev
+There's scripts in the `./bin` directory to help you build, run, test, and publish rituals.dev
 
 They're designed for macOS, but should work on Linux or Windows (via WSL).
 

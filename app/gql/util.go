@@ -1,12 +1,8 @@
 package gql
 
 import (
-	"fmt"
-
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/kyleu/rituals.dev/app/query"
@@ -24,8 +20,9 @@ func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger 
 	if ok {
 		for _, x := range o.([]interface{}) {
 			m := x.(map[string]interface{})
-			col := m["col"].(string)
-			var defaultOrdering = query.Orderings{{Column: col, Asc: m["asc"].(bool)}}
+			col := util.MapGetString(m, "col", logger)
+			asc := util.MapGetBool(m, "asc", logger)
+			var defaultOrdering = query.Orderings{{Column: col, Asc: asc}}
 			orderings = append(orderings, defaultOrdering...)
 		}
 	}
@@ -46,37 +43,12 @@ func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger 
 	return ret.Filtered(logger)
 }
 
-func paramKeyString(p graphql.ResolveParams) (string, error) {
-	arg, ok := p.Args[util.KeyKey]
-	if !ok {
-		return "", errors.New(fmt.Sprintf("parameter %v is not present", util.KeyKey))
-	}
-	ret, ok := arg.(string)
-	if !ok {
-		return "", errors.New(fmt.Sprintf("parameter %v is not a string: %v", util.KeyKey, arg))
-	}
-	return ret, nil
-}
-
-func paramUUID(p graphql.ResolveParams, key string) (*uuid.UUID, error) {
-	arg, ok := p.Args[key]
-	if !ok {
-		return nil, errors.New(fmt.Sprintf("parameter %v is not present", key))
-	}
-	ret, ok := arg.(uuid.UUID)
-	if !ok {
-		return nil, errors.New(fmt.Sprintf("parameter %v is not a UUID: %v", key, arg))
-	}
-	return &ret, nil
-}
-
 func ErrorResponseJSON(logger logur.Logger, errors ...error) *graphql.Result {
-	var errs = make([]gqlerrors.FormattedError, len(errors))
+	var errs = make([]gqlerrors.FormattedError, 0, len(errors))
 
-	for i, err := range errors {
-		logger.Warn(fmt.Sprintf("error running GraphQL: %+v", err))
-
-		errs[i] = gqlerrors.FormattedError{Message: err.Error()}
+	for _, err := range errors {
+		logger.Warn("error running GraphQL", util.ToMap(util.KeyError, err))
+		errs = append(errs, gqlerrors.FormattedError{Message: err.Error()})
 	}
 
 	return &graphql.Result{

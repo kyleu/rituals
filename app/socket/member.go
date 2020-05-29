@@ -31,22 +31,17 @@ func (s *Service) GetOnline(ch channel) []uuid.UUID {
 
 func (s *Service) sendOnlineUpdate(ch channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {
 	p := OnlineUpdate{UserID: userID, Connected: connected}
-	onlineMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdOnlineUpdate, Param: p}
-	return s.WriteChannel(ch, &onlineMsg, connID)
+	onlineMsg := NewMessage(util.SvcSystem, ServerCmdOnlineUpdate, p)
+	return s.WriteChannel(ch, onlineMsg, connID)
 }
 
 func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...uuid.UUID) error {
-	onlineMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdMemberUpdate, Param: current}
-	return s.WriteChannel(ch, &onlineMsg, except...)
+	onlineMsg := NewMessage(util.SvcSystem, ServerCmdMemberUpdate, current)
+	return s.WriteChannel(ch, onlineMsg, except...)
 }
 
-func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, _ uuid.UUID, targetString string) error {
-	target, err := uuid.FromString(targetString)
-	if err != nil {
-		return errors.Wrap(err, util.IDErrorString(util.KeyMember, targetString))
-	}
-
-	err = memberSvc.RemoveMember(ch.ID, target)
+func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, _ uuid.UUID, target uuid.UUID) error {
+	err := memberSvc.RemoveMember(ch.ID, target)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove member from team")
 	}

@@ -1,3 +1,9 @@
+// Input
+.uk-input, .uk-select, .uk-textarea, .uk-icon-button {
+  transition: none;
+}
+
+// Pre
 pre {
   background-color: transparent;
   border: none;

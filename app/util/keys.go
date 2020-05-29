@@ -4,22 +4,33 @@ import "strings"
 
 const (
 	KeyAbout      = "about"
+	KeyAct        = "act"
 	KeyAction     = "action"
 	KeyAdmin      = "admin"
 	KeyAuth       = "auth"
+	KeyAuthor     = "author"
 	KeyCreated    = "created"
+	KeyComment    = "comment"
 	KeyConnection = "connection"
+	KeyCategory   = "category"
+	KeyChoice     = "choice"
+	KeyContent    = "content"
 	KeyDetail     = "detail"
+	KeyEmail      = "email"
+	KeyError      = "error"
 	KeyFeedback   = "feedback"
 	KeyGraphQL    = "graphql"
 	KeyGraphiQL   = "graphiql"
+	KeyHTML       = "html"
 	KeyID         = "id"
 	KeyIdx        = "idx"
 	KeyInvitation = "invitation"
 	KeyKey        = "key"
 	KeyMember     = "member"
+	KeyModel      = "model"
 	KeyModules    = "modules"
 	KeyName       = "name"
+	KeyNote       = "note"
 	KeyNoText     = "-no text-"
 	KeyProfile    = "profile"
 	KeyOwner      = "owner"
@@ -27,6 +38,7 @@ const (
 	KeyRole       = "role"
 	KeyRoutes     = "routes"
 	KeyPermission = "permission"
+	KeyProvider   = "provider"
 	KeySandbox    = "sandbox"
 	KeyService    = "service"
 	KeySession    = "session"
@@ -35,6 +47,7 @@ const (
 	KeyStatus     = "status"
 	KeyStory      = "story"
 	KeySvc        = "svc"
+	KeySystem     = "system"
 	KeySystemUser = "system_user"
 	KeyTheme      = "theme"
 	KeyTitle      = "title"
@@ -50,6 +63,8 @@ func Plural(k string) string {
 	switch k {
 	case KeyGraphQL, KeyRoutes, KeyModules:
 		return k
+	case KeyCategory:
+		return "categories"
 	case KeyStory:
 		return "stories"
 	case KeySandbox:
@@ -74,10 +89,14 @@ func Title(k string) string {
 	return strings.ToUpper(k[0:1]) + k[1:]
 }
 
-func PluralProper(k string) string {
+func PluralTitle(k string) string {
 	return Title(Plural(k))
 }
 
 func WithID(k string) string {
 	return k + "ID"
+}
+
+func WithDBID(k string) string {
+	return k + "_id"
 }

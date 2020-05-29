@@ -12119,6 +12119,10 @@ iframe.uk-cover {
   border-color: #000000 !important;
 }
 
+.uk-input, .uk-select, .uk-textarea, .uk-icon-button {
+  transition: none;
+}
+
 pre {
   background-color: transparent;
   border: none;
@@ -12352,6 +12356,19 @@ h3 a:hover {
 }
 .section:hover .section-link {
   text-decoration: underline;
+}
+
+.profile-pic {
+  height: 32px;
+  width: 32px;
+}
+
+.profile-title {
+  padding: 4px 0;
+}
+
+.profile-remove {
+  padding-top: 4px;
 }
 
 #team-warning-container {

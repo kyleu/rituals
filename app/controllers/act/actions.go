@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"emperror.dev/errors"
-
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
@@ -29,7 +27,7 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 
 	redir, err := f(ctx)
 	if err != nil {
-		ctx.Logger.Warn(fmt.Sprintf("%+v", errors.Wrap(err, "error running action")))
+		ctx.Logger.Warn("error running action", util.ToMap(util.KeyError, err))
 		if ctx.Title == "" {
 			ctx.Title = "Error"
 		}
@@ -38,7 +36,7 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 		switch contentType {
 		case "application/json", "text/json":
 			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			b, _ := json.MarshalIndent(errorResult{Status: "error", Message: err.Error()}, "", "  ")
+			b, _ := json.MarshalIndent(errorResult{Status: util.KeyError, Message: err.Error()}, "", "  ")
 			_, _ = w.Write(b)
 		default:
 			_, _ = templates.InternalServerError(util.GetErrorDetail(err), r, ctx, w)

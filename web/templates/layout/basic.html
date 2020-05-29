@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="<%= ctx.Profile.Theme.BackgroundClass %>">
+<html lang="en">
 <% Head(ctx, _buffer) %>
-<body class="<%= ctx.Profile.Theme.BackgroundClass %>">
+<body style="visibility: hidden;">
 <% Navbar(ctx, _buffer) %>
-<div id="content" data-uk-height-viewport="expand: true">
+<div id="<%= util.KeyContent %>" data-uk-height-viewport="expand: true">
 <% for _, flash := range ctx.Flashes { %>
   <% cls, content := web.ParseFlash(flash) %>
   <div class="alert-top <%= cls %>" data-uk-alert>
@@ -13,5 +13,6 @@
 <% } %>
 <%@ body { %><% } %>
 </div>
+<script>window.addEventListener("load", function() { dom.initDom('<%= ctx.Profile.Theme.String() %>'); }, false)</script>
 </body>
 </html>

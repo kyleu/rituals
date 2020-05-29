@@ -254,7 +254,7 @@ create table if not exists "invitation" (
 -- Actions
 create table if not exists "action" (
   "id" uuid not null primary key,
-  "svc" varchar(64) not null,
+  "svc" model_service not null,
   "model_id" uuid not null,
   "author_id" uuid references "system_user"("id"),
   "act" varchar(64) not null,
@@ -263,6 +263,17 @@ create table if not exists "action" (
   "created" timestamp not null default now()
 );
 
-create index if not exists idx_action_svc_model_id on action(svc, model_id);
+-- Actions
+create table if not exists "comment" (
+  "id" uuid not null primary key,
+  "svc" model_service not null,
+  "model_id" uuid not null,
+  "author_id" uuid references "system_user"("id"),
+  "content" text not null,
+  "html" text not null,
+  "created" timestamp not null default now()
+);
+
+create index if not exists idx_comment_svc_model_id on comment(svc, model_id);
 
 -- <%: func CreateTables(w io.Writer) %>

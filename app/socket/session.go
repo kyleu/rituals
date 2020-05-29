@@ -3,20 +3,29 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry, msg Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
-	err := s.WriteMessage(conn.ID, &msg)
+type SessionResult struct {
+	Auth        auth.Displays
+	Perms       permission.Permissions
+	Entry       *member.Entry
+	SprintEntry *member.Entry
+	Error       error
+}
+
+func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry, msg *Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
+	err := s.WriteMessage(conn.ID, msg)
 	if err != nil {
 		return errors.Wrap(err, "error writing initial estimate message")
 	}
 
 	if sprintEntry != nil {
-		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint.Key, ID: *sprintID}, sprintEntry, conn.ID)
+		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint, ID: *sprintID}, sprintEntry, conn.ID)
 		if err != nil {
 			return errors.Wrap(err, "error writing member update to sprint")
 		}
@@ -31,65 +40,51 @@ func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry,
 	return errors.Wrap(err, "error writing online update")
 }
 
-func (s *Service) check(
-	userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID,
-	svc util.Service, modelID uuid.UUID) (permission.Permissions, permission.Errors, error) {
-	var err error
-
-	var currTeams []uuid.UUID
-	if teamID != nil {
-		currTeams, err = s.teams.GetIdsByMember(userID)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "unable to retrieve current teams")
-		}
+func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch channel, conn *connection) SessionResult {
+	userID := conn.Profile.UserID
+	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
+	perms, permErrors, err := s.check(conn.Profile.UserID, auths, teamID, sprintID, ch.Svc, ch.ID)
+	if err != nil {
+		return SessionResult{Error: err}
+	}
+	if len(permErrors) > 0 {
+		return SessionResult{Error: s.sendPermErrors(ch, permErrors)}
 	}
 
-	var currSprints []uuid.UUID
+	memberSvc, err := memberSvcFor(s, ch.Svc)
+	if err != nil {
+		return SessionResult{Error: err}
+	}
+	entry := memberSvc.Register(ch.ID, userID, member.RoleMember)
+	var sprintEntry *member.Entry
 	if sprintID != nil {
-		currSprints, err = s.sprints.GetIdsByMember(userID)
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "unable to retrieve current sprints")
-		}
+		sprintEntry = s.sprints.Members.RegisterRef(sprintID, userID, member.RoleMember)
 	}
 
-	var tp *permission.Params
-	if teamID != nil {
-		tm, _ := s.teams.GetByID(*teamID)
-		tp = &permission.Params{ID: tm.ID, Slug: tm.Slug, Title: tm.Title, Current: currTeams}
-	}
+	conn.Svc = ch.Svc
+	conn.ModelID = &ch.ID
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
 
-	var sp *permission.Params
-	if sprintID != nil {
-		spr, _ := s.sprints.GetByID(*sprintID)
-		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
+	return SessionResult{
+		Auth:        displays,
+		Perms:       perms,
+		Entry:       entry,
+		SprintEntry: sprintEntry,
 	}
-
-	var permSvc *permission.Service
-	switch svc {
-	case util.SvcTeam:
-		permSvc = s.teams.Permissions
-	case util.SvcSprint:
-		permSvc = s.sprints.Permissions
-	case util.SvcEstimate:
-		permSvc = s.estimates.Permissions
-	case util.SvcStandup:
-		permSvc = s.standups.Permissions
-	case util.SvcRetro:
-		permSvc = s.retros.Permissions
-	}
-
-	if permSvc == nil {
-		return nil, nil, errors.New("Invalid service [" + svc.Key + "]")
-	}
-
-	perms, e := permSvc.Check(s.auths.Enabled, svc, modelID, auths, tp, sp)
-	return perms, e, nil
 }
 
-func (s *Service) sendPermErrors(svc util.Service, ch channel, permErrors permission.Errors) error {
+func (s *Service) sendPermErrors(ch channel, permErrors permission.Errors) error {
 	if len(permErrors) > 0 {
-		msg := Message{Svc: svc.Key, Cmd: ServerCmdError, Param: "insufficient permissions"}
-		return s.WriteChannel(ch, &msg)
+		return s.WriteChannel(ch, NewMessage(ch.Svc, ServerCmdError, "insufficient permissions"))
 	}
 	return nil
+}
+
+func errorNoSession(s *Service, svc util.Service, connID uuid.UUID, chID uuid.UUID) error {
+	msg := util.IDErrorString(util.KeySession, chID.String())
+	err := s.WriteMessage(connID, NewMessage(util.SvcEstimate, ServerCmdError, msg))
+	if err != nil {
+		return errors.Wrap(err, "error writing error message")
+	}
+	return errors.New("no " + svc.Key + " session available")
 }

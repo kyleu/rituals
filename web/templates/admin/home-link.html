@@ -1,6 +1,6 @@
 <%: func AdminHomeLink(key string, count int64, recent *time.Time, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <tr>
-  <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(key)) %>"><%= util.PluralProper(key) %></a></td>
+  <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(key)) %>"><%= util.PluralTitle(key) %></a></td>
   <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(recent, buffer) %></td>
   <td class="uk-table-shrink uk-text-nowrap uk-text-right">
     <% if count > -1 { %>

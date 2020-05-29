@@ -2,6 +2,7 @@ package retro
 
 import (
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/markdown"
@@ -9,22 +10,23 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-var defaultFeedbackOrdering = query.Orderings{{Column: "category", Asc: true}, {Column: util.KeyIdx, Asc: true}, {Column: util.KeyCreated, Asc: false}}
+var defaultFeedbackOrdering = query.Orderings{{Column: util.KeyCategory, Asc: true}, {Column: util.KeyIdx, Asc: true}, {Column: util.KeyCreated, Asc: false}}
 
-func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) (Feedbacks, error) {
+func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) Feedbacks {
 	params = query.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)
 	var dtos []feedbackDTO
 	q := query.SQLSelect("*", util.KeyFeedback, "retro_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, retroID)
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving feedback for retro [%v]: %+v", retroID, err))
+		return nil
 	}
-	return toFeedbacks(dtos), nil
+	return toFeedbacks(dtos)
 }
 
 func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	dto := &feedbackDTO{}
-	q := query.SQLSelect("*", util.KeyFeedback, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeyFeedback, util.KeyID + " = $1")
 	err := s.db.Get(dto, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
@@ -34,7 +36,7 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelect("retro_id", util.KeyFeedback, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple(util.WithDBID(util.SvcRetro.Key), util.KeyFeedback, util.KeyID + " = $1")
 	err := s.db.Get(&ret, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
@@ -55,7 +57,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": id}
-	s.actions.Post(util.SvcRetro.Key, retroID, authorID, action.ActFeedbackAdd, actionContent, "")
+	s.actions.Post(util.SvcRetro, retroID, authorID, action.ActFeedbackAdd, actionContent, "")
 
 	return s.GetFeedbackByID(id)
 }
@@ -63,7 +65,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content string, userID uuid.UUID) (*Feedback, error) {
 	html := markdown.ToHTML(content)
 
-	q := `update feedback set category = $1, content = $2, html = $3 where id = $4`
+	q := query.SQLUpdate(util.KeyFeedback, []string{util.KeyCategory, util.KeyContent, util.KeyHTML}, util.KeyID + " = $4")
 	err := s.db.UpdateOne(q, nil, category, content, html, feedbackID)
 	if err != nil {
 		return nil, err
@@ -78,7 +80,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.actions.Post(util.SvcRetro.Key, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent, "")
+	s.actions.Post(util.SvcRetro, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent, "")
 
 	return s.GetFeedbackByID(feedbackID)
 }
@@ -92,11 +94,11 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
 	}
 
-	q := query.SQLDelete(util.KeyFeedback, "id = $1")
-	_, err = s.db.Delete(q, nil, feedbackID)
+	q := query.SQLDelete(util.KeyFeedback, util.KeyID + " = $1")
+	err = s.db.DeleteOne(q, nil, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.actions.Post(util.SvcRetro.Key, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
+	s.actions.Post(util.SvcRetro, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
 
 	return err
 }

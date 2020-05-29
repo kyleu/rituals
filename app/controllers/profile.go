@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"github.com/gorilla/mux"
+	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/controllers/form"
 	"net/http"
 	"strings"
 
@@ -19,10 +22,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := act.ParamSetFromRequest(r)
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "cannot load auth records for user ["+ctx.Profile.UserID.String()+"]")
-		}
+		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
 		return tmpl(templates.Profile(ctx.App.Auth.Enabled, auths, ctx, w))
@@ -31,15 +31,23 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 func ProfileSave(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		_ = r.ParseForm()
-		ctx.Profile.Name = strings.TrimSpace(r.Form.Get("username"))
-		if ctx.Profile.Name == "" {
-			ctx.Profile.Name = "Guest"
+		prof := &form.ProfileForm{}
+		err := form.Decode(r, prof, ctx.Logger)
+		if err != nil {
+			return eresp(err, "")
 		}
-		ctx.Profile.Theme = util.ThemeFromString(r.Form.Get(util.KeyTheme))
-		ctx.Profile.NavColor = r.Form.Get("navbar-color")
-		ctx.Profile.LinkColor = r.Form.Get("link-color")
-		_, err := ctx.App.User.SaveProfile(ctx.Profile)
+
+		if len(strings.TrimSpace(prof.Username)) == 0 {
+			prof.Username = "Guest"
+		}
+
+		ctx.Profile.Name = strings.TrimSpace(prof.Username)
+		ctx.Profile.Theme = util.ThemeFromString(prof.Theme)
+		ctx.Profile.NavColor = prof.NavColor
+		ctx.Profile.LinkColor = prof.LinkColor
+
+		_, _ = ctx.App.User.GetByID(ctx.Profile.UserID, true)
+		_, err = ctx.App.User.SaveProfile(ctx.Profile)
 		if err != nil {
 			return eresp(err, "")
 		}
@@ -48,3 +56,27 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 		return ctx.Route("home"), nil
 	})
 }
+
+func ProfilePic(w http.ResponseWriter, r *http.Request) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		if !ctx.App.Auth.Enabled {
+			return "", auth.ErrorAuthDisabled
+		}
+		id, err := act.IDFromParams(util.KeyID, mux.Vars(r))
+		if err != nil {
+			return eresp(err, "invalid id")
+		}
+		a, err := ctx.App.Auth.GetByID(*id)
+		if err != nil {
+			return eresp(err, "invalid auth")
+		}
+		ctx.Profile.Picture = a.Picture
+		_, err = ctx.App.User.SaveProfile(ctx.Profile)
+		if err != nil {
+			return eresp(err, "can't save profile")
+		}
+
+		return ctx.Route(util.KeyProfile), nil
+	})
+}
+

@@ -17,17 +17,11 @@ import (
 func TeamList(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
-		sessions, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "error retrieving teams")
-		}
 
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		sessions := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
-		ctx.Title = util.PluralProper(util.SvcTeam.Key)
+		ctx.Title = util.PluralTitle(util.SvcTeam.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key+".list"), util.SvcTeam.Key)
 		return tmpl(templates.TeamList(sessions, auths, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, w))
 	})
@@ -37,17 +31,17 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
-		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
+		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User)
 		if err != nil {
 			return eresp(err, "cannot parse form")
 		}
 
-		sess, err := ctx.App.Team.New(r.Title, ctx.Profile.UserID)
+		sess, err := ctx.App.Team.New(sf.Title, ctx.Profile.UserID)
 		if err != nil {
 			return eresp(err, "error creating team session")
 		}
 
-		_, err = ctx.App.Team.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		_, err = ctx.App.Team.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return eresp(err, "error setting permissions for new session")
 		}

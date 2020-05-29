@@ -2,6 +2,7 @@ package invitation
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/database"
@@ -31,8 +32,8 @@ func NewService(service *action.Service, db *database.Service, logger logur.Logg
 }
 
 func (s *Service) New(key string, k Type, v string, src *uuid.UUID, tgt *uuid.UUID, note string) (*Invitation, error) {
-	s.logger.Info("creating invitation [" + key + "]")
-	q := query.SQLInsert(util.KeyInvitation, []string{"key", "k", "v", "src", "tgt", "note", "status", "redeemed", "created"}, 1)
+	s.logger.Info("creating invitation", util.ToMap(util.KeyKey, key))
+	q := query.SQLInsert(util.KeyInvitation, []string{util.KeyKey, "k", "v", "src", "tgt", util.KeyNote, util.KeyStatus, "redeemed", util.KeyCreated}, 1)
 	dto := invitationDTO{
 		Key:      key,
 		K:        k.String(),
@@ -51,14 +52,15 @@ func (s *Service) New(key string, k Type, v string, src *uuid.UUID, tgt *uuid.UU
 	return dto.ToInvitation(), nil
 }
 
-func (s *Service) List(params *query.Params) (Invitations, error) {
+func (s *Service) List(params *query.Params) Invitations {
 	params = query.ParamsWithDefaultOrdering(util.KeyInvitation, params, query.DefaultCreatedOrdering...)
 
 	var dtos []invitationDTO
 	q := query.SQLSelect("*", util.KeyInvitation, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving invitations: %+v", err))
+		return nil
 	}
 
 	ret := make(Invitations, 0, len(dtos))
@@ -67,12 +69,12 @@ func (s *Service) List(params *query.Params) (Invitations, error) {
 		ret = append(ret, dto.ToInvitation())
 	}
 
-	return ret, nil
+	return ret
 }
 
 func (s *Service) GetByKey(key string) (*Invitation, error) {
 	dto := &invitationDTO{}
-	q := query.SQLSelect("*", util.KeyInvitation, "key = $1", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeyInvitation, "key = $1")
 	err := s.db.Get(dto, q, nil, key)
 	if err == sql.ErrNoRows {
 		return nil, nil

@@ -9,19 +9,10 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	category, ok := param["category"].(string)
-	if !ok {
-		return errors.New(fmt.Sprintf("can't read string from [%v]", param["category"]))
-	}
-
-	content, ok := getContent(param)
-	if !ok {
-		return errors.New(fmt.Sprintf("can't read content from [%v]", param["content"]))
-	}
-
-	s.logger.Debug(fmt.Sprintf("adding [%s] feedback for [%s]", category, userID))
-	fb, err := s.retros.NewFeedback(ch.ID, category, content, userID)
+func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param addFeedbackParams) error {
+	content := getContent(param.Content)
+	s.logger.Debug(fmt.Sprintf("adding [%s] feedback for [%s]", param.Category, userID))
+	fb, err := s.retros.NewFeedback(ch.ID, param.Category, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new feedback")
 	}
@@ -29,24 +20,10 @@ func onAddFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]in
 	return errors.Wrap(err, "error sending feedback")
 }
 
-func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	id := getUUIDPointer(param, util.KeyID)
-	if id == nil {
-		return errors.New("no id provided")
-	}
-
-	category, ok := param["category"].(string)
-	if !ok {
-		return errors.New("cannot read category")
-	}
-
-	content, ok := getContent(param)
-	if !ok {
-		return errors.New(fmt.Sprintf("can't read content from [%v]", param["content"]))
-	}
-
-	s.logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", category, userID))
-	feedback, err := s.retros.UpdateFeedback(*id, category, content, userID)
+func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param editFeedbackParams) error {
+	content := getContent(param.Content)
+	s.logger.Debug(fmt.Sprintf("updating [%s] feedback for [%s]", param.Category, userID))
+	feedback, err := s.retros.UpdateFeedback(param.ID, param.Category, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update feedback")
 	}
@@ -54,23 +31,17 @@ func onEditFeedback(s *Service, ch channel, userID uuid.UUID, param map[string]i
 	return err
 }
 
-func onRemoveFeedback(s *Service, ch channel, userID uuid.UUID, param string) error {
-	feedbackID, err := uuid.FromString(param)
-	if err != nil {
-		return errors.New(util.IDErrorString(util.KeyFeedback, param))
-	}
+func onRemoveFeedback(s *Service, ch channel, userID uuid.UUID, feedbackID uuid.UUID) error {
 	s.logger.Debug(fmt.Sprintf("removing report [%s]", feedbackID))
-	err = s.retros.RemoveFeedback(feedbackID, userID)
+	err := s.retros.RemoveFeedback(feedbackID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove feedback")
 	}
-	msg := Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdFeedbackRemove, Param: feedbackID}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdFeedbackRemove, feedbackID))
 	return errors.Wrap(err, "error sending feedback removal notification")
 }
 
 func sendFeedbackUpdate(s *Service, ch channel, fb *retro.Feedback) error {
-	msg := Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdFeedbackUpdate, Param: fb}
-	err := s.WriteChannel(ch, &msg)
+	err := s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdFeedbackUpdate, fb))
 	return errors.Wrap(err, "error sending feedback update")
 }

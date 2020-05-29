@@ -65,6 +65,8 @@ func (s *Service) decodeRecord(prv *Provider, code string) (*Record, error) {
 		return githubAuth(tok)
 	case &ProviderSlack:
 		return slackAuth(tok)
+	case &ProviderFacebook:
+		return facebookAuth(tok)
 	case &ProviderAmazon:
 		return amazonAuth(tok)
 	case &ProviderMicrosoft:

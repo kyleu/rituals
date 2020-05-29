@@ -27,7 +27,7 @@ clean: ## Clean builds
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
-	bash scripts/dev.sh
+	bash bin/dev.sh
 
 .PHONY: goversion
 goversion:
@@ -71,7 +71,7 @@ build-debug: ## Build all binaries with remote debugging capabilities
 
 .PHONY: lint
 lint: ## Run linter
-	bash scripts/check.sh
+	bash bin/check.sh
 
 .PHONY: help
 help:

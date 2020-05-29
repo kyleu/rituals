@@ -3,8 +3,8 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -18,33 +18,30 @@ import (
 type SprintSessionJoined struct {
 	Profile     *util.Profile          `json:"profile"`
 	Session     *sprint.Session        `json:"session"`
-	Permissions permission.Permissions `json:"permissions"`
-	Auths       auth.Displays          `json:"auths"`
+	Comments    comment.Comments       `json:"comments"`
 	Team        *team.Session          `json:"team"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
 	Estimates   estimate.Sessions      `json:"estimates"`
 	Standups    standup.Sessions       `json:"standups"`
 	Retros      retro.Sessions         `json:"retros"`
+	Auths       auth.Displays          `json:"auths"`
+	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
-	sprintID, err := uuid.FromString(param)
-	if err != nil {
-		return util.IDError(util.SvcTeam.Key, param)
-	}
-	ch := channel{Svc: util.SvcSprint.Key, ID: sprintID}
-	err = s.Join(conn.ID, ch)
+func onSprintConnect(s *Service, conn *connection, sprintID uuid.UUID) error {
+	ch := channel{Svc: util.SvcSprint, ID: sprintID}
+	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
 	}
-	err = joinSprintSession(s, conn, userID, ch)
+	err = joinSprintSession(s, conn, ch)
 	return errors.Wrap(err, "error joining sprint session")
 }
 
-func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcSprint.Key {
-		return errors.New("sprint cannot handle [" + ch.Svc + "] message")
+func joinSprintSession(s *Service, conn *connection, ch channel) error {
+	if ch.Svc != util.SvcSprint {
+		return errors.New("sprint cannot handle [" + ch.Svc.Key + "] message")
 	}
 
 	sess, err := s.sprints.GetByID(ch.ID)
@@ -52,58 +49,26 @@ func joinSprintSession(s *Service, conn *connection, userID uuid.UUID, ch channe
 		return errors.Wrap(err, "error finding sprint session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcSprint.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, "")})
-		if err != nil {
-			return errors.Wrap(err, "error writing sprint error message")
-		}
-		return nil
+		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
+	}
+	res := getSessionResult(s, sess.TeamID, nil, ch, conn)
+	if res.Error != nil {
+		return res.Error
 	}
 
-	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, nil, util.SvcSprint, ch.ID)
-	if err != nil {
-		return err
+	sj := SprintSessionJoined{
+		Profile:     &conn.Profile,
+		Session:     sess,
+		Comments:    s.sprints.Comments.GetByModelID(ch.ID, nil),
+		Team:        getTeamOpt(s, sess.TeamID),
+		Members:     s.sprints.Members.GetByModelID(ch.ID, nil),
+		Online:      s.GetOnline(ch),
+		Estimates:   s.estimates.GetBySprint(ch.ID, nil),
+		Standups:    s.standups.GetBySprint(ch.ID, nil),
+		Retros:      s.retros.GetBySprint(ch.ID, nil),
+		Auths:       res.Auth,
+		Permissions: res.Perms,
 	}
-	if len(permErrors) > 0 {
-		return s.sendPermErrors(util.SvcSprint, ch, permErrors)
-	}
-
-	entry := s.sprints.Members.Register(ch.ID, userID, member.RoleMember)
-	members := s.sprints.Members.GetByModelID(ch.ID, nil)
-
-	conn.Svc = ch.Svc
-	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
-	estimates, err := s.estimates.GetBySprint(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-	standups, err := s.standups.GetBySprint(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-	retros, err := s.retros.GetBySprint(ch.ID, nil)
-	if err != nil {
-		return err
-	}
-
-	msg := Message{
-		Svc: util.SvcSprint.Key,
-		Cmd: ServerCmdSessionJoined,
-		Param: SprintSessionJoined{
-			Profile:     &conn.Profile,
-			Session:     sess,
-			Permissions: perms,
-			Auths:       displays,
-			Team:        getTeamOpt(s, sess.TeamID),
-			Members:     members,
-			Online:      s.GetOnline(ch),
-			Estimates:   estimates,
-			Standups:    standups,
-			Retros:      retros,
-		},
-	}
-
-	return s.sendInitial(ch, conn, entry, msg, nil, nil)
+	msg := NewMessage(util.SvcSprint, ServerCmdSessionJoined, sj)
+	return s.sendInitial(ch, conn, res.Entry, msg, nil, nil)
 }

@@ -3,8 +3,8 @@ while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
 DIR="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
 cd "$DIR"
 
-./scripts/build-client.sh
-./scripts/build-css.sh
+./bin/build-client.sh
+./bin/build-css.sh
 
 for arch in amd64 386
 do

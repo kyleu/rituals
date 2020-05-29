@@ -15,7 +15,7 @@ import (
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = util.PluralProper(util.KeySandbox)
+		ctx.Title = util.PluralTitle(util.KeySandbox)
 		ctx.Breadcrumbs = adminBC(ctx, ctx.Route(util.KeySandbox), util.KeySandbox)
 		return tmpl(templates.AdminSandboxList(sandbox.AllSandboxes, ctx, w))
 	})

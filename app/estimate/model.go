@@ -39,6 +39,15 @@ func (t Status) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
+func (t *Status) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = statusFromString(s)
+	return nil
+}
+
 var DefaultChoices = []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", "?"}
 
 func choicesFromDB(s string) []string {

@@ -19,10 +19,7 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "Auth List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAuth, util.Plural(util.KeyAuth))
 		params := act.ParamSetFromRequest(r)
-		users, err := ctx.App.Auth.List(params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		users := ctx.App.Auth.List(params.Get(util.KeyAuth, ctx.Logger))
 		return tmpl(templates.AdminAuthList(users, params, ctx, w))
 	})
 }

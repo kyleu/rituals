@@ -1,5 +1,5 @@
 <%: func MemberSelf(ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle" id="member-self">
+<div class="uk-card uk-card-body uk-transition-toggle" id="member-self">
   <h3 class="uk-card-title">
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="events.openModal('self');return false;" title="edit name"></a>

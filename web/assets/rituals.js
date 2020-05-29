@@ -16,9 +16,10 @@ var auth;
     const github = { key: "github", title: "GitHub" };
     const google = { key: "google", title: "Google" };
     const slack = { key: "slack", title: "Slack" };
+    const facebook = { key: "facebook", title: "Facebook" };
     const amazon = { key: "amazon", title: "Amazon" };
     const microsoft = { key: "microsoft", title: "Microsoft" };
-    auth.allProviders = [github, google, slack, amazon, microsoft];
+    auth.allProviders = [github, google, slack, facebook, amazon, microsoft];
 })(auth || (auth = {}));
 var collection;
 (function (collection) {
@@ -177,9 +178,19 @@ var date;
         return `${toDateString(d)} ${toTimeString(d)}`;
     }
     date_1.toDateTimeString = toDateTimeString;
+    const tzOffset = new Date().getTimezoneOffset() * 60000;
+    function utcDate(s) {
+        return new Date(Date.parse(s) + tzOffset);
+    }
+    date_1.utcDate = utcDate;
 })(date || (date = {}));
 var dom;
 (function (dom) {
+    function initDom(t) {
+        style.setTheme(t);
+        document.body.style.visibility = "visible";
+    }
+    dom.initDom = initDom;
     function els(selector, context) {
         return UIkit.util.$$(selector, context);
     }
@@ -467,6 +478,10 @@ var events;
         return false;
     }
     events.openModal = openModal;
+    function hideModal(key) {
+        UIkit.modal(`#modal-${key}`).hide();
+    }
+    events.hideModal = hideModal;
 })(events || (events = {}));
 var feedback;
 (function (feedback_1) {
@@ -526,7 +541,7 @@ var feedback;
         const same = fb.authorID === profile.userID;
         dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.authorID)}`);
         dom.setSelectOption("#feedback-edit-category", same ? fb.category : undefined);
-        contents.onContentDisplay("report", same, fb.content, fb.html);
+        contents.onContentDisplay("feedback", same, fb.content, fb.html);
     }
     feedback_1.viewActiveFeedback = viewActiveFeedback;
     function onFeedbackUpdate(r) {
@@ -810,10 +825,10 @@ var profile;
 (function (profile) {
     // noinspection JSUnusedGlobalSymbols
     function setNavColor(el, c) {
-        dom.setValue("#navbar-color", c);
+        dom.setValue("#nav-color", c);
         const nb = dom.req("#navbar");
         nb.className = `${c}-bg uk-navbar-container uk-navbar`;
-        const colors = document.querySelectorAll(".navbar_swatch");
+        const colors = document.querySelectorAll(".nav_swatch");
         colors.forEach(function (i) {
             i.classList.remove("active");
         });
@@ -839,35 +854,6 @@ var profile;
         el.classList.add("active");
     }
     profile.setLinkColor = setLinkColor;
-    function selectTheme(theme) {
-        const card = dom.els(".uk-card");
-        switch (theme) {
-            case "light":
-                document.documentElement.classList.remove("uk-light");
-                document.body.classList.remove("uk-light");
-                document.documentElement.classList.add("uk-dark");
-                document.body.classList.add("uk-dark");
-                card.forEach(x => {
-                    x.classList.add("uk-card-default");
-                    x.classList.remove("uk-card-secondary");
-                });
-                break;
-            case "dark":
-                document.documentElement.classList.add("uk-light");
-                document.body.classList.add("uk-light");
-                document.documentElement.classList.remove("uk-dark");
-                document.body.classList.remove("uk-dark");
-                card.forEach(x => {
-                    x.classList.remove("uk-card-default");
-                    x.classList.add("uk-card-secondary");
-                });
-                break;
-            default:
-                console.warn("invalid theme");
-                break;
-        }
-    }
-    profile.selectTheme = selectTheme;
 })(profile || (profile = {}));
 var report;
 (function (report_1) {
@@ -1049,6 +1035,7 @@ var rituals;
     rituals.onSocketMessage = onSocketMessage;
     function setDetail(session) {
         system.cache.session = session;
+        document.title = session.title;
         dom.setText("#model-title", session.title);
         dom.setValue("#model-title-input", session.title);
         const items = dom.els("#navbar .uk-navbar-item");
@@ -1246,10 +1233,9 @@ var sprint;
     }
     sprint.onSprintMessage = onSprintMessage;
     function setSprintDetail(detail) {
-        var _a, _b;
         sprint.cache.detail = detail;
-        const s = ((_a = detail.startDate) === null || _a === void 0 ? void 0 : _a.length) === 0 ? undefined : new Date(detail.startDate);
-        const e = ((_b = detail.endDate) === null || _b === void 0 ? void 0 : _b.length) === 0 ? undefined : new Date(detail.endDate);
+        const s = detail.startDate ? date.utcDate(detail.startDate) : undefined;
+        const e = detail.endDate ? date.utcDate(detail.endDate) : undefined;
         dom.setContent("#sprint-date-display", sprint.renderSprintDates(s, e));
         dom.setValue("#sprint-start-date-input", s ? date.dateToYMD(s) : "");
         dom.setValue("#sprint-end-date-input", e ? date.dateToYMD(e) : "");
@@ -1264,8 +1250,8 @@ var sprint;
         var _a, _b;
         const title = dom.req("#model-title-input").value;
         const teamID = dom.req("#model-team-select select").value;
-        const startDate = (_a = dom.opt("#model-start-date-input")) === null || _a === void 0 ? void 0 : _a.value;
-        const endDate = (_b = dom.opt("#model-end-date-input")) === null || _b === void 0 ? void 0 : _b.value;
+        const startDate = (_a = dom.opt("#sprint-start-date-input")) === null || _a === void 0 ? void 0 : _a.value;
+        const endDate = (_b = dom.opt("#sprint-end-date-input")) === null || _b === void 0 ? void 0 : _b.value;
         const permissions = permission.readPermissions();
         const msg = { svc: services.sprint.key, cmd: command.client.updateSession, param: { title, startDate, endDate, teamID, permissions } };
         socket.send(msg);
@@ -1628,6 +1614,46 @@ var team;
     }
     team.viewTeams = viewTeams;
 })(team || (team = {}));
+var style;
+(function (style) {
+    function setTheme(theme) {
+        const card = dom.els(".uk-card");
+        switch (theme) {
+            case "default":
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme("dark");
+                }
+                else {
+                    setTheme("light");
+                }
+                break;
+            case "light":
+                document.documentElement.classList.remove("uk-light");
+                document.body.classList.remove("uk-light");
+                document.documentElement.classList.add("uk-dark");
+                document.body.classList.add("uk-dark");
+                card.forEach(x => {
+                    x.classList.add("uk-card-default");
+                    x.classList.remove("uk-card-secondary");
+                });
+                break;
+            case "dark":
+                document.documentElement.classList.add("uk-light");
+                document.body.classList.add("uk-light");
+                document.documentElement.classList.remove("uk-dark");
+                document.body.classList.remove("uk-dark");
+                card.forEach(x => {
+                    x.classList.remove("uk-card-default");
+                    x.classList.add("uk-card-secondary");
+                });
+                break;
+            default:
+                console.warn("invalid theme");
+                break;
+        }
+    }
+    style.setTheme = setTheme;
+})(style || (style = {}));
 var vote;
 (function (vote) {
     function setVotes(votes) {
@@ -1722,7 +1748,7 @@ var action;
             JSX("td", null, action.act),
             JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
             JSX("td", null, action.note),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.occurred))));
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.created))));
     }
     function renderActions(actions) {
         if (actions.length === 0) {
@@ -1736,7 +1762,7 @@ var action;
                         JSX("th", null, "Act"),
                         JSX("th", null, "Content"),
                         JSX("th", null, "Note"),
-                        JSX("th", null, "Occurred"))),
+                        JSX("th", null, "Created"))),
                 JSX("tbody", null, actions.map(a => renderAction(a))));
         }
     }
@@ -1851,6 +1877,7 @@ var permission;
         ret.push(...readPermission("github"));
         ret.push(...readPermission("google"));
         ret.push(...readPermission("slack"));
+        ret.push(...readPermission("facebook"));
         ret.push(...readPermission("amazon"));
         ret.push(...readPermission("microsoft"));
         return ret;

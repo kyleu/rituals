@@ -45,7 +45,7 @@
       });
     }
 
-    window.onload = function() {
+    window.addEventListener("load", function() {
       var q = voyagerLink("query", "settings", "<%= ctx.Route(util.AdminLink(util.KeyVoyager, `query`)) %>");
       var s = React.createElement("span", { style: { display: "inline-block", width: "16px" } });
       var m = voyagerLink("mutation", "cog", "<%= ctx.Route(util.AdminLink(util.KeyVoyager, `mutation`)) %>");
@@ -57,7 +57,7 @@
         }, React.createElement(GraphiQL.Logo, {}, q, s, m)),
         document.getElementById("<%= util.KeyGraphiQL %>")
       )
-    };
+    }, false);
   </script>
   <style>
     .graphiql-container .execute-button-wrap {

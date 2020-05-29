@@ -8,22 +8,19 @@ import (
 )
 
 var (
-	estimateArgs               graphql.FieldConfigArgument
 	estimateResolver           Callback
 	estimatesResolver          Callback
+	estimateActionResolver     Callback
 	estimateMemberResolver     Callback
 	estimatePermissionResolver Callback
+	estimateCommentResolver    Callback
 	estimateTeamResolver       Callback
 	estimateSprintResolver     Callback
 	estimateType               *graphql.Object
 )
 
 func initEstimate() {
-	estimateArgs = graphql.FieldConfigArgument{
-		util.KeyKey: &graphql.ArgumentConfig{
-			Type: graphql.String,
-		},
-	}
+	initStory()
 
 	estimateStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "EstimateStatus",
@@ -36,15 +33,15 @@ func initEstimate() {
 	})
 
 	estimateResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, err := paramKeyString(p)
-		if err != nil {
-			return nil, err
-		}
-		return ctx.App.Estimate.GetBySlug(slug)
+		return ctx.App.Estimate.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger))
 	}
 
 	estimatesResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.List(paramSetFromGraphQLParams(util.SvcEstimate.Key, params, ctx.Logger))
+		return ctx.App.Estimate.List(paramSetFromGraphQLParams(util.SvcEstimate.Key, params, ctx.Logger)), nil
+	}
+
+	estimateActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Action.GetBySvcModel(util.SvcEstimate, p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	estimateMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -53,6 +50,10 @@ func initEstimate() {
 
 	estimatePermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Estimate.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
+	estimateCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Estimate.Comments.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	estimateTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -99,17 +100,29 @@ func initEstimate() {
 						return p.Source.(*estimate.Session).Status.Key, nil
 					},
 				},
-				"choices": &graphql.Field{
+				util.Plural(util.KeyChoice): &graphql.Field{
 					Type: graphql.NewNonNull(graphql.NewList(graphql.String)),
 				},
 				util.KeyCreated: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.DateTime),
+				},
+				util.Plural(util.KeyStory): &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(storyType)),
+					Description: "This estimate's stories",
+					Args:        listArgs,
+					Resolve:     ctxF(storiesResolver),
 				},
 				util.Plural(util.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This estimate's members",
 					Args:        listArgs,
 					Resolve:     ctxF(estimateMemberResolver),
+				},
+				util.Plural(util.KeyComment): &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
+					Description: "This estimate's comments",
+					Args:        listArgs,
+					Resolve:     ctxF(estimateCommentResolver),
 				},
 			},
 		},

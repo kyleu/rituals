@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Service) NewRecord(r *Record) (*Record, error) {
-	q := query.SQLInsert(util.KeyAuth, []string{"id", "user_id", "provider", "provider_id", "user_list_id", "user_list_name", "access_token", "expires", "name", "email", "picture"}, 1)
+	q := query.SQLInsert(util.KeyAuth, []string{util.KeyID, util.WithDBID(util.KeyUser), util.KeyProvider, util.WithDBID(util.KeyProvider), "user_list_id", "user_list_name", "access_token", "expires", util.KeyName, util.KeyEmail, "picture"}, 1)
 	err := s.db.Insert(q, nil, r.ID, r.UserID, r.Provider.Key, r.ProviderID, r.UserListID, r.UserListName, r.AccessToken, r.Expires, r.Name, r.Email, r.Picture)
 	if err != nil {
 		return nil, err
@@ -21,25 +21,26 @@ func (s *Service) NewRecord(r *Record) (*Record, error) {
 }
 
 func (s *Service) UpdateRecord(r *Record) error {
-	cols := []string{"user_list_id", "user_list_name", "access_token", "expires", "name", "email", "picture"}
-	q := query.SQLUpdate(util.KeyAuth, cols, fmt.Sprintf("id = $%v", len(cols)+1))
+	cols := []string{"user_list_id", "user_list_name", "access_token", "expires", util.KeyName, util.KeyEmail, "picture"}
+	q := query.SQLUpdate(util.KeyAuth, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	return s.db.UpdateOne(q, nil, r.UserListID, r.UserListName, r.AccessToken, r.Expires, r.Name, r.Email, r.Picture, r.ID)
 }
 
-func (s *Service) List(params *query.Params) (Records, error) {
+func (s *Service) List(params *query.Params) Records {
 	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	q := query.SQLSelect("*", util.KeyAuth, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving auth records: %+v", err))
+		return nil
 	}
-	return toRecords(dtos), nil
+	return toRecords(dtos)
 }
 
 func (s *Service) GetByID(authID uuid.UUID) (*Record, error) {
 	dto := &recordDTO{}
-	q := query.SQLSelect("*", util.KeyAuth, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeyAuth, util.KeyID + " = $1")
 	err := s.db.Get(dto, q, nil, authID)
 	if err != nil {
 		return nil, err
@@ -49,7 +50,7 @@ func (s *Service) GetByID(authID uuid.UUID) (*Record, error) {
 
 func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
 	dto := &recordDTO{}
-	q := query.SQLSelect("*", util.KeyAuth, "provider = $1 and provider_id = $2", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeyAuth, "provider = $1 and provider_id = $2")
 	err := s.db.Get(dto, q, nil, key, code)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -60,21 +61,21 @@ func (s *Service) GetByProviderID(key string, code string) (*Record, error) {
 	return dto.ToRecord(), nil
 }
 
-func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) (Records, error) {
+func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) Records {
 	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving auths for user [%v]: %+v", userID, err))
+		return nil
 	}
-	return toRecords(dtos), nil
+	return toRecords(dtos)
 }
 
 func (s *Service) Delete(authID uuid.UUID) error {
-	q := query.SQLDelete(util.KeyAuth, "id = $1")
-	_, err := s.db.Delete(q, nil, authID)
-	return err
+	q := query.SQLDelete(util.KeyAuth, util.KeyID + " = $1")
+	return s.db.DeleteOne(q, nil, authID)
 }
 
 func toRecords(dtos []recordDTO) Records {

@@ -1,6 +1,7 @@
 package standup
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/action"
@@ -17,40 +18,41 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, au
 	id := util.UUID()
 	html := markdown.ToHTML(content)
 
-	q := query.SQLInsert(util.KeyReport, []string{"id", "standup_id", "d", "author_id", "content", "html"}, 1)
+	q := query.SQLInsert(util.KeyReport, []string{util.KeyID, util.WithDBID(util.SvcStandup.Key), "d", util.WithDBID(util.KeyAuthor), util.KeyContent, util.KeyHTML}, 1)
 	err := s.db.Insert(q, nil, id, standupID, d, authorID, content, html)
 	if err != nil {
 		return nil, err
 	}
 
 	actionContent := map[string]interface{}{"reportID": id}
-	s.actions.Post(util.SvcStandup.Key, standupID, authorID, action.ActReportAdd, actionContent, "")
+	s.actions.Post(util.SvcStandup, standupID, authorID, action.ActReportAdd, actionContent, "")
 
 	return s.GetReportByID(id)
 }
 
 var defaultReportOrdering = query.Orderings{{Column: "d", Asc: false}, {Column: util.KeyCreated, Asc: false}}
 
-func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) (Reports, error) {
+func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) Reports {
 	params = query.ParamsWithDefaultOrdering(util.KeyReport, params, defaultReportOrdering...)
 	var dtos []reportDTO
 	q := query.SQLSelect("*", util.KeyReport, "standup_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, standupID)
 
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving reports for standup [%v]: %+v", standupID, err))
+		return nil
 	}
 
 	ret := make(Reports, 0, len(dtos))
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToReport())
 	}
-	return ret, nil
+	return ret
 }
 
 func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	dto := &reportDTO{}
-	q := query.SQLSelect("*", util.KeyReport, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeyReport, util.KeyID + " = $1")
 	err := s.db.Get(dto, q, nil, reportID)
 
 	if err != nil {
@@ -62,7 +64,7 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelect("standup_id", util.KeyReport, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple(util.WithDBID(util.SvcStandup.Key), util.KeyReport, util.KeyID + " = $1")
 	err := s.db.Get(&ret, q, nil, reportID)
 
 	if err != nil {
@@ -75,7 +77,7 @@ func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, authorID uuid.UUID) (*Report, error) {
 	html := markdown.ToHTML(content)
 
-	q := `update report set d = $1, author_id = $2, content = $3, html = $4 where id = $5`
+	q := query.SQLUpdate(util.KeyReport, []string{"d", util.WithDBID(util.KeyAuthor), util.KeyContent, util.KeyHTML}, util.KeyID + " = $5")
 	err := s.db.UpdateOne(q, nil, d, authorID, content, html, reportID)
 	if err != nil {
 		return nil, err
@@ -87,7 +89,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	}
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.actions.Post(util.SvcStandup.Key, report.StandupID, authorID, action.ActReportUpdate, actionContent, "")
+	s.actions.Post(util.SvcStandup, report.StandupID, authorID, action.ActReportUpdate, actionContent, "")
 
 	return report, err
 }
@@ -101,10 +103,10 @@ func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load report [" + reportID.String() + "] for removal")
 	}
 
-	_, err = s.db.Delete(query.SQLDelete(util.KeyReport, "id = $1"), nil, reportID)
+	err = s.db.DeleteOne(query.SQLDelete(util.KeyReport, util.KeyID + " = $1"), nil, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.actions.Post(util.SvcStandup.Key, report.StandupID, userID, action.ActReportRemove, actionContent, "")
+	s.actions.Post(util.SvcStandup, report.StandupID, userID, action.ActReportRemove, actionContent, "")
 
 	return err
 }

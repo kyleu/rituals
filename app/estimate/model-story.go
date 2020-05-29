@@ -34,6 +34,15 @@ func (t StoryStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
+func (t *StoryStatus) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = StoryStatusFromString(s)
+	return nil
+}
+
 type Story struct {
 	ID         uuid.UUID   `json:"id"`
 	EstimateID uuid.UUID   `json:"estimateID"`

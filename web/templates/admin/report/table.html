@@ -5,8 +5,8 @@
     <tr>
       <% ComponentTableHeader(util.KeyReport, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyReport, "d", "Date", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyReport, "authorID", "Author", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyReport, "content", "Content", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyReport, util.WithID(util.KeyAuthor), util.Title(util.KeyAuthor), params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyReport, util.KeyContent, util.Title(util.KeyContent), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyReport, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>

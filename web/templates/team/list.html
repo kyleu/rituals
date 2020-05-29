@@ -5,7 +5,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+    <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">
         <span class="h3-icon" data-uk-icon="icon: <%= util.SvcTeam.Icon %>"></span> Teams
       </h3>
@@ -15,7 +15,7 @@
       <% } %>
     </div>
 
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+    <div class="uk-card uk-card-body uk-margin-top">
       <h3 class="uk-card-title">New Team</h3>
       <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcTeam.Key + `.new`) %>" method="post">
         <% TeamForm("", auths, ctx, _buffer) %>

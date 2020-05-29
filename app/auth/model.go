@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"golang.org/x/oauth2/facebook"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -26,9 +27,9 @@ type Provider struct {
 type Providers []*Provider
 
 func (p Providers) Names() []string {
-	ret := make([]string, len(p))
-	for i, prv := range p {
-		ret[i] = prv.Title
+	ret := make([]string, 0, len(p))
+	for _, prv := range p {
+		ret = append(ret, prv.Title)
 	}
 	return ret
 }
@@ -36,10 +37,11 @@ func (p Providers) Names() []string {
 var ProviderGitHub = Provider{Key: "github", Title: "GitHub", Icon: "github-alt", Endpoint: github.Endpoint, Scopes: githubScopes}
 var ProviderGoogle = Provider{Key: "google", Title: "Google", Icon: "google", Endpoint: google.Endpoint, Scopes: googleScopes}
 var ProviderSlack = Provider{Key: "slack", Title: "Slack", Icon: "hashtag", Endpoint: slack.Endpoint, Scopes: slackScopes}
+var ProviderFacebook = Provider{Key: "facebook", Title: "Facebook", Icon: "facebook", Endpoint: facebook.Endpoint, Scopes: facebookScopes}
 var ProviderAmazon = Provider{Key: "amazon", Title: "Amazon", Icon: "cart", Endpoint: amazon.Endpoint, Scopes: amazonScopes}
 var ProviderMicrosoft = Provider{Key: "microsoft", Title: "Microsoft", Icon: "world", Endpoint: microsoft.AzureADEndpoint(""), Scopes: microsoftScopes}
 
-var AllProviders = Providers{&ProviderGitHub, &ProviderGoogle, &ProviderSlack, &ProviderAmazon, &ProviderMicrosoft}
+var AllProviders = Providers{&ProviderGitHub, &ProviderGoogle, &ProviderSlack, &ProviderFacebook, &ProviderAmazon, &ProviderMicrosoft}
 
 func ProviderFromString(s string) *Provider {
 	for _, t := range AllProviders {
@@ -96,9 +98,9 @@ func (r Records) FindByProvider(key string) Records {
 }
 
 func (r Records) Emails() []string {
-	ret := make([]string, len(r))
-	for i, e := range r {
-		ret[i] = e.Email
+	ret := make([]string, 0, len(r))
+	for _, e := range r {
+		ret = append(ret, e.Email)
 	}
 	return ret
 }

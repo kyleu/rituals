@@ -13,10 +13,10 @@ type Service struct {
 // Services
 
 var SvcSystem = Service{
-	Key:         "system",
-	Title:       "System",
-	Plural:      "systems",
-	PluralTitle: "Systems",
+	Key:         KeySystem,
+	Title:       Title(KeySystem),
+	Plural:      Plural(KeySystem),
+	PluralTitle: PluralTitle(KeySystem),
 	Icon:        "close",
 }
 var SvcTeam = Service{
@@ -53,6 +53,17 @@ var SvcRetro = Service{
 	Plural:      "retros",
 	PluralTitle: "Retrospectives",
 	Icon:        "history",
+}
+
+var allServices = []Service{SvcSystem, SvcTeam, SvcSprint, SvcEstimate, SvcStandup, SvcRetro}
+
+func ServiceFromString(str string) Service {
+	for _, s := range allServices {
+		if s.Key == str {
+			return s
+		}
+	}
+	return SvcSystem
 }
 
 func ServiceTitle(svc Service, title string) string {

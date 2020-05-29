@@ -21,10 +21,7 @@ func InvitationList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		params := act.ParamSetFromRequest(r)
-		invitations, err := ctx.App.Invitation.List(params.Get(util.KeyInvitation, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		invitations := ctx.App.Invitation.List(params.Get(util.KeyInvitation, ctx.Logger))
 		return tmpl(templates.AdminInvitationList(invitations, params, ctx, w))
 	})
 }

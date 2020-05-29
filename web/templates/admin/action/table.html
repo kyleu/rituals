@@ -4,10 +4,10 @@
   <thead>
     <tr>
       <% ComponentTableHeader(util.KeyAction, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAction, "modelID", "Model", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAction, "authorID", "AuthorID", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAction, "act", "Act", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAction, "note", "Note", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAction, util.WithID(util.KeyModel), util.Title(util.KeyModel), params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAction, util.WithID(util.KeyAuthor), util.WithID(util.KeyAuthor), params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAction, util.KeyAct, util.Title(util.KeyAct), params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAction, util.KeyNote, util.Title(util.KeyNote), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyAction, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>

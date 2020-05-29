@@ -2,6 +2,7 @@ package action
 
 import (
 	"encoding/json"
+	"github.com/kyleu/rituals.dev/app/util"
 	"time"
 
 	"emperror.dev/errors"
@@ -36,14 +37,14 @@ const (
 )
 
 type Action struct {
-	ID       uuid.UUID   `json:"id"`
-	Svc      string      `json:"svc"`
-	ModelID  uuid.UUID   `json:"modelID"`
-	AuthorID uuid.UUID   `json:"authorID"`
-	Act      string      `json:"act"`
-	Content  interface{} `json:"content"`
-	Note     string      `json:"note"`
-	Created  time.Time   `json:"created"`
+	ID       uuid.UUID    `json:"id"`
+	Svc      util.Service `json:"svc"`
+	ModelID  uuid.UUID    `json:"modelID"`
+	AuthorID uuid.UUID    `json:"authorID"`
+	Act      string       `json:"act"`
+	Content  interface{}  `json:"content"`
+	Note     string       `json:"note"`
+	Created  time.Time    `json:"created"`
 }
 
 func (a *Action) ContentJSON() (string, error) {
@@ -75,7 +76,7 @@ func (dto *actionDTO) ToAction() *Action {
 
 	return &Action{
 		ID:       dto.ID,
-		Svc:      dto.Svc,
+		Svc:      util.ServiceFromString(dto.Svc),
 		ModelID:  dto.ModelID,
 		AuthorID: dto.AuthorID,
 		Act:      dto.Act,

@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/json"
+	"github.com/kyleu/rituals.dev/app/controllers/form"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/controllers/act"
@@ -22,10 +23,7 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyConnection, util.Plural(util.KeyConnection))
 
 		p := act.ParamSetFromRequest(r)
-		connections, err := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		connections := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
 		return tmpl(templates.AdminConnectionList(connections, p, ctx, w))
 	})
 }
@@ -47,7 +45,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		msg := socket.Message{Svc: util.SvcSystem.Key, Cmd: socket.ServerCmdPong, Param: nil}
+		msg := socket.NewMessage(util.SvcSystem, socket.ServerCmdPong, nil)
 		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))
 	})
 }
@@ -63,14 +61,17 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 
-		_ = r.ParseForm()
-		svc := r.Form.Get(util.KeySvc)
-		cmd := r.Form.Get("cmd")
-		paramString := r.Form.Get("param")
+		frm := &form.ConnectionForm{}
+		err = form.Decode(r, frm, ctx.Logger)
+		if err != nil {
+			return eresp(err, "")
+		}
+
 		var param []map[string]interface{}
-		_ = json.Unmarshal([]byte(paramString), &param)
-		msg := socket.Message{Svc: svc, Cmd: cmd, Param: param}
-		err = ctx.App.Socket.WriteMessage(*connectionID, &msg)
+		_ = json.Unmarshal([]byte(frm.Param), &param)
+		svc := util.ServiceFromString(frm.Svc)
+		msg := socket.NewMessage(svc, frm.Cmd, param)
+		err = ctx.App.Socket.WriteMessage(*connectionID, msg)
 		if err != nil {
 			return eresp(err, "")
 		}

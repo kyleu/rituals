@@ -1,9 +1,8 @@
 package socket
 
 import (
+	"encoding/json"
 	"fmt"
-	"strings"
-
 	"github.com/kyleu/rituals.dev/app/query"
 
 	"emperror.dev/errors"
@@ -12,53 +11,61 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onEstimateMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
+func onEstimateMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
 	var err error
-
+	userID := conn.Profile.UserID
 	switch cmd {
 	case ClientCmdConnect:
-		err = onEstimateConnect(s, conn, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onEstimateConnect(s, conn, u)
 	case ClientCmdUpdateSession:
-		err = onEstimateSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+		ess := estimateSessionSaveParams{}
+		util.FromJSON(param, &ess, s.logger)
+		err = onEstimateSessionSave(s, *conn.Channel, userID, ess)
 	case ClientCmdRemoveMember:
-		err = onRemoveMember(s, s.estimates.Members, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveMember(s, s.estimates.Members, *conn.Channel, userID, u)
 	case ClientCmdAddStory:
-		err = onAddStory(s, *conn.Channel, userID, param.(map[string]interface{}))
+		asp := addStoryParams{}
+		util.FromJSON(param, &asp, s.logger)
+		err = onAddStory(s, *conn.Channel, userID, asp)
 	case ClientCmdUpdateStory:
-		err = onUpdateStory(s, *conn.Channel, userID, param.(map[string]interface{}))
+		usp := updateStoryParams{}
+		util.FromJSON(param, &usp, s.logger)
+		err = onUpdateStory(s, *conn.Channel, userID, usp)
 	case ClientCmdRemoveStory:
-		err = onRemoveStory(s, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveStory(s, *conn.Channel, userID, u)
 	case ClientCmdSetStoryStatus:
-		err = onSetStoryStatus(s, *conn.Channel, userID, param.(map[string]interface{}))
+		sssp := setStoryStatusParams{}
+		util.FromJSON(param, &sssp, s.logger)
+		err = onSetStoryStatus(s, *conn.Channel, userID, sssp)
 	case ClientCmdSubmitVote:
-		err = onSubmitVote(s, *conn.Channel, userID, param.(map[string]interface{}))
+		svp := submitVoteParams{}
+		util.FromJSON(param, &svp, s.logger)
+		err = onSubmitVote(s, *conn.Channel, userID, svp)
 	default:
 		err = errors.New("unhandled estimate command [" + cmd + "]")
 	}
 	return errors.Wrap(err, "error handling estimate message")
 }
 
-func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	titleString, ok := param[util.KeyTitle].(string)
-	if !ok {
-		return errors.New("cannot read choices as string")
-	}
-	title := util.ServiceTitle(util.SvcEstimate, titleString)
+func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param estimateSessionSaveParams) error {
+	title := util.ServiceTitle(util.SvcEstimate, param.Title)
 
-	choicesString, ok := param["choices"].(string)
-	if !ok {
-		return errors.New(fmt.Sprintf("cannot parse [%v] as string", param["choices"]))
-	}
-	choices := query.StringToArray(choicesString)
+	choices := query.StringToArray(param.Choices)
 	if len(choices) == 0 {
 		choices = estimate.DefaultChoices
 	}
 
-	sprintID := getUUIDPointer(param, util.WithID(util.SvcSprint.Key))
-	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
+	sprintID := util.GetUUIDFromString(param.SprintID)
+	teamID := util.GetUUIDFromString(param.TeamID)
 
 	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
-	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(choices, ", "), teamID, sprintID))
+	s.logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(choices, "and"), teamID, sprintID))
 
 	curr, err := s.estimates.GetByID(ch.ID)
 	if err != nil {
@@ -94,7 +101,7 @@ func onEstimateSessionSave(s *Service, ch channel, userID uuid.UUID, param map[s
 		}
 	}
 
-	err = s.updatePerms(ch, userID, s.estimates.Permissions, param)
+	err = s.updatePerms(ch, userID, s.estimates.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -111,7 +118,6 @@ func sendEstimateSessionUpdate(s *Service, ch channel) error {
 		return errors.Wrap(err, "cannot load estimate session ["+ch.ID.String()+"]")
 	}
 
-	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdSessionUpdate, Param: est}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdSessionUpdate, est))
 	return errors.Wrap(err, "error sending estimate session")
 }

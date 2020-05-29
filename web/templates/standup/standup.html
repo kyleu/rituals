@@ -23,5 +23,6 @@
   </div>
 </div>
 <% ComponentSessionWelcome(util.SvcStandup, ctx, _buffer) %>
-<script>window.onload = function() { rituals.init(services.standup.key, "<%= model.ID.String() %>") }</script>
+<% ComponentSessionComments(ctx, _buffer) %>
+<script>window.addEventListener("load", function() { rituals.init(services.standup.key, "<%= model.ID.String() %>") }, false)</script>
 <% } %>

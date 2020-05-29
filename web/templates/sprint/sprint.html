@@ -23,5 +23,6 @@
   </div>
 </div>
 <% ComponentSessionWelcome(util.SvcSprint, ctx, _buffer) %>
-<script>window.onload = function() { rituals.init(services.sprint.key, "<%= model.ID.String() %>") }</script>
+<% ComponentSessionComments(ctx, _buffer) %>
+<script>window.addEventListener("load", function() { rituals.init(services.sprint.key, "<%= model.ID.String() %>") }, false)</script>
 <% } %>

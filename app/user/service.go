@@ -34,7 +34,7 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 func (s *Service) new(id uuid.UUID) (*SystemUser, error) {
 	s.logger.Info("creating user [" + id.String() + "]")
 
-	q := query.SQLInsert(util.KeySystemUser, []string{"id", "name", "role", "theme", "nav_color", "link_color", "picture", "locale", "created"}, 1)
+	q := query.SQLInsert(util.KeySystemUser, []string{util.KeyID, util.KeyName, util.KeyRole, util.KeyTheme, "nav_color", "link_color", "picture", "locale", util.KeyCreated}, 1)
 	prof := util.NewUserProfile(id)
 	err := s.db.Insert(q, nil, prof.UserID, prof.Name, util.RoleGuest.Key, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), time.Now())
 
@@ -45,7 +45,7 @@ func (s *Service) new(id uuid.UUID) (*SystemUser, error) {
 	return s.GetByID(id, false)
 }
 
-func (s *Service) List(params *query.Params) (SystemUsers, error) {
+func (s *Service) List(params *query.Params) SystemUsers {
 	params = query.ParamsWithDefaultOrdering(util.KeyUser, params, query.DefaultCreatedOrdering...)
 
 	var ret SystemUsers
@@ -54,15 +54,16 @@ func (s *Service) List(params *query.Params) (SystemUsers, error) {
 	err := s.db.Select(&ret, q, nil)
 
 	if err != nil {
-		return nil, err
+		s.logger.Error(fmt.Sprintf("error retrieving system users: %+v", err))
+		return nil
 	}
 
-	return ret, nil
+	return ret
 }
 
 func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) {
 	ret := &SystemUser{}
-	q := query.SQLSelect("*", util.KeySystemUser, "id = $1", "", 0, 0)
+	q := query.SQLSelectSimple("*", util.KeySystemUser, util.KeyID + " = $1")
 	err := s.db.Get(ret, q, nil, id)
 	if err == sql.ErrNoRows {
 		if addIfMissing {
@@ -79,7 +80,7 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) (*SystemUser, error) 
 func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error) {
 	s.logger.Info("updating user [" + prof.UserID.String() + "] from profile")
 	cols := []string{"name", "role", "theme", "nav_color", "link_color", "picture", "locale"}
-	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("id = $%v", len(cols)+1))
+	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, prof.Name, prof.Role.Key, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), prof.UserID)
 	if err != nil {
 		return nil, err
@@ -90,7 +91,7 @@ func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error)
 func (s *Service) UpdateUserName(userID uuid.UUID, name string) error {
 	s.logger.Info("updating user [" + userID.String() + "]")
 	cols := []string{"name"}
-	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("id = $%v", len(cols)+1))
+	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, name, userID)
 	return err
 }
@@ -98,7 +99,7 @@ func (s *Service) UpdateUserName(userID uuid.UUID, name string) error {
 func (s *Service) SetRole(userID uuid.UUID, role util.Role) error {
 	s.logger.Info("updating user role [" + userID.String() + "]")
 	cols := []string{"role"}
-	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("id = $%v", len(cols)+1))
+	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, role.Key, userID)
 	return err
 }

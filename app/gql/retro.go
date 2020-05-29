@@ -8,23 +8,18 @@ import (
 )
 
 var (
-	retroArgs               graphql.FieldConfigArgument
 	retroResolver           Callback
 	retrosResolver          Callback
+	retroActionResolver     Callback
 	retroMemberResolver     Callback
 	retroPermissionResolver Callback
+	retroCommentResolver    Callback
 	retroTeamResolver       Callback
 	retroSprintResolver     Callback
 	retroType               *graphql.Object
 )
 
 func initRetro() {
-	retroArgs = graphql.FieldConfigArgument{
-		util.KeyKey: &graphql.ArgumentConfig{
-			Type: graphql.String,
-		},
-	}
-
 	retroStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "RetroStatus",
 		Values: graphql.EnumValueConfigMap{
@@ -34,15 +29,15 @@ func initRetro() {
 	})
 
 	retroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, err := paramKeyString(p)
-		if err != nil {
-			return nil, err
-		}
-		return ctx.App.Retro.GetBySlug(slug)
+		return ctx.App.Retro.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger))
 	}
 
 	retrosResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.List(paramSetFromGraphQLParams(util.SvcRetro.Key, params, ctx.Logger))
+		return ctx.App.Retro.List(paramSetFromGraphQLParams(util.SvcRetro.Key, params, ctx.Logger)), nil
+	}
+
+	retroActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Action.GetBySvcModel(util.SvcRetro, p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	retroMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -51,6 +46,10 @@ func initRetro() {
 
 	retroPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.Permissions.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
+	retroCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Retro.Comments.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	retroTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -97,7 +96,7 @@ func initRetro() {
 						return p.Source.(*retro.Session).Status.Key, nil
 					},
 				},
-				"categories": &graphql.Field{
+				util.Plural(util.KeyCategory): &graphql.Field{
 					Type: graphql.NewNonNull(graphql.NewList(graphql.String)),
 				},
 				util.KeyCreated: &graphql.Field{
@@ -108,6 +107,12 @@ func initRetro() {
 					Description: "This retro's members",
 					Args:        listArgs,
 					Resolve:     ctxF(retroMemberResolver),
+				},
+				util.Plural(util.KeyComment): &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
+					Description: "This retro's comments",
+					Args:        listArgs,
+					Resolve:     ctxF(retroCommentResolver),
 				},
 			},
 		},

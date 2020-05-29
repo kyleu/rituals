@@ -3,29 +3,33 @@ package query
 import "github.com/kyleu/rituals.dev/app/util"
 
 var (
-	allowedActionSortColumns     = []string{util.KeyID, util.KeySvc, "modelID", "authorID", "act", "content", "note", util.KeyCreated}
+	allowedActionSortColumns     = []string{util.KeyID, util.KeySvc, util.WithID(util.KeyModel), util.WithID(util.KeyAuthor), "act", util.KeyContent, util.KeyNote, util.KeyCreated}
 	allowedAdminSortColumns      = []string{util.KeyName, "recent", "count"}
-	allowedAuthSortColumns       = []string{util.KeyID, util.WithID(util.KeyUser), "provider", "providerID", "expires", util.KeyName, "email", "picture", util.KeyCreated}
-	allowedEstimateSortColumns   = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, "choices", "options", util.KeyCreated}
-	allowedInvitationSortColumns = []string{util.KeyKey, "k", "v", "src", "tgt", "note", util.KeyStatus, "redeemed", util.KeyCreated}
+	allowedAuthSortColumns       = []string{util.KeyID, util.WithID(util.KeyUser), util.KeyProvider, util.WithID(util.KeyProvider), "expires", util.KeyName, util.KeyEmail, "picture", util.KeyCreated}
+	allowedCommentSortColumns    = []string{util.KeyID, util.KeySvc, util.WithID(util.KeyModel), util.WithID(util.KeyAuthor), util.KeyContent, util.KeyHTML, util.KeyCreated}
+	allowedEstimateSortColumns   = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyChoice), "options", util.KeyCreated}
+	allowedFeedbackSortColumns   = []string{util.KeyID, util.WithID(util.SvcRetro.Key), util.KeyIdx, util.WithID(util.KeyAuthor), util.KeyCategory, util.KeyContent, util.KeyHTML, util.KeyCreated}
+	allowedInvitationSortColumns = []string{util.KeyKey, "k", "v", "src", "tgt", util.KeyNote, util.KeyStatus, "redeemed", util.KeyCreated}
 	allowedMemberSortColumns     = []string{util.WithID(util.KeyUser), util.KeyName, util.KeyRole, util.KeyCreated}
 	allowedPermissionSortColumns = []string{"k", "v", "access", util.KeyCreated}
-	allowedReportSortColumns     = []string{util.KeyID, "standupID", "d", "authorID", "content", "html", util.KeyCreated}
-	allowedRetroSortColumns      = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, "categories", util.KeyCreated}
+	allowedReportSortColumns     = []string{util.KeyID, util.WithID(util.SvcStandup.Key), "d", util.WithID(util.KeyAuthor), util.KeyContent, util.KeyHTML, util.KeyCreated}
+	allowedRetroSortColumns      = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyCategory), util.KeyCreated}
 	allowedSocketSortColumns     = []string{util.KeySvc, "cmd", "param"}
 	allowedSprintSortColumns     = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.KeyOwner, "startDate", "endDate", util.KeyCreated}
 	allowedStandupSortColumns    = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.KeyCreated}
-	allowedStorySortColumns      = []string{util.KeyID, "estimateID", util.KeyIdx, "authorID", util.KeyTitle, util.KeyStatus, "finalVote", util.KeyCreated}
+	allowedStorySortColumns      = []string{util.KeyID, util.WithID(util.SvcEstimate.Key), util.KeyIdx, util.WithID(util.KeyAuthor), util.KeyTitle, util.KeyStatus, "finalVote", util.KeyCreated}
 	allowedTeamSortColumns       = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.KeyOwner, util.KeyCreated}
 	allowedUserSortColumns       = []string{util.KeyID, util.KeyName, util.KeyRole, util.KeyTheme, "navColor", "linkColor", "picture", "locale", util.KeyCreated}
-	allowedVoteSortColumns       = []string{"storyID", util.WithID(util.KeyUser), "choice", "updated", util.KeyCreated}
+	allowedVoteSortColumns       = []string{"storyID", util.WithID(util.KeyUser), util.KeyChoice, "updated", util.KeyCreated}
 )
 
 var allowedColumns = map[string][]string{
 	util.KeyAction:       allowedActionSortColumns,
 	util.KeyAdmin:        allowedAdminSortColumns,
 	util.KeyAuth:         allowedAuthSortColumns,
+	util.KeyComment:      allowedCommentSortColumns,
 	util.SvcEstimate.Key: allowedEstimateSortColumns,
+	util.KeyFeedback  :   allowedFeedbackSortColumns,
 	util.KeyInvitation:   allowedInvitationSortColumns,
 	util.KeyMember:       allowedMemberSortColumns,
 	util.KeyPermission:   allowedPermissionSortColumns,

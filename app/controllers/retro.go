@@ -19,23 +19,11 @@ import (
 func RetroList(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
-		sessions, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "error retrieving retros")
-		}
 
-		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		sessions := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		teams := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcRetro.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key+".list"), util.SvcRetro.Key)
@@ -47,32 +35,32 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
-		categoriesString := r.Form.Get("categories")
+		categoriesString := r.Form.Get(util.Plural(util.KeyCategory))
 		categories := query.StringToArray(categoriesString)
 		if len(categories) == 0 {
 			categories = retro.DefaultCategories
 		}
 
-		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcRetro, r.Form, ctx.App.User)
+		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcRetro, r.Form, ctx.App.User)
 		if err != nil {
 			return eresp(err, "cannot parse form")
 		}
 
-		sess, err := ctx.App.Retro.New(r.Title, ctx.Profile.UserID, categories, r.TeamID, r.SprintID)
+		sess, err := ctx.App.Retro.New(sf.Title, ctx.Profile.UserID, categories, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return eresp(err, "error creating retro session")
 		}
 
-		_, err = ctx.App.Retro.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		_, err = ctx.App.Retro.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return eresp(err, "error setting permissions for new session")
 		}
 
-		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, r.TeamID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}
-		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint.Key, r.SprintID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint, sf.SprintID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}

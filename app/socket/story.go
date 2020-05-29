@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -15,14 +16,14 @@ type StoryStatusChange struct {
 	FinalVote string               `json:"finalVote"`
 }
 
-func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := param[util.KeyTitle].(string)
-	if title == "" {
-		title = "Untitled " + util.Title(util.KeyStory)
+func onAddStory(s *Service, ch channel, userID uuid.UUID, param addStoryParams) error {
+	param.Title = strings.TrimSpace(param.Title)
+	if param.Title == "" {
+		param.Title = "Untitled " + util.Title(util.KeyStory)
 	}
-	s.logger.Debug(fmt.Sprintf("adding story [%s]", title))
+	s.logger.Debug(fmt.Sprintf("adding story [%s]", param.Title))
 
-	story, err := s.estimates.NewStory(ch.ID, title, userID)
+	story, err := s.estimates.NewStory(ch.ID, param.Title, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new story")
 	}
@@ -30,17 +31,12 @@ func onAddStory(s *Service, ch channel, userID uuid.UUID, param map[string]inter
 	return errors.Wrap(err, "error sending story update")
 }
 
-func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	storyID := getUUIDPointer(param, util.KeyID)
-	if storyID == nil {
-		return util.IDError(util.KeyStory, "")
+func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param updateStoryParams) error {
+	param.Title = strings.TrimSpace(param.Title)
+	if param.Title == "" {
+		param.Title = "Untitled " + util.Title(util.KeyStory)
 	}
-
-	title := param[util.KeyTitle].(string)
-	if title == "" {
-		title = "Untitled " + util.Title(util.KeyStory)
-	}
-	st, err := s.estimates.UpdateStory(*storyID, title, userID)
+	st, err := s.estimates.UpdateStory(param.StoryID, param.Title, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update story")
 	}
@@ -48,65 +44,43 @@ func onUpdateStory(s *Service, ch channel, userID uuid.UUID, param map[string]in
 	return err
 }
 
-func onRemoveStory(s *Service, ch channel, userID uuid.UUID, param string) error {
-	storyID, err := uuid.FromString(param)
-	if err != nil {
-		return util.IDError(util.KeyStory, param)
-	}
+func onRemoveStory(s *Service, ch channel, userID uuid.UUID, storyID uuid.UUID) error {
 	s.logger.Debug(fmt.Sprintf("removing report [%s]", storyID))
-	err = s.estimates.RemoveStory(storyID, userID)
+	err := s.estimates.RemoveStory(storyID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove story")
 	}
-	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdStoryRemove, Param: storyID}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdStoryRemove, storyID))
 	return errors.Wrap(err, "error sending story removal notification")
 }
 
-func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, m map[string]interface{}) error {
-	storyIDString := m["storyID"].(string)
-	storyID, err := uuid.FromString(storyIDString)
+func onSetStoryStatus(s *Service, ch channel, userID uuid.UUID, params setStoryStatusParams) error {
+	status := estimate.StoryStatusFromString(params.Status)
+	changed, finalVote, err := s.estimates.SetStoryStatus(params.StoryID, status, userID)
 	if err != nil {
-		return util.IDError(util.KeyStory, storyIDString)
-	}
-
-	statusString := m[util.KeyStatus].(string)
-	status := estimate.StoryStatusFromString(statusString)
-	changed, finalVote, err := s.estimates.SetStoryStatus(storyID, status, userID)
-	if err != nil {
-		return errors.Wrap(err, "cannot update status of story ["+storyIDString+"]")
+		return errors.Wrap(err, "cannot update status of story ["+params.StoryID.String()+"]")
 	}
 
 	if changed {
-		param := StoryStatusChange{StoryID: storyID, Status: status, FinalVote: finalVote}
-		msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdStoryStatusChange, Param: param}
-		err := s.WriteChannel(ch, &msg)
+		param := StoryStatusChange{StoryID: params.StoryID, Status: status, FinalVote: finalVote}
+		err := s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdStoryStatusChange, param))
 		return errors.Wrap(err, "error sending story update")
 	}
 
 	return nil
 }
 
-func onSubmitVote(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	storyIDString := param["storyID"].(string)
-	storyID, err := uuid.FromString(storyIDString)
-	if err != nil {
-		return errors.Wrap(err, "cannot parse story ["+storyIDString+"]")
-	}
-	choice := param["choice"].(string)
-
-	vote, err := s.estimates.UpdateVote(storyID, userID, choice)
+func onSubmitVote(s *Service, ch channel, userID uuid.UUID, param submitVoteParams) error {
+	vote, err := s.estimates.UpdateVote(param.StoryID, userID, param.Choice)
 	if err != nil {
 		return errors.Wrap(err, "cannot update vote")
 	}
 
-	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdVoteUpdate, Param: vote}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdVoteUpdate, vote))
 	return errors.Wrap(err, "error sending story update")
 }
 
 func sendStoryUpdate(s *Service, ch channel, story *estimate.Story) error {
-	msg := Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdStoryUpdate, Param: story}
-	err := s.WriteChannel(ch, &msg)
+	err := s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdStoryUpdate, story))
 	return errors.Wrap(err, "error sending story update")
 }

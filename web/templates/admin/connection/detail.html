@@ -1,11 +1,11 @@
-<%: func AdminConnectionDetail(model *socket.Status, msg socket.Message, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminConnectionDetail(model *socket.Status, msg *socket.Message, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+    <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">Socket Connection</h3>
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
@@ -20,7 +20,7 @@
         </tbody>
       </table>
     </div>
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+    <div class="uk-card uk-card-body">
       <form class="uk-form-stacked" action="<%= ctx.Route(util.AdminLink(util.KeyConnection, `post`)) %>" method="post">
         <input name=util.KeyID type="hidden" value="<%=v model.ID %>" />
         <fieldset class="uk-fieldset">

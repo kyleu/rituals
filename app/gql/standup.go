@@ -8,23 +8,18 @@ import (
 )
 
 var (
-	standupArgs               graphql.FieldConfigArgument
 	standupResolver           Callback
 	standupsResolver          Callback
+	standupActionResolver     Callback
 	standupMemberResolver     Callback
 	standupPermissionResolver Callback
+	standupCommentResolver    Callback
 	standupTeamResolver       Callback
 	standupSprintResolver     Callback
 	standupType               *graphql.Object
 )
 
 func initStandup() {
-	standupArgs = graphql.FieldConfigArgument{
-		util.KeyKey: &graphql.ArgumentConfig{
-			Type: graphql.String,
-		},
-	}
-
 	standupStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "StandupStatus",
 		Values: graphql.EnumValueConfigMap{
@@ -34,15 +29,15 @@ func initStandup() {
 	})
 
 	standupResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		slug, err := paramKeyString(p)
-		if err != nil {
-			return nil, err
-		}
-		return ctx.App.Standup.GetBySlug(slug)
+		return ctx.App.Standup.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger))
 	}
 
 	standupsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Standup.List(paramSetFromGraphQLParams(util.SvcStandup.Key, params, ctx.Logger))
+		return ctx.App.Standup.List(paramSetFromGraphQLParams(util.SvcStandup.Key, params, ctx.Logger)), nil
+	}
+
+	standupActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Action.GetBySvcModel(util.SvcStandup, p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	standupMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -51,6 +46,10 @@ func initStandup() {
 
 	standupPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Standup.Permissions.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
+	}
+
+	standupCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Standup.Comments.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	standupTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -105,6 +104,12 @@ func initStandup() {
 					Description: "This standup's members",
 					Args:        listArgs,
 					Resolve:     ctxF(standupMemberResolver),
+				},
+				util.Plural(util.KeyComment): &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
+					Description: "This standups's comments",
+					Args:        listArgs,
+					Resolve:     ctxF(standupCommentResolver),
 				},
 			},
 		},

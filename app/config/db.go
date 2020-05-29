@@ -17,7 +17,7 @@ import (
 	"logur.dev/logur"
 )
 
-func OpenDatabase(logger logur.Logger) (*database.Service, error) {
+func OpenDatabase(debug bool, logger logur.Logger, wipe bool) (*database.Service, error) {
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: "config"})
 
 	// load from config
@@ -35,12 +35,13 @@ func OpenDatabase(logger logur.Logger) (*database.Service, error) {
 		return nil, errors.Wrap(err, "error opening config database")
 	}
 
-	svc := database.New(db)
+	svc := database.NewService(debug, db, logger)
 
-	// remove when not needed
-	err = dbWipe(svc, logger)
-	if err != nil {
-		return nil, errors.Wrap(err, "error applying initial queries")
+	if wipe {
+		err = dbWipe(svc, logger)
+		if err != nil {
+			return nil, errors.Wrap(err, "error applying initial schema")
+		}
 	}
 
 	return svc, nil
@@ -73,7 +74,7 @@ func exec(name string, db *database.Service, logger logur.Logger, f func(*string
 	sqls := strings.Split(sb.String(), ";")
 	startNanos := time.Now().UnixNano()
 	for _, q := range sqls {
-		_, err := db.Exec(q, nil)
+		_, err := db.Exec(q, nil, -1)
 		if err != nil {
 			return errors.Wrap(err, "cannot execute ["+name+"]")
 		}

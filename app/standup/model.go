@@ -37,6 +37,15 @@ func (t Status) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
+func (t *Status) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = statusFromString(s)
+	return nil
+}
+
 type Session struct {
 	ID       uuid.UUID  `json:"id"`
 	Slug     string     `json:"slug"`

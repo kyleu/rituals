@@ -3,8 +3,8 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
@@ -16,33 +16,30 @@ import (
 type EstimateSessionJoined struct {
 	Profile     *util.Profile          `json:"profile"`
 	Session     *estimate.Session      `json:"session"`
-	Auths       auth.Displays          `json:"auths"`
-	Permissions permission.Permissions `json:"permissions"`
+	Comments    comment.Comments       `json:"comments"`
 	Team        *team.Session          `json:"team"`
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
 	Stories     estimate.Stories       `json:"stories"`
 	Votes       estimate.Votes         `json:"votes"`
+	Auths       auth.Displays          `json:"auths"`
+	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onEstimateConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
-	estimateID, err := uuid.FromString(param)
-	if err != nil {
-		return util.IDError(util.SvcEstimate.Key, param)
-	}
-	ch := channel{Svc: util.SvcEstimate.Key, ID: estimateID}
-	err = s.Join(conn.ID, ch)
+func onEstimateConnect(s *Service, conn *connection, estimateID uuid.UUID) error {
+	ch := channel{Svc: util.SvcEstimate, ID: estimateID}
+	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
 	}
-	err = joinEstimateSession(s, conn, userID, ch)
+	err = joinEstimateSession(s, conn, ch)
 	return errors.Wrap(err, "error joining estimate session")
 }
 
-func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcEstimate.Key {
-		return errors.New("estimate cannot handle [" + ch.Svc + "] message")
+func joinEstimateSession(s *Service, conn *connection, ch channel) error {
+	if ch.Svc != util.SvcEstimate {
+		return errors.New("estimate cannot handle [" + ch.Svc.Key + "] message")
 	}
 
 	sess, err := s.estimates.GetByID(ch.ID)
@@ -50,56 +47,27 @@ func joinEstimateSession(s *Service, conn *connection, userID uuid.UUID, ch chan
 		return errors.Wrap(err, "error finding estimate session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcEstimate.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, ch.ID.String())})
-		if err != nil {
-			return errors.Wrap(err, "error writing error message")
-		}
-		return nil
+		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
+	}
+	res := getSessionResult(s, sess.TeamID, sess.SprintID, ch, conn)
+	if res.Error != nil {
+		return res.Error
 	}
 
-	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcEstimate, ch.ID)
-	if err != nil {
-		return err
-	}
-	if len(permErrors) > 0 {
-		return s.sendPermErrors(util.SvcEstimate, ch, permErrors)
-	}
-
-	entry := s.estimates.Members.Register(ch.ID, userID, member.RoleMember)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID, member.RoleMember)
-	members := s.estimates.Members.GetByModelID(ch.ID, nil)
-
-	stories, err := s.estimates.GetStories(ch.ID, nil)
-	if err != nil {
-		return errors.Wrap(err, "error finding stories")
+	sj := EstimateSessionJoined{
+		Profile:     &conn.Profile,
+		Session:     sess,
+		Comments:    s.estimates.Comments.GetByModelID(ch.ID, nil),
+		Team:        getTeamOpt(s, sess.TeamID),
+		Sprint:      getSprintOpt(s, sess.SprintID),
+		Members:     s.estimates.Members.GetByModelID(ch.ID, nil),
+		Online:      s.GetOnline(ch),
+		Stories:     s.estimates.GetStories(ch.ID, nil),
+		Votes:       s.estimates.GetEstimateVotes(ch.ID, nil),
+		Auths:       res.Auth,
+		Permissions: res.Perms,
 	}
 
-	votes, err := s.estimates.GetEstimateVotes(ch.ID, nil)
-	if err != nil {
-		return errors.Wrap(err, "error finding votes")
-	}
-
-	conn.Svc = ch.Svc
-	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
-	msg := Message{
-		Svc: util.SvcEstimate.Key,
-		Cmd: ServerCmdSessionJoined,
-		Param: EstimateSessionJoined{
-			Profile:     &conn.Profile,
-			Session:     sess,
-			Auths:       displays,
-			Permissions: perms,
-			Team:        getTeamOpt(s, sess.TeamID),
-			Sprint:      getSprintOpt(s, sess.SprintID),
-			Members:     members,
-			Online:      s.GetOnline(ch),
-			Stories:     stories,
-			Votes:       votes,
-		},
-	}
-
-	return s.sendInitial(ch, conn, entry, msg, sess.SprintID, sprintEntry)
+	msg := NewMessage(util.SvcEstimate, ServerCmdSessionJoined, sj)
+	return s.sendInitial(ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
 }

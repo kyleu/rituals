@@ -1,6 +1,7 @@
 package socket
 
 import (
+	"encoding/json"
 	"fmt"
 	"sync"
 
@@ -12,7 +13,7 @@ import (
 type connection struct {
 	ID      uuid.UUID
 	Profile util.Profile
-	Svc     string
+	Svc     util.Service
 	ModelID *uuid.UUID
 	Channel *channel
 	socket  *websocket.Conn
@@ -21,7 +22,7 @@ type connection struct {
 
 func (c *connection) ToStatus() *Status {
 	if c.Channel == nil {
-		return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: "", ChannelID: nil}
+		return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: util.SvcSystem, ChannelID: nil}
 	}
 	return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: c.Channel.Svc, ChannelID: &c.Channel.ID}
 }
@@ -30,16 +31,20 @@ type Status struct {
 	ID         uuid.UUID `json:"id"`
 	UserID     uuid.UUID `json:"userID"`
 	Username   string
-	ChannelSvc string
+	ChannelSvc util.Service
 	ChannelID  *uuid.UUID
 }
 
 type Statuses = []*Status
 
 type Message struct {
-	Svc   string      `json:"svc"`
-	Cmd   string      `json:"cmd"`
-	Param interface{} `json:"param"`
+	Svc   string          `json:"svc"`
+	Cmd   string          `json:"cmd"`
+	Param json.RawMessage `json:"param"`
+}
+
+func NewMessage(svc util.Service, cmd string, param interface{}) *Message {
+	return &Message{Svc: svc.Key, Cmd: cmd, Param: json.RawMessage(util.ToJSON(param))}
 }
 
 func (m *Message) String() string {

@@ -1,40 +1,53 @@
 package socket
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
+	"encoding/json"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onStandupMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
+func onStandupMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
 	var err error
+	userID := conn.Profile.UserID
 
 	switch cmd {
 	case ClientCmdConnect:
-		err = onStandupConnect(s, conn, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onStandupConnect(s, conn, u)
 	case ClientCmdUpdateSession:
-		err = onStandupSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+		sss := standupSessionSaveParams{}
+		util.FromJSON(param, &sss, s.logger)
+		err = onStandupSessionSave(s, *conn.Channel, userID, sss)
 	case ClientCmdRemoveMember:
-		err = onRemoveMember(s, s.standups.Members, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveMember(s, s.standups.Members, *conn.Channel, userID, u)
 	case ClientCmdAddReport:
-		err = onAddReport(s, *conn.Channel, userID, param.(map[string]interface{}))
+		arp := addReportParams{}
+		util.FromJSON(param, &arp, s.logger)
+		err = onAddReport(s, *conn.Channel, userID, arp)
 	case ClientCmdUpdateReport:
-		err = onEditReport(s, *conn.Channel, userID, param.(map[string]interface{}))
+		erp := editReportParams{}
+		util.FromJSON(param, &erp, s.logger)
+		err = onEditReport(s, *conn.Channel, userID, erp)
 	case ClientCmdRemoveReport:
-		err = onRemoveReport(s, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveReport(s, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled standup command [" + cmd + "]")
 	}
 	return errors.Wrap(err, "error handling standup message")
 }
 
-func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcStandup, param[util.KeyTitle].(string))
+func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param standupSessionSaveParams) error {
+	title := util.ServiceTitle(util.SvcStandup, param.Title)
 
-	sprintID := getUUIDPointer(param, util.WithID(util.SvcSprint.Key))
-	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
+	sprintID := util.GetUUIDFromString(param.SprintID)
+	teamID := util.GetUUIDFromString(param.TeamID)
 
 	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
 	s.logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
@@ -73,7 +86,7 @@ func onStandupSessionSave(s *Service, ch channel, userID uuid.UUID, param map[st
 		}
 	}
 
-	err = s.updatePerms(ch, userID, s.standups.Permissions, param)
+	err = s.updatePerms(ch, userID, s.standups.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -89,7 +102,6 @@ func sendStandupSessionUpdate(s *Service, ch channel) error {
 	if sess == nil {
 		return errors.Wrap(err, "cannot load standup session ["+ch.ID.String()+"]")
 	}
-	msg := Message{Svc: util.SvcStandup.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcStandup, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending standup session")
 }

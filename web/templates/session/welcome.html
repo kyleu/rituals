@@ -9,11 +9,11 @@
       <p>Enjoy your new <%= svc.Key %>!</p>
       <p>
         Invite new members by sharing this page's url, or restrict access to this <%= svc.Key %> by
-        <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="UIkit.modal('#modal-welcome').hide();events.openModal('<%= util.KeySession %>');return false;">editing permissions</a>.
+        <a class="<%= ctx.Profile.LinkClass() %>" href="" onclick="events.hideModal('welcome');events.openModal('<%= util.KeySession %>');return false;">editing permissions</a>.
       </p>
     </div>
     <div class="uk-modal-footer uk-text-right">
-      <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-welcome').hide();">Get Started</button>
+      <button class="uk-button uk-button-default" type="button" onclick="events.hideModal('welcome');">Get Started</button>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ package web
 
 import (
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -46,9 +47,26 @@ func ParseFlash(s string) (string, string) {
 		return "uk-alert-success", content
 	case "warning":
 		return "uk-alert-warning", content
-	case "error":
+	case util.KeyError:
 		return "uk-alert-danger", content
 	default:
 		return "", content
 	}
+}
+
+var re *regexp.Regexp
+
+func PathParams(s string) []string {
+	if re == nil {
+		re = regexp.MustCompile("{([^}]*)}")
+	}
+
+	matches := re.FindAll([]byte(s), -1)
+
+	ret := make([]string, 0, len(matches))
+	for _, m := range matches {
+		ret = append(ret, string(m))
+	}
+
+	return ret
 }

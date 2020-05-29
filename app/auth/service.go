@@ -65,7 +65,7 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
-		s.logger.Error(fmt.Sprintf("error retrieving auth entries for user [%v]: %+v", userID, err))
+		s.logger.Error(fmt.Sprintf("error retrieving auth entries for user [%v]: %+v", util.ToMap(util.KeyUser, userID, util.KeyError, err)))
 		return nil, nil
 	}
 	rec := make(Records, 0, len(dtos))
@@ -124,8 +124,6 @@ func (s *Service) Handle(profile *util.UserProfile, prv *Provider, code string) 
 
 		return s.mergeProfile(profile, record)
 	}
-
-	s.logger.Warn("TODO insert auth record with conflicting users")
 
 	record, err = s.NewRecord(record)
 	if err != nil {

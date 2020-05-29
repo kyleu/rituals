@@ -17,23 +17,11 @@ import (
 func StandupList(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
-		sessions, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "error retrieving standups")
-		}
 
-		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		sessions := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		teams := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcStandup.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Key)
@@ -45,26 +33,26 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
-		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcStandup, r.Form, ctx.App.User)
+		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcStandup, r.Form, ctx.App.User)
 		if err != nil {
 			return eresp(err, "cannot parse form")
 		}
 
-		sess, err := ctx.App.Standup.New(r.Title, ctx.Profile.UserID, r.TeamID, r.SprintID)
+		sess, err := ctx.App.Standup.New(sf.Title, ctx.Profile.UserID, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return eresp(err, "error creating standup session")
 		}
 
-		_, err = ctx.App.Standup.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		_, err = ctx.App.Standup.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return eresp(err, "error setting permissions for new session")
 		}
 
-		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, r.TeamID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}
-		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint.Key, r.SprintID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint, sf.SprintID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}

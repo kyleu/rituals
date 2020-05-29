@@ -1,54 +1,62 @@
 package socket
 
 import (
-	"fmt"
-	"strings"
-
 	"emperror.dev/errors"
+	"encoding/json"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/query"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onRetroMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
+func onRetroMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
 	var err error
+	userID := conn.Profile.UserID
 
 	switch cmd {
 	case ClientCmdConnect:
-		err = onRetroConnect(s, conn, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRetroConnect(s, conn, u)
 	case ClientCmdUpdateSession:
-		err = onRetroSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+		rss := retroSessionSaveParams{}
+		util.FromJSON(param, &rss, s.logger)
+		err = onRetroSessionSave(s, *conn.Channel, userID, rss)
 	case ClientCmdRemoveMember:
-		err = onRemoveMember(s, s.retros.Members, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveMember(s, s.retros.Members, *conn.Channel, userID, u)
 	case ClientCmdAddFeedback:
-		err = onAddFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
+		afp := addFeedbackParams{}
+		util.FromJSON(param, &afp, s.logger)
+		err = onAddFeedback(s, *conn.Channel, userID, afp)
 	case ClientCmdUpdateFeedback:
-		err = onEditFeedback(s, *conn.Channel, userID, param.(map[string]interface{}))
+		efp := editFeedbackParams{}
+		util.FromJSON(param, &efp, s.logger)
+		err = onEditFeedback(s, *conn.Channel, userID, efp)
 	case ClientCmdRemoveFeedback:
-		err = onRemoveFeedback(s, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveFeedback(s, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")
 	}
 	return errors.Wrap(err, "error handling retro message")
 }
 
-func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcRetro, param[util.KeyTitle].(string))
-	categoriesString, ok := param["categories"].(string)
-	if !ok {
-		return errors.New(fmt.Sprintf("cannot parse [%v] as string", param["categories"]))
-	}
-	categories := query.StringToArray(categoriesString)
+func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param retroSessionSaveParams) error {
+	title := util.ServiceTitle(util.SvcRetro, param.Title)
+	categories := query.StringToArray(param.Categories)
 	if len(categories) == 0 {
 		categories = retro.DefaultCategories
 	}
 
-	sprintID := getUUIDPointer(param, util.WithID(util.SvcSprint.Key))
-	teamID := getUUIDPointer(param, util.WithID(util.SvcTeam.Key))
+	sprintID := util.GetUUIDFromString(param.SprintID)
+	teamID := util.GetUUIDFromString(param.TeamID)
 
 	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
-	s.logger.Debug(fmt.Sprintf(msg, title, strings.Join(categories, ", "), sprintID, teamID))
+	s.logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(categories, "and"), sprintID, teamID))
 
 	curr, err := s.retros.GetByID(ch.ID)
 	if err != nil {
@@ -84,7 +92,7 @@ func onRetroSessionSave(s *Service, ch channel, userID uuid.UUID, param map[stri
 		}
 	}
 
-	err = s.updatePerms(ch, userID, s.retros.Permissions, param)
+	err = s.updatePerms(ch, userID, s.retros.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -101,7 +109,6 @@ func sendRetroSessionUpdate(s *Service, ch channel) error {
 		return errors.Wrap(err, "cannot load retro session ["+ch.ID.String()+"]")
 	}
 
-	msg := Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending retro session")
 }

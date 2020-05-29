@@ -5,10 +5,10 @@
     <tr>
       <% ComponentTableHeader(util.KeyAuth, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyAuth, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAuth, "provider", "Provider", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, util.KeyProvider, util.Title(util.KeyProvider), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyAuth, "providerID", "Provider ID", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAuth, util.KeyName, "Name", params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyAuth, "email", "Email", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, util.KeyName, util.Title(util.KeyName), params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyAuth, util.KeyEmail, util.Title(util.KeyEmail), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyAuth, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>

@@ -18,7 +18,7 @@ func mutationFields() graphql.Fields {
 		"callSandbox": &graphql.Field{
 			Type:        graphql.String,
 			Description: "Call sandbox",
-			Args:        callSandboxArgs,
+			Args:        keyArgs,
 			Resolve:     ctxF(callSandboxResolver),
 		},
 	}

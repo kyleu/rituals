@@ -65,6 +65,7 @@ namespace rituals {
 
   export function setDetail(session: Session) {
     system.cache.session = session;
+    document.title = session.title;
     dom.setText("#model-title", session.title);
     dom.setValue("#model-title-input", session.title);
     const items = dom.els("#navbar .uk-navbar-item");

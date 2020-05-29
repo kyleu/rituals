@@ -54,8 +54,8 @@ namespace sprint {
 
   function setSprintDetail(detail: Detail) {
     cache.detail = detail;
-    const s = detail.startDate?.length === 0 ? undefined : new Date(detail.startDate);
-    const e = detail.endDate?.length === 0 ? undefined : new Date(detail.endDate);
+    const s = detail.startDate ? date.utcDate(detail.startDate) : undefined;
+    const e = detail.endDate ? date.utcDate(detail.endDate) : undefined;
     dom.setContent("#sprint-date-display", renderSprintDates(s, e));
     dom.setValue("#sprint-start-date-input", s ? date.dateToYMD(s) : "");
     dom.setValue("#sprint-end-date-input", e ? date.dateToYMD(e) : "");
@@ -71,8 +71,8 @@ namespace sprint {
   export function onSubmitSprintSession() {
     const title = dom.req<HTMLInputElement>("#model-title-input").value;
     const teamID = dom.req<HTMLSelectElement>("#model-team-select select").value;
-    const startDate = dom.opt<HTMLInputElement>("#model-start-date-input")?.value;
-    const endDate = dom.opt<HTMLInputElement>("#model-end-date-input")?.value;
+    const startDate = dom.opt<HTMLInputElement>("#sprint-start-date-input")?.value;
+    const endDate = dom.opt<HTMLInputElement>("#sprint-end-date-input")?.value;
     const permissions = permission.readPermissions();
 
     const msg = {svc: services.sprint.key, cmd: command.client.updateSession, param: {title, startDate, endDate, teamID, permissions}};

@@ -19,10 +19,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "Action List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAction, util.Plural(util.KeyAction))
 		params := act.ParamSetFromRequest(r)
-		actions, err := ctx.App.Action.List(params.Get(util.KeyAction, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		actions := ctx.App.Action.List(params.Get(util.KeyAction, ctx.Logger))
 		return tmpl(templates.AdminActionList(actions, params, ctx, w))
 	})
 }

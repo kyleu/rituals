@@ -20,10 +20,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
 
 		params := act.ParamSetFromRequest(r)
-		teams, err := ctx.App.Team.List(params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		teams := ctx.App.Team.List(params.Get(util.SvcTeam.Key, ctx.Logger))
 		return tmpl(templates.AdminTeamList(teams, params, ctx, w))
 	})
 }
@@ -45,37 +42,22 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := act.ParamSetFromRequest(r)
+
+		sprints := ctx.App.Sprint.GetByTeamID(*teamID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		estimates := ctx.App.Estimate.GetByTeamID(*teamID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := ctx.App.Standup.GetByTeamID(*teamID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := ctx.App.Retro.GetByTeamID(*teamID, params.Get(util.SvcRetro.Key, ctx.Logger))
+
+		comments := ctx.App.Team.Comments.GetByModelID(*teamID, params.Get(util.KeyComment, ctx.Logger))
+		actions := ctx.App.Action.GetBySvcModel(util.SvcTeam, *teamID, params.Get(util.KeyAction, ctx.Logger))
 		members := ctx.App.Team.Members.GetByModelID(*teamID, params.Get(util.KeyMember, ctx.Logger))
 		perms := ctx.App.Team.Permissions.GetByModelID(*teamID, params.Get(util.KeyPermission, ctx.Logger))
 
-		sprints, err := ctx.App.Sprint.GetByTeamID(*teamID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		estimates, err := ctx.App.Estimate.GetByTeamID(*teamID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		standups, err := ctx.App.Standup.GetByTeamID(*teamID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		retros, err := ctx.App.Retro.GetByTeamID(*teamID, params.Get(util.SvcRetro.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcTeam.Key, *teamID, params.Get(util.KeyAction, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-
-		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
 		link := util.AdminLink(util.SvcTeam.Key, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, teamID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminTeamDetail(sess, members, perms, sprints, estimates, standups, retros, actions, params, ctx, w))
+		return tmpl(templates.AdminTeamDetail(sess, sprints, estimates, standups, retros, comments, members, perms, actions, params, ctx, w))
 	})
 }

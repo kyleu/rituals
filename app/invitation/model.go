@@ -49,6 +49,15 @@ func (t Type) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
 }
 
+func (t *Type) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = typeFromString(s)
+	return nil
+}
+
 type Status struct {
 	Key string
 }
@@ -74,6 +83,15 @@ func (t *Status) String() string {
 
 func (t Status) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Key)
+}
+
+func (t *Status) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = statusFromString(s)
+	return nil
 }
 
 type Invitation struct {

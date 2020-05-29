@@ -10,6 +10,10 @@ import (
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
+func testbed() string {
+  return "OK"
+}
+
 func Home(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		if !tempSecurityCheck(&ctx) {
@@ -18,26 +22,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 
-		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		estimates, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		standups, err := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		retros, err := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		teams := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		estimates := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := ctx.App.Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
 
 		ctx.Title = "Home"
 		return tmpl(templates.Index(ctx, teams, sprints, estimates, standups, retros, w))
@@ -63,19 +52,4 @@ func tempSecurityCheck(ctx *web.RequestContext) bool {
 		return true
 	}
 	return false
-}
-
-func Temp(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		s := `{
-	"associatedApplications": [
-		{
-			"applicationId": "f2187a97-e0ee-4f52-8e58-ab527a84fc69"
-		}
-	]
-}`
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(s))
-		return "", nil
-	})
 }

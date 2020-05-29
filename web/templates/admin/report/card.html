@@ -1,5 +1,5 @@
 <%: func AdminReportCard(reports standup.Reports, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+<div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Reports</h3>
   <% if len(reports) == 0 { %>
     <p>No reports available</p>

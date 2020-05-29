@@ -2,23 +2,27 @@ package socket
 
 import (
 	"emperror.dev/errors"
+	"encoding/json"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
+func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+	userID := conn.Profile.UserID
 	if conn.Profile.UserID != userID {
 		return errors.New("received name change for wrong user [" + userID.String() + "]")
 	}
+
 	var err error
 
 	switch cmd {
 	case ClientCmdPing:
-		msg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdPong, Param: param}
-		err = s.WriteMessage(conn.ID, &msg)
+		err = s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdPong, param))
 	case ClientCmdUpdateProfile:
-		err = saveName(s, conn, userID, param.(map[string]interface{}))
+		snp := &ParamsSaveName{}
+		util.FromJSON(param, snp, s.logger)
+		err = saveName(s, conn, userID, snp)
 	case ClientCmdGetActions:
 		err = sendActions(s, conn)
 	case ClientCmdGetTeams:
@@ -31,11 +35,14 @@ func onSystemMessage(s *Service, conn *connection, userID uuid.UUID, cmd string,
 	return errors.Wrap(err, "error handling system message")
 }
 
-func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]interface{}) error {
-	name := o[util.KeyName].(string)
-	choice := o["choice"].(string)
-	if choice == "global" {
-		err := s.UpdateName(userID, name)
+type ParamsSaveName struct {
+	Name   string `json:"name"`
+	Choice string `json:"choice"`
+}
+
+func saveName(s *Service, conn *connection, userID uuid.UUID, p *ParamsSaveName) error {
+	if p.Choice == "global" {
+		err := s.UpdateName(userID, p.Name)
 		if err != nil {
 			return err
 		}
@@ -50,8 +57,8 @@ func saveName(s *Service, conn *connection, userID uuid.UUID, o map[string]inter
 		return err
 	}
 
-	if current.Name != name {
-		current, err = memberSvc.UpdateName(conn.Channel.ID, userID, name)
+	if current.Name != p.Name {
+		current, err = memberSvc.UpdateName(conn.Channel.ID, userID, p.Name)
 		if err != nil {
 			return err
 		}
@@ -67,56 +74,36 @@ func sendActions(s *Service, conn *connection) error {
 	if conn.ModelID == nil {
 		return errors.New("no active model for connection [" + conn.ID.String() + "]")
 	}
-	actions, err := s.actions.GetBySvcModel(conn.Svc, *conn.ModelID, nil)
-	if err != nil {
-		return errors.Wrap(err, "cannot get actions")
-	}
-	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdActions, Param: actions}
-	return s.WriteMessage(conn.ID, &actionsMsg)
+	actions := s.actions.GetBySvcModel(conn.Svc, *conn.ModelID, nil)
+	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdActions, actions))
 }
 
 func sendTeams(s *Service, conn *connection, userID uuid.UUID) error {
-	teams, err := s.teams.GetByMember(userID, nil)
-	if err != nil {
-		return errors.Wrap(err, "cannot get teams")
-	}
-	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdTeams, Param: teams}
-	return s.WriteMessage(conn.ID, &actionsMsg)
+	teams := s.teams.GetByMember(userID, nil)
+	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdTeams, teams))
 }
 
 func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
-	sprints, err := s.sprints.GetByMember(userID, nil)
-	if err != nil {
-		return errors.Wrap(err, "cannot get sprints")
-	}
-	actionsMsg := Message{Svc: util.SvcSystem.Key, Cmd: ServerCmdSprints, Param: sprints}
-	return s.WriteMessage(conn.ID, &actionsMsg)
+	sprints := s.sprints.GetByMember(userID, nil)
+	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdSprints, sprints))
 }
 
-func memberSvcFor(s *Service, svc string) (*member.Service, error) {
+func memberSvcFor(s *Service, svc util.Service) (*member.Service, error) {
 	var ret *member.Service
 
 	switch svc {
-	case util.SvcTeam.Key:
+	case util.SvcTeam:
 		ret = s.teams.Members
-	case util.SvcSprint.Key:
+	case util.SvcSprint:
 		ret = s.sprints.Members
-	case util.SvcEstimate.Key:
+	case util.SvcEstimate:
 		ret = s.estimates.Members
-	case util.SvcStandup.Key:
+	case util.SvcStandup:
 		ret = s.standups.Members
-	case util.SvcRetro.Key:
+	case util.SvcRetro:
 		ret = s.retros.Members
 	default:
-		return nil, errors.New(util.IDErrorString(util.KeyService, svc))
+		return nil, errors.New(util.IDErrorString(util.KeyService, svc.Key))
 	}
 	return ret, nil
-}
-
-func getUUIDPointer(m map[string]interface{}, key string) *uuid.UUID {
-	retOut, ok := m[key]
-	if !ok {
-		return nil
-	}
-	return util.GetUUIDFromString(retOut.(string))
 }

@@ -82,4 +82,8 @@ namespace events {
     UIkit.modal(`#modal-${key}`).show();
     return false;
   }
+
+  export function hideModal(key: string) {
+    UIkit.modal(`#modal-${key}`).hide();
+  }
 }

@@ -16,6 +16,7 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2
+	github.com/mitchellh/mapstructure v1.1.2
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sagikazarmark/ocmux v0.2.0
 	github.com/shiyanhui/hero v0.0.2

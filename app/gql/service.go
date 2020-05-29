@@ -82,6 +82,7 @@ func initSchema() {
 		graphQLInitialized = true
 
 		initMember()
+		initComment()
 
 		initEstimate()
 		initStandup()
@@ -91,6 +92,7 @@ func initSchema() {
 		initTeam()
 
 		initPermission()
+		initAction()
 
 		initProfile()
 		initUser()

@@ -8,41 +8,23 @@ import (
 )
 
 var (
-	sandboxArgs         graphql.FieldConfigArgument
 	sandboxResolver     Callback
 	sandboxesResolver   Callback
-	callSandboxArgs     graphql.FieldConfigArgument
 	callSandboxResolver Callback
 	sandboxType         *graphql.Object
 )
 
 func initSandbox() {
-	sandboxArgs = graphql.FieldConfigArgument{
-		util.KeyKey: &graphql.ArgumentConfig{
-			Type: graphql.NewNonNull(graphql.String),
-		},
-	}
-
 	sandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, err := paramKeyString(p)
-		if err != nil {
-			return nil, err
-		}
-		return sandbox.FromString(key), nil
+		return sandbox.FromString(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
 	sandboxesResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return sandbox.AllSandboxes, nil
 	}
 
-	callSandboxArgs = graphql.FieldConfigArgument{
-		util.KeyKey: &graphql.ArgumentConfig{
-			Type: graphql.NewNonNull(graphql.String),
-		},
-	}
-
-	callSandboxResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		key, _ := paramKeyString(params)
+	callSandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		key := util.MapGetString(p.Args, util.KeyKey, ctx.Logger)
 		sb := sandbox.FromString(key)
 		if sb == nil {
 			return nil, util.IDError(util.KeySandbox, key)

@@ -7,7 +7,7 @@ namespace action {
     readonly act: string;
     readonly content: any;
     readonly note: string;
-    readonly occurred: string;
+    readonly created: string;
   }
 
   export function loadActions() {

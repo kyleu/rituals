@@ -36,6 +36,7 @@ namespace permission {
     ret.push(...readPermission("github"));
     ret.push(...readPermission("google"));
     ret.push(...readPermission("slack"));
+    ret.push(...readPermission("facebook"));
     ret.push(...readPermission("amazon"));
     ret.push(...readPermission("microsoft"));
 

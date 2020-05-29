@@ -3,8 +3,8 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -16,32 +16,29 @@ import (
 type RetroSessionJoined struct {
 	Profile     *util.Profile          `json:"profile"`
 	Session     *retro.Session         `json:"session"`
-	Permissions permission.Permissions `json:"permissions"`
-	Auths       auth.Displays          `json:"auths"`
+	Comments    comment.Comments       `json:"comments"`
 	Team        *team.Session          `json:"team"`
 	Sprint      *sprint.Session        `json:"sprint"`
 	Members     member.Entries         `json:"members"`
 	Online      []uuid.UUID            `json:"online"`
 	Feedback    retro.Feedbacks        `json:"feedback"`
+	Auths       auth.Displays          `json:"auths"`
+	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onRetroConnect(s *Service, conn *connection, userID uuid.UUID, param string) error {
-	retroID, err := uuid.FromString(param)
-	if err != nil {
-		return util.IDError(util.SvcRetro.Key, param)
-	}
-	ch := channel{Svc: util.SvcRetro.Key, ID: retroID}
-	err = s.Join(conn.ID, ch)
+func onRetroConnect(s *Service, conn *connection, retroID uuid.UUID) error {
+	ch := channel{Svc: util.SvcRetro, ID: retroID}
+	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
 	}
-	err = joinRetroSession(s, conn, userID, ch)
+	err = joinRetroSession(s, conn, ch)
 	return errors.Wrap(err, "error joining retro session")
 }
 
-func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel) error {
-	if ch.Svc != util.SvcRetro.Key {
-		return errors.New("retro cannot handle [" + ch.Svc + "] message")
+func joinRetroSession(s *Service, conn *connection, ch channel) error {
+	if ch.Svc != util.SvcRetro {
+		return errors.New("retro cannot handle [" + ch.Svc.Key + "] message")
 	}
 
 	sess, err := s.retros.GetByID(ch.ID)
@@ -49,47 +46,25 @@ func joinRetroSession(s *Service, conn *connection, userID uuid.UUID, ch channel
 		return errors.Wrap(err, "error finding retro session")
 	}
 	if sess == nil {
-		err = s.WriteMessage(conn.ID, &Message{Svc: util.SvcRetro.Key, Cmd: ServerCmdError, Param: util.IDErrorString(util.KeySession, ch.ID.String())})
-		return errors.Wrap(err, "error writing error message")
+		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
+	}
+	res := getSessionResult(s, sess.TeamID, sess.SprintID, ch, conn)
+	if res.Error != nil {
+		return res.Error
 	}
 
-	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
-	perms, permErrors, err := s.check(conn.Profile.UserID, auths, sess.TeamID, sess.SprintID, util.SvcRetro, ch.ID)
-	if err != nil {
-		return err
+	sj := RetroSessionJoined{
+		Profile:     &conn.Profile,
+		Session:     sess,
+		Comments:    s.retros.Comments.GetByModelID(ch.ID, nil),
+		Team:        getTeamOpt(s, sess.TeamID),
+		Sprint:      getSprintOpt(s, sess.SprintID),
+		Members:     s.retros.Members.GetByModelID(ch.ID, nil),
+		Online:      s.GetOnline(ch),
+		Feedback:    s.retros.GetFeedback(ch.ID, nil),
+		Auths:       res.Auth,
+		Permissions: res.Perms,
 	}
-	if len(permErrors) > 0 {
-		return s.sendPermErrors(util.SvcRetro, ch, permErrors)
-	}
-
-	entry := s.retros.Members.Register(ch.ID, userID, member.RoleMember)
-	sprintEntry := s.sprints.Members.RegisterRef(sess.SprintID, userID, member.RoleMember)
-	members := s.retros.Members.GetByModelID(ch.ID, nil)
-
-	conn.Svc = ch.Svc
-	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
-
-	feedback, err := s.retros.GetFeedback(ch.ID, nil)
-	if err != nil {
-		return errors.Wrap(err, "error finding feedback for retro")
-	}
-
-	msg := Message{
-		Svc: util.SvcRetro.Key,
-		Cmd: ServerCmdSessionJoined,
-		Param: RetroSessionJoined{
-			Profile:     &conn.Profile,
-			Session:     sess,
-			Permissions: perms,
-			Auths:       displays,
-			Team:        getTeamOpt(s, sess.TeamID),
-			Sprint:      getSprintOpt(s, sess.SprintID),
-			Members:     members,
-			Online:      s.GetOnline(ch),
-			Feedback:    feedback,
-		},
-	}
-
-	return s.sendInitial(ch, conn, entry, msg, sess.SprintID, sprintEntry)
+	msg := NewMessage(util.SvcRetro, ServerCmdSessionJoined, sj)
+	return s.sendInitial(ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
 }

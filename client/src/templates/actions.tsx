@@ -6,7 +6,7 @@ namespace action {
       <td>{action.act}</td>
       <td>{c === "null" ? "" : <pre>{c}</pre>}</td>
       <td>{action.note}</td>
-      <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(action.occurred))}</td>
+      <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(action.created))}</td>
     </tr>;
   }
 
@@ -21,7 +21,7 @@ namespace action {
             <th>Act</th>
             <th>Content</th>
             <th>Note</th>
-            <th>Occurred</th>
+            <th>Created</th>
           </tr>
         </thead>
         <tbody>

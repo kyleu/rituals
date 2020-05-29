@@ -21,19 +21,19 @@ type Service struct {
 	actions   *action.Service
 	db        *database.Service
 	logger    logur.Logger
-	svc       string
+	svc       util.Service
 	tableName string
 	colName   string
 }
 
-func NewService(actions *action.Service, db *database.Service, logger logur.Logger, svc string) *Service {
+func NewService(actions *action.Service, db *database.Service, logger logur.Logger, svc util.Service) *Service {
 	return &Service{
 		actions:   actions,
 		db:        db,
 		logger:    logger,
 		svc:       svc,
-		tableName: svc + "_member",
-		colName:   svc + "_id",
+		tableName: svc.Key + "_member",
+		colName:   util.WithDBID(svc.Key),
 	}
 }
 
@@ -64,7 +64,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	dto := entryDTO{}
 	cols := fmt.Sprintf("user_id, %s, role, created", nameClause)
 	where := fmt.Sprintf("%s = $1 and user_id = $2", s.colName)
-	q := query.SQLSelect(cols, s.tableName, where, "", 0, 0)
+	q := query.SQLSelectSimple(cols, s.tableName, where)
 	err := s.db.Get(&dto, q, nil, modelID, userID)
 
 	if err == sql.ErrNoRows {
@@ -89,7 +89,7 @@ func (s *Service) UpdateName(modelID uuid.UUID, userID uuid.UUID, name string) (
 }
 
 func (s *Service) RemoveMember(modelID uuid.UUID, target uuid.UUID) error {
-	q := fmt.Sprintf("delete from %s where %s = $1 and user_id = $2", s.tableName, s.colName)
-	_, err := s.db.Delete(q, nil, modelID, target)
+	q := query.SQLDelete(s.tableName, fmt.Sprintf("%v = $1 and user_id = $2", s.colName))
+	err := s.db.DeleteOne(q, nil, modelID, target)
 	return errors.Wrap(err, "unable to remove member ["+target.String()+"]")
 }

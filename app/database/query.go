@@ -2,10 +2,15 @@ package database
 
 import (
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/kyleu/rituals.dev/app/util"
 )
 
 func (s *Service) Query(q string, tx *sqlx.Tx, values ...interface{}) (*sqlx.Rows, error) {
+	if s.debug {
+		logQuery(s, "running raw query", q, values)
+	}
 	if tx == nil {
 		return s.db.Queryx(q, values...)
 	}
@@ -13,6 +18,9 @@ func (s *Service) Query(q string, tx *sqlx.Tx, values ...interface{}) (*sqlx.Row
 }
 
 func (s *Service) Select(dest interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
+	if s.debug {
+		logQuery(s, fmt.Sprintf("selecting rows of type [%T]", dest), q, values)
+	}
 	if tx == nil {
 		return s.db.Select(dest, q, values...)
 	}
@@ -20,6 +28,10 @@ func (s *Service) Select(dest interface{}, q string, tx *sqlx.Tx, values ...inte
 }
 
 func (s *Service) Get(dto interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
+	if s.debug {
+		logQuery(s, fmt.Sprintf("getting single row of type [%T]", dto), q, values)
+		s.logger.Debug(fmt.Sprintf("getting single row\nSQL: %v\nValues: %v", q, util.ValueStrings(values)))
+	}
 	if tx == nil {
 		return s.db.Get(dto, q, values...)
 	}

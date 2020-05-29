@@ -21,10 +21,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
 
 		params := act.ParamSetFromRequest(r)
-		standups, err := ctx.App.Standup.List(params.Get(util.SvcStandup.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		standups := ctx.App.Standup.List(params.Get(util.SvcStandup.Key, ctx.Logger))
 		return tmpl(templates.AdminStandupList(standups, params, ctx, w))
 	})
 }
@@ -47,17 +44,12 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 
+		reports := ctx.App.Standup.GetReports(*standupID, params.Get(util.KeyReport, ctx.Logger))
+		comments := ctx.App.Standup.Comments.GetByModelID(*standupID, params.Get(util.KeyComment, ctx.Logger))
+		actions := ctx.App.Action.GetBySvcModel(util.SvcStandup, *standupID, params.Get(util.KeyAction, ctx.Logger))
 		members := ctx.App.Standup.Members.GetByModelID(*standupID, params.Get(util.KeyMember, ctx.Logger))
 		perms := ctx.App.Standup.Permissions.GetByModelID(*standupID, params.Get(util.KeyPermission, ctx.Logger))
 
-		reports, err := ctx.App.Standup.GetReports(*standupID, params.Get(util.KeyReport, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		actions, err := ctx.App.Action.GetBySvcModel(util.SvcStandup.Key, *standupID, params.Get(util.KeyAction, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
@@ -65,6 +57,6 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, standupID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminStandupDetail(sess, members, perms, reports, actions, params, ctx, w))
+		return tmpl(templates.AdminStandupDetail(sess, reports, comments, members, perms, actions, params, ctx, w))
 	})
 }

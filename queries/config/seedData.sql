@@ -2,10 +2,10 @@
 insert into system_user
   (id, name, role, theme, nav_color, link_color, picture, locale)
 values
-  ('00000000-0000-0000-0000-000000000000', 'Kyle U', 'admin', 'light', 'bluegrey', 'bluegrey', '', 'en-US'),
-  ('00000001-0000-0000-0000-000000000000', 'Katie', 'guest', 'light', 'bluegrey', 'bluegrey', '', 'en-US'),
+  ('00000000-0000-0000-0000-000000000000', 'Kyle U', 'admin', 'default', 'bluegrey', 'bluegrey', '', 'en-US'),
+  ('00000001-0000-0000-0000-000000000000', 'Katie', 'guest', 'default', 'bluegrey', 'bluegrey', '', 'en-US'),
   ('00000002-0000-0000-0000-000000000000', 'Dan', 'guest', 'light', 'bluegrey', 'bluegrey', '', 'en-US'),
-  ('00000003-0000-0000-0000-000000000000', 'Janet', 'guest', 'light', 'bluegrey', 'bluegrey', '', 'en-US')
+  ('00000003-0000-0000-0000-000000000000', 'Janet', 'guest', 'dark', 'bluegrey', 'bluegrey', '', 'en-US')
 ;
 
 -- Auth
@@ -86,6 +86,7 @@ values
   ('30000001-0000-0000-0000-000000000000', 'google', '@kyleu.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'google', '@gmail.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'slack', '@kyleu.com', 'member'),
+  ('30000001-0000-0000-0000-000000000000', 'facebook', '@kyleu.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'amazon', '@gmail.com', 'member'),
   ('30000001-0000-0000-0000-000000000000', 'microsoft', '@gmail.com', 'member')
 ;
@@ -203,5 +204,16 @@ values
   ('private', 'estimate', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'Targeted Invite', 'pending'),
   ('public', 'estimate', '30000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000', null, 'Open Invite', 'pending')
 ;
+
+
+-- Comment
+insert into comment
+  (id, svc, model_id, author_id, content, html)
+values
+  ('70000000-0000-0000-0000-000000000000', 'estimate', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'comment 1!', '<div>comment 1!</div>'),
+  ('70000001-0000-0000-0000-000000000000', 'estimate', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'comment 2!', '<div>comment 2!</div>'),
+  ('70000002-0000-0000-0000-000000000000', 'estimate', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'comment 3!', '<div>comment 3!</div>')
+;
+
 
 -- <%: func SeedData(w io.Writer) %>

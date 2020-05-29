@@ -16,21 +16,12 @@ import (
 func SprintList(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
-		sessions, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "error retrieving sprints")
-		}
 
-		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		sessions := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		teams := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
-		ctx.Title = util.PluralProper(util.SvcSprint.Key)
+		ctx.Title = util.PluralTitle(util.SvcSprint.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Key)
 		return tmpl(templates.SprintList(sessions, teams, auths, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, w))
 	})
@@ -49,22 +40,22 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 
-		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
+		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
 		if err != nil {
 			return eresp(err, "cannot parse form")
 		}
 
-		sess, err := ctx.App.Sprint.New(r.Title, ctx.Profile.UserID, startDate, endDate, r.TeamID)
+		sess, err := ctx.App.Sprint.New(sf.Title, ctx.Profile.UserID, startDate, endDate, sf.TeamID)
 		if err != nil {
 			return eresp(err, "error creating sprint session")
 		}
 
-		_, err = ctx.App.Sprint.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		_, err = ctx.App.Sprint.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return eresp(err, "error setting permissions for new session")
 		}
 
-		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, r.TeamID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}

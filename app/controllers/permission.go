@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strings"
 
-	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/member"
@@ -29,7 +28,7 @@ func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionPar
 
 	auths, currTeams, currSprints, err := authsTeamsAndSprints(ctx, p.TeamID, p.SprintID)
 	if err != nil {
-		return nil, permission.Errors{{Svc: "system", Provider: "error", Message: err.Error()}}, bc
+		return nil, permission.Errors{{Svc: util.KeySystem, Provider: util.KeyError, Message: err.Error()}}, bc
 	}
 
 	var tp *permission.Params
@@ -60,25 +59,16 @@ func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionPar
 }
 
 func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID) (auth.Records, []uuid.UUID, []uuid.UUID, error) {
-	auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, nil)
-	if err != nil {
-		return nil, nil, nil, errors.Wrap(err, "unable to retrieve current auth records")
-	}
+	auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, nil)
 
 	var currTeams []uuid.UUID
 	if tm != nil {
-		currTeams, err = ctx.App.Team.GetIdsByMember(ctx.Profile.UserID)
-		if err != nil {
-			return nil, nil, nil, errors.Wrap(err, "unable to retrieve current teams")
-		}
+		currTeams = ctx.App.Team.GetIdsByMember(ctx.Profile.UserID)
 	}
 
 	var currSprints []uuid.UUID
 	if spr != nil {
-		currSprints, err = ctx.App.Sprint.GetIdsByMember(ctx.Profile.UserID)
-		if err != nil {
-			return nil, nil, nil, errors.Wrap(err, "unable to retrieve current sprints")
-		}
+		currSprints = ctx.App.Sprint.GetIdsByMember(ctx.Profile.UserID)
 	}
 
 	return auths, currTeams, currSprints, nil

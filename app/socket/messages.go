@@ -1,5 +1,7 @@
 package socket
 
+import "github.com/kyleu/rituals.dev/app/util"
+
 // Client Messages
 const (
 	ClientCmdPing = "ping"
@@ -31,7 +33,7 @@ const (
 
 // Server Messages
 const (
-	ServerCmdError = "error"
+	ServerCmdError = util.KeyError
 	ServerCmdPong  = "pong"
 
 	ServerCmdSessionJoined     = "session-joined"

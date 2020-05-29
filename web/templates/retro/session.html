@@ -1,10 +1,9 @@
 <%: func RetroSession(model *retro.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+<div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
-    <% ComponentSessionPublic(util.SvcRetro, ctx, buffer) %>
+    <% ComponentSessionIcon(util.SvcRetro, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
     <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
-    <a class="<%= ctx.Profile.LinkClass() %> uk-icon uk-margin-small-left uk-transition-fade" data-uk-icon="comments" onclick="events.openModal('<%= util.Plural(util.KeyAction) %>');return false;" title="view history"></a>
   </h3>
   <span id="sprint-link-container"></span>
   <%= util.SvcRetro.Key %>

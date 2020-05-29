@@ -69,7 +69,7 @@ func getCurr(q query.ParamSet, key string) *query.Params {
 	return curr
 }
 
-func IDFromParams(svc string, m map[string]string) (*uuid.UUID, error) {
+func IDFromParams(key string, m map[string]string) (*uuid.UUID, error) {
 	retOut, ok := m[util.KeyID]
 	if !ok {
 		return nil, errors.New("params do not contain \"id\"")
@@ -77,7 +77,7 @@ func IDFromParams(svc string, m map[string]string) (*uuid.UUID, error) {
 
 	ret := util.GetUUIDFromString(retOut)
 	if ret == nil {
-		return nil, util.IDError(svc, retOut)
+		return nil, util.IDError(key, retOut)
 	}
 
 	return ret, nil

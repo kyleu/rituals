@@ -1,11 +1,11 @@
 <%: func StandupReports(ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+<div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="events.openModal('add-<%= util.KeyReport %>');return false;" title="add <%= util.KeyReport %>"></a>
     </span>
     <span class="model-icon h3-icon" onclick="events.openModal('add-<%= util.KeyReport %>');" data-uk-icon="icon: <%= util.SvcStandup.Icon %>;"></span>
-    <span class="modal-title" onclick="events.openModal('add-<%= util.KeyReport %>');"><%= util.PluralProper(util.KeyReport) %></span>
+    <span class="modal-title" onclick="events.openModal('add-<%= util.KeyReport %>');"><%= util.PluralTitle(util.KeyReport) %></span>
   </h3>
   <p id="report-detail">Loading...</p>
 </div>
@@ -59,7 +59,7 @@
         <button class="uk-button uk-button-default" type="button" onclick="report.onEditReport();">Save</button>
       </div>
       <div class="buttons-view">
-        <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-report').hide();">Close</button>
+        <button class="uk-button uk-button-default" type="button" onclick="events.hideModal('report');">Close</button>
       </div>
     </div>
   </div>

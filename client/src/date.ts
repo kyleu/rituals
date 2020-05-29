@@ -43,4 +43,10 @@ namespace date {
   export function toDateTimeString(d: Date) {
     return `${toDateString(d)} ${toTimeString(d)}`;
   }
+
+  const tzOffset = new Date().getTimezoneOffset() * 60000;
+
+  export function utcDate(s: string) {
+    return new Date(Date.parse(s) + tzOffset);
+  }
 }

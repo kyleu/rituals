@@ -56,9 +56,9 @@ func (es Errors) ToError() error {
 	if len(es) == 0 {
 		return nil
 	}
-	var msgs = make([]string, len(es))
-	for i, e := range es {
-		msgs[i] = e.Message
+	var msgs = make([]string, 0, len(es))
+	for _, e := range es {
+		msgs = append(msgs, e.Message)
 	}
 	return errors.New("permission error: " + strings.Join(msgs, ", "))
 }

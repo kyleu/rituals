@@ -63,16 +63,20 @@ func SQLSelect(columns string, tables string, where string, orderBy string, limi
 	return "select " + columns + " from " + tables + whereClause + orderByClause + limitClause + offsetClause
 }
 
+func SQLSelectSimple(columns string, tables string, where string) string {
+	return SQLSelect(columns, tables, where, "", 0, 0)
+}
+
 func SQLUpdate(table string, columns []string, where string) string {
 	whereClause := ""
 	if len(where) > 0 {
 		whereClause = " where " + where
 	}
 
-	stmts := make([]string, len(columns))
+	stmts := make([]string, 0, len(columns))
 	for i, col := range columns {
 		s := fmt.Sprintf("%v = $%v", col, i+1)
-		stmts[i] = s
+		stmts = append(stmts, s)
 	}
 	return fmt.Sprintf("update %v set %v%v", table, strings.Join(stmts, ", "), whereClause)
 }
@@ -81,5 +85,5 @@ func SQLDelete(table string, where string) string {
 	if len(strings.TrimSpace(where)) == 0 {
 		return "attempt to delete from [" + table + "] with empty where clause"
 	}
-	return "delete from " + table + where
+	return "delete from " + table + " where " + where
 }

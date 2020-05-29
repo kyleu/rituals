@@ -18,23 +18,11 @@ import (
 func EstimateList(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
-		sessions, err := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "error retrieving estimates")
-		}
 
-		teams, err := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		sprints, err := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
-		auths, err := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
-		if err != nil {
-			return eresp(err, "")
-		}
+		sessions := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		teams := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcEstimate.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key+".list"), util.SvcEstimate.Key)
@@ -46,32 +34,32 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
-		choicesString := r.Form.Get("choices")
+		choicesString := r.Form.Get(util.Plural(util.KeyChoice))
 		choices := query.StringToArray(choicesString)
 		if len(choices) == 0 {
 			choices = estimate.DefaultChoices
 		}
 
-		r, err := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
+		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
 		if err != nil {
 			return eresp(err, "cannot parse form")
 		}
 
-		sess, err := ctx.App.Estimate.New(r.Title, ctx.Profile.UserID, choices, r.TeamID, r.SprintID)
+		sess, err := ctx.App.Estimate.New(sf.Title, ctx.Profile.UserID, choices, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return eresp(err, "error creating estimate session")
 		}
 
-		_, err = ctx.App.Estimate.Permissions.SetAll(sess.ID, r.Perms, ctx.Profile.UserID)
+		_, err = ctx.App.Estimate.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return eresp(err, "error setting permissions for new session")
 		}
 
-		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam.Key, r.TeamID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}
-		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint.Key, r.SprintID)
+		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint, sf.SprintID)
 		if err != nil {
 			return eresp(err, "cannot send content update")
 		}

@@ -52,7 +52,7 @@ func providerCheck(svc util.Service, p *auth.Provider, perms Permissions, auths 
 	}
 
 	if len(emailDomains) > 0 {
-		msg += " with email address " + strings.Join(emailDomains, " or ")
+		msg += " with email address " + util.OxfordComma(emailDomains, "or")
 	}
 
 	msg += " to access this " + svc.Key

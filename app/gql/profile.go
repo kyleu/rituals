@@ -22,23 +22,23 @@ func initProfile() {
 	}
 
 	profileTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Team.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger))
+		return ctx.App.Team.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger)), nil
 	}
 
 	profileSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Sprint.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger))
+		return ctx.App.Sprint.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger)), nil
 	}
 
 	profileEstimateResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger))
+		return ctx.App.Estimate.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
 	profileStandupResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Standup.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger))
+		return ctx.App.Standup.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
 	profileRetroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger))
+		return ctx.App.Retro.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 
 	profileType = graphql.NewObject(
@@ -107,5 +107,11 @@ func initProfile() {
 		Type:        profileType,
 		Description: "The user associated to this member",
 		Resolve:     ctxF(memberProfileResolver),
+	})
+
+	commentType.AddFieldConfig(util.KeyUser, &graphql.Field{
+		Type:        profileType,
+		Description: "The user associated to this comment",
+		Resolve:     ctxF(commentAuthorResolver),
 	})
 }

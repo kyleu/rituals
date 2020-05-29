@@ -2,7 +2,7 @@
 
 <% if ed.StackTrace != nil { %>
   <div class="uk-margin-top">
-    <div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body">
+    <div class="uk-card uk-card-body">
       <table class="uk-table uk-table-divider">
         <tbody>
         <% for _, f := range util.TraceDetail(ed.StackTrace) { %>

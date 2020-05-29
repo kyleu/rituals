@@ -2,6 +2,7 @@ package gql
 
 import (
 	"github.com/graphql-go/graphql"
+	"github.com/kyleu/rituals.dev/app/util"
 )
 
 var orderingInputType = graphql.NewInputObject(
@@ -27,5 +28,17 @@ var listArgs = graphql.FieldConfigArgument{
 	},
 	"offset": &graphql.ArgumentConfig{
 		Type: graphql.Int,
+	},
+}
+
+var idArgs = graphql.FieldConfigArgument{
+	util.KeyID: &graphql.ArgumentConfig{
+		Type: scalarUUID,
+	},
+}
+
+var keyArgs = graphql.FieldConfigArgument{
+	util.KeyKey: &graphql.ArgumentConfig{
+		Type: graphql.String,
 	},
 }

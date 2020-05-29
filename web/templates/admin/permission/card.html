@@ -1,5 +1,5 @@
 <%: func AdminPermissionCard(perms permission.Permissions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-margin-top">
+<div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Permissions</h3>
   <% if len(perms) == 0 { %>
     <p>No permissions available</p>

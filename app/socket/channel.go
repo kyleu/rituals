@@ -2,17 +2,18 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
 
 type channel struct {
-	Svc string
+	Svc util.Service
 	ID  uuid.UUID
 }
 
 func (ch *channel) String() string {
-	return fmt.Sprintf("%s:%s", ch.Svc, ch.ID)
+	return fmt.Sprintf("%s:%s", ch.Svc.Key, ch.ID)
 }
 
 func (s *Service) Join(connID uuid.UUID, ch channel) error {

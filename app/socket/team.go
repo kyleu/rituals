@@ -1,6 +1,7 @@
 package socket
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"emperror.dev/errors"
@@ -9,24 +10,30 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onTeamMessage(s *Service, conn *connection, userID uuid.UUID, cmd string, param interface{}) error {
+func onTeamMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
 	var err error
-
+	userID := conn.Profile.UserID
 	switch cmd {
 	case ClientCmdConnect:
-		err = onTeamConnect(s, conn, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onTeamConnect(s, conn, u)
 	case ClientCmdUpdateSession:
-		err = onTeamSessionSave(s, *conn.Channel, userID, param.(map[string]interface{}))
+		tss := teamSessionSaveParams{}
+		util.FromJSON(param, &tss, s.logger)
+		err = onTeamSessionSave(s, *conn.Channel, userID, tss)
 	case ClientCmdRemoveMember:
-		err = onRemoveMember(s, s.teams.Members, *conn.Channel, userID, param.(string))
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.logger)
+		err = onRemoveMember(s, s.teams.Members, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled team command [" + cmd + "]")
 	}
 	return errors.Wrap(err, "error handling team message")
 }
 
-func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[string]interface{}) error {
-	title := util.ServiceTitle(util.SvcTeam, param[util.KeyTitle].(string))
+func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param teamSessionSaveParams) error {
+	title := util.ServiceTitle(util.SvcTeam, param.Title)
 	s.logger.Debug(fmt.Sprintf("saving team session [%s]", title))
 
 	err := s.teams.UpdateSession(ch.ID, title, userID)
@@ -39,7 +46,7 @@ func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[strin
 		return errors.Wrap(err, "error sending team session")
 	}
 
-	err = s.updatePerms(ch, userID, s.teams.Permissions, param)
+	err = s.updatePerms(ch, userID, s.teams.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -48,17 +55,17 @@ func onTeamSessionSave(s *Service, ch channel, userID uuid.UUID, param map[strin
 }
 
 func sendTeamUpdate(s *Service, ch channel, curr *uuid.UUID, tm *team.Session) error {
-	err := s.WriteChannel(ch, &Message{Svc: ch.Svc, Cmd: ServerCmdTeamUpdate, Param: tm})
+	err := s.WriteChannel(ch, NewMessage(ch.Svc, ServerCmdTeamUpdate, tm))
 	if err != nil {
 		return errors.Wrap(err, "error writing team update message")
 	}
 
-	err = s.SendContentUpdate(util.SvcTeam.Key, curr)
+	err = s.SendContentUpdate(util.SvcTeam, curr)
 	if err != nil {
 		return err
 	}
 	if tm != nil {
-		err = s.SendContentUpdate(util.SvcTeam.Key, &tm.ID)
+		err = s.SendContentUpdate(util.SvcTeam, &tm.ID)
 	}
 	return err
 }
@@ -71,8 +78,7 @@ func sendTeamSessionUpdate(s *Service, ch channel) error {
 	if sess == nil {
 		return errors.Wrap(err, "cannot load team session ["+ch.ID.String()+"]")
 	}
-	msg := Message{Svc: util.SvcTeam.Key, Cmd: ServerCmdSessionUpdate, Param: sess}
-	err = s.WriteChannel(ch, &msg)
+	err = s.WriteChannel(ch, NewMessage(util.SvcTeam, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending team session")
 }
 

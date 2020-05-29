@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <% ComponentTableHeader(util.KeyVote, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
-      <% ComponentTableHeader(util.KeyVote, "choice", "Choice", params, ctx, buffer) %>
+      <% ComponentTableHeader(util.KeyVote, util.KeyChoice, util.Title(util.KeyChoice), params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyVote, "updated", "Updated", params, ctx, buffer) %>
       <% ComponentTableHeader(util.KeyVote, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>

@@ -5,27 +5,31 @@ import (
 )
 
 type Theme struct {
-	Name            string
-	BackgroundClass string
-	CardClass       string
-	LogoPath        string
+	Name string
+}
+
+var ThemeDefault = Theme{
+	Name: "default",
 }
 
 var ThemeLight = Theme{
-	Name:            "light",
-	BackgroundClass: "uk-dark",
-	CardClass:       "uk-card-default",
-	LogoPath:        "/assets/logo.png",
+	Name: "light",
 }
 
 var ThemeDark = Theme{
-	Name:            "dark",
-	BackgroundClass: "uk-light",
-	CardClass:       "uk-card-secondary",
-	LogoPath:        "/assets/logo-white.png",
+	Name: "dark",
 }
 
-var AllThemes = []Theme{ThemeLight, ThemeDark}
+var AllThemes = []Theme{ThemeDefault, ThemeLight, ThemeDark}
+
+func ThemeFromString(s string) Theme {
+	for _, t := range AllThemes {
+		if t.Name == s {
+			return t
+		}
+	}
+	return ThemeDefault
+}
 
 func (t *Theme) String() string {
 	return t.Name
@@ -35,14 +39,13 @@ func (t Theme) MarshalJSON() ([]byte, error) {
 	return json.Marshal(t.Name)
 }
 
-func ThemeFromString(s string) Theme {
-	for _, t := range AllThemes {
-		if t.Name == s {
-			return t
-		}
+func (t *Theme) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
 	}
-
-	return ThemeLight
+	*t = ThemeFromString(s)
+	return nil
 }
 
 var AllColors = []string{"clear", "grey", "bluegrey", "red", "orange", "yellow", "green", "blue", "purple"}

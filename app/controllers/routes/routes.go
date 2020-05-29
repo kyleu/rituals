@@ -26,13 +26,11 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Path(p("health")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Health))).Name(n("health"))
 	r.Path(p("s")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Socket))).Name(n("websocket"))
 
-	r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("msworkaround")
-	r.Methods(http.MethodGet).Path("/.well-known/microsoft-identity-association.json").Handler(addContext(r, app, http.HandlerFunc(controllers.Temp))).Name("msworkaround.json")
-
 	// Profile
 	profile := r.Path(p(util.KeyProfile)).Subrouter()
 	profile.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Profile))).Name(n(util.KeyProfile))
 	profile.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(controllers.ProfileSave))).Name(n(util.KeyProfile, "save"))
+	r.Path(p(util.KeyProfile, "pic", "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.ProfilePic))).Name(n(util.KeyProfile, "pic"))
 
 	// Auth
 	_ = r.Path(p(util.KeyAuth)).Subrouter()

@@ -1,5 +1,5 @@
 <%: func MemberOthers(ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card <%= ctx.Profile.Theme.CardClass %> uk-card-body uk-transition-toggle">
+<div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
       <a class="<%= ctx.Profile.LinkClass() %> uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="events.openModal('<%= util.KeyInvitation %>');return false;" title="invite members"></a>
@@ -34,7 +34,7 @@
     </div>
     <div class="uk-modal-footer uk-text-right">
       <button class="left uk-button uk-button-default" type="button" onclick="member.removeMember();">Remove Member</button>
-      <button class="uk-button uk-button-default" type="button" onclick="UIkit.modal('#modal-member').hide();">Close</button>
+      <button class="uk-button uk-button-default" type="button" onclick="events.hideModal('member');">Close</button>
     </div>
   </div>
 </div>
