@@ -3,13 +3,24 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/auth"
-	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) updatePerms(ch channel, userID uuid.UUID, permSvc *permission.Service, perms permission.Permissions) error {
-	final, err := permSvc.SetAll(ch.ID, perms, userID)
+func (s *Service) updatePerms(ch Channel, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, permSvc *permission.Service, perms permission.Permissions) error {
+	filtered := make(permission.Permissions, 0)
+	for _, p := range perms {
+		if p.K == util.SvcTeam.Key && teamID == nil {
+			// skip team
+		} else if p.K == util.SvcSprint.Key && sprintID == nil {
+			// skip sprint
+		} else {
+			filtered = append(filtered, p)
+		}
+	}
+
+	final, err := permSvc.SetAll(ch.ID, filtered, userID)
 	if err != nil {
 		return errors.Wrap(err, "unable to set permissions")
 	}
@@ -18,7 +29,7 @@ func (s *Service) updatePerms(ch channel, userID uuid.UUID, permSvc *permission.
 	return errors.Wrap(err, "unable to send permissions update")
 }
 
-func sendPermissionsUpdate(s *Service, ch channel, perms permission.Permissions) error {
+func sendPermissionsUpdate(s *Service, ch Channel, perms permission.Permissions) error {
 	err := s.WriteChannel(ch, NewMessage(ch.Svc, ServerCmdPermissionsUpdate, perms))
 	if err != nil {
 		return errors.Wrap(err, "error writing permission update message")
@@ -43,28 +54,28 @@ func (s *Service) check(
 
 	var tp *permission.Params
 	if teamID != nil {
-		tm, _ := s.teams.GetByID(*teamID)
+		tm := s.teams.GetByID(*teamID)
 		tp = &permission.Params{ID: tm.ID, Slug: tm.Slug, Title: tm.Title, Current: currTeams}
 	}
 
 	var sp *permission.Params
 	if sprintID != nil {
-		spr, _ := s.sprints.GetByID(*sprintID)
+		spr := s.sprints.GetByID(*sprintID)
 		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
 	}
 
 	var permSvc *permission.Service
 	switch svc {
 	case util.SvcTeam:
-		permSvc = s.teams.Permissions
+		permSvc = s.teams.Data.Permissions
 	case util.SvcSprint:
-		permSvc = s.sprints.Permissions
+		permSvc = s.sprints.Data.Permissions
 	case util.SvcEstimate:
-		permSvc = s.estimates.Permissions
+		permSvc = s.estimates.Data.Permissions
 	case util.SvcStandup:
-		permSvc = s.standups.Permissions
+		permSvc = s.standups.Data.Permissions
 	case util.SvcRetro:
-		permSvc = s.retros.Permissions
+		permSvc = s.retros.Data.Permissions
 	}
 
 	if permSvc == nil {

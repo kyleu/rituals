@@ -16,7 +16,7 @@
           <tr>
             <th>User</th>
             <td>
-              <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a>
+              <a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a>
               <div><%= user.Name %></div>
             </td>
           </tr>

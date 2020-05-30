@@ -17,7 +17,7 @@
         <tbody>
           <% for _, m := range bi.Deps { %>
           <tr>
-            <td><a target="_blank" class="<%= ctx.Profile.LinkClass() %>" href="https://<%= m.Path %>"><%= m.Path %></a></td>
+            <td><a target="_blank" class="theme" href="https://<%= m.Path %>"><%= m.Path %></a></td>
             <td title="<%= m.Sum %>"><%= m.Version %></td>
           </tr>
           <% } %>

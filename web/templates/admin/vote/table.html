@@ -12,7 +12,7 @@
   <tbody>
   <% for _, model := range votes { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
       <td><%= model.Choice %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Updated, buffer) %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>

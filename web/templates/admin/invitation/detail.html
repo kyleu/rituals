@@ -19,13 +19,13 @@
           </tr>
           <tr>
             <th>Source</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.Src.String()) %>"><%= model.Src.String() %></a></td>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Src.String()) %>"><%= model.Src.String() %></a></td>
           </tr>
           <tr>
             <th>Target</th>
             <td>
               <% if model.Tgt != nil { %>
-                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.Tgt.String()) %>"><%= model.Tgt.String() %></a>
+                <a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Tgt.String()) %>"><%= model.Tgt.String() %></a>
               <% } %>
             </td>
           </tr>

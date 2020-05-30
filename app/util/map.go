@@ -8,18 +8,6 @@ import (
 	"strings"
 )
 
-func ToMap(fields ...interface{}) map[string]interface{} {
-	ret := make(map[string]interface{})
-	for i := 0; i < len(fields); i+= 2 {
-		k, ok := fields[i].(string)
-		if !ok {
-			ret["BADKEY"] = fields[i]
-		}
-		ret[k] = fields[i + 1]
-	}
-	return ret
-}
-
 func GetEntry(m map[string]interface{}, key string, logger logur.Logger) interface{} {
 	retEntry, ok := m[key]
 	if !ok {

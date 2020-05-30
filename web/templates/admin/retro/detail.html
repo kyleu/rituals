@@ -1,4 +1,4 @@
-<%: func AdminRetroDetail(model *retro.Session, feedbacks retro.Feedbacks, comments comment.Comments, members member.Entries, perms permission.Permissions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminRetroDetail(model *retro.Session, feedbacks retro.Feedbacks, data *session.Data, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -28,7 +28,7 @@
             <th>Team</th>
             <td>
               <% if model.TeamID != nil { %>
-                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key, `detail`), `id`, model.TeamID.String()) %>"><% ComponentUUID(model.TeamID, _buffer) %></a>
+                <a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key, util.KeyDetail), `id`, model.TeamID.String()) %>"><% ComponentUUID(model.TeamID, _buffer) %></a>
               <% } %>
             </td>
           </tr>
@@ -36,13 +36,13 @@
             <th>Sprint</th>
             <td>
               <% if model.SprintID != nil { %>
-                <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcSprint.Key, `detail`), `id`, model.SprintID.String()) %>"><% ComponentUUID(model.SprintID, _buffer) %></a>
+                <a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcSprint.Key, util.KeyDetail), `id`, model.SprintID.String()) %>"><% ComponentUUID(model.SprintID, _buffer) %></a>
               <% } %>
             </td>
           </tr>
           <tr>
             <th>Owner</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
           </tr>
           <tr>
             <th>Status</th>
@@ -56,10 +56,8 @@
       </table>
     </div>
     <% AdminFeedbackCard(feedbacks, params, ctx, _buffer) %>
-    <% AdminCommentCard(comments, params, ctx, _buffer) %>
-    <% AdminMemberCard(members, params, ctx, _buffer) %>
-    <% AdminPermissionCard(perms, params, ctx, _buffer) %>
-    <% AdminActionCard(actions, params, ctx, _buffer) %>
+
+    <% AdminSessionData(data, params, ctx, _buffer) %>
   </div>
 </div>
 <% } %>

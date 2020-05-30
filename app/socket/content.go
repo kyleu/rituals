@@ -11,7 +11,7 @@ import (
 func (s *Service) SendContentUpdate(svc util.Service, id *uuid.UUID) error {
 	if id != nil {
 		msg := NewMessage(svc, ServerCmdContentUpdate, nil)
-		err := s.WriteChannel(channel{Svc: svc, ID: *id}, msg)
+		err := s.WriteChannel(Channel{Svc: svc, ID: *id}, msg)
 		if err != nil {
 			return errors.Wrap(err, "error writing "+svc.Key+" content update message")
 		}

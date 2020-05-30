@@ -10,6 +10,8 @@
       <div class="uk-margin-top">
         <% if sb.Key == "gallery" { %>
           <% AdminSandboxGallery(ctx, _buffer) %>
+        <% } else if sb.Key == "testbed" { %>
+          <% AdminSandboxTestbed(ctx, _buffer) %>
         <% } else { %>
           <pre><%= content %></pre>
         <% } %>

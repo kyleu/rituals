@@ -10,7 +10,7 @@
   <tbody>
   <% for _, model := range standups { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.SvcStandup.Key, util.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.SvcStandup.Key, util.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentDateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>

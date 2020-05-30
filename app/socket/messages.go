@@ -7,11 +7,15 @@ const (
 	ClientCmdPing = "ping"
 
 	ClientCmdConnect       = "connect"
-	ClientCmdUpdateSession = "update-session"
 
 	ClientCmdGetActions = "get-actions"
 	ClientCmdGetTeams   = "get-teams"
 	ClientCmdGetSprints = "get-sprints"
+
+	ClientCmdUpdateSession = "update-session"
+
+	ClientCmdAddComment    = "add-comment"
+	ClientCmdUpdateComment = "update-comment"
 
 	ClientCmdUpdateProfile = "update-profile"
 	ClientCmdRemoveMember  = "remove-member"
@@ -38,10 +42,12 @@ const (
 
 	ServerCmdSessionJoined     = "session-joined"
 	ServerCmdSessionUpdate     = "session-update"
+
+	ServerCmdCommentUpdate     = "comment-update"
 	ServerCmdPermissionsUpdate = "permissions-update"
-	ServerCmdTeamUpdate        = "team-update"
-	ServerCmdSprintUpdate      = "sprint-update"
-	ServerCmdContentUpdate     = "content-update"
+	ServerCmdTeamUpdate    = "team-update"
+	ServerCmdSprintUpdate  = "sprint-update"
+	ServerCmdContentUpdate = "content-update"
 
 	ServerCmdActions = "actions"
 	ServerCmdTeams   = "teams"

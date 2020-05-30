@@ -1,0 +1,3 @@
+<%: func ComponentInit(svc util.Service, modelID uuid.UUID, buffer *bytes.Buffer) %>
+<script>window.addEventListener("load", function() { rituals.init("<%= svc.Key %>", "<%= modelID.String() %>") }, false)</script>
+<script src="/assets/vendor/emoji/emoji.min.js" defer></script>

@@ -1,4 +1,4 @@
--- User
+-- user
 create table if not exists "system_user" (
   "id" uuid not null primary key,
   "name" varchar(2048) not null,
@@ -28,10 +28,10 @@ create table if not exists "auth" (
 
 create index if not exists idx_auth_provider_provider_id on auth(provider, provider_id);
 
--- Team
+-- team
 create table if not exists "team" (
   "id" uuid not null primary key,
-  "slug" varchar(128) not null unique,
+  "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
   "owner" uuid references "system_user"("id"),
   "created" timestamp not null default now()
@@ -48,6 +48,13 @@ create table if not exists "team_member" (
   primary key ("team_id", "user_id")
 );
 
+create table if not exists "team_history" (
+  "slug" varchar(1024) not null primary key,
+  "model_id" uuid not null references "team"("id"),
+  "model_name" varchar(2048) not null,
+  "created" timestamp not null default now()
+);
+
 create table if not exists "team_permission" (
   "team_id" uuid not null references "team"("id"),
   "k" varchar(128) not null,
@@ -59,10 +66,10 @@ create table if not exists "team_permission" (
 
 create index if not exists idx_team_permission_team_id on team_permission(team_id);
 
--- Sprint
+-- sprint
 create table if not exists "sprint" (
   "id" uuid not null primary key,
-  "slug" varchar(128) not null unique,
+  "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
   "team_id" uuid references "team"("id"),
   "owner" uuid references "system_user"("id"),
@@ -82,6 +89,13 @@ create table if not exists "sprint_member" (
   primary key ("sprint_id", "user_id")
 );
 
+create table if not exists "sprint_history" (
+  "slug" varchar(1024) not null primary key,
+  "model_id" uuid not null references "sprint"("id"),
+  "model_name" varchar(2048) not null,
+  "created" timestamp not null default now()
+);
+
 create table if not exists "sprint_permission" (
   "sprint_id" uuid not null references "sprint"("id"),
   "k" varchar(128) not null,
@@ -93,10 +107,10 @@ create table if not exists "sprint_permission" (
 
 create index if not exists idx_sprint_permission_sprint_id on sprint_permission(sprint_id);
 
--- Estimate
+-- estimate
 create table if not exists "estimate" (
   "id" uuid not null primary key,
-  "slug" varchar(128) not null unique,
+  "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
   "team_id" uuid references "team"("id"),
   "sprint_id" uuid references "sprint"("id"),
@@ -117,6 +131,13 @@ create table if not exists "estimate_member" (
   primary key ("estimate_id", "user_id")
 );
 
+create table if not exists "estimate_history" (
+  "slug" varchar(1024) not null primary key,
+  "model_id" uuid not null references "estimate"("id"),
+  "model_name" varchar(2048) not null,
+  "created" timestamp not null default now()
+);
+
 create table if not exists "estimate_permission" (
   "estimate_id" uuid not null references "estimate"("id"),
   "k" varchar(128) not null,
@@ -132,7 +153,7 @@ create table if not exists "story" (
   "id" uuid not null primary key,
   "estimate_id" uuid not null references "estimate"("id"),
   "idx" int not null default 0,
-  "author_id" uuid not null references "system_user"("id"),
+  "user_id" uuid not null references "system_user"("id"),
   "title" varchar(2048) not null,
   "status" story_status not null default 'pending',
   "final_vote" varchar(2048) not null,
@@ -148,10 +169,10 @@ create table if not exists "vote" (
   primary key ("story_id", "user_id")
 );
 
--- Standup
+-- standup
 create table if not exists "standup" (
   "id" uuid not null primary key,
-  "slug" varchar(128) not null unique,
+  "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
   "team_id" uuid references "team"("id"),
   "sprint_id" uuid references "sprint"("id"),
@@ -171,6 +192,13 @@ create table if not exists "standup_member" (
   primary key ("standup_id", "user_id")
 );
 
+create table if not exists "standup_history" (
+  "slug" varchar(1024) not null primary key,
+  "model_id" uuid not null references "standup"("id"),
+  "model_name" varchar(2048) not null,
+  "created" timestamp not null default now()
+);
+
 create table if not exists "standup_permission" (
   "standup_id" uuid not null references "standup"("id"),
   "k" varchar(128) not null,
@@ -186,16 +214,16 @@ create table "report" (
   "id" uuid not null primary key,
   "standup_id" uuid not null references "standup"("id"),
   "d" date not null default now()::date,
-  "author_id" uuid not null references "system_user"("id"),
+  "user_id" uuid not null references "system_user"("id"),
   "content" text not null,
   "html" text not null,
   "created" timestamp not null default now()
 );
 
--- Retro
+-- retro
 create table if not exists "retro" (
   "id" uuid not null primary key,
-  "slug" varchar(128) not null unique,
+  "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
   "team_id" uuid references "team"("id"),
   "sprint_id" uuid references "sprint"("id"),
@@ -216,6 +244,13 @@ create table if not exists "retro_member" (
   primary key ("retro_id", "user_id")
 );
 
+create table if not exists "retro_history" (
+  "slug" varchar(1024) not null primary key,
+  "model_id" uuid not null references "retro"("id"),
+  "model_name" varchar(2048) not null,
+  "created" timestamp not null default now()
+);
+
 create table if not exists "retro_permission" (
   "retro_id" uuid not null references "retro"("id"),
   "k" varchar(128) not null,
@@ -231,14 +266,14 @@ create table if not exists "feedback" (
   "id" uuid not null primary key,
   "retro_id" uuid not null references "retro"("id"),
   "idx" int not null default 0,
-  "author_id" uuid not null references "system_user"("id"),
+  "user_id" uuid not null references "system_user"("id"),
   "category" varchar(2048) not null,
   "content" text not null,
   "html" text not null,
   "created" timestamp not null default now()
 );
 
--- Invite
+-- invite
 create table if not exists "invitation" (
   "key" varchar(128) not null primary key,
   "k" invitation_type not null,
@@ -251,24 +286,26 @@ create table if not exists "invitation" (
   "created" timestamp not null default now()
 );
 
--- Actions
+-- action
 create table if not exists "action" (
   "id" uuid not null primary key,
   "svc" model_service not null,
   "model_id" uuid not null,
-  "author_id" uuid references "system_user"("id"),
+  "user_id" uuid references "system_user"("id"),
   "act" varchar(64) not null,
   "content" json,
   "note" text,
   "created" timestamp not null default now()
 );
 
--- Actions
+-- comment
 create table if not exists "comment" (
   "id" uuid not null primary key,
   "svc" model_service not null,
   "model_id" uuid not null,
-  "author_id" uuid references "system_user"("id"),
+  "target_type" varchar(128) not null,
+  "target_id" uuid,
+  "user_id" uuid references "system_user"("id"),
   "content" text not null,
   "html" text not null,
   "created" timestamp not null default now()

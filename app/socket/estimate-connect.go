@@ -3,13 +3,13 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/auth"
-	"github.com/kyleu/rituals.dev/app/comment"
-	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/team"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/comment"
+	"github.com/kyleu/rituals.dev/app/model/estimate"
+	"github.com/kyleu/rituals.dev/app/model/member"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+	"github.com/kyleu/rituals.dev/app/model/sprint"
+	"github.com/kyleu/rituals.dev/app/model/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -27,8 +27,8 @@ type EstimateSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onEstimateConnect(s *Service, conn *connection, estimateID uuid.UUID) error {
-	ch := channel{Svc: util.SvcEstimate, ID: estimateID}
+func onEstimateConnect(s *Service, conn *Connection, estimateID uuid.UUID) error {
+	ch := Channel{Svc: util.SvcEstimate, ID: estimateID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -37,15 +37,12 @@ func onEstimateConnect(s *Service, conn *connection, estimateID uuid.UUID) error
 	return errors.Wrap(err, "error joining estimate session")
 }
 
-func joinEstimateSession(s *Service, conn *connection, ch channel) error {
+func joinEstimateSession(s *Service, conn *Connection, ch Channel) error {
 	if ch.Svc != util.SvcEstimate {
 		return errors.New("estimate cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess, err := s.estimates.GetByID(ch.ID)
-	if err != nil {
-		return errors.Wrap(err, "error finding estimate session")
-	}
+	sess := s.estimates.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -57,10 +54,10 @@ func joinEstimateSession(s *Service, conn *connection, ch channel) error {
 	sj := EstimateSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.estimates.Comments.GetByModelID(ch.ID, nil),
+		Comments:    s.estimates.Data.Comments.GetByModelID(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
 		Sprint:      getSprintOpt(s, sess.SprintID),
-		Members:     s.estimates.Members.GetByModelID(ch.ID, nil),
+		Members:     s.estimates.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
 		Stories:     s.estimates.GetStories(ch.ID, nil),
 		Votes:       s.estimates.GetEstimateVotes(ch.ID, nil),

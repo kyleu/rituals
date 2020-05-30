@@ -2,14 +2,14 @@
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <% ComponentSessionIcon(util.SvcSprint, ctx, buffer) %>
-    <span class="model-icon h3-icon" onclick="events.openModal('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcSprint.Icon %>;"></span>
-    <span id="model-title" onclick="events.openModal('<%= util.KeySession %>');"><%= model.Title %></span>
+    <span class="model-icon h3-icon" onclick="modal.open('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcSprint.Icon %>;"></span>
+    <span id="model-title" onclick="modal.open('<%= util.KeySession %>');"><%= model.Title %></span>
   </h3>
   <span class="right" id="sprint-date-display"></span>
   <%= util.SvcSprint.Key %>
   <span id="team-link-container"></span>
 </div>
-<div id="modal-session" data-uk-modal>
+<div id="modal-session" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">

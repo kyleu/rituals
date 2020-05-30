@@ -11,7 +11,8 @@
     "outFile": "../web/assets/rituals.js",
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "sourceMap": false,
+    "sourceMap": true,
+    "sourceRoot": "/admin/src/client/src/",
     "strict": true,
     "target": "ES6"
   },

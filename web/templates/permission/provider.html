@@ -2,7 +2,7 @@
 <% if len(errors) > 0 { %>
   <li>
     <p>
-      To access this <%= svc.Key %>, you must sign in to <a class="<%= ctx.Profile.LinkClass() %> profile-link" href="<%= ctx.Route(`auth.submit`, util.KeyKey, provider.Key) %>"><%= provider.Title %></a>
+      To access this <%= svc.Key %>, you must sign in to <a class="theme profile-link" href="<%= ctx.Route(`auth.submit`, util.KeyKey, provider.Key) %>"><%= provider.Title %></a>
       <% var ms = errors.GetMatches() %>
       <% if len(ms) > 0 { %>
         using an email address from

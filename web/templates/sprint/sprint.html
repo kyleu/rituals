@@ -2,6 +2,10 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ head { %>
+<% ComponentInit(util.SvcSprint, model.ID, _buffer) %>
+<% } %>
+
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -17,12 +21,11 @@
         <% SprintContents(model, ctx, _buffer) %>
       </div>
       <div class="uk-width-1-3@m">
-        <% MemberOthers(ctx, _buffer) %>
+        <% MemberOther(ctx, _buffer) %>
       </div>
     </div>
   </div>
 </div>
 <% ComponentSessionWelcome(util.SvcSprint, ctx, _buffer) %>
-<% ComponentSessionComments(ctx, _buffer) %>
-<script>window.addEventListener("load", function() { rituals.init(services.sprint.key, "<%= model.ID.String() %>") }, false)</script>
+<% ComponentSessionComment(ctx, _buffer) %>
 <% } %>

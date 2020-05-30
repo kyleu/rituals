@@ -1,15 +1,62 @@
 "use strict";
+var rituals;
+(function (rituals) {
+    function onError(svc, err) {
+        console.error(`${svc.key}: ${err}`);
+        const idx = err.lastIndexOf(":");
+        if (idx > -1) {
+            err = err.substr(idx + 1);
+        }
+        notify.notify(`${svc.key} error: ${err}`, false);
+    }
+    rituals.onError = onError;
+    function init(svc, id) {
+        window.onbeforeunload = function () {
+            socket.setAppUnloading();
+        };
+        socket.socketConnect(services.fromKey(svc), id);
+    }
+    rituals.init = init;
+})(rituals || (rituals = {}));
 var action;
 (function (action) {
     function loadActions() {
-        const msg = { svc: services.system.key, cmd: command.client.getActions, param: null };
-        socket.send(msg);
+        socket.send({ svc: services.system.key, cmd: command.client.getActions, param: null });
     }
     action.loadActions = loadActions;
     function viewActions(actions) {
         dom.setContent("#action-list", action.renderActions(actions));
     }
     action.viewActions = viewActions;
+})(action || (action = {}));
+var action;
+(function (action_1) {
+    function renderAction(action) {
+        const c = JSON.stringify(action.content, null, 2);
+        return JSX("tr", null,
+            JSX("td", null, system.getMemberName(action.userID)),
+            JSX("td", null, action.act),
+            JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
+            JSX("td", null, action.note),
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.created))));
+    }
+    function renderActions(actions) {
+        if (actions.length === 0) {
+            return JSX("div", null, "No actions available");
+        }
+        else {
+            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
+                JSX("thead", null,
+                    JSX("tr", null,
+                        JSX("th", null, "User"),
+                        JSX("th", null, "Act"),
+                        JSX("th", null, "Content"),
+                        JSX("th", null, "Note"),
+                        JSX("th", null, "Created"))),
+                JSX("tbody", null, actions.map(a => renderAction(a))));
+        }
+    }
+    action_1.renderActions = renderActions;
 })(action || (action = {}));
 var auth;
 (function (auth) {
@@ -21,107 +68,148 @@ var auth;
     const microsoft = { key: "microsoft", title: "Microsoft" };
     auth.allProviders = [github, google, slack, facebook, amazon, microsoft];
 })(auth || (auth = {}));
-var collection;
-(function (collection) {
-    class Group {
-        constructor(key) {
-            this.members = [];
-            this.key = key;
-        }
+var comment;
+(function (comment) {
+    let activeComments = [];
+    let activeType;
+    let activeID;
+    function applyComments(comments) {
+        activeComments = comments;
     }
-    collection.Group = Group;
-    function groupBy(list, func) {
-        const res = [];
-        let group;
-        if (list) {
-            list.forEach((o) => {
-                const groupName = func(o);
-                if (!group) {
-                    group = new Group(groupName);
-                }
-                if (groupName != group.key) {
-                    res.push(group);
-                    group = new Group(groupName);
-                }
-                group.members.push(o);
-            });
-        }
-        if (group) {
-            res.push(group);
-        }
-        return res;
+    comment.applyComments = applyComments;
+    function setActive(t, id) {
+        activeType = t;
+        activeID = id;
     }
-    collection.groupBy = groupBy;
-    function findGroup(groups, key) {
-        for (const g of groups) {
-            if (g.key === key) {
-                return g.members;
+    comment.setActive = setActive;
+    function add() {
+        const textarea = dom.req("#comment-add-content");
+        const v = textarea.value;
+        textarea.value = "";
+        socket.send({ svc: services.system.key, cmd: command.client.addComment, param: { targetType: activeType, targetID: activeID, content: v } });
+    }
+    comment.add = add;
+    function onCommentUpdate(u) {
+        activeComments.push(u);
+        setCounts();
+        load();
+    }
+    comment.onCommentUpdate = onCommentUpdate;
+    function find(t, id) {
+        if ((!t) || t === "modal") {
+            t = activeType;
+            if (!id) {
+                id = activeID;
             }
         }
-        return [];
+        if (t === "root") {
+            t = "";
+        }
+        if (id) {
+            return activeComments.filter(x => x.targetType === t && x.targetID == id);
+        }
+        return activeComments.filter(x => x.targetType === t);
     }
-    collection.findGroup = findGroup;
-    function flatten(a) {
-        const ret = [];
-        a.forEach(v => ret.push(...v));
-        return ret;
+    function load(t, id) {
+        if ((!t) || t === "modal") {
+            t = activeType;
+            if (!id) {
+                id = activeID;
+            }
+        }
+        if (!t) {
+            console.warn(`invalid comment type [${t}]`);
+            return;
+        }
+        activeType = t;
+        activeID = id;
+        dom.setContent("#modal-comment-content", comment.renderComments(find(t, id)));
     }
-    collection.flatten = flatten;
-})(collection || (collection = {}));
-var command;
-(function (command) {
-    command.client = {
-        error: "error",
-        ping: "ping",
-        connect: "connect",
-        updateSession: "update-session",
-        getActions: "get-actions",
-        getTeams: "get-teams",
-        getSprints: "get-sprints",
-        updateProfile: "update-profile",
-        removeMember: "remove-member",
-        addStory: "add-story",
-        updateStory: "update-story",
-        removeStory: "remove-story",
-        setStoryStatus: "set-story-status",
-        submitVote: "submit-vote",
-        addReport: "add-report",
-        updateReport: "update-report",
-        removeReport: "remove-report",
-        addFeedback: "add-feedback",
-        updateFeedback: "update-feedback",
-        removeFeedback: "remove-feedback",
-    };
-    command.server = {
-        error: "error",
-        pong: "pong",
-        sessionJoined: "session-joined",
-        sessionUpdate: "session-update",
-        permissionsUpdate: "permissions-update",
-        teamUpdate: "team-update",
-        sprintUpdate: "sprint-update",
-        contentUpdate: "content-update",
-        actions: "actions",
-        teams: "teams",
-        sprints: "sprints",
-        memberUpdate: "member-update",
-        onlineUpdate: "online-update",
-        storyUpdate: "story-update",
-        storyRemove: "story-remove",
-        storyStatusChange: "story-status-change",
-        voteUpdate: "vote-update",
-        reportUpdate: "report-update",
-        reportRemove: "report-remove",
-        feedbackUpdate: "feedback-update",
-        feedbackRemove: "feedback-remove",
-    };
-})(command || (command = {}));
+    comment.load = load;
+    function setCounts() {
+        const containers = dom.els(`.comment-count-container`);
+        let matchedModal = false;
+        const modalCount = dom.opt(`#comment-count-modal`);
+        containers.forEach(cc => {
+            const t = cc.dataset["commentType"];
+            const id = cc.dataset["commentId"];
+            if (!t) {
+                throw `invalid comment type [${t}] with id [${id}]`;
+            }
+            let comments = find(t, id);
+            setCount(t, comments, cc);
+            if (activeType === t) {
+                if (modalCount) {
+                    setCount(t, comments, modalCount);
+                    matchedModal = true;
+                }
+            }
+        });
+        if (!matchedModal && modalCount) {
+            setCount("modal", [], modalCount, true);
+        }
+    }
+    comment.setCounts = setCounts;
+    function closeModal() {
+        if (activeType === "story") {
+            modal.openSoon("story");
+        }
+        else if (activeType === "report") {
+            modal.openSoon("report");
+        }
+        else if (activeType === "feedback") {
+            modal.openSoon("feedback");
+        }
+        activeType = undefined;
+    }
+    comment.closeModal = closeModal;
+    function setCount(t, comments, cc, force) {
+        dom.req(".text", cc).innerText = comments.length.toString();
+        if (t !== "root" && t !== "modal" && t !== "") {
+            dom.setDisplay(cc, (comments.length !== 0) || force === true);
+        }
+    }
+})(comment || (comment = {}));
+var comment;
+(function (comment_1) {
+    function renderComment(comment) {
+        return JSX("tr", null,
+            JSX("td", null, system.getMemberName(comment.userID)),
+            JSX("td", { dangerouslySetInnerHTML: { __html: comment.html } }),
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(comment.created))));
+    }
+    function renderComments(comments) {
+        if (comments.length === 0) {
+            return JSX("div", null, "No comments available");
+        }
+        else {
+            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
+                JSX("thead", null,
+                    JSX("tr", null,
+                        JSX("th", null, "User"),
+                        JSX("th", null, "Content"),
+                        JSX("th", null, "Created"))),
+                JSX("tbody", null, comments.map(c => renderComment(c))));
+        }
+    }
+    comment_1.renderComments = renderComments;
+    function renderCount(k, v) {
+        const profile = system.cache.getProfile();
+        return JSX("div", { class: "comment-count-container uk-margin-small-left left hidden", "data-comment-type": k, "data-comment-id": v },
+            JSX("a", { class: `${profile.linkColor}-fg`, title: "view comments" },
+                JSX("div", { class: "comment-count" },
+                    JSX("span", { class: "uk-icon", "data-uk-icon": "comments" }),
+                    JSX("span", { class: "text" }))));
+    }
+    comment_1.renderCount = renderCount;
+})(comment || (comment = {}));
 var contents;
 (function (contents) {
     function onContentDisplay(key, same, content, html) {
         dom.setDisplay(`#modal-${key} .content-edit`, same);
         dom.setDisplay(`#modal-${key} .buttons-edit`, same);
-        dom.setHTML(dom.setDisplay(`#modal-${key} .content-view`, !same), !same ? "" : html);
+        const v = dom.setDisplay(`#modal-${key} .content-view`, !same);
+        dom.setHTML(v, same ? "" : html);
         dom.setDisplay(`#modal-${key} .buttons-view`, !same);
         const contentEditTextarea = dom.req(`#${key}-edit-content`);
         dom.setValue(contentEditTextarea, same ? content : "");
@@ -131,169 +219,34 @@ var contents;
     }
     contents.onContentDisplay = onContentDisplay;
 })(contents || (contents = {}));
-var date;
-(function (date_1) {
-    function dateToYMD(date) {
-        const d = date.getDate();
-        const m = date.getMonth() + 1;
-        const y = date.getFullYear();
-        return `${y}-${m <= 9 ? `0${m}` : m}-${d <= 9 ? `0${d}` : d}`;
+var contents;
+(function (contents_1) {
+    function renderSprintContent(svc, session) {
+        const profile = system.cache.getProfile();
+        return JSX("tr", null,
+            JSX("td", null,
+                JSX("a", { class: `${profile.linkColor}-fg`, href: `/${svc.key}/${session.slug}` }, session.title)),
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created))));
     }
-    date_1.dateToYMD = dateToYMD;
-    function dateFromYMD(s) {
-        const d = new Date(s);
-        return new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+    function toContent(svc, sessions) {
+        return sessions.map(s => {
+            return { svc: svc, session: s };
+        });
     }
-    date_1.dateFromYMD = dateFromYMD;
-    function dow(i) {
-        switch (i) {
-            case 0:
-                return "Sun";
-            case 1:
-                return "Mon";
-            case 2:
-                return "Tue";
-            case 3:
-                return "Wed";
-            case 4:
-                return "Thu";
-            case 5:
-                return "Fri";
-            case 6:
-                return "Sat";
-            default:
-                return "???";
+    function renderContents(src, tgt, sessions) {
+        const contents = toContent(tgt, sessions);
+        contents.sort((l, r) => (l.session.created > r.session.created ? -1 : 1));
+        if (contents.length === 0) {
+            return JSX("div", null, `No ${tgt.plural} in this ${src.key}`);
+        }
+        else {
+            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
+                JSX("tbody", null, contents.map(a => renderSprintContent(a.svc, a.session))));
         }
     }
-    date_1.dow = dow;
-    function toDateString(d) {
-        return d.toLocaleDateString();
-    }
-    date_1.toDateString = toDateString;
-    function toTimeString(d) {
-        return d.toLocaleTimeString().slice(0, 8);
-    }
-    date_1.toTimeString = toTimeString;
-    function toDateTimeString(d) {
-        return `${toDateString(d)} ${toTimeString(d)}`;
-    }
-    date_1.toDateTimeString = toDateTimeString;
-    const tzOffset = new Date().getTimezoneOffset() * 60000;
-    function utcDate(s) {
-        return new Date(Date.parse(s) + tzOffset);
-    }
-    date_1.utcDate = utcDate;
-})(date || (date = {}));
-var dom;
-(function (dom) {
-    function initDom(t) {
-        style.setTheme(t);
-        document.body.style.visibility = "visible";
-    }
-    dom.initDom = initDom;
-    function els(selector, context) {
-        return UIkit.util.$$(selector, context);
-    }
-    dom.els = els;
-    function opt(selector, context) {
-        return els(selector, context).shift();
-    }
-    dom.opt = opt;
-    function req(selector, context) {
-        const res = opt(selector, context);
-        if (!res) {
-            console.warn(`no element found for selector [${selector}]`);
-        }
-        return res;
-    }
-    dom.req = req;
-    function setHTML(el, html) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.innerHTML = html;
-        return el;
-    }
-    dom.setHTML = setHTML;
-    function setDisplay(el, condition, v = "block") {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.style.display = condition ? v : "none";
-        return el;
-    }
-    dom.setDisplay = setDisplay;
-    function setContent(el, e) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.innerHTML = "";
-        el.appendChild(e);
-        return el;
-    }
-    dom.setContent = setContent;
-    function setText(el, text) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.innerText = text;
-        return el;
-    }
-    dom.setText = setText;
-    function setValue(el, text) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.value = text;
-        return el;
-    }
-    dom.setValue = setValue;
-    function wireTextarea(text) {
-        function resize() {
-            text.style.height = "auto";
-            text.style.height = `${text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)}px`;
-        }
-        function delayedResize() {
-            window.setTimeout(resize, 0);
-        }
-        const x = text.dataset["autoresize"];
-        if (!x) {
-            text.dataset["autoresize"] = "true";
-            text.addEventListener("change", resize, false);
-            text.addEventListener("cut", delayedResize, false);
-            text.addEventListener("paste", delayedResize, false);
-            text.addEventListener("drop", delayedResize, false);
-            text.addEventListener("keydown", delayedResize, false);
-            text.focus();
-            text.select();
-        }
-        resize();
-    }
-    dom.wireTextarea = wireTextarea;
-    function setOptions(el, categories) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.innerHTML = "";
-        for (const c of categories) {
-            const opt = document.createElement("option");
-            opt.value = c;
-            opt.innerText = c;
-            el.appendChild(opt);
-        }
-    }
-    dom.setOptions = setOptions;
-    function setSelectOption(el, o) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        for (let i = 0; i < el.children.length; i++) {
-            const e = el.children.item(i);
-            e.selected = e.value === o;
-        }
-    }
-    dom.setSelectOption = setSelectOption;
-})(dom || (dom = {}));
+    contents_1.renderContents = renderContents;
+})(contents || (contents = {}));
 var estimate;
 (function (estimate) {
     class Cache {
@@ -312,17 +265,15 @@ var estimate;
     function onEstimateMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.estimate.key, param);
+                rituals.onError(services.estimate, param);
                 break;
             case command.server.sessionJoined:
                 const sj = param;
-                rituals.onSessionJoin(sj);
-                rituals.setTeam(sj.team);
-                rituals.setSprint(sj.sprint);
+                session.onSessionJoin(sj);
                 setEstimateDetail(sj.session);
                 story.setStories(sj.stories);
                 vote.setVotes(sj.votes);
-                rituals.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
@@ -335,14 +286,14 @@ var estimate;
                 if (estimate.cache.detail) {
                     estimate.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
                 }
-                rituals.setTeam(tm);
+                session.setTeam(tm);
                 break;
             case command.server.sprintUpdate:
                 const spr = param;
                 if (estimate.cache.detail) {
                     estimate.cache.detail.sprintID = spr === null || spr === void 0 ? void 0 : spr.id;
                 }
-                rituals.setSprint(spr);
+                session.setSprint(spr);
                 break;
             case command.server.storyUpdate:
                 onStoryUpdate(param);
@@ -365,7 +316,7 @@ var estimate;
         estimate.cache.detail = detail;
         dom.setValue("#model-choices-input", detail.choices.join(", "));
         story.viewActiveStory();
-        rituals.setDetail(detail);
+        session.setDetail(detail);
     }
     function onSubmitEstimateSession() {
         const title = dom.req("#model-title-input").value;
@@ -380,6 +331,7 @@ var estimate;
     function onStoryUpdate(s) {
         const x = preUpdate(s.id);
         x.push(s);
+        x.sort(s => s.idx);
         if (s.id === estimate.cache.activeStory) {
             dom.setText("#story-title", s.title);
         }
@@ -390,105 +342,22 @@ var estimate;
         const x = preUpdate(id);
         story.setStories(x);
         if (id === estimate.cache.activeStory) {
-            UIkit.modal("#modal-story").hide();
+            modal.hide("story");
         }
-        UIkit.notification("story has been deleted", { status: "success", pos: "top-right" });
+        notify.notify("story has been deleted", true);
     }
     estimate.onStoryRemove = onStoryRemove;
     function preUpdate(id) {
         return estimate.cache.stories.filter((p) => p.id !== id);
     }
 })(estimate || (estimate = {}));
-var events;
-(function (events) {
-    function delay(f) {
-        setTimeout(f, 250);
-    }
-    function openModal(key, id) {
-        switch (key) {
-            case "session":
-                const sessionInput = dom.setValue("#model-title-input", dom.req("#model-title").innerText);
-                delay(() => sessionInput.focus());
-                team.refreshTeams();
-                sprint.refreshSprints();
-                break;
-            // member
-            case "self":
-                const selfInput = dom.setValue("#self-name-input", dom.req("#member-self .member-name").innerText);
-                delay(() => selfInput.focus());
-                break;
-            case "invitation":
-                break;
-            case "member":
-                system.cache.activeMember = id;
-                member.viewActiveMember();
-                break;
-            case "welcome":
-                break;
-            // actions
-            case "actions":
-                action.loadActions();
-                break;
-            // estimate
-            case "add-story":
-                const storyInput = dom.setValue("#story-title-input", "");
-                delay(() => storyInput.focus());
-                break;
-            case "story":
-                estimate.cache.activeStory = id;
-                story.viewActiveStory();
-                break;
-            // standup
-            case "add-report":
-                dom.setValue("#report-date", date.dateToYMD(new Date()));
-                const reportContent = dom.setValue("#report-content", "");
-                dom.wireTextarea(reportContent);
-                delay(() => reportContent.focus());
-                break;
-            case "report":
-                standup.cache.activeReport = id;
-                report.viewActiveReport();
-                const reportEditContent = dom.req("#report-edit-content");
-                delay(() => {
-                    dom.wireTextarea(reportEditContent);
-                    reportEditContent.focus();
-                });
-                break;
-            // retro
-            case "add-feedback":
-                dom.setSelectOption("#feedback-category", id);
-                const feedbackContent = dom.setValue("#feedback-content", "");
-                dom.wireTextarea(feedbackContent);
-                delay(() => feedbackContent.focus());
-                break;
-            case "feedback":
-                retro.cache.activeFeedback = id;
-                feedback.viewActiveFeedback();
-                const feedbackEditContent = dom.req("#feedback-edit-content");
-                delay(() => {
-                    dom.wireTextarea(feedbackEditContent);
-                    feedbackEditContent.focus();
-                });
-                break;
-            // default
-            default:
-                console.warn(`unhandled modal [${key}]`);
-        }
-        UIkit.modal(`#modal-${key}`).show();
-        return false;
-    }
-    events.openModal = openModal;
-    function hideModal(key) {
-        UIkit.modal(`#modal-${key}`).hide();
-    }
-    events.hideModal = hideModal;
-})(events || (events = {}));
 var feedback;
 (function (feedback_1) {
     function setFeedback(feedback) {
         retro.cache.feedback = feedback;
         dom.setContent("#feedback-detail", feedback_1.renderFeedbackArray(feedback));
-        UIkit.modal("#modal-add-feedback").hide();
+        comment.setCounts();
+        modal.hide("add-feedback");
     }
     feedback_1.setFeedback = setFeedback;
     function onSubmitFeedback() {
@@ -514,7 +383,7 @@ var feedback;
             UIkit.modal.confirm("Delete this feedback?").then(function () {
                 const msg = { svc: services.retro.key, cmd: command.client.removeFeedback, param: id };
                 socket.send(msg);
-                UIkit.modal("#modal-feedback").hide();
+                modal.hide("feedback");
             });
         }
         return false;
@@ -531,17 +400,22 @@ var feedback;
         return curr;
     }
     feedback_1.getActiveFeedback = getActiveFeedback;
-    function viewActiveFeedback() {
+    function viewActiveFeedback(id) {
         const profile = system.cache.getProfile();
+        if (id) {
+            retro.cache.activeFeedback = id;
+        }
         const fb = getActiveFeedback();
         if (!fb) {
             console.warn("no active feedback");
             return;
         }
-        const same = fb.authorID === profile.userID;
-        dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.authorID)}`);
+        const same = fb.userID === profile.userID;
+        dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.userID)}`);
         dom.setSelectOption("#feedback-edit-category", same ? fb.category : undefined);
         contents.onContentDisplay("feedback", same, fb.content, fb.html);
+        comment.setActive("feedback", fb.id);
+        comment.setCounts();
     }
     feedback_1.viewActiveFeedback = viewActiveFeedback;
     function onFeedbackUpdate(r) {
@@ -553,7 +427,7 @@ var feedback;
     function onFeedbackRemoved(id) {
         const x = preUpdate(id);
         postUpdate(x, id);
-        UIkit.notification("feedback has been deleted", { status: "success", pos: "top-right" });
+        notify.notify("feedback has been deleted", true);
     }
     feedback_1.onFeedbackRemoved = onFeedbackRemoved;
     function preUpdate(id) {
@@ -562,7 +436,7 @@ var feedback;
     function postUpdate(x, id) {
         feedback.setFeedback(x);
         if (id === retro.cache.activeFeedback) {
-            UIkit.modal("#modal-feedback").hide();
+            modal.hide("feedback");
         }
     }
     function getFeedbackCategories(feedback, categories) {
@@ -578,42 +452,61 @@ var feedback;
         return ret;
     }
     feedback_1.getFeedbackCategories = getFeedbackCategories;
-})(feedback || (feedback = {}));
-// noinspection JSUnusedGlobalSymbols
-function JSX(tag, attrs) {
-    const e = document.createElement(tag);
-    for (const name in attrs) {
-        if (name && attrs.hasOwnProperty(name)) {
-            const v = attrs[name];
-            if (v === true) {
-                e.setAttribute(name, name);
-            }
-            else if (v !== false && v !== null && v !== undefined) {
-                e.setAttribute(name, v.toString());
-            }
-        }
+    function viewAddFeedback(p) {
+        dom.setSelectOption("#feedback-category", p);
+        const feedbackContent = dom.setValue("#feedback-content", "");
+        dom.wireTextarea(feedbackContent);
+        setTimeout((() => feedbackContent.focus()), 250);
     }
-    for (let i = 2; i < arguments.length; i++) {
-        let child = arguments[i];
-        if (Array.isArray(child)) {
-            child.forEach(c => {
-                e.appendChild(c);
-            });
+    feedback_1.viewAddFeedback = viewAddFeedback;
+    function viewFeedback(p) {
+        feedback.viewActiveFeedback(p);
+        const feedbackEditContent = dom.req("#feedback-edit-content");
+        setTimeout(() => {
+            dom.wireTextarea(feedbackEditContent);
+            feedbackEditContent.focus();
+        }, 250);
+    }
+    feedback_1.viewFeedback = viewFeedback;
+})(feedback || (feedback = {}));
+var feedback;
+(function (feedback) {
+    function renderFeedback(model) {
+        const profile = system.cache.getProfile();
+        const ret = JSX("div", { id: `feedback-${model.id}`, class: "feedback-detail section", onclick: `modal.open('feedback', '${model.id}');` },
+            JSX("div", { class: "feedback-comments right" }, comment.renderCount("feedback", model.id)),
+            JSX("div", { class: "left" },
+                JSX("a", { class: `${profile.linkColor}-fg section-link` }, system.getMemberName(model.userID))),
+            JSX("div", { class: "clear" }),
+            JSX("div", { class: "feedback-content" }, "loading..."));
+        if (model.html.length > 0) {
+            dom.setHTML(dom.req(".feedback-content", ret), model.html).style.display = "block";
+        }
+        return ret;
+    }
+    function renderFeedbackArray(f) {
+        var _a;
+        if (f.length === 0) {
+            return JSX("div", null,
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-feedback');", type: "button" }, "Add Feedback"));
         }
         else {
-            if (!child.nodeType) {
-                child = document.createTextNode(child.toString());
-            }
-            e.appendChild(child);
+            const cats = feedback.getFeedbackCategories(f, ((_a = retro.cache.detail) === null || _a === void 0 ? void 0 : _a.categories) || []);
+            const profile = system.cache.getProfile();
+            return JSX("div", { class: "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "data-uk-grid": true }, cats.map(cat => JSX("div", { class: "feedback-list uk-transition-toggle" },
+                JSX("div", { class: "feedback-category-header" },
+                    JSX("span", { class: "right" },
+                        JSX("a", { class: `${profile.linkColor}-fg uk-icon-button uk-transition-fade`, "data-uk-icon": "plus", onclick: `modal.open('add-feedback', '${cat.category}');`, title: "add feedback" })),
+                    JSX("span", { class: "feedback-category-title", onclick: `modal.open('add-feedback', '${cat.category}');` }, cat.category)),
+                JSX("div", null, cat.feedback.map(fb => JSX("div", null, renderFeedback(fb)))))));
         }
     }
-    return e;
-}
+    feedback.renderFeedbackArray = renderFeedbackArray;
+})(feedback || (feedback = {}));
 var member;
 (function (member_1) {
     function isSelf(x) {
-        var _a;
-        return x.userID === ((_a = system.cache.profile) === null || _a === void 0 ? void 0 : _a.userID);
+        return x.userID === system.cache.getProfile().userID;
     }
     function setMembers() {
         const self = system.cache.members.filter(isSelf).shift();
@@ -630,23 +523,23 @@ var member;
     function onMemberUpdate(member) {
         var _a;
         if (isSelf(member)) {
-            UIkit.modal("#modal-self").hide();
+            modal.hide("self");
         }
         const unfiltered = system.cache.members;
         const curr = unfiltered.filter(m => m.userID === member.userID).shift();
         const nameChanged = (curr === null || curr === void 0 ? void 0 : curr.name) !== member.name;
         const ms = unfiltered.filter(m => m.userID !== member.userID);
         if (ms.length === system.cache.members.length) {
-            UIkit.notification(`${member.name} has joined`, { status: "success", pos: "top-right" });
+            notify.notify(`${member.name} has joined`, true);
         }
         if (member.name === "::delete") {
-            if (member.userID === ((_a = system.cache.profile) === null || _a === void 0 ? void 0 : _a.userID)) {
-                UIkit.modal("#modal-self").hide();
-                UIkit.notification(`you have left this ${system.cache.currentService}`, { status: "success", pos: "top-right" });
+            if (member.userID === system.cache.getProfile().userID) {
+                modal.hide("self");
+                notify.notify(`you have left this ${(_a = system.cache.currentService) === null || _a === void 0 ? void 0 : _a.key}`, true);
                 document.location.href = "/";
             }
             else {
-                UIkit.modal("#modal-member").hide();
+                modal.hide("member");
             }
         }
         else {
@@ -657,22 +550,22 @@ var member;
         setMembers();
         if (nameChanged) {
             switch (system.cache.currentService) {
-                case services.team.key:
+                case services.team:
                     break;
-                case services.sprint.key:
+                case services.sprint:
                     break;
-                case services.estimate.key:
+                case services.estimate:
                     if (estimate.cache.activeStory) {
                         vote.viewVotes();
                     }
                     break;
-                case services.standup.key:
+                case services.standup:
                     dom.setContent("#report-detail", report.renderReports(standup.cache.reports));
                     if (standup.cache.activeReport) {
                         report.viewActiveReport();
                     }
                     break;
-                case services.retro.key:
+                case services.retro:
                     dom.setContent("#feedback-detail", feedback.renderFeedbackArray(retro.cache.feedback));
                     if (retro.cache.activeFeedback) {
                         feedback.viewActiveFeedback();
@@ -714,18 +607,22 @@ var member;
         socket.send(msg);
     }
     member_1.onSubmitSelf = onSubmitSelf;
+    let activeMember;
     function getActiveMember() {
-        if (!system.cache.activeMember) {
+        if (!activeMember) {
             console.warn("no active member");
             return undefined;
         }
-        const curr = system.cache.members.filter(x => x.userID === system.cache.activeMember).shift();
+        const curr = system.cache.members.filter(x => x.userID === activeMember).shift();
         if (curr) {
-            console.warn(`cannot load active member [${system.cache.activeMember}]`);
+            console.warn(`cannot load active member [${activeMember}]`);
         }
         return curr;
     }
-    function viewActiveMember() {
+    function viewActiveMember(p) {
+        if (p) {
+            activeMember = p;
+        }
         const member = getActiveMember();
         if (!member) {
             return;
@@ -734,26 +631,121 @@ var member;
         dom.setText("#member-modal-role", member.role);
     }
     member_1.viewActiveMember = viewActiveMember;
-    function removeMember(id = system.cache.activeMember) {
-        var _a;
+    function removeMember(id = activeMember) {
         if (!id) {
-            console.warn(`cannot load active member [${system.cache.activeMember}]`);
+            console.warn(`cannot load active member [${activeMember}]`);
         }
-        if (id == "self") {
-            id = (_a = system.cache.profile) === null || _a === void 0 ? void 0 : _a.userID;
+        if (id === "self") {
+            id = system.cache.getProfile().userID;
         }
-        if (confirm(`Are you sure you wish to leave this ${system.cache.currentService}?`)) {
-            const msg = { svc: system.cache.currentService, cmd: command.client.removeMember, param: id };
+        const svc = system.cache.currentService;
+        if (confirm(`Are you sure you wish to leave this ${svc.key}?`)) {
+            const msg = { svc: svc.key, cmd: command.client.removeMember, param: id };
             socket.send(msg);
         }
     }
     member_1.removeMember = removeMember;
 })(member || (member = {}));
+var member;
+(function (member_2) {
+    function renderMember(member) {
+        const profile = system.cache.getProfile();
+        return JSX("div", { class: "section", onclick: `modal.open('member', '${member.userID}');` },
+            JSX("div", { title: "user is offline", class: "right uk-article-meta online-indicator" }, "offline"),
+            JSX("div", { class: `${profile.linkColor}-fg section-link` }, member.name));
+    }
+    function renderMembers(members) {
+        if (members.length === 0) {
+            return JSX("div", null,
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('invitation');", type: "button" }, "Invite Members"));
+        }
+        else {
+            return JSX("ul", { class: "uk-list uk-list-divider" }, members.map(m => JSX("li", { id: `member-${m.userID}` }, renderMember(m))));
+        }
+    }
+    member_2.renderMembers = renderMembers;
+    function viewSelf() {
+        const selfInput = dom.setValue("#self-name-input", dom.req("#member-self .member-name").innerText);
+        setTimeout(() => selfInput.focus(), 250);
+    }
+    member_2.viewSelf = viewSelf;
+})(member || (member = {}));
+var command;
+(function (command) {
+    command.client = {
+        ping: "ping",
+        connect: "connect",
+        getActions: "get-actions",
+        getTeams: "get-teams",
+        getSprints: "get-sprints",
+        updateSession: "update-session",
+        addComment: "add-comment",
+        updateComment: "update-comment",
+        updateProfile: "update-profile",
+        removeMember: "remove-member",
+        addStory: "add-story",
+        updateStory: "update-story",
+        removeStory: "remove-story",
+        setStoryStatus: "set-story-status",
+        submitVote: "submit-vote",
+        addReport: "add-report",
+        updateReport: "update-report",
+        removeReport: "remove-report",
+        addFeedback: "add-feedback",
+        updateFeedback: "update-feedback",
+        removeFeedback: "remove-feedback",
+    };
+    command.server = {
+        error: "error",
+        pong: "pong",
+        sessionJoined: "session-joined",
+        sessionUpdate: "session-update",
+        commentUpdate: "comment-update",
+        permissionsUpdate: "permissions-update",
+        teamUpdate: "team-update",
+        sprintUpdate: "sprint-update",
+        contentUpdate: "content-update",
+        actions: "actions",
+        teams: "teams",
+        sprints: "sprints",
+        memberUpdate: "member-update",
+        onlineUpdate: "online-update",
+        storyUpdate: "story-update",
+        storyRemove: "story-remove",
+        storyStatusChange: "story-status-change",
+        voteUpdate: "vote-update",
+        reportUpdate: "report-update",
+        reportRemove: "report-remove",
+        feedbackUpdate: "feedback-update",
+        feedbackRemove: "feedback-remove",
+    };
+})(command || (command = {}));
+var services;
+(function (services) {
+    services.system = { key: "system", title: "System", plural: "systems", icon: "close" };
+    services.team = { key: "team", title: "Team", plural: "teams", icon: "users" };
+    services.sprint = { key: "sprint", title: "Sprint", plural: "sprints", icon: "git-fork" };
+    services.estimate = { key: "estimate", title: "Estimate Session", plural: "estimates", icon: "settings" };
+    services.standup = { key: "standup", title: "Daily Standup", plural: "standups", icon: "future" };
+    services.retro = { key: "retro", title: "Retrospective", plural: "retros", icon: "history" };
+    const allServices = [services.system, services.team, services.sprint, services.estimate, services.standup, services.retro];
+    function fromKey(key) {
+        const ret = allServices.find(s => s.key === key);
+        if (!ret) {
+            throw `invalid service [${key}]`;
+        }
+        return ret;
+    }
+    services.fromKey = fromKey;
+})(services || (services = {}));
 var permission;
 (function (permission) {
     function setPerms() {
+        const perms = system.cache.permissions;
+        dom.setDisplay("#public-link-container", perms === null || perms.length === 0);
+        dom.setDisplay("#private-link-container", perms !== null && perms.length > 0);
         ["team", "sprint"].forEach(setModelPerms);
-        if (system.cache.auths != null) {
+        if (system.cache.auths !== null) {
             auth.allProviders.forEach(setProviderPerms);
         }
     }
@@ -766,12 +758,13 @@ var permission;
             if (section) {
                 const checkbox = dom.req(`#perm-${key}-checkbox`);
                 checkbox.checked = perms.length > 0;
-                dom.setDisplay(section, el.value != "");
+                dom.setDisplay(section, el.value !== "");
             }
             collection.findGroup(system.cache.permissions, key);
         }
     }
     permission.setModelPerms = setModelPerms;
+    // noinspection JSUnusedGlobalSymbols
     function onChanged(k, v, checked) {
         switch (k) {
             case "email":
@@ -797,64 +790,72 @@ var permission;
     }
     function setProviderPerms(p) {
         const perms = collection.findGroup(system.cache.permissions, p.key);
-        const auths = system.cache.auths.filter(a => a.provider == p.key);
+        const auths = system.cache.auths.filter(a => a.provider === p.key);
         const section = dom.opt(`#perm-${p.key}-section`);
         if (section) {
             const checkbox = dom.req(`#perm-${p.key}-checkbox`);
             checkbox.checked = perms.length > 0;
             const emailContainer = dom.req(`#perm-${p.key}-email-container`);
             const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({ matched: true, domain: x }));
-            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length == 0).map(m => {
+            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => {
                 return { matched: false, domain: getDomain(m.email) };
             });
             emails.push(...additional);
             emails.sort();
             dom.setDisplay(emailContainer, emails.length > 0);
-            dom.setContent(emailContainer, emails.length == 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
+            dom.setContent(emailContainer, emails.length === 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
         }
     }
     function getDomain(email) {
         const idx = email.lastIndexOf("@");
-        if (idx == -1) {
+        if (idx === -1) {
             return email;
         }
         return email.substr(idx);
     }
 })(permission || (permission = {}));
-var profile;
-(function (profile) {
-    // noinspection JSUnusedGlobalSymbols
-    function setNavColor(el, c) {
-        dom.setValue("#nav-color", c);
-        const nb = dom.req("#navbar");
-        nb.className = `${c}-bg uk-navbar-container uk-navbar`;
-        const colors = document.querySelectorAll(".nav_swatch");
-        colors.forEach(function (i) {
-            i.classList.remove("active");
-        });
-        el.classList.add("active");
+var permission;
+(function (permission) {
+    function renderEmails(key, emails) {
+        const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
+        const oc = `permission.onChanged('email', '${key}', this.checked)`;
+        return JSX("ul", null, emails.map(e => {
+            return JSX("li", null,
+                JSX("label", null,
+                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc }),
+                    "Using email address ",
+                    e.domain));
+        }));
     }
-    profile.setNavColor = setNavColor;
-    // noinspection JSUnusedGlobalSymbols
-    function setLinkColor(el, c) {
-        dom.setValue("#link-color", c);
-        const links = dom.els(".profile-link");
-        links.forEach(l => {
-            l.classList.forEach(x => {
-                if (x.indexOf("-fg") > -1) {
-                    l.classList.remove(x);
-                }
-                l.classList.add(`${c}-fg`);
-            });
-        });
-        const colors = document.querySelectorAll(".link_swatch");
-        colors.forEach(function (i) {
-            i.classList.remove("active");
-        });
-        el.classList.add("active");
+    permission.renderEmails = renderEmails;
+    function readPermission(k) {
+        const checkbox = dom.opt(`#perm-${k}-checkbox`);
+        if (!checkbox || !checkbox.checked) {
+            return [];
+        }
+        const emails = dom.els(`.perm-${k}-email`);
+        const v = emails.filter(e => e.checked).map(e => e.value).join(",");
+        const access = "member";
+        return [{ k, v, access }];
     }
-    profile.setLinkColor = setLinkColor;
-})(profile || (profile = {}));
+    function readPermissions() {
+        const ret = [];
+        ret.push(...readPermission("team"));
+        ret.push(...readPermission("sprint"));
+        ret.push(...readPermission("github"));
+        ret.push(...readPermission("google"));
+        ret.push(...readPermission("slack"));
+        ret.push(...readPermission("facebook"));
+        ret.push(...readPermission("amazon"));
+        ret.push(...readPermission("microsoft"));
+        return ret;
+    }
+    permission.readPermissions = readPermissions;
+    function applyPermissions(perms) {
+        system.cache.permissions = collection.groupBy(perms, x => x.k).groups;
+    }
+    permission.applyPermissions = applyPermissions;
+})(permission || (permission = {}));
 var report;
 (function (report_1) {
     function onSubmitReport() {
@@ -879,7 +880,7 @@ var report;
             UIkit.modal.confirm("Delete this report?").then(function () {
                 const msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
                 socket.send(msg);
-                UIkit.modal("#modal-report").hide();
+                modal.hide("report");
             });
         }
         return false;
@@ -896,21 +897,25 @@ var report;
         }
         return curr;
     }
-    function viewActiveReport() {
+    function viewActiveReport(id) {
         const profile = system.cache.getProfile();
+        if (id) {
+            standup.cache.activeReport = id;
+        }
         const report = getActiveReport();
         if (!report) {
             console.warn("no active report");
             return;
         }
-        dom.setText("#report-title", `${report.d} / ${system.getMemberName(report.authorID)}`);
+        dom.setText("#report-title", `${date.toDateString(date.dateFromYMD(report.d))} - ${system.getMemberName(report.userID)}`);
         setFor(report, profile.userID);
     }
     report_1.viewActiveReport = viewActiveReport;
     function setReports(reports) {
         standup.cache.reports = reports;
         dom.setContent("#report-detail", report_1.renderReports(reports));
-        UIkit.modal("#modal-add-report").hide();
+        comment.setCounts();
+        modal.hide("add-report");
     }
     report_1.setReports = setReports;
     function getReportDates(reports) {
@@ -925,10 +930,59 @@ var report;
     }
     report_1.getReportDates = getReportDates;
     function setFor(report, userID) {
-        const same = report.authorID === userID;
-        contents.onContentDisplay("report", same, report.content, report.html);
+        const same = report.userID === userID;
         dom.setValue(dom.req("#report-edit-date"), same ? report.d : "");
+        contents.onContentDisplay("report", same, report.content, report.html);
+        comment.setActive("report", report.id);
+        comment.setCounts();
     }
+    function viewAddReport() {
+        dom.setValue("#report-date", date.dateToYMD(new Date()));
+        const reportContent = dom.setValue("#report-content", "");
+        dom.wireTextarea(reportContent);
+        setTimeout(() => reportContent.focus(), 250);
+    }
+    report_1.viewAddReport = viewAddReport;
+    function viewReport(p) {
+        report.viewActiveReport(p);
+        const reportEditContent = dom.req("#report-edit-content");
+        setTimeout(() => {
+            dom.wireTextarea(reportEditContent);
+            reportEditContent.focus();
+        }, 250);
+    }
+    report_1.viewReport = viewReport;
+})(report || (report = {}));
+var report;
+(function (report) {
+    function renderReport(model) {
+        const profile = system.cache.getProfile();
+        const ret = JSX("div", { id: `report-${model.id}`, class: "report-detail section", onclick: `modal.open('report', '${model.id}');` },
+            JSX("div", { class: "report-comments right" }, comment.renderCount("report", model.id)),
+            JSX("div", { class: "left" },
+                JSX("a", { class: `${profile.linkColor}-fg section-link` }, system.getMemberName(model.userID))),
+            JSX("div", { class: "clear" }),
+            JSX("div", { class: "report-content" }, "loading..."));
+        if (model.html.length > 0) {
+            dom.setHTML(dom.req(".report-content", ret), model.html).style.display = "block";
+        }
+        return ret;
+    }
+    function renderReports(reports) {
+        if (reports.length === 0) {
+            return JSX("div", null,
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-report');", type: "button" }, "Add Report"));
+        }
+        else {
+            const dates = report.getReportDates(reports);
+            return JSX("ul", { class: "uk-list" }, dates.map(day => JSX("li", { id: `report-date-${day.d}` },
+                JSX("h5", null,
+                    JSX("div", { class: "right uk-article-meta" }, date.dow(date.dateFromYMD(day.d).getDay())),
+                    date.toDateString(date.dateFromYMD(day.d))),
+                JSX("ul", null, day.reports.map(r => JSX("li", null, renderReport(r)))))));
+        }
+    }
+    report.renderReports = renderReports;
 })(report || (report = {}));
 var retro;
 (function (retro) {
@@ -941,16 +995,14 @@ var retro;
     function onRetroMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.retro.key, param);
+                rituals.onError(services.retro, param);
                 break;
             case command.server.sessionJoined:
                 const sj = param;
-                rituals.onSessionJoin(sj);
-                rituals.setTeam(sj.team);
-                rituals.setSprint(sj.sprint);
+                session.onSessionJoin(sj);
                 setRetroDetail(sj.session);
                 feedback.setFeedback(sj.feedback);
-                rituals.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
@@ -963,14 +1015,14 @@ var retro;
                 if (retro.cache.detail) {
                     retro.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
                 }
-                rituals.setTeam(tm);
+                session.setTeam(tm);
                 break;
             case command.server.sprintUpdate:
                 const spr = param;
                 if (retro.cache.detail) {
                     retro.cache.detail.sprintID = spr === null || spr === void 0 ? void 0 : spr.id;
                 }
-                rituals.setSprint(spr);
+                session.setSprint(spr);
                 break;
             case command.server.feedbackUpdate:
                 feedback.onFeedbackUpdate(param);
@@ -989,7 +1041,7 @@ var retro;
         dom.setOptions("#feedback-category", detail.categories);
         dom.setOptions("#feedback-edit-category", detail.categories);
         feedback.setFeedback(retro.cache.feedback);
-        rituals.setDetail(detail);
+        session.setDetail(detail);
     }
     function onSubmitRetroSession() {
         const title = dom.req("#model-title-input").value;
@@ -1002,37 +1054,8 @@ var retro;
     }
     retro.onSubmitRetroSession = onSubmitRetroSession;
 })(retro || (retro = {}));
-var rituals;
-(function (rituals) {
-    function onSocketMessage(msg) {
-        if (debug) {
-            console.debug("message received");
-            console.debug(msg);
-        }
-        switch (msg.svc) {
-            case services.system.key:
-                onSystemMessage(msg.cmd, msg.param);
-                break;
-            case services.team.key:
-                team.onTeamMessage(msg.cmd, msg.param);
-                break;
-            case services.sprint.key:
-                sprint.onSprintMessage(msg.cmd, msg.param);
-                break;
-            case services.estimate.key:
-                estimate.onEstimateMessage(msg.cmd, msg.param);
-                break;
-            case services.standup.key:
-                standup.onStandupMessage(msg.cmd, msg.param);
-                break;
-            case services.retro.key:
-                retro.onRetroMessage(msg.cmd, msg.param);
-                break;
-            default:
-                console.warn(`unhandled message for service [${msg.svc}]`);
-        }
-    }
-    rituals.onSocketMessage = onSocketMessage;
+var session;
+(function (session_1) {
     function setDetail(session) {
         system.cache.session = session;
         document.title = session.title;
@@ -1042,62 +1065,24 @@ var rituals;
         if (items.length > 0) {
             items[items.length - 1].innerText = session.title;
         }
-        UIkit.modal("#modal-session").hide();
+        modal.hide("session");
     }
-    rituals.setDetail = setDetail;
-    function onError(svc, err) {
-        console.warn(`${svc}: ${err}`);
-        const idx = err.lastIndexOf(":");
-        if (idx > -1) {
-            err = err.substr(idx + 1);
-        }
-        UIkit.notification(`${svc} error: ${err}`, { status: "danger", pos: "top-right" });
-    }
-    rituals.onError = onError;
-    function onSystemMessage(cmd, param) {
-        switch (cmd) {
-            case command.server.error:
-                onError("system", param);
-                break;
-            case command.server.actions:
-                action.viewActions(param);
-                break;
-            case command.server.teams:
-                team.viewTeams(param);
-                break;
-            case command.server.sprints:
-                sprint.viewSprints(param);
-                break;
-            case command.server.memberUpdate:
-                member.onMemberUpdate(param);
-                break;
-            case command.server.onlineUpdate:
-                member.onOnlineUpdate(param);
-                break;
-            default:
-                console.warn(`unhandled system message for command [${cmd}]`);
-        }
-    }
+    session_1.setDetail = setDetail;
     function onSessionJoin(param) {
-        system.cache.session = param.session;
-        system.cache.profile = param.profile;
-        system.cache.auths = param.auths;
-        permission.applyPermissions(param.permissions);
+        system.cache.apply(param);
         permission.setPerms();
-        system.cache.members = param.members;
-        system.cache.online = param.online;
         member.setMembers();
+        comment.setCounts();
     }
-    rituals.onSessionJoin = onSessionJoin;
-    function init(svc, id) {
-        window.onbeforeunload = function () {
-            socket.setAppUnloading();
-        };
-        socket.socketConnect(svc, id);
+    session_1.onSessionJoin = onSessionJoin;
+    function showWelcomeMessage(memberCount) {
+        if (memberCount === 1) {
+            setTimeout(() => modal.open("welcome"), 300);
+        }
     }
-    rituals.init = init;
+    session_1.showWelcomeMessage = showWelcomeMessage;
     function setSprint(spr) {
-        UIkit.modal("#modal-session").hide();
+        modal.hide("session");
         const lc = dom.req("#sprint-link-container");
         lc.innerHTML = "";
         if (spr) {
@@ -1105,32 +1090,24 @@ var rituals;
             dom.req("#sprint-warning-name").innerText = spr.title;
         }
     }
-    rituals.setSprint = setSprint;
+    session_1.setSprint = setSprint;
     function setTeam(tm) {
-        UIkit.modal("#modal-session").hide();
+        modal.hide("session");
         const container = dom.req("#team-link-container");
         container.innerHTML = "";
         if (tm) {
             container.appendChild(team.renderTeamLink(tm));
         }
     }
-    rituals.setTeam = setTeam;
-    function showWelcomeMessage(count) {
-        if (count === 1) {
-            setTimeout(() => events.openModal("welcome"), 300);
-        }
+    session_1.setTeam = setTeam;
+    function onModalOpen(param) {
+        const sessionInput = dom.setValue("#model-title-input", dom.req("#model-title").innerText);
+        setTimeout(() => sessionInput.focus(), 250);
+        team.refreshTeams();
+        sprint.refreshSprints();
     }
-    rituals.showWelcomeMessage = showWelcomeMessage;
-})(rituals || (rituals = {}));
-var services;
-(function (services) {
-    services.system = { key: "system", title: "System", plural: "systems", icon: "close" };
-    services.team = { key: "team", title: "Team", plural: "teams", icon: "users" };
-    services.sprint = { key: "sprint", title: "Sprint", plural: "sprints", icon: "git-fork" };
-    services.estimate = { key: "estimate", title: "Estimate Session", plural: "estimates", icon: "settings" };
-    services.standup = { key: "standup", title: "Daily Standup", plural: "standups", icon: "future" };
-    services.retro = { key: "retro", title: "Retrospective", plural: "retros", icon: "history" };
-})(services || (services = {}));
+    session_1.onModalOpen = onModalOpen;
+})(session || (session = {}));
 var socket;
 (function (socket_1) {
     let socket;
@@ -1153,18 +1130,14 @@ var socket;
         system.cache.connectTime = Date.now();
         socket = new WebSocket(socketUrl());
         socket.onopen = function () {
-            if (debug) {
-                console.debug("socket connected");
-            }
-            const msg = { svc: svc, cmd: command.client.connect, param: id };
-            send(msg);
+            send({ svc: svc.key, cmd: command.client.connect, param: id });
         };
         socket.onmessage = function (event) {
             const msg = JSON.parse(event.data);
-            rituals.onSocketMessage(msg);
+            onSocketMessage(msg);
         };
         socket.onerror = function (event) {
-            rituals.onError("socket", event.type);
+            rituals.onError(services.system, event.type);
         };
         socket.onclose = function () {
             onSocketClose();
@@ -1173,12 +1146,39 @@ var socket;
     socket_1.socketConnect = socketConnect;
     function send(msg) {
         if (debug) {
-            console.debug("sending message");
-            console.debug(msg);
+            console.debug("out", msg);
         }
         socket.send(JSON.stringify(msg));
     }
     socket_1.send = send;
+    function onSocketMessage(msg) {
+        if (debug) {
+            console.debug("in", msg);
+        }
+        switch (msg.svc) {
+            case services.system.key:
+                system.onSystemMessage(msg.cmd, msg.param);
+                break;
+            case services.team.key:
+                team.onTeamMessage(msg.cmd, msg.param);
+                break;
+            case services.sprint.key:
+                sprint.onSprintMessage(msg.cmd, msg.param);
+                break;
+            case services.estimate.key:
+                estimate.onEstimateMessage(msg.cmd, msg.param);
+                break;
+            case services.standup.key:
+                standup.onStandupMessage(msg.cmd, msg.param);
+                break;
+            case services.retro.key:
+                retro.onRetroMessage(msg.cmd, msg.param);
+                break;
+            default:
+                console.warn(`unhandled message for service [${msg.svc}]`);
+        }
+    }
+    socket_1.onSocketMessage = onSocketMessage;
     function onSocketClose() {
         function disconnect(seconds) {
             if (debug) {
@@ -1201,22 +1201,21 @@ var sprint;
     function onSprintMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.sprint.key, param);
+                rituals.onError(services.sprint, param);
                 break;
             case command.server.sessionJoined:
                 const sj = param;
-                rituals.onSessionJoin(sj);
+                session.onSessionJoin(sj);
                 setSprintDetail(sj.session);
-                rituals.setTeam(sj.team);
                 setSprintContents(sj);
-                rituals.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.teamUpdate:
                 const tm = param;
                 if (sprint.cache.detail) {
                     sprint.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
                 }
-                rituals.setTeam(tm);
+                session.setTeam(tm);
                 break;
             case command.server.sessionUpdate:
                 setSprintDetail(param);
@@ -1239,7 +1238,7 @@ var sprint;
         dom.setContent("#sprint-date-display", sprint.renderSprintDates(s, e));
         dom.setValue("#sprint-start-date-input", s ? date.dateToYMD(s) : "");
         dom.setValue("#sprint-end-date-input", e ? date.dateToYMD(e) : "");
-        rituals.setDetail(detail);
+        session.setDetail(detail);
     }
     function setSprintContents(sj) {
         dom.setContent("#sprint-estimate-list", contents.renderContents(services.sprint, services.estimate, sj.estimates));
@@ -1275,6 +1274,54 @@ var sprint;
     }
     sprint.viewSprints = viewSprints;
 })(sprint || (sprint = {}));
+var sprint;
+(function (sprint) {
+    function renderSprintDates(startDate, endDate) {
+        function f(p, d) {
+            return JSX("span", null,
+                p,
+                " ",
+                JSX("span", { class: "sprint-date", onclick: "modal.open('session');" }, d ? date.toDateString(d) : ""));
+        }
+        const s = f("starts", startDate);
+        const e = f("ends", endDate);
+        if (startDate) {
+            if (endDate) {
+                return JSX("span", null,
+                    s,
+                    ", ",
+                    e);
+            }
+            else {
+                return s;
+            }
+        }
+        else {
+            if (endDate) {
+                return e;
+            }
+            else {
+                return JSX("span", null, "Sprint");
+            }
+        }
+    }
+    sprint.renderSprintDates = renderSprintDates;
+    function renderSprintLink(spr) {
+        const profile = system.cache.getProfile();
+        return JSX("span", null,
+            JSX("a", { class: `${profile.linkColor}-fg`, href: `/sprint/${spr.slug}` }, spr.title),
+            "\u00A0");
+    }
+    sprint.renderSprintLink = renderSprintLink;
+    function renderSprintSelect(sprints, activeID) {
+        return JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('sprint')" },
+            JSX("option", { value: "" }, "- no sprint -"),
+            sprints.map(s => {
+                return s.id === activeID ? JSX("option", { selected: "selected", value: s.id }, s.title) : JSX("option", { value: s.id }, s.title);
+            }));
+    }
+    sprint.renderSprintSelect = renderSprintSelect;
+})(sprint || (sprint = {}));
 var standup;
 (function (standup) {
     class Cache {
@@ -1286,16 +1333,14 @@ var standup;
     function onStandupMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.standup.key, param);
+                rituals.onError(services.standup, param);
                 break;
             case command.server.sessionJoined:
                 const sj = param;
-                rituals.onSessionJoin(sj);
-                rituals.setTeam(sj.team);
-                rituals.setSprint(sj.sprint);
+                session.onSessionJoin(sj);
                 setStandupDetail(sj.session);
                 report.setReports(sj.reports);
-                rituals.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
@@ -1308,14 +1353,14 @@ var standup;
                 if (standup.cache.detail) {
                     standup.cache.detail.teamID = tm === null || tm === void 0 ? void 0 : tm.id;
                 }
-                rituals.setTeam(tm);
+                session.setTeam(tm);
                 break;
             case command.server.sprintUpdate:
                 const x = param;
                 if (standup.cache.detail) {
                     standup.cache.detail.sprintID = x === null || x === void 0 ? void 0 : x.id;
                 }
-                rituals.setSprint(x);
+                session.setSprint(x);
                 break;
             case command.server.reportUpdate:
                 onReportUpdate(param);
@@ -1330,7 +1375,7 @@ var standup;
     standup.onStandupMessage = onStandupMessage;
     function setStandupDetail(detail) {
         standup.cache.detail = detail;
-        rituals.setDetail(detail);
+        session.setDetail(detail);
     }
     function onSubmitStandupSession() {
         const title = dom.req("#model-title-input").value;
@@ -1349,7 +1394,7 @@ var standup;
     function onReportRemoved(id) {
         const x = preUpdate(id);
         postUpdate(x, id);
-        UIkit.notification("report has been deleted", { status: "success", pos: "top-right" });
+        notify.notify("report has been deleted", true);
     }
     function preUpdate(id) {
         return standup.cache.reports.filter((p) => p.id !== id);
@@ -1357,7 +1402,7 @@ var standup;
     function postUpdate(x, id) {
         report.setReports(x);
         if (id === standup.cache.activeReport) {
-            UIkit.modal("#modal-report").hide();
+            modal.hide("report");
         }
     }
 })(standup || (standup = {}));
@@ -1439,7 +1484,8 @@ var story;
         dom.setContent("#story-detail", story.renderStories(stories));
         stories.forEach(s => story.setStoryStatus(s.id, s.status, s, false));
         showTotalIfNeeded();
-        UIkit.modal("#modal-add-story").hide();
+        comment.setCounts();
+        modal.hide("add-story");
     }
     story.setStories = setStories;
     function onSubmitStory() {
@@ -1452,8 +1498,11 @@ var story;
     function beginEditStory() {
         const s = getActiveStory();
         const title = prompt("Edit your story", s.title);
+        if (title === null) {
+            return false;
+        }
         if (title && title !== s.title) {
-            const msg = { svc: services.estimate.key, cmd: command.client.updateStory, param: { id: s.id, title } };
+            const msg = { svc: services.estimate.key, cmd: command.client.updateStory, param: { storyID: s.id, title } };
             socket.send(msg);
         }
         return false;
@@ -1465,7 +1514,7 @@ var story;
             UIkit.modal.confirm("Delete this story?").then(function () {
                 const msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
                 socket.send(msg);
-                UIkit.modal("#modal-story").hide();
+                modal.hide("story");
             });
         }
         return false;
@@ -1476,19 +1525,24 @@ var story;
             return undefined;
         }
         const curr = estimate.cache.stories.filter(x => x.id === estimate.cache.activeStory).shift();
-        if (curr) {
+        if (!curr) {
             console.warn(`cannot load active story [${estimate.cache.activeStory}]`);
         }
         return curr;
     }
     story.getActiveStory = getActiveStory;
-    function viewActiveStory() {
+    function viewActiveStory(id) {
+        if (id) {
+            estimate.cache.activeStory = id;
+        }
         const s = getActiveStory();
         if (!s) {
             return;
         }
         dom.setText("#story-title", s.title);
         story.viewStoryStatus(s.status);
+        comment.setActive("story", s.id);
+        comment.setCounts();
     }
     story.viewActiveStory = viewActiveStory;
     function showTotalIfNeeded() {
@@ -1508,12 +1562,55 @@ var story;
     }
     story.showTotalIfNeeded = showTotalIfNeeded;
 })(story || (story = {}));
+var story;
+(function (story_2) {
+    function renderStory(story) {
+        const profile = system.cache.getProfile();
+        return JSX("li", { id: `story-${story.id}`, class: "section", onclick: `modal.open('story', '${story.id}');` },
+            JSX("div", { class: "right uk-article-meta story-status" }, story.status),
+            JSX("div", { class: `${profile.linkColor}-fg section-link left` }, story.title),
+            JSX("div", { class: "left", style: "margin-top: 4px;" }, comment.renderCount("story", story.id)));
+    }
+    function renderStories(stories) {
+        if (stories.length === 0) {
+            return JSX("div", { id: "story-list" },
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-story');", type: "button" }, "Add Story"));
+        }
+        else {
+            return JSX("table", { class: "uk-table uk-table-divider uk-table-small" },
+                JSX("ul", { id: "story-list", class: "uk-list uk-list-divider" }, stories.map(s => renderStory(s))));
+        }
+    }
+    story_2.renderStories = renderStories;
+    function renderStatus(status) {
+        switch (status) {
+            case "pending":
+                return JSX("span", null, status);
+            case "active":
+                return JSX("span", null, status);
+            default:
+                return JSX("span", { class: "vote-badge" }, status);
+        }
+    }
+    story_2.renderStatus = renderStatus;
+    function renderTotal(sum) {
+        return JSX("li", { id: "story-total" },
+            JSX("div", { class: "right uk-article-meta" },
+                JSX("span", { class: "vote-badge" }, sum)),
+            " Total");
+    }
+    story_2.renderTotal = renderTotal;
+    function viewAddStory() {
+        const storyInput = dom.setValue("#story-title-input", "");
+        setTimeout(() => storyInput.focus(), 250);
+    }
+    story_2.viewAddStory = viewAddStory;
+})(story || (story = {}));
 const debug = true;
 var system;
 (function (system) {
     class Cache {
         constructor() {
-            this.currentService = "";
             this.currentID = "";
             this.connectTime = 0;
             this.permissions = [];
@@ -1526,6 +1623,21 @@ var system;
                 throw "no active profile";
             }
             return this.profile;
+        }
+        apply(sj) {
+            system.cache.session = sj.session;
+            system.cache.profile = sj.profile;
+            system.cache.auths = sj.auths;
+            permission.applyPermissions(sj.permissions);
+            system.cache.members = sj.members;
+            system.cache.online = sj.online;
+            comment.applyComments(sj.comments);
+            if (sj.team) {
+                session.setTeam(sj.team);
+            }
+            if (sj.sprint) {
+                session.setSprint(sj.sprint);
+            }
         }
     }
     function getMemberName(id) {
@@ -1542,11 +1654,40 @@ var system;
         permission.setPerms();
     }
     system.setPermissions = setPermissions;
+    // noinspection JSUnusedGlobalSymbols
     function setAuths(auths) {
         system.cache.auths = auths;
         permission.setPerms();
     }
     system.setAuths = setAuths;
+    function onSystemMessage(cmd, param) {
+        switch (cmd) {
+            case command.server.error:
+                rituals.onError(services.system, param);
+                break;
+            case command.server.actions:
+                action.viewActions(param);
+                break;
+            case command.server.teams:
+                team.viewTeams(param);
+                break;
+            case command.server.sprints:
+                sprint.viewSprints(param);
+                break;
+            case command.server.memberUpdate:
+                member.onMemberUpdate(param);
+                break;
+            case command.server.onlineUpdate:
+                member.onOnlineUpdate(param);
+                break;
+            case command.server.commentUpdate:
+                comment.onCommentUpdate(param);
+                break;
+            default:
+                console.warn(`unhandled system message for command [${cmd}]`);
+        }
+    }
+    system.onSystemMessage = onSystemMessage;
 })(system || (system = {}));
 var team;
 (function (team) {
@@ -1556,14 +1697,14 @@ var team;
     function onTeamMessage(cmd, param) {
         switch (cmd) {
             case command.server.error:
-                rituals.onError(services.team.key, param);
+                rituals.onError(services.team, param);
                 break;
             case command.server.sessionJoined:
                 const sj = param;
-                rituals.onSessionJoin(sj);
+                session.onSessionJoin(sj);
                 setTeamDetail(sj.session);
                 setTeamHistory(sj);
-                rituals.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setTeamDetail(param);
@@ -1581,7 +1722,7 @@ var team;
     team.onTeamMessage = onTeamMessage;
     function setTeamDetail(detail) {
         team.cache.detail = detail;
-        rituals.setDetail(detail);
+        session.setDetail(detail);
     }
     function setTeamHistory(sj) {
         dom.setContent("#team-sprint-list", contents.renderContents(services.team, services.sprint, sj.sprints));
@@ -1614,9 +1755,434 @@ var team;
     }
     team.viewTeams = viewTeams;
 })(team || (team = {}));
+var team;
+(function (team) {
+    function renderTeamLink(tm) {
+        const profile = system.cache.getProfile();
+        return JSX("span", null,
+            " in ",
+            JSX("a", { class: `${profile.linkColor}-fg`, href: `/team/${tm.slug}` }, tm.title));
+    }
+    team.renderTeamLink = renderTeamLink;
+    function renderTeamSelect(teams, activeID) {
+        return JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('team')" },
+            JSX("option", { value: "" }, "- no team -"),
+            teams.map(t => {
+                return t.id === activeID ? JSX("option", { selected: "selected", value: t.id }, t.title) : JSX("option", { value: t.id }, t.title);
+            }));
+    }
+    team.renderTeamSelect = renderTeamSelect;
+})(team || (team = {}));
+var profile;
+(function (profile) {
+    // noinspection JSUnusedGlobalSymbols
+    function setNavColor(el, c) {
+        dom.setValue("#nav-color", c);
+        const nb = dom.req("#navbar");
+        nb.className = `${c}-bg uk-navbar-container uk-navbar`;
+        const colors = document.querySelectorAll(".nav_swatch");
+        colors.forEach(function (i) {
+            i.classList.remove("active");
+        });
+        el.classList.add("active");
+    }
+    profile.setNavColor = setNavColor;
+    // noinspection JSUnusedGlobalSymbols
+    function setLinkColor(el, c) {
+        dom.setValue("#link-color", c);
+        const links = dom.els(".profile-link");
+        links.forEach(l => {
+            l.classList.forEach(x => {
+                if (x.indexOf("-fg") > -1) {
+                    l.classList.remove(x);
+                }
+                l.classList.add(`${c}-fg`);
+            });
+        });
+        const colors = document.querySelectorAll(".link_swatch");
+        colors.forEach(function (i) {
+            i.classList.remove("active");
+        });
+        el.classList.add("active");
+    }
+    profile.setLinkColor = setLinkColor;
+})(profile || (profile = {}));
+var collection;
+(function (collection) {
+    class Group {
+        constructor(key) {
+            this.members = [];
+            this.key = key;
+        }
+    }
+    collection.Group = Group;
+    class GroupSet {
+        constructor() {
+            this.groups = [];
+        }
+        findOrInsert(key) {
+            const ret = this.groups.find(x => x.key === key);
+            if (ret) {
+                return ret;
+            }
+            const n = new Group(key);
+            this.groups.push(n);
+            return n;
+        }
+    }
+    collection.GroupSet = GroupSet;
+    function groupBy(list, func) {
+        const res = new GroupSet();
+        if (list) {
+            list.forEach((o) => {
+                const group = res.findOrInsert(func(o));
+                group.members.push(o);
+            });
+        }
+        return res;
+    }
+    collection.groupBy = groupBy;
+    function findGroup(groups, key) {
+        for (const g of groups) {
+            if (g.key === key) {
+                return g.members;
+            }
+        }
+        return [];
+    }
+    collection.findGroup = findGroup;
+    function flatten(a) {
+        const ret = [];
+        a.forEach(v => ret.push(...v));
+        return ret;
+    }
+    collection.flatten = flatten;
+})(collection || (collection = {}));
+var date;
+(function (date_1) {
+    function dateToYMD(date) {
+        const d = date.getDate();
+        const m = date.getMonth() + 1;
+        const y = date.getFullYear();
+        return `${y}-${m <= 9 ? `0${m}` : m}-${d <= 9 ? `0${d}` : d}`;
+    }
+    date_1.dateToYMD = dateToYMD;
+    function dateFromYMD(s) {
+        const d = new Date(s);
+        return new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+    }
+    date_1.dateFromYMD = dateFromYMD;
+    function dow(i) {
+        switch (i) {
+            case 0:
+                return "Sun";
+            case 1:
+                return "Mon";
+            case 2:
+                return "Tue";
+            case 3:
+                return "Wed";
+            case 4:
+                return "Thu";
+            case 5:
+                return "Fri";
+            case 6:
+                return "Sat";
+            default:
+                return "???";
+        }
+    }
+    date_1.dow = dow;
+    function toDateString(d) {
+        return d.toLocaleDateString();
+    }
+    date_1.toDateString = toDateString;
+    function toTimeString(d) {
+        return d.toLocaleTimeString().slice(0, 8);
+    }
+    date_1.toTimeString = toTimeString;
+    function toDateTimeString(d) {
+        return `${toDateString(d)} ${toTimeString(d)}`;
+    }
+    date_1.toDateTimeString = toDateTimeString;
+    const tzOffset = new Date().getTimezoneOffset() * 60000;
+    function utcDate(s) {
+        return new Date(Date.parse(s) + tzOffset);
+    }
+    date_1.utcDate = utcDate;
+})(date || (date = {}));
+var dom;
+(function (dom) {
+    function initDom(t, color) {
+        try {
+            style.themeLinks(color);
+            style.setTheme(t);
+        }
+        catch (e) {
+            console.warn("error setting style", e);
+        }
+        document.body.style.visibility = "visible";
+        try {
+            modal.wire();
+        }
+        catch (e) {
+            console.warn("error wiring modals", e);
+        }
+    }
+    dom.initDom = initDom;
+    function els(selector, context) {
+        return UIkit.util.$$(selector, context);
+    }
+    dom.els = els;
+    function opt(selector, context) {
+        return els(selector, context).shift();
+    }
+    dom.opt = opt;
+    function req(selector, context) {
+        const res = opt(selector, context);
+        if (!res) {
+            console.warn(`no element found for selector [${selector}]`);
+        }
+        return res;
+    }
+    dom.req = req;
+    function setHTML(el, html) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerHTML = html;
+        return el;
+    }
+    dom.setHTML = setHTML;
+    function setDisplay(el, condition, v = "block") {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.style.display = condition ? v : "none";
+        return el;
+    }
+    dom.setDisplay = setDisplay;
+    function setContent(el, e) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerHTML = "";
+        el.appendChild(e);
+        return el;
+    }
+    dom.setContent = setContent;
+    function setText(el, text) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerText = text;
+        return el;
+    }
+    dom.setText = setText;
+})(dom || (dom = {}));
+var dom;
+(function (dom) {
+    function setValue(el, text) {
+        if (typeof el === "string") {
+            el = dom.req(el);
+        }
+        el.value = text;
+        return el;
+    }
+    dom.setValue = setValue;
+    function wireTextarea(text) {
+        function resize() {
+            text.style.height = "auto";
+            text.style.height = `${text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)}px`;
+        }
+        function delayedResize() {
+            window.setTimeout(resize, 0);
+        }
+        const x = text.dataset["autoresize"];
+        if (!x) {
+            text.dataset["autoresize"] = "true";
+            text.addEventListener("change", resize, false);
+            text.addEventListener("cut", delayedResize, false);
+            text.addEventListener("paste", delayedResize, false);
+            text.addEventListener("drop", delayedResize, false);
+            text.addEventListener("keydown", delayedResize, false);
+            text.focus();
+            text.select();
+        }
+        resize();
+    }
+    dom.wireTextarea = wireTextarea;
+    function setOptions(el, categories) {
+        if (typeof el === "string") {
+            el = dom.req(el);
+        }
+        el.innerHTML = "";
+        for (const c of categories) {
+            const opt = document.createElement("option");
+            opt.value = c;
+            opt.innerText = c;
+            el.appendChild(opt);
+        }
+    }
+    dom.setOptions = setOptions;
+    function setSelectOption(el, o) {
+        if (typeof el === "string") {
+            el = dom.req(el);
+        }
+        for (let i = 0; i < el.children.length; i++) {
+            const e = el.children.item(i);
+            e.selected = e.value === o;
+        }
+    }
+    dom.setSelectOption = setSelectOption;
+    function insertAtCaret(e, text) {
+        if (e.selectionStart || e.selectionStart === 0) {
+            var startPos = e.selectionStart;
+            var endPos = e.selectionEnd;
+            e.value = e.value.substring(0, startPos) + text + e.value.substring(endPos, e.value.length);
+            e.selectionStart = startPos + text.length;
+            e.selectionEnd = startPos + text.length;
+        }
+        else {
+            e.value += text;
+        }
+    }
+    dom.insertAtCaret = insertAtCaret;
+})(dom || (dom = {}));
+// noinspection JSUnusedGlobalSymbols
+function JSX(tag, attrs) {
+    const e = document.createElement(tag);
+    for (const name in attrs) {
+        if (name && attrs.hasOwnProperty(name)) {
+            const v = attrs[name];
+            if (name === "dangerouslySetInnerHTML") {
+                e.innerHTML = v["__html"];
+            }
+            else if (v === true) {
+                e.setAttribute(name, name);
+            }
+            else if (v !== false && v !== null && v !== undefined) {
+                e.setAttribute(name, v.toString());
+            }
+        }
+    }
+    for (let i = 2; i < arguments.length; i++) {
+        let child = arguments[i];
+        if (Array.isArray(child)) {
+            child.forEach(c => {
+                e.appendChild(c);
+            });
+        }
+        else {
+            if (!child.nodeType) {
+                child = document.createTextNode(child.toString());
+            }
+            e.appendChild(child);
+        }
+    }
+    return e;
+}
+var modal;
+(function (modal) {
+    let openEvents = new Map();
+    let closeEvents = new Map();
+    let activeParam;
+    function register(key, o, c) {
+        if (!o) {
+            o = () => { };
+        }
+        openEvents.set(key, o);
+        if (c) {
+            closeEvents.set(key, c);
+        }
+    }
+    modal.register = register;
+    function wire() {
+        UIkit.util.on(".modal", "show", onModalOpen);
+        UIkit.util.on(".modal", "hide", onModalHide);
+        register("welcome");
+        // session
+        register("session", session.onModalOpen);
+        register("action", action.loadActions);
+        register("comment", comment.load, comment.closeModal);
+        // member
+        register("self", member.viewSelf);
+        register("invitation");
+        register("member", member.viewActiveMember);
+        // estimate
+        register("add-story", story.viewAddStory);
+        register("story", story.viewActiveStory);
+        // standup
+        register("add-report", report.viewAddReport);
+        register("report", report.viewReport);
+        // retro
+        register("add-feedback", feedback.viewAddFeedback);
+        register("feedback", feedback.viewFeedback);
+    }
+    modal.wire = wire;
+    function open(key, param) {
+        activeParam = param;
+        const m = UIkit.modal(`#modal-${key}`);
+        if (!m) {
+            console.warn(`no modal available with key [${key}]`);
+        }
+        m.show();
+        return false;
+    }
+    modal.open = open;
+    function openSoon(key) {
+        setTimeout(() => open(key), 0);
+    }
+    modal.openSoon = openSoon;
+    function hide(key) {
+        const m = UIkit.modal(`#modal-${key}`);
+        const el = m.$el;
+        if (el.classList.contains("uk-open")) {
+            m.hide();
+        }
+    }
+    modal.hide = hide;
+    function onModalOpen(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        const key = el.id.substr("modal-".length);
+        const f = openEvents.get(key);
+        if (f) {
+            f(activeParam);
+        }
+        else {
+            console.warn(`no modal open handler registered for [${key}]`);
+        }
+        activeParam = undefined;
+    }
+    function onModalHide(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        if (el.classList.contains("uk-open")) {
+            const key = el.id.substr("modal-".length);
+            const f = closeEvents.get(key);
+            if (f) {
+                f(activeParam);
+            }
+            activeParam = undefined;
+        }
+    }
+})(modal || (modal = {}));
+var notify;
+(function (notify_1) {
+    function notify(msg, status) {
+        UIkit.notification(msg, { status: status ? "success" : "danger", pos: "top-right" });
+    }
+    notify_1.notify = notify;
+})(notify || (notify = {}));
 var style;
 (function (style) {
     function setTheme(theme) {
+        wireEmoji(theme);
         const card = dom.els(".uk-card");
         switch (theme) {
             case "default":
@@ -1653,6 +2219,33 @@ var style;
         }
     }
     style.setTheme = setTheme;
+    function themeLinks(color) {
+        dom.els(".theme").forEach(el => {
+            el.classList.add(`${color}-fg`);
+        });
+    }
+    style.themeLinks = themeLinks;
+    function wireEmoji(t) {
+        if (typeof EmojiButton === 'undefined') {
+            dom.els(".picker-toggle").forEach(el => dom.setDisplay(el, false));
+            return;
+        }
+        if (t === "default") {
+            t = "auto";
+        }
+        const opts = { position: "bottom-end", theme: t, zIndex: 1011 };
+        dom.els(".textarea-emoji").forEach(el => {
+            const toggle = dom.req(".picker-toggle", el);
+            toggle.addEventListener("click", () => {
+                const textarea = dom.req(".uk-textarea", el);
+                const picker = new EmojiButton(opts);
+                picker.on('emoji', (emoji) => {
+                    dom.insertAtCaret(textarea, emoji);
+                });
+                picker.togglePicker(toggle);
+            }, false);
+        });
+    }
 })(style || (style = {}));
 var vote;
 (function (vote) {
@@ -1672,7 +2265,6 @@ var vote;
     }
     vote.onVoteUpdate = onVoteUpdate;
     function viewVotes() {
-        var _a;
         const s = story.getActiveStory();
         if (!s) {
             return;
@@ -1681,7 +2273,7 @@ var vote;
         const activeVote = votes.filter(v => v.userID === system.cache.getProfile().userID).pop();
         switch (s.status) {
             case "pending":
-                const same = ((_a = system.cache.profile) === null || _a === void 0 ? void 0 : _a.userID) === s.authorID;
+                const same = system.cache.getProfile().userID === s.userID;
                 dom.setDisplay("#story-edit-section", same);
                 dom.setDisplay("#story-view-section", !same);
                 break;
@@ -1739,288 +2331,6 @@ var vote;
     }
     vote.getVoteResults = getVoteResults;
 })(vote || (vote = {}));
-var action;
-(function (action_1) {
-    function renderAction(action) {
-        const c = JSON.stringify(action.content, null, 2);
-        return JSX("tr", null,
-            JSX("td", null, system.getMemberName(action.authorID)),
-            JSX("td", null, action.act),
-            JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
-            JSX("td", null, action.note),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.created))));
-    }
-    function renderActions(actions) {
-        if (actions.length === 0) {
-            return JSX("div", null, "No actions available");
-        }
-        else {
-            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
-                JSX("thead", null,
-                    JSX("tr", null,
-                        JSX("th", null, "Author"),
-                        JSX("th", null, "Act"),
-                        JSX("th", null, "Content"),
-                        JSX("th", null, "Note"),
-                        JSX("th", null, "Created"))),
-                JSX("tbody", null, actions.map(a => renderAction(a))));
-        }
-    }
-    action_1.renderActions = renderActions;
-})(action || (action = {}));
-var contents;
-(function (contents_1) {
-    function renderSprintContent(svc, session) {
-        const profile = system.cache.getProfile();
-        return JSX("tr", null,
-            JSX("td", null,
-                JSX("a", { class: `${profile.linkColor}-fg`, href: `/${svc.key}/${session.slug}` }, session.title)),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created))));
-    }
-    function toContent(svc, sessions) {
-        return sessions.map(s => {
-            return { svc: svc, session: s };
-        });
-    }
-    function renderContents(src, tgt, sessions) {
-        const contents = toContent(tgt, sessions);
-        contents.sort((l, r) => (l.session.created > r.session.created ? -1 : 1));
-        if (contents.length === 0) {
-            return JSX("div", null, `No ${tgt.plural} in this ${src.key}`);
-        }
-        else {
-            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
-                JSX("tbody", null, contents.map(a => renderSprintContent(a.svc, a.session))));
-        }
-    }
-    contents_1.renderContents = renderContents;
-})(contents || (contents = {}));
-var feedback;
-(function (feedback) {
-    function renderFeedback(model) {
-        const profile = system.cache.getProfile();
-        const ret = JSX("div", { id: `feedback-${model.id}`, class: "feedback-detail uk-border-rounded section", onclick: `events.openModal('feedback', '${model.id}');` },
-            JSX("a", { class: `${profile.linkColor}-fg section-link` }, system.getMemberName(model.authorID)),
-            JSX("div", { class: "feedback-content" }, "loading..."));
-        if (model.html.length > 0) {
-            dom.setHTML(dom.req(".feedback-content", ret), model.html).style.display = "block";
-        }
-        return ret;
-    }
-    function renderFeedbackArray(f) {
-        var _a;
-        if (f.length === 0) {
-            return JSX("div", null,
-                JSX("button", { class: "uk-button uk-button-default", onclick: "events.openModal('add-feedback');", type: "button" }, "Add Feedback"));
-        }
-        else {
-            const cats = feedback.getFeedbackCategories(f, ((_a = retro.cache.detail) === null || _a === void 0 ? void 0 : _a.categories) || []);
-            const profile = system.cache.getProfile();
-            return JSX("div", { class: "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "data-uk-grid": true }, cats.map(cat => JSX("div", { class: "feedback-list uk-transition-toggle" },
-                JSX("div", { class: "feedback-category-header" },
-                    JSX("span", { class: "right" },
-                        JSX("a", { class: `${profile.linkColor}-fg uk-icon-button uk-transition-fade`, "data-uk-icon": "plus", onclick: `events.openModal('add-feedback', '${cat.category}');`, title: "edit feedback" })),
-                    JSX("span", { class: "feedback-category-title", onclick: `events.openModal('add-feedback', '${cat.category}');` }, cat.category)),
-                JSX("div", null, cat.feedback.map(fb => JSX("div", null, renderFeedback(fb)))))));
-        }
-    }
-    feedback.renderFeedbackArray = renderFeedbackArray;
-})(feedback || (feedback = {}));
-var member;
-(function (member_2) {
-    function renderMember(member) {
-        const profile = system.cache.getProfile();
-        return JSX("div", { class: "section", onclick: `events.openModal('member', '${member.userID}');` },
-            JSX("div", { title: "user is offline", class: "right uk-article-meta online-indicator" }, "offline"),
-            JSX("div", { class: `${profile.linkColor}-fg section-link` }, member.name));
-    }
-    function renderMembers(members) {
-        if (members.length === 0) {
-            return JSX("div", null,
-                JSX("button", { class: "uk-button uk-button-default", onclick: "events.openModal('invitation');", type: "button" }, "Invite Members"));
-        }
-        else {
-            return JSX("ul", { class: "uk-list uk-list-divider" }, members.map(m => JSX("li", { id: `member-${m.userID}` }, renderMember(m))));
-        }
-    }
-    member_2.renderMembers = renderMembers;
-})(member || (member = {}));
-var permission;
-(function (permission) {
-    function renderEmails(key, emails) {
-        const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
-        const oc = `permission.onChanged('email', '${key}', this.checked)`;
-        return JSX("ul", null, emails.map(e => {
-            return JSX("li", null,
-                JSX("label", null,
-                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc }),
-                    "Using email address ",
-                    e.domain));
-        }));
-    }
-    permission.renderEmails = renderEmails;
-    function readPermission(k) {
-        const checkbox = dom.opt(`#perm-${k}-checkbox`);
-        if (!checkbox || !checkbox.checked) {
-            return [];
-        }
-        const emails = dom.els(`.perm-${k}-email`);
-        const v = emails.filter(e => e.checked).map(e => e.value).join(",");
-        const access = "member";
-        return [{ k, v, access }];
-    }
-    function readPermissions() {
-        const ret = [];
-        ret.push(...readPermission("team"));
-        ret.push(...readPermission("sprint"));
-        ret.push(...readPermission("github"));
-        ret.push(...readPermission("google"));
-        ret.push(...readPermission("slack"));
-        ret.push(...readPermission("facebook"));
-        ret.push(...readPermission("amazon"));
-        ret.push(...readPermission("microsoft"));
-        return ret;
-    }
-    permission.readPermissions = readPermissions;
-    function applyPermissions(perms) {
-        system.cache.permissions = collection.groupBy(perms, x => x.k);
-        dom.setDisplay("#public-link-container", perms === null || perms.length === 0);
-        dom.setDisplay("#private-link-container", perms !== null && perms.length > 0);
-    }
-    permission.applyPermissions = applyPermissions;
-})(permission || (permission = {}));
-var report;
-(function (report) {
-    function renderReport(model) {
-        const profile = system.cache.getProfile();
-        const ret = JSX("div", { id: `report-${model.id}`, class: "report-detail uk-border-rounded section", onclick: `events.openModal('report', '${model.id}');` },
-            JSX("a", { class: `${profile.linkColor}-fg section-link` }, system.getMemberName(model.authorID)),
-            JSX("div", { class: "report-content" }, "loading..."));
-        if (model.html.length > 0) {
-            dom.setHTML(dom.req(".report-content", ret), model.html).style.display = "block";
-        }
-        return ret;
-    }
-    function renderReports(reports) {
-        if (reports.length === 0) {
-            return JSX("div", null,
-                JSX("button", { class: "uk-button uk-button-default", onclick: "events.openModal('add-report');", type: "button" }, "Add Report"));
-        }
-        else {
-            const dates = report.getReportDates(reports);
-            return JSX("ul", { class: "uk-list" }, dates.map(day => JSX("li", { id: `report-date-${day.d}` },
-                JSX("h5", null,
-                    JSX("div", { class: "right uk-article-meta" }, date.dow(date.dateFromYMD(day.d).getDay())),
-                    date.toDateString(date.dateFromYMD(day.d))),
-                JSX("ul", null, day.reports.map(r => JSX("li", null, renderReport(r)))))));
-        }
-    }
-    report.renderReports = renderReports;
-})(report || (report = {}));
-var sprint;
-(function (sprint) {
-    function renderSprintDates(startDate, endDate) {
-        function f(p, d) {
-            return JSX("span", null,
-                p,
-                " ",
-                JSX("span", { class: "sprint-date", onclick: "events.openModal('session');" }, d ? date.toDateString(d) : ""));
-        }
-        const s = f("starts", startDate);
-        const e = f("ends", endDate);
-        if (startDate) {
-            if (endDate) {
-                return JSX("span", null,
-                    s,
-                    ", ",
-                    e);
-            }
-            else {
-                return s;
-            }
-        }
-        else {
-            if (endDate) {
-                return e;
-            }
-            else {
-                return JSX("span", null, "Sprint");
-            }
-        }
-    }
-    sprint.renderSprintDates = renderSprintDates;
-    function renderSprintLink(spr) {
-        const profile = system.cache.getProfile();
-        return JSX("span", null,
-            JSX("a", { class: `${profile.linkColor}-fg`, href: `/sprint/${spr.slug}` }, spr.title),
-            "\u00A0");
-    }
-    sprint.renderSprintLink = renderSprintLink;
-    function renderSprintSelect(sprints, activeID) {
-        return JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('sprint')" },
-            JSX("option", { value: "" }, "- no sprint -"),
-            sprints.map(s => {
-                return s.id === activeID ? JSX("option", { selected: "selected", value: s.id }, s.title) : JSX("option", { value: s.id }, s.title);
-            }));
-    }
-    sprint.renderSprintSelect = renderSprintSelect;
-})(sprint || (sprint = {}));
-var story;
-(function (story_2) {
-    function renderStory(story) {
-        const profile = system.cache.getProfile();
-        return JSX("li", { id: `story-${story.id}`, class: "section", onclick: `events.openModal('story', '${story.id}');` },
-            JSX("div", { class: "right uk-article-meta story-status" }, story.status),
-            JSX("div", { class: `${profile.linkColor}-fg section-link` }, story.title));
-    }
-    function renderStories(stories) {
-        if (stories.length === 0) {
-            return JSX("div", { id: "story-list" },
-                JSX("button", { class: "uk-button uk-button-default", onclick: "events.openModal('add-story');", type: "button" }, "Add Story"));
-        }
-        else {
-            return JSX("ul", { id: "story-list", class: "uk-list uk-list-divider" }, stories.map(s => renderStory(s)));
-        }
-    }
-    story_2.renderStories = renderStories;
-    function renderStatus(status) {
-        switch (status) {
-            case "pending":
-                return JSX("span", null, status);
-            case "active":
-                return JSX("span", null, status);
-            default:
-                return JSX("span", { class: "vote-badge uk-border-rounded" }, status);
-        }
-    }
-    story_2.renderStatus = renderStatus;
-    function renderTotal(sum) {
-        return JSX("li", { id: "story-total" },
-            JSX("div", { class: "right uk-article-meta" },
-                JSX("span", { class: "vote-badge uk-border-rounded" }, sum)),
-            " Total");
-    }
-    story_2.renderTotal = renderTotal;
-})(story || (story = {}));
-var team;
-(function (team) {
-    function renderTeamLink(tm) {
-        const profile = system.cache.getProfile();
-        return JSX("span", null,
-            " in ",
-            JSX("a", { class: `${profile.linkColor}-fg`, href: `/team/${tm.slug}` }, tm.title));
-    }
-    team.renderTeamLink = renderTeamLink;
-    function renderTeamSelect(teams, activeID) {
-        return JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('team')" },
-            JSX("option", { value: "" }, "- no team -"),
-            teams.map(t => {
-                return t.id === activeID ? JSX("option", { selected: "selected", value: t.id }, t.title) : JSX("option", { value: t.id }, t.title);
-            }));
-    }
-    team.renderTeamSelect = renderTeamSelect;
-})(team || (team = {}));
 var vote;
 (function (vote_1) {
     function renderVoteMember(member, hasVote) {
@@ -2094,3 +2404,4 @@ var vote;
     }
     vote_1.renderVoteSummary = renderVoteSummary;
 })(vote || (vote = {}));
+//# sourceMappingURL=rituals.js.map

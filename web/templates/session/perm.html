@@ -6,7 +6,7 @@
       <% if !(showTeam || showSprint || len(auths) > 0){ %>
         <li>
           Control access to this <%= svc.Key %> by
-          <a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.KeyProfile) %>">signing in</a>
+          <a class="theme" href="<%= ctx.Route(util.KeyProfile) %>">signing in</a>
         </li>
       <% } %>
       <% if showTeam { %>

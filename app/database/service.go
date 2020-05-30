@@ -31,5 +31,5 @@ func errMessage(t string, q string, values []interface{}) string {
 }
 
 func logQuery(s *Service, msg string, q string, values []interface{}) {
-	s.logger.Debug(fmt.Sprintf("%v {\n  SQL: %v\n  Values: %v\n}", msg, strings.TrimSpace(q), util.ValueStrings(values)))
+	util.LogDebug(s.logger, "%v {\n  SQL: %v\n  Values: %v\n}", msg, strings.TrimSpace(q), util.ValueStrings(values))
 }

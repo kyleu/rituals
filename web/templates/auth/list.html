@@ -1,7 +1,7 @@
 <%: func AuthSigninList(auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div id="signin-card" class="uk-card uk-card-body">
   <h3 class="uk-card-title">
-    <a class="right <%= ctx.Profile.LinkClass() %> uk-icon-button" data-uk-icon="question" href="" onclick="return events.openModal('auth');" title="sign in information"></a>
+    <a class="right theme uk-icon-button" data-uk-icon="question" href="" onclick="return modal.open('auth');" title="sign in information"></a>
     Sign In
   </h3>
   <ul class="uk-list uk-list-divider uk-margin-top">
@@ -18,7 +18,7 @@
     <% } %>
   </ul>
 </div>
-<div id="modal-auth" data-uk-modal>
+<div id="modal-auth" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
@@ -29,9 +29,6 @@
       <p>We store your email address and a link to your profile picture</p>
       <p>This information is only used to let you control access to your stuff</p>
       <p>We don't send you any mail or push notifications or anything shady</p>
-    </div>
-    <div class="uk-modal-footer uk-text-right">
-      <button class="uk-button uk-button-default" onclick="events.hideModal('auth');" type="button">Close</button>
     </div>
   </div>
 </div>

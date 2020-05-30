@@ -4,31 +4,31 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/model/auth"
 
-	"github.com/kyleu/rituals.dev/app/team"
+	"github.com/kyleu/rituals.dev/app/model/team"
 
-	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/query"
-	"github.com/kyleu/rituals.dev/app/sprint"
+	"github.com/kyleu/rituals.dev/app/database/query"
+	"github.com/kyleu/rituals.dev/app/model/action"
+	"github.com/kyleu/rituals.dev/app/model/sprint"
 
-	"github.com/kyleu/rituals.dev/app/retro"
-	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/rituals.dev/app/user"
+	"github.com/kyleu/rituals.dev/app/model/retro"
+	"github.com/kyleu/rituals.dev/app/model/standup"
+	"github.com/kyleu/rituals.dev/app/model/user"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/estimate"
+	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"logur.dev/logur"
 )
 
 type Service struct {
-	connections   map[uuid.UUID]*connection
+	connections   map[uuid.UUID]*Connection
 	connectionsMu sync.Mutex
-	channels      map[channel][]uuid.UUID
+	channels      map[Channel][]uuid.UUID
 	channelsMu    sync.Mutex
-	logger        logur.Logger
+	Logger        logur.Logger
 	actions       *action.Service
 	users         *user.Service
 	auths         *auth.Service
@@ -45,11 +45,11 @@ func NewService(
 	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeySocket})
 	return &Service{
-		connections:   make(map[uuid.UUID]*connection),
+		connections:   make(map[uuid.UUID]*Connection),
 		connectionsMu: sync.Mutex{},
-		channels:      make(map[channel][]uuid.UUID),
+		channels:      make(map[Channel][]uuid.UUID),
 		channelsMu:    sync.Mutex{},
-		logger:        logger,
+		Logger:        logger,
 		actions:       actions,
 		users:         users,
 		auths:         auths,
@@ -78,15 +78,16 @@ func (s *Service) List(params *query.Params) Statuses {
 	return ret
 }
 
-func (s *Service) GetByID(id uuid.UUID) (*Status, error) {
+func (s *Service) GetByID(id uuid.UUID) *Status {
 	if id == systemID {
-		return &systemStatus, nil
+		return &systemStatus
 	}
 	conn, ok := s.connections[id]
 	if !ok {
-		return nil, invalidConnection(id)
+		util.LogError(s.Logger, "error getting connection by id [%v]", id)
+		return nil
 	}
-	return conn.ToStatus(), nil
+	return conn.ToStatus()
 }
 
 func (s *Service) Count() int {
@@ -95,8 +96,8 @@ func (s *Service) Count() int {
 
 func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	if connID == systemID {
-		s.logger.Warn("--- admin message received ---")
-		s.logger.Warn(fmt.Sprint(message))
+		s.Logger.Warn("--- admin message received ---")
+		s.Logger.Warn(fmt.Sprint(message))
 		return nil
 	}
 	c, ok := s.connections[connID]

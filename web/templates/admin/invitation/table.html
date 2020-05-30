@@ -13,7 +13,7 @@
   <tbody>
   <% for _, i := range invitations { %>
     <tr>
-      <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyInvitation, `detail`), util.KeyKey, i.Key) %>"><%= i.Key %></a></td>
+      <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyInvitation, util.KeyDetail), util.KeyKey, i.Key) %>"><%= i.Key %></a></td>
       <td><%= i.K.String() %>:<%= i.V %></td>
       <td><% ComponentUUID(i.Src, buffer) %></td>
       <td><% ComponentUUID(i.Tgt, buffer) %></td>

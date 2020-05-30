@@ -4,11 +4,11 @@ import (
 	"emperror.dev/errors"
 	"encoding/json"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+func onSystemMessage(s *Service, conn *Connection, cmd string, param json.RawMessage) error {
 	userID := conn.Profile.UserID
 	if conn.Profile.UserID != userID {
 		return errors.New("received name change for wrong user [" + userID.String() + "]")
@@ -19,9 +19,13 @@ func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMes
 	switch cmd {
 	case ClientCmdPing:
 		err = s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdPong, param))
+	case ClientCmdAddComment:
+		acp := addCommentParams{}
+		util.FromJSON(param, &acp, s.Logger)
+		err = onAddComment(s, *conn.Channel, userID, acp)
 	case ClientCmdUpdateProfile:
 		snp := &ParamsSaveName{}
-		util.FromJSON(param, snp, s.logger)
+		util.FromJSON(param, snp, s.Logger)
 		err = saveName(s, conn, userID, snp)
 	case ClientCmdGetActions:
 		err = sendActions(s, conn)
@@ -40,25 +44,22 @@ type ParamsSaveName struct {
 	Choice string `json:"choice"`
 }
 
-func saveName(s *Service, conn *connection, userID uuid.UUID, p *ParamsSaveName) error {
+func saveName(s *Service, conn *Connection, userID uuid.UUID, p *ParamsSaveName) error {
 	if p.Choice == "global" {
 		err := s.UpdateName(userID, p.Name)
 		if err != nil {
 			return err
 		}
 	}
-	memberSvc, err := memberSvcFor(s, conn.Channel.Svc)
-	if err != nil {
-		return err
-	}
+	dataSvc := dataFor(s, conn.Channel.Svc)
 
-	current, err := memberSvc.Get(conn.Channel.ID, userID)
+	current, err := dataSvc.Members.Get(conn.Channel.ID, userID)
 	if err != nil {
 		return err
 	}
 
 	if current.Name != p.Name {
-		current, err = memberSvc.UpdateName(conn.Channel.ID, userID, p.Name)
+		current, err = dataSvc.Members.UpdateName(conn.Channel.ID, userID, p.Name)
 		if err != nil {
 			return err
 		}
@@ -70,7 +71,7 @@ func saveName(s *Service, conn *connection, userID uuid.UUID, p *ParamsSaveName)
 	return s.sendMemberUpdate(*conn.Channel, current)
 }
 
-func sendActions(s *Service, conn *connection) error {
+func sendActions(s *Service, conn *Connection) error {
 	if conn.ModelID == nil {
 		return errors.New("no active model for connection [" + conn.ID.String() + "]")
 	}
@@ -78,32 +79,29 @@ func sendActions(s *Service, conn *connection) error {
 	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdActions, actions))
 }
 
-func sendTeams(s *Service, conn *connection, userID uuid.UUID) error {
+func sendTeams(s *Service, conn *Connection, userID uuid.UUID) error {
 	teams := s.teams.GetByMember(userID, nil)
 	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdTeams, teams))
 }
 
-func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
+func sendSprints(s *Service, conn *Connection, userID uuid.UUID) error {
 	sprints := s.sprints.GetByMember(userID, nil)
 	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdSprints, sprints))
 }
 
-func memberSvcFor(s *Service, svc util.Service) (*member.Service, error) {
-	var ret *member.Service
-
+func dataFor(s *Service, svc util.Service) *session.DataServices {
 	switch svc {
 	case util.SvcTeam:
-		ret = s.teams.Members
+		return s.teams.Data
 	case util.SvcSprint:
-		ret = s.sprints.Members
+		return s.sprints.Data
 	case util.SvcEstimate:
-		ret = s.estimates.Members
+		return s.estimates.Data
 	case util.SvcStandup:
-		ret = s.standups.Members
+		return s.standups.Data
 	case util.SvcRetro:
-		ret = s.retros.Members
+		return s.retros.Data
 	default:
-		return nil, errors.New(util.IDErrorString(util.KeyService, svc.Key))
+		return nil
 	}
-	return ret, nil
 }

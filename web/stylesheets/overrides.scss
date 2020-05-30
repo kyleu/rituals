@@ -1,24 +1,44 @@
-// Input
-.uk-input, .uk-select, .uk-textarea, .uk-icon-button {
-  transition: none;
-}
-
-// Pre
-pre {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-}
-
+// Alerts
 .uk-light {
-  pre {
-    color: rgba(255, 255, 255, 0.7);
+  .uk-alert, .uk-alert-primary, .uk-alert-success, .uk-alert-warning, .uk-alert-danger {
+    background: #222;
   }
 }
 
 // Button
 .uk-button {
-  // text-transform: none;
+  text-transform: none;
+}
+
+// H4
+h4 {
+  margin-top: 0;
+}
+
+// Input
+.uk-light {
+  .uk-input, .uk-select, .uk-textarea, .uk-icon-button, .uk-checkbox, .uk-button {
+    transition: none;
+  }
+}
+
+// Modal
+.uk-close {
+  background: transparent;
+}
+
+.uk-light {
+  .uk-modal-dialog, .uk-modal-header, .uk-modal-body, .uk-modal-footer {
+    background: $dark-bg-color;
+  }
+
+  .uk-modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .uk-modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
 }
 
 // Nav
@@ -79,21 +99,16 @@ pre {
   }
 }
 
-// Modals
-.uk-close {
-  background: transparent;
+// Pre
+pre {
+  background-color: transparent;
+  border: none;
+  padding: 0;
 }
 
 .uk-light {
-  .uk-modal-dialog, .uk-modal-header, .uk-modal-body, .uk-modal-footer {
-    background: $dark-bg-color;
-  }
-}
-
-// Alerts
-.uk-light {
-  .uk-alert, .uk-alert-primary, .uk-alert-success, .uk-alert-warning, .uk-alert-danger {
-    background: #222;
+  pre {
+    color: rgba(255, 255, 255, 0.7);
   }
 }
 

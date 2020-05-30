@@ -1,0 +1,6 @@
+<%: func AdminSessionData(data *session.Data, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<% AdminMemberCard(data.Members, params, ctx, buffer) %>
+<% AdminCommentCard(data.Comments, params, ctx, buffer) %>
+<% AdminActionCard(data.Actions, params, ctx, buffer) %>
+<% AdminPermissionCard(data.Perms, params, ctx, buffer) %>

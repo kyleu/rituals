@@ -10,17 +10,17 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type connection struct {
+type Connection struct {
 	ID      uuid.UUID
 	Profile util.Profile
 	Svc     util.Service
 	ModelID *uuid.UUID
-	Channel *channel
+	Channel *Channel
 	socket  *websocket.Conn
 	mu      sync.Mutex
 }
 
-func (c *connection) ToStatus() *Status {
+func (c *Connection) ToStatus() *Status {
 	if c.Channel == nil {
 		return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: util.SvcSystem, ChannelID: nil}
 	}

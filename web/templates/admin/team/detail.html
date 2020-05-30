@@ -1,4 +1,4 @@
-<%: func AdminTeamDetail(model *team.Session, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, comments comment.Comments, members member.Entries, perms permission.Permissions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AdminTeamDetail(model *team.Session, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, data *session.Data, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
 
@@ -26,7 +26,7 @@
           </tr>
           <tr>
             <th>Owner</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Owner.String()) %>"><% ComponentUUID(&model.Owner, _buffer) %></a></td>
           </tr>
           <tr>
             <th>Created</th>
@@ -35,14 +35,12 @@
         </tbody>
       </table>
     </div>
-    <% AdminCommentCard(comments, params, ctx, _buffer) %>
-    <% AdminMemberCard(members, params, ctx, _buffer) %>
-    <% AdminPermissionCard(perms, params, ctx, _buffer) %>
     <% AdminSprintCard(sprints, params, ctx, _buffer) %>
     <% AdminEstimateCard(estimates, params, ctx, _buffer) %>
     <% AdminStandupCard(standups, params, ctx, _buffer) %>
     <% AdminRetroCard(retros, params, ctx, _buffer) %>
-    <% AdminActionCard(actions, params, ctx, _buffer) %>
+
+    <% AdminSessionData(data, params, ctx, _buffer) %>
   </div>
 </div>
 <% } %>

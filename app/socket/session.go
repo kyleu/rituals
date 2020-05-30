@@ -3,10 +3,10 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/auth"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/permission"
+	"github.com/kyleu/rituals.dev/app/model/action"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/member"
+	"github.com/kyleu/rituals.dev/app/model/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -18,14 +18,14 @@ type SessionResult struct {
 	Error       error
 }
 
-func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry, msg *Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
+func (s *Service) sendInitial(ch Channel, conn *Connection, entry *member.Entry, msg *Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
 	err := s.WriteMessage(conn.ID, msg)
 	if err != nil {
 		return errors.Wrap(err, "error writing initial estimate message")
 	}
 
 	if sprintEntry != nil {
-		err = s.sendMemberUpdate(channel{Svc: util.SvcSprint, ID: *sprintID}, sprintEntry, conn.ID)
+		err = s.sendMemberUpdate(Channel{Svc: util.SvcSprint, ID: *sprintID}, sprintEntry, conn.ID)
 		if err != nil {
 			return errors.Wrap(err, "error writing member update to sprint")
 		}
@@ -40,7 +40,7 @@ func (s *Service) sendInitial(ch channel, conn *connection, entry *member.Entry,
 	return errors.Wrap(err, "error writing online update")
 }
 
-func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch channel, conn *connection) SessionResult {
+func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Channel, conn *Connection) SessionResult {
 	userID := conn.Profile.UserID
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
 	perms, permErrors, err := s.check(conn.Profile.UserID, auths, teamID, sprintID, ch.Svc, ch.ID)
@@ -51,14 +51,11 @@ func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch cha
 		return SessionResult{Error: s.sendPermErrors(ch, permErrors)}
 	}
 
-	memberSvc, err := memberSvcFor(s, ch.Svc)
-	if err != nil {
-		return SessionResult{Error: err}
-	}
-	entry := memberSvc.Register(ch.ID, userID, member.RoleMember)
+	dataSvc := dataFor(s, ch.Svc)
+	entry := dataSvc.Members.Register(ch.ID, userID, member.RoleMember)
 	var sprintEntry *member.Entry
 	if sprintID != nil {
-		sprintEntry = s.sprints.Members.RegisterRef(sprintID, userID, member.RoleMember)
+		sprintEntry = s.sprints.Data.Members.RegisterRef(sprintID, userID, member.RoleMember)
 	}
 
 	conn.Svc = ch.Svc
@@ -73,7 +70,7 @@ func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch cha
 	}
 }
 
-func (s *Service) sendPermErrors(ch channel, permErrors permission.Errors) error {
+func (s *Service) sendPermErrors(ch Channel, permErrors permission.Errors) error {
 	if len(permErrors) > 0 {
 		return s.WriteChannel(ch, NewMessage(ch.Svc, ServerCmdError, "insufficient permissions"))
 	}

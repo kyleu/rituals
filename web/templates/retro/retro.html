@@ -2,6 +2,10 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ head { %>
+<% ComponentInit(util.SvcRetro, model.ID, _buffer) %>
+<% } %>
+
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container uk-container-expand">
@@ -17,12 +21,11 @@
         <% RetroFeedback(ctx, _buffer) %>
       </div>
       <div class="uk-width-1-4@m">
-        <% MemberOthers(ctx, _buffer) %>
+        <% MemberOther(ctx, _buffer) %>
       </div>
     </div>
   </div>
 </div>
 <% ComponentSessionWelcome(util.SvcRetro, ctx, _buffer) %>
-<% ComponentSessionComments(ctx, _buffer) %>
-<script>window.addEventListener("load", function() { rituals.init(services.retro.key, "<%= model.ID.String() %>") }, false)</script>
+<% ComponentSessionComment(ctx, _buffer) %>
 <% } %>

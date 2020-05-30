@@ -60,20 +60,17 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 	if ok {
 		userID, err = uuid.FromString(userIDValue.(string))
 		if err != nil {
-			ai.Logger.Warn(fmt.Sprintf("cannot parse uuid [%v]: %+v", userIDValue, err))
+			util.LogWarn(ai.Logger, "cannot parse uuid [%v]: %+v", userIDValue, err)
 		}
 	} else {
 		session.Values[util.KeyUser] = util.UUID().String()
 		err = session.Save(r, w)
 		if err != nil {
-			ai.Logger.Warn(fmt.Sprintf("cannot save session: %+v", err))
+			util.LogWarn(ai.Logger, "cannot save session: %+v", err)
 		}
 	}
 
-	user, err := ai.User.GetByID(userID, addIfMissing)
-	if err != nil {
-		ai.Logger.Warn(fmt.Sprintf("unable to load user profile: %+v", err))
-	}
+	user := ai.User.GetByID(userID, addIfMissing)
 	var prof *util.UserProfile
 	if user == nil {
 		prof = util.NewUserProfile(userID)

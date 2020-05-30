@@ -1,0 +1,84 @@
+<%: func EstimateStory(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card uk-card-body uk-transition-toggle">
+  <h3 class="uk-card-title">
+    <span class="right">
+      <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="modal.open('add-<%= util.KeyStory %>');return false;" title="add story"></a>
+    </span>
+    <span class="model-icon h3-icon" onclick="modal.open('add-<%= util.KeyStory %>');" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>;"></span>
+    <span class="modal-title" onclick="modal.open('add-<%= util.KeyStory %>');"><%= util.PluralTitle(util.KeyStory) %></span>
+  </h3>
+  <p id="story-detail">Loading...</p>
+</div>
+<div id="modal-add-story" class="modal" data-uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title">Add New Story</h2>
+    </div>
+    <form class="uk-form-stacked" id="form-detail" onsubmit="return story.onSubmitStory();">
+      <div class="uk-modal-body" data-uk-overflow-auto>
+        <fieldset class="uk-fieldset">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="story-title-input">Title</label>
+            <input class="uk-input" id="story-title-input" type="text" />
+          </div>
+        </fieldset>
+      </div>
+      <div class="uk-modal-footer uk-text-right">
+        <button class="uk-button uk-button-default" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="modal-story" class="modal" data-uk-modal>
+  <div class="uk-modal-dialog uk-margin-auto-vertical">
+    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+    <div class="uk-modal-header">
+      <h2 class="uk-modal-title" id="story-status">...</h2>
+    </div>
+    <div class="uk-modal-body" data-uk-overflow-auto>
+      <div id="story-title">Story Detail</div>
+      <div class="modal-body-height">
+        <div id="story-status-body-pending" class="story-status-body active">
+          <p id="story-view-section">
+            Your story is ready to <a class="theme" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
+          </p>
+          <p id="story-edit-section">
+            Your story is available to
+            <a class="theme" href="" onclick="story.beginEditStory();return false;">edit</a>
+            and ready to
+            <a class="theme" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
+          </p>
+        </div>
+        <div id="story-status-body-active" class="story-status-body">
+          <div id="story-vote-members"></div>
+          <hr />
+          <div id="story-vote-choices"></div>
+        </div>
+        <div id="story-status-body-complete" class="story-status-body">
+          <div id="story-vote-results"></div>
+          <hr />
+          <div id="story-vote-summary"></div>
+        </div>
+      </div>
+    </div>
+    <div class="uk-modal-footer uk-text-right">
+      <div id="modal-comment-count" class="left"><% ComponentCommentBadge("modal", ctx, buffer) %></div>
+
+      <div id="story-status-actions-pending" class="story-status-actions">
+        <button class="uk-button uk-button-default" type="button" onclick="story.onRemoveStory();">Delete</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Start Voting</button>
+      </div>
+
+      <div id="story-status-actions-active" class="story-status-actions">
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('pending');">Reset</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('complete');">Finish</button>
+      </div>
+
+      <div id="story-status-actions-complete" class="story-status-actions">
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Reopen</button>
+        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= util.KeyStory %>');">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,24 +5,24 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/kyleu/rituals.dev/app/controllers/routes"
+	"github.com/kyleu/rituals.dev/app/web/routes"
 
-	"github.com/kyleu/rituals.dev/app/invitation"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/team"
+	"github.com/kyleu/rituals.dev/app/model/invitation"
+	"github.com/kyleu/rituals.dev/app/model/sprint"
+	"github.com/kyleu/rituals.dev/app/model/team"
 
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	"emperror.dev/handler/logur"
 	"github.com/gorilla/handlers"
-	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/config"
-	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/retro"
+	"github.com/kyleu/rituals.dev/app/model/action"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/estimate"
+	"github.com/kyleu/rituals.dev/app/model/retro"
+	"github.com/kyleu/rituals.dev/app/model/standup"
+	"github.com/kyleu/rituals.dev/app/model/user"
 	"github.com/kyleu/rituals.dev/app/socket"
-	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/spf13/cobra"
 	log "logur.dev/logur"
@@ -113,11 +113,11 @@ func MakeServer(info *config.AppInfo, address string, port uint16) error {
 	if err != nil {
 		return errors.WithMessage(err, "unable to construct routes")
 	}
-	var msg = fmt.Sprintf("%v is starting on [%v:%v]", util.AppName, address, port)
+	var msg = "%v is starting on [%v:%v]"
 	if info.Debug {
 		msg += " (verbose)"
 	}
-	info.Logger.Info(msg, util.ToMap("address", address, "port", port))
+	util.LogInfo(info.Logger, msg, util.AppName, address, port)
 	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(r))
 	return errors.Wrap(err, "unable to run http server")
 }

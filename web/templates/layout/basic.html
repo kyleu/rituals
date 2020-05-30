@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<% Head(ctx, _buffer) %>
+<head>
+<% ComponentHead(ctx, _buffer) %>
+<%@ head { %><% } %>
+</head>
 <body style="visibility: hidden;">
 <% Navbar(ctx, _buffer) %>
 <div id="<%= util.KeyContent %>" data-uk-height-viewport="expand: true">
@@ -13,6 +16,10 @@
 <% } %>
 <%@ body { %><% } %>
 </div>
-<script>window.addEventListener("load", function() { dom.initDom('<%= ctx.Profile.Theme.String() %>'); }, false)</script>
+<script>
+  window.addEventListener("load", function() {
+    dom.initDom('<%= ctx.Profile.Theme.String() %>', '<%= ctx.Profile.LinkColor %>');
+  }, false);
+</script>
 </body>
 </html>

@@ -15,8 +15,8 @@
   <tbody>
   <% for _, model := range auths { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyAuth, `detail`), `id`, model.ID.String()) %>"><% ComponentUUID(&model.ID, buffer) %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyAuth, util.KeyDetail), `id`, model.ID.String()) %>"><% ComponentUUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Provider.Key %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.ProviderID %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Name %></td>

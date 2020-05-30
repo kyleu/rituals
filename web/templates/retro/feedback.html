@@ -1,12 +1,12 @@
 <%: func RetroFeedback(ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body">
   <h3 class="uk-card-title">
-    <span class="model-icon h3-icon" onclick="events.openModal('add-<%= util.KeyFeedback %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
-    <span class="modal-title" onclick="events.openModal('add-<%= util.KeyFeedback %>');">Feedback</span>
+    <span class="model-icon h3-icon" onclick="modal.open('add-<%= util.KeyFeedback %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
+    <span class="modal-title" onclick="modal.open('add-<%= util.KeyFeedback %>');">Feedback</span>
   </h3>
   <p id="feedback-detail">Loading...</p>
 </div>
-<div id="modal-add-feedback" data-uk-modal>
+<div id="modal-add-feedback" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
@@ -21,7 +21,7 @@
           </div>
           <div class="uk-margin">
             <label class="uk-form-label" for="feedback-content"><%= util.Title(util.KeyFeedback) %></label>
-            <textarea class="uk-textarea" id="feedback-content" placeholder="Markdown and HTML supported"></textarea>
+            <% ComponentTextarea(web.InputParams{ID: "feedback-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
           </div>
         </fieldset>
       </div>
@@ -31,7 +31,7 @@
     </form>
   </div>
 </div>
-<div id="modal-feedback" class="uk-modal-container" data-uk-modal>
+<div id="modal-feedback" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
@@ -45,18 +45,19 @@
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="feedback-edit-content"><%= util.Title(util.KeyContent) %></label>
-          <textarea class="uk-textarea" id="feedback-edit-content"></textarea>
+          <% ComponentTextarea(web.InputParams{ID: "feedback-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
         </div>
       </div>
       <div class="content-view"></div>
     </div>
     <div class="uk-modal-footer uk-text-right">
-      <div class="buttons-edit">
+      <div id="modal-comment-count" class="left"><% ComponentCommentBadge("modal", ctx, buffer) %></div>
+      <div class="buttons-edit right">
         <button class="uk-button uk-button-default" type="button" onclick="feedback.onRemoveFeedback();">Delete</button>
         <button class="uk-button uk-button-default" type="button" onclick="feedback.onEditFeedback();">Save</button>
       </div>
-      <div class="buttons-view">
-        <button class="uk-button uk-button-default" type="button" onclick="events.hideModal('feedback');">Close</button>
+      <div class="buttons-view right">
+        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= util.KeyFeedback %>');">Close</button>
       </div>
     </div>
   </div>

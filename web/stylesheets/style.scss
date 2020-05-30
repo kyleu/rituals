@@ -25,12 +25,16 @@ $navbar-nav-item-height: 54px;
   clear: both;
 }
 
-h4 {
-  margin-top: 0;
+.small-margin-top {
+  margin-top: 3px;
 }
 
-.uk-button {
-  text-transform: none;
+.hidden {
+  display: none;
+}
+
+.width-icon {
+  width: 32px;
 }
 
 .modal-title {
@@ -39,16 +43,6 @@ h4 {
 
 .modal-body-height {
   min-height: 256px !important;
-}
-
-.uk-light {
-  .uk-modal-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .uk-modal-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-  }
 }
 
 // Alerts
@@ -135,9 +129,11 @@ h3 a:hover {
   }
 }
 
+@import "form.scss";
 @import "profile.scss";
 @import "permission.scss";
 @import "members.scss";
+@import "session.scss";
 @import "team.scss";
 @import "sprint.scss";
 @import "estimate.scss";

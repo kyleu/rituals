@@ -12119,18 +12119,34 @@ iframe.uk-cover {
   border-color: #000000 !important;
 }
 
-.uk-input, .uk-select, .uk-textarea, .uk-icon-button {
+.uk-light .uk-alert, .uk-section-primary:not(.uk-preserve-color) .uk-alert, .uk-section-secondary:not(.uk-preserve-color) .uk-alert, .uk-tile-primary:not(.uk-preserve-color) .uk-alert, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert, .uk-card-primary.uk-card-body .uk-alert, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert, .uk-card-secondary.uk-card-body .uk-alert, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert, .uk-overlay-primary .uk-alert, .uk-offcanvas-bar .uk-alert, .uk-light .uk-alert-primary, .uk-section-primary:not(.uk-preserve-color) .uk-alert-primary, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-primary, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-primary, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-primary, .uk-card-primary.uk-card-body .uk-alert-primary, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-primary, .uk-card-secondary.uk-card-body .uk-alert-primary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-primary, .uk-overlay-primary .uk-alert-primary, .uk-offcanvas-bar .uk-alert-primary, .uk-light .uk-alert-success, .uk-section-primary:not(.uk-preserve-color) .uk-alert-success, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-success, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-success, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-success, .uk-card-primary.uk-card-body .uk-alert-success, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-success, .uk-card-secondary.uk-card-body .uk-alert-success, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-success, .uk-overlay-primary .uk-alert-success, .uk-offcanvas-bar .uk-alert-success, .uk-light .uk-alert-warning, .uk-section-primary:not(.uk-preserve-color) .uk-alert-warning, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-warning, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-warning, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-warning, .uk-card-primary.uk-card-body .uk-alert-warning, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-warning, .uk-card-secondary.uk-card-body .uk-alert-warning, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-warning, .uk-overlay-primary .uk-alert-warning, .uk-offcanvas-bar .uk-alert-warning, .uk-light .uk-alert-danger, .uk-section-primary:not(.uk-preserve-color) .uk-alert-danger, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-danger, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-danger, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-danger, .uk-card-primary.uk-card-body .uk-alert-danger, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-danger, .uk-card-secondary.uk-card-body .uk-alert-danger, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-danger, .uk-overlay-primary .uk-alert-danger, .uk-offcanvas-bar .uk-alert-danger {
+  background: #222;
+}
+
+.uk-button {
+  text-transform: none;
+}
+
+h4 {
+  margin-top: 0;
+}
+
+.uk-light .uk-input, .uk-section-primary:not(.uk-preserve-color) .uk-input, .uk-section-secondary:not(.uk-preserve-color) .uk-input, .uk-tile-primary:not(.uk-preserve-color) .uk-input, .uk-tile-secondary:not(.uk-preserve-color) .uk-input, .uk-card-primary.uk-card-body .uk-input, .uk-card-primary > :not([class*=uk-card-media]) .uk-input, .uk-card-secondary.uk-card-body .uk-input, .uk-card-secondary > :not([class*=uk-card-media]) .uk-input, .uk-overlay-primary .uk-input, .uk-offcanvas-bar .uk-input, .uk-light .uk-select, .uk-section-primary:not(.uk-preserve-color) .uk-select, .uk-section-secondary:not(.uk-preserve-color) .uk-select, .uk-tile-primary:not(.uk-preserve-color) .uk-select, .uk-tile-secondary:not(.uk-preserve-color) .uk-select, .uk-card-primary.uk-card-body .uk-select, .uk-card-primary > :not([class*=uk-card-media]) .uk-select, .uk-card-secondary.uk-card-body .uk-select, .uk-card-secondary > :not([class*=uk-card-media]) .uk-select, .uk-overlay-primary .uk-select, .uk-offcanvas-bar .uk-select, .uk-light .uk-textarea, .uk-section-primary:not(.uk-preserve-color) .uk-textarea, .uk-section-secondary:not(.uk-preserve-color) .uk-textarea, .uk-tile-primary:not(.uk-preserve-color) .uk-textarea, .uk-tile-secondary:not(.uk-preserve-color) .uk-textarea, .uk-card-primary.uk-card-body .uk-textarea, .uk-card-primary > :not([class*=uk-card-media]) .uk-textarea, .uk-card-secondary.uk-card-body .uk-textarea, .uk-card-secondary > :not([class*=uk-card-media]) .uk-textarea, .uk-overlay-primary .uk-textarea, .uk-offcanvas-bar .uk-textarea, .uk-light .uk-icon-button, .uk-section-primary:not(.uk-preserve-color) .uk-icon-button, .uk-section-secondary:not(.uk-preserve-color) .uk-icon-button, .uk-tile-primary:not(.uk-preserve-color) .uk-icon-button, .uk-tile-secondary:not(.uk-preserve-color) .uk-icon-button, .uk-card-primary.uk-card-body .uk-icon-button, .uk-card-primary > :not([class*=uk-card-media]) .uk-icon-button, .uk-card-secondary.uk-card-body .uk-icon-button, .uk-card-secondary > :not([class*=uk-card-media]) .uk-icon-button, .uk-overlay-primary .uk-icon-button, .uk-offcanvas-bar .uk-icon-button, .uk-light .uk-checkbox, .uk-section-primary:not(.uk-preserve-color) .uk-checkbox, .uk-section-secondary:not(.uk-preserve-color) .uk-checkbox, .uk-tile-primary:not(.uk-preserve-color) .uk-checkbox, .uk-tile-secondary:not(.uk-preserve-color) .uk-checkbox, .uk-card-primary.uk-card-body .uk-checkbox, .uk-card-primary > :not([class*=uk-card-media]) .uk-checkbox, .uk-card-secondary.uk-card-body .uk-checkbox, .uk-card-secondary > :not([class*=uk-card-media]) .uk-checkbox, .uk-overlay-primary .uk-checkbox, .uk-offcanvas-bar .uk-checkbox, .uk-light .uk-button, .uk-section-primary:not(.uk-preserve-color) .uk-button, .uk-section-secondary:not(.uk-preserve-color) .uk-button, .uk-tile-primary:not(.uk-preserve-color) .uk-button, .uk-tile-secondary:not(.uk-preserve-color) .uk-button, .uk-card-primary.uk-card-body .uk-button, .uk-card-primary > :not([class*=uk-card-media]) .uk-button, .uk-card-secondary.uk-card-body .uk-button, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button, .uk-overlay-primary .uk-button, .uk-offcanvas-bar .uk-button {
   transition: none;
 }
 
-pre {
-  background-color: transparent;
-  border: none;
-  padding: 0;
+.uk-close {
+  background: transparent;
 }
 
-.uk-light pre, .uk-section-primary:not(.uk-preserve-color) pre, .uk-section-secondary:not(.uk-preserve-color) pre, .uk-tile-primary:not(.uk-preserve-color) pre, .uk-tile-secondary:not(.uk-preserve-color) pre, .uk-card-primary.uk-card-body pre, .uk-card-primary > :not([class*=uk-card-media]) pre, .uk-card-secondary.uk-card-body pre, .uk-card-secondary > :not([class*=uk-card-media]) pre, .uk-overlay-primary pre, .uk-offcanvas-bar pre {
-  color: rgba(255, 255, 255, 0.7);
+.uk-light .uk-modal-dialog, .uk-section-primary:not(.uk-preserve-color) .uk-modal-dialog, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-dialog, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-dialog, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-dialog, .uk-card-primary.uk-card-body .uk-modal-dialog, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-dialog, .uk-card-secondary.uk-card-body .uk-modal-dialog, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-dialog, .uk-overlay-primary .uk-modal-dialog, .uk-offcanvas-bar .uk-modal-dialog, .uk-light .uk-modal-header, .uk-section-primary:not(.uk-preserve-color) .uk-modal-header, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-card-primary.uk-card-body .uk-modal-header, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-header, .uk-card-secondary.uk-card-body .uk-modal-header, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-header, .uk-overlay-primary .uk-modal-header, .uk-offcanvas-bar .uk-modal-header, .uk-light .uk-modal-body, .uk-section-primary:not(.uk-preserve-color) .uk-modal-body, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-body, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-body, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-body, .uk-card-primary.uk-card-body .uk-modal-body, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-body, .uk-card-secondary.uk-card-body .uk-modal-body, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-body, .uk-overlay-primary .uk-modal-body, .uk-offcanvas-bar .uk-modal-body, .uk-light .uk-modal-footer, .uk-section-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-card-primary.uk-card-body .uk-modal-footer, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-card-secondary.uk-card-body .uk-modal-footer, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-overlay-primary .uk-modal-footer, .uk-offcanvas-bar .uk-modal-footer {
+  background: #121212;
+}
+.uk-light .uk-modal-header, .uk-section-primary:not(.uk-preserve-color) .uk-modal-header, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-card-primary.uk-card-body .uk-modal-header, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-header, .uk-card-secondary.uk-card-body .uk-modal-header, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-header, .uk-overlay-primary .uk-modal-header, .uk-offcanvas-bar .uk-modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.uk-light .uk-modal-footer, .uk-section-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-card-primary.uk-card-body .uk-modal-footer, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-card-secondary.uk-card-body .uk-modal-footer, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-overlay-primary .uk-modal-footer, .uk-offcanvas-bar .uk-modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .uk-nav-header {
@@ -12174,16 +12190,14 @@ pre {
   color: #999;
 }
 
-.uk-close {
-  background: transparent;
+pre {
+  background-color: transparent;
+  border: none;
+  padding: 0;
 }
 
-.uk-light .uk-modal-dialog, .uk-section-primary:not(.uk-preserve-color) .uk-modal-dialog, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-dialog, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-dialog, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-dialog, .uk-card-primary.uk-card-body .uk-modal-dialog, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-dialog, .uk-card-secondary.uk-card-body .uk-modal-dialog, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-dialog, .uk-overlay-primary .uk-modal-dialog, .uk-offcanvas-bar .uk-modal-dialog, .uk-light .uk-modal-header, .uk-section-primary:not(.uk-preserve-color) .uk-modal-header, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-card-primary.uk-card-body .uk-modal-header, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-header, .uk-card-secondary.uk-card-body .uk-modal-header, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-header, .uk-overlay-primary .uk-modal-header, .uk-offcanvas-bar .uk-modal-header, .uk-light .uk-modal-body, .uk-section-primary:not(.uk-preserve-color) .uk-modal-body, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-body, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-body, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-body, .uk-card-primary.uk-card-body .uk-modal-body, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-body, .uk-card-secondary.uk-card-body .uk-modal-body, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-body, .uk-overlay-primary .uk-modal-body, .uk-offcanvas-bar .uk-modal-body, .uk-light .uk-modal-footer, .uk-section-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-card-primary.uk-card-body .uk-modal-footer, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-card-secondary.uk-card-body .uk-modal-footer, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-overlay-primary .uk-modal-footer, .uk-offcanvas-bar .uk-modal-footer {
-  background: #121212;
-}
-
-.uk-light .uk-alert, .uk-section-primary:not(.uk-preserve-color) .uk-alert, .uk-section-secondary:not(.uk-preserve-color) .uk-alert, .uk-tile-primary:not(.uk-preserve-color) .uk-alert, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert, .uk-card-primary.uk-card-body .uk-alert, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert, .uk-card-secondary.uk-card-body .uk-alert, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert, .uk-overlay-primary .uk-alert, .uk-offcanvas-bar .uk-alert, .uk-light .uk-alert-primary, .uk-section-primary:not(.uk-preserve-color) .uk-alert-primary, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-primary, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-primary, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-primary, .uk-card-primary.uk-card-body .uk-alert-primary, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-primary, .uk-card-secondary.uk-card-body .uk-alert-primary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-primary, .uk-overlay-primary .uk-alert-primary, .uk-offcanvas-bar .uk-alert-primary, .uk-light .uk-alert-success, .uk-section-primary:not(.uk-preserve-color) .uk-alert-success, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-success, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-success, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-success, .uk-card-primary.uk-card-body .uk-alert-success, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-success, .uk-card-secondary.uk-card-body .uk-alert-success, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-success, .uk-overlay-primary .uk-alert-success, .uk-offcanvas-bar .uk-alert-success, .uk-light .uk-alert-warning, .uk-section-primary:not(.uk-preserve-color) .uk-alert-warning, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-warning, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-warning, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-warning, .uk-card-primary.uk-card-body .uk-alert-warning, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-warning, .uk-card-secondary.uk-card-body .uk-alert-warning, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-warning, .uk-overlay-primary .uk-alert-warning, .uk-offcanvas-bar .uk-alert-warning, .uk-light .uk-alert-danger, .uk-section-primary:not(.uk-preserve-color) .uk-alert-danger, .uk-section-secondary:not(.uk-preserve-color) .uk-alert-danger, .uk-tile-primary:not(.uk-preserve-color) .uk-alert-danger, .uk-tile-secondary:not(.uk-preserve-color) .uk-alert-danger, .uk-card-primary.uk-card-body .uk-alert-danger, .uk-card-primary > :not([class*=uk-card-media]) .uk-alert-danger, .uk-card-secondary.uk-card-body .uk-alert-danger, .uk-card-secondary > :not([class*=uk-card-media]) .uk-alert-danger, .uk-overlay-primary .uk-alert-danger, .uk-offcanvas-bar .uk-alert-danger {
-  background: #222;
+.uk-light pre, .uk-section-primary:not(.uk-preserve-color) pre, .uk-section-secondary:not(.uk-preserve-color) pre, .uk-tile-primary:not(.uk-preserve-color) pre, .uk-tile-secondary:not(.uk-preserve-color) pre, .uk-card-primary.uk-card-body pre, .uk-card-primary > :not([class*=uk-card-media]) pre, .uk-card-secondary.uk-card-body pre, .uk-card-secondary > :not([class*=uk-card-media]) pre, .uk-overlay-primary pre, .uk-offcanvas-bar pre {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .uk-table th {
@@ -12203,12 +12217,16 @@ pre {
   clear: both;
 }
 
-h4 {
-  margin-top: 0;
+.small-margin-top {
+  margin-top: 3px;
 }
 
-.uk-button {
-  text-transform: none;
+.hidden {
+  display: none;
+}
+
+.width-icon {
+  width: 32px;
 }
 
 .modal-title {
@@ -12217,13 +12235,6 @@ h4 {
 
 .modal-body-height {
   min-height: 256px !important;
-}
-
-.uk-light .uk-modal-header, .uk-section-primary:not(.uk-preserve-color) .uk-modal-header, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-header, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-header, .uk-card-primary.uk-card-body .uk-modal-header, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-header, .uk-card-secondary.uk-card-body .uk-modal-header, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-header, .uk-overlay-primary .uk-modal-header, .uk-offcanvas-bar .uk-modal-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-.uk-light .uk-modal-footer, .uk-section-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-section-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-primary:not(.uk-preserve-color) .uk-modal-footer, .uk-tile-secondary:not(.uk-preserve-color) .uk-modal-footer, .uk-card-primary.uk-card-body .uk-modal-footer, .uk-card-primary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-card-secondary.uk-card-body .uk-modal-footer, .uk-card-secondary > :not([class*=uk-card-media]) .uk-modal-footer, .uk-overlay-primary .uk-modal-footer, .uk-offcanvas-bar .uk-modal-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .alert-top {
@@ -12300,6 +12311,23 @@ h3 a:hover {
   height: 32px;
 }
 
+.emoji-picker, .emoji-picker__search {
+  border-radius: 0 !important;
+}
+
+.emoji-picker__search-icon {
+  top: 5px !important;
+}
+
+.textarea-emoji {
+  position: relative;
+}
+.textarea-emoji .picker-toggle {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+}
+
 .swatch {
   width: 32px;
   height: 32px;
@@ -12369,6 +12397,33 @@ h3 a:hover {
 
 .profile-remove {
   padding-top: 4px;
+}
+
+.comment-count {
+  position: relative;
+}
+.comment-count .uk-icon {
+  float: left;
+}
+.comment-count .text {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  font-size: 9px;
+  text-align: center;
+  width: 19px;
+}
+
+.report-comments {
+  margin-right: 14px;
+}
+
+.feedback-comments {
+  margin-top: 4px;
+}
+
+#modal-comment-count {
+  margin-top: 8px;
 }
 
 #team-warning-container {
@@ -12528,7 +12583,7 @@ h3 a:hover {
 .feedback-detail {
   border: 1px solid #666;
   margin-top: 8px;
-  padding: 8px;
+  padding: 8px 14px;
 }
 .feedback-detail a {
   display: block;

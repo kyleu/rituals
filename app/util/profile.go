@@ -62,10 +62,6 @@ type UserProfile struct {
 	Locale    language.Tag
 }
 
-func (p *UserProfile) LinkClass() string {
-	return p.LinkColor + "-fg"
-}
-
 func NewUserProfile(id uuid.UUID) *UserProfile {
 	return &UserProfile{
 		UserID:    id,

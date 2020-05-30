@@ -11,7 +11,7 @@ import (
 func (s *Service) Insert(q string, tx *sqlx.Tx, values ...interface{}) error {
 	if s.debug {
 		logQuery(s, "inserting row", q, values)
-		s.logger.Debug(fmt.Sprintf("inserting row\nSQL: %v\nValues: %v", q, util.ValueStrings(values)))
+		util.LogDebug(s.logger, "inserting row\nSQL: %v\nValues: %v", q, util.ValueStrings(values))
 	}
 	aff, err := s.execUnknown(q, tx, values...)
 	if err != nil || aff == 0 {

@@ -1,0 +1,30 @@
+.comment-count {
+  position: relative;
+
+  .uk-icon {
+    float: left;
+  }
+
+  .text {
+    position: absolute;
+    top: 2px;
+    left: 0;
+
+    font-size: 9px;
+    text-align: center;
+
+    width: 19px;
+  }
+}
+
+.report-comments {
+  margin-right: 14px;
+}
+
+.feedback-comments {
+  margin-top: 4px;
+}
+
+#modal-comment-count {
+  margin-top: 8px;
+}

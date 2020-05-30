@@ -15,7 +15,7 @@
           </tr>
           <tr>
             <th>Estimate</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.SvcEstimate.Key, `detail`), `id`, model.EstimateID.String()) %>"><%= model.EstimateID.String() %></a></td>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcEstimate.Key, util.KeyDetail), `id`, model.EstimateID.String()) %>"><%= model.EstimateID.String() %></a></td>
           </tr>
           <tr>
             <th>Index</th>
@@ -30,8 +30,8 @@
             <td><%= model.Title %></td>
           </tr>
           <tr>
-            <th>Author</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.AuthorID.String()) %>"><%= model.AuthorID.String() %></a></td>
+            <th>User</th>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
           </tr>
           <tr>
             <th>Created</th>

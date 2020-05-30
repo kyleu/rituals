@@ -3,13 +3,13 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/auth"
-	"github.com/kyleu/rituals.dev/app/comment"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/rituals.dev/app/team"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/comment"
+	"github.com/kyleu/rituals.dev/app/model/member"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+	"github.com/kyleu/rituals.dev/app/model/sprint"
+	"github.com/kyleu/rituals.dev/app/model/standup"
+	"github.com/kyleu/rituals.dev/app/model/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -26,8 +26,8 @@ type StandupSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onStandupConnect(s *Service, conn *connection, standupID uuid.UUID) error {
-	ch := channel{Svc: util.SvcStandup, ID: standupID}
+func onStandupConnect(s *Service, conn *Connection, standupID uuid.UUID) error {
+	ch := Channel{Svc: util.SvcStandup, ID: standupID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -36,15 +36,12 @@ func onStandupConnect(s *Service, conn *connection, standupID uuid.UUID) error {
 	return errors.Wrap(err, "error joining standup session")
 }
 
-func joinStandupSession(s *Service, conn *connection, ch channel) error {
+func joinStandupSession(s *Service, conn *Connection, ch Channel) error {
 	if ch.Svc != util.SvcStandup {
 		return errors.New("standup cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess, err := s.standups.GetByID(ch.ID)
-	if err != nil {
-		return errors.Wrap(err, "error finding standup session")
-	}
+	sess := s.standups.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -56,10 +53,10 @@ func joinStandupSession(s *Service, conn *connection, ch channel) error {
 	sj := StandupSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.standups.Comments.GetByModelID(ch.ID, nil),
+		Comments:    s.standups.Data.Comments.GetByModelID(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
 		Sprint:      getSprintOpt(s, sess.SprintID),
-		Members:     s.standups.Members.GetByModelID(ch.ID, nil),
+		Members:     s.standups.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
 		Reports:     s.standups.GetReports(ch.ID, nil),
 		Auths:       res.Auth,

@@ -5,7 +5,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -13,7 +13,7 @@ func (s *Service) UpdateName(id uuid.UUID, name string) error {
 	return s.users.UpdateUserName(id, name)
 }
 
-func (s *Service) GetOnline(ch channel) []uuid.UUID {
+func (s *Service) GetOnline(ch Channel) []uuid.UUID {
 	connections, ok := s.channels[ch]
 	if !ok {
 		connections = make([]uuid.UUID, 0)
@@ -29,18 +29,18 @@ func (s *Service) GetOnline(ch channel) []uuid.UUID {
 	return online
 }
 
-func (s *Service) sendOnlineUpdate(ch channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {
+func (s *Service) sendOnlineUpdate(ch Channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {
 	p := OnlineUpdate{UserID: userID, Connected: connected}
 	onlineMsg := NewMessage(util.SvcSystem, ServerCmdOnlineUpdate, p)
 	return s.WriteChannel(ch, onlineMsg, connID)
 }
 
-func (s *Service) sendMemberUpdate(ch channel, current *member.Entry, except ...uuid.UUID) error {
+func (s *Service) sendMemberUpdate(ch Channel, current *member.Entry, except ...uuid.UUID) error {
 	onlineMsg := NewMessage(util.SvcSystem, ServerCmdMemberUpdate, current)
 	return s.WriteChannel(ch, onlineMsg, except...)
 }
 
-func onRemoveMember(s *Service, memberSvc *member.Service, ch channel, _ uuid.UUID, target uuid.UUID) error {
+func onRemoveMember(s *Service, memberSvc *member.Service, ch Channel, _ uuid.UUID, target uuid.UUID) error {
 	err := memberSvc.RemoveMember(ch.ID, target)
 	if err != nil {
 		return errors.Wrap(err, "unable to remove member from team")

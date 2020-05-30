@@ -18,8 +18,8 @@
             <td><% ComponentChannel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
           </tr>
           <tr>
-            <th>Author ID</th>
-            <td><a class="<%= ctx.Profile.LinkClass() %>" href="<%= ctx.Route(util.AdminLink(util.KeyUser, `detail`), `id`, model.AuthorID.String()) %>"><%= model.AuthorID.String() %></a></td>
+            <th>User ID</th>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
           </tr>
           <tr>
             <th>Act</th>

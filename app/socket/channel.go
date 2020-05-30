@@ -7,16 +7,16 @@ import (
 	"github.com/gofrs/uuid"
 )
 
-type channel struct {
+type Channel struct {
 	Svc util.Service
 	ID  uuid.UUID
 }
 
-func (ch *channel) String() string {
+func (ch *Channel) String() string {
 	return fmt.Sprintf("%s:%s", ch.Svc.Key, ch.ID)
 }
 
-func (s *Service) Join(connID uuid.UUID, ch channel) error {
+func (s *Service) Join(connID uuid.UUID, ch Channel) error {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return invalidConnection(connID)
@@ -38,7 +38,7 @@ func (s *Service) Join(connID uuid.UUID, ch channel) error {
 	return nil
 }
 
-func (s *Service) Leave(connID uuid.UUID, ch channel) error {
+func (s *Service) Leave(connID uuid.UUID, ch Channel) error {
 	conn, ok := s.connections[connID]
 	if !ok {
 		return invalidConnection(connID)

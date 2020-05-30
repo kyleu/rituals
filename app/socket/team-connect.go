@@ -3,15 +3,15 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/auth"
-	"github.com/kyleu/rituals.dev/app/comment"
-	"github.com/kyleu/rituals.dev/app/estimate"
-	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/retro"
-	"github.com/kyleu/rituals.dev/app/sprint"
-	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/rituals.dev/app/team"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/comment"
+	"github.com/kyleu/rituals.dev/app/model/estimate"
+	"github.com/kyleu/rituals.dev/app/model/member"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+	"github.com/kyleu/rituals.dev/app/model/retro"
+	"github.com/kyleu/rituals.dev/app/model/sprint"
+	"github.com/kyleu/rituals.dev/app/model/standup"
+	"github.com/kyleu/rituals.dev/app/model/team"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -29,8 +29,8 @@ type TeamSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onTeamConnect(s *Service, conn *connection, teamID uuid.UUID) error {
-	ch := channel{Svc: util.SvcTeam, ID: teamID}
+func onTeamConnect(s *Service, conn *Connection, teamID uuid.UUID) error {
+	ch := Channel{Svc: util.SvcTeam, ID: teamID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -39,15 +39,12 @@ func onTeamConnect(s *Service, conn *connection, teamID uuid.UUID) error {
 	return errors.Wrap(err, "error joining team session")
 }
 
-func joinTeamSession(s *Service, conn *connection, ch channel) error {
+func joinTeamSession(s *Service, conn *Connection, ch Channel) error {
 	if ch.Svc != util.SvcTeam {
 		return errors.New("team cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess, err := s.teams.GetByID(ch.ID)
-	if err != nil {
-		return errors.Wrap(err, "error finding team session")
-	}
+	sess := s.teams.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -59,8 +56,8 @@ func joinTeamSession(s *Service, conn *connection, ch channel) error {
 	sj := TeamSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.teams.Comments.GetByModelID(ch.ID, nil),
-		Members:     s.teams.Members.GetByModelID(ch.ID, nil),
+		Comments:    s.teams.Data.Comments.GetByModelID(ch.ID, nil),
+		Members:     s.teams.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
 		Sprints:     s.sprints.GetByTeamID(ch.ID, nil),
 		Estimates:   s.estimates.GetByTeamID(ch.ID, nil),

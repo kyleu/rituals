@@ -30,7 +30,7 @@ func (s *Service) Select(dest interface{}, q string, tx *sqlx.Tx, values ...inte
 func (s *Service) Get(dto interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
 	if s.debug {
 		logQuery(s, fmt.Sprintf("getting single row of type [%T]", dto), q, values)
-		s.logger.Debug(fmt.Sprintf("getting single row\nSQL: %v\nValues: %v", q, util.ValueStrings(values)))
+		util.LogDebug(s.logger, "getting single row\nSQL: %v\nValues: %v", q, util.ValueStrings(values))
 	}
 	if tx == nil {
 		return s.db.Get(dto, q, values...)

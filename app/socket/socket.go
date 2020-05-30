@@ -3,7 +3,6 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
-
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
@@ -13,8 +12,8 @@ import (
 
 func (s *Service) Write(connID uuid.UUID, message string) error {
 	if connID == systemID {
-		s.logger.Warn("--- admin message sent ---")
-		s.logger.Warn(fmt.Sprint(message))
+		s.Logger.Warn("--- admin message sent ---")
+		s.Logger.Warn(fmt.Sprint(message))
 		return nil
 	}
 
@@ -36,13 +35,13 @@ func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
 	return s.Write(connID, util.ToJSON(message))
 }
 
-func (s *Service) WriteChannel(channel channel, message *Message, except ...uuid.UUID) error {
+func (s *Service) WriteChannel(channel Channel, message *Message, except ...uuid.UUID) error {
 	conns, ok := s.channels[channel]
 	if !ok {
 		return nil
 	}
 
-	// s.logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Svc, message.Cmd, len(conns)))
+	// s.Logger.Debug(fmt.Sprintf("sending message [%v::%v] to [%v] connections", message.Svc, message.Cmd, len(conns)))
 	for _, conn := range conns {
 		if !contains(except, conn) {
 			connID := conn
@@ -64,7 +63,7 @@ func (s *Service) ReadLoop(connID uuid.UUID) error {
 	defer func() {
 		_ = c.socket.Close()
 		_, _ = s.Disconnect(connID)
-		s.logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
+		s.Logger.Debug(fmt.Sprintf("closed websocket [%v]", connID.String()))
 	}()
 
 	for {
