@@ -1,12 +1,14 @@
-<%: func About(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func StaticPricing(ctx web.RequestContext, w io.Writer) (int, error) %>
 
 <%~ "layout/basic.html" %>
+
+<%@ nav { %><% NavbarStatic(ctx, _buffer) %><% } %>
 
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
-      <h3 class="uk-card-title">About <%= util.AppName %></h3>
+      <h3 class="uk-card-title">Pricing</h3>
       <p>Coming soon!</p>
     </div>
   </div>

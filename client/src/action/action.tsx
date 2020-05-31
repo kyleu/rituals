@@ -1,8 +1,8 @@
 namespace action {
-  function renderAction(action: Action): JSX.Element {
+  function renderAction(action: Action) {
     const c = JSON.stringify(action.content, null, 2);
     return <tr>
-      <td>{system.getMemberName(action.userID)}</td>
+      <td>{member.renderTitle(member.getMember(action.userID))}</td>
       <td>{action.act}</td>
       <td>{c === "null" ? "" : <pre>{c}</pre>}</td>
       <td>{action.note}</td>
@@ -10,7 +10,7 @@ namespace action {
     </tr>;
   }
 
-  export function renderActions(actions: Action[]): JSX.Element {
+  export function renderActions(actions: ReadonlyArray<Action>) {
     if (actions.length === 0) {
       return <div>No actions available</div>;
     } else {

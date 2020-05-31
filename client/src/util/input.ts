@@ -34,7 +34,7 @@ namespace dom {
     resize();
   }
 
-  export function setOptions(el: string | HTMLSelectElement, categories: string[]) {
+  export function setOptions(el: string | HTMLSelectElement, categories: ReadonlyArray<string>) {
     if (typeof el === "string") {
       el = req<HTMLSelectElement>(el);
     }

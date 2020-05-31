@@ -1,6 +1,6 @@
 <%: func ComponentCommentBadge(t string, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="comment-count-container left" data-comment-type="<%= t %>">
-  <a class="theme" onclick="modal.open('<%= util.KeyComment %>', '<%= t %>');return false;" title="view comments">
+  <a class="theme" onclick="comment.show('<%= t %>');return false;" title="view comments">
     <div class="comment-count">
       <span class="uk-icon" data-uk-icon="comments"></span>
       <span class="text"></span>

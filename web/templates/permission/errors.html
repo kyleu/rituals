@@ -2,13 +2,15 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
+
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">
         <span class="h3-icon" data-uk-icon="icon: lock;"></span>
-        Userization Error<% if len(errors) > 1 { %>s<% } %>
+        Authorization Error<% if len(errors) > 1 { %>s<% } %>
       </h3>
       <% if len(errors) > 0 { %>
         <ul class="uk-list uk-list-divider">
@@ -23,7 +25,7 @@
     <!--
     <div class="uk-card uk-card-body uk-margin-top">
       <h3 class="uk-card-title">Details</h3>
-      <pre><%= util.ToJSON(errors) %></pre>
+      <pre><%= util.ToJSON(errors, ctx.Logger) %></pre>
     </div>
     -->
   </div>

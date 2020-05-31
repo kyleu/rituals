@@ -1,7 +1,8 @@
 package act
 
 import (
-	"encoding/json"
+	"emperror.dev/errors"
+	"logur.dev/logur"
 	"net/http"
 	"time"
 
@@ -30,14 +31,9 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 		if ctx.Title == "" {
 			ctx.Title = "Error"
 		}
-		contentType := r.Header.Get("Content-Type")
-
-		switch contentType {
-		case "application/json", "text/json":
-			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			b, _ := json.MarshalIndent(errorResult{Status: util.KeyError, Message: err.Error()}, "", "  ")
-			_, _ = w.Write(b)
-		default:
+		if IsContentTypeJson(GetContentType(r)) {
+			_, _ = RespondJSON(w, errorResult{Status: util.KeyError, Message: err.Error()}, ctx.Logger)
+		} else {
 			_, _ = templates.InternalServerError(util.GetErrorDetail(err), r, ctx, w)
 		}
 	}
@@ -51,6 +47,17 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 	} else {
 		logComplete(startNanos, ctx, http.StatusOK, r)
 	}
+}
+
+func RespondJSON(w http.ResponseWriter, body interface{}, logger logur.Logger) (string, error) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	b := util.ToJSONBytes(body, logger)
+	_, err := w.Write(b)
+	if err != nil {
+		return "", errors.Wrap(err, "")
+	}
+	return "", nil
 }
 
 func SaveSession(w http.ResponseWriter, r *http.Request, ctx web.RequestContext) {

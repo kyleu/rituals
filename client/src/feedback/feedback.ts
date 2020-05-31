@@ -75,7 +75,7 @@ namespace feedback {
 
     const same = fb.userID === profile.userID;
 
-    dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.userID)}`);
+    dom.setText("#feedback-title", `${fb.category} / ${member.getMember(fb.userID)?.name}`);
     dom.setSelectOption("#feedback-edit-category", same ? fb.category : undefined);
     contents.onContentDisplay("feedback", same, fb.content, fb.html);
     comment.setActive("feedback", fb.id);
@@ -105,7 +105,7 @@ namespace feedback {
     }
   }
 
-  export function getFeedbackCategories(feedback: feedback.Feedback[], categories: string[]) {
+  export function getFeedbackCategories(feedback: ReadonlyArray<feedback.Feedback>, categories: ReadonlyArray<string>) {
     function toCollection(c: string): FeedbackCategory {
       const reports = feedback.filter(r => r.category === c).sort((l, r) => (l.created > r.created ? -1 : 1));
       return {category: c, feedback: reports};

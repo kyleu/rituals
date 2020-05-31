@@ -2,6 +2,8 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
+
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -36,7 +38,7 @@
 
           <div class="uk-margin">
             <label class="uk-form-label" for="param">Param</label>
-            <% ComponentTextarea(web.InputParams{Name: "param", Value: util.ToJSON(msg.Param)}, _buffer) %>
+            <% ComponentTextarea(web.InputParams{Name: "param", Value: util.ToJSON(msg.Param, ctx.Logger)}, _buffer) %>
           </div>
 
           <div class="uk-margin-top">

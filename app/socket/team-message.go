@@ -34,3 +34,8 @@ func onTeamMessage(s *Service, conn *Connection, cmd string, param json.RawMessa
 	}
 	return errors.Wrap(err, "error handling team message")
 }
+
+func sendTeams(s *Service, conn *Connection, userID uuid.UUID) error {
+	teams := s.teams.GetByMember(userID, nil)
+	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdTeams, teams))
+}

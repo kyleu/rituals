@@ -18,8 +18,8 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, role Role) *Entr
 	}
 
 	if dto == nil {
-		q := query.SQLInsert(s.tableName, []string{s.colName, util.WithDBID(util.KeyUser), util.KeyName, util.KeyRole}, 1)
-		err = s.db.Insert(q, nil, modelID, userID, "", role.String())
+		q := query.SQLInsert(s.tableName, []string{s.colName, util.WithDBID(util.KeyUser), util.KeyName, "picture", util.KeyRole}, 1)
+		err = s.db.Insert(q, nil, modelID, userID, "", "", role.String())
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting member for user [%v] and model [%v]: %+v", modelID, userID, err))
 		}

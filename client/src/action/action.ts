@@ -14,7 +14,7 @@ namespace action {
     socket.send({svc: services.system.key, cmd: command.client.getActions, param: null});
   }
 
-  export function viewActions(actions: action.Action[]) {
+  export function viewActions(actions: ReadonlyArray<Action>) {
     dom.setContent("#action-list", renderActions(actions));
   }
 }

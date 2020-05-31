@@ -39,4 +39,9 @@ namespace profile {
     });
     el.classList.add("active");
   }
+
+  export function setPicture(p: string) {
+    dom.setValue('#self-picture-input', p);
+    return false;
+  }
 }

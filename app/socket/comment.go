@@ -25,6 +25,9 @@ func onAddComment(s *Service, ch Channel, userID uuid.UUID, param addCommentPara
 	if param.Content == "" {
 		return errors.New("add some content")
 	}
+	if param.TargetType == "root" {
+		param.TargetType = ""
+	}
 	s.Logger.Debug(fmt.Sprintf("adding comment [%s] for [%v:%v]", param.Content, param.TargetType, param.TargetID))
 
 	dataSvc := dataFor(s, ch.Svc)

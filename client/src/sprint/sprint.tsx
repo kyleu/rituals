@@ -25,7 +25,7 @@ namespace sprint {
     return <span><a class={`${profile.linkColor}-fg`} href={`/sprint/${spr.slug}`}>{spr.title}</a>&nbsp;</span>
   }
 
-  export function renderSprintSelect(sprints: sprint.Detail[], activeID: string | undefined) {
+  export function renderSprintSelect(sprints: ReadonlyArray<sprint.Detail>, activeID: string | undefined) {
     return <select class="uk-select" onchange="permission.setModelPerms('sprint')">
       <option value="">- no sprint -</option>
       {sprints.map(s => {

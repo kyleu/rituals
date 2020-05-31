@@ -43,12 +43,13 @@ func (s *Service) sendInitial(ch Channel, conn *Connection, entry *member.Entry,
 func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Channel, conn *Connection) SessionResult {
 	userID := conn.Profile.UserID
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
+
 	perms, permErrors, err := s.check(conn.Profile.UserID, auths, teamID, sprintID, ch.Svc, ch.ID)
 	if err != nil {
 		return SessionResult{Error: err}
 	}
 	if len(permErrors) > 0 {
-		return SessionResult{Error: s.sendPermErrors(ch, permErrors)}
+		return SessionResult{Error: s.sendPermErrors(conn.ID, ch.Svc, permErrors)}
 	}
 
 	dataSvc := dataFor(s, ch.Svc)
@@ -70,9 +71,9 @@ func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Cha
 	}
 }
 
-func (s *Service) sendPermErrors(ch Channel, permErrors permission.Errors) error {
+func (s *Service) sendPermErrors(connID uuid.UUID, svc util.Service, permErrors permission.Errors) error {
 	if len(permErrors) > 0 {
-		return s.WriteChannel(ch, NewMessage(ch.Svc, ServerCmdError, "insufficient permissions"))
+		return s.WriteMessage(connID, NewMessage(svc, ServerCmdError, "insufficient permissions"))
 	}
 	return nil
 }

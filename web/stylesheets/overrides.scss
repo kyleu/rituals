@@ -67,6 +67,12 @@ h4 {
   }
 }
 
+.uk-navbar-nav > li > a {
+  text-transform: none;
+  padding: 0;
+  margin: 0 10px;
+}
+
 // Tabs
 .uk-tab > * > a {
   text-transform: none;

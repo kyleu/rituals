@@ -5,7 +5,7 @@
 <%@ head { %><% } %>
 </head>
 <body style="visibility: hidden;">
-<% Navbar(ctx, _buffer) %>
+<%@ nav { %><% } %>
 <div id="<%= util.KeyContent %>" data-uk-height-viewport="expand: true">
 <% for _, flash := range ctx.Flashes { %>
   <% cls, content := web.ParseFlash(flash) %>

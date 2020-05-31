@@ -36,6 +36,9 @@ func (s *Service) sendOnlineUpdate(ch Channel, connID uuid.UUID, userID uuid.UUI
 }
 
 func (s *Service) sendMemberUpdate(ch Channel, current *member.Entry, except ...uuid.UUID) error {
+	if current == nil {
+		return errors.New("no current member to send update for")
+	}
 	onlineMsg := NewMessage(util.SvcSystem, ServerCmdMemberUpdate, current)
 	return s.WriteChannel(ch, onlineMsg, except...)
 }

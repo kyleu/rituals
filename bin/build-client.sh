@@ -12,4 +12,4 @@ tsc --project tsconfig.json
 
 cd $project_dir/web/assets
 
-closure-compiler rituals.js > rituals.min.js
+closure-compiler --create_source_map rituals.min.js.map rituals.js > rituals.min.js

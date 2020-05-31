@@ -1,13 +1,13 @@
 namespace comment {
-  function renderComment(comment: Comment): JSX.Element {
+  function renderComment(comment: Comment) {
     return <tr>
-      <td>{system.getMemberName(comment.userID)}</td>
+      <td>{member.renderTitle(member.getMember(comment.userID))}</td>
       <td dangerouslySetInnerHTML={{__html: comment.html}} />
       <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(comment.created))}</td>
     </tr>;
   }
 
-  export function renderComments(comments: Comment[]): JSX.Element {
+  export function renderComments(comments: ReadonlyArray<Comment>) {
     if (comments.length === 0) {
       return <div>No comments available</div>;
     } else {

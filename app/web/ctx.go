@@ -57,17 +57,14 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 
 	var userID uuid.UUID
 	userIDValue, ok := session.Values[util.KeyUser]
-	if ok {
+	if ok && len(userIDValue.(string)) == 36 {
 		userID, err = uuid.FromString(userIDValue.(string))
 		if err != nil {
 			util.LogWarn(ai.Logger, "cannot parse uuid [%v]: %+v", userIDValue, err)
+			userID = setSessionUser(session, r, w, ai.Logger)
 		}
 	} else {
-		session.Values[util.KeyUser] = util.UUID().String()
-		err = session.Save(r, w)
-		if err != nil {
-			util.LogWarn(ai.Logger, "cannot save session: %+v", err)
-		}
+		userID = setSessionUser(session, r, w, ai.Logger)
 	}
 
 	user := ai.User.GetByID(userID, addIfMissing)
@@ -96,4 +93,14 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 		Flashes:     flashes,
 		Session:     *session,
 	}
+}
+
+func setSessionUser(session *sessions.Session, r *http.Request, w http.ResponseWriter, logger logur.Logger) uuid.UUID {
+	userID := util.UUID()
+	session.Values[util.KeyUser] = userID.String()
+	err := session.Save(r, w)
+	if err != nil {
+		util.LogWarn(logger, "cannot save session: %+v", err)
+	}
+	return userID
 }

@@ -1,23 +1,17 @@
 package controllers
 
 import (
-	"net/http"
-	"strings"
-
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/app/web/act"
 	"github.com/kyleu/rituals.dev/gen/templates"
+	"net/http"
 )
-
-func testbed() string {
-  return "OK"
-}
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		if !tempSecurityCheck(&ctx) {
-			return tmpl(templates.Message("Coming soon!", ctx, w))
+			return tmpl(templates.StaticMessage("Coming soon!", ctx, w))
 		}
 
 		params := act.ParamSetFromRequest(r)
@@ -31,25 +25,4 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "Home"
 		return tmpl(templates.Index(ctx, teams, sprints, estimates, standups, retros, w))
 	})
-}
-
-func About(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		ctx.Title = "About " + util.AppName
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyAbout), util.KeyAbout)
-		return tmpl(templates.About(ctx, w))
-	})
-}
-
-func tempSecurityCheck(ctx *web.RequestContext) bool {
-	if ctx.Profile.Role == util.RoleAdmin {
-		return true
-	}
-	if strings.Contains(ctx.App.Auth.Redir, "localhost") {
-		return true
-	}
-	if strings.Contains(ctx.Request.RawQuery, "p=np") {
-		return true
-	}
-	return false
 }

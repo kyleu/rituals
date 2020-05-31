@@ -12,7 +12,7 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/util"
-	"github.com/kyleu/rituals.dev/gen/queries"
+	"github.com/kyleu/rituals.dev/gen/query"
 	"golang.org/x/text/language"
 	"logur.dev/logur"
 )
@@ -48,19 +48,19 @@ func OpenDatabase(debug bool, logger logur.Logger, wipe bool) (*database.Service
 }
 
 func dbWipe(db *database.Service, logger logur.Logger) error {
-	err := exec("reset", db, logger, func(sb *strings.Builder) { queries.ResetDatabase(sb) })
+	err := exec("reset", db, logger, func(sb *strings.Builder) { query.ResetDatabase(sb) })
 	if err != nil {
 		return err
 	}
-	err = exec("create-types", db, logger, func(sb *strings.Builder) { queries.CreateTypes(sb) })
+	err = exec("create-types", db, logger, func(sb *strings.Builder) { query.CreateTypes(sb) })
 	if err != nil {
 		return err
 	}
-	err = exec("create-tables", db, logger, func(sb *strings.Builder) { queries.CreateTables(sb) })
+	err = exec("create-tables", db, logger, func(sb *strings.Builder) { query.CreateTables(sb) })
 	if err != nil {
 		return err
 	}
-	err = exec("seed-data", db, logger, func(sb *strings.Builder) { queries.SeedData(sb) })
+	err = exec("seed-data", db, logger, func(sb *strings.Builder) { query.SeedData(sb) })
 	if err != nil {
 		return err
 	}

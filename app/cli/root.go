@@ -80,11 +80,11 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	userSvc := user.NewService(actionService, db, logger)
 	authSvc := auth.NewService(authEnabled, redir, actionService, db, logger, userSvc)
 	invitationSvc := invitation.NewService(actionService, db, logger)
-	teamSvc := team.NewService(actionService, db, logger)
-	sprintSvc := sprint.NewService(actionService, db, logger)
-	estimateSvc := estimate.NewService(actionService, db, logger)
-	standupSvc := standup.NewService(actionService, db, logger)
-	retroSvc := retro.NewService(actionService, db, logger)
+	teamSvc := team.NewService(actionService, userSvc, db, logger)
+	sprintSvc := sprint.NewService(actionService, userSvc, db, logger)
+	estimateSvc := estimate.NewService(actionService, userSvc, db, logger)
+	standupSvc := standup.NewService(actionService, userSvc, db, logger)
+	retroSvc := retro.NewService(actionService, userSvc, db, logger)
 	socketSvc := socket.NewService(logger, actionService, userSvc, authSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{

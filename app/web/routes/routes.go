@@ -22,7 +22,6 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 
 	// Home
 	r.Path("/").Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Home))).Name(n("home"))
-	r.Path(p(util.KeyAbout)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.About))).Name(n(util.KeyAbout))
 	r.Path(p("health")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Health))).Name(n("health"))
 	r.Path(p("s")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Socket))).Name(n("websocket"))
 
@@ -75,6 +74,12 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 
 	// Admin
 	r = adminRoutes(app, r)
+
+	// Static
+	r.Path(p(util.KeyAbout)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.About))).Name(n(util.KeyAbout))
+	r.Path(p("pricing")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Pricing))).Name(n("pricing"))
+	r.Path(p("features")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Features))).Name(n("features"))
+	r.Path(p("community")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Community))).Name(n("community"))
 
 	// Assets
 	r.Path(p("favicon.ico")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Favicon))).Name(n("favicon"))

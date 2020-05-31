@@ -1,10 +1,10 @@
 package admin
 
 import (
-	"net/http"
-
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/web/act"
+	"net/http"
+	"time"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -12,6 +12,13 @@ import (
 
 	"github.com/kyleu/rituals.dev/gen/templates"
 )
+
+type JSONResponse struct {
+	Status   string    `json:"status"`
+	Message  string    `json:"message"`
+	Path     string    `json:"path"`
+	Occurred time.Time `json:"occurred"`
+}
 
 func Modules(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
@@ -32,6 +39,16 @@ func Routes(w http.ResponseWriter, r *http.Request) {
 func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		if ctx.Profile.Role != util.RoleAdmin {
+			println(act.RequestToString(r))
+			if act.IsContentTypeJson(act.GetContentType(r)) {
+				println("JSON!")
+				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+				ae := JSONResponse{Status: "error", Message: "you are not an administrator", Path: r.URL.Path, Occurred: time.Now()}
+				b := util.ToJSONBytes(ae, ctx.Logger)
+				_, _ = w.Write(b)
+
+				return "", nil
+			}
 			ctx.Session.AddFlash("error:You're not an administrator, silly")
 			act.SaveSession(w, r, ctx)
 			return ctx.Route("home"), nil

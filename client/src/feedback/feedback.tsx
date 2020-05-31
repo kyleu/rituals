@@ -1,9 +1,9 @@
 namespace feedback {
-  function renderFeedback(model: Feedback): JSX.Element {
+  function renderFeedback(model: Feedback) {
     const profile = system.cache.getProfile();
     const ret = <div id={`feedback-${model.id}`} class="feedback-detail section" onclick={`modal.open('feedback', '${model.id}');`}>
       <div class="feedback-comments right">{comment.renderCount("feedback", model.id)}</div>
-      <div class="left"><a class={`${profile.linkColor}-fg section-link`}>{system.getMemberName(model.userID)}</a></div>
+      <div class="left"><a class={`${profile.linkColor}-fg section-link`}>{member.renderTitle(member.getMember(model.userID))}</a></div>
       <div class="clear"/>
       <div class="feedback-content">loading...</div>
     </div>;
@@ -15,7 +15,7 @@ namespace feedback {
     return ret;
   }
 
-  export function renderFeedbackArray(f: feedback.Feedback[]): JSX.Element {
+  export function renderFeedbackArray(f: ReadonlyArray<feedback.Feedback>) {
     if (f.length === 0) {
       return <div>
         <button class="uk-button uk-button-default" onclick="modal.open('add-feedback');" type="button">Add Feedback</button>

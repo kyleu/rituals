@@ -1,7 +1,7 @@
 namespace estimate {
   interface Detail extends session.Session {
     readonly status: { key: string };
-    readonly choices: string[];
+    readonly choices: ReadonlyArray<string>;
   }
 
   export interface StoryStatusChange {

@@ -22,6 +22,10 @@ namespace comment {
     activeID = id;
   }
 
+  export function show(t: string) {
+    modal.open("comment", t);
+  }
+
   export function add() {
     const textarea = dom.req<HTMLTextAreaElement>("#comment-add-content");
     const v = textarea.value;
@@ -103,7 +107,7 @@ namespace comment {
     activeType = undefined;
   }
 
-  function setCount(t: string, comments: comment.Comment[], cc: HTMLElement, force?: boolean) {
+  function setCount(t: string, comments: ReadonlyArray<Comment>, cc: HTMLElement, force?: boolean) {
     dom.req(".text", cc).innerText = comments.length.toString();
     if (t !== "root" && t !== "modal" && t !== "") {
       dom.setDisplay(cc, (comments.length !== 0) || force === true);

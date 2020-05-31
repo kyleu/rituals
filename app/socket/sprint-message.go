@@ -38,3 +38,8 @@ func onSprintMessage(s *Service, conn *Connection, cmd string, param json.RawMes
 	}
 	return errors.Wrap(err, "error handling sprint message")
 }
+
+func sendSprints(s *Service, conn *Connection, userID uuid.UUID) error {
+	sprints := s.sprints.GetByMember(userID, nil)
+	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdSprints, sprints))
+}

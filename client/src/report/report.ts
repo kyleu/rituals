@@ -65,7 +65,7 @@ namespace report {
       return;
     }
 
-    dom.setText("#report-title", `${date.toDateString(date.dateFromYMD(report.d))} - ${system.getMemberName(report.userID)}`);
+    dom.setText("#report-title", `${date.toDateString(date.dateFromYMD(report.d))} - ${member.getMember(report.userID)?.name}`);
 
     setFor(report, profile.userID);
   }
@@ -77,8 +77,8 @@ namespace report {
     modal.hide("add-report");
   }
 
-  export function getReportDates(reports: Report[]): DayReports[] {
-    function distinct(v: string, i: number, s: any[]) {
+  export function getReportDates(reports: ReadonlyArray<Report>): DayReports[] {
+    function distinct(v: string, i: number, s: ReadonlyArray<any>) {
       return s.indexOf(v) === i;
     }
 

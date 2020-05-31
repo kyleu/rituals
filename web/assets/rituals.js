@@ -34,7 +34,7 @@ var action;
     function renderAction(action) {
         const c = JSON.stringify(action.content, null, 2);
         return JSX("tr", null,
-            JSX("td", null, system.getMemberName(action.userID)),
+            JSX("td", null, member.renderTitle(member.getMember(action.userID))),
             JSX("td", null, action.act),
             JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
             JSX("td", null, action.note),
@@ -67,6 +67,15 @@ var auth;
     const amazon = { key: "amazon", title: "Amazon" };
     const microsoft = { key: "microsoft", title: "Microsoft" };
     auth.allProviders = [github, google, slack, facebook, amazon, microsoft];
+    let auths = [];
+    function applyAuths(as) {
+        auths = as;
+    }
+    auth.applyAuths = applyAuths;
+    function active() {
+        return auths;
+    }
+    auth.active = active;
 })(auth || (auth = {}));
 var comment;
 (function (comment) {
@@ -82,6 +91,10 @@ var comment;
         activeID = id;
     }
     comment.setActive = setActive;
+    function show(t) {
+        modal.open("comment", t);
+    }
+    comment.show = show;
     function add() {
         const textarea = dom.req("#comment-add-content");
         const v = textarea.value;
@@ -174,7 +187,7 @@ var comment;
 (function (comment_1) {
     function renderComment(comment) {
         return JSX("tr", null,
-            JSX("td", null, system.getMemberName(comment.userID)),
+            JSX("td", null, member.renderTitle(member.getMember(comment.userID))),
             JSX("td", { dangerouslySetInnerHTML: { __html: comment.html } }),
             JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(comment.created))));
     }
@@ -226,7 +239,7 @@ var contents;
         return JSX("tr", null,
             JSX("td", null,
                 JSX("a", { class: `${profile.linkColor}-fg`, href: `/${svc.key}/${session.slug}` }, session.title)),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, system.getMemberName(session.owner)),
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, member.renderTitle(member.getMember(session.owner))),
             JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created))));
     }
     function toContent(svc, sessions) {
@@ -401,6 +414,7 @@ var feedback;
     }
     feedback_1.getActiveFeedback = getActiveFeedback;
     function viewActiveFeedback(id) {
+        var _a;
         const profile = system.cache.getProfile();
         if (id) {
             retro.cache.activeFeedback = id;
@@ -411,7 +425,7 @@ var feedback;
             return;
         }
         const same = fb.userID === profile.userID;
-        dom.setText("#feedback-title", `${fb.category} / ${system.getMemberName(fb.userID)}`);
+        dom.setText("#feedback-title", `${fb.category} / ${(_a = member.getMember(fb.userID)) === null || _a === void 0 ? void 0 : _a.name}`);
         dom.setSelectOption("#feedback-edit-category", same ? fb.category : undefined);
         contents.onContentDisplay("feedback", same, fb.content, fb.html);
         comment.setActive("feedback", fb.id);
@@ -476,7 +490,7 @@ var feedback;
         const ret = JSX("div", { id: `feedback-${model.id}`, class: "feedback-detail section", onclick: `modal.open('feedback', '${model.id}');` },
             JSX("div", { class: "feedback-comments right" }, comment.renderCount("feedback", model.id)),
             JSX("div", { class: "left" },
-                JSX("a", { class: `${profile.linkColor}-fg section-link` }, system.getMemberName(model.userID))),
+                JSX("a", { class: `${profile.linkColor}-fg section-link` }, member.renderTitle(member.getMember(model.userID)))),
             JSX("div", { class: "clear" }),
             JSX("div", { class: "feedback-content" }, "loading..."));
         if (model.html.length > 0) {
@@ -505,17 +519,28 @@ var feedback;
 })(feedback || (feedback = {}));
 var member;
 (function (member_1) {
+    let online = [];
+    let members = [];
     function isSelf(x) {
         return x.userID === system.cache.getProfile().userID;
     }
+    function getMembers() {
+        return members;
+    }
+    member_1.getMembers = getMembers;
+    function getMember(id) {
+        return members.filter(m => m.userID === id).shift();
+    }
+    member_1.getMember = getMember;
     function setMembers() {
-        const self = system.cache.members.filter(isSelf).shift();
+        const self = members.filter(isSelf).shift();
         if (self) {
+            dom.setContent("#self-picture", member_1.setPicture(self.picture));
             dom.setText("#member-self .member-name", self.name);
             dom.setValue("#self-name-input", self.name);
             dom.setText("#member-self .member-role", self.role);
         }
-        const others = system.cache.members.filter(x => !isSelf(x));
+        const others = members.filter(x => !isSelf(x));
         dom.setContent("#member-detail", member_1.renderMembers(others));
         renderOnline();
     }
@@ -525,11 +550,11 @@ var member;
         if (isSelf(member)) {
             modal.hide("self");
         }
-        const unfiltered = system.cache.members;
+        const unfiltered = members;
         const curr = unfiltered.filter(m => m.userID === member.userID).shift();
         const nameChanged = (curr === null || curr === void 0 ? void 0 : curr.name) !== member.name;
         const ms = unfiltered.filter(m => m.userID !== member.userID);
-        if (ms.length === system.cache.members.length) {
+        if (ms.length === members.length) {
             notify.notify(`${member.name} has joined`, true);
         }
         if (member.name === "::delete") {
@@ -546,7 +571,7 @@ var member;
             ms.push(member);
         }
         ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
-        system.cache.members = ms;
+        members = ms;
         setMembers();
         if (nameChanged) {
             switch (system.cache.currentService) {
@@ -577,21 +602,21 @@ var member;
     member_1.onMemberUpdate = onMemberUpdate;
     function onOnlineUpdate(update) {
         if (update.connected) {
-            if (!system.cache.online.find(x => x === update.userID)) {
-                system.cache.online.push(update.userID);
+            if (!online.find(x => x === update.userID)) {
+                online.push(update.userID);
             }
         }
         else {
-            system.cache.online = system.cache.online.filter(x => x !== update.userID);
+            online = online.filter(x => x !== update.userID);
         }
         renderOnline();
     }
     member_1.onOnlineUpdate = onOnlineUpdate;
     function renderOnline() {
-        for (const member of system.cache.members) {
+        for (const member of members) {
             const el = dom.opt(`#member-${member.userID} .online-indicator`);
             if (el) {
-                if (!system.cache.online.find(x => x === member.userID)) {
+                if (!online.find(x => x === member.userID)) {
                     el.classList.add("offline");
                 }
                 else {
@@ -603,7 +628,8 @@ var member;
     function onSubmitSelf() {
         const name = dom.req("#self-name-input").value;
         const choice = dom.req("#self-name-choice-global").checked ? "global" : "local";
-        const msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name, choice } };
+        const picture = dom.req("#self-picture-input").value;
+        const msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name, choice, picture } };
         socket.send(msg);
     }
     member_1.onSubmitSelf = onSubmitSelf;
@@ -613,7 +639,7 @@ var member;
             console.warn("no active member");
             return undefined;
         }
-        const curr = system.cache.members.filter(x => x.userID === activeMember).shift();
+        const curr = members.filter(x => x.userID === activeMember).shift();
         if (curr) {
             console.warn(`cannot load active member [${activeMember}]`);
         }
@@ -645,6 +671,14 @@ var member;
         }
     }
     member_1.removeMember = removeMember;
+    function applyMembers(m) {
+        members = m;
+    }
+    member_1.applyMembers = applyMembers;
+    function applyOnline(o) {
+        online = o;
+    }
+    member_1.applyOnline = applyOnline;
 })(member || (member = {}));
 var member;
 (function (member_2) {
@@ -652,7 +686,7 @@ var member;
         const profile = system.cache.getProfile();
         return JSX("div", { class: "section", onclick: `modal.open('member', '${member.userID}');` },
             JSX("div", { title: "user is offline", class: "right uk-article-meta online-indicator" }, "offline"),
-            JSX("div", { class: `${profile.linkColor}-fg section-link` }, member.name));
+            JSX("div", { class: `${profile.linkColor}-fg section-link` }, renderTitle(member)));
     }
     function renderMembers(members) {
         if (members.length === 0) {
@@ -664,11 +698,35 @@ var member;
         }
     }
     member_2.renderMembers = renderMembers;
+    function renderTitle(member) {
+        if (!member) {
+            return JSX("span", null, "{former member}");
+        }
+        if (member.picture && member.picture.length > 0) {
+            return JSX("div", null,
+                JSX("div", { class: "profile-image uk-margin-small-right" },
+                    JSX("img", { class: "uk-border-circle", src: member.picture, alt: member.name })),
+                JSX("div", { class: "profile-name" }, member.name));
+        }
+        return JSX("div", null,
+            JSX("div", { class: "profile-image uk-margin-small-right" },
+                JSX("span", { class: "profile-icon uk-icon", "data-uk-icon": "user" })),
+            JSX("div", { class: "profile-name" }, member.name));
+    }
+    member_2.renderTitle = renderTitle;
     function viewSelf() {
         const selfInput = dom.setValue("#self-name-input", dom.req("#member-self .member-name").innerText);
         setTimeout(() => selfInput.focus(), 250);
     }
     member_2.viewSelf = viewSelf;
+    function setPicture(url) {
+        if (url && url.length > 0) {
+            return JSX("div", { class: "model-icon profile-image uk-margin-small-right" },
+                JSX("img", { class: "uk-border-circle", src: url, alt: "your picture" }));
+        }
+        return JSX("span", { class: "model-icon h3-icon", onclick: "modal.open('self');", "data-uk-icon": "icon: user;" });
+    }
+    member_2.setPicture = setPicture;
 })(member || (member = {}));
 var command;
 (function (command) {
@@ -740,27 +798,25 @@ var services;
 })(services || (services = {}));
 var permission;
 (function (permission) {
+    let permissions = [];
     function setPerms() {
-        const perms = system.cache.permissions;
-        dom.setDisplay("#public-link-container", perms === null || perms.length === 0);
-        dom.setDisplay("#private-link-container", perms !== null && perms.length > 0);
+        dom.setDisplay("#public-link-container", permissions === null || permissions.length === 0);
+        dom.setDisplay("#private-link-container", permissions !== null && permissions.length > 0);
         ["team", "sprint"].forEach(setModelPerms);
-        if (system.cache.auths !== null) {
-            auth.allProviders.forEach(setProviderPerms);
-        }
+        auth.allProviders.forEach(setProviderPerms);
     }
     permission.setPerms = setPerms;
     function setModelPerms(key) {
         const el = dom.opt(`#model-${key}-select select`);
         if (el) {
-            const perms = collection.findGroup(system.cache.permissions, key);
+            const perms = collection.findGroup(permissions, key);
             const section = dom.opt(`#perm-${key}-section`);
             if (section) {
                 const checkbox = dom.req(`#perm-${key}-checkbox`);
                 checkbox.checked = perms.length > 0;
                 dom.setDisplay(section, el.value !== "");
             }
-            collection.findGroup(system.cache.permissions, key);
+            collection.findGroup(permissions, key);
         }
     }
     permission.setModelPerms = setModelPerms;
@@ -789,8 +845,8 @@ var permission;
         });
     }
     function setProviderPerms(p) {
-        const perms = collection.findGroup(system.cache.permissions, p.key);
-        const auths = system.cache.auths.filter(a => a.provider === p.key);
+        const perms = collection.findGroup(permissions, p.key);
+        const auths = auth.active().filter(a => a.provider === p.key);
         const section = dom.opt(`#perm-${p.key}-section`);
         if (section) {
             const checkbox = dom.req(`#perm-${p.key}-checkbox`);
@@ -813,6 +869,10 @@ var permission;
         }
         return email.substr(idx);
     }
+    function applyPermissions(perms) {
+        permissions = collection.groupBy(perms, x => x.k).groups;
+    }
+    permission.applyPermissions = applyPermissions;
 })(permission || (permission = {}));
 var permission;
 (function (permission) {
@@ -851,10 +911,6 @@ var permission;
         return ret;
     }
     permission.readPermissions = readPermissions;
-    function applyPermissions(perms) {
-        system.cache.permissions = collection.groupBy(perms, x => x.k).groups;
-    }
-    permission.applyPermissions = applyPermissions;
 })(permission || (permission = {}));
 var report;
 (function (report_1) {
@@ -898,6 +954,7 @@ var report;
         return curr;
     }
     function viewActiveReport(id) {
+        var _a;
         const profile = system.cache.getProfile();
         if (id) {
             standup.cache.activeReport = id;
@@ -907,7 +964,7 @@ var report;
             console.warn("no active report");
             return;
         }
-        dom.setText("#report-title", `${date.toDateString(date.dateFromYMD(report.d))} - ${system.getMemberName(report.userID)}`);
+        dom.setText("#report-title", `${date.toDateString(date.dateFromYMD(report.d))} - ${(_a = member.getMember(report.userID)) === null || _a === void 0 ? void 0 : _a.name}`);
         setFor(report, profile.userID);
     }
     report_1.viewActiveReport = viewActiveReport;
@@ -960,7 +1017,7 @@ var report;
         const ret = JSX("div", { id: `report-${model.id}`, class: "report-detail section", onclick: `modal.open('report', '${model.id}');` },
             JSX("div", { class: "report-comments right" }, comment.renderCount("report", model.id)),
             JSX("div", { class: "left" },
-                JSX("a", { class: `${profile.linkColor}-fg section-link` }, system.getMemberName(model.userID))),
+                JSX("a", { class: `${profile.linkColor}-fg section-link` }, member.renderTitle(member.getMember(model.userID)))),
             JSX("div", { class: "clear" }),
             JSX("div", { class: "report-content" }, "loading..."));
         if (model.html.length > 0) {
@@ -1613,10 +1670,6 @@ var system;
         constructor() {
             this.currentID = "";
             this.connectTime = 0;
-            this.permissions = [];
-            this.auths = [];
-            this.members = [];
-            this.online = [];
         }
         getProfile() {
             if (!this.profile) {
@@ -1627,10 +1680,10 @@ var system;
         apply(sj) {
             system.cache.session = sj.session;
             system.cache.profile = sj.profile;
-            system.cache.auths = sj.auths;
+            auth.applyAuths(sj.auths);
             permission.applyPermissions(sj.permissions);
-            system.cache.members = sj.members;
-            system.cache.online = sj.online;
+            member.applyMembers(sj.members);
+            member.applyOnline(sj.online);
             comment.applyComments(sj.comments);
             if (sj.team) {
                 session.setTeam(sj.team);
@@ -1640,14 +1693,6 @@ var system;
             }
         }
     }
-    function getMemberName(id) {
-        const ret = system.cache.members.filter(m => m.userID === id).shift();
-        if (ret) {
-            return ret.name;
-        }
-        return "{former member}";
-    }
-    system.getMemberName = getMemberName;
     system.cache = new Cache();
     function setPermissions(perms) {
         permission.applyPermissions(perms);
@@ -1656,7 +1701,7 @@ var system;
     system.setPermissions = setPermissions;
     // noinspection JSUnusedGlobalSymbols
     function setAuths(auths) {
-        system.cache.auths = auths;
+        auth.applyAuths(auths);
         permission.setPerms();
     }
     system.setAuths = setAuths;
@@ -1806,6 +1851,11 @@ var profile;
         el.classList.add("active");
     }
     profile.setLinkColor = setLinkColor;
+    function setPicture(p) {
+        dom.setValue('#self-picture-input', p);
+        return false;
+    }
+    profile.setPicture = setPicture;
 })(profile || (profile = {}));
 var collection;
 (function (collection) {
@@ -1935,7 +1985,15 @@ var dom;
     }
     dom.els = els;
     function opt(selector, context) {
-        return els(selector, context).shift();
+        const e = els(selector, context);
+        switch (e.length) {
+            case 0:
+                return undefined;
+            case 1:
+                return e[0];
+            default:
+                console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`);
+        }
     }
     dom.opt = opt;
     function req(selector, context) {
@@ -2072,6 +2130,9 @@ function JSX(tag, attrs) {
             child.forEach(c => {
                 e.appendChild(c);
             });
+        }
+        else if (child === undefined || child === null) {
+            throw `child for tag [${tag}] is ${child}`;
         }
         else {
             if (!child.nodeType) {
@@ -2289,11 +2350,11 @@ var vote;
     }
     vote.viewVotes = viewVotes;
     function viewActiveVotes(votes, activeVote) {
-        dom.setContent("#story-vote-members", vote.renderVoteMembers(system.cache.members, votes));
+        dom.setContent("#story-vote-members", vote.renderVoteMembers(member.getMembers(), votes));
         dom.setContent("#story-vote-choices", vote.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
     }
     function viewVoteResults(votes) {
-        dom.setContent("#story-vote-results", vote.renderVoteResults(system.cache.members, votes));
+        dom.setContent("#story-vote-results", vote.renderVoteResults(member.getMembers(), votes));
         dom.setContent("#story-vote-summary", vote.renderVoteSummary(votes));
     }
     // noinspection JSUnusedGlobalSymbols

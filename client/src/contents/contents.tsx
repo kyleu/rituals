@@ -1,20 +1,20 @@
 namespace contents {
-  function renderSprintContent(svc: services.Service, session: session.Session): JSX.Element {
+  function renderSprintContent(svc: services.Service, session: session.Session) {
     const profile = system.cache.getProfile();
     return <tr>
       <td><a class={`${profile.linkColor}-fg`} href={`/${svc.key}/${session.slug}`}>{session.title}</a></td>
-      <td class="uk-table-shrink uk-text-nowrap">{system.getMemberName(session.owner)}</td>
+      <td class="uk-table-shrink uk-text-nowrap">{member.renderTitle(member.getMember(session.owner))}</td>
       <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(session.created))}</td>
     </tr>;
   }
 
-  function toContent(svc: services.Service, sessions: session.Session[]) {
+  function toContent(svc: services.Service, sessions: ReadonlyArray<session.Session>) {
     return sessions.map(s => {
       return {svc: svc, session: s}
     })
   }
 
-  export function renderContents(src: services.Service, tgt: services.Service, sessions: session.Session[]): JSX.Element {
+  export function renderContents(src: services.Service, tgt: services.Service, sessions: ReadonlyArray<session.Session>) {
     const contents = toContent(tgt, sessions);
     contents.sort((l, r) => (l.session.created > r.session.created ? -1 : 1));
 

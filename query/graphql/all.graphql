@@ -1,0 +1,229 @@
+query All {
+  action(id: "00000000-0000-0000-0000-000000000000") {
+    ...ActionF
+  }
+  actions(orders: [{col: "svc", asc: true}], limit: 3) {
+    ...ActionF
+  }
+
+  estimate(key: "estimate-a") {
+    ...EstimateF
+  }
+  estimates {
+    ...EstimateF
+  }
+
+  retro(key: "retro-a") {
+    ...RetroF
+  }
+  retros {
+    ...RetroF
+  }
+
+  profile {
+    ...ProfileF
+  }
+
+  sandboxes {
+    ...SandboxF
+  }
+
+  sprint(key: "sprint-a") {
+    ...SprintF
+  }
+  sprints {
+    ...SprintF
+  }
+
+  standup(key: "standup-a") {
+    ...StandupF
+  }
+  standups {
+    ...StandupF
+  }
+
+  team(key: "team-a") {
+    ...TeamF
+  }
+  teams {
+    ...TeamF
+  }
+
+  user(id: "00000000-0000-0000-0000-000000000000") {
+    ...ProfileF
+  }
+  users {
+    ...ProfileF
+  }
+}
+
+fragment ActionF on Action {
+  id
+  svc
+  modelID
+  act
+  userID
+  content
+  note
+  created
+}
+
+fragment CommentF on Comment {
+  id
+  svc
+  modelID
+  userID
+  content
+  created
+}
+
+fragment EstimateF on Estimate {
+  id
+  slug
+  title
+  sprintID
+  owner
+  status
+  choices
+  created
+  actions {
+    act
+    content
+  }
+  permissions {
+    __typename
+    k
+    v
+    access
+    created
+  }
+  comments {
+    ...CommentF
+  }
+}
+
+fragment MemberF on Member {
+  userID
+  name
+  role
+}
+
+fragment ProfileF on Profile {
+  userID
+  name
+  role
+  theme
+  picture
+  teams {
+    slug
+  }
+  sprints {
+    slug
+  }
+  estimates {
+    slug
+  }
+  standups {
+    slug
+  }
+  retros {
+    slug
+  }
+}
+
+fragment RetroF on Retrospective {
+  id
+  slug
+  title
+  sprintID
+  owner
+  status
+  categories
+  created
+  actions {
+    act
+    content
+  }
+  permissions {
+    __typename
+    k
+    v
+    access
+    created
+  }
+  comments {
+    ...CommentF
+  }
+}
+
+fragment SandboxF on Sandbox {
+  key
+  title
+  description
+}
+
+fragment SprintF on Sprint {
+  id
+  slug
+  title
+  owner
+  startDate
+  endDate
+  created
+  actions {
+    act
+    content
+  }
+  members {
+    userID
+    name
+    role
+    user {
+      userID
+      name
+      picture
+    }
+  }
+  comments {
+    ...CommentF
+  }
+  estimates {
+    slug
+  }
+  standups {
+    slug
+  }
+  retros {
+    slug
+  }
+}
+
+fragment StandupF on Standup {
+  id
+  slug
+  title
+  sprintID
+  owner
+  status
+  created
+  comments {
+    content
+  }
+}
+
+fragment TeamF on Team {
+  id
+  slug
+  title
+  owner
+  created
+  actions {
+    ...ActionF
+  }
+  members {
+    ...MemberF
+  }
+  comments {
+    ...CommentF
+  }
+}

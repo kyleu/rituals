@@ -1,5 +1,5 @@
 namespace permission {
-  export function renderEmails(key: string, emails: Email[]): JSX.Element {
+  export function renderEmails(key: string, emails: ReadonlyArray<Email>) {
     const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
     const oc = `permission.onChanged('email', '${key}', this.checked)`;
     return <ul>
@@ -14,7 +14,7 @@ namespace permission {
     </ul>;
   }
 
-  function readPermission(k: string): Permission[] {
+  function readPermission(k: string): ReadonlyArray<Permission> {
     const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`)
     if(!checkbox || !checkbox.checked) {
       return [];
@@ -28,7 +28,7 @@ namespace permission {
     return [{k, v, access}];
   }
 
-  export function readPermissions(): Permission[] {
+  export function readPermissions(): ReadonlyArray<Permission> {
     const ret = [];
 
     ret.push(...readPermission("team"));
@@ -41,9 +41,5 @@ namespace permission {
     ret.push(...readPermission("microsoft"));
 
     return ret;
-  }
-
-  export function applyPermissions(perms: permission.Permission[] | null) {
-    system.cache.permissions = collection.groupBy(perms, x => x.k).groups;
   }
 }

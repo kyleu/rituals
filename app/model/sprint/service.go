@@ -6,6 +6,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/model/comment"
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
+	"github.com/kyleu/rituals.dev/app/model/user"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/database"
@@ -27,11 +28,11 @@ type Service struct {
 	logger logur.Logger
 }
 
-func NewService(actions *action.Service, db *database.Service, logger logur.Logger) *Service {
+func NewService(actions *action.Service, users *user.Service, db *database.Service, logger logur.Logger) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.SvcRetro.Key})
 
 	data := session.DataServices{
-		Members:     member.NewService(actions, db, logger, util.SvcSprint),
+		Members:     member.NewService(actions, users, db, logger, util.SvcSprint),
 		Comments:    comment.NewService(actions, db, logger, util.SvcSprint),
 		Permissions: permission.NewService(actions, db, logger, util.SvcSprint),
 		History:     history.NewService(db, logger, util.SvcSprint),

@@ -5,7 +5,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 	"time"
 
-	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 )
 
@@ -45,16 +44,6 @@ type Action struct {
 	Content  interface{}  `json:"content"`
 	Note     string       `json:"note"`
 	Created  time.Time    `json:"created"`
-}
-
-func (a *Action) ContentJSON() (string, error) {
-	bytes, err := json.MarshalIndent(a.Content, "", "  ")
-
-	if err != nil {
-		return "", errors.Wrap(err, "error marshalling action content")
-	}
-
-	return string(bytes), nil
 }
 
 type Actions []*Action

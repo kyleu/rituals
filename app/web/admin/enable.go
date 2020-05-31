@@ -24,10 +24,10 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 			ctx.Logger.Warn("### admin enable request")
 			ctx.Logger.Warn("### to enable admin access for this user")
 			ctx.Logger.Warn("### add \"?code=" + code + "\" to your url")
-			return tmpl(templates.Message("To become an admin, follow the instructions in your server logs", ctx, w))
+			return tmpl(templates.StaticMessage("To become an admin, follow the instructions in your server logs", ctx, w))
 		}
 		if v[0] != code {
-			return tmpl(templates.Message("Invalid code", ctx, w))
+			return tmpl(templates.StaticMessage("Invalid code", ctx, w))
 		}
 
 		err := ctx.App.User.SetRole(ctx.Profile.UserID, util.RoleAdmin)

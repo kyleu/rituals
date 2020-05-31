@@ -2,6 +2,8 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ nav { %><% NavbarStatic(ctx, _buffer) %><% } %>
+
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -10,7 +12,7 @@
         <div class="uk-card uk-card-body">
           <h3 class="uk-card-title">
             <span class="right">
-              <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
+              <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`static.about`) %>" title="about <%= util.AppName %>"></a>
             </span>
             <% if ctx.Profile.Role == util.RoleAdmin { %>
             <span class="right">

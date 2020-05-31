@@ -16,12 +16,20 @@ namespace dom {
     }
   }
 
-  export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): T[] {
-    return UIkit.util.$$(selector, context) as T[];
+  export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): ReadonlyArray<T> {
+    return UIkit.util.$$(selector, context) as ReadonlyArray<T>;
   }
 
   export function opt<T extends HTMLElement>(selector: string, context?: HTMLElement): T | undefined {
-    return els<T>(selector, context).shift();
+    const e = els<T>(selector, context);
+    switch (e.length) {
+      case 0:
+        return undefined;
+      case 1:
+        return e[0];
+      default:
+        console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`)
+    }
   }
 
   export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {

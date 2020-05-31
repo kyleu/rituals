@@ -2,6 +2,7 @@ namespace member {
   export interface Member {
     readonly userID: string;
     readonly name: string;
+    readonly picture: string;
     readonly role: string;
     readonly created: string;
   }
@@ -11,19 +12,31 @@ namespace member {
     readonly connected: boolean;
   }
 
+  let online: string[] = [];
+  let members: member.Member[] = [];
+
   function isSelf(x: Member) {
     return x.userID === system.cache.getProfile().userID;
   }
 
+  export function getMembers() {
+    return members;
+  }
+
+  export function getMember(id: string): Member | undefined {
+    return members.filter(m => m.userID === id).shift();
+  }
+
   export function setMembers() {
-    const self = system.cache.members.filter(isSelf).shift();
+    const self = members.filter(isSelf).shift();
     if (self) {
+      dom.setContent("#self-picture", setPicture(self.picture));
       dom.setText("#member-self .member-name", self.name);
       dom.setValue("#self-name-input", self.name);
       dom.setText("#member-self .member-role", self.role);
     }
 
-    const others = system.cache.members.filter(x => !isSelf(x));
+    const others = members.filter(x => !isSelf(x));
     dom.setContent("#member-detail", renderMembers(others));
     renderOnline();
   }
@@ -32,12 +45,12 @@ namespace member {
     if (isSelf(member)) {
       modal.hide("self");
     }
-    const unfiltered = system.cache.members;
+    const unfiltered = members;
     const curr = unfiltered.filter(m => m.userID === member.userID).shift();
     const nameChanged = curr?.name !== member.name;
 
     const ms = unfiltered.filter(m => m.userID !== member.userID);
-    if (ms.length === system.cache.members.length) {
+    if (ms.length === members.length) {
       notify.notify(`${member.name} has joined`, true);
     }
     if (member.name === "::delete") {
@@ -53,7 +66,7 @@ namespace member {
     }
     ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
 
-    system.cache.members = ms;
+    members = ms;
     setMembers();
 
     if (nameChanged) {
@@ -85,20 +98,20 @@ namespace member {
 
   export function onOnlineUpdate(update: OnlineUpdate) {
     if (update.connected) {
-      if (!system.cache.online.find(x => x === update.userID)) {
-        system.cache.online.push(update.userID);
+      if (!online.find(x => x === update.userID)) {
+        online.push(update.userID);
       }
     } else {
-      system.cache.online = system.cache.online.filter(x => x !== update.userID);
+      online = online.filter(x => x !== update.userID);
     }
     renderOnline();
   }
 
   function renderOnline() {
-    for (const member of system.cache.members) {
+    for (const member of members) {
       const el = dom.opt(`#member-${member.userID} .online-indicator`);
       if (el) {
-        if (!system.cache.online.find(x => x === member.userID)) {
+        if (!online.find(x => x === member.userID)) {
           el.classList.add("offline");
         } else {
           el.classList.remove("offline");
@@ -110,7 +123,8 @@ namespace member {
   export function onSubmitSelf() {
     const name = dom.req<HTMLInputElement>("#self-name-input").value;
     const choice = dom.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
-    const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name, choice}};
+    const picture = dom.req<HTMLInputElement>("#self-picture-input").value;
+    const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name, choice, picture}};
     socket.send(msg);
   }
 
@@ -121,7 +135,7 @@ namespace member {
       console.warn("no active member");
       return undefined;
     }
-    const curr = system.cache.members.filter(x => x.userID === activeMember).shift();
+    const curr = members.filter(x => x.userID === activeMember).shift();
     if (curr) {
       console.warn(`cannot load active member [${activeMember}]`);
     }
@@ -152,5 +166,13 @@ namespace member {
       const msg = {svc: svc.key, cmd: command.client.removeMember, param: id};
       socket.send(msg);
     }
+  }
+
+  export function applyMembers(m: member.Member[]) {
+    members = m
+  }
+
+  export function applyOnline(o: string[]) {
+    online = o
   }
 }

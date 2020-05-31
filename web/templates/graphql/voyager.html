@@ -2,6 +2,8 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
+
 <%@ body { %>
   <div id="<%= util.KeyVoyager %>" style="height: calc(100vh - 54px);"></div>
   <script src="/assets/vendor/react/react.production.min.js"></script>

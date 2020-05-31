@@ -9,12 +9,6 @@ namespace system {
     currentID = "";
     connectTime = 0;
 
-    permissions: collection.Group<string, permission.Permission>[] = [];
-    auths: auth.Auth[] = [];
-
-    members: member.Member[] = [];
-    online: string[] = [];
-
     public getProfile() {
       if (!this.profile) {
         throw "no active profile";
@@ -26,11 +20,11 @@ namespace system {
       system.cache.session = sj.session;
       system.cache.profile = sj.profile;
 
-      system.cache.auths = sj.auths;
+      auth.applyAuths(sj.auths);
       permission.applyPermissions(sj.permissions);
 
-      system.cache.members = sj.members;
-      system.cache.online = sj.online;
+      member.applyMembers(sj.members);
+      member.applyOnline(sj.online);
 
       comment.applyComments(sj.comments);
 
@@ -43,14 +37,6 @@ namespace system {
     }
   }
 
-  export function getMemberName(id: string) {
-    const ret = cache.members.filter(m => m.userID === id).shift();
-    if (ret) {
-      return ret.name;
-    }
-    return "{former member}";
-  }
-
   export const cache = new Cache();
 
   export function setPermissions(perms: permission.Permission[]) {
@@ -60,7 +46,7 @@ namespace system {
 
   // noinspection JSUnusedGlobalSymbols
   export function setAuths(auths: auth.Auth[]) {
-    system.cache.auths = auths;
+    auth.applyAuths(auths);
     permission.setPerms();
   }
 
@@ -70,13 +56,13 @@ namespace system {
         rituals.onError(services.system, param as string);
         break;
       case command.server.actions:
-        action.viewActions(param as action.Action[]);
+        action.viewActions(param as ReadonlyArray<action.Action>);
         break;
       case command.server.teams:
-        team.viewTeams(param as team.Detail[]);
+        team.viewTeams(param as ReadonlyArray<team.Detail>);
         break;
       case command.server.sprints:
-        sprint.viewSprints(param as sprint.Detail[]);
+        sprint.viewSprints(param as ReadonlyArray<sprint.Detail>);
         break;
       case command.server.memberUpdate:
         member.onMemberUpdate(param as member.Member);

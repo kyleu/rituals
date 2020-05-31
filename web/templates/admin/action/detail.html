@@ -2,6 +2,8 @@
 
 <%~ "layout/basic.html" %>
 
+<%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
+
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -27,7 +29,7 @@
           </tr>
           <tr>
             <th>Content</th>
-            <td><pre><%= util.ToJSON(model) %></pre></td>
+            <td><pre><%= util.ToJSON(model, ctx.Logger) %></pre></td>
           </tr>
           <tr>
             <th>Note</th>

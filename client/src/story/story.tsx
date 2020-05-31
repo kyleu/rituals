@@ -1,5 +1,5 @@
 namespace story {
-  function renderStory(story: story.Story): JSX.Element {
+  function renderStory(story: story.Story) {
     const profile = system.cache.getProfile();
     return <li id={`story-${story.id}`} class="section" onclick={`modal.open('story', '${story.id}');`}>
       <div class="right uk-article-meta story-status">{story.status}</div>
@@ -8,7 +8,7 @@ namespace story {
     </li>;
   }
 
-  export function renderStories(stories: story.Story[]): JSX.Element {
+  export function renderStories(stories: ReadonlyArray<story.Story>) {
     if (stories.length === 0) {
       return <div id="story-list">
         <button class="uk-button uk-button-default" onclick="modal.open('add-story');" type="button">Add Story</button>
@@ -22,7 +22,7 @@ namespace story {
     }
   }
 
-  export function renderStatus(status: string): JSX.Element {
+  export function renderStatus(status: string) {
     switch (status) {
       case "pending":
         return <span>{status}</span>;

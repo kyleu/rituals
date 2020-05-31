@@ -43,6 +43,7 @@ create table if not exists "team_member" (
   "team_id" uuid not null references "team"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
+  "picture" text not null,
   "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("team_id", "user_id")
@@ -84,6 +85,7 @@ create table if not exists "sprint_member" (
   "sprint_id" uuid not null references "sprint"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
+  "picture" text not null,
   "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("sprint_id", "user_id")
@@ -126,6 +128,7 @@ create table if not exists "estimate_member" (
   "estimate_id" uuid not null references "estimate"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
+  "picture" text not null,
   "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("estimate_id", "user_id")
@@ -187,6 +190,7 @@ create table if not exists "standup_member" (
   "standup_id" uuid not null references "standup"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
+  "picture" text not null,
   "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("standup_id", "user_id")
@@ -239,6 +243,7 @@ create table if not exists "retro_member" (
   "retro_id" uuid not null references "retro"("id"),
   "user_id" uuid not null references "system_user"("id"),
   "name" varchar(2048) not null,
+  "picture" text not null,
   "role" member_status not null,
   "created" timestamp not null default now(),
   primary key ("retro_id", "user_id")

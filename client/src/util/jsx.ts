@@ -29,6 +29,8 @@ function JSX(tag: string, attrs: any) {
       child.forEach(c => {
         e.appendChild(c);
       });
+    } else if (child === undefined || child === null) {
+      throw `child for tag [${tag}] is ${child}`;
     } else {
       if (!child.nodeType) {
         child = document.createTextNode(child.toString());

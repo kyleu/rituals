@@ -29,7 +29,7 @@ func NewService(db *database.Service, logger logur.Logger) *Service {
 func (s *Service) New(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
 	id := util.UUID()
 	q := query.SQLInsert(util.KeyAction, []string{util.KeyID, util.KeySvc, util.WithDBID(util.KeyModel), util.WithDBID(util.KeyUser), util.KeyAct, util.KeyContent, util.KeyNote}, 1)
-	err := s.db.Insert(q, nil, id, svc.Key, modelID, userID, act, util.ToJSON(content), note)
+	err := s.db.Insert(q, nil, id, svc.Key, modelID, userID, act, util.ToJSON(content, s.logger), note)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new ["+svc.Key+"] action")

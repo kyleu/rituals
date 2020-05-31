@@ -24,5 +24,15 @@ namespace auth {
     readonly matched: boolean,
     readonly domain: string
   }
+
+  let auths: ReadonlyArray<auth.Auth> = [];
+
+  export function applyAuths(as: ReadonlyArray<auth.Auth>) {
+    auths = as;
+  }
+
+  export function active() {
+    return auths;
+  }
 }
 

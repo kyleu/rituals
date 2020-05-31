@@ -1,0 +1,11 @@
+{
+  "name": "rituals.dev",
+  "extensions": {
+    "endpoints": {
+      "localhost": {
+        "url": "http://localhost:6660/admin/graphql",
+        "introspect": true
+      }
+    }
+  }
+}

@@ -18,7 +18,7 @@ import (
 func Profile(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		if !tempSecurityCheck(&ctx) {
-			return tmpl(templates.Message("Coming soon!", ctx, w))
+			return tmpl(templates.StaticMessage("Coming soon!", ctx, w))
 		}
 
 		params := act.ParamSetFromRequest(r)

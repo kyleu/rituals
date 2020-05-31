@@ -1,10 +1,12 @@
-<%: func MemberSelf(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberSelf(auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle" id="member-self">
   <h3 class="uk-card-title">
     <span class="right">
       <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="pencil" onclick="modal.open('self');return false;" title="edit name"></a>
     </span>
-    <span class="model-icon h3-icon" onclick="modal.open('self');" data-uk-icon="icon: user;"></span>
+    <span id="self-picture" onclick="modal.open('self');">
+      <span class="model-icon h3-icon" onclick="modal.open('self');" data-uk-icon="icon: user;"></span>
+    </span>
     <span class="member-name" onclick="modal.open('self');"><%= ctx.Profile.Name %></span>
   </h3>
   <p class="member-role"></p>
@@ -22,7 +24,6 @@
               <label class="uk-form-label" for="self-name-input">Name</label>
               <input class="uk-input" id="self-name-input" type="text" />
             </div>
-
             <div class="uk-margin">
               <div>
                 <label for="self-name-choice-local">
@@ -36,6 +37,26 @@
                   Change global default
                 </label>
               </div>
+            </div>
+            <div class="uk-margin">
+              <label class="uk-form-label" for="self-picture-input">Picture</label>
+              <input class="uk-input" id="self-picture-input" type="hidden" />
+              <% if len(auths) == 0 { %>
+                <div>To set a profile picture, <a class="theme" href="<%= ctx.Route(util.KeyProfile) %>">sign in</a></div>
+              <% } else { %>
+                <% for _, a := range auths { %>
+                  <div class="profile-picture-choice">
+                    <a href="" title="<%= a.Provider.Title %> picture" onclick="return profile.setPicture('<%= a.Picture %>');">
+                      <img class="uk-border-circle" alt="<%= a.Provider.Title %> picture" src="<%= a.Picture %>" />
+                    </a>
+                  </div>
+                <% } %>
+              <div class="profile-picture-choice">
+                <a href="" title="no picture" onclick="return profile.setPicture('');">
+                  <span class="model-icon h3-icon" onclick="modal.open('self');" data-uk-icon="icon: user;"></span>
+                </a>
+              </div>
+              <% } %>
             </div>
           </fieldset>
       </div>

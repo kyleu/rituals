@@ -33,7 +33,7 @@ namespace collection {
     return res;
   }
 
-  export function findGroup<K, V>(groups: collection.Group<K, V>[], key: K): V[] {
+  export function findGroup<K, V>(groups: collection.Group<K, V>[], key: K): ReadonlyArray<V> {
     for (const g of groups) {
       if (g.key === key) {
         return g.members;
@@ -42,7 +42,7 @@ namespace collection {
     return []
   }
 
-  export function flatten<T>(a: T[][]): T[] {
+  export function flatten<T>(a: ReadonlyArray<ReadonlyArray<T>>): ReadonlyArray<T> {
     const ret: T[] = [];
     a.forEach(v => ret.push(...v));
     return ret;

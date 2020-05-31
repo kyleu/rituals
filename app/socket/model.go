@@ -44,7 +44,7 @@ type Message struct {
 }
 
 func NewMessage(svc util.Service, cmd string, param interface{}) *Message {
-	return &Message{Svc: svc.Key, Cmd: cmd, Param: json.RawMessage(util.ToJSON(param))}
+	return &Message{Svc: svc.Key, Cmd: cmd, Param: json.RawMessage(util.ToJSON(param, nil))}
 }
 
 func (m *Message) String() string {

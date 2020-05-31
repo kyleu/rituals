@@ -72,7 +72,7 @@ namespace team {
     }
   }
 
-  export function viewTeams(teams: team.Detail[]) {
+  export function viewTeams(teams: ReadonlyArray<team.Detail>) {
     const c = dom.opt("#model-team-container");
     if(c) {
       dom.setDisplay(c, teams.length > 0)

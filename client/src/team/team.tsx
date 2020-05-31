@@ -4,7 +4,7 @@ namespace team {
     return <span> in <a class={`${profile.linkColor}-fg`} href={`/team/${tm.slug}`}>{tm.title}</a></span>
   }
 
-  export function renderTeamSelect(teams: team.Detail[], activeID: string | undefined) {
+  export function renderTeamSelect(teams: ReadonlyArray<team.Detail>, activeID: string | undefined) {
     return <select class="uk-select" onchange="permission.setModelPerms('team')">
       <option value="">- no team -</option>
       { teams.map(t => {

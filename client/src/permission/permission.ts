@@ -5,32 +5,31 @@ namespace permission {
     readonly access: string;
   }
 
+  let permissions: collection.Group<string, Permission>[] = [];
+
   export interface Email {
     readonly matched: boolean,
     readonly domain: string
   }
 
   export function setPerms() {
-    const perms = system.cache.permissions;
-    dom.setDisplay("#public-link-container", perms === null || perms.length === 0);
-    dom.setDisplay("#private-link-container", perms !== null && perms.length > 0);
+    dom.setDisplay("#public-link-container", permissions === null || permissions.length === 0);
+    dom.setDisplay("#private-link-container", permissions !== null && permissions.length > 0);
     ["team", "sprint"].forEach(setModelPerms);
-    if (system.cache.auths !== null) {
-      auth.allProviders.forEach(setProviderPerms);
-    }
+    auth.allProviders.forEach(setProviderPerms);
   }
 
   export function setModelPerms(key: string) {
     const el = dom.opt<HTMLSelectElement>(`#model-${key}-select select`);
     if (el) {
-      const perms = collection.findGroup(system.cache.permissions, key);
+      const perms = collection.findGroup(permissions, key);
       const section = dom.opt(`#perm-${key}-section`);
       if (section) {
         const checkbox = dom.req<HTMLInputElement>(`#perm-${key}-checkbox`);
         checkbox.checked = perms.length > 0;
         dom.setDisplay(section, el.value !== "");
       }
-      collection.findGroup(system.cache.permissions, key);
+      collection.findGroup(permissions, key);
     }
   }
 
@@ -61,8 +60,8 @@ namespace permission {
   }
 
   function setProviderPerms(p: auth.Provider) {
-    const perms = collection.findGroup(system.cache.permissions, p.key);
-    const auths = system.cache.auths.filter(a => a.provider === p.key);
+    const perms = collection.findGroup(permissions, p.key);
+    const auths = auth.active().filter(a => a.provider === p.key);
 
     const section = dom.opt(`#perm-${p.key}-section`);
     if (section) {
@@ -90,5 +89,8 @@ namespace permission {
     }
     return email.substr(idx);
   }
-}
 
+  export function applyPermissions(perms: permission.Permission[] | null) {
+    permissions = collection.groupBy(perms, x => x.k).groups;
+  }
+}
