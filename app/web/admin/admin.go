@@ -32,7 +32,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 func Source(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		http.ServeFile(w, r, "./" + r.URL.Path)
+		http.ServeFile(w, r, "./"+r.URL.Path)
 		return "", nil
 	})
 }

@@ -31,10 +31,7 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
-		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User)
-		if err != nil {
-			return eresp(err, "cannot parse form")
-		}
+		sf := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User)
 
 		sess, err := ctx.App.Team.New(sf.Title, ctx.Profile.UserID)
 		if err != nil {
@@ -58,6 +55,9 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 			ctx.Session.AddFlash("error:Can't load team [" + key + "]")
 			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcTeam.Key + ".list"), nil
+		}
+		if sess.Slug != key {
+			return ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug), nil
 		}
 
 		params := PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}

@@ -1,10 +1,12 @@
 package act
 
 import (
-	"emperror.dev/errors"
-	"logur.dev/logur"
 	"net/http"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/gorilla/sessions"
+	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
@@ -31,16 +33,13 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 		if ctx.Title == "" {
 			ctx.Title = "Error"
 		}
-		if IsContentTypeJson(GetContentType(r)) {
+		if IsContentTypeJSON(GetContentType(r)) {
 			_, _ = RespondJSON(w, errorResult{Status: util.KeyError, Message: err.Error()}, ctx.Logger)
 		} else {
 			_, _ = templates.InternalServerError(util.GetErrorDetail(err), r, ctx, w)
 		}
 	}
 	if redir != "" {
-		if len(ctx.Flashes) > 0 {
-			SaveSession(w, r, ctx)
-		}
 		w.Header().Set("Location", redir)
 		w.WriteHeader(http.StatusFound)
 		logComplete(startNanos, ctx, http.StatusFound, r)
@@ -61,6 +60,7 @@ func RespondJSON(w http.ResponseWriter, body interface{}, logger logur.Logger) (
 }
 
 func SaveSession(w http.ResponseWriter, r *http.Request, ctx web.RequestContext) {
+	ctx.Session.Options = &sessions.Options{Path: "/", HttpOnly: true, SameSite: http.SameSiteDefaultMode}
 	err := ctx.Session.Save(r, w)
 	if err != nil {
 		ctx.Logger.Warn("unable to save session to response")

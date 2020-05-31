@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
+
+	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/util"
 )

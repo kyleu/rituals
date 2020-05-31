@@ -60,7 +60,7 @@ type storyDTO struct {
 	ID         uuid.UUID `db:"id"`
 	EstimateID uuid.UUID `db:"estimate_id"`
 	Idx        uint      `db:"idx"`
-	UserID   uuid.UUID `db:"user_id"`
+	UserID     uuid.UUID `db:"user_id"`
 	Title      string    `db:"title"`
 	Status     string    `db:"status"`
 	FinalVote  string    `db:"final_vote"`

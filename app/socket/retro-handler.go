@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/retro"
@@ -11,6 +12,7 @@ import (
 
 func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSessionSaveParams) error {
 	title := util.ServiceTitle(util.SvcRetro, param.Title)
+
 	categories := query.StringToArray(param.Categories)
 	if len(categories) == 0 {
 		categories = retro.DefaultCategories
@@ -19,17 +21,27 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	sprintID := util.GetUUIDFromString(param.SprintID)
 	teamID := util.GetUUIDFromString(param.TeamID)
 
-	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
-	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(categories, "and"), sprintID, teamID))
-
 	curr := s.retros.GetByID(ch.ID)
+	if curr == nil {
+		return errors.New("no retro available with id [" + ch.ID.String() + "]")
+	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
+	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
+	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(categories, "and"), sprintID, teamID))
+
 	err := s.retros.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating retro session")
+	}
+
+	if title != curr.Title {
+		slug, err := s.retros.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		if err != nil {
+			return errors.Wrap(err, "error updating retro slug from ["+curr.Slug+"] to ["+slug+"]")
+		}
 	}
 
 	err = sendRetroSessionUpdate(s, ch)
@@ -64,7 +76,7 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 func sendRetroSessionUpdate(s *Service, ch Channel) error {
 	sess := s.retros.GetByID(ch.ID)
 	if sess == nil {
-		return errors.New("cannot load retro session ["+ch.ID.String()+"]")
+		return errors.New("cannot load retro session [" + ch.ID.String() + "]")
 	}
 
 	err := s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdSessionUpdate, sess))

@@ -3,11 +3,12 @@ package sprint
 import (
 	"database/sql"
 	"fmt"
+	"time"
+
 	"github.com/kyleu/rituals.dev/app/model/comment"
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/model/user"
-	"time"
 
 	"github.com/kyleu/rituals.dev/app/database"
 
@@ -26,28 +27,26 @@ type Service struct {
 	Data   *session.DataServices
 	db     *database.Service
 	logger logur.Logger
+	svc    util.Service
 }
 
 func NewService(actions *action.Service, users *user.Service, db *database.Service, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.SvcRetro.Key})
+	svc := util.SvcSprint
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: svc.Key})
 
 	data := session.DataServices{
-		Members:     member.NewService(actions, users, db, logger, util.SvcSprint),
-		Comments:    comment.NewService(actions, db, logger, util.SvcSprint),
-		Permissions: permission.NewService(actions, db, logger, util.SvcSprint),
-		History:     history.NewService(db, logger, util.SvcSprint),
+		Members:     member.NewService(actions, users, db, logger, svc),
+		Comments:    comment.NewService(actions, db, logger, svc),
+		Permissions: permission.NewService(actions, db, logger, svc),
+		History:     history.NewService(actions, db, logger, svc),
 		Actions:     actions,
 	}
 
-	return &Service{
-		Data:   &data,
-		db:     db,
-		logger: logger,
-	}
+	return &Service{Data: &data, db: db, logger: logger, svc: svc}
 }
 
 func (s *Service) New(title string, userID uuid.UUID, startDate *time.Time, endDate *time.Time, teamID *uuid.UUID) (*Session, error) {
-	slug, err := member.NewSlugFor(s.db, util.SvcSprint, title)
+	slug, err := s.Data.History.NewSlugFor(title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating sprint slug")
 	}
@@ -56,7 +55,7 @@ func (s *Service) New(title string, userID uuid.UUID, startDate *time.Time, endD
 
 	println(fmt.Sprintf("#@@@@@@@@@@@@@: %v", model.EndDate))
 
-	q := query.SQLInsert(util.SvcSprint.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.KeyOwner, "start_date", "end_date"}, 1)
+	q := query.SQLInsert(s.svc.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.KeyOwner, "start_date", "end_date"}, 1)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.Owner, model.StartDate, model.EndDate)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new sprint session")
@@ -64,16 +63,16 @@ func (s *Service) New(title string, userID uuid.UUID, startDate *time.Time, endD
 
 	s.Data.Members.Register(model.ID, userID, member.RoleOwner)
 
-	s.Data.Actions.Post(util.SvcSprint, model.ID, userID, action.ActCreate, nil, "")
-	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, util.SvcSprint, model.ID, userID, action.ActContentAdd, "")
+	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
+	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd, "")
 
 	return &model, nil
 }
 
 func (s *Service) List(params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcSprint.Key, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", util.SvcSprint.Key, "", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", s.svc.Key, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving sprint sessions: %+v", err))
@@ -84,7 +83,7 @@ func (s *Service) List(params *query.Params) Sessions {
 
 func (s *Service) GetByID(id uuid.UUID) *Session {
 	dto := &sessionDTO{}
-	q := query.SQLSelectSimple("*", util.SvcSprint.Key, util.KeyID+" = $1")
+	q := query.SQLSelectSimple("*", s.svc.Key, util.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -98,7 +97,7 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 
 func (s *Service) GetBySlug(slug string) *Session {
 	var dto = &sessionDTO{}
-	q := query.SQLSelectSimple("*", util.SvcSprint.Key, "slug = $1")
+	q := query.SQLSelectSimple("*", s.svc.Key, "slug = $1")
 	err := s.db.Get(dto, q, nil, slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -111,9 +110,9 @@ func (s *Service) GetBySlug(slug string) *Session {
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcSprint.Key, params, query.DefaultMCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultMCreatedOrdering...)
 	var dtos []sessionDTO
-	t := "sprint join sprint_member m on id = m." + util.WithDBID(util.SvcSprint.Key)
+	t := "sprint join sprint_member m on id = m." + util.WithDBID(s.svc.Key)
 	q := query.SQLSelect("sprint.*", t, "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
@@ -125,7 +124,7 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
 
 func (s *Service) GetIdsByMember(userID uuid.UUID) []uuid.UUID {
 	var ids []uuid.UUID
-	t := "sprint join sprint_member m on id = m." + util.WithDBID(util.SvcSprint.Key)
+	t := "sprint join sprint_member m on id = m." + util.WithDBID(s.svc.Key)
 	q := query.SQLSelectSimple(util.KeyID, t, "m.user_id = $1")
 	err := s.db.Select(&ids, q, nil, userID)
 	if err != nil {
@@ -136,9 +135,9 @@ func (s *Service) GetIdsByMember(userID uuid.UUID) []uuid.UUID {
 }
 
 func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcSprint.Key, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", util.SvcSprint.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", s.svc.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, teamID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving sprints for team [%v]: %+v", teamID, err))
@@ -149,9 +148,9 @@ func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.UUID, startDate *time.Time, endDate *time.Time, userID uuid.UUID) error {
 	cols := []string{util.KeyTitle, "start_date", "end_date", util.WithDBID(util.SvcTeam.Key)}
-	q := query.SQLUpdate(util.SvcSprint.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
+	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, startDate, endDate, teamID, sessionID)
-	s.Data.Actions.Post(util.SvcSprint, sessionID, userID, action.ActUpdate, nil, "")
+	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating sprint session")
 }
 

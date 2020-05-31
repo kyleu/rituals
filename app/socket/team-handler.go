@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/model/team"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -10,11 +11,24 @@ import (
 
 func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessionSaveParams) error {
 	title := util.ServiceTitle(util.SvcTeam, param.Title)
+
+	curr := s.standups.GetByID(ch.ID)
+	if curr == nil {
+		return errors.New("no team available with id [" + ch.ID.String() + "]")
+	}
+
 	s.Logger.Debug(fmt.Sprintf("saving team session [%s]", title))
 
 	err := s.teams.UpdateSession(ch.ID, title, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating team session")
+	}
+
+	if title != curr.Title {
+		slug, err := s.teams.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		if err != nil {
+			return errors.Wrap(err, "error updating team slug from ["+curr.Slug+"] to ["+slug+"]")
+		}
 	}
 
 	err = sendTeamSessionUpdate(s, ch)
@@ -49,7 +63,7 @@ func sendTeamUpdate(s *Service, ch Channel, curr *uuid.UUID, tm *team.Session) e
 func sendTeamSessionUpdate(s *Service, ch Channel) error {
 	sess := s.teams.GetByID(ch.ID)
 	if sess == nil {
-		return errors.New("cannot load team session ["+ch.ID.String()+"]")
+		return errors.New("cannot load team session [" + ch.ID.String() + "]")
 	}
 	err := s.WriteChannel(ch, NewMessage(util.SvcTeam, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending team session")

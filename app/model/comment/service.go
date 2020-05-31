@@ -2,6 +2,7 @@ package comment
 
 import (
 	"database/sql"
+
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/database"
 
@@ -51,7 +52,7 @@ func (s *Service) GetByModelID(modelID uuid.UUID, params *query.Params) Comments
 
 func (s *Service) GetByID(id uuid.UUID) *Comment {
 	dto := commentDTO{}
-	q := query.SQLSelectSimple("*", util.KeyComment, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeyComment, util.KeyID+" = $1")
 	err := s.db.Get(&dto, q, nil, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -65,7 +66,7 @@ func (s *Service) GetByID(id uuid.UUID) *Comment {
 }
 
 func (s *Service) RemoveComment(commentID uuid.UUID) error {
-	q := query.SQLDelete(util.KeyComment, util.KeyID + " = $1")
+	q := query.SQLDelete(util.KeyComment, util.KeyID+" = $1")
 	err := s.db.DeleteOne(q, nil, commentID)
 	return errors.Wrap(err, "unable to remove comment ["+commentID.String()+"]")
 }

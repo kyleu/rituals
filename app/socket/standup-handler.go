@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
 )
@@ -13,17 +14,27 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 	sprintID := util.GetUUIDFromString(param.SprintID)
 	teamID := util.GetUUIDFromString(param.TeamID)
 
-	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
-	s.Logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
-
 	curr := s.standups.GetByID(ch.ID)
+	if curr == nil {
+		return errors.New("no standup available with id [" + ch.ID.String() + "]")
+	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
+	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
+	s.Logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
+
 	err := s.standups.UpdateSession(ch.ID, title, teamID, sprintID, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating standup session")
+	}
+
+	if title != curr.Title {
+		slug, err := s.standups.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		if err != nil {
+			return errors.Wrap(err, "error updating standup slug from ["+curr.Slug+"] to ["+slug+"]")
+		}
 	}
 
 	err = sendStandupSessionUpdate(s, ch)
@@ -58,7 +69,7 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 func sendStandupSessionUpdate(s *Service, ch Channel) error {
 	sess := s.standups.GetByID(ch.ID)
 	if sess == nil {
-		return errors.New("cannot load standup session ["+ch.ID.String()+"]")
+		return errors.New("cannot load standup session [" + ch.ID.String() + "]")
 	}
 	err := s.WriteChannel(ch, NewMessage(util.SvcStandup, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending standup session")

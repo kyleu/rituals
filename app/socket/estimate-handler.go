@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
@@ -20,17 +21,27 @@ func onEstimateSessionSave(s *Service, ch Channel, userID uuid.UUID, param estim
 	sprintID := util.GetUUIDFromString(param.SprintID)
 	teamID := util.GetUUIDFromString(param.TeamID)
 
-	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
-	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(choices, "and"), teamID, sprintID))
-
 	curr := s.estimates.GetByID(ch.ID)
+	if curr == nil {
+		return errors.New("no estimate available with id [" + ch.ID.String() + "]")
+	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
+	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
+	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(choices, "and"), teamID, sprintID))
+
 	err := s.estimates.UpdateSession(ch.ID, title, choices, teamID, sprintID, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating estimate session")
+	}
+
+	if title != curr.Title {
+		slug, err := s.estimates.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		if err != nil {
+			return errors.Wrap(err, "error updating estimate slug from ["+curr.Slug+"] to ["+slug+"]")
+		}
 	}
 
 	err = sendEstimateSessionUpdate(s, ch)
@@ -65,7 +76,7 @@ func onEstimateSessionSave(s *Service, ch Channel, userID uuid.UUID, param estim
 func sendEstimateSessionUpdate(s *Service, ch Channel) error {
 	est := s.estimates.GetByID(ch.ID)
 	if est == nil {
-		return errors.New("cannot load estimate session ["+ch.ID.String()+"]")
+		return errors.New("cannot load estimate session [" + ch.ID.String() + "]")
 	}
 
 	err := s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdSessionUpdate, est))

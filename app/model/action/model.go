@@ -2,8 +2,9 @@ package action
 
 import (
 	"encoding/json"
-	"github.com/kyleu/rituals.dev/app/util"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -36,27 +37,27 @@ const (
 )
 
 type Action struct {
-	ID       uuid.UUID    `json:"id"`
-	Svc      util.Service `json:"svc"`
-	ModelID  uuid.UUID    `json:"modelID"`
-	UserID uuid.UUID    `json:"userID"`
-	Act      string       `json:"act"`
-	Content  interface{}  `json:"content"`
-	Note     string       `json:"note"`
-	Created  time.Time    `json:"created"`
+	ID      uuid.UUID    `json:"id"`
+	Svc     util.Service `json:"svc"`
+	ModelID uuid.UUID    `json:"modelID"`
+	UserID  uuid.UUID    `json:"userID"`
+	Act     string       `json:"act"`
+	Content interface{}  `json:"content"`
+	Note    string       `json:"note"`
+	Created time.Time    `json:"created"`
 }
 
 type Actions []*Action
 
 type actionDTO struct {
-	ID       uuid.UUID `db:"id"`
-	Svc      string    `db:"svc"`
-	ModelID  uuid.UUID `db:"model_id"`
-	UserID uuid.UUID `db:"user_id"`
-	Act      string    `db:"act"`
-	Content  string    `db:"content"`
-	Note     string    `db:"note"`
-	Created  time.Time `db:"created"`
+	ID      uuid.UUID `db:"id"`
+	Svc     string    `db:"svc"`
+	ModelID uuid.UUID `db:"model_id"`
+	UserID  uuid.UUID `db:"user_id"`
+	Act     string    `db:"act"`
+	Content string    `db:"content"`
+	Note    string    `db:"note"`
+	Created time.Time `db:"created"`
 }
 
 func (dto *actionDTO) ToAction() *Action {
@@ -64,13 +65,13 @@ func (dto *actionDTO) ToAction() *Action {
 	_ = json.Unmarshal([]byte(dto.Content), &param)
 
 	return &Action{
-		ID:       dto.ID,
-		Svc:      util.ServiceFromString(dto.Svc),
-		ModelID:  dto.ModelID,
-		UserID: dto.UserID,
-		Act:      dto.Act,
-		Content:  param,
-		Note:     dto.Note,
-		Created:  dto.Created,
+		ID:      dto.ID,
+		Svc:     util.ServiceFromString(dto.Svc),
+		ModelID: dto.ModelID,
+		UserID:  dto.UserID,
+		Act:     dto.Act,
+		Content: param,
+		Note:    dto.Note,
+		Created: dto.Created,
 	}
 }

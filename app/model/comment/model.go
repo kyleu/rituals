@@ -1,8 +1,9 @@
 package comment
 
 import (
-	"github.com/kyleu/rituals.dev/app/util"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -13,7 +14,7 @@ type commentDTO struct {
 	ModelID    uuid.UUID  `db:"model_id"`
 	TargetType string     `db:"target_type"`
 	TargetID   *uuid.UUID `db:"target_id"`
-	UserID   uuid.UUID  `db:"user_id"`
+	UserID     uuid.UUID  `db:"user_id"`
 	Content    string     `db:"content"`
 	HTML       string     `db:"html"`
 	Created    time.Time  `db:"created"`
@@ -26,7 +27,7 @@ func (dto *commentDTO) ToComment() *Comment {
 		ModelID:    dto.ModelID,
 		TargetType: dto.TargetType,
 		TargetID:   dto.TargetID,
-		UserID:   dto.UserID,
+		UserID:     dto.UserID,
 		Content:    dto.Content,
 		HTML:       dto.HTML,
 		Created:    dto.Created,
@@ -39,7 +40,7 @@ type Comment struct {
 	ModelID    uuid.UUID    `json:"-"`
 	TargetType string       `json:"targetType"`
 	TargetID   *uuid.UUID   `json:"targetID"`
-	UserID   uuid.UUID    `json:"userID"`
+	UserID     uuid.UUID    `json:"userID"`
 	Content    string       `json:"content"`
 	HTML       string       `json:"html"`
 	Created    time.Time    `json:"created"`

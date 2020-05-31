@@ -82,7 +82,7 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 			s.logger.Error(fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
 		}
 	} else {
-		q := query.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName + " = $3 and k = $4")
+		q := query.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName+" = $3 and k = $4")
 		err = s.db.UpdateOne(q, nil, access.Key, v, modelID, k)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
@@ -125,7 +125,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 	}
 
 	for _, p := range u {
-		q := query.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName + " = $3 and k = $4")
+		q := query.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName+" = $3 and k = $4")
 		err := s.db.UpdateOne(q, tx, p.Access.Key, p.V, modelID, p.K)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))

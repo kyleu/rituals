@@ -1,8 +1,9 @@
 package util
 
 import (
-	"emperror.dev/errors"
 	"time"
+
+	"emperror.dev/errors"
 )
 
 const YMD = "2006-01-02"

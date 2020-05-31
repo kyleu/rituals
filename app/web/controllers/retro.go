@@ -41,10 +41,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 			categories = retro.DefaultCategories
 		}
 
-		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcRetro, r.Form, ctx.App.User)
-		if err != nil {
-			return eresp(err, "cannot parse form")
-		}
+		sf := parseSessionForm(ctx.Profile.UserID, util.SvcRetro, r.Form, ctx.App.User)
 
 		sess, err := ctx.App.Retro.New(sf.Title, ctx.Profile.UserID, categories, sf.TeamID, sf.SprintID)
 		if err != nil {
@@ -77,6 +74,9 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 			ctx.Session.AddFlash("error:Can't load retro [" + key + "]")
 			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcRetro.Key + ".list"), nil
+		}
+		if sess.Slug != key {
+			return ctx.Route(util.SvcRetro.Key, util.KeyKey, sess.Slug), nil
 		}
 
 		params := PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}

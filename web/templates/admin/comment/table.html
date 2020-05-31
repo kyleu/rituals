@@ -13,7 +13,7 @@
   <tbody>
   <% for _, model := range comments { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyComment, util.KeyDetail), `id`, model.ID.String()) %>"><% ComponentUUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% ComponentUUID(&model.ID, buffer) %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% ComponentChannel(model.Svc, &model.ModelID, ctx, buffer) %></td>
       <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.ID.String()) %>"><% ComponentUUID(&model.UserID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%== model.HTML %></td>

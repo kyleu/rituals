@@ -3,6 +3,7 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"

@@ -1,10 +1,10 @@
 package database
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/jmoiron/sqlx"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 func (s *Service) Query(q string, tx *sqlx.Tx, values ...interface{}) (*sqlx.Rows, error) {
@@ -30,7 +30,6 @@ func (s *Service) Select(dest interface{}, q string, tx *sqlx.Tx, values ...inte
 func (s *Service) Get(dto interface{}, q string, tx *sqlx.Tx, values ...interface{}) error {
 	if s.debug {
 		logQuery(s, fmt.Sprintf("getting single row of type [%T]", dto), q, values)
-		util.LogDebug(s.logger, "getting single row\nSQL: %v\nValues: %v", q, util.ValueStrings(values))
 	}
 	if tx == nil {
 		return s.db.Get(dto, q, values...)

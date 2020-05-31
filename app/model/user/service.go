@@ -63,7 +63,7 @@ func (s *Service) List(params *query.Params) SystemUsers {
 
 func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) *SystemUser {
 	ret := &SystemUser{}
-	q := query.SQLSelectSimple("*", util.KeySystemUser, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeySystemUser, util.KeyID+" = $1")
 	err := s.db.Get(ret, q, nil, id)
 	if err == sql.ErrNoRows {
 		if addIfMissing {

@@ -16,6 +16,7 @@ type Data struct {
 	Members  member.Entries
 	Comments comment.Comments
 	Perms    permission.Permissions
+	History  history.Entries
 	Actions  action.Actions
 }
 
@@ -29,9 +30,10 @@ type DataServices struct {
 
 func (svcs *DataServices) GetData(id uuid.UUID, params query.ParamSet, logger logur.Logger) *Data {
 	return &Data{
-		Members: svcs.Members.GetByModelID(id, params.Get(util.KeyMember, logger)),
+		Members:  svcs.Members.GetByModelID(id, params.Get(util.KeyMember, logger)),
 		Comments: svcs.Comments.GetByModelID(id, params.Get(util.KeyComment, logger)),
-		Perms: svcs.Permissions.GetByModelID(id, params.Get(util.KeyPermission, logger)),
-		Actions: svcs.Actions.GetBySvcModel(util.SvcTeam, id, params.Get(util.KeyAction, logger)),
+		Perms:    svcs.Permissions.GetByModelID(id, params.Get(util.KeyPermission, logger)),
+		History:  svcs.History.GetByModelID(id, params.Get(util.KeyHistory, logger)),
+		Actions:  svcs.Actions.GetBySvcModel(util.SvcTeam, id, params.Get(util.KeyAction, logger)),
 	}
 }

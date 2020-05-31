@@ -10,6 +10,10 @@ cd "$DIR"
 fsrc="tmp/sql.hashcode"
 ftgt="tmp/sql.hashcode.tmp"
 
+if [ ! -d "gen/query" ]; then
+  rm "$fsrc"
+fi
+
 find -s query/sql -type f -exec md5sum {} \; | md5sum > "$ftgt"
 
 if cmp -s "$fsrc" "$ftgt"; then

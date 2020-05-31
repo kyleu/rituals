@@ -59,9 +59,9 @@ endif
 
 .PHONY: build-release
 build-release: ## Build all binaries without debug information
-	@go-embed -input web/assets -output app/controllers/assets/assets.go
+	@go-embed -input web/assets -output app/web/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
-	@git checkout app/controllers/assets/assets.go
+	@git checkout app/web/assets/assets.go
 
 .PHONY: build-debug
 build-debug: ## Build all binaries with remote debugging capabilities

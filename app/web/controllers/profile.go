@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/app/model/auth"
 	"github.com/kyleu/rituals.dev/app/web/form"
-	"net/http"
-	"strings"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
 
@@ -76,4 +77,3 @@ func ProfilePic(w http.ResponseWriter, r *http.Request) {
 		return ctx.Route(util.KeyProfile), nil
 	})
 }
-

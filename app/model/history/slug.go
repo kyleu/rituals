@@ -1,10 +1,9 @@
-package member
+package history
 
 import (
 	"regexp"
 	"strings"
 
-	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/database/query"
@@ -12,24 +11,30 @@ import (
 	"emperror.dev/errors"
 )
 
-func NewSlugFor(db *database.Service, svc util.Service, str string) (string, error) {
+func (s *Service) NewSlugFor(str string) (string, error) {
 	randomStrLength := 4
 	if len(str) == 0 {
 		str = strings.ToLower(util.RandomString(randomStrLength))
 	}
 	slug := slugify(str)
-	q := query.SQLSelectSimple(util.KeyID, svc.Key, "slug = $1")
 
-	x, err := db.Query(q, nil, slug)
+	q := query.SQLSelectSimple(util.KeyID, s.svc.Key, "slug = $1")
+	x, err := s.db.Query(q, nil, slug)
 	if err != nil {
 		return slug, errors.Wrap(err, "error fetching existing slug")
 	}
 
-	if x.Next() {
+	q2 := query.SQLSelectSimple(util.WithDBID(util.KeyModel), s.tableName, "slug = $1")
+	y, err := s.db.Query(q2, nil, slug)
+	if err != nil {
+		return slug, errors.Wrap(err, "error fetching historical slug")
+	}
+
+	if x.Next() || y.Next() {
 		junk := strings.ToLower(util.RandomString(randomStrLength))
-		slug, err = NewSlugFor(db, svc, slug+"-"+junk)
+		slug, err = s.NewSlugFor(slug + "-" + junk)
 		if err != nil {
-			return slug, errors.Wrap(err, "error finding slug for new "+svc.Key+" session")
+			return slug, errors.Wrap(err, "error finding slug for new "+s.svc.Key+" session")
 		}
 	}
 

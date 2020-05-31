@@ -3,11 +3,12 @@ package estimate
 import (
 	"database/sql"
 	"fmt"
+	"strings"
+
 	"github.com/kyleu/rituals.dev/app/model/comment"
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/model/user"
-	"strings"
 
 	"github.com/kyleu/rituals.dev/app/database"
 
@@ -27,31 +28,33 @@ type Service struct {
 	Data   *session.DataServices
 	db     *database.Service
 	logger logur.Logger
+	svc    util.Service
 }
 
 func NewService(actions *action.Service, users *user.Service, db *database.Service, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.SvcEstimate.Key})
+	svc := util.SvcEstimate
+	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: svc.Key})
 
 	data := session.DataServices{
-		Members:     member.NewService(actions, users, db, logger, util.SvcEstimate),
-		Comments:    comment.NewService(actions, db, logger, util.SvcEstimate),
-		Permissions: permission.NewService(actions, db, logger, util.SvcEstimate),
-		History:     history.NewService(db, logger, util.SvcEstimate),
+		Members:     member.NewService(actions, users, db, logger, svc),
+		Comments:    comment.NewService(actions, db, logger, svc),
+		Permissions: permission.NewService(actions, db, logger, svc),
+		History:     history.NewService(actions, db, logger, svc),
 		Actions:     actions,
 	}
 
-	return &Service{Data: &data, db: db, logger: logger}
+	return &Service{Data: &data, db: db, logger: logger, svc: svc}
 }
 
 func (s *Service) New(title string, userID uuid.UUID, choices []string, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
-	slug, err := member.NewSlugFor(s.db, util.SvcEstimate, title)
+	slug, err := s.Data.History.NewSlugFor(title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating estimate slug")
 	}
 
 	model := NewSession(title, slug, userID, choices, teamID, sprintID)
 
-	q := query.SQLInsert(util.SvcEstimate.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyChoice)}, 1)
+	q := query.SQLInsert(s.svc.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyChoice)}, 1)
 	choiceString := "{" + strings.Join(model.Choices, ",") + "}"
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String(), choiceString)
 	if err != nil {
@@ -60,16 +63,16 @@ func (s *Service) New(title string, userID uuid.UUID, choices []string, teamID *
 
 	s.Data.Members.Register(model.ID, userID, member.RoleOwner)
 
-	s.Data.Actions.Post(util.SvcEstimate, model.ID, userID, action.ActCreate, nil, "")
-	s.Data.Actions.PostRef(util.SvcSprint, model.SprintID, util.SvcEstimate, model.ID, userID, action.ActContentAdd, "")
-	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, util.SvcEstimate, model.ID, userID, action.ActContentAdd, "")
+	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
+	s.Data.Actions.PostRef(util.SvcSprint, model.SprintID, s.svc, model.ID, userID, action.ActContentAdd, "")
+	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd, "")
 	return &model, nil
 }
 
 func (s *Service) List(params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcEstimate.Key, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", util.SvcEstimate.Key, "", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", s.svc.Key, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving estimate sessions: %+v", err))
@@ -80,7 +83,7 @@ func (s *Service) List(params *query.Params) Sessions {
 
 func (s *Service) GetByID(id uuid.UUID) *Session {
 	dto := &sessionDTO{}
-	q := query.SQLSelectSimple("*", util.SvcEstimate.Key, util.KeyID+" = $1")
+	q := query.SQLSelectSimple("*", s.svc.Key, util.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -94,10 +97,14 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 
 func (s *Service) GetBySlug(slug string) *Session {
 	var dto = &sessionDTO{}
-	q := query.SQLSelectSimple("*", util.SvcEstimate.Key, "slug = $1")
+	q := query.SQLSelectSimple("*", s.svc.Key, "slug = $1")
 	err := s.db.Get(dto, q, nil, slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			hist := s.Data.History.Get(slug)
+			if hist != nil {
+				return s.GetByID(hist.ModelID)
+			}
 			return nil
 		}
 		util.LogError(s.logger, "error getting estimate session by slug [%v]: %+v", slug, err)
@@ -107,9 +114,9 @@ func (s *Service) GetBySlug(slug string) *Session {
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcEstimate.Key, params, query.DefaultMCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultMCreatedOrdering...)
 	var dtos []sessionDTO
-	t := "estimate join estimate_member m on id = m." + util.WithDBID(util.SvcEstimate.Key)
+	t := "estimate join estimate_member m on id = m." + util.WithDBID(s.svc.Key)
 	q := query.SQLSelect("estimate.*", t, "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
@@ -120,9 +127,9 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
 }
 
 func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcEstimate.Key, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", util.SvcEstimate.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", s.svc.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, teamID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving estimates for team [%v]: %+v", teamID, err))
@@ -132,9 +139,9 @@ func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
 }
 
 func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(util.SvcEstimate.Key, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", util.SvcEstimate.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := query.SQLSelect("*", s.svc.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, sprintID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving estimates for sprint [%v]: %+v", sprintID, err))
@@ -145,10 +152,10 @@ func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) Sessions
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, choices []string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
 	cols := []string{util.KeyTitle, util.Plural(util.KeyChoice), util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key)}
-	q := query.SQLUpdate(util.SvcEstimate.Key, cols, fmt.Sprintf(util.KeyID+" = $%v", len(cols)+1))
+	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf(util.KeyID+" = $%v", len(cols)+1))
 	choiceString := "{" + strings.Join(choices, ",") + "}"
 	err := s.db.UpdateOne(q, nil, title, choiceString, teamID, sprintID, sessionID)
-	s.Data.Actions.Post(util.SvcEstimate, sessionID, userID, "update", nil, "")
+	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating estimate session")
 }
 

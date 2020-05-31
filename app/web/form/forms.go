@@ -1,13 +1,14 @@
 package form
 
 import (
-	"emperror.dev/errors"
 	"encoding/json"
 	"fmt"
-	"github.com/mitchellh/mapstructure"
-	"logur.dev/logur"
 	"net/http"
 	"strings"
+
+	"emperror.dev/errors"
+	"github.com/mitchellh/mapstructure"
+	"logur.dev/logur"
 )
 
 type ProfileForm struct {

@@ -1,8 +1,9 @@
 package retro
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/action"
@@ -25,7 +26,7 @@ func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) Feedbacks
 
 func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	dto := &feedbackDTO{}
-	q := query.SQLSelectSimple("*", util.KeyFeedback, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeyFeedback, util.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
@@ -35,7 +36,7 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelectSimple(util.WithDBID(util.SvcRetro.Key), util.KeyFeedback, util.KeyID + " = $1")
+	q := query.SQLSelectSimple(util.WithDBID(s.svc.Key), util.KeyFeedback, util.KeyID+" = $1")
 	err := s.db.Get(&ret, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
@@ -56,7 +57,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": id}
-	s.Data.Actions.Post(util.SvcRetro, retroID, userID, action.ActFeedbackAdd, actionContent, "")
+	s.Data.Actions.Post(s.svc, retroID, userID, action.ActFeedbackAdd, actionContent, "")
 
 	return s.GetFeedbackByID(id)
 }
@@ -64,7 +65,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content string, userID uuid.UUID) (*Feedback, error) {
 	html := util.ToHTML(content)
 
-	q := query.SQLUpdate(util.KeyFeedback, []string{util.KeyCategory, util.KeyContent, util.KeyHTML}, util.KeyID + " = $4")
+	q := query.SQLUpdate(util.KeyFeedback, []string{util.KeyCategory, util.KeyContent, util.KeyHTML}, util.KeyID+" = $4")
 	err := s.db.UpdateOne(q, nil, category, content, html, feedbackID)
 	if err != nil {
 		return nil, err
@@ -79,7 +80,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.Data.Actions.Post(util.SvcRetro, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent, "")
+	s.Data.Actions.Post(s.svc, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent, "")
 
 	return s.GetFeedbackByID(feedbackID)
 }
@@ -93,11 +94,11 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
 	}
 
-	q := query.SQLDelete(util.KeyFeedback, util.KeyID + " = $1")
+	q := query.SQLDelete(util.KeyFeedback, util.KeyID+" = $1")
 	err = s.db.DeleteOne(q, nil, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.Data.Actions.Post(util.SvcRetro, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
+	s.Data.Actions.Post(s.svc, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
 
 	return err
 }

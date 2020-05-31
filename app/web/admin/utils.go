@@ -1,10 +1,11 @@
 package admin
 
 import (
-	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/web/act"
 	"net/http"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -40,7 +41,7 @@ func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext)
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		if ctx.Profile.Role != util.RoleAdmin {
 			println(act.RequestToString(r))
-			if act.IsContentTypeJson(act.GetContentType(r)) {
+			if act.IsContentTypeJSON(act.GetContentType(r)) {
 				println("JSON!")
 				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 				ae := JSONResponse{Status: "error", Message: "you are not an administrator", Path: r.URL.Path, Occurred: time.Now()}

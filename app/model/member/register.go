@@ -2,6 +2,7 @@ package member
 
 import (
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"

@@ -29,7 +29,7 @@ func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) Stories
 
 func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 	dto := &storyDTO{}
-	q := query.SQLSelectSimple("*", util.KeyStory, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeyStory, util.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, storyID)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 
 func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelectSimple(util.WithDBID(util.SvcEstimate.Key), util.KeyStory, util.KeyID + " = $1")
+	q := query.SQLSelectSimple(util.WithDBID(s.svc.Key), util.KeyStory, util.KeyID+" = $1")
 	err := s.db.Get(&ret, q, nil, storyID)
 	if err != nil {
 		return nil, err
@@ -60,14 +60,14 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, userID uuid.UUID)
 
 	ret, err := s.GetStoryByID(id)
 	if err == nil && ret != nil {
-		postStory(s.Data.Actions, ret, userID, action.ActStoryAdd)
+		s.postStory(ret, userID, action.ActStoryAdd)
 	}
 
 	return ret, err
 }
 
 func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID) (*Story, error) {
-	q := query.SQLUpdate(util.KeyStory, []string{util.KeyTitle}, util.KeyID + " = $2")
+	q := query.SQLUpdate(util.KeyStory, []string{util.KeyTitle}, util.KeyID+" = $2")
 	err := s.db.UpdateOne(q, nil, title, storyID)
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID)
 		return nil, errors.New("cannot load newly-updated story")
 	}
 
-	postStory(s.Data.Actions, story, userID, action.ActStoryUpdate)
+	s.postStory(story, userID, action.ActStoryUpdate)
 	return story, err
 }
 
@@ -96,16 +96,16 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 		return err
 	}
 
-	q2 := query.SQLDelete(util.KeyStory, util.KeyID + " = $1")
+	q2 := query.SQLDelete(util.KeyStory, util.KeyID+" = $1")
 	err = s.db.DeleteOne(q2, nil, storyID)
 
-	postStory(s.Data.Actions, story, userID, action.ActStoryRemove)
+	s.postStory(story, userID, action.ActStoryRemove)
 	return err
 }
 
-func postStory(actions *action.Service, story *Story, userID uuid.UUID, act string) {
+func (s *Service) postStory(story *Story, userID uuid.UUID, act string) {
 	actionContent := map[string]interface{}{"storyID": story.ID}
-	actions.Post(util.SvcEstimate, story.EstimateID, userID, act, actionContent, "")
+	s.Data.Actions.Post(s.svc, story.EstimateID, userID, act, actionContent, "")
 }
 
 func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID uuid.UUID) (bool, string, error) {
@@ -128,7 +128,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 	err = s.db.UpdateOne(q, nil, status.String(), finalVote, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID, util.KeyStatus: status, "finalVote": finalVote}
-	s.Data.Actions.Post(util.SvcEstimate, story.EstimateID, userID, action.ActStoryStatus, actionContent, "")
+	s.Data.Actions.Post(s.svc, story.EstimateID, userID, action.ActStoryStatus, actionContent, "")
 
 	return true, finalVote, errors.Wrap(err, "error updating story status")
 }

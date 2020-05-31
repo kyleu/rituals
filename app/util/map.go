@@ -2,10 +2,11 @@ package util
 
 import (
 	"fmt"
-	"github.com/gofrs/uuid"
-	"logur.dev/logur"
 	"sort"
 	"strings"
+
+	"github.com/gofrs/uuid"
+	"logur.dev/logur"
 )
 
 func GetEntry(m map[string]interface{}, key string, logger logur.Logger) interface{} {
@@ -13,7 +14,7 @@ func GetEntry(m map[string]interface{}, key string, logger logur.Logger) interfa
 	if !ok {
 		if logger != nil {
 			keys := make([]string, 0, len(m))
-			for k, _ := range m {
+			for k := range m {
 				keys = append(keys, k)
 			}
 			sort.Strings(keys)

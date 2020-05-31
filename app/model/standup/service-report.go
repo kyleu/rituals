@@ -17,14 +17,14 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, us
 	id := util.UUID()
 	html := util.ToHTML(content)
 
-	q := query.SQLInsert(util.KeyReport, []string{util.KeyID, util.WithDBID(util.SvcStandup.Key), "d", util.WithDBID(util.KeyUser), util.KeyContent, util.KeyHTML}, 1)
+	q := query.SQLInsert(util.KeyReport, []string{util.KeyID, util.WithDBID(s.svc.Key), "d", util.WithDBID(util.KeyUser), util.KeyContent, util.KeyHTML}, 1)
 	err := s.db.Insert(q, nil, id, standupID, d, userID, content, html)
 	if err != nil {
 		return nil, err
 	}
 
 	actionContent := map[string]interface{}{"reportID": id}
-	s.Data.Actions.Post(util.SvcStandup, standupID, userID, action.ActReportAdd, actionContent, "")
+	s.Data.Actions.Post(s.svc, standupID, userID, action.ActReportAdd, actionContent, "")
 
 	return s.GetReportByID(id)
 }
@@ -51,7 +51,7 @@ func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) Reports 
 
 func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 	dto := &reportDTO{}
-	q := query.SQLSelectSimple("*", util.KeyReport, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeyReport, util.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, reportID)
 
 	if err != nil {
@@ -63,7 +63,7 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelectSimple(util.WithDBID(util.SvcStandup.Key), util.KeyReport, util.KeyID + " = $1")
+	q := query.SQLSelectSimple(util.WithDBID(s.svc.Key), util.KeyReport, util.KeyID+" = $1")
 	err := s.db.Get(&ret, q, nil, reportID)
 
 	if err != nil {
@@ -76,7 +76,7 @@ func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {
 func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, userID uuid.UUID) (*Report, error) {
 	html := util.ToHTML(content)
 
-	q := query.SQLUpdate(util.KeyReport, []string{"d", util.WithDBID(util.KeyUser), util.KeyContent, util.KeyHTML}, util.KeyID + " = $5")
+	q := query.SQLUpdate(util.KeyReport, []string{"d", util.WithDBID(util.KeyUser), util.KeyContent, util.KeyHTML}, util.KeyID+" = $5")
 	err := s.db.UpdateOne(q, nil, d, userID, content, html, reportID)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	}
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.Data.Actions.Post(util.SvcStandup, report.StandupID, userID, action.ActReportUpdate, actionContent, "")
+	s.Data.Actions.Post(s.svc, report.StandupID, userID, action.ActReportUpdate, actionContent, "")
 
 	return report, err
 }
@@ -102,10 +102,10 @@ func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load report [" + reportID.String() + "] for removal")
 	}
 
-	err = s.db.DeleteOne(query.SQLDelete(util.KeyReport, util.KeyID + " = $1"), nil, reportID)
+	err = s.db.DeleteOne(query.SQLDelete(util.KeyReport, util.KeyID+" = $1"), nil, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.Data.Actions.Post(util.SvcStandup, report.StandupID, userID, action.ActReportRemove, actionContent, "")
+	s.Data.Actions.Post(s.svc, report.StandupID, userID, action.ActReportRemove, actionContent, "")
 
 	return err
 }

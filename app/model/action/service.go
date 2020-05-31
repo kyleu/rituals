@@ -2,6 +2,7 @@ package action
 
 import (
 	"database/sql"
+
 	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
@@ -71,7 +72,7 @@ func (s *Service) List(params *query.Params) Actions {
 
 func (s *Service) GetByID(id uuid.UUID) *Action {
 	dto := actionDTO{}
-	q := query.SQLSelectSimple("*", util.KeyAction, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeyAction, util.KeyID+" = $1")
 	err := s.db.Get(&dto, q, nil, id)
 
 	if err != nil {

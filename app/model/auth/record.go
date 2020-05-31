@@ -40,7 +40,7 @@ func (s *Service) List(params *query.Params) Records {
 
 func (s *Service) GetByID(authID uuid.UUID) *Record {
 	dto := &recordDTO{}
-	q := query.SQLSelectSimple("*", util.KeyAuth, util.KeyID + " = $1")
+	q := query.SQLSelectSimple("*", util.KeyAuth, util.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, authID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -79,7 +79,7 @@ func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) Records {
 }
 
 func (s *Service) Delete(authID uuid.UUID) error {
-	q := query.SQLDelete(util.KeyAuth, util.KeyID + " = $1")
+	q := query.SQLDelete(util.KeyAuth, util.KeyID+" = $1")
 	return s.db.DeleteOne(q, nil, authID)
 }
 

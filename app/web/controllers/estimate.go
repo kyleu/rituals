@@ -40,10 +40,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 			choices = estimate.DefaultChoices
 		}
 
-		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
-		if err != nil {
-			return eresp(err, "cannot parse form")
-		}
+		sf := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
 
 		sess, err := ctx.App.Estimate.New(sf.Title, ctx.Profile.UserID, choices, sf.TeamID, sf.SprintID)
 		if err != nil {
@@ -76,6 +73,9 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 			ctx.Session.AddFlash("error:Can't load estimate [" + key + "]")
 			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcEstimate.Key + ".list"), nil
+		}
+		if sess.Slug != key {
+			return ctx.Route(util.SvcEstimate.Key, util.KeyKey, sess.Slug), nil
 		}
 
 		params := PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}

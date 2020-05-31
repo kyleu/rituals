@@ -28,7 +28,7 @@ import (
 	log "logur.dev/logur"
 )
 
-const debugSQL = false
+var debugSQL bool
 var verbose bool
 var redir string
 var addr string

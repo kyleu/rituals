@@ -61,10 +61,10 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 		userID, err = uuid.FromString(userIDValue.(string))
 		if err != nil {
 			util.LogWarn(ai.Logger, "cannot parse uuid [%v]: %+v", userIDValue, err)
-			userID = setSessionUser(session, r, w, ai.Logger)
+			userID = SetSessionUser(util.UUID(), session, r, w, ai.Logger)
 		}
 	} else {
-		userID = setSessionUser(session, r, w, ai.Logger)
+		userID = SetSessionUser(util.UUID(), session, r, w, ai.Logger)
 	}
 
 	user := ai.User.GetByID(userID, addIfMissing)
@@ -95,9 +95,9 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 	}
 }
 
-func setSessionUser(session *sessions.Session, r *http.Request, w http.ResponseWriter, logger logur.Logger) uuid.UUID {
-	userID := util.UUID()
+func SetSessionUser(userID uuid.UUID, session *sessions.Session, r *http.Request, w http.ResponseWriter, logger logur.Logger) uuid.UUID {
 	session.Values[util.KeyUser] = userID.String()
+	session.Options = &sessions.Options{Path: "/", HttpOnly: true, SameSite: http.SameSiteStrictMode}
 	err := session.Save(r, w)
 	if err != nil {
 		util.LogWarn(logger, "cannot save session: %+v", err)

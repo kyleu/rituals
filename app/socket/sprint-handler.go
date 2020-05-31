@@ -13,8 +13,6 @@ import (
 func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintSessionSaveParams) error {
 	title := util.ServiceTitle(util.SvcSprint, param.Title)
 
-	curr := s.sprints.GetByID(ch.ID)
-
 	teamID := util.GetUUIDFromString(param.TeamID)
 	var startDate *time.Time
 	var endDate *time.Time
@@ -32,13 +30,26 @@ func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintS
 		}
 	}
 
-	s.Logger.Debug(fmt.Sprintf("saving sprint session [%s] in team [%s]", title, teamID))
+	curr := s.sprints.GetByID(ch.ID)
+	if curr == nil {
+		return errors.New("no sprint available with id [" + ch.ID.String() + "]")
+	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
+
+	msg := "saving sprint session [%s] in team [%s]"
+	s.Logger.Debug(fmt.Sprintf(msg, title, teamID))
 
 	err := s.sprints.UpdateSession(ch.ID, title, teamID, startDate, endDate, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating sprint session")
+	}
+
+	if title != curr.Title {
+		slug, err := s.sprints.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		if err != nil {
+			return errors.Wrap(err, "error updating sprint slug from ["+curr.Slug+"] to ["+slug+"]")
+		}
 	}
 
 	err = sendSprintSessionUpdate(s, ch)
@@ -80,7 +91,7 @@ func sendSprintUpdate(s *Service, ch Channel, curr *uuid.UUID, spr *sprint.Sessi
 func sendSprintSessionUpdate(s *Service, ch Channel) error {
 	sess := s.sprints.GetByID(ch.ID)
 	if sess == nil {
-		return errors.New("cannot load sprint session ["+ch.ID.String()+"]")
+		return errors.New("cannot load sprint session [" + ch.ID.String() + "]")
 	}
 	err := s.WriteChannel(ch, NewMessage(util.SvcSprint, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending sprint session")

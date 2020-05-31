@@ -9,6 +9,7 @@ var (
 	allowedCommentSortColumns    = []string{util.KeyID, util.KeySvc, util.WithID(util.KeyModel), util.WithID(util.KeyUser), util.KeyContent, util.KeyHTML, util.KeyCreated}
 	allowedEstimateSortColumns   = []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyChoice), "options", util.KeyCreated}
 	allowedFeedbackSortColumns   = []string{util.KeyID, util.WithID(util.SvcRetro.Key), util.KeyIdx, util.WithID(util.KeyUser), util.KeyCategory, util.KeyContent, util.KeyHTML, util.KeyCreated}
+	allowedHistorySortColumns    = []string{util.KeySlug, util.WithID(util.KeyModel), "modelName", util.KeyCreated}
 	allowedInvitationSortColumns = []string{util.KeyKey, "k", "v", "src", "tgt", util.KeyNote, util.KeyStatus, "redeemed", util.KeyCreated}
 	allowedMemberSortColumns     = []string{util.WithID(util.KeyUser), util.KeyName, util.KeyRole, util.KeyCreated}
 	allowedPermissionSortColumns = []string{"k", "v", "access", util.KeyCreated}
@@ -29,7 +30,8 @@ var allowedColumns = map[string][]string{
 	util.KeyAuth:         allowedAuthSortColumns,
 	util.KeyComment:      allowedCommentSortColumns,
 	util.SvcEstimate.Key: allowedEstimateSortColumns,
-	util.KeyFeedback  :   allowedFeedbackSortColumns,
+	util.KeyFeedback:     allowedFeedbackSortColumns,
+	util.KeyHistory:      allowedHistorySortColumns,
 	util.KeyInvitation:   allowedInvitationSortColumns,
 	util.KeyMember:       allowedMemberSortColumns,
 	util.KeyPermission:   allowedPermissionSortColumns,

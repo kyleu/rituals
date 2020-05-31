@@ -3,6 +3,7 @@ package member
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/model/user"
 
 	"github.com/kyleu/rituals.dev/app/database"

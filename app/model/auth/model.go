@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"golang.org/x/oauth2/facebook"
 	"time"
+
+	"golang.org/x/oauth2/facebook"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/amazon"

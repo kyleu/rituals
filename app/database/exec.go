@@ -2,8 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/util"
 )

@@ -40,7 +40,7 @@ type formResult struct {
 	Perms    permission.Permissions
 }
 
-func parseSessionForm(userID uuid.UUID, svc util.Service, form url.Values, userSvc *user.Service) (*formResult, error) {
+func parseSessionForm(userID uuid.UUID, svc util.Service, form url.Values, userSvc *user.Service) *formResult {
 	u := userSvc.GetByID(userID, true)
 	title := util.ServiceTitle(svc, form.Get(util.KeyTitle))
 	teamID := getUUID(form, util.SvcTeam.Key)
@@ -48,5 +48,5 @@ func parseSessionForm(userID uuid.UUID, svc util.Service, form url.Values, userS
 	perms := parsePerms(form, teamID, sprintID)
 
 	ret := formResult{User: u, Title: title, TeamID: teamID, SprintID: sprintID, Perms: perms}
-	return &ret, nil
+	return &ret
 }

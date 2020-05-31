@@ -11,11 +11,9 @@ import (
 func (s *Service) updatePerms(ch Channel, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, permSvc *permission.Service, perms permission.Permissions) error {
 	filtered := make(permission.Permissions, 0)
 	for _, p := range perms {
-		if p.K == util.SvcTeam.Key && teamID == nil {
-			// skip team
-		} else if p.K == util.SvcSprint.Key && sprintID == nil {
-			// skip sprint
-		} else {
+		skipTeam := p.K == util.SvcTeam.Key && teamID == nil
+		skipSprint := p.K == util.SvcSprint.Key && sprintID == nil
+		if (!skipTeam) && (!skipSprint) {
 			filtered = append(filtered, p)
 		}
 	}
@@ -39,9 +37,8 @@ func sendPermissionsUpdate(s *Service, ch Channel, perms permission.Permissions)
 }
 
 func (s *Service) check(
-		userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID,
-		svc util.Service, modelID uuid.UUID) (permission.Permissions, permission.Errors, error) {
-
+	userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID, svc util.Service, modelID uuid.UUID) (
+	permission.Permissions, permission.Errors, error) {
 	var currTeams []uuid.UUID
 	if teamID != nil {
 		currTeams = s.teams.GetIdsByMember(userID)

@@ -26,10 +26,7 @@ func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionPar
 	var bc web.Breadcrumbs
 	bc = web.BreadcrumbsSimple(ctx.Route(p.Svc.Key+".list"), p.Svc.Plural)
 
-	auths, currTeams, currSprints, err := authsTeamsAndSprints(ctx, p.TeamID, p.SprintID)
-	if err != nil {
-		return nil, permission.Errors{{Svc: util.KeySystem, Provider: util.KeyError, Message: err.Error()}}, bc
-	}
+	auths, currTeams, currSprints := authsTeamsAndSprints(ctx, p.TeamID, p.SprintID)
 
 	var tp *permission.Params
 	if p.TeamID != nil {
@@ -58,7 +55,7 @@ func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionPar
 	return auths, permErrors, bc
 }
 
-func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID) (auth.Records, []uuid.UUID, []uuid.UUID, error) {
+func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID) (auth.Records, []uuid.UUID, []uuid.UUID) {
 	auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, nil)
 
 	var currTeams []uuid.UUID
@@ -71,7 +68,7 @@ func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID
 		currSprints = ctx.App.Sprint.GetIdsByMember(ctx.Profile.UserID)
 	}
 
-	return auths, currTeams, currSprints, nil
+	return auths, currTeams, currSprints
 }
 
 func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records, ctx web.RequestContext, w http.ResponseWriter) (string, error) {

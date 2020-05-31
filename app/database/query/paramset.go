@@ -11,7 +11,7 @@ type ParamSet map[string]*Params
 func (s ParamSet) Get(key string, logger logur.Logger) *Params {
 	x, ok := s[key]
 	if !ok {
-		return nil
+		return &Params{Key: key}
 	}
 
 	return x.Filtered(logger)

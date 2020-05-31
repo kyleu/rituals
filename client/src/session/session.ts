@@ -22,6 +22,7 @@ namespace session {
   }
 
   export function setDetail(session: Session) {
+    const oldSlug = system.cache.session?.slug || "invalid";
     system.cache.session = session;
     document.title = session.title;
     dom.setText("#model-title", session.title);
@@ -29,6 +30,11 @@ namespace session {
     const items = dom.els("#navbar .uk-navbar-item");
     if (items.length > 0) {
       items[items.length - 1].innerText = session.title;
+    }
+
+    if (oldSlug !== session.slug) {
+      window.history.replaceState(null, "", document.location.href.replace(oldSlug, session.slug));
+      console.log("slugChanged!!!!!");
     }
 
     modal.hide("session");

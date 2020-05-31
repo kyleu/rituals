@@ -10,6 +10,10 @@ cd "$DIR"
 fsrc="tmp/html.hashcode"
 ftgt="tmp/html.hashcode.tmp"
 
+if [ ! -d "gen/templates" ]; then
+  rm "$fsrc"
+fi
+
 find -s web/templates -type f -exec md5sum {} \; | md5sum > "$ftgt"
 
 if cmp -s "$fsrc" "$ftgt"; then

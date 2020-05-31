@@ -1,0 +1,9 @@
+<%: func AdminHistoryCard(histories history.Entries, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card uk-card-body uk-margin-top">
+  <h3 class="uk-card-title">History</h3>
+  <% if len(histories) == 0 { %>
+    <p>No history available</p>
+  <% } else { %>
+    <% AdminHistoryTable(histories, params.Get(util.KeyHistory, ctx.Logger), ctx, buffer) %>
+  <% } %>
+</div>

@@ -53,7 +53,7 @@ func (p *Params) OrderByString() string {
 			dir = " desc"
 		}
 		snake := util.ToSnakeCase(o.Column)
-		ret = append(ret, snake + dir)
+		ret = append(ret, snake+dir)
 	}
 
 	return strings.Join(ret, ", ")

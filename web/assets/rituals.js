@@ -1114,6 +1114,8 @@ var retro;
 var session;
 (function (session_1) {
     function setDetail(session) {
+        var _a;
+        const oldSlug = ((_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.slug) || "invalid";
         system.cache.session = session;
         document.title = session.title;
         dom.setText("#model-title", session.title);
@@ -1121,6 +1123,10 @@ var session;
         const items = dom.els("#navbar .uk-navbar-item");
         if (items.length > 0) {
             items[items.length - 1].innerText = session.title;
+        }
+        if (oldSlug !== session.slug) {
+            window.history.replaceState(null, "", document.location.href.replace(oldSlug, session.slug));
+            console.log("slugChanged!!!!!");
         }
         modal.hide("session");
     }

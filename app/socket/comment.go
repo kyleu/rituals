@@ -1,12 +1,13 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/model/comment"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
 type addCommentParams struct {

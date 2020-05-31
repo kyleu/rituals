@@ -33,10 +33,7 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
-		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcStandup, r.Form, ctx.App.User)
-		if err != nil {
-			return eresp(err, "cannot parse form")
-		}
+		sf := parseSessionForm(ctx.Profile.UserID, util.SvcStandup, r.Form, ctx.App.User)
 
 		sess, err := ctx.App.Standup.New(sf.Title, ctx.Profile.UserID, sf.TeamID, sf.SprintID)
 		if err != nil {
@@ -69,6 +66,9 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 			ctx.Session.AddFlash("error:Can't load standup [" + key + "]")
 			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcStandup.Key + ".list"), nil
+		}
+		if sess.Slug != key {
+			return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
 		}
 
 		params := PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}

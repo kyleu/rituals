@@ -15,7 +15,7 @@ func GetContentType(r *http.Request) string {
 	return strings.TrimSpace(ret)
 }
 
-func IsContentTypeJson(c string) bool {
+func IsContentTypeJSON(c string) bool {
 	return c == "application/json" || c == "text/json"
 }
 
@@ -32,4 +32,3 @@ func RequestToString(r *http.Request) string {
 	}
 	return strings.Join(request, "\n")
 }
-

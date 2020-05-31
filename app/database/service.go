@@ -2,10 +2,11 @@ package database
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/kyleu/rituals.dev/app/util"
 	"logur.dev/logur"
-	"strings"
 )
 
 type Service struct {

@@ -6,7 +6,7 @@ import "github.com/kyleu/rituals.dev/app/util"
 const (
 	ClientCmdPing = "ping"
 
-	ClientCmdConnect       = "connect"
+	ClientCmdConnect = "connect"
 
 	ClientCmdGetActions = "get-actions"
 	ClientCmdGetTeams   = "get-teams"
@@ -40,14 +40,14 @@ const (
 	ServerCmdError = util.KeyError
 	ServerCmdPong  = "pong"
 
-	ServerCmdSessionJoined     = "session-joined"
-	ServerCmdSessionUpdate     = "session-update"
+	ServerCmdSessionJoined = "session-joined"
+	ServerCmdSessionUpdate = "session-update"
 
 	ServerCmdCommentUpdate     = "comment-update"
 	ServerCmdPermissionsUpdate = "permissions-update"
-	ServerCmdTeamUpdate    = "team-update"
-	ServerCmdSprintUpdate  = "sprint-update"
-	ServerCmdContentUpdate = "content-update"
+	ServerCmdTeamUpdate        = "team-update"
+	ServerCmdSprintUpdate      = "sprint-update"
+	ServerCmdContentUpdate     = "content-update"
 
 	ServerCmdActions = "actions"
 	ServerCmdTeams   = "teams"

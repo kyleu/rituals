@@ -2,12 +2,13 @@ package admin
 
 import (
 	"encoding/json"
-	"github.com/kyleu/rituals.dev/app/util"
-	"github.com/kyleu/rituals.dev/app/web/act"
 	"io"
 	"io/ioutil"
-	"logur.dev/logur"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/util"
+	"github.com/kyleu/rituals.dev/app/web/act"
+	"logur.dev/logur"
 
 	"emperror.dev/errors"
 	"github.com/graphql-go/graphql"

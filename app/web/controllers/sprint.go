@@ -40,10 +40,7 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 
-		sf, err := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
-		if err != nil {
-			return eresp(err, "cannot parse form")
-		}
+		sf := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
 
 		sess, err := ctx.App.Sprint.New(sf.Title, ctx.Profile.UserID, startDate, endDate, sf.TeamID)
 		if err != nil {
@@ -71,6 +68,9 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")
 			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcSprint.Key + ".list"), nil
+		}
+		if sess.Slug != key {
+			return ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug), nil
 		}
 
 		params := PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
