@@ -5,7 +5,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/model/action"
 	"github.com/kyleu/rituals.dev/app/model/auth"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
-	"github.com/kyleu/rituals.dev/app/model/invitation"
 	"github.com/kyleu/rituals.dev/app/model/retro"
 	"github.com/kyleu/rituals.dev/app/model/sprint"
 	"github.com/kyleu/rituals.dev/app/model/standup"
@@ -23,7 +22,6 @@ type AppInfo struct {
 	User       *user.Service
 	Auth       *auth.Service
 	Action     *action.Service
-	Invitation *invitation.Service
 	Team       *team.Service
 	Sprint     *sprint.Service
 	Estimate   *estimate.Service

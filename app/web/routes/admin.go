@@ -32,9 +32,6 @@ func adminRoutes(app *config.AppInfo, r *mux.Router) *mux.Router {
 	r.Path(adm(util.KeyAction)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.ActionList))).Name(util.AdminLink(util.KeyAction))
 	r.Path(adm(util.KeyAction, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.ActionDetail))).Name(util.AdminLink(util.KeyAction, util.KeyDetail))
 
-	r.Path(adm(util.KeyInvitation)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.InvitationList))).Name(util.AdminLink(util.KeyInvitation))
-	r.Path(adm(util.KeyInvitation, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.InvitationDetail))).Name(util.AdminLink(util.KeyInvitation, util.KeyDetail))
-
 	r.Path(adm(util.SvcTeam.Key)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.TeamList))).Name(util.AdminLink(util.SvcTeam.Key))
 	r.Path(adm(util.SvcTeam.Key, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.TeamDetail))).Name(util.AdminLink(util.SvcTeam.Key, util.KeyDetail))
 

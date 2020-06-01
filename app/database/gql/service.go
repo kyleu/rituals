@@ -83,6 +83,7 @@ func initSchema() {
 
 		initMember()
 		initComment()
+		initHistory()
 
 		initEstimate()
 		initStandup()

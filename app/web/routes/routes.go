@@ -37,11 +37,6 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	r.Path(p(util.KeyAuth, "signout", "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.AuthSignout))).Name(n(util.KeyAuth, "signout"))
 	r.Path(p(util.KeyAuth, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.AuthSubmit))).Name(n(util.KeyAuth, "submit"))
 
-	// Join
-	join := r.Path(p("join")).Subrouter()
-	r.Path(p("join", "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.JoinGet))).Name(n("join", "get"))
-	join.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(controllers.JoinPost))).Name(n("join", "post"))
-
 	// Team
 	team := r.Path(p(util.SvcTeam.Key)).Subrouter()
 	team.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.TeamList))).Name(n(util.SvcTeam.Key, "list"))

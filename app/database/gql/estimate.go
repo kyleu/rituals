@@ -11,9 +11,7 @@ var (
 	estimateResolver           Callback
 	estimatesResolver          Callback
 	estimateActionResolver     Callback
-	estimateMemberResolver     Callback
 	estimatePermissionResolver Callback
-	estimateCommentResolver    Callback
 	estimateTeamResolver       Callback
 	estimateSprintResolver     Callback
 	estimateType               *graphql.Object
@@ -44,16 +42,21 @@ func initEstimate() {
 		return ctx.App.Action.GetBySvcModel(util.SvcEstimate, p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	estimateMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.Data.Members.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
-	}
-
 	estimatePermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Estimate.Data.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	estimateCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	estimateMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		return ctx.App.Estimate.Data.Members.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
+	}
+
+	estimateCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Estimate.Data.Comments.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+	}
+
+	estimateHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		ret := ctx.App.Estimate.Data.History.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
+		return ret, nil
 	}
 
 	estimateTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -123,6 +126,12 @@ func initEstimate() {
 					Description: "This estimate's comments",
 					Args:        listArgs,
 					Resolve:     ctxF(estimateCommentResolver),
+				},
+				util.KeyHistory: &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
+					Description: "This estimate's name history",
+					Args:        listArgs,
+					Resolve:     ctxF(estimateHistoryResolver),
 				},
 			},
 		},

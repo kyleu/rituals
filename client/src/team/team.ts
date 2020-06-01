@@ -75,7 +75,7 @@ namespace team {
   export function viewTeams(teams: ReadonlyArray<team.Detail>) {
     const c = dom.opt("#model-team-container");
     if(c) {
-      dom.setDisplay(c, teams.length > 0)
+      // dom.setDisplay(c, teams.length > 0)
       dom.setContent("#model-team-select", renderTeamSelect(teams, system.cache.session?.teamID));
       permission.setModelPerms("team");
     }

@@ -23,10 +23,10 @@ func (dto *entryDTO) ToEntry() *Entry {
 }
 
 type Entry struct {
-	Slug      string    `db:"slug"`
-	ModelID   uuid.UUID `db:"model_id"`
-	ModelName string    `db:"model_name"`
-	Created   time.Time `db:"created"`
+	Slug      string    `json:"slug"`
+	ModelID   uuid.UUID `json:"modelId"`
+	ModelName string    `json:"modelName"`
+	Created   time.Time `json:"created"`
 }
 
 type Entries []*Entry

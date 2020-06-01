@@ -28,7 +28,8 @@ namespace member {
     if (member.picture && member.picture.length > 0) {
       return <div>
         <div class="profile-image uk-margin-small-right"><img class="uk-border-circle" src={member.picture} alt={member.name} /></div>
-        <div class="profile-name">{member.name}</div>
+        <div>{member.name}</div>
+        <div class="clear"/>
       </div>;
     }
     return <div>

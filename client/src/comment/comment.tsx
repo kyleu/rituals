@@ -31,7 +31,7 @@ namespace comment {
     return <div class="comment-count-container uk-margin-small-left left hidden" data-comment-type={k} data-comment-id={v}>
       <a class={`${profile.linkColor}-fg`} title="view comments">
         <div class="comment-count">
-          <span class="uk-icon" data-uk-icon="comments" />
+          <span class="uk-icon" data-uk-icon="comment" />
           <span class="text" />
         </div>
       </a>

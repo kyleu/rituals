@@ -11,9 +11,7 @@ var (
 	retroResolver           Callback
 	retrosResolver          Callback
 	retroActionResolver     Callback
-	retroMemberResolver     Callback
 	retroPermissionResolver Callback
-	retroCommentResolver    Callback
 	retroTeamResolver       Callback
 	retroSprintResolver     Callback
 	retroType               *graphql.Object
@@ -40,7 +38,7 @@ func initRetro() {
 		return ctx.App.Action.GetBySvcModel(util.SvcRetro, p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	retroMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.Data.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
@@ -48,8 +46,13 @@ func initRetro() {
 		return ctx.App.Retro.Data.Permissions.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	retroCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.Data.Comments.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+	}
+
+	retroHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		ret := ctx.App.Retro.Data.History.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
+		return ret, nil
 	}
 
 	retroTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -113,6 +116,12 @@ func initRetro() {
 					Description: "This retro's comments",
 					Args:        listArgs,
 					Resolve:     ctxF(retroCommentResolver),
+				},
+				util.KeyHistory: &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
+					Description: "This retro's name history",
+					Args:        listArgs,
+					Resolve:     ctxF(retroHistoryResolver),
 				},
 			},
 		},

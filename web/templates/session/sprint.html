@@ -1,6 +1,6 @@
 <%: func ComponentSessionSprint(sprints sprint.Sessions, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div id="model-sprint-container" class="uk-margin">
-  <label class="uk-form-label" for="model-sprint-select" name="sprint">Sprint</label>
+  <label class="uk-form-label" for="model-sprint-select" name="sprint"><a href="<%= ctx.Route(util.SvcSprint.Key + `.list`) %>" class="theme">Sprint</a></label>
   <div id="model-sprint-select">
     <select class="uk-select" name="sprint">
       <option value="">- no sprint -</option>

@@ -88,7 +88,7 @@ namespace sprint {
   export function viewSprints(sprints: ReadonlyArray<sprint.Detail>) {
     const c = dom.opt("#model-sprint-container");
     if(c) {
-      dom.setDisplay(c, sprints.length > 0)
+      // dom.setDisplay(c, sprints.length > 0)
       dom.setContent("#model-sprint-select", renderSprintSelect(sprints, system.cache.session?.sprintID));
       permission.setModelPerms("sprint");
     }

@@ -1,6 +1,6 @@
 <%: func ComponentSessionTeam(teams team.Sessions, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <div id="model-team-container" class="uk-margin">
-  <label class="uk-form-label" for="model-team-select" name="team">Team</label>
+  <label class="uk-form-label" for="model-team-select" name="team"><a href="<%= ctx.Route(util.SvcTeam.Key + `.list`) %>" class="theme">Team</a></label>
   <div id="model-team-select">
     <select class="uk-select" name="team">
       <option value="">- no team -</option>

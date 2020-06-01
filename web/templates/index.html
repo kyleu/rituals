@@ -12,21 +12,16 @@
         <div class="uk-card uk-card-body">
           <h3 class="uk-card-title">
             <span class="right">
-              <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`static.about`) %>" title="about <%= util.AppName %>"></a>
+              <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
             </span>
             <% if ctx.Profile.Role == util.RoleAdmin { %>
             <span class="right">
               <a class="theme uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
             </span>
             <% } %>
-            Join Now
+            <%= util.AppName %>
           </h3>
-          <form method="post" action="<%= ctx.Route(`join.post`) %>">
-            <div class="uk-inline uk-display-block">
-              <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: forward"></button>
-              <input class="uk-input" type="text" name="i" placeholder="Invite Code" />
-            </div>
-          </form>
+          <p>Sample text</p>
         </div>
       </div>
       <div class="uk-width-1-2@s">

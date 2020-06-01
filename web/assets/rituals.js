@@ -211,7 +211,7 @@ var comment;
         return JSX("div", { class: "comment-count-container uk-margin-small-left left hidden", "data-comment-type": k, "data-comment-id": v },
             JSX("a", { class: `${profile.linkColor}-fg`, title: "view comments" },
                 JSX("div", { class: "comment-count" },
-                    JSX("span", { class: "uk-icon", "data-uk-icon": "comments" }),
+                    JSX("span", { class: "uk-icon", "data-uk-icon": "comment" }),
                     JSX("span", { class: "text" }))));
     }
     comment_1.renderCount = renderCount;
@@ -239,7 +239,6 @@ var contents;
         return JSX("tr", null,
             JSX("td", null,
                 JSX("a", { class: `${profile.linkColor}-fg`, href: `/${svc.key}/${session.slug}` }, session.title)),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, member.renderTitle(member.getMember(session.owner))),
             JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created))));
     }
     function toContent(svc, sessions) {
@@ -706,7 +705,8 @@ var member;
             return JSX("div", null,
                 JSX("div", { class: "profile-image uk-margin-small-right" },
                     JSX("img", { class: "uk-border-circle", src: member.picture, alt: member.name })),
-                JSX("div", { class: "profile-name" }, member.name));
+                JSX("div", null, member.name),
+                JSX("div", { class: "clear" }));
         }
         return JSX("div", null,
             JSX("div", { class: "profile-image uk-margin-small-right" },
@@ -1330,7 +1330,7 @@ var sprint;
         var _a;
         const c = dom.opt("#model-sprint-container");
         if (c) {
-            dom.setDisplay(c, sprints.length > 0);
+            // dom.setDisplay(c, sprints.length > 0)
             dom.setContent("#model-sprint-select", sprint.renderSprintSelect(sprints, (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.sprintID));
             permission.setModelPerms("sprint");
         }
@@ -1799,7 +1799,7 @@ var team;
         var _a;
         const c = dom.opt("#model-team-container");
         if (c) {
-            dom.setDisplay(c, teams.length > 0);
+            // dom.setDisplay(c, teams.length > 0)
             dom.setContent("#model-team-select", team.renderTeamSelect(teams, (_a = system.cache.session) === null || _a === void 0 ? void 0 : _a.teamID));
             permission.setModelPerms("team");
         }

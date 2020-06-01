@@ -47,7 +47,7 @@ func NewService(actions *action.Service, users *user.Service, db *database.Servi
 }
 
 func (s *Service) New(title string, userID uuid.UUID, categories []string, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
-	slug, err := s.Data.History.NewSlugFor(title)
+	slug, err := s.Data.History.NewSlugFor(nil, title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating retro slug")
 	}

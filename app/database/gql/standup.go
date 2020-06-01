@@ -11,9 +11,7 @@ var (
 	standupResolver           Callback
 	standupsResolver          Callback
 	standupActionResolver     Callback
-	standupMemberResolver     Callback
 	standupPermissionResolver Callback
-	standupCommentResolver    Callback
 	standupTeamResolver       Callback
 	standupSprintResolver     Callback
 	standupType               *graphql.Object
@@ -40,7 +38,7 @@ func initStandup() {
 		return ctx.App.Action.GetBySvcModel(util.SvcStandup, p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	standupMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	standupMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Standup.Data.Members.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
@@ -48,8 +46,13 @@ func initStandup() {
 		return ctx.App.Standup.Data.Permissions.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	standupCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	standupCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Standup.Data.Comments.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+	}
+
+	standupHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		ret := ctx.App.Standup.Data.History.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
+		return ret, nil
 	}
 
 	standupTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -110,6 +113,12 @@ func initStandup() {
 					Description: "This standups's comments",
 					Args:        listArgs,
 					Resolve:     ctxF(standupCommentResolver),
+				},
+				util.KeyHistory: &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
+					Description: "This standup's name history",
+					Args:        listArgs,
+					Resolve:     ctxF(standupHistoryResolver),
 				},
 			},
 		},

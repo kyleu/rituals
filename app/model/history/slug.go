@@ -1,6 +1,7 @@
 package history
 
 import (
+	"github.com/gofrs/uuid"
 	"regexp"
 	"strings"
 
@@ -11,12 +12,12 @@ import (
 	"emperror.dev/errors"
 )
 
-func (s *Service) NewSlugFor(str string) (string, error) {
+func (s *Service) NewSlugFor(modelID *uuid.UUID, title string) (string, error) {
 	randomStrLength := 4
-	if len(str) == 0 {
-		str = strings.ToLower(util.RandomString(randomStrLength))
+	if len(title) == 0 {
+		title = strings.ToLower(util.RandomString(randomStrLength))
 	}
-	slug := slugify(str)
+	slug := slugify(title)
 
 	q := query.SQLSelectSimple(util.KeyID, s.svc.Key, "slug = $1")
 	x, err := s.db.Query(q, nil, slug)
@@ -24,18 +25,17 @@ func (s *Service) NewSlugFor(str string) (string, error) {
 		return slug, errors.Wrap(err, "error fetching existing slug")
 	}
 
-	q2 := query.SQLSelectSimple(util.WithDBID(util.KeyModel), s.tableName, "slug = $1")
-	y, err := s.db.Query(q2, nil, slug)
-	if err != nil {
-		return slug, errors.Wrap(err, "error fetching historical slug")
-	}
+	curr := s.Get(slug)
 
-	if x.Next() || y.Next() {
+	if x.Next() {
 		junk := strings.ToLower(util.RandomString(randomStrLength))
-		slug, err = s.NewSlugFor(slug + "-" + junk)
+		slug, err = s.NewSlugFor(modelID, slug + "-" + junk)
 		if err != nil {
 			return slug, errors.Wrap(err, "error finding slug for new "+s.svc.Key+" session")
 		}
+	} else if(curr != nil && modelID != nil && curr.ModelID == *modelID) {
+		err = s.Remove(curr.Slug)
+		return slug, errors.Wrap(err, "unable to remove old history with slug [" + curr.Slug + "]")
 	}
 
 	return slug, nil

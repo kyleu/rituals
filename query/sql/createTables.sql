@@ -278,19 +278,6 @@ create table if not exists "feedback" (
   "created" timestamp not null default now()
 );
 
--- invite
-create table if not exists "invitation" (
-  "key" varchar(128) not null primary key,
-  "k" invitation_type not null,
-  "v" uuid not null,
-  "src" uuid references "system_user"("id"),
-  "tgt" uuid references "system_user"("id"),
-  "note" text,
-  "status" invitation_status not null,
-  "redeemed" timestamp,
-  "created" timestamp not null default now()
-);
-
 -- action
 create table if not exists "action" (
   "id" uuid not null primary key,

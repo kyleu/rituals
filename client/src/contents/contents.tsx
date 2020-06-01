@@ -3,7 +3,6 @@ namespace contents {
     const profile = system.cache.getProfile();
     return <tr>
       <td><a class={`${profile.linkColor}-fg`} href={`/${svc.key}/${session.slug}`}>{session.title}</a></td>
-      <td class="uk-table-shrink uk-text-nowrap">{member.renderTitle(member.getMember(session.owner))}</td>
       <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(session.created))}</td>
     </tr>;
   }

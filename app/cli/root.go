@@ -7,7 +7,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/web/routes"
 
-	"github.com/kyleu/rituals.dev/app/model/invitation"
 	"github.com/kyleu/rituals.dev/app/model/sprint"
 	"github.com/kyleu/rituals.dev/app/model/team"
 
@@ -79,7 +78,6 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	actionService := action.NewService(db, logger)
 	userSvc := user.NewService(actionService, db, logger)
 	authSvc := auth.NewService(authEnabled, redir, actionService, db, logger, userSvc)
-	invitationSvc := invitation.NewService(actionService, db, logger)
 	teamSvc := team.NewService(actionService, userSvc, db, logger)
 	sprintSvc := sprint.NewService(actionService, userSvc, db, logger)
 	estimateSvc := estimate.NewService(actionService, userSvc, db, logger)
@@ -95,7 +93,6 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		User:       userSvc,
 		Auth:       authSvc,
 		Action:     actionService,
-		Invitation: invitationSvc,
 		Team:       teamSvc,
 		Sprint:     sprintSvc,
 		Estimate:   estimateSvc,

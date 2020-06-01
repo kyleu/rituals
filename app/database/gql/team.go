@@ -11,9 +11,7 @@ var (
 	teamResolver           Callback
 	teamsResolver          Callback
 	teamActionResolver     Callback
-	teamMemberResolver     Callback
 	teamPermissionResolver Callback
-	teamCommentResolver    Callback
 	teamType               *graphql.Object
 )
 
@@ -30,7 +28,7 @@ func initTeam() {
 		return ctx.App.Action.GetBySvcModel(util.SvcTeam, p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	teamMemberResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.Data.Members.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
@@ -38,8 +36,13 @@ func initTeam() {
 		return ctx.App.Team.Data.Permissions.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	teamCommentResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.Data.Comments.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+	}
+
+	teamHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+		ret := ctx.App.Team.Data.History.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
+		return ret, nil
 	}
 
 	teamType = graphql.NewObject(
@@ -72,6 +75,12 @@ func initTeam() {
 					Description: "This team's comments",
 					Args:        listArgs,
 					Resolve:     ctxF(teamCommentResolver),
+				},
+				util.KeyHistory: &graphql.Field{
+					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
+					Description: "This team's name history",
+					Args:        listArgs,
+					Resolve:     ctxF(teamHistoryResolver),
 				},
 			},
 		},

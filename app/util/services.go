@@ -31,14 +31,14 @@ var SvcSprint = Service{
 	Title:       "Sprint",
 	Plural:      "sprints",
 	PluralTitle: "Sprints",
-	Icon:        "social",
+	Icon:        "settings",
 }
 var SvcEstimate = Service{
 	Key:         "estimate",
 	Title:       "Estimate",
 	Plural:      "estimates",
 	PluralTitle: "Estimates",
-	Icon:        "settings",
+	Icon:        "tag",
 }
 var SvcStandup = Service{
 	Key:         "standup",

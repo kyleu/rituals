@@ -52,7 +52,7 @@ func (s *Service) Get(slug string) *Entry {
 }
 
 func (s *Service) UpdateSlug(sessID uuid.UUID, oSlug string, oTitle string, title string, userID uuid.UUID) (string, error) {
-	tgt, err := s.NewSlugFor(title)
+	tgt, err := s.NewSlugFor(&sessID, title)
 	if err != nil {
 		return "", errors.Wrap(err, "error getting new slug slug for ["+title+"]")
 	}
@@ -79,19 +79,28 @@ func (s *Service) UpdateSlug(sessID uuid.UUID, oSlug string, oTitle string, titl
 	return tgt, nil
 }
 
-func (s *Service) RemoveHistory(modelID uuid.UUID) error {
-	q := query.SQLDelete(s.tableName, "model_id = $1")
-	err := s.db.DeleteOne(q, nil, modelID)
-	return errors.Wrap(err, "unable to remove history for ["+modelID.String()+"]")
+func (s *Service) Remove(slug string) error {
+	q := query.SQLDelete(s.tableName, "slug = $1")
+	err := s.db.DeleteOne(q, nil, slug)
+	return errors.Wrap(err, "unable to remove " + s.svc.Key + " history for ["+slug+"]")
 }
 
 func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
-	var dtos Entries
+	var dtos []entryDTO
+
 	q := query.SQLSelect("*", s.tableName, "model_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving history for model [%v:%v]: %+v", s.svc.Key, id, err))
 		return nil
 	}
-	return dtos
+	return toEntries(dtos)
+}
+
+func toEntries(dtos []entryDTO) Entries {
+	ret := make(Entries, 0, len(dtos))
+	for _, dto := range dtos {
+		ret = append(ret, dto.ToEntry())
+	}
+	return ret
 }

@@ -215,15 +215,6 @@ values
 ;
 
 
--- Invite
-insert into invitation
-  (key, k, v, src, tgt, note, status)
-values
-  ('private', 'estimate', '30000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000', 'Targeted Invite', 'pending'),
-  ('public', 'estimate', '30000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000000', null, 'Open Invite', 'pending')
-;
-
-
 -- Comment
 insert into comment
   (id, svc, model_id, target_type, target_id, user_id, content, html)
