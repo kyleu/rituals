@@ -26,11 +26,12 @@ namespace comment {
     modal.open("comment", t);
   }
 
-  export function add() {
-    const textarea = dom.req<HTMLTextAreaElement>("#comment-add-content");
+  export function add(t: string) {
+    const textarea = dom.req<HTMLTextAreaElement>(`#comment-add-content-${t}`);
     const v = textarea.value;
     textarea.value = "";
-    socket.send({svc: services.system.key, cmd: command.client.addComment, param: {targetType: activeType, targetID: activeID, content: v}})
+    const param = {targetType: activeType, targetID: activeID, content: v};
+    socket.send({svc: services.system.key, cmd: command.client.addComment, param: param});
   }
 
   export function onCommentUpdate(u: Comment) {
@@ -69,7 +70,13 @@ namespace comment {
 
     activeType = t;
     activeID = id;
-    dom.setContent("#modal-comment-content", renderComments(find(t, id)));
+    const comments = find(t, id);
+    if (t !== "root") {
+      t = "modal";
+    }
+    const el = dom.req(`#drop-comment-${t} .uk-comment-list`);
+    dom.setContent(el, renderComments(comments, system.cache.getProfile()));
+    el.scrollTop = el.scrollHeight;
   }
 
   export function setCounts() {
@@ -107,10 +114,23 @@ namespace comment {
     activeType = undefined;
   }
 
+  export function remove(id: string) {
+    if (confirm("remove this comment?")) {
+      socket.send({svc: services.system.key, cmd: command.client.removeComment, param: id});
+    }
+    return false;
+  }
+
   function setCount(t: string, comments: ReadonlyArray<Comment>, cc: HTMLElement, force?: boolean) {
     dom.req(".text", cc).innerText = comments.length.toString();
     if (t !== "root" && t !== "modal" && t !== "") {
       dom.setDisplay(cc, (comments.length !== 0) || force === true);
     }
+  }
+
+  export function onCommentRemoved(id: string) {
+    activeComments = activeComments.filter((c) => c.id !== id);
+    setCounts();
+    load();
   }
 }

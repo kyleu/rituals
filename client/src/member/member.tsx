@@ -27,15 +27,34 @@ namespace member {
     }
     if (member.picture && member.picture.length > 0) {
       return <div>
-        <div class="profile-image uk-margin-small-right"><img class="uk-border-circle" src={member.picture} alt={member.name} /></div>
-        <div>{member.name}</div>
+        <div class="profile-image"><img class="uk-border-circle" src={member.picture} alt={member.name} /></div>
+        <div class="left">{member.name}</div>
         <div class="clear"/>
       </div>;
     }
     return <div>
-      <div class="profile-image uk-margin-small-right"><span class="profile-icon uk-icon" data-uk-icon="user" /></div>
-      <div class="profile-name">{member.name}</div>
+      <div class="profile-image"><span class="profile-icon uk-icon" data-uk-icon="user" /></div>
+      <div class="left">{member.name}</div>
     </div>;
+  }
+
+  export function renderHeader(m: member.Member | undefined, t: string, close?: JSX.Element) {
+    return <header class="uk-comment-header uk-position-relative">
+      {close ? close : <span/>}
+      <div class="uk-grid-collapse uk-flex-middle" uk-grid>
+        <div class="uk-width-auto">
+          {(m && m.picture && m.picture.length > 0) ? <div>
+            <div class="profile-image"><img class="uk-border-circle" src={m.picture} alt={m.name} /></div>
+          </div> : <div>
+            <div class="profile-image"><span class="profile-icon uk-icon" data-uk-icon="user" /></div>
+          </div>}
+        </div>
+        <div class="uk-width-expand">
+          <h4 class="uk-comment-title uk-margin-remove">{ m?.name }</h4>
+          <p class="uk-comment-meta uk-margin-remove-top">{ date.toDateTimeString(new Date(t)) }</p>
+        </div>
+      </div>
+    </header>
   }
 
   export function viewSelf() {
@@ -45,7 +64,7 @@ namespace member {
 
   export function setPicture(url?: string) {
     if (url && url.length > 0) {
-      return <div class="model-icon profile-image uk-margin-small-right"><img class="uk-border-circle" src={url} alt="your picture" /></div>
+      return <div class="model-icon profile-image"><img class="uk-border-circle" src={url} alt="your picture" /></div>
     }
     return <span class="model-icon h3-icon" onclick="modal.open('self');" data-uk-icon="icon: user;"/>
   }

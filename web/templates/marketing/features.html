@@ -1,0 +1,20 @@
+<%: func Features(ctx web.RequestContext, w io.Writer) (int, error) %>
+
+<%~ "layout/basic.html" %>
+
+<%@ nav { %><% NavbarStatic("features", ctx, _buffer) %><% } %>
+
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title">Features</h3>
+    </div>
+    <% if ctx.App.Auth.Enabled { %>
+      <% FeatureSignin(ctx, _buffer) %>
+    <% } %>
+    <% FeatureTeam(_buffer) %>
+    <% FeatureTheme(_buffer) %>
+  </div>
+</div>
+<% } %>

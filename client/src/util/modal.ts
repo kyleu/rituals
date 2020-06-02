@@ -15,6 +15,10 @@ namespace modal {
   }
 
   export function wire() {
+    UIkit.util.on(".drop", "show", onDropOpen);
+    UIkit.util.on(".drop", "beforehide", onDropBeforeHide);
+    UIkit.util.on(".drop", "hide", onDropHide);
+
     UIkit.util.on(".modal", "show", onModalOpen);
     UIkit.util.on(".modal", "hide", onModalHide);
 
@@ -70,6 +74,9 @@ namespace modal {
       return;
     }
     const el = e.target as HTMLElement;
+    if(el.id.indexOf("modal") !== 0) {
+      return;
+    }
     const key = el.id.substr("modal-".length);
     const f = openEvents.get(key);
     if (f) {
@@ -92,6 +99,49 @@ namespace modal {
         f(activeParam);
       }
       activeParam = undefined;
+    }
+  }
+
+  function onDropOpen(e: Event) {
+    if(!e.target) {
+      return;
+    }
+    const el = e.target as HTMLElement;
+    const key = el.dataset["key"] || "";
+    let t = el.dataset["t"] || ""
+    const f = openEvents.get(key);
+    if (f) {
+      f(t);
+    } else {
+      console.warn(`no modal open handler registered for [${key}]`);
+    }
+  }
+
+  function onDropHide(e: Event) {
+    if(!e.target) {
+      return;
+    }
+    const el = e.target as HTMLElement;
+    if(el.classList.contains("uk-open")) {
+      const key = el.dataset["key"] || "";
+      const t = el.dataset["t"] || ""
+      const f = closeEvents.get(key);
+      if (f) {
+        f(t);
+      }
+    }
+  }
+
+  let emojiPicked = false;
+
+  export function onEmojiPicked() {
+    emojiPicked = true;
+    setTimeout(() => emojiPicked = false, 200);
+  }
+
+  function onDropBeforeHide(e: Event) {
+    if(emojiPicked) {
+      e.preventDefault()
     }
   }
 }

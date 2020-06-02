@@ -6,18 +6,22 @@ import (
 
 type Theme struct {
 	Name string
+	CSS  string
 }
 
 var ThemeDefault = Theme{
 	Name: "default",
+	CSS:  "theme-auto",
 }
 
 var ThemeLight = Theme{
 	Name: "light",
+	CSS:  "uk-dark",
 }
 
 var ThemeDark = Theme{
 	Name: "dark",
+	CSS:  "uk-light",
 }
 
 var AllThemes = []Theme{ThemeDefault, ThemeLight, ThemeDark}

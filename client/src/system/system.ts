@@ -73,6 +73,9 @@ namespace system {
       case command.server.commentUpdate:
         comment.onCommentUpdate(param as comment.Comment);
         break;
+      case command.server.commentRemove:
+        comment.onCommentRemoved(param as string);
+        break;
       default:
         console.warn(`unhandled system message for command [${cmd}]`);
     }

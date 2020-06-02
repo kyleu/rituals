@@ -32,7 +32,7 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 }
 
 func (s *Service) GetByModelID(modelID uuid.UUID, params *query.Params) Comments {
-	var defaultOrdering = query.Orderings{{Column: util.KeyCreated, Asc: false}}
+	var defaultOrdering = query.Orderings{{Column: util.KeyCreated, Asc: true}}
 	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, defaultOrdering...)
 	var dtos []commentDTO
 	q := query.SQLSelect("*", util.KeyComment, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)

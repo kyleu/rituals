@@ -26,7 +26,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
-		return tmpl(templates.Profile(ctx.App.Auth.Enabled, auths, ctx, w))
+		return tmpl(templates.Profile(auths, ctx, w))
 	})
 }
 

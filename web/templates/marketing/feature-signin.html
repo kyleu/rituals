@@ -1,0 +1,12 @@
+<%: func FeatureSignin(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<div class="uk-card uk-card-body uk-margin-top marketing">
+  <div class="uk-align-right">
+    <ul class="uk-list uk-list-divider">
+      <% for _, p := range ctx.App.Auth.EnabledProviders { %>
+        <% AuthSigninLink(p, nil, ctx, buffer) %>
+      <% } %>
+    </ul>
+  </div>
+  <h3 class="uk-card-title">Signin</h3>
+  <p>TODO!</p>
+</div>

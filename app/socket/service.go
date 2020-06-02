@@ -94,6 +94,10 @@ func (s *Service) Count() int {
 	return len(s.connections)
 }
 
+func (s *Service) RemoveComment(commentID uuid.UUID, userID uuid.UUID) error {
+	return s.teams.Data.Comments.RemoveComment(commentID)
+}
+
 func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	if connID == systemID {
 		s.Logger.Warn("--- admin message received ---")

@@ -2,7 +2,7 @@
 
 <%~ "layout/basic.html" %>
 
-<%@ nav { %><% NavbarStatic(ctx, _buffer) %><% } %>
+<%@ nav { %><% NavbarStatic("", ctx, _buffer) %><% } %>
 
 <%@ body { %>
 <div class="uk-section uk-section-small">
@@ -21,7 +21,7 @@
             <% } %>
             <%= util.AppName %>
           </h3>
-          <p>Sample text</p>
+          <p>Work with your team to estimate work, track your progress, and gather feedback</p>
         </div>
       </div>
       <div class="uk-width-1-2@s">

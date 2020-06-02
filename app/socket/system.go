@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/gofrs/uuid"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/model/session"
@@ -27,6 +28,10 @@ func onSystemMessage(s *Service, conn *Connection, cmd string, param json.RawMes
 		ucp := updateCommentParams{}
 		util.FromJSON(param, &ucp, s.Logger)
 		err = onUpdateComment(s, *conn.Channel, userID, ucp)
+	case ClientCmdRemoveComment:
+		var u uuid.UUID
+		util.FromJSON(param, &u, s.Logger)
+		err = onRemoveComment(s, *conn.Channel, userID, u)
 	case ClientCmdUpdateProfile:
 		snp := &saveProfileParams{}
 		util.FromJSON(param, snp, s.Logger)

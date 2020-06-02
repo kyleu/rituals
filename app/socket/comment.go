@@ -50,10 +50,20 @@ func onUpdateComment(s *Service, ch Channel, userID uuid.UUID, param updateComme
 	dataSvc := dataFor(s, ch.Svc)
 	c, err := dataSvc.Comments.Update(param.ID, param.Content, userID)
 	if err != nil {
-		return errors.Wrap(err, "cannot update story")
+		return errors.Wrap(err, "cannot update comment")
 	}
 	err = sendCommentUpdate(s, ch, c)
-	return errors.Wrap(err, "error sending story update")
+	return errors.Wrap(err, "error sending comment update")
+}
+
+func onRemoveComment(s *Service, ch Channel, userID uuid.UUID, commentID uuid.UUID) error {
+	s.Logger.Debug(fmt.Sprintf("removing report [%s]", commentID))
+	err := s.RemoveComment(commentID, userID)
+	if err != nil {
+		return errors.Wrap(err, "cannot remove comment")
+	}
+	err = s.WriteChannel(ch, NewMessage(util.SvcSystem, ServerCmdCommentRemove, commentID))
+	return errors.Wrap(err, "error sending comment removal notification")
 }
 
 func sendCommentUpdate(s *Service, ch Channel, comment *comment.Comment) error {

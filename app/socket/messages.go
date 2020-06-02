@@ -16,6 +16,7 @@ const (
 
 	ClientCmdAddComment    = "add-comment"
 	ClientCmdUpdateComment = "update-comment"
+	ClientCmdRemoveComment = "remove-comment"
 
 	ClientCmdUpdateProfile = "update-profile"
 	ClientCmdRemoveMember  = "remove-member"
@@ -44,6 +45,8 @@ const (
 	ServerCmdSessionUpdate = "session-update"
 
 	ServerCmdCommentUpdate     = "comment-update"
+	ServerCmdCommentRemove     = "comment-remove"
+
 	ServerCmdPermissionsUpdate = "permissions-update"
 	ServerCmdTeamUpdate        = "team-update"
 	ServerCmdSprintUpdate      = "sprint-update"

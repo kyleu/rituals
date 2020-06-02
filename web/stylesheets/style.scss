@@ -50,6 +50,10 @@ html {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
 }
 
+body .theme-auto {
+  visibility: hidden;
+}
+
 html.uk-light, body.uk-light {
   background-color: $dark_bg_color;
 }
@@ -122,6 +126,59 @@ h3 a:hover {
   img {
     width: 32px;
     height: 32px;
+  }
+}
+
+// Marketing
+.marketing {
+  .uk-align-right {
+    margin: 0;
+  }
+  .uk-list-divider {
+    margin: 0;
+  }
+  h3 {
+    margin: 0;
+  }
+}
+
+// Comments
+.uk-comment-header {
+  margin-bottom: 6px;
+}
+
+.uk-comment-body {
+  margin-bottom: 8px;
+}
+
+.drop {
+  font-size: 16px;
+  text-align: left;
+  width: 482px;
+  .uk-comment-list {
+    max-height: 400px;
+    overflow: auto;
+  }
+  .uk-card {
+    width: 480px;
+  }
+  .uk-card-body {
+    padding-bottom: 0;
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.uk-light {
+  .drop {
+    border: 1px solid #444;
+  }
+}
+
+.uk-dark  {
+  .drop {
+    border: 1px solid #e5e5e5;
   }
 }
 

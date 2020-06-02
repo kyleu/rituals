@@ -13,7 +13,7 @@ type Sandbox struct {
 
 type Sandboxes = []*Sandbox
 
-var AllSandboxes = Sandboxes{&Gallery, &Testbed, &Error}
+var AllSandboxes = Sandboxes{&Testbed, &Error}
 
 func FromString(s string) *Sandbox {
 	for _, t := range AllSandboxes {

@@ -95,11 +95,12 @@ var comment;
         modal.open("comment", t);
     }
     comment.show = show;
-    function add() {
-        const textarea = dom.req("#comment-add-content");
+    function add(t) {
+        const textarea = dom.req(`#comment-add-content-${t}`);
         const v = textarea.value;
         textarea.value = "";
-        socket.send({ svc: services.system.key, cmd: command.client.addComment, param: { targetType: activeType, targetID: activeID, content: v } });
+        const param = { targetType: activeType, targetID: activeID, content: v };
+        socket.send({ svc: services.system.key, cmd: command.client.addComment, param: param });
     }
     comment.add = add;
     function onCommentUpdate(u) {
@@ -136,7 +137,13 @@ var comment;
         }
         activeType = t;
         activeID = id;
-        dom.setContent("#modal-comment-content", comment.renderComments(find(t, id)));
+        const comments = find(t, id);
+        if (t !== "root") {
+            t = "modal";
+        }
+        const el = dom.req(`#drop-comment-${t} .uk-comment-list`);
+        dom.setContent(el, comment.renderComments(comments, system.cache.getProfile()));
+        el.scrollTop = el.scrollHeight;
     }
     comment.load = load;
     function setCounts() {
@@ -176,33 +183,44 @@ var comment;
         activeType = undefined;
     }
     comment.closeModal = closeModal;
+    function remove(id) {
+        if (confirm("remove this comment?")) {
+            socket.send({ svc: services.system.key, cmd: command.client.removeComment, param: id });
+        }
+        return false;
+    }
+    comment.remove = remove;
     function setCount(t, comments, cc, force) {
         dom.req(".text", cc).innerText = comments.length.toString();
         if (t !== "root" && t !== "modal" && t !== "") {
             dom.setDisplay(cc, (comments.length !== 0) || force === true);
         }
     }
+    function onCommentRemoved(id) {
+        activeComments = activeComments.filter((c) => c.id !== id);
+        setCounts();
+        load();
+    }
+    comment.onCommentRemoved = onCommentRemoved;
 })(comment || (comment = {}));
 var comment;
 (function (comment_1) {
-    function renderComment(comment) {
-        return JSX("tr", null,
-            JSX("td", null, member.renderTitle(member.getMember(comment.userID))),
-            JSX("td", { dangerouslySetInnerHTML: { __html: comment.html } }),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(comment.created))));
+    function renderComment(comment, profile) {
+        let close = comment.userID === profile.userID ? JSX("div", { class: "right" },
+            JSX("a", { class: `${profile.linkColor}-fg`, "data-uk-icon": "close", href: "", onclick: `return comment.remove('${comment.id}');`, title: "remove your comment" })) : JSX("span", null);
+        return JSX("li", null,
+            JSX("article", { class: "uk-comment uk-visible-toggle uk-transition-toggle", tabindex: "-1" },
+                member.renderHeader(member.getMember(comment.userID), comment.created, close),
+                JSX("div", { class: "uk-comment-body" },
+                    JSX("div", { dangerouslySetInnerHTML: { __html: comment.html } })),
+                JSX("hr", null)));
     }
-    function renderComments(comments) {
+    function renderComments(comments, profile) {
         if (comments.length === 0) {
             return JSX("div", null, "No comments available");
         }
         else {
-            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
-                JSX("thead", null,
-                    JSX("tr", null,
-                        JSX("th", null, "User"),
-                        JSX("th", null, "Content"),
-                        JSX("th", null, "Created"))),
-                JSX("tbody", null, comments.map(c => renderComment(c))));
+            return JSX("div", null, comments.map(c => renderComment(c, profile)));
         }
     }
     comment_1.renderComments = renderComments;
@@ -393,8 +411,7 @@ var feedback;
         const id = retro.cache.activeFeedback;
         if (id) {
             UIkit.modal.confirm("Delete this feedback?").then(function () {
-                const msg = { svc: services.retro.key, cmd: command.client.removeFeedback, param: id };
-                socket.send(msg);
+                socket.send({ svc: services.retro.key, cmd: command.client.removeFeedback, param: id });
                 modal.hide("feedback");
             });
         }
@@ -703,17 +720,31 @@ var member;
         }
         if (member.picture && member.picture.length > 0) {
             return JSX("div", null,
-                JSX("div", { class: "profile-image uk-margin-small-right" },
+                JSX("div", { class: "profile-image" },
                     JSX("img", { class: "uk-border-circle", src: member.picture, alt: member.name })),
-                JSX("div", null, member.name),
+                JSX("div", { class: "left" }, member.name),
                 JSX("div", { class: "clear" }));
         }
         return JSX("div", null,
-            JSX("div", { class: "profile-image uk-margin-small-right" },
+            JSX("div", { class: "profile-image" },
                 JSX("span", { class: "profile-icon uk-icon", "data-uk-icon": "user" })),
-            JSX("div", { class: "profile-name" }, member.name));
+            JSX("div", { class: "left" }, member.name));
     }
     member_2.renderTitle = renderTitle;
+    function renderHeader(m, t, close) {
+        return JSX("header", { class: "uk-comment-header uk-position-relative" },
+            close ? close : JSX("span", null),
+            JSX("div", { class: "uk-grid-collapse uk-flex-middle", "uk-grid": true },
+                JSX("div", { class: "uk-width-auto" }, (m && m.picture && m.picture.length > 0) ? JSX("div", null,
+                    JSX("div", { class: "profile-image" },
+                        JSX("img", { class: "uk-border-circle", src: m.picture, alt: m.name }))) : JSX("div", null,
+                    JSX("div", { class: "profile-image" },
+                        JSX("span", { class: "profile-icon uk-icon", "data-uk-icon": "user" })))),
+                JSX("div", { class: "uk-width-expand" },
+                    JSX("h4", { class: "uk-comment-title uk-margin-remove" }, m === null || m === void 0 ? void 0 : m.name),
+                    JSX("p", { class: "uk-comment-meta uk-margin-remove-top" }, date.toDateTimeString(new Date(t))))));
+    }
+    member_2.renderHeader = renderHeader;
     function viewSelf() {
         const selfInput = dom.setValue("#self-name-input", dom.req("#member-self .member-name").innerText);
         setTimeout(() => selfInput.focus(), 250);
@@ -721,7 +752,7 @@ var member;
     member_2.viewSelf = viewSelf;
     function setPicture(url) {
         if (url && url.length > 0) {
-            return JSX("div", { class: "model-icon profile-image uk-margin-small-right" },
+            return JSX("div", { class: "model-icon profile-image" },
                 JSX("img", { class: "uk-border-circle", src: url, alt: "your picture" }));
         }
         return JSX("span", { class: "model-icon h3-icon", onclick: "modal.open('self');", "data-uk-icon": "icon: user;" });
@@ -739,6 +770,7 @@ var command;
         updateSession: "update-session",
         addComment: "add-comment",
         updateComment: "update-comment",
+        removeComment: "remove-comment",
         updateProfile: "update-profile",
         removeMember: "remove-member",
         addStory: "add-story",
@@ -759,6 +791,7 @@ var command;
         sessionJoined: "session-joined",
         sessionUpdate: "session-update",
         commentUpdate: "comment-update",
+        commentRemove: "comment-remove",
         permissionsUpdate: "permissions-update",
         teamUpdate: "team-update",
         sprintUpdate: "sprint-update",
@@ -1508,8 +1541,8 @@ var story;
         if (!story) {
             return;
         }
-        const msg = { svc: services.estimate.key, cmd: command.client.setStoryStatus, param: { storyID: story.id, status } };
-        socket.send(msg);
+        const param = { storyID: story.id, status };
+        socket.send({ svc: services.estimate.key, cmd: command.client.setStoryStatus, param: param });
     }
     story_1.requestStoryStatus = requestStoryStatus;
     function setStoryStatus(storyID, status, currStory, calcTotal) {
@@ -1525,7 +1558,7 @@ var story;
     }
     story_1.setStoryStatus = setStoryStatus;
     function onStoryStatusChange(u) {
-        let currStory;
+        let currStory = undefined;
         estimate.cache.stories.forEach(s => {
             if (s.id === u.storyID) {
                 currStory = s;
@@ -1733,6 +1766,9 @@ var system;
                 break;
             case command.server.commentUpdate:
                 comment.onCommentUpdate(param);
+                break;
+            case command.server.commentRemove:
+                comment.onCommentRemoved(param);
                 break;
             default:
                 console.warn(`unhandled system message for command [${cmd}]`);
@@ -2165,6 +2201,9 @@ var modal;
     }
     modal.register = register;
     function wire() {
+        UIkit.util.on(".drop", "show", onDropOpen);
+        UIkit.util.on(".drop", "beforehide", onDropBeforeHide);
+        UIkit.util.on(".drop", "hide", onDropHide);
         UIkit.util.on(".modal", "show", onModalOpen);
         UIkit.util.on(".modal", "hide", onModalHide);
         register("welcome");
@@ -2214,6 +2253,9 @@ var modal;
             return;
         }
         const el = e.target;
+        if (el.id.indexOf("modal") !== 0) {
+            return;
+        }
         const key = el.id.substr("modal-".length);
         const f = openEvents.get(key);
         if (f) {
@@ -2236,6 +2278,46 @@ var modal;
                 f(activeParam);
             }
             activeParam = undefined;
+        }
+    }
+    function onDropOpen(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        const key = el.dataset["key"] || "";
+        let t = el.dataset["t"] || "";
+        const f = openEvents.get(key);
+        if (f) {
+            f(t);
+        }
+        else {
+            console.warn(`no modal open handler registered for [${key}]`);
+        }
+    }
+    function onDropHide(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        if (el.classList.contains("uk-open")) {
+            const key = el.dataset["key"] || "";
+            const t = el.dataset["t"] || "";
+            const f = closeEvents.get(key);
+            if (f) {
+                f(t);
+            }
+        }
+    }
+    let emojiPicked = false;
+    function onEmojiPicked() {
+        emojiPicked = true;
+        setTimeout(() => emojiPicked = false, 200);
+    }
+    modal.onEmojiPicked = onEmojiPicked;
+    function onDropBeforeHide(e) {
+        if (emojiPicked) {
+            e.preventDefault();
         }
     }
 })(modal || (modal = {}));
@@ -2300,13 +2382,14 @@ var style;
         if (t === "default") {
             t = "auto";
         }
-        const opts = { position: "bottom-end", theme: t, zIndex: 1011 };
+        const opts = { position: "bottom-end", theme: t, zIndex: 1021 };
         dom.els(".textarea-emoji").forEach(el => {
             const toggle = dom.req(".picker-toggle", el);
             toggle.addEventListener("click", () => {
                 const textarea = dom.req(".uk-textarea", el);
                 const picker = new EmojiButton(opts);
                 picker.on('emoji', (emoji) => {
+                    modal.onEmojiPicked();
                     dom.insertAtCaret(textarea, emoji);
                 });
                 picker.togglePicker(toggle);

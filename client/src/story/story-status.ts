@@ -38,8 +38,8 @@ namespace story {
     if (!story) {
       return;
     }
-    const msg = {svc: services.estimate.key, cmd: command.client.setStoryStatus, param: {storyID: story.id, status}};
-    socket.send(msg);
+    const param = {storyID: story.id, status};
+    socket.send({svc: services.estimate.key, cmd: command.client.setStoryStatus, param: param});
   }
 
   export function setStoryStatus(storyID: string, status: string, currStory: story.Story | undefined, calcTotal: boolean) {
@@ -55,7 +55,7 @@ namespace story {
   }
 
   export function onStoryStatusChange(u: estimate.StoryStatusChange) {
-    let currStory: Story | undefined;
+    let currStory: Story | undefined = undefined;
     estimate.cache.stories.forEach(s => {
       if (s.id === u.storyID) {
         currStory = s;
@@ -63,7 +63,6 @@ namespace story {
         s.status = u.status;
       }
     });
-
     setStoryStatus(u.storyID, u.status, currStory, true);
     if(u.storyID === estimate.cache.activeStory) {
       viewStoryStatus(u.status);

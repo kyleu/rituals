@@ -1,4 +1,4 @@
-<%: func NavbarStatic(ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func NavbarStatic(section string, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <header>
   <div data-uk-sticky="sel-target: .uk-navbar-container; cls-active: data-uk-navbar-sticky">
     <nav id="navbar" class="uk-navbar-container <%= ctx.Profile.NavColor %>-bg" data-uk-navbar>

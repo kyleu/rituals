@@ -12,6 +12,7 @@ namespace command {
 
     addComment: "add-comment",
     updateComment: "update-comment",
+    removeComment: "remove-comment",
 
     updateProfile: "update-profile",
     removeMember: "remove-member",
@@ -39,6 +40,8 @@ namespace command {
     sessionUpdate: "session-update",
 
     commentUpdate: "comment-update",
+    commentRemove: "comment-remove",
+
     permissionsUpdate: "permissions-update",
     teamUpdate: "team-update",
     sprintUpdate: "sprint-update",

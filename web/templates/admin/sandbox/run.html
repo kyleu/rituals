@@ -10,9 +10,7 @@
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><%= sb.Title %></h3>
       <div class="uk-margin-top">
-        <% if sb.Key == "gallery" { %>
-          <% AdminSandboxGallery(ctx, _buffer) %>
-        <% } else if sb.Key == "testbed" { %>
+        <% if sb.Key == "testbed" { %>
           <% AdminSandboxTestbed(ctx, _buffer) %>
         <% } else { %>
           <pre><%= content %></pre>

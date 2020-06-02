@@ -4,7 +4,7 @@
 <% ComponentHead(ctx, _buffer) %>
 <%@ head { %><% } %>
 </head>
-<body style="visibility: hidden;">
+<body class="<%= ctx.Profile.Theme.CSS %>">
 <%@ nav { %><% } %>
 <div id="<%= util.KeyContent %>" data-uk-height-viewport="expand: true">
 <% for _, flash := range ctx.Flashes { %>

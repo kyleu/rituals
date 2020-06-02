@@ -53,13 +53,14 @@ namespace style {
     if (t === "default") {
       t = "auto";
     }
-    const opts = {position: "bottom-end", theme: t, zIndex: 1011};
+    const opts = {position: "bottom-end", theme: t, zIndex: 1021};
     dom.els(".textarea-emoji").forEach(el => {
       const toggle = dom.req(".picker-toggle", el);
       toggle.addEventListener("click", () => {
         const textarea = dom.req<HTMLTextAreaElement>(".uk-textarea", el);
         const picker = new EmojiButton(opts);
         picker.on('emoji', (emoji: string) => {
+          modal.onEmojiPicked();
           dom.insertAtCaret(textarea, emoji);
         });
         picker.togglePicker(toggle);

@@ -28,7 +28,7 @@ func Pricing(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = "Pricing"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("pricing"), "pricing")
-		return tmpl(templates.StaticPricing(ctx, w))
+		return tmpl(templates.Pricing(ctx, w))
 	})
 }
 
@@ -39,7 +39,7 @@ func Features(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = "Features"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("features"), "features")
-		return tmpl(templates.StaticFeatures(ctx, w))
+		return tmpl(templates.Features(ctx, w))
 	})
 }
 
@@ -50,7 +50,7 @@ func Community(w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Title = "Community"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("community"), "community")
-		return tmpl(templates.StaticCommunity(ctx, w))
+		return tmpl(templates.Community(ctx, w))
 	})
 }
 
