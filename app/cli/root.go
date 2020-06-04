@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/model/comment"
 	"net/http"
 	"os"
 
@@ -74,16 +75,16 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database pool")
 	}
-
 	actionService := action.NewService(db, logger)
+	commentService := comment.NewService(actionService, db, logger)
 	userSvc := user.NewService(actionService, db, logger)
 	authSvc := auth.NewService(authEnabled, redir, actionService, db, logger, userSvc)
-	teamSvc := team.NewService(actionService, userSvc, db, logger)
-	sprintSvc := sprint.NewService(actionService, userSvc, db, logger)
-	estimateSvc := estimate.NewService(actionService, userSvc, db, logger)
-	standupSvc := standup.NewService(actionService, userSvc, db, logger)
-	retroSvc := retro.NewService(actionService, userSvc, db, logger)
-	socketSvc := socket.NewService(logger, actionService, userSvc, authSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
+	teamSvc := team.NewService(actionService, userSvc, commentService, db, logger)
+	sprintSvc := sprint.NewService(actionService, userSvc, commentService, db, logger)
+	estimateSvc := estimate.NewService(actionService, userSvc, commentService, db, logger)
+	standupSvc := standup.NewService(actionService, userSvc, commentService, db, logger)
+	retroSvc := retro.NewService(actionService, userSvc, commentService, db, logger)
+	socketSvc := socket.NewService(logger, actionService, userSvc, commentService, authSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
 
 	ai := config.AppInfo{
 		Debug:      verbose,
@@ -91,6 +92,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 		Commit:     commitHash,
 		Logger:     logger,
 		User:       userSvc,
+		Comment:    commentService,
 		Auth:       authSvc,
 		Action:     actionService,
 		Team:       teamSvc,

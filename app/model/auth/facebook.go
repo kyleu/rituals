@@ -49,8 +49,6 @@ func facebookAuth(tok *oauth2.Token) (*Record, error) {
 	}
 
 	var user = facebookUser{}
-	println("#@######")
-	println(string(contents))
 	err = json.Unmarshal(contents, &user)
 
 	if err != nil {

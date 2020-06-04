@@ -1,9 +1,6 @@
 <%: func Profile(auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% NavbarStatic("profile", ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">

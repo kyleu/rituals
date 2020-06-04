@@ -18,6 +18,7 @@ var (
 )
 
 func initEstimate() {
+	svc := util.SvcEstimate
 	initStory()
 
 	estimateStatusType := graphql.NewEnum(graphql.EnumConfig{
@@ -35,11 +36,11 @@ func initEstimate() {
 	}
 
 	estimatesResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.List(paramSetFromGraphQLParams(util.SvcEstimate.Key, params, ctx.Logger)), nil
+		return ctx.App.Estimate.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	estimateActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Action.GetBySvcModel(util.SvcEstimate, p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
+		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	estimatePermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -51,7 +52,7 @@ func initEstimate() {
 	}
 
 	estimateCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.Data.Comments.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+		return ctx.App.Estimate.Data.GetComments(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	estimateHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -77,7 +78,7 @@ func initEstimate() {
 
 	estimateType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.SvcEstimate.Title,
+			Name: svc.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),

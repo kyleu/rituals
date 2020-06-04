@@ -11,6 +11,7 @@ import (
 )
 
 func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSessionSaveParams) error {
+	dataSvc := s.retros
 	title := util.ServiceTitle(util.SvcRetro, param.Title)
 
 	categories := query.StringToArray(param.Categories)
@@ -21,9 +22,14 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	sprintID := util.GetUUIDFromString(param.SprintID)
 	teamID := util.GetUUIDFromString(param.TeamID)
 
-	curr := s.retros.GetByID(ch.ID)
+	curr := dataSvc.GetByID(ch.ID)
 	if curr == nil {
 		return errors.New("no retro available with id [" + ch.ID.String() + "]")
+	}
+
+	sr := s.checkPerms(userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	if sr != nil {
+		return sr
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -32,13 +38,13 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(categories, "and"), sprintID, teamID))
 
-	err := s.retros.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)
+	err := dataSvc.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating retro session")
 	}
 
 	if title != curr.Title {
-		slug, err := s.retros.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		slug, err := dataSvc.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
 		if err != nil {
 			return errors.Wrap(err, "error updating retro slug from ["+curr.Slug+"] to ["+slug+"]")
 		}
@@ -65,7 +71,7 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, sprintID, s.retros.Data.Permissions, param.Permissions)
+	err = s.updatePerms(ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}

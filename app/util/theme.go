@@ -9,9 +9,9 @@ type Theme struct {
 	CSS  string
 }
 
-var ThemeDefault = Theme{
-	Name: "default",
-	CSS:  "theme-auto",
+var ThemeAuto = Theme{
+	Name: "auto",
+	CSS:  "uk-dark",
 }
 
 var ThemeLight = Theme{
@@ -24,7 +24,7 @@ var ThemeDark = Theme{
 	CSS:  "uk-light",
 }
 
-var AllThemes = []Theme{ThemeDefault, ThemeLight, ThemeDark}
+var AllThemes = []Theme{ThemeAuto, ThemeLight, ThemeDark}
 
 func ThemeFromString(s string) Theme {
 	for _, t := range AllThemes {
@@ -32,7 +32,7 @@ func ThemeFromString(s string) Theme {
 			return t
 		}
 	}
-	return ThemeDefault
+	return ThemeAuto
 }
 
 func (t *Theme) String() string {

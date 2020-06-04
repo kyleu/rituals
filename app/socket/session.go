@@ -18,7 +18,7 @@ type SessionResult struct {
 	Error       error
 }
 
-func (s *Service) sendInitial(ch Channel, conn *Connection, entry *member.Entry, msg *Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
+func (s *Service) sendInitial(ch Channel, conn *connection, entry *member.Entry, msg *Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
 	err := s.WriteMessage(conn.ID, msg)
 	if err != nil {
 		return errors.Wrap(err, "error writing initial estimate message")
@@ -40,11 +40,20 @@ func (s *Service) sendInitial(ch Channel, conn *Connection, entry *member.Entry,
 	return errors.Wrap(err, "error writing online update")
 }
 
-func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Channel, conn *Connection) SessionResult {
+func getPerms(s *Service, auths auth.Records, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, ch Channel) (permission.Permissions, permission.Errors, error) {
+	perms, permErrors, err := s.check(userID, auths, teamID, sprintID, ch.Svc, ch.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return perms, permErrors, nil
+}
+
+func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Channel, conn *connection) SessionResult {
 	userID := conn.Profile.UserID
 	auths, displays := s.auths.GetDisplayByUserID(userID, nil)
 
-	perms, permErrors, err := s.check(conn.Profile.UserID, auths, teamID, sprintID, ch.Svc, ch.ID)
+	perms, permErrors, err := getPerms(s, auths, conn.Profile.UserID, teamID, sprintID, ch)
 	if err != nil {
 		return SessionResult{Error: err}
 	}
@@ -53,10 +62,10 @@ func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Cha
 	}
 
 	dataSvc := dataFor(s, ch.Svc)
-	entry := dataSvc.Members.Register(ch.ID, userID, member.RoleMember)
+	entry := dataSvc.Members.Register(ch.ID, userID, "", member.RoleMember)
 	var sprintEntry *member.Entry
 	if sprintID != nil {
-		sprintEntry = s.sprints.Data.Members.RegisterRef(sprintID, userID, member.RoleMember)
+		sprintEntry = s.sprints.Data.Members.RegisterRef(sprintID, userID, "", member.RoleMember)
 	}
 
 	conn.Svc = ch.Svc
@@ -80,7 +89,7 @@ func (s *Service) sendPermErrors(connID uuid.UUID, svc util.Service, permErrors 
 
 func errorNoSession(s *Service, svc util.Service, connID uuid.UUID, chID uuid.UUID) error {
 	msg := util.IDErrorString(util.KeySession, chID.String())
-	err := s.WriteMessage(connID, NewMessage(util.SvcEstimate, ServerCmdError, msg))
+	err := s.WriteMessage(connID, NewMessage(util.SvcEstimate, ServerCmdSessionRemove, msg))
 	if err != nil {
 		return errors.Wrap(err, "error writing error message")
 	}

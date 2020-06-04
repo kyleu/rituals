@@ -25,7 +25,7 @@ namespace member {
     if (!member) {
       return <span>{"{former member}"}</span>
     }
-    if (member.picture && member.picture.length > 0) {
+    if (member.picture && member.picture.length > 0 && member.picture != "none") {
       return <div>
         <div class="profile-image"><img class="uk-border-circle" src={member.picture} alt={member.name} /></div>
         <div class="left">{member.name}</div>
@@ -63,7 +63,7 @@ namespace member {
   }
 
   export function setPicture(url?: string) {
-    if (url && url.length > 0) {
+    if (url && url.length > 0 && url != "none") {
       return <div class="model-icon profile-image"><img class="uk-border-circle" src={url} alt="your picture" /></div>
     }
     return <span class="model-icon h3-icon" onclick="modal.open('self');" data-uk-icon="icon: user;"/>

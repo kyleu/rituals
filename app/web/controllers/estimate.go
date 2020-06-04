@@ -42,7 +42,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User)
 
-		sess, err := ctx.App.Estimate.New(sf.Title, ctx.Profile.UserID, choices, sf.TeamID, sf.SprintID)
+		sess, err := ctx.App.Estimate.New(sf.Title, ctx.Profile.UserID, sf.MemberName, choices, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return eresp(err, "error creating estimate session")
 		}

@@ -30,6 +30,7 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 	profile.Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Profile))).Name(n(util.KeyProfile))
 	profile.Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(controllers.ProfileSave))).Name(n(util.KeyProfile, "save"))
 	r.Path(p(util.KeyProfile, "pic", "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.ProfilePic))).Name(n(util.KeyProfile, "pic"))
+	r.Path(p(util.KeyProfile, "theme", "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.ProfileTheme))).Name(n(util.KeyProfile, util.KeyTheme))
 
 	// Auth
 	_ = r.Path(p(util.KeyAuth)).Subrouter()

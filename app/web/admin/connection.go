@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/json"
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/form"
@@ -14,8 +15,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func ConnectionList(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +24,7 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 
 		p := act.ParamSetFromRequest(r)
 		connections := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
-		return tmpl(templates.AdminConnectionList(connections, p, ctx, w))
+		return tmpl(admintemplates.ConnectionList(connections, p, ctx, w))
 	})
 }
 
@@ -44,7 +43,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		msg := socket.NewMessage(util.SvcSystem, socket.ServerCmdPong, nil)
-		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))
+		return tmpl(admintemplates.ConnectionDetail(connection, msg, ctx, w))
 	})
 }
 
@@ -78,6 +77,6 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminConnectionDetail(connection, msg, ctx, w))
+		return tmpl(admintemplates.ConnectionDetail(connection, msg, ctx, w))
 	})
 }

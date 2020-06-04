@@ -53,6 +53,9 @@ namespace estimate {
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);
         break;
+      case command.server.sessionRemove:
+        system.onSessionRemove(services.estimate)
+        break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
         break;

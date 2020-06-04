@@ -37,8 +37,7 @@ endif
 
 .PHONY: compile-templates
 compile-templates:
-	bin/template-html.sh
-	bin/template-sql.sh
+	bin/template/all.sh
 
 .PHONY: build-%
 build-%: goversion compile-templates

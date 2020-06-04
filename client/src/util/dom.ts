@@ -8,7 +8,6 @@ namespace dom {
     } catch (e) {
       console.warn("error setting style", e);
     }
-    document.body.style.visibility = "visible";
     try {
       modal.wire();
     } catch (e) {

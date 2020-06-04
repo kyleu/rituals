@@ -36,7 +36,8 @@ type submitVoteParams struct {
 	Choice  string    `json:"choice"`
 }
 
-func onEstimateMessage(s *Service, conn *Connection, cmd string, param json.RawMessage) error {
+func onEstimateMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+	dataSvc := s.estimates;
 	var err error
 	userID := conn.Profile.UserID
 	switch cmd {
@@ -47,11 +48,15 @@ func onEstimateMessage(s *Service, conn *Connection, cmd string, param json.RawM
 	case ClientCmdUpdateSession:
 		ess := estimateSessionSaveParams{}
 		util.FromJSON(param, &ess, s.Logger)
-		err = onEstimateSessionSave(s, *conn.Channel, userID, ess)
+		err = onEstimateSessionSave(s, conn, userID, ess)
+	case ClientCmdUpdateMember:
+		u := updateMemberParams{}
+		util.FromJSON(param, &u, s.Logger)
+		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
 		util.FromJSON(param, &u, s.Logger)
-		err = onRemoveMember(s, s.estimates.Data.Members, *conn.Channel, userID, u)
+		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdAddStory:
 		asp := addStoryParams{}
 		util.FromJSON(param, &asp, s.Logger)

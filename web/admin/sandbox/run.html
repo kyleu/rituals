@@ -1,0 +1,19 @@
+<%: func SandboxRun(sb *sandbox.Sandbox, content string, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title"><%= sb.Title %></h3>
+      <div class="uk-margin-top">
+        <% if sb.Key == "testbed" { %>
+          <% SandboxTestbed(ctx, _buffer) %>
+        <% } else { %>
+          <pre><%= content %></pre>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

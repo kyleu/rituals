@@ -9,14 +9,20 @@ import (
 )
 
 func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standupSessionSaveParams) error {
+	dataSvc := s.standups
 	title := util.ServiceTitle(util.SvcStandup, param.Title)
 
 	sprintID := util.GetUUIDFromString(param.SprintID)
 	teamID := util.GetUUIDFromString(param.TeamID)
 
-	curr := s.standups.GetByID(ch.ID)
+	curr := dataSvc.GetByID(ch.ID)
 	if curr == nil {
 		return errors.New("no standup available with id [" + ch.ID.String() + "]")
+	}
+
+	sr := s.checkPerms(userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	if sr != nil {
+		return sr
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -25,13 +31,13 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
 
-	err := s.standups.UpdateSession(ch.ID, title, teamID, sprintID, userID)
+	err := dataSvc.UpdateSession(ch.ID, title, teamID, sprintID, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating standup session")
 	}
 
 	if title != curr.Title {
-		slug, err := s.standups.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		slug, err := dataSvc.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
 		if err != nil {
 			return errors.Wrap(err, "error updating standup slug from ["+curr.Slug+"] to ["+slug+"]")
 		}
@@ -58,7 +64,7 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, sprintID, s.standups.Data.Permissions, param.Permissions)
+	err = s.updatePerms(ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}

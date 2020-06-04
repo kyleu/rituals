@@ -1,0 +1,99 @@
+<%: func UserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title">User Detail</h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= user.UserID.String() %></td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <td><%= user.Name %></td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td><%= user.Role %></td>
+          </tr>
+          <tr>
+            <th>Theme</th>
+            <td><%= user.Theme %></td>
+          </tr>
+          <tr>
+            <th>Nav Color</th>
+            <td><%= user.NavColor %></td>
+          </tr>
+          <tr>
+            <th>Link Color</th>
+            <td><%= user.LinkColor %></td>
+          </tr>
+          <tr>
+            <th>Picture</th>
+            <td>
+              <% if len(user.Picture) > 0 { %>
+                <img src="<%= user.Picture %>" />
+              <% } %>
+            </td>
+          </tr>
+          <tr>
+            <th>Locale</th>
+            <td><%=v user.Locale %></td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td><% templates.ComponentDateTime(&user.Created, _buffer) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <% if len(auths) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Auth Records</h3>
+        <% AuthTable(auths, params.Get(util.KeyAuth, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(teams) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Teams</h3>
+        <% TeamTable(teams, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(sprints) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Sprints</h3>
+        <% SprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(estimates) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title"><%= util.SvcEstimate.PluralTitle %></h3>
+        <% EstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(standups) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title"><%= util.SvcStandup.PluralTitle %></h3>
+        <% StandupTable(standups, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(retros) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title"><%= util.SvcRetro.PluralTitle %></h3>
+        <% RetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+    <% if len(actions) > 0 { %>
+      <div class="uk-card uk-card-body uk-margin-top">
+        <h3 class="uk-card-title">Actions</h3>
+        <% ActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
+      </div>
+    <% } %>
+  </div>
+</div>
+<% } %>

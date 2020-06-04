@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"sort"
 	"strings"
 	"time"
 
@@ -28,7 +29,7 @@ type Permission struct {
 	K       string      `json:"k"`
 	V       string      `json:"v"`
 	Access  member.Role `json:"access"`
-	Created time.Time   `json:"created"`
+	Created time.Time   `json:"-"`
 }
 
 type Permissions []*Permission
@@ -41,6 +42,38 @@ func (ps Permissions) FindByK(k string) Permissions {
 		}
 	}
 	return ret
+}
+
+func (ps Permissions) FindByKV(k string, v string) *Permission {
+	for _, e := range ps {
+		if e.K == k && e.V == v {
+			return e
+		}
+	}
+	return nil
+}
+
+func (ps Permissions) Sort() Permissions {
+	sort.Slice(ps, func(i, j int) bool {
+		l, r := ps[i], ps[j]
+		if l.K == r.K {
+			return l.V < r.V
+		}
+		return l.K < r.K
+	})
+	return ps
+}
+
+func (ps Permissions) Equals(filtered Permissions) bool {
+	if len(ps) != len(filtered) {
+		return false
+	}
+		for _, c := range ps {
+			if filtered.FindByKV(c.K, c.V) == nil {
+				return false
+			}
+		}
+	return true
 }
 
 type Error struct {

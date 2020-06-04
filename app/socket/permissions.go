@@ -2,6 +2,7 @@ package socket
 
 import (
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/model/auth"
 	"github.com/kyleu/rituals.dev/app/model/permission"
@@ -16,6 +17,13 @@ func (s *Service) updatePerms(ch Channel, userID uuid.UUID, teamID *uuid.UUID, s
 		if (!skipTeam) && (!skipSprint) {
 			filtered = append(filtered, p)
 		}
+	}
+	filtered.Sort()
+
+	curr := permSvc.GetByModelID(ch.ID, nil)
+
+	if curr.Equals(filtered) {
+		return nil
 	}
 
 	final, err := permSvc.SetAll(ch.ID, filtered, userID)
@@ -36,8 +44,7 @@ func sendPermissionsUpdate(s *Service, ch Channel, perms permission.Permissions)
 	return err
 }
 
-func (s *Service) check(
-	userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID, svc util.Service, modelID uuid.UUID) (
+func (s *Service) check(userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID, svc util.Service, modelID uuid.UUID) (
 	permission.Permissions, permission.Errors, error) {
 	var currTeams []uuid.UUID
 	if teamID != nil {
@@ -61,24 +68,18 @@ func (s *Service) check(
 		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
 	}
 
-	var permSvc *permission.Service
-	switch svc {
-	case util.SvcTeam:
-		permSvc = s.teams.Data.Permissions
-	case util.SvcSprint:
-		permSvc = s.sprints.Data.Permissions
-	case util.SvcEstimate:
-		permSvc = s.estimates.Data.Permissions
-	case util.SvcStandup:
-		permSvc = s.standups.Data.Permissions
-	case util.SvcRetro:
-		permSvc = s.retros.Data.Permissions
-	}
-
-	if permSvc == nil {
-		return nil, nil, errors.New("Invalid service [" + svc.Key + "]")
-	}
-
-	perms, e := permSvc.Check(s.auths.Enabled, svc, modelID, auths, tp, sp)
+	perms, e := dataFor(s, svc).Permissions.Check(s.auths.Enabled, svc, modelID, auths, tp, sp)
 	return perms, e, nil
+}
+
+func (s *Service) checkPerms(userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, svc util.Service, modelID uuid.UUID) error {
+	auths := s.auths.GetByUserID(userID, nil)
+	_, permErrors, err := s.check(userID, auths, teamID, sprintID, svc, modelID)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("unable to read permissions for [%v:%v]", svc, modelID))
+	}
+	if len(permErrors) > 0 {
+		return errors.New("permission violation")
+	}
+	return nil
 }

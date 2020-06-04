@@ -1,0 +1,7 @@
+<%: func SessionData(data *session.Data, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<% MemberCard(data.Members, params, ctx, buffer) %>
+<% CommentCard(data.Comments, params, ctx, buffer) %>
+<% PermissionCard(data.Perms, params, ctx, buffer) %>
+<% HistoryCard(data.History, params, ctx, buffer) %>
+<% ActionCard(data.Actions, params, ctx, buffer) %>

@@ -1,15 +1,12 @@
 <%: func SprintList(sprints sprint.Sessions, teams team.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcSprint.Icon %>"></span> Sprints</h3>
-      <p>Plan your time and direct your efforts</p>
+      <p><%= util.SvcSprint.Description %></p>
       <% if len(sprints) > 0 { %>
         <% SprintTable(sprints, params, ctx, _buffer) %>
       <% } %>

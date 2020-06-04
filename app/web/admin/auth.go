@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -10,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func AuthList(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +19,7 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAuth, util.Plural(util.KeyAuth))
 		params := act.ParamSetFromRequest(r)
 		users := ctx.App.Auth.List(params.Get(util.KeyAuth, ctx.Logger))
-		return tmpl(templates.AdminAuthList(users, params, ctx, w))
+		return tmpl(admintemplates.AuthList(users, params, ctx, w))
 	})
 }
 
@@ -50,6 +49,6 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, authID.String()), authID.String()[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminAuthDetail(record, user, ctx, w))
+		return tmpl(admintemplates.AuthDetail(record, user, ctx, w))
 	})
 }

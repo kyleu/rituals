@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/web"
 
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func UserList(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +21,7 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		users := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
-		return tmpl(templates.AdminUserList(users, params, ctx, w))
+		return tmpl(admintemplates.UserList(users, params, ctx, w))
 	})
 }
 
@@ -54,6 +54,6 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, userID.String()), u.Name)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminUserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))
+		return tmpl(admintemplates.UserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))
 	})
 }

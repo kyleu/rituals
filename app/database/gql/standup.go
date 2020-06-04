@@ -18,6 +18,8 @@ var (
 )
 
 func initStandup() {
+	svc := util.SvcStandup
+
 	standupStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "StandupStatus",
 		Values: graphql.EnumValueConfigMap{
@@ -31,11 +33,11 @@ func initStandup() {
 	}
 
 	standupsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Standup.List(paramSetFromGraphQLParams(util.SvcStandup.Key, params, ctx.Logger)), nil
+		return ctx.App.Standup.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	standupActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Action.GetBySvcModel(util.SvcStandup, p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
+		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	standupMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -47,7 +49,7 @@ func initStandup() {
 	}
 
 	standupCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Standup.Data.Comments.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+		return ctx.App.Standup.Data.GetComments(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	standupHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -73,7 +75,7 @@ func initStandup() {
 
 	standupType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.SvcStandup.Title,
+			Name: svc.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),

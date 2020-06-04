@@ -30,11 +30,25 @@
       <h2 id="member-modal-name" class="uk-modal-title"></h2>
     </div>
     <div class="uk-modal-body" data-uk-overflow-auto>
-      <p><span id="member-modal-role"></span></p>
+      <div class="owner-form">
+        <select class="uk-select" id="member-modal-role-select">
+        <% for _, r := range member.AllRoles { %>
+          <option value="<%= r.Key %>"><%= r.Title %></option>
+        <% } %>
+        </select>
+      </div>
+      <div class="member-form">
+        <p><span id="member-modal-role"></span></p>
+      </div>
     </div>
     <div class="uk-modal-footer uk-text-right">
-      <button class="left uk-button uk-button-default" type="button" onclick="member.removeMember();">Remove Member</button>
-      <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= util.KeyMember %>');">Close</button>
+      <div class="owner-actions">
+        <button class="left uk-button uk-button-default" type="button" onclick="member.removeMember();">Remove Member</button>
+        <button class="uk-button uk-button-default" type="button" onclick="member.saveRole();">Save Changes</button>
+      </div>
+      <div class="member-actions">
+        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= util.KeyMember %>');">Close</button>
+      </div>
     </div>
   </div>
 </div>

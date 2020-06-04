@@ -27,7 +27,8 @@ type editReportParams struct {
 	Content string    `json:"content"`
 }
 
-func onStandupMessage(s *Service, conn *Connection, cmd string, param json.RawMessage) error {
+func onStandupMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+	dataSvc := s.standups
 	var err error
 	userID := conn.Profile.UserID
 
@@ -40,10 +41,14 @@ func onStandupMessage(s *Service, conn *Connection, cmd string, param json.RawMe
 		sss := standupSessionSaveParams{}
 		util.FromJSON(param, &sss, s.Logger)
 		err = onStandupSessionSave(s, *conn.Channel, userID, sss)
+	case ClientCmdUpdateMember:
+		u := updateMemberParams{}
+		util.FromJSON(param, &u, s.Logger)
+		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
 		util.FromJSON(param, &u, s.Logger)
-		err = onRemoveMember(s, s.standups.Data.Members, *conn.Channel, userID, u)
+		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdAddReport:
 		arp := addReportParams{}
 		util.FromJSON(param, &arp, s.Logger)

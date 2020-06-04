@@ -10,12 +10,14 @@ import (
 )
 
 type Role struct {
-	Key string `json:"key"`
+	Key         string `json:"key"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
-var RoleOwner = Role{Key: util.KeyOwner}
-var RoleMember = Role{Key: util.KeyMember}
-var RoleObserver = Role{Key: "observer"}
+var RoleOwner = Role{Key: util.KeyOwner, Title: "Owner", Description: "can do pretty much anything"}
+var RoleMember = Role{Key: util.KeyMember, Title: "Member", Description: "can participate in the session"}
+var RoleObserver = Role{Key: "observer", Title: "Observer", Description: "can only view the session"}
 
 var AllRoles = []Role{RoleOwner, RoleMember, RoleObserver}
 

@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -10,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func SprintList(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +20,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		sprints := ctx.App.Sprint.List(params.Get(util.SvcSprint.Key, ctx.Logger))
-		return tmpl(templates.AdminSprintList(sprints, params, ctx, w))
+		return tmpl(admintemplates.SprintList(sprints, params, ctx, w))
 	})
 }
 
@@ -40,9 +39,9 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 
-		estimates := ctx.App.Estimate.GetBySprint(*sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		standups := ctx.App.Standup.GetBySprint(*sprintID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		retros := ctx.App.Retro.GetBySprint(*sprintID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		estimates := ctx.App.Estimate.GetBySprintID(*sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := ctx.App.Standup.GetBySprintID(*sprintID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := ctx.App.Retro.GetBySprintID(*sprintID, params.Get(util.SvcRetro.Key, ctx.Logger))
 
 		data := ctx.App.Sprint.Data.GetData(*sprintID, params, ctx.Logger)
 
@@ -52,6 +51,6 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, sprintID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminSprintDetail(sess, estimates, standups, retros, data, params, ctx, w))
+		return tmpl(admintemplates.SprintDetail(sess, estimates, standups, retros, data, params, ctx, w))
 	})
 }

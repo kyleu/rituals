@@ -1,16 +1,19 @@
 package socket
 
 import (
-	"time"
-
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) UpdateName(id uuid.UUID, name string) error {
-	return s.users.UpdateUserName(id, name)
+type updateMemberParams struct {
+	ID   uuid.UUID `json:"id"`
+	Role string    `json:"role"`
+}
+
+func (s *Service) UpdateMember(id uuid.UUID, name string, picture string) error {
+	return s.users.UpdateMember(id, name, picture)
 }
 
 func (s *Service) GetOnline(ch Channel) []uuid.UUID {
@@ -43,18 +46,25 @@ func (s *Service) sendMemberUpdate(ch Channel, current *member.Entry, except ...
 	return s.WriteChannel(ch, onlineMsg, except...)
 }
 
-func onRemoveMember(s *Service, memberSvc *member.Service, ch Channel, _ uuid.UUID, target uuid.UUID) error {
-	err := memberSvc.RemoveMember(ch.ID, target)
+func (s *Service) sendMemberRemoved(ch Channel, member uuid.UUID, except ...uuid.UUID) error {
+	onlineMsg := NewMessage(util.SvcSystem, ServerCmdMemberRemove, member)
+	return s.WriteChannel(ch, onlineMsg, except...)
+}
+
+func onRemoveMember(s *Service, memberSvc *member.Service, ch Channel, userID uuid.UUID, target uuid.UUID) error {
+	err := memberSvc.RemoveMember(ch.ID, userID, target)
 	if err != nil {
-		return errors.Wrap(err, "unable to remove member from team")
+		return errors.Wrap(err, "unable to remove member")
 	}
+	err = s.sendMemberRemoved(ch, target)
+	return errors.Wrap(err, "unable to send member update")
+}
 
-	err = s.sendMemberUpdate(ch, &member.Entry{
-		UserID:  target,
-		Name:    "::delete",
-		Role:    member.Role{},
-		Created: time.Time{},
-	})
-
-	return errors.Wrap(err, "unable to send member update from team")
+func onUpdateMember(s *Service, memberSvc *member.Service, ch Channel, src uuid.UUID, params updateMemberParams) error {
+	curr, err := memberSvc.UpdateMember(ch.ID, src, params.ID, params.Role)
+	if err != nil {
+		return errors.Wrap(err, "unable to remove member")
+	}
+	err = s.sendMemberUpdate(ch, curr)
+	return errors.Wrap(err, "unable to send member update")
 }

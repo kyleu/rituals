@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -10,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func ActionList(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +19,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAction, util.Plural(util.KeyAction))
 		params := act.ParamSetFromRequest(r)
 		actions := ctx.App.Action.List(params.Get(util.KeyAction, ctx.Logger))
-		return tmpl(templates.AdminActionList(actions, params, ctx, w))
+		return tmpl(admintemplates.ActionList(actions, params, ctx, w))
 	})
 }
 
@@ -50,6 +49,6 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, s), s[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminActionDetail(a, user, ctx, w))
+		return tmpl(admintemplates.ActionDetail(a, user, ctx, w))
 	})
 }

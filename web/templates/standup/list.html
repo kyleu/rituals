@@ -1,15 +1,12 @@
 <%: func StandupList(sessions standup.Sessions, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcStandup.Icon %>"></span> <%= util.SvcStandup.PluralTitle %></h3>
-      <p>Share your progress with your team</p>
+      <p><%= util.SvcStandup.Description %></p>
       <% if len(sessions) > 0 { %>
         <% StandupTable(sessions, params, ctx, _buffer) %>
       <% } %>

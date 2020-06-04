@@ -42,7 +42,7 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
 
-		sess, err := ctx.App.Sprint.New(sf.Title, ctx.Profile.UserID, startDate, endDate, sf.TeamID)
+		sess, err := ctx.App.Sprint.New(sf.Title, ctx.Profile.UserID, sf.MemberName, startDate, endDate, sf.TeamID)
 		if err != nil {
 			return eresp(err, "error creating sprint session")
 		}

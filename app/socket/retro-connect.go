@@ -26,7 +26,7 @@ type RetroSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onRetroConnect(s *Service, conn *Connection, retroID uuid.UUID) error {
+func onRetroConnect(s *Service, conn *connection, retroID uuid.UUID) error {
 	ch := Channel{Svc: util.SvcRetro, ID: retroID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
@@ -36,12 +36,13 @@ func onRetroConnect(s *Service, conn *Connection, retroID uuid.UUID) error {
 	return errors.Wrap(err, "error joining retro session")
 }
 
-func joinRetroSession(s *Service, conn *Connection, ch Channel) error {
+func joinRetroSession(s *Service, conn *connection, ch Channel) error {
+	dataSvc := s.retros;
 	if ch.Svc != util.SvcRetro {
 		return errors.New("retro cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess := s.retros.GetByID(ch.ID)
+	sess := dataSvc.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -53,12 +54,12 @@ func joinRetroSession(s *Service, conn *Connection, ch Channel) error {
 	sj := RetroSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.retros.Data.Comments.GetByModelID(ch.ID, nil),
+		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
 		Sprint:      getSprintOpt(s, sess.SprintID),
-		Members:     s.retros.Data.Members.GetByModelID(ch.ID, nil),
+		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Feedback:    s.retros.GetFeedback(ch.ID, nil),
+		Feedback:    dataSvc.GetFeedback(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}

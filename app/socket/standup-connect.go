@@ -26,7 +26,7 @@ type StandupSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onStandupConnect(s *Service, conn *Connection, standupID uuid.UUID) error {
+func onStandupConnect(s *Service, conn *connection, standupID uuid.UUID) error {
 	ch := Channel{Svc: util.SvcStandup, ID: standupID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
@@ -36,12 +36,13 @@ func onStandupConnect(s *Service, conn *Connection, standupID uuid.UUID) error {
 	return errors.Wrap(err, "error joining standup session")
 }
 
-func joinStandupSession(s *Service, conn *Connection, ch Channel) error {
+func joinStandupSession(s *Service, conn *connection, ch Channel) error {
+	dataSvc := s.standups
 	if ch.Svc != util.SvcStandup {
 		return errors.New("standup cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess := s.standups.GetByID(ch.ID)
+	sess := dataSvc.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -53,12 +54,12 @@ func joinStandupSession(s *Service, conn *Connection, ch Channel) error {
 	sj := StandupSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.standups.Data.Comments.GetByModelID(ch.ID, nil),
+		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
 		Sprint:      getSprintOpt(s, sess.SprintID),
-		Members:     s.standups.Data.Members.GetByModelID(ch.ID, nil),
+		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Reports:     s.standups.GetReports(ch.ID, nil),
+		Reports:     dataSvc.GetReports(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}

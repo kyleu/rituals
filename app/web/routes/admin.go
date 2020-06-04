@@ -20,6 +20,9 @@ func adminRoutes(app *config.AppInfo, r *mux.Router) *mux.Router {
 	r.Path(adm(util.KeySandbox)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.SandboxList))).Name(util.AdminLink(util.KeySandbox))
 	r.Path(adm(util.KeySandbox, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.SandboxRun))).Name(util.AdminLink(util.KeySandbox, "run"))
 
+	r.Path(adm(util.KeyTranscript)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.TranscriptList))).Name(util.AdminLink(util.KeyTranscript))
+	r.Path(adm(util.KeyTranscript, "{key}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.TranscriptRun))).Name(util.AdminLink(util.KeyTranscript, "run"))
+
 	r.Path(adm(util.KeyModules)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Modules))).Name(util.AdminLink(util.KeyModules))
 	r.Path(adm(util.KeyRoutes)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.Routes))).Name(util.AdminLink(util.KeyRoutes))
 

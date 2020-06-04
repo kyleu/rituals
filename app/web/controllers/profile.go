@@ -77,3 +77,19 @@ func ProfilePic(w http.ResponseWriter, r *http.Request) {
 		return ctx.Route(util.KeyProfile), nil
 	})
 }
+
+func ProfileTheme(w http.ResponseWriter, r *http.Request) {
+	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+		key := mux.Vars(r)[util.KeyKey]
+		theme := util.ThemeFromString(key)
+		ctx.Profile.Theme = theme
+		ctx.App.User.GetByID(ctx.Profile.UserID, true)
+		_, err := ctx.App.User.SaveProfile(ctx.Profile)
+		if err != nil {
+			return eresp(err, "can't save profile")
+		}
+
+		_, err = w.Write([]byte(""))
+		return eresp(err, "")
+	})
+}

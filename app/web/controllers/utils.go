@@ -33,20 +33,22 @@ func enew(msg string) (string, error) {
 }
 
 type formResult struct {
-	User     *user.SystemUser
-	Title    string
-	TeamID   *uuid.UUID
-	SprintID *uuid.UUID
-	Perms    permission.Permissions
+	User       *user.SystemUser
+	Title      string
+	MemberName string
+	TeamID     *uuid.UUID
+	SprintID   *uuid.UUID
+	Perms      permission.Permissions
 }
 
 func parseSessionForm(userID uuid.UUID, svc util.Service, form url.Values, userSvc *user.Service) *formResult {
 	u := userSvc.GetByID(userID, true)
 	title := util.ServiceTitle(svc, form.Get(util.KeyTitle))
+	memberName := form.Get("member-name")
 	teamID := getUUID(form, util.SvcTeam.Key)
 	sprintID := getUUID(form, util.SvcSprint.Key)
 	perms := parsePerms(form, teamID, sprintID)
 
-	ret := formResult{User: u, Title: title, TeamID: teamID, SprintID: sprintID, Perms: perms}
+	ret := formResult{User: u, Title: title, MemberName: memberName, TeamID: teamID, SprintID: sprintID, Perms: perms}
 	return &ret
 }

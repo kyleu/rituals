@@ -1,15 +1,12 @@
 <%: func RetroList(sessions retro.Sessions, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body uk-margin-top">
       <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcRetro.Icon %>"></span> <%= util.SvcRetro.PluralTitle %></h3>
-      <p>Discover improvements and praise for your work</p>
+      <p><%= util.SvcRetro.Description %></p>
       <% if len(sessions) > 0 { %>
         <% RetroTable(sessions, params, ctx, _buffer) %>
       <% } %>

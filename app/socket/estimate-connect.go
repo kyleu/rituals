@@ -27,7 +27,7 @@ type EstimateSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onEstimateConnect(s *Service, conn *Connection, estimateID uuid.UUID) error {
+func onEstimateConnect(s *Service, conn *connection, estimateID uuid.UUID) error {
 	ch := Channel{Svc: util.SvcEstimate, ID: estimateID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
@@ -37,12 +37,13 @@ func onEstimateConnect(s *Service, conn *Connection, estimateID uuid.UUID) error
 	return errors.Wrap(err, "error joining estimate session")
 }
 
-func joinEstimateSession(s *Service, conn *Connection, ch Channel) error {
+func joinEstimateSession(s *Service, conn *connection, ch Channel) error {
+	dataSvc := s.estimates
 	if ch.Svc != util.SvcEstimate {
 		return errors.New("estimate cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess := s.estimates.GetByID(ch.ID)
+	sess := dataSvc.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -54,13 +55,13 @@ func joinEstimateSession(s *Service, conn *Connection, ch Channel) error {
 	sj := EstimateSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.estimates.Data.Comments.GetByModelID(ch.ID, nil),
+		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
 		Sprint:      getSprintOpt(s, sess.SprintID),
-		Members:     s.estimates.Data.Members.GetByModelID(ch.ID, nil),
+		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Stories:     s.estimates.GetStories(ch.ID, nil),
-		Votes:       s.estimates.GetEstimateVotes(ch.ID, nil),
+		Stories:     dataSvc.GetStories(ch.ID, nil),
+		Votes:       dataSvc.GetEstimateVotes(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}

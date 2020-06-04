@@ -1,9 +1,0 @@
-<%: func AdminCommentCard(comments comment.Comments, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-margin-top">
-  <h3 class="uk-card-title">Comments</h3>
-  <% if len(comments) == 0 { %>
-    <p>No comments available</p>
-  <% } else { %>
-    <% AdminCommentTable(comments, params.Get(util.KeyComment, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

@@ -3,8 +3,9 @@ package team
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/kyleu/rituals.dev/app/model/comment"
+	"time"
+
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/model/user"
@@ -30,13 +31,14 @@ type Service struct {
 	svc    util.Service
 }
 
-func NewService(actions *action.Service, users *user.Service, db *database.Service, logger logur.Logger) *Service {
+func NewService(actions *action.Service, users *user.Service, comments *comment.Service, db *database.Service, logger logur.Logger) *Service {
 	svc := util.SvcTeam
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: svc.Key})
 
 	data := session.DataServices{
+		Svc:         svc,
 		Members:     member.NewService(actions, users, db, logger, svc),
-		Comments:    comment.NewService(actions, db, logger, svc),
+		Comments:    comments,
 		Permissions: permission.NewService(actions, db, logger, svc),
 		History:     history.NewService(actions, db, logger, svc),
 		Actions:     actions,
@@ -45,7 +47,7 @@ func NewService(actions *action.Service, users *user.Service, db *database.Servi
 	return &Service{Data: &data, db: db, logger: logger, svc: svc}
 }
 
-func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, memberName string) (*Session, error) {
 	slug, err := s.Data.History.NewSlugFor(nil, title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating team slug")
@@ -59,7 +61,7 @@ func (s *Service) New(title string, userID uuid.UUID) (*Session, error) {
 		return nil, errors.Wrap(err, "error saving new team session")
 	}
 
-	s.Data.Members.Register(model.ID, userID, member.RoleOwner)
+	s.Data.Members.Register(model.ID, userID, memberName, member.RoleOwner)
 
 	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
 	return &model, nil
@@ -89,6 +91,13 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 		return nil
 	}
 	return dto.ToSession()
+}
+
+func (s *Service) GetByIDPointer(teamID *uuid.UUID) *Session {
+	if teamID == nil {
+		return nil
+	}
+	return s.GetByID(*teamID)
 }
 
 func (s *Service) GetBySlug(slug string) *Session {
@@ -134,19 +143,24 @@ func (s *Service) GetIdsByMember(userID uuid.UUID) []uuid.UUID {
 	return ids
 }
 
+func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
+	var dtos []sessionDTO
+	q := query.SQLSelect("*", s.svc.Key, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, d, d.Add(time.Duration(24 * time.Hour)))
+	if err != nil {
+		s.logger.Error(fmt.Sprintf("error retrieving teams created on [%v]: %+v", d, err))
+		return nil
+	}
+	return toSessions(dtos)
+}
+
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.UUID) error {
 	cols := []string{"title"}
 	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, sessionID)
 	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating team session")
-}
-
-func (s *Service) GetByIDPointer(teamID *uuid.UUID) *Session {
-	if teamID == nil {
-		return nil
-	}
-	return s.GetByID(*teamID)
 }
 
 func toSessions(dtos []sessionDTO) Sessions {

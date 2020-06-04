@@ -1,6 +1,0 @@
-<%: func ComponentChannel(svc util.Service, id *uuid.UUID, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<% if id == nil { %>
-  &lt;nil&gt;
-<% } else { %>
-  <a class="theme" href="<%= ctx.Route(util.AdminLink(svc.Key, util.KeyDetail), util.KeyID, id.String()) %>"><%= svc.Key %>:<% ComponentUUID(id, buffer) %></a>
-<% } %>

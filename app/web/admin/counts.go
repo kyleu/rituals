@@ -26,7 +26,7 @@ func SectionCounts(sections []string, routes util.RouteDescriptions, db *databas
 
 func sectionCount(routes util.RouteDescriptions, db *database.Service, sck *socket.Service, section string) (int64, *time.Time, error) {
 	switch section {
-	case util.KeyGraphQL:
+	case util.KeyGraphQL, util.KeyTranscript:
 		return -1, nil, nil
 	case util.KeyConnection:
 		return int64(sck.Count()), nil, nil

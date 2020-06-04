@@ -1,0 +1,5 @@
+<%: func TranscriptEmailHTML(t *transcript.Transcript, r transcript.EmailResponse, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Subject() %></h3>
+  <p><%= r.Opener() %></p>
+</div>

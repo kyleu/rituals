@@ -29,7 +29,7 @@ type SprintSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintConnect(s *Service, conn *Connection, sprintID uuid.UUID) error {
+func onSprintConnect(s *Service, conn *connection, sprintID uuid.UUID) error {
 	ch := Channel{Svc: util.SvcSprint, ID: sprintID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
@@ -39,12 +39,14 @@ func onSprintConnect(s *Service, conn *Connection, sprintID uuid.UUID) error {
 	return errors.Wrap(err, "error joining sprint session")
 }
 
-func joinSprintSession(s *Service, conn *Connection, ch Channel) error {
+func joinSprintSession(s *Service, conn *connection, ch Channel) error {
+	dataSvc := s.sprints
+
 	if ch.Svc != util.SvcSprint {
 		return errors.New("sprint cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess := s.sprints.GetByID(ch.ID)
+	sess := dataSvc.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -56,13 +58,13 @@ func joinSprintSession(s *Service, conn *Connection, ch Channel) error {
 	sj := SprintSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.sprints.Data.Comments.GetByModelID(ch.ID, nil),
+		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
-		Members:     s.sprints.Data.Members.GetByModelID(ch.ID, nil),
+		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Estimates:   s.estimates.GetBySprint(ch.ID, nil),
-		Standups:    s.standups.GetBySprint(ch.ID, nil),
-		Retros:      s.retros.GetBySprint(ch.ID, nil),
+		Estimates:   s.estimates.GetBySprintID(ch.ID, nil),
+		Standups:    s.standups.GetBySprintID(ch.ID, nil),
+		Retros:      s.retros.GetBySprintID(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}

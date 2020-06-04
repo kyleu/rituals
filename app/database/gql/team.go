@@ -16,16 +16,18 @@ var (
 )
 
 func initTeam() {
+	svc := util.SvcTeam
+
 	teamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
 	teamsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Team.List(paramSetFromGraphQLParams(util.SvcTeam.Key, params, ctx.Logger)), nil
+		return ctx.App.Team.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	teamActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Action.GetBySvcModel(util.SvcTeam, p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
+		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	teamMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -37,7 +39,7 @@ func initTeam() {
 	}
 
 	teamCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Team.Data.Comments.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+		return ctx.App.Team.Data.GetComments(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	teamHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -47,7 +49,7 @@ func initTeam() {
 
 	teamType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.SvcTeam.Title,
+			Name: svc.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),
@@ -86,28 +88,28 @@ func initTeam() {
 		},
 	)
 
-	sprintType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+	sprintType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        teamType,
 		Description: "This sprint's team",
 		Args:        listArgs,
 		Resolve:     ctxF(sprintTeamResolver),
 	})
 
-	estimateType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+	estimateType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        teamType,
 		Description: "This estimate's team",
 		Args:        listArgs,
 		Resolve:     ctxF(estimateTeamResolver),
 	})
 
-	standupType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+	standupType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        teamType,
 		Description: "This standup's team",
 		Args:        listArgs,
 		Resolve:     ctxF(standupTeamResolver),
 	})
 
-	retroType.AddFieldConfig(util.SvcTeam.Key, &graphql.Field{
+	retroType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        teamType,
 		Description: "This retro's team",
 		Args:        listArgs,

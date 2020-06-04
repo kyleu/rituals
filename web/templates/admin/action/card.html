@@ -1,9 +1,0 @@
-<%: func AdminActionCard(actions action.Actions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-margin-top">
-  <h3 class="uk-card-title">Actions</h3>
-  <% if len(actions) == 0 { %>
-    <p>No actions available</p>
-  <% } else { %>
-    <% AdminActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

@@ -1,0 +1,62 @@
+<%: func StandupDetail(model *standup.Session, reports standup.Reports, data *session.Data, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title">
+        <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcStandup.Key, util.KeyKey, model.Slug) %>">Join</a></div>
+        <%= util.SvcStandup.Title %>
+      </h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td><%= model.ID.String() %></td>
+          </tr>
+          <tr>
+            <th>Slug</th>
+            <td><%= model.Slug %></td>
+          </tr>
+          <tr>
+            <th>Title</th>
+            <td><%= model.Title %></td>
+          </tr>
+          <tr>
+            <th>Team</th>
+            <td>
+              <% if model.TeamID != nil { %>
+                <a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key, util.KeyDetail), `id`, model.TeamID.String()) %>"><% templates.ComponentUUID(model.TeamID, _buffer) %></a>
+              <% } %>
+            </td>
+          </tr>
+          <tr>
+            <th>Sprint</th>
+            <td>
+              <% if model.SprintID != nil { %>
+                <a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcSprint.Key, util.KeyDetail), `id`, model.SprintID.String()) %>"><% templates.ComponentUUID(model.SprintID, _buffer) %></a>
+              <% } %>
+            </td>
+          </tr>
+          <tr>
+            <th>Owner</th>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Owner.String()) %>"><% templates.ComponentUUID(&model.Owner, _buffer) %></a></td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td><%= model.Status.String() %></td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td><% templates.ComponentDateTime(&model.Created, _buffer) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <% ReportCard(reports, params, ctx, _buffer) %>
+
+    <% SessionData(data, params, ctx, _buffer) %>
+  </div>
+</div>
+<% } %>

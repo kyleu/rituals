@@ -93,11 +93,11 @@ func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error)
 	return prof, nil
 }
 
-func (s *Service) UpdateUserName(userID uuid.UUID, name string) error {
-	s.logger.Info("updating user [" + userID.String() + "]")
-	cols := []string{"name"}
+func (s *Service) UpdateMember(userID uuid.UUID, name string, picture string) error {
+	s.logger.Debug("updating user [" + userID.String() + "]")
+	cols := []string{"name", "picture"}
 	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
-	err := s.db.UpdateOne(q, nil, name, userID)
+	err := s.db.UpdateOne(q, nil, name, picture, userID)
 	return err
 }
 

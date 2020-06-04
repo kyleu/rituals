@@ -17,7 +17,8 @@ type sprintSessionSaveParams struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintMessage(s *Service, conn *Connection, cmd string, param json.RawMessage) error {
+func onSprintMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+	dataSvc := s.sprints
 	var err error
 	userID := conn.Profile.UserID
 
@@ -30,17 +31,21 @@ func onSprintMessage(s *Service, conn *Connection, cmd string, param json.RawMes
 		sss := sprintSessionSaveParams{}
 		util.FromJSON(param, &sss, s.Logger)
 		err = onSprintSessionSave(s, *conn.Channel, userID, sss)
+	case ClientCmdUpdateMember:
+		u := updateMemberParams{}
+		util.FromJSON(param, &u, s.Logger)
+		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
 		util.FromJSON(param, &u, s.Logger)
-		err = onRemoveMember(s, s.sprints.Data.Members, *conn.Channel, userID, u)
+		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled sprint command [" + cmd + "]")
 	}
 	return errors.Wrap(err, "error handling sprint message")
 }
 
-func sendSprints(s *Service, conn *Connection, userID uuid.UUID) error {
+func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
 	sprints := s.sprints.GetByMember(userID, nil)
 	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdSprints, sprints))
 }

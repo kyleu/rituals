@@ -17,12 +17,14 @@ var (
 )
 
 func initSprint() {
+	svc := util.SvcSprint
+
 	sprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
 	sprintsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Sprint.List(paramSetFromGraphQLParams(util.SvcSprint.Key, params, ctx.Logger)), nil
+		return ctx.App.Sprint.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	sprintTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -34,7 +36,7 @@ func initSprint() {
 	}
 
 	sprintActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Action.GetBySvcModel(util.SvcSprint, p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
+		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	sprintMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -46,9 +48,8 @@ func initSprint() {
 	}
 
 	sprintCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Sprint.Data.Comments.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+		return ctx.App.Sprint.Data.GetComments(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
-
 
 	sprintHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
 		ret := ctx.App.Sprint.Data.History.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
@@ -56,20 +57,20 @@ func initSprint() {
 	}
 
 	sprintEstimateResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Estimate.GetBySprint(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
+		return ctx.App.Estimate.GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
 	sprintStandupResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Standup.GetBySprint(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
+		return ctx.App.Standup.GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
 	sprintRetroResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.GetBySprint(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
+		return ctx.App.Retro.GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 
 	sprintType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.SvcSprint.Title,
+			Name: svc.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),
@@ -135,21 +136,21 @@ func initSprint() {
 		},
 	)
 
-	estimateType.AddFieldConfig(util.SvcSprint.Key, &graphql.Field{
+	estimateType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        sprintType,
 		Description: "This estimate's sprint",
 		Args:        listArgs,
 		Resolve:     ctxF(estimateSprintResolver),
 	})
 
-	standupType.AddFieldConfig(util.SvcSprint.Key, &graphql.Field{
+	standupType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        sprintType,
 		Description: "This standup's sprint",
 		Args:        listArgs,
 		Resolve:     ctxF(standupSprintResolver),
 	})
 
-	retroType.AddFieldConfig(util.SvcSprint.Key, &graphql.Field{
+	retroType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        sprintType,
 		Description: "This retro's sprint",
 		Args:        listArgs,

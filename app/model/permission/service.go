@@ -38,8 +38,10 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 	}
 }
 
+var defaultOrdering = query.Orderings{{Column: "k", Asc: true}, {Column: "v", Asc: true}}
+
 func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
-	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyPermission, params, defaultOrdering...)
 	var dtos []permissionDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
 	q := query.SQLSelect(fmt.Sprintf("k, v, access, created"), s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
@@ -52,7 +54,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
 	for _, dto := range dtos {
 		ret = append(ret, dto.ToPermission())
 	}
-	return ret
+	return ret.Sort()
 }
 
 func (s *Service) Get(modelID uuid.UUID, k string, v string) (*Permission, error) {

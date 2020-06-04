@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/model/comment"
 	"sync"
 
 	"github.com/kyleu/rituals.dev/app/model/auth"
@@ -24,11 +25,12 @@ import (
 )
 
 type Service struct {
-	connections   map[uuid.UUID]*Connection
+	connections   map[uuid.UUID]*connection
 	connectionsMu sync.Mutex
 	channels      map[Channel][]uuid.UUID
 	channelsMu    sync.Mutex
 	Logger        logur.Logger
+	comments      *comment.Service
 	actions       *action.Service
 	users         *user.Service
 	auths         *auth.Service
@@ -40,16 +42,17 @@ type Service struct {
 }
 
 func NewService(
-	logger logur.Logger, actions *action.Service, users *user.Service, auths *auth.Service,
-	teams *team.Service, sprints *sprint.Service,
-	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
+		logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
+		auths *auth.Service, teams *team.Service, sprints *sprint.Service,
+		estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeySocket})
 	return &Service{
-		connections:   make(map[uuid.UUID]*Connection),
+		connections:   make(map[uuid.UUID]*connection),
 		connectionsMu: sync.Mutex{},
 		channels:      make(map[Channel][]uuid.UUID),
 		channelsMu:    sync.Mutex{},
 		Logger:        logger,
+		comments:      comments,
 		actions:       actions,
 		users:         users,
 		auths:         auths,
@@ -61,7 +64,7 @@ func NewService(
 	}
 }
 
-var systemID = uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000")
+var systemID = uuid.FromStringOrNil("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF")
 var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem, ChannelID: &systemID}
 
 func (s *Service) List(params *query.Params) Statuses {
@@ -95,7 +98,11 @@ func (s *Service) Count() int {
 }
 
 func (s *Service) RemoveComment(commentID uuid.UUID, userID uuid.UUID) error {
-	return s.teams.Data.Comments.RemoveComment(commentID)
+	c := s.GetByID(commentID)
+	if c.UserID != userID {
+		return errors.New("This is not your comment")
+	}
+	return s.comments.RemoveComment(commentID)
 }
 
 func onMessage(s *Service, connID uuid.UUID, message Message) error {

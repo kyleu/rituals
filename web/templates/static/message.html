@@ -1,9 +1,6 @@
 <%: func StaticMessage(message string, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">

@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -10,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func RetroList(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +19,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
 		params := act.ParamSetFromRequest(r)
 		retros := ctx.App.Retro.List(params.Get(util.SvcRetro.Key, ctx.Logger))
-		return tmpl(templates.AdminRetroList(retros, params, ctx, w))
+		return tmpl(admintemplates.RetroList(retros, params, ctx, w))
 	})
 }
 
@@ -49,6 +48,6 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, retroID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminRetroDetail(sess, feedbacks, data, params, ctx, w))
+		return tmpl(admintemplates.RetroDetail(sess, feedbacks, data, params, ctx, w))
 	})
 }

@@ -1,0 +1,13 @@
+<%: func SprintList(sprints sprint.Sessions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title">Sprints</h3>
+      <% SprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, _buffer) %>
+    </div>
+  </div>
+</div>
+<% } %>

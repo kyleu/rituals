@@ -1,0 +1,27 @@
+<%: func Home(ctx web.RequestContext, sections []string, countMap map[string]int64, recentMap map[string]*time.Time, params *query.Params, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title">Administration</h3>
+      <p>Privileged actions for <%= util.AppName %></p>
+      <table class="uk-table uk-table-divider">
+        <thead>
+          <tr>
+            <% templates.ComponentTableHeader(util.KeyAdmin, util.KeyName, util.Title(util.KeyName), params, ctx, _buffer) %>
+            <% templates.ComponentTableHeader(util.KeyAdmin, "recent", "Most Recent", params, ctx, _buffer) %>
+            <% templates.ComponentTableHeader(util.KeyAdmin, "count", "#", params, ctx, _buffer) %>
+          </tr>
+        </thead>
+        <tbody>
+          <% for _, section := range sections { %>
+            <% HomeLink(section, countMap[section], recentMap[section], ctx, _buffer) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% } %>

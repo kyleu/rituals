@@ -1,11 +1,7 @@
 <%: func EstimateWorkspace(model *estimate.Session, auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ head { %><% ComponentInit(util.SvcEstimate, model.ID, _buffer) %><% } %>
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">

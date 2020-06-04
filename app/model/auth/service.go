@@ -59,7 +59,7 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 		return nil, nil
 	}
 
-	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, query.DefaultCreatedOrdering...)
+	params = query.ParamsWithDefaultOrdering(util.KeyAuth, params, query.DefaultCreatedOrdering...)
 	var dtos []recordDTO
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)

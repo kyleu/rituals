@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Service) GetStoryVotes(storyID uuid.UUID, params *query.Params) Votes {
-	params = query.ParamsWithDefaultOrdering(util.KeyStory, params)
+	params = query.ParamsWithDefaultOrdering(util.KeyVote, params)
 	var dtos []voteDTO
 	q := query.SQLSelect("*", util.KeyVote, "story_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, storyID)

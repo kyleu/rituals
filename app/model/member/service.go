@@ -93,8 +93,17 @@ func (s *Service) Update(modelID uuid.UUID, userID uuid.UUID, name string, pictu
 	return s.Get(modelID, userID)
 }
 
-func (s *Service) RemoveMember(modelID uuid.UUID, target uuid.UUID) error {
+func (s *Service) RemoveMember(modelID uuid.UUID, src uuid.UUID, target uuid.UUID) error {
 	q := query.SQLDelete(s.tableName, fmt.Sprintf("%v = $1 and user_id = $2", s.colName))
 	err := s.db.DeleteOne(q, nil, modelID, target)
-	return errors.Wrap(err, "unable to remove member ["+target.String()+"]")
+	return errors.Wrap(err, "unable to remove member ["+target.String()+"] as ["+src.String()+"]")
+}
+
+func (s *Service) UpdateMember(modelID uuid.UUID, src uuid.UUID, target uuid.UUID, role string) (*Entry, error) {
+	q := query.SQLUpdate(s.tableName, []string{"role"}, fmt.Sprintf("%v = $2 and user_id = $3", s.colName))
+	err := s.db.DeleteOne(q, nil, role, modelID, target)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to update member ["+target.String()+"] as ["+src.String()+"]")
+	}
+	return s.Get(modelID, target)
 }

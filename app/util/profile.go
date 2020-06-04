@@ -67,7 +67,7 @@ func NewUserProfile(id uuid.UUID) *UserProfile {
 		UserID:    id,
 		Name:      "Guest",
 		Role:      RoleGuest,
-		Theme:     ThemeDefault,
+		Theme:     ThemeAuto,
 		NavColor:  "bluegrey",
 		LinkColor: "bluegrey",
 		Picture:   "",

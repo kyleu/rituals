@@ -33,6 +33,9 @@ namespace team {
       case command.server.sessionUpdate:
         setTeamDetail(param as Detail);
         break;
+      case command.server.sessionRemove:
+        system.onSessionRemove(services.team)
+        break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
         break;

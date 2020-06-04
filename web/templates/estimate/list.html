@@ -1,15 +1,12 @@
 <%: func EstimateList(sessions estimate.Sessions, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>"></span> <%= util.SvcEstimate.PluralTitle %></h3>
-      <p>Planning poker for any <%= util.Plural(util.KeyStory) %> you need to work on</p>
+      <p><%= util.SvcEstimate.Description %></p>
       <% if len(sessions) > 0 { %>
         <% EstimateTable(sessions, params, ctx, _buffer) %>
       <% } %>

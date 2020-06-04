@@ -1,9 +1,0 @@
-<%: func AdminRetroCard(retros retro.Sessions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-margin-top">
-  <h3 class="uk-card-title">Retros</h3>
-  <% if len(retros) == 0 { %>
-    <p>No retros available</p>
-  <% } else { %>
-    <% AdminRetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

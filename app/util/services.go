@@ -7,6 +7,7 @@ type Service struct {
 	Title       string
 	Plural      string
 	PluralTitle string
+	Description string
 	Icon        string
 }
 
@@ -17,6 +18,7 @@ var SvcSystem = Service{
 	Title:       Title(KeySystem),
 	Plural:      Plural(KeySystem),
 	PluralTitle: PluralTitle(KeySystem),
+	Description: "",
 	Icon:        "close",
 }
 var SvcTeam = Service{
@@ -24,6 +26,7 @@ var SvcTeam = Service{
 	Title:       "Team",
 	Plural:      "teams",
 	PluralTitle: "Teams",
+	Description: "Join your friends and work towards a common goal",
 	Icon:        "users",
 }
 var SvcSprint = Service{
@@ -31,6 +34,7 @@ var SvcSprint = Service{
 	Title:       "Sprint",
 	Plural:      "sprints",
 	PluralTitle: "Sprints",
+	Description: "Plan your time and direct your efforts",
 	Icon:        "settings",
 }
 var SvcEstimate = Service{
@@ -38,6 +42,7 @@ var SvcEstimate = Service{
 	Title:       "Estimate",
 	Plural:      "estimates",
 	PluralTitle: "Estimates",
+	Description: "Planning poker for any stories you need to work on",
 	Icon:        "tag",
 }
 var SvcStandup = Service{
@@ -45,6 +50,7 @@ var SvcStandup = Service{
 	Title:       "Standup",
 	Plural:      "standups",
 	PluralTitle: "Standups",
+	Description: "Share your progress with your team",
 	Icon:        "future",
 }
 var SvcRetro = Service{
@@ -52,6 +58,7 @@ var SvcRetro = Service{
 	Title:       "Retrospective",
 	Plural:      "retros",
 	PluralTitle: "Retrospectives",
+	Description: "Discover improvements and praise for your work",
 	Icon:        "history",
 }
 

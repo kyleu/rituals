@@ -1,20 +1,19 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 var homeSections = []string{
 	util.KeyUser, util.KeyAuth, util.KeyAction,
 	util.SvcTeam.Key, util.SvcSprint.Key, util.SvcEstimate.Key, util.SvcStandup.Key, util.SvcRetro.Key,
-	util.KeyConnection, util.KeySandbox, util.KeyRoutes, util.KeyModules, util.KeyGraphQL,
+	util.KeyConnection, util.KeySandbox, util.KeyRoutes, util.KeyModules, util.KeyTranscript, util.KeyGraphQL,
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +25,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return eresp(err, "error getting section counts")
 		}
-		return tmpl(templates.AdminHome(ctx, homeSections, countMap, recentMap, params.Get(util.KeyAdmin, ctx.Logger), w))
+		return tmpl(admintemplates.Home(ctx, homeSections, countMap, recentMap, params.Get(util.KeyAdmin, ctx.Logger), w))
 	})
 }
 

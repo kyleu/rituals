@@ -1,0 +1,22 @@
+<%: func PermissionTable(members permission.Permissions, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <% templates.ComponentTableHeader(util.KeyPermission, "k", "K", params, ctx, buffer) %>
+      <% templates.ComponentTableHeader(util.KeyPermission, "v", "V", params, ctx, buffer) %>
+      <% templates.ComponentTableHeader(util.KeyPermission, "access", "Access", params, ctx, buffer) %>
+      <% templates.ComponentTableHeader(util.KeyPermission, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range members { %>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.K %></td>
+      <td><%= model.V %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.Access.String() %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

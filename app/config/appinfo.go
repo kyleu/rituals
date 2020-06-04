@@ -4,6 +4,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/model/action"
 	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/comment"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/model/retro"
 	"github.com/kyleu/rituals.dev/app/model/sprint"
@@ -20,6 +21,7 @@ type AppInfo struct {
 	Commit     string
 	Logger     logur.Logger
 	User       *user.Service
+	Comment    *comment.Service
 	Auth       *auth.Service
 	Action     *action.Service
 	Team       *team.Service

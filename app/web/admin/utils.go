@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 	"time"
 
@@ -10,8 +11,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 type JSONResponse struct {
@@ -25,7 +24,7 @@ func Modules(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = util.Title(util.KeyModules)
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyModules, util.KeyModules)
-		return tmpl(templates.AdminModulesList(ctx, w))
+		return tmpl(admintemplates.ModulesList(ctx, w))
 	})
 }
 
@@ -33,22 +32,16 @@ func Routes(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
 		ctx.Title = util.Title(util.KeyRoutes)
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyRoutes, util.KeyRoutes)
-		return tmpl(templates.AdminRoutesList(ctx, w))
+		return tmpl(admintemplates.RoutesList(ctx, w))
 	})
 }
 
 func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
 		if ctx.Profile.Role != util.RoleAdmin {
-			println(act.RequestToString(r))
 			if act.IsContentTypeJSON(act.GetContentType(r)) {
-				println("JSON!")
-				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 				ae := JSONResponse{Status: "error", Message: "you are not an administrator", Path: r.URL.Path, Occurred: time.Now()}
-				b := util.ToJSONBytes(ae, ctx.Logger)
-				_, _ = w.Write(b)
-
-				return "", nil
+				return act.RespondJSON(w, ae, ctx.Logger)
 			}
 			ctx.Session.AddFlash("error:You're not an administrator, silly")
 			act.SaveSession(w, r, ctx)

@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -10,8 +11,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func TeamList(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +20,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		teams := ctx.App.Team.List(params.Get(util.SvcTeam.Key, ctx.Logger))
-		return tmpl(templates.AdminTeamList(teams, params, ctx, w))
+		return tmpl(admintemplates.TeamList(teams, params, ctx, w))
 	})
 }
 
@@ -52,6 +51,6 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, teamID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(templates.AdminTeamDetail(sess, sprints, estimates, standups, retros, data, params, ctx, w))
+		return tmpl(admintemplates.TeamDetail(sess, sprints, estimates, standups, retros, data, params, ctx, w))
 	})
 }

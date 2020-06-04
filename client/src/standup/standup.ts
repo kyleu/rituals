@@ -36,6 +36,9 @@ namespace standup {
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);
         break;
+      case command.server.sessionRemove:
+        system.onSessionRemove(services.standup)
+        break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
         break;

@@ -1,0 +1,13 @@
+<%: func RetroList(retros retro.Sessions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title"><%= util.SvcRetro.PluralTitle %></h3>
+      <% RetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, _buffer) %>
+    </div>
+  </div>
+</div>
+<% } %>

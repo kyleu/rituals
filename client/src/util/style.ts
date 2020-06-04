@@ -6,12 +6,15 @@ namespace style {
 
     const card = dom.els(".uk-card");
     switch (theme) {
-      case "default":
+      case "auto":
+        let t = "light";
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          setTheme("dark");
-        } else {
-          setTheme("light");
+          t = "dark";
         }
+        setTheme(t)
+        fetch("/profile/theme/" + t).then(r => r.text()).then(body => {
+          console.log(`Set theme to [${t}]`);
+        });
         break;
       case "light":
         document.documentElement.classList.remove("uk-light");
@@ -49,9 +52,6 @@ namespace style {
     if (typeof EmojiButton === 'undefined') {
       dom.els(".picker-toggle").forEach(el => dom.setDisplay(el, false));
       return;
-    }
-    if (t === "default") {
-      t = "auto";
     }
     const opts = {position: "bottom-end", theme: t, zIndex: 1021};
     dom.els(".textarea-emoji").forEach(el => {

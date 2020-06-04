@@ -10,7 +10,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-type Connection struct {
+type connection struct {
 	ID      uuid.UUID
 	Profile util.Profile
 	Svc     util.Service
@@ -20,7 +20,7 @@ type Connection struct {
 	mu      sync.Mutex
 }
 
-func (c *Connection) ToStatus() *Status {
+func (c *connection) ToStatus() *Status {
 	if c.Channel == nil {
 		return &Status{ID: c.ID, UserID: c.Profile.UserID, Username: c.Profile.Name, ChannelSvc: util.SvcSystem, ChannelID: nil}
 	}

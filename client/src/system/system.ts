@@ -67,6 +67,9 @@ namespace system {
       case command.server.memberUpdate:
         member.onMemberUpdate(param as member.Member);
         break;
+      case command.server.memberRemove:
+        member.onMemberRemove(param as string);
+        break;
       case command.server.onlineUpdate:
         member.onOnlineUpdate(param as member.OnlineUpdate);
         break;
@@ -79,5 +82,9 @@ namespace system {
       default:
         console.warn(`unhandled system message for command [${cmd}]`);
     }
+  }
+
+  export function onSessionRemove(svc: services.Service) {
+    document.location.reload();
   }
 }

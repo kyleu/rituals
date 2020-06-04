@@ -9,7 +9,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSystemMessage(s *Service, conn *Connection, cmd string, param json.RawMessage) error {
+func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
 	userID := conn.Profile.UserID
 	if conn.Profile.UserID != userID {
 		return errors.New("received name change for wrong user [" + userID.String() + "]")
@@ -48,7 +48,7 @@ func onSystemMessage(s *Service, conn *Connection, cmd string, param json.RawMes
 	return errors.Wrap(err, "error handling system message")
 }
 
-func sendActions(s *Service, conn *Connection) error {
+func sendActions(s *Service, conn *connection) error {
 	if conn.ModelID == nil {
 		return errors.New("no active model for connection [" + conn.ID.String() + "]")
 	}

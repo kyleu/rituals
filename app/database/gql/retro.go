@@ -18,6 +18,8 @@ var (
 )
 
 func initRetro() {
+	svc := util.SvcRetro
+
 	retroStatusType := graphql.NewEnum(graphql.EnumConfig{
 		Name: "RetroStatus",
 		Values: graphql.EnumValueConfigMap{
@@ -31,11 +33,11 @@ func initRetro() {
 	}
 
 	retrosResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.List(paramSetFromGraphQLParams(util.SvcRetro.Key, params, ctx.Logger)), nil
+		return ctx.App.Retro.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	retroActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Action.GetBySvcModel(util.SvcRetro, p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
+		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
 	retroMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -47,7 +49,7 @@ func initRetro() {
 	}
 
 	retroCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
-		return ctx.App.Retro.Data.Comments.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
+		return ctx.App.Retro.Data.GetComments(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
 	retroHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
@@ -73,7 +75,7 @@ func initRetro() {
 
 	retroType = graphql.NewObject(
 		graphql.ObjectConfig{
-			Name: util.SvcRetro.Title,
+			Name: svc.Title,
 			Fields: graphql.Fields{
 				util.KeyID: &graphql.Field{
 					Type: graphql.NewNonNull(scalarUUID),

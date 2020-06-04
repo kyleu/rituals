@@ -19,6 +19,7 @@ const (
 	ClientCmdRemoveComment = "remove-comment"
 
 	ClientCmdUpdateProfile = "update-profile"
+	ClientCmdUpdateMember  = "update-member"
 	ClientCmdRemoveMember  = "remove-member"
 
 	ClientCmdAddStory       = "add-story"
@@ -43,9 +44,10 @@ const (
 
 	ServerCmdSessionJoined = "session-joined"
 	ServerCmdSessionUpdate = "session-update"
+	ServerCmdSessionRemove = "session-remove"
 
-	ServerCmdCommentUpdate     = "comment-update"
-	ServerCmdCommentRemove     = "comment-remove"
+	ServerCmdCommentUpdate = "comment-update"
+	ServerCmdCommentRemove = "comment-remove"
 
 	ServerCmdPermissionsUpdate = "permissions-update"
 	ServerCmdTeamUpdate        = "team-update"
@@ -57,6 +59,7 @@ const (
 	ServerCmdSprints = "sprints"
 
 	ServerCmdMemberUpdate = "member-update"
+	ServerCmdMemberRemove = "member-remove"
 	ServerCmdOnlineUpdate = "online-update"
 
 	ServerCmdStoryUpdate       = "story-update"

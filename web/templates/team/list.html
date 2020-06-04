@@ -1,9 +1,6 @@
 <%: func TeamList(teams team.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
-
 <%~ "layout/basic.html" %>
-
 <%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
-
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -11,7 +8,7 @@
       <h3 class="uk-card-title">
         <span class="h3-icon" data-uk-icon="icon: <%= util.SvcTeam.Icon %>"></span> Teams
       </h3>
-      <p>Join your friends and work towards a common goal</p>
+      <p><%= util.SvcTeam.Description %></p>
       <% if len(teams) > 0 { %>
         <% TeamTable(teams, params, ctx, _buffer) %>
       <% } %>

@@ -29,7 +29,7 @@ type TeamSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onTeamConnect(s *Service, conn *Connection, teamID uuid.UUID) error {
+func onTeamConnect(s *Service, conn *connection, teamID uuid.UUID) error {
 	ch := Channel{Svc: util.SvcTeam, ID: teamID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
@@ -39,12 +39,13 @@ func onTeamConnect(s *Service, conn *Connection, teamID uuid.UUID) error {
 	return errors.Wrap(err, "error joining team session")
 }
 
-func joinTeamSession(s *Service, conn *Connection, ch Channel) error {
+func joinTeamSession(s *Service, conn *connection, ch Channel) error {
+	dataSvc := s.teams
 	if ch.Svc != util.SvcTeam {
 		return errors.New("team cannot handle [" + ch.Svc.Key + "] message")
 	}
 
-	sess := s.teams.GetByID(ch.ID)
+	sess := dataSvc.GetByID(ch.ID)
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
@@ -56,8 +57,8 @@ func joinTeamSession(s *Service, conn *Connection, ch Channel) error {
 	sj := TeamSessionJoined{
 		Profile:     &conn.Profile,
 		Session:     sess,
-		Comments:    s.teams.Data.Comments.GetByModelID(ch.ID, nil),
-		Members:     s.teams.Data.Members.GetByModelID(ch.ID, nil),
+		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
+		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
 		Sprints:     s.sprints.GetByTeamID(ch.ID, nil),
 		Estimates:   s.estimates.GetByTeamID(ch.ID, nil),

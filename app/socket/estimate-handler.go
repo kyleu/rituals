@@ -1,16 +1,17 @@
 package socket
 
 import (
-	"fmt"
-
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onEstimateSessionSave(s *Service, ch Channel, userID uuid.UUID, param estimateSessionSaveParams) error {
+func onEstimateSessionSave(s *Service, conn *connection, userID uuid.UUID, param estimateSessionSaveParams) error {
+	dataSvc := s.estimates
+	ch := *conn.Channel
 	title := util.ServiceTitle(util.SvcEstimate, param.Title)
 
 	choices := query.StringToArray(param.Choices)
@@ -21,9 +22,14 @@ func onEstimateSessionSave(s *Service, ch Channel, userID uuid.UUID, param estim
 	sprintID := util.GetUUIDFromString(param.SprintID)
 	teamID := util.GetUUIDFromString(param.TeamID)
 
-	curr := s.estimates.GetByID(ch.ID)
+	curr := dataSvc.GetByID(ch.ID)
 	if curr == nil {
 		return errors.New("no estimate available with id [" + ch.ID.String() + "]")
+	}
+
+	sr := s.checkPerms(userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	if sr != nil {
+		return sr
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -32,13 +38,13 @@ func onEstimateSessionSave(s *Service, ch Channel, userID uuid.UUID, param estim
 	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(choices, "and"), teamID, sprintID))
 
-	err := s.estimates.UpdateSession(ch.ID, title, choices, teamID, sprintID, userID)
+	err := dataSvc.UpdateSession(ch.ID, title, choices, teamID, sprintID, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating estimate session")
 	}
 
 	if title != curr.Title {
-		slug, err := s.estimates.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		slug, err := dataSvc.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
 		if err != nil {
 			return errors.Wrap(err, "error updating estimate slug from ["+curr.Slug+"] to ["+slug+"]")
 		}
@@ -65,7 +71,7 @@ func onEstimateSessionSave(s *Service, ch Channel, userID uuid.UUID, param estim
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, sprintID, s.estimates.Data.Permissions, param.Permissions)
+	err = s.updatePerms(ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}

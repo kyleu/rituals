@@ -11,12 +11,14 @@ type saveProfileParams struct {
 	Picture string `json:"picture"`
 }
 
-func saveProfile(s *Service, conn *Connection, userID uuid.UUID, p *saveProfileParams) error {
+func saveProfile(s *Service, conn *connection, userID uuid.UUID, p *saveProfileParams) error {
 	if p.Choice == "global" {
-		err := s.UpdateName(userID, p.Name)
+		err := s.UpdateMember(userID, p.Name, p.Picture)
 		if err != nil {
 			return err
 		}
+		p.Name = ""
+		p.Picture = ""
 	}
 	dataSvc := dataFor(s, conn.Channel.Svc)
 

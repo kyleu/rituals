@@ -3,8 +3,9 @@ package standup
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/kyleu/rituals.dev/app/model/comment"
+	"time"
+
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/model/user"
@@ -30,13 +31,14 @@ type Service struct {
 	svc    util.Service
 }
 
-func NewService(actions *action.Service, users *user.Service, db *database.Service, logger logur.Logger) *Service {
+func NewService(actions *action.Service, users *user.Service, comments *comment.Service, db *database.Service, logger logur.Logger) *Service {
 	svc := util.SvcStandup
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: svc.Key})
 
 	data := session.DataServices{
+		Svc:         svc,
 		Members:     member.NewService(actions, users, db, logger, svc),
-		Comments:    comment.NewService(actions, db, logger, svc),
+		Comments:    comments,
 		Permissions: permission.NewService(actions, db, logger, svc),
 		History:     history.NewService(actions, db, logger, svc),
 		Actions:     actions,
@@ -45,7 +47,7 @@ func NewService(actions *action.Service, users *user.Service, db *database.Servi
 	return &Service{Data: &data, db: db, logger: logger, svc: svc}
 }
 
-func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
+func (s *Service) New(title string, userID uuid.UUID, memberName string, teamID *uuid.UUID, sprintID *uuid.UUID) (*Session, error) {
 	slug, err := s.Data.History.NewSlugFor(nil, title)
 	if err != nil {
 		return nil, errors.Wrap(err, "error creating standup slug")
@@ -59,7 +61,7 @@ func (s *Service) New(title string, userID uuid.UUID, teamID *uuid.UUID, sprintI
 		return nil, errors.Wrap(err, "error saving new standup session")
 	}
 
-	s.Data.Members.Register(model.ID, userID, member.RoleOwner)
+	s.Data.Members.Register(model.ID, userID, memberName, member.RoleOwner)
 
 	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
 	s.Data.Actions.PostRef(util.SvcSprint, model.SprintID, s.svc, model.ID, userID, action.ActContentAdd, "")
@@ -133,13 +135,25 @@ func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
 	return toSessions(dtos)
 }
 
-func (s *Service) GetBySprint(sprintID uuid.UUID, params *query.Params) Sessions {
+func (s *Service) GetBySprintID(sprintID uuid.UUID, params *query.Params) Sessions {
 	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
 	q := query.SQLSelect("*", s.svc.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, sprintID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving standups for sprint [%v]: %+v", sprintID, err))
+		return nil
+	}
+	return toSessions(dtos)
+}
+
+func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
+	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
+	var dtos []sessionDTO
+	q := query.SQLSelect("*", s.svc.Key, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, d, d.Add(time.Duration(24 * time.Hour)))
+	if err != nil {
+		s.logger.Error(fmt.Sprintf("error retrieving standups created on [%v]: %+v", d, err))
 		return nil
 	}
 	return toSessions(dtos)

@@ -1,5 +1,5 @@
 query All {
-  action(id: "00000000-0000-0000-0000-000000000000") {
+  action(id: "60000000-0000-0000-0000-000000000000") {
     ...ActionF
   }
   actions(orders: [{col: "svc", asc: true}], limit: 3) {
@@ -49,7 +49,7 @@ query All {
     ...TeamF
   }
 
-  user(id: "00000000-0000-0000-0000-000000000000") {
+  user(id: "F0000000-0000-0000-0000-000000000000") {
     ...ProfileF
   }
   users {

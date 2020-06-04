@@ -10,22 +10,29 @@ import (
 )
 
 func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessionSaveParams) error {
+	dataSvc := s.teams
 	title := util.ServiceTitle(util.SvcTeam, param.Title)
 
-	curr := s.standups.GetByID(ch.ID)
+	curr := dataSvc.GetByID(ch.ID)
 	if curr == nil {
 		return errors.New("no team available with id [" + ch.ID.String() + "]")
 	}
 
-	s.Logger.Debug(fmt.Sprintf("saving team session [%s]", title))
+	sr := s.checkPerms(userID, nil, nil, ch.Svc, ch.ID)
+	if sr != nil {
+		return sr
+	}
 
-	err := s.teams.UpdateSession(ch.ID, title, userID)
+	msg := "saving team session [%s]"
+	s.Logger.Debug(fmt.Sprintf(msg, title))
+
+	err := dataSvc.UpdateSession(ch.ID, title, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating team session")
 	}
 
 	if title != curr.Title {
-		slug, err := s.teams.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		slug, err := dataSvc.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
 		if err != nil {
 			return errors.Wrap(err, "error updating team slug from ["+curr.Slug+"] to ["+slug+"]")
 		}
@@ -36,7 +43,7 @@ func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessi
 		return errors.Wrap(err, "error sending team session")
 	}
 
-	err = s.updatePerms(ch, userID, nil, nil, s.teams.Data.Permissions, param.Permissions)
+	err = s.updatePerms(ch, userID, nil, nil, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}

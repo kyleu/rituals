@@ -43,7 +43,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcRetro, r.Form, ctx.App.User)
 
-		sess, err := ctx.App.Retro.New(sf.Title, ctx.Profile.UserID, categories, sf.TeamID, sf.SprintID)
+		sess, err := ctx.App.Retro.New(sf.Title, ctx.Profile.UserID, sf.MemberName, categories, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return eresp(err, "error creating retro session")
 		}

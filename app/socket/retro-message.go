@@ -28,7 +28,8 @@ type editFeedbackParams struct {
 	Content  string    `json:"content"`
 }
 
-func onRetroMessage(s *Service, conn *Connection, cmd string, param json.RawMessage) error {
+func onRetroMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+	dataSvc := s.retros
 	var err error
 	userID := conn.Profile.UserID
 
@@ -41,10 +42,14 @@ func onRetroMessage(s *Service, conn *Connection, cmd string, param json.RawMess
 		rss := retroSessionSaveParams{}
 		util.FromJSON(param, &rss, s.Logger)
 		err = onRetroSessionSave(s, *conn.Channel, userID, rss)
+	case ClientCmdUpdateMember:
+		u := updateMemberParams{}
+		util.FromJSON(param, &u, s.Logger)
+		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
 		util.FromJSON(param, &u, s.Logger)
-		err = onRemoveMember(s, s.retros.Data.Members, *conn.Channel, userID, u)
+		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdAddFeedback:
 		afp := addFeedbackParams{}
 		util.FromJSON(param, &afp, s.Logger)

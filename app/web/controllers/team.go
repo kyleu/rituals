@@ -33,7 +33,7 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User)
 
-		sess, err := ctx.App.Team.New(sf.Title, ctx.Profile.UserID)
+		sess, err := ctx.App.Team.New(sf.Title, ctx.Profile.UserID, sf.MemberName)
 		if err != nil {
 			return eresp(err, "error creating team session")
 		}

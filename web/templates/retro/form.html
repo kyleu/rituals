@@ -5,6 +5,7 @@
     <label class="uk-form-label" for="model-categories-input"><%= util.PluralTitle(util.KeyCategory) %></label>
     <input class="uk-input" id="model-categories-input" type="text" name="categories" value="<%= strings.Join(categories, `,`) %>" />
   </div>
+  <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>
   <% ComponentSessionTeam(teams, ctx, buffer) %>
   <% ComponentSessionSprint(sprints, ctx, buffer) %>
   <% ComponentSessionPerm(util.SvcRetro, true, true, auths, ctx, buffer) %>

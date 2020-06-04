@@ -35,7 +35,7 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcStandup, r.Form, ctx.App.User)
 
-		sess, err := ctx.App.Standup.New(sf.Title, ctx.Profile.UserID, sf.TeamID, sf.SprintID)
+		sess, err := ctx.App.Standup.New(sf.Title, ctx.Profile.UserID, sf.MemberName, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return eresp(err, "error creating standup session")
 		}

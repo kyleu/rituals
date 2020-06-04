@@ -10,7 +10,7 @@ import (
 )
 
 func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, error) {
-	conn := &Connection{
+	conn := &connection{
 		ID:      util.UUID(),
 		Profile: profile,
 		Svc:     util.SvcSystem,

@@ -11,6 +11,7 @@ import (
 )
 
 func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintSessionSaveParams) error {
+	dataSvc := s.sprints
 	title := util.ServiceTitle(util.SvcSprint, param.Title)
 
 	teamID := util.GetUUIDFromString(param.TeamID)
@@ -30,9 +31,14 @@ func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintS
 		}
 	}
 
-	curr := s.sprints.GetByID(ch.ID)
+	curr := dataSvc.GetByID(ch.ID)
 	if curr == nil {
 		return errors.New("no sprint available with id [" + ch.ID.String() + "]")
+	}
+
+	sr := s.checkPerms(userID, curr.TeamID, nil, ch.Svc, ch.ID)
+	if sr != nil {
+		return sr
 	}
 
 	teamChanged := differentPointerValues(curr.TeamID, teamID)
@@ -40,13 +46,13 @@ func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintS
 	msg := "saving sprint session [%s] in team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, teamID))
 
-	err := s.sprints.UpdateSession(ch.ID, title, teamID, startDate, endDate, userID)
+	err := dataSvc.UpdateSession(ch.ID, title, teamID, startDate, endDate, userID)
 	if err != nil {
 		return errors.Wrap(err, "error updating sprint session")
 	}
 
 	if title != curr.Title {
-		slug, err := s.sprints.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
+		slug, err := dataSvc.Data.History.UpdateSlug(curr.ID, curr.Slug, curr.Title, title, userID)
 		if err != nil {
 			return errors.Wrap(err, "error updating sprint slug from ["+curr.Slug+"] to ["+slug+"]")
 		}
@@ -65,7 +71,7 @@ func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintS
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, nil, s.sprints.Data.Permissions, param.Permissions)
+	err = s.updatePerms(ch, userID, teamID, nil, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}

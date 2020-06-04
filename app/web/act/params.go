@@ -18,7 +18,7 @@ func ParamSetFromRequest(r *http.Request) query.ParamSet {
 	for qk, qs := range r.URL.Query() {
 		if strings.Contains(qk, ".") {
 			for _, qv := range qs {
-				ret = check(ret, qk, qv)
+				ret = apply(ret, qk, qv)
 			}
 		}
 	}
@@ -26,21 +26,18 @@ func ParamSetFromRequest(r *http.Request) query.ParamSet {
 	return ret
 }
 
-func check(ret query.ParamSet, qk string, qv string) query.ParamSet {
+func apply(ps query.ParamSet, qk string, qv string) query.ParamSet {
 	switch {
 	case strings.HasSuffix(qk, ".o"):
-		key := strings.TrimSuffix(qk, ".o")
-		curr := getCurr(ret, key)
+		curr := getCurr(ps, strings.TrimSuffix(qk, ".o"))
 		asc := true
 		if strings.HasSuffix(qv, ".d") {
 			asc = false
 			qv = qv[0 : len(qv)-2]
 		}
-
 		curr.Orderings = append(curr.Orderings, &query.Ordering{Column: qv, Asc: asc})
 	case strings.HasSuffix(qk, ".l"):
-		key := strings.TrimSuffix(qk, ".l")
-		curr := getCurr(ret, key)
+		curr := getCurr(ps, strings.TrimSuffix(qk, ".l"))
 		li, err := strconv.ParseInt(qv, 10, 64)
 		if err == nil {
 			curr.Limit = int(li)
@@ -50,14 +47,13 @@ func check(ret query.ParamSet, qk string, qv string) query.ParamSet {
 			}
 		}
 	case strings.HasSuffix(qk, ".x"):
-		key := strings.TrimSuffix(qk, ".x")
-		curr := getCurr(ret, key)
+		curr := getCurr(ps, strings.TrimSuffix(qk, ".x"))
 		xi, err := strconv.ParseInt(qv, 10, 64)
 		if err == nil {
 			curr.Offset = int(xi)
 		}
 	}
-	return ret
+	return ps
 }
 
 func getCurr(q query.ParamSet, key string) *query.Params {

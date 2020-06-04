@@ -10,7 +10,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/model/action"
 )
 
-func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, role Role) *Entry {
+func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, memberName string, role Role) *Entry {
 	dto, err := s.Get(modelID, userID)
 
 	if err != nil {
@@ -20,7 +20,7 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, role Role) *Entr
 
 	if dto == nil {
 		q := query.SQLInsert(s.tableName, []string{s.colName, util.WithDBID(util.KeyUser), util.KeyName, "picture", util.KeyRole}, 1)
-		err = s.db.Insert(q, nil, modelID, userID, "", "", role.String())
+		err = s.db.Insert(q, nil, modelID, userID, memberName, "", role.String())
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting member for user [%v] and model [%v]: %+v", modelID, userID, err))
 		}
@@ -35,9 +35,9 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, role Role) *Entr
 	return dto
 }
 
-func (s *Service) RegisterRef(modelID *uuid.UUID, userID uuid.UUID, role Role) *Entry {
+func (s *Service) RegisterRef(modelID *uuid.UUID, userID uuid.UUID, memberName string, role Role) *Entry {
 	if modelID == nil {
 		return nil
 	}
-	return s.Register(*modelID, userID, role)
+	return s.Register(*modelID, userID, memberName, role)
 }

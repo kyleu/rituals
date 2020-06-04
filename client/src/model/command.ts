@@ -15,6 +15,7 @@ namespace command {
     removeComment: "remove-comment",
 
     updateProfile: "update-profile",
+    updateMember: "update-member",
     removeMember: "remove-member",
 
     addStory: "add-story",
@@ -38,6 +39,7 @@ namespace command {
 
     sessionJoined: "session-joined",
     sessionUpdate: "session-update",
+    sessionRemove: "session-remove",
 
     commentUpdate: "comment-update",
     commentRemove: "comment-remove",
@@ -52,6 +54,7 @@ namespace command {
     sprints: "sprints",
 
     memberUpdate: "member-update",
+    memberRemove: "member-remove",
     onlineUpdate: "online-update",
 
     storyUpdate: "story-update",

@@ -308,6 +308,9 @@ var estimate;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
                 break;
+            case command.server.sessionRemove:
+                system.onSessionRemove(services.estimate);
+                break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
                 break;
@@ -537,6 +540,7 @@ var member;
 (function (member_1) {
     let online = [];
     let members = [];
+    let me;
     function isSelf(x) {
         return x.userID === system.cache.getProfile().userID;
     }
@@ -551,6 +555,7 @@ var member;
     function setMembers() {
         const self = members.filter(isSelf).shift();
         if (self) {
+            me = self;
             dom.setContent("#self-picture", member_1.setPicture(self.picture));
             dom.setText("#member-self .member-name", self.name);
             dom.setValue("#self-name-input", self.name);
@@ -561,10 +566,29 @@ var member;
         renderOnline();
     }
     member_1.setMembers = setMembers;
-    function onMemberUpdate(member) {
+    function onMemberRemove(member) {
         var _a;
+        if (member === system.cache.getProfile().userID) {
+            notify.notify(`you have left this ${(_a = system.cache.currentService) === null || _a === void 0 ? void 0 : _a.key}`, true);
+            document.location.href = "/";
+        }
+        else {
+            modal.hide("member");
+            const unfiltered = members;
+            const ms = unfiltered.filter(m => m.userID !== member);
+            ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+            members = ms;
+            setMembers();
+        }
+    }
+    member_1.onMemberRemove = onMemberRemove;
+    function onMemberUpdate(member) {
         if (isSelf(member)) {
+            me = member;
             modal.hide("self");
+        }
+        else {
+            modal.hide("member");
         }
         const unfiltered = members;
         const curr = unfiltered.filter(m => m.userID === member.userID).shift();
@@ -573,19 +597,7 @@ var member;
         if (ms.length === members.length) {
             notify.notify(`${member.name} has joined`, true);
         }
-        if (member.name === "::delete") {
-            if (member.userID === system.cache.getProfile().userID) {
-                modal.hide("self");
-                notify.notify(`you have left this ${(_a = system.cache.currentService) === null || _a === void 0 ? void 0 : _a.key}`, true);
-                document.location.href = "/";
-            }
-            else {
-                modal.hide("member");
-            }
-        }
-        else {
-            ms.push(member);
-        }
+        ms.push(member);
         ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
         members = ms;
         setMembers();
@@ -656,7 +668,7 @@ var member;
             return undefined;
         }
         const curr = members.filter(x => x.userID === activeMember).shift();
-        if (curr) {
+        if (!curr) {
             console.warn(`cannot load active member [${activeMember}]`);
         }
         return curr;
@@ -669,6 +681,12 @@ var member;
         if (!member) {
             return;
         }
+        const owner = (me === null || me === void 0 ? void 0 : me.role) == "owner";
+        dom.setDisplay("#modal-member .owner-form", owner);
+        dom.setDisplay("#modal-member .member-form", !owner);
+        dom.setDisplay("#modal-member .owner-actions", owner);
+        dom.setDisplay("#modal-member .member-actions", !owner);
+        dom.setSelectOption("#member-modal-role-select", member.role);
         dom.setText("#member-modal-name", member.name);
         dom.setText("#member-modal-role", member.role);
     }
@@ -687,6 +705,24 @@ var member;
         }
     }
     member_1.removeMember = removeMember;
+    function saveRole() {
+        const curr = getActiveMember();
+        if (!curr) {
+            console.warn("no active member");
+            return;
+        }
+        const src = curr.role;
+        const tgt = dom.req("#member-modal-role-select").value;
+        if (src === tgt) {
+            modal.hide("member");
+        }
+        else {
+            const svc = system.cache.currentService;
+            const msg = { svc: svc.key, cmd: command.client.updateMember, param: { id: curr.userID, role: tgt } };
+            socket.send(msg);
+        }
+    }
+    member_1.saveRole = saveRole;
     function applyMembers(m) {
         members = m;
     }
@@ -718,7 +754,7 @@ var member;
         if (!member) {
             return JSX("span", null, "{former member}");
         }
-        if (member.picture && member.picture.length > 0) {
+        if (member.picture && member.picture.length > 0 && member.picture != "none") {
             return JSX("div", null,
                 JSX("div", { class: "profile-image" },
                     JSX("img", { class: "uk-border-circle", src: member.picture, alt: member.name })),
@@ -751,7 +787,7 @@ var member;
     }
     member_2.viewSelf = viewSelf;
     function setPicture(url) {
-        if (url && url.length > 0) {
+        if (url && url.length > 0 && url != "none") {
             return JSX("div", { class: "model-icon profile-image" },
                 JSX("img", { class: "uk-border-circle", src: url, alt: "your picture" }));
         }
@@ -772,6 +808,7 @@ var command;
         updateComment: "update-comment",
         removeComment: "remove-comment",
         updateProfile: "update-profile",
+        updateMember: "update-member",
         removeMember: "remove-member",
         addStory: "add-story",
         updateStory: "update-story",
@@ -790,6 +827,7 @@ var command;
         pong: "pong",
         sessionJoined: "session-joined",
         sessionUpdate: "session-update",
+        sessionRemove: "session-remove",
         commentUpdate: "comment-update",
         commentRemove: "comment-remove",
         permissionsUpdate: "permissions-update",
@@ -800,6 +838,7 @@ var command;
         teams: "teams",
         sprints: "sprints",
         memberUpdate: "member-update",
+        memberRemove: "member-remove",
         onlineUpdate: "online-update",
         storyUpdate: "story-update",
         storyRemove: "story-remove",
@@ -1097,6 +1136,9 @@ var retro;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
                 break;
+            case command.server.sessionRemove:
+                system.onSessionRemove(services.retro);
+                break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
                 break;
@@ -1316,6 +1358,9 @@ var sprint;
             case command.server.sessionUpdate:
                 setSprintDetail(param);
                 break;
+            case command.server.sessionRemove:
+                system.onSessionRemove(services.sprint);
+                break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
                 break;
@@ -1440,6 +1485,9 @@ var standup;
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
+                break;
+            case command.server.sessionRemove:
+                system.onSessionRemove(services.standup);
                 break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
@@ -1761,6 +1809,9 @@ var system;
             case command.server.memberUpdate:
                 member.onMemberUpdate(param);
                 break;
+            case command.server.memberRemove:
+                member.onMemberRemove(param);
+                break;
             case command.server.onlineUpdate:
                 member.onOnlineUpdate(param);
                 break;
@@ -1775,6 +1826,10 @@ var system;
         }
     }
     system.onSystemMessage = onSystemMessage;
+    function onSessionRemove(svc) {
+        document.location.reload();
+    }
+    system.onSessionRemove = onSessionRemove;
 })(system || (system = {}));
 var team;
 (function (team) {
@@ -1795,6 +1850,9 @@ var team;
                 break;
             case command.server.sessionUpdate:
                 setTeamDetail(param);
+                break;
+            case command.server.sessionRemove:
+                system.onSessionRemove(services.team);
                 break;
             case command.server.permissionsUpdate:
                 system.setPermissions(param);
@@ -2013,7 +2071,6 @@ var dom;
         catch (e) {
             console.warn("error setting style", e);
         }
-        document.body.style.visibility = "visible";
         try {
             modal.wire();
         }
@@ -2334,13 +2391,15 @@ var style;
         wireEmoji(theme);
         const card = dom.els(".uk-card");
         switch (theme) {
-            case "default":
+            case "auto":
+                let t = "light";
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    setTheme("dark");
+                    t = "dark";
                 }
-                else {
-                    setTheme("light");
-                }
+                setTheme(t);
+                fetch("/profile/theme/" + t).then(r => r.text()).then(body => {
+                    console.log(`Set theme to [${t}]`);
+                });
                 break;
             case "light":
                 document.documentElement.classList.remove("uk-light");
@@ -2378,9 +2437,6 @@ var style;
         if (typeof EmojiButton === 'undefined') {
             dom.els(".picker-toggle").forEach(el => dom.setDisplay(el, false));
             return;
-        }
-        if (t === "default") {
-            t = "auto";
         }
         const opts = { position: "bottom-end", theme: t, zIndex: 1021 };
         dom.els(".textarea-emoji").forEach(el => {

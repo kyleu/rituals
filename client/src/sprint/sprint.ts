@@ -40,6 +40,9 @@ namespace sprint {
       case command.server.sessionUpdate:
         setSprintDetail(param as Detail);
         break;
+      case command.server.sessionRemove:
+        system.onSessionRemove(services.sprint)
+        break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
         break;
