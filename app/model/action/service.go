@@ -2,6 +2,7 @@ package action
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/kyleu/rituals.dev/app/database"
 
@@ -50,7 +51,7 @@ func (s *Service) Post(svc util.Service, modelID uuid.UUID, userID uuid.UUID, ac
 	go func() {
 		_, err := s.New(svc, modelID, userID, act, content, note)
 		if err != nil {
-			util.LogError(s.logger, "unable to save new action: %+v", err)
+			s.logger.Error(fmt.Sprintf("unable to save new action: %+v", err))
 		}
 	}()
 }
@@ -63,7 +64,7 @@ func (s *Service) List(params *query.Params) Actions {
 	err := s.db.Select(&dtos, q, nil)
 
 	if err != nil {
-		util.LogError(s.logger, "error retrieving actions: %+v", err)
+		s.logger.Error(fmt.Sprintf("error retrieving actions: %+v", err))
 		return nil
 	}
 
@@ -79,11 +80,11 @@ func (s *Service) GetByID(id uuid.UUID) *Action {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting action by id [%v]: %+v", id, err)
+		s.logger.Error(fmt.Sprintf("error getting action by id [%v]: %+v", id, err))
 		return nil
 	}
 
-	return dto.ToAction()
+	return dto.toAction()
 }
 
 func (s *Service) GetByUser(userID uuid.UUID, params *query.Params) Actions {
@@ -94,7 +95,7 @@ func (s *Service) GetByUser(userID uuid.UUID, params *query.Params) Actions {
 	err := s.db.Select(&dtos, q, nil, userID)
 
 	if err != nil {
-		util.LogError(s.logger, "error retrieving actions for user [%v]: %+v", userID, err)
+		s.logger.Error(fmt.Sprintf("error retrieving actions for user [%v]: %+v", userID, err))
 		return nil
 	}
 	return toActions(dtos)
@@ -109,7 +110,7 @@ func (s *Service) GetBySvcModel(svc util.Service, modelID uuid.UUID, params *que
 	err := s.db.Select(&dtos, q, nil, svc.Key, modelID)
 
 	if err != nil {
-		util.LogError(s.logger, "unable to get actions for [%v:%v]: %+v", svc, modelID, err)
+		s.logger.Error(fmt.Sprintf("unable to get actions for [%v:%v]: %+v", svc, modelID, err))
 		return nil
 	}
 
@@ -120,7 +121,7 @@ func toActions(dtos []actionDTO) Actions {
 	ret := make(Actions, 0, len(dtos))
 
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToAction())
+		ret = append(ret, dto.toAction())
 	}
 
 	return ret

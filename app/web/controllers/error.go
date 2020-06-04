@@ -1,13 +1,11 @@
 package controllers
 
 import (
+	"fmt"
+	"github.com/kyleu/rituals.dev/gen/components"
 	"net/http"
 
-	"github.com/kyleu/rituals.dev/app/util"
-
 	"github.com/kyleu/rituals.dev/app/web"
-
-	"github.com/kyleu/rituals.dev/gen/templates"
 )
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
@@ -16,6 +14,6 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	ctx := web.ExtractContext(w, r, false)
 	ctx.Title = "Not Found"
 	ctx.Breadcrumbs = web.BreadcrumbsSimple(r.URL.Path, "not found")
-	util.LogInfo(ctx.Logger, "[%v %v] returned [%d]", r.Method, r.URL.Path, http.StatusNotFound)
-	_, _ = templates.NotFound(r, ctx, w)
+	ctx.Logger.Info(fmt.Sprintf("[%v %v] returned [%d]", r.Method, r.URL.Path, http.StatusNotFound))
+	_, _ = components.NotFound(r, ctx, w)
 }

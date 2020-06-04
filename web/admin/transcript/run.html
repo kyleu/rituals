@@ -1,6 +1,6 @@
 <%: func TranscriptRun(t *transcript.Transcript, content interface{}, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -8,17 +8,17 @@
       <%
         switch t.Key {
         case transcript.Email.Key:
-          TranscriptEmailHTML(t, content.(transcript.EmailResponse), _buffer)
+          transcripttemplates.TranscriptEmailHTML(content.(transcript.EmailResponse), _buffer)
         case transcript.Team.Key:
-          TranscriptTeamHTML(t, content.(transcript.TeamResponse), _buffer)
+          transcripttemplates.TranscriptTeamHTML(content.(transcript.TeamResponse), _buffer)
         case transcript.Sprint.Key:
-          TranscriptSprintHTML(t, content.(transcript.SprintResponse), _buffer)
+          transcripttemplates.TranscriptSprintHTML(content.(transcript.SprintResponse), _buffer)
         case transcript.Estimate.Key:
-          TranscriptEstimateHTML(t, content.(transcript.EstimateResponse), _buffer)
+          transcripttemplates.TranscriptEstimateHTML(content.(transcript.EstimateResponse), _buffer)
         case transcript.Standup.Key:
-          TranscriptStandupHTML(t, content.(transcript.StandupResponse), _buffer)
+          transcripttemplates.TranscriptStandupHTML(content.(transcript.StandupResponse), _buffer)
         case transcript.Retro.Key:
-          TranscriptRetroHTML(t, content.(transcript.RetroResponse), _buffer)
+          transcripttemplates.TranscriptRetroHTML(content.(transcript.RetroResponse), _buffer)
         default:
           _, _ = w.Write([]byte("Invalid transcript type"))
         }

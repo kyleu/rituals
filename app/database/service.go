@@ -32,5 +32,9 @@ func errMessage(t string, q string, values []interface{}) string {
 }
 
 func logQuery(s *Service, msg string, q string, values []interface{}) {
-	util.LogDebug(s.logger, "%v {\n  SQL: %v\n  Values: %v\n}", msg, strings.TrimSpace(q), util.ValueStrings(values))
+	s.logger.Debug(fmt.Sprintf("%v {\n  SQL: %v\n  Values: %v\n}", msg, strings.TrimSpace(q), util.ValueStrings(values)))
+}
+
+func ArrayToString(a []string) string {
+	return "{" + strings.Join(a, ",") + "}"
 }

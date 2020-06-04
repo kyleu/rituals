@@ -69,21 +69,21 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) *SystemUser {
 		if addIfMissing {
 			ret, err := s.new(id)
 			if err != nil {
-				util.LogError(s.logger, "error creating new user with id [%v]: %+v", id, err)
+				s.logger.Error(fmt.Sprintf("error creating new user with id [%v]: %+v", id, err))
 			}
 			return ret
 		}
 		return nil
 	}
 	if err != nil {
-		util.LogError(s.logger, "error getting user by id [%v]: %+v", id, err)
+		s.logger.Error(fmt.Sprintf("error getting user by id [%v]: %+v", id, err))
 		return nil
 	}
 	return ret
 }
 
 func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error) {
-	s.logger.Info("updating user [" + prof.UserID.String() + "] from profile")
+	s.logger.Debug("updating user [" + prof.UserID.String() + "] from profile")
 	cols := []string{"name", "role", "theme", "nav_color", "link_color", "picture", "locale"}
 	q := query.SQLUpdate(util.KeySystemUser, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, prof.Name, prof.Role.Key, prof.Theme.String(), prof.NavColor, prof.LinkColor, prof.Picture, prof.Locale.String(), prof.UserID)

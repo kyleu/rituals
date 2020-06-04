@@ -3,9 +3,9 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% templates.ComponentTableHeader(util.KeyHistory, util.KeySlug, util.Title(util.KeySlug), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyHistory, "modelName", util.Title(util.KeyTitle), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyHistory, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyHistory, util.KeySlug, util.Title(util.KeySlug), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyHistory, "modelName", util.Title(util.KeyTitle), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyHistory, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
@@ -13,7 +13,7 @@
     <tr>
       <td><%= model.Slug %></td>
       <td><%= model.ModelName %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

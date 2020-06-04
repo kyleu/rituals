@@ -90,7 +90,7 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 		s.logger.Warn(fmt.Sprintf("error getting estimate by id: %+v", err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetByIDPointer(teamID *uuid.UUID) *Session {
@@ -115,7 +115,7 @@ func (s *Service) GetBySlug(slug string) *Session {
 		s.logger.Warn(fmt.Sprintf("error getting estimate by slug: %+v", err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
@@ -166,7 +166,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.U
 func toSessions(dtos []sessionDTO) Sessions {
 	ret := make(Sessions, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
+		ret = append(ret, dto.toSession())
 	}
 	return ret
 }

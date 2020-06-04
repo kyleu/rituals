@@ -24,7 +24,7 @@ namespace vote {
 
   export function onVoteUpdate(v: Vote) {
     let x = estimate.cache.votes;
-    x = x.filter(v => v.userID !== v.userID || v.storyID !== v.storyID);
+    x = x.filter(vt => vt.userID !== v.userID || vt.storyID !== v.storyID);
     x.push(v);
     estimate.cache.votes = x;
     if (v.storyID === estimate.cache.activeStory) {
@@ -58,6 +58,8 @@ namespace vote {
   }
 
   function viewActiveVotes(votes: ReadonlyArray<Vote>, activeVote: Vote | undefined) {
+    console.log("!!!!!!!!");
+    console.log(votes);
     dom.setContent("#story-vote-members", renderVoteMembers(member.getMembers(), votes));
     dom.setContent("#story-vote-choices", renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
   }

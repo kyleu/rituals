@@ -305,4 +305,25 @@ create table if not exists "comment" (
 
 create index if not exists idx_comment_svc_model_id on comment(svc, model_id);
 
+-- emails
+create table if not exists "email" (
+  "id" varchar(1024) not null primary key,
+  "recipients" varchar(1024)[] not null,
+  "subject" text not null,
+  "data" json not null,
+  "plain" text not null,
+  "html" text not null,
+  "user_id" uuid references "system_user"("id"),
+  "status" varchar(128) not null,
+  "created" timestamp not null default now()
+);
+
+-- migrations
+create table if not exists "migration" (
+  "idx" int not null primary key,
+  "title" varchar(1024) not null,
+  "src" text not null,
+  "created" timestamp not null default now()
+);
+
 -- <%: func CreateTables(w io.Writer) %>

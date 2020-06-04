@@ -1,0 +1,40 @@
+<%: func CommentDetail(model *comment.Comment, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title"><%= ctx.Title %></h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+          <tr>
+            <th><%= util.Title(util.KeyID) %></th>
+            <td><%= model.ID.String() %></td>
+          </tr>
+          <tr>
+            <th><%= util.Title(util.KeyModel) %></th>
+            <td><% Channel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
+          </tr>
+          <tr>
+            <th><%= util.Title(util.KeyUser) %></th>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, _buffer) %></a></td>
+          </tr>
+          <tr>
+            <th>Target</th>
+            <td><%= model.TargetType %>:<%=v model.TargetID %></td>
+          </tr>
+          <tr>
+            <th><%= util.Title(util.KeyHTML) %></th>
+            <td><%== model.HTML %></td>
+          </tr>
+          <tr>
+            <th><%= util.Title(util.KeyCreated) %></th>
+            <td><% components.DateTime(&model.Created, _buffer) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% } %>

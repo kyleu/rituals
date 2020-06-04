@@ -1,9 +1,8 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/web"
 
@@ -28,7 +27,7 @@ func Socket(w http.ResponseWriter, r *http.Request) {
 
 	err = ctx.App.Socket.ReadLoop(connID)
 	if err != nil {
-		util.LogError(ctx.Logger, "error processing socket read loop: %+v", err)
+		ctx.Logger.Error(fmt.Sprintf("error processing socket read loop: %+v", err))
 		return
 	}
 }

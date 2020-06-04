@@ -32,6 +32,9 @@ namespace auth {
   }
 
   export function active() {
+    if (!auths) {
+      return [];
+    }
     return auths;
   }
 }

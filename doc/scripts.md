@@ -10,6 +10,7 @@ They're designed for macOS, but should work on Linux or Windows (via WSL).
 - `build-css.sh`: Uses `scss` to compile the stylesheets in `./web/stylesheets`
 - `build-css-watch.sh`: Builds the css resources using `build-css`, then watches for changes in `./web/stylesheets`
 - `build-docker.sh`: Makes a release build, builds a docker image, then exports and zips the output
+- `build-linux.sh`: Makes a release build for 64-bit Linux
 - `build-windows.bat`: Makes a release build, builds a docker image, then exports and zips the output
 - `check.sh`: Runs code statistics, checks for outdated dependencies, then runs various linters
 - `dev.sh`: Watches the project directories, and runs the main application, restarting when changes are detected
@@ -18,3 +19,5 @@ They're designed for macOS, but should work on Linux or Windows (via WSL).
 - `package.sh`: Runs the code formatter, checks all the projects, then builds binaries for Linux, macOS, and Windows
 - `run-docker.sh`: Runs the Docker image produced by `build-docker`, exposing an HTTP port
 - `run-release.sh`: Builds the project in release mode and runs it
+- `templates.sh`: Builds hero templates, writing output to `./gen`
+- `workspace.sh`: Opens all build in separate panes (iTerm2 only)

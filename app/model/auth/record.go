@@ -32,7 +32,7 @@ func (s *Service) List(params *query.Params) Records {
 	q := query.SQLSelect("*", util.KeyAuth, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
-		util.LogError(s.logger, "error retrieving auth records: %+v", err)
+		s.logger.Error(fmt.Sprintf("error retrieving auth records: %+v", err))
 		return nil
 	}
 	return toRecords(dtos)
@@ -46,10 +46,10 @@ func (s *Service) GetByID(authID uuid.UUID) *Record {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting auth record by id [%v]: %+v", authID, err)
+		s.logger.Error(fmt.Sprintf("error getting auth record by id [%v]: %+v", authID, err))
 		return nil
 	}
-	return dto.ToRecord()
+	return dto.toRecord()
 }
 
 func (s *Service) GetByProviderID(key string, code string) *Record {
@@ -60,10 +60,10 @@ func (s *Service) GetByProviderID(key string, code string) *Record {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting auth record by provider [%v:%v]: %+v", key, code, err)
+		s.logger.Error(fmt.Sprintf("error getting auth record by provider [%v:%v]: %+v", key, code, err))
 		return nil
 	}
-	return dto.ToRecord()
+	return dto.toRecord()
 }
 
 func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) Records {
@@ -72,7 +72,7 @@ func (s *Service) GetByUserID(userID uuid.UUID, params *query.Params) Records {
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
-		util.LogError(s.logger, "error retrieving auths for user [%v]: %+v", userID, err)
+		s.logger.Error(fmt.Sprintf("error retrieving auths for user [%v]: %+v", userID, err))
 		return nil
 	}
 	return toRecords(dtos)
@@ -86,7 +86,7 @@ func (s *Service) Delete(authID uuid.UUID) error {
 func toRecords(dtos []recordDTO) Records {
 	ret := make(Records, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToRecord())
+		ret = append(ret, dto.toRecord())
 	}
 	return ret
 }

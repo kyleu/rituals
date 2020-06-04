@@ -1,4 +1,4 @@
-<%: func SprintForm(title string, startDate *time.Time, endDate *time.Time, teams team.Sessions, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintForm(title string, startDate *time.Time, endDate *time.Time, teams team.Sessions, auths auth.Records, showName bool, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">
@@ -9,7 +9,9 @@
     <label class="uk-form-label" for="sprint-end-date-input">End Date</label>
     <input class="uk-input" id="sprint-end-date-input" type="date" name="endDate" value="<%= util.ToYMD(endDate) %>" />
   </div>
+  <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>
+  <% } %>
   <% ComponentSessionTeam(teams, ctx, buffer) %>
   <% ComponentSessionPerm(util.SvcSprint, true, false, auths, ctx, buffer) %>
 </fieldset>

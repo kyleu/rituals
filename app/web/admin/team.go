@@ -33,7 +33,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Team.GetByID(*teamID)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load team [" + teamID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.SvcTeam.Key)), nil
 		}
 

@@ -52,7 +52,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
 	}
 	ret := make(Permissions, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToPermission())
+		ret = append(ret, dto.toPermission())
 	}
 	return ret.Sort()
 }
@@ -68,7 +68,7 @@ func (s *Service) Get(modelID uuid.UUID, k string, v string) (*Permission, error
 	if err != nil {
 		return nil, err
 	}
-	return dto.ToPermission(), nil
+	return dto.toPermission(), nil
 }
 
 func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role, userID uuid.UUID) *Permission {

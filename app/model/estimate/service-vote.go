@@ -47,7 +47,7 @@ func (s *Service) GetVote(storyID uuid.UUID, userID uuid.UUID) (*Vote, error) {
 		}
 		return nil, err
 	}
-	return dto.ToVote(), nil
+	return dto.toVote(), nil
 }
 
 func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string) (*Vote, error) {
@@ -89,7 +89,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 func toVotes(dtos []voteDTO) Votes {
 	ret := make(Votes, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToVote())
+		ret = append(ret, dto.toVote())
 	}
 	return ret
 }

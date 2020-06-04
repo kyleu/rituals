@@ -15,7 +15,7 @@
     <div class="uk-modal-header">
       <h2 class="uk-modal-title">Add Report</h2>
     </div>
-    <form class="uk-form-stacked" id="form-detail" onsubmit="return report.onSubmitReport();">
+    <form class="uk-form-stacked" onsubmit="return report.onSubmitReport();">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
           <div class="uk-margin">
@@ -24,7 +24,7 @@
           </div>
           <div class="uk-margin">
             <label class="uk-form-label" for="report-content">Report</label>
-            <% ComponentTextarea(web.InputParams{ID: "report-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+            <% components.Textarea(web.InputParams{ID: "report-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
           </div>
         </fieldset>
       </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="report-edit-content">Content</label>
-          <% ComponentTextarea(web.InputParams{ID: "report-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+          <% components.Textarea(web.InputParams{ID: "report-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
         </div>
       </div>
       <div class="content-view"></div>

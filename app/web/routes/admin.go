@@ -51,6 +51,15 @@ func adminRoutes(app *config.AppInfo, r *mux.Router) *mux.Router {
 	r.Path(adm(util.SvcRetro.Key)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.RetroList))).Name(util.AdminLink(util.SvcRetro.Key))
 	r.Path(adm(util.SvcRetro.Key, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.RetroDetail))).Name(util.AdminLink(util.SvcRetro.Key, util.KeyDetail))
 
+	r.Path(adm(util.KeyComment)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.CommentList))).Name(util.AdminLink(util.KeyComment))
+	r.Path(adm(util.KeyComment, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.CommentDetail))).Name(util.AdminLink(util.KeyComment, util.KeyDetail))
+
+	r.Path(adm(util.KeyEmail)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.EmailList))).Name(util.AdminLink(util.KeyEmail))
+	r.Path(adm(util.KeyEmail, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.EmailDetail))).Name(util.AdminLink(util.KeyEmail, util.KeyDetail))
+
+	r.Path(adm(util.KeyMigration)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.MigrationList))).Name(util.AdminLink(util.KeyMigration))
+	r.Path(adm(util.KeyMigration, "{idx}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.MigrationDetail))).Name(util.AdminLink(util.KeyMigration, util.KeyDetail))
+
 	r.Path(adm(util.KeyConnection)).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.ConnectionList))).Name(util.AdminLink(util.KeyConnection))
 	r.Path(adm(util.KeyConnection)).Methods(http.MethodPost).Handler(addContext(r, app, http.HandlerFunc(admin.ConnectionPost))).Name(util.AdminLink(util.KeyConnection, "post"))
 	r.Path(adm(util.KeyConnection, "{id}")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(admin.ConnectionDetail))).Name(util.AdminLink(util.KeyConnection, util.KeyDetail))

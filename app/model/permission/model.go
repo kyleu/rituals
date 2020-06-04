@@ -16,7 +16,7 @@ type permissionDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto *permissionDTO) ToPermission() *Permission {
+func (dto *permissionDTO) toPermission() *Permission {
 	return &Permission{
 		K:       dto.K,
 		V:       dto.V,

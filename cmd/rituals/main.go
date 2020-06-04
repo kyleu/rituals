@@ -15,10 +15,6 @@ var (
 )
 
 func main() {
-	Run()
-}
-
-func Run() {
 	cmd := cli.Configure(version, commitHash)
 
 	if err := cmd.Execute(); err != nil {

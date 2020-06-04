@@ -60,7 +60,7 @@ type actionDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto *actionDTO) ToAction() *Action {
+func (dto *actionDTO) toAction() *Action {
 	var param interface{}
 	_ = json.Unmarshal([]byte(dto.Content), &param)
 

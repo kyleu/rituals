@@ -87,7 +87,7 @@ func (s *Service) GetByID(id uuid.UUID) *Status {
 	}
 	conn, ok := s.connections[id]
 	if !ok {
-		util.LogError(s.Logger, "error getting connection by id [%v]", id)
+		s.Logger.Error(fmt.Sprintf("error getting connection by id [%v]", id))
 		return nil
 	}
 	return conn.ToStatus()

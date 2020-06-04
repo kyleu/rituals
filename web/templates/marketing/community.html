@@ -1,6 +1,6 @@
 <%: func Community(ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
-<%@ nav { %><% NavbarStatic("community", ctx, _buffer) %><% } %>
+<%@ nav { %><% components.NavbarStatic("community", ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">

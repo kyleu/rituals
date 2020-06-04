@@ -30,7 +30,7 @@ type reportDTO struct {
 	Created   time.Time `db:"created"`
 }
 
-func (dto *reportDTO) ToReport() *Report {
+func (dto *reportDTO) toReport() *Report {
 	return &Report{
 		ID:        dto.ID,
 		StandupID: dto.StandupID,

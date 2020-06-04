@@ -42,7 +42,7 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Session.AddFlash("success:You're a wizard, Harry!")
-		act.SaveSession(w, r, ctx)
+		act.SaveSession(w, r, &ctx)
 
 		return ctx.Route(util.KeyAdmin), nil
 	})

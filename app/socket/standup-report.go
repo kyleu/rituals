@@ -58,7 +58,7 @@ func sendReportUpdate(s *Service, ch Channel, report *standup.Report) error {
 
 func parseDate(s string) (*time.Time, error) {
 	dString := strings.TrimSpace(s)
-	if dString == "" {
+	if len(dString) == 0 {
 		t := time.Now()
 		dString = util.ToYMD(&t)
 	}

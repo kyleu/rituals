@@ -17,8 +17,15 @@ import (
 	"logur.dev/logur"
 )
 
-func OpenDatabase(debug bool, logger logur.Logger, wipe bool) (*database.Service, error) {
-	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: "config"})
+type DBParams struct {
+	Debug bool
+	Logger logur.Logger
+	Wipe bool
+	Migrate bool
+}
+
+func OpenDatabase(params DBParams) (*database.Service, error) {
+	params.Logger = logur.WithFields(params.Logger, map[string]interface{}{util.KeyService: "config"})
 
 	// load from config
 	host := "localhost"
@@ -35,12 +42,19 @@ func OpenDatabase(debug bool, logger logur.Logger, wipe bool) (*database.Service
 		return nil, errors.Wrap(err, "error opening config database")
 	}
 
-	svc := database.NewService(debug, db, logger)
+	svc := database.NewService(params.Debug, db, params.Logger)
 
-	if wipe {
-		err = dbWipe(svc, logger)
+	if params.Wipe {
+		err = dbWipe(svc, params.Logger)
 		if err != nil {
 			return nil, errors.Wrap(err, "error applying initial schema")
+		}
+	}
+
+	if params.Migrate {
+		err = svc.Migrate()
+		if err != nil {
+			return nil, errors.Wrap(err, "error applying database migrations")
 		}
 	}
 
@@ -80,6 +94,6 @@ func exec(name string, db *database.Service, logger logur.Logger, f func(*string
 		}
 	}
 	elapsed := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
-	util.LogDebug(logger, "ran initial query [%s] in [%v]", name, util.MicrosToMillis(language.AmericanEnglish, int(elapsed)))
+	logger.Debug(fmt.Sprintf("ran initial query [%s] in [%v]", name, util.MicrosToMillis(language.AmericanEnglish, int(elapsed))))
 	return nil
 }

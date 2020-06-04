@@ -1,5 +1,0 @@
-<%: func TranscriptRetroHTML(t *transcript.Transcript, r transcript.RetroResponse, buffer *bytes.Buffer) %>
-<div>
-  <h3><%= t.Title %></h3>
-  <pre><%= util.ToJSON(r, nil) %></pre>
-</div>

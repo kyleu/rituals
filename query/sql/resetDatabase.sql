@@ -31,6 +31,9 @@ drop table if exists "action";
 drop table if exists "comment";
 
 drop table if exists "auth";
+drop table if exists "email";
+drop table if exists "migration";
+
 drop table if exists "system_user";
 
 drop type if exists "auth_provider";

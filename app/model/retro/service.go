@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/kyleu/rituals.dev/app/model/comment"
-	"strings"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/model/history"
@@ -57,7 +56,7 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, categor
 	model := NewSession(title, slug, userID, categories, teamID, sprintID)
 
 	q := query.SQLInsert(s.svc.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyCategory)}, 1)
-	categoriesString := "{" + strings.Join(model.Categories, ",") + "}"
+	categoriesString := database.ArrayToString(model.Categories)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String(), categoriesString)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new retro session")
@@ -92,10 +91,10 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting retro by id [%v]: %+v", id, err)
+		s.logger.Error(fmt.Sprintf("error getting retro by id [%v]: %+v", id, err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetBySlug(slug string) *Session {
@@ -106,10 +105,10 @@ func (s *Service) GetBySlug(slug string) *Session {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting retro by slug [%v]: %+v", slug, err)
+		s.logger.Error(fmt.Sprintf("error getting retro by slug [%v]: %+v", slug, err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
@@ -164,7 +163,7 @@ func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
 	cols := []string{"title", util.Plural(util.KeyCategory), util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key)}
 	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
-	categoriesString := "{" + strings.Join(categories, ",") + "}"
+	categoriesString := database.ArrayToString(categories)
 	err := s.db.UpdateOne(q, nil, title, categoriesString, teamID, sprintID, sessionID)
 	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating retro session")
@@ -173,7 +172,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []
 func toSessions(dtos []sessionDTO) Sessions {
 	ret := make(Sessions, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
+		ret = append(ret, dto.toSession())
 	}
 	return ret
 }

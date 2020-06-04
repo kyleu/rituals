@@ -40,6 +40,9 @@ namespace member {
 
     const others = members.filter(x => !isSelf(x));
     dom.setContent("#member-detail", renderMembers(others));
+    if(others.length > 0) {
+      modal.hide('welcome');
+    }
     renderOnline();
   }
 

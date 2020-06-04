@@ -12,7 +12,7 @@
     <div class="uk-modal-header">
       <h2 class="uk-modal-title">Add Feedback</h2>
     </div>
-    <form class="uk-form-stacked" id="form-detail" onsubmit="return feedback.onSubmitFeedback();">
+    <form class="uk-form-stacked" onsubmit="return feedback.onSubmitFeedback();">
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
           <div class="uk-margin">
@@ -21,7 +21,7 @@
           </div>
           <div class="uk-margin">
             <label class="uk-form-label" for="feedback-content"><%= util.Title(util.KeyFeedback) %></label>
-            <% ComponentTextarea(web.InputParams{ID: "feedback-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+            <% components.Textarea(web.InputParams{ID: "feedback-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
           </div>
         </fieldset>
       </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="feedback-edit-content"><%= util.Title(util.KeyContent) %></label>
-          <% ComponentTextarea(web.InputParams{ID: "feedback-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+          <% components.Textarea(web.InputParams{ID: "feedback-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
         </div>
       </div>
       <div class="content-view"></div>

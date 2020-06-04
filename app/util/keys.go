@@ -28,6 +28,7 @@ const (
 	KeyJSON       = "json"
 	KeyKey        = "key"
 	KeyMember     = "member"
+	KeyMigration  = "migration"
 	KeyModel      = "model"
 	KeyModules    = "modules"
 	KeyName       = "name"

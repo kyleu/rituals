@@ -37,12 +37,12 @@ func (s *Service) Get(dto interface{}, q string, tx *sqlx.Tx, values ...interfac
 	return tx.Get(dto, q, values...)
 }
 
-type countResult struct {
-	C int64 `db:"c"`
+type singleIntResult struct {
+	X *int64 `db:"x"`
 }
 
-func (s *Service) Count(q string, tx *sqlx.Tx, values ...interface{}) (int64, error) {
-	x := &countResult{}
+func (s *Service) SingleInt(q string, tx *sqlx.Tx, values ...interface{}) (int64, error) {
+	x := &singleIntResult{}
 	var err error
 	if tx == nil {
 		err = s.db.Get(x, q, values...)
@@ -52,5 +52,8 @@ func (s *Service) Count(q string, tx *sqlx.Tx, values ...interface{}) (int64, er
 	if err != nil {
 		return -1, errors.Wrap(err, "returned value is not an integer")
 	}
-	return x.C, nil
+	if x.X == nil {
+		return 0, nil
+	}
+	return *x.X, nil
 }

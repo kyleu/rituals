@@ -3,10 +3,10 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% templates.ComponentTableHeader(util.KeyPermission, "k", "K", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyPermission, "v", "V", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyPermission, "access", "Access", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyPermission, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyPermission, "k", "K", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyPermission, "v", "V", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyPermission, "access", "Access", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyPermission, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
@@ -15,7 +15,7 @@
       <td class="uk-table-shrink uk-text-nowrap"><%= model.K %></td>
       <td><%= model.V %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Access.String() %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

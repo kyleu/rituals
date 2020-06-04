@@ -18,7 +18,7 @@ type StoryStatusChange struct {
 
 func onAddStory(s *Service, ch Channel, userID uuid.UUID, param addStoryParams) error {
 	param.Title = strings.TrimSpace(param.Title)
-	if param.Title == "" {
+	if len(param.Title) == 0 {
 		param.Title = "Untitled " + util.Title(util.KeyStory)
 	}
 	s.Logger.Debug(fmt.Sprintf("adding story [%s]", param.Title))
@@ -33,7 +33,7 @@ func onAddStory(s *Service, ch Channel, userID uuid.UUID, param addStoryParams) 
 
 func onUpdateStory(s *Service, ch Channel, userID uuid.UUID, param updateStoryParams) error {
 	param.Title = strings.TrimSpace(param.Title)
-	if param.Title == "" {
+	if len(param.Title) == 0 {
 		param.Title = "Untitled " + util.Title(util.KeyStory)
 	}
 	st, err := s.estimates.UpdateStory(param.StoryID, param.Title, userID)

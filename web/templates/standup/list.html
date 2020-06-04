@@ -1,6 +1,6 @@
 <%: func StandupList(sessions standup.Sessions, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, params *query.Params, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
-<%@ nav { %><% Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -15,7 +15,7 @@
     <div class="uk-card uk-card-body uk-margin-top">
       <h3 class="uk-card-title">New Standup</h3>
       <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcStandup.Key + `.new`) %>" method="post">
-        <% StandupForm("", teams, sprints, auths, ctx, _buffer) %>
+        <% StandupForm("", teams, sprints, auths, true, ctx, _buffer) %>
         <div class="uk-margin-top">
           <button class="uk-button uk-button-default" type="submit">Start</button>
         </div>

@@ -11,8 +11,8 @@ import (
 )
 
 var homeSections = []string{
-	util.KeyUser, util.KeyAuth, util.KeyAction,
 	util.SvcTeam.Key, util.SvcSprint.Key, util.SvcEstimate.Key, util.SvcStandup.Key, util.SvcRetro.Key,
+	util.KeyUser, util.KeyAuth, util.KeyAction, util.KeyComment, util.KeyEmail, util.KeyMigration,
 	util.KeyConnection, util.KeySandbox, util.KeyRoutes, util.KeyModules, util.KeyTranscript, util.KeyGraphQL,
 }
 

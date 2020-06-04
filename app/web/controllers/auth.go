@@ -60,7 +60,7 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Session.AddFlash("success:Signed in as " + record.Name)
-		act.SaveSession(w, r, ctx)
+		act.SaveSession(w, r, &ctx)
 
 		return u, nil
 	})

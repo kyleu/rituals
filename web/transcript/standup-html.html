@@ -1,0 +1,7 @@
+<%: func TranscriptStandupHTML(r transcript.StandupResponse, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Session.Title %></h3>
+  <p><% TranscriptCommentListHTML(r.Comments, r.Members, buffer) %></p>
+  <h3>Debug</h3>
+  <pre><%= util.ToJSON(r, nil) %></pre>
+</div>

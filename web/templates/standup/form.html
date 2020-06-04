@@ -1,7 +1,9 @@
-<%: func StandupForm(title string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func StandupForm(title string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
+  <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>
+  <% } %>
   <% ComponentSessionTeam(teams, ctx, buffer) %>
   <% ComponentSessionSprint(sprints, ctx, buffer) %>
   <% ComponentSessionPerm(util.SvcStandup, true, true, auths, ctx, buffer) %>

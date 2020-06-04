@@ -34,7 +34,7 @@ func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 	if err != nil {
 		return nil, err
 	}
-	return dto.ToStory(), nil
+	return dto.toStory(), nil
 }
 
 func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
@@ -162,7 +162,7 @@ func calcFinalVote(votes Votes) string {
 func toStories(dtos []storyDTO) Stories {
 	ret := make(Stories, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToStory())
+		ret = append(ret, dto.toStory())
 	}
 	return ret
 }

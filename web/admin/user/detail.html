@@ -1,6 +1,6 @@
 <%: func UserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,11 +9,11 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th>ID</th>
+            <th><%= util.Title(util.KeyID) %></th>
             <td><%= user.UserID.String() %></td>
           </tr>
           <tr>
-            <th>Name</th>
+            <th><%= util.Title(util.KeyName) %></th>
             <td><%= user.Name %></td>
           </tr>
           <tr>
@@ -45,8 +45,8 @@
             <td><%=v user.Locale %></td>
           </tr>
           <tr>
-            <th>Created</th>
-            <td><% templates.ComponentDateTime(&user.Created, _buffer) %></td>
+            <th><%= util.Title(util.KeyCreated) %></th>
+            <td><% components.DateTime(&user.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

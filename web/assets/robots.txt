@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://rituals.dev/sitemap.xml

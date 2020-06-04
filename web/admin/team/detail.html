@@ -1,6 +1,6 @@
 <%: func TeamDetail(model *team.Session, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, data *session.Data, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -12,24 +12,24 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th>ID</th>
+            <th><%= util.Title(util.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th>Slug</th>
+            <th><%= util.Title(util.KeySlug) %></th>
             <td><%= model.Slug %></td>
           </tr>
           <tr>
-            <th>Title</th>
+            <th><%= util.Title(util.KeyTitle) %></th>
             <td><%= model.Title %></td>
           </tr>
           <tr>
-            <th>Owner</th>
-            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Owner.String()) %>"><% templates.ComponentUUID(&model.Owner, _buffer) %></a></td>
+            <th><%= util.Title(util.KeyOwner) %></th>
+            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Owner.String()) %>"><% components.UUID(&model.Owner, _buffer) %></a></td>
           </tr>
           <tr>
-            <th>Created</th>
-            <td><% templates.ComponentDateTime(&model.Created, _buffer) %></td>
+            <th><%= util.Title(util.KeyCreated) %></th>
+            <td><% components.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

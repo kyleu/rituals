@@ -48,7 +48,7 @@ type recentResult struct {
 }
 
 func databaseWork(db *database.Service, section string) (int64, *time.Time, error) {
-	count, err := db.Count("select count(*) as c from "+section, nil)
+	count, err := db.SingleInt("select count(*) as x from "+section, nil)
 	if err != nil {
 		return -1, nil, errors.Wrap(err, "cannot get count from "+section)
 	}

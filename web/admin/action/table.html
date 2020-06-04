@@ -3,23 +3,23 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% templates.ComponentTableHeader(util.KeyAction, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyAction, util.WithID(util.KeyModel), util.Title(util.KeyModel), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyAction, util.WithID(util.KeyUser), util.WithID(util.KeyUser), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyAction, util.KeyAct, util.Title(util.KeyAct), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyAction, util.KeyNote, util.Title(util.KeyNote), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyAction, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyAction, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyAction, util.WithID(util.KeyModel), util.Title(util.KeyModel), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyAction, util.WithID(util.KeyUser), util.WithID(util.KeyUser), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyAction, util.KeyAct, util.Title(util.KeyAct), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyAction, util.KeyNote, util.Title(util.KeyNote), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyAction, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range actions { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyAction, util.KeyDetail), `id`, model.ID.String()) %>"><% templates.ComponentUUID(&model.ID, buffer) %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentChannel(model.Svc, &model.ModelID, ctx, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.ID.String()) %>"><% templates.ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyAction, util.KeyDetail), `id`, model.ID.String()) %>"><% components.UUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% Channel(model.Svc, &model.ModelID, ctx, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Act %></td>
       <td><%= model.Note %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

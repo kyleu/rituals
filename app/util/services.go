@@ -75,7 +75,7 @@ func ServiceFromString(str string) Service {
 
 func ServiceTitle(svc Service, title string) string {
 	title = strings.TrimSpace(title)
-	if title == "" {
+	if len(title) == 0 {
 		title = "Untitled " + svc.Title
 	}
 

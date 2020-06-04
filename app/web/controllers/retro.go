@@ -72,7 +72,7 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Retro.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load retro [" + key + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.SvcRetro.Key + ".list"), nil
 		}
 		if sess.Slug != key {

@@ -25,7 +25,7 @@ func BreadcrumbsSimple(path string, title string) Breadcrumbs {
 
 var sessionKey = func() string {
 	x := os.Getenv("SESSION_KEY")
-	if x == "" {
+	if len(x) == 0 {
 		x = "random_secret_key"
 	}
 	return x

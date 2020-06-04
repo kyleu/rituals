@@ -67,7 +67,7 @@ type storyDTO struct {
 	Created    time.Time `db:"created"`
 }
 
-func (dto *storyDTO) ToStory() *Story {
+func (dto *storyDTO) toStory() *Story {
 	return &Story{
 		ID:         dto.ID,
 		EstimateID: dto.EstimateID,

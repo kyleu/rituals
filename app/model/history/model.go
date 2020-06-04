@@ -13,7 +13,7 @@ type entryDTO struct {
 	Created   time.Time `db:"created"`
 }
 
-func (dto *entryDTO) ToEntry() *Entry {
+func (dto *entryDTO) toEntry() *Entry {
 	return &Entry{
 		Slug:      dto.Slug,
 		ModelID:   dto.ModelID,

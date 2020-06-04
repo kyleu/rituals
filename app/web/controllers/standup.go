@@ -64,7 +64,7 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Standup.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + key + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.SvcStandup.Key + ".list"), nil
 		}
 		if sess.Slug != key {

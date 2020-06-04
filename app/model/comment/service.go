@@ -31,6 +31,21 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 	}
 }
 
+func (s *Service) List(params *query.Params) Comments {
+	params = query.ParamsWithDefaultOrdering(util.KeyComment, params, query.DefaultCreatedOrdering...)
+
+	var dtos []commentDTO
+	q := query.SQLSelect("*", util.KeyComment, "", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil)
+
+	if err != nil {
+		s.logger.Error(fmt.Sprintf("error retrieving comments: %+v", err))
+		return nil
+	}
+
+	return toComments(dtos)
+}
+
 func (s *Service) GetByModelID(svc util.Service, modelID uuid.UUID, params *query.Params) Comments {
 	var defaultOrdering = query.Orderings{{Column: util.KeyCreated, Asc: true}}
 	params = query.ParamsWithDefaultOrdering(util.KeyComment, params, defaultOrdering...)
@@ -38,7 +53,7 @@ func (s *Service) GetByModelID(svc util.Service, modelID uuid.UUID, params *quer
 	q := query.SQLSelect("*", util.KeyComment, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, svc.Key, modelID)
 	if err != nil {
-		util.LogError(s.logger, "error retrieving comment entries for [%v:%v]: %+v", svc.Key, modelID, err)
+		s.logger.Error(fmt.Sprintf("error retrieving comment entries for [%v:%v]: %+v", svc.Key, modelID, err))
 		return nil
 	}
 	return toComments(dtos)
@@ -52,11 +67,11 @@ func (s *Service) GetByID(id uuid.UUID) *Comment {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting comment by id [%v]: %+v", id, err)
+		s.logger.Error(fmt.Sprintf("error getting comment by id [%v]: %+v", id, err))
 		return nil
 	}
 
-	return dto.ToComment()
+	return dto.toComment()
 }
 
 func (s *Service) Add(svc util.Service, modelID uuid.UUID, targetType string, targetID *uuid.UUID, content string, userID uuid.UUID) (*Comment, error) {
@@ -104,7 +119,7 @@ func (s *Service) GetByCreated(d *time.Time, params *query.Params) Comments {
 func toComments(dtos []commentDTO) Comments {
 	ret := make(Comments, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToComment())
+		ret = append(ret, dto.toComment())
 	}
 	return ret
 }

@@ -1,0 +1,20 @@
+<%: func MigrationTable(migrations database.Migrations, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+
+<table class="uk-table uk-table-divider uk-text-left">
+  <thead>
+    <tr>
+      <% components.TableHeader(util.KeyMigration, util.KeyIdx, util.Title(util.KeyIdx), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyMigration, util.KeyTitle, util.Title(util.KeyTitle), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyStory, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+    </tr>
+  </thead>
+  <tbody>
+  <% for _, model := range migrations { %>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyMigration, util.KeyDetail), `idx`, fmt.Sprintf(`%v`, model.Idx)) %>"><%=v model.Idx %></a></td>
+      <td><%= model.Title %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+    </tr>
+  <% } %>
+  </tbody>
+</table>

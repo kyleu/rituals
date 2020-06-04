@@ -31,7 +31,7 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	if err != nil {
 		return nil, err
 	}
-	return dto.ToFeedback(), nil
+	return dto.toFeedback(), nil
 }
 
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
@@ -106,7 +106,7 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 func toFeedbacks(dtos []feedbackDTO) Feedbacks {
 	ret := make(Feedbacks, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToFeedback())
+		ret = append(ret, dto.toFeedback())
 	}
 	return ret
 }

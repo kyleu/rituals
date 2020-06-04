@@ -32,13 +32,13 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 		a := ctx.App.Action.GetByID(*actionID)
 		if a == nil {
 			ctx.Session.AddFlash("error:Can't load action [" + actionID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.KeyAction)), nil
 		}
 		user := ctx.App.User.GetByID(a.UserID, false)
 		if user == nil {
 			ctx.Session.AddFlash("error:Can't load user [" + a.UserID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.KeyAction)), nil
 		}
 

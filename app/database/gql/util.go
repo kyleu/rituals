@@ -1,6 +1,7 @@
 package gql
 
 import (
+	"fmt"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/graphql-go/graphql"
@@ -47,7 +48,7 @@ func ErrorResponseJSON(logger logur.Logger, errors ...error) *graphql.Result {
 	var errs = make([]gqlerrors.FormattedError, 0, len(errors))
 
 	for _, err := range errors {
-		util.LogWarn(logger, "error running GraphQL: %+v", err)
+		logger.Warn(fmt.Sprintf("error running GraphQL: %+v", err))
 		errs = append(errs, gqlerrors.FormattedError{Message: err.Error()})
 	}
 

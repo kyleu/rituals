@@ -1,0 +1,32 @@
+<%: func MigrationDetail(model *database.Migration, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%~ "layout/admin.html" %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ body { %>
+<div class="uk-section uk-section-small">
+  <div class="uk-container">
+    <div class="uk-card uk-card-body">
+      <h3 class="uk-card-title"><%= ctx.Title %></h3>
+      <table class="uk-table uk-table-divider uk-text-left">
+        <tbody>
+        <tr>
+          <th><%= util.Title(util.KeyIdx) %></th>
+          <td><%=v model.Idx %></td>
+        </tr>
+        <tr>
+          <th><%= util.Title(util.KeyTitle) %></th>
+          <td><%= model.Title %></td>
+        </tr>
+          <tr>
+            <th>Source</th>
+            <td><pre><%= model.Src %></pre></td>
+          </tr>
+          <tr>
+            <th><%= util.Title(util.KeyCreated) %></th>
+            <td><% components.DateTime(&model.Created, _buffer) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% } %>

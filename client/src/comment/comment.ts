@@ -123,7 +123,7 @@ namespace comment {
 
   function setCount(t: string, comments: ReadonlyArray<Comment>, cc: HTMLElement, force?: boolean) {
     dom.req(".text", cc).innerText = comments.length.toString();
-    if (t !== "root" && t !== "modal" && t !== "") {
+    if (t !== "root" && t !== "modal" && t.length !== 0) {
       dom.setDisplay(cc, (comments.length !== 0) || force === true);
     }
   }

@@ -60,7 +60,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
 
 	ret := make(Entries, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToEntry())
+		ret = append(ret, dto.toEntry())
 	}
 	return ret
 }
@@ -80,7 +80,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 		return nil, err
 	}
 
-	return dto.ToEntry(), nil
+	return dto.toEntry(), nil
 }
 
 func (s *Service) Update(modelID uuid.UUID, userID uuid.UUID, name string, picture string) (*Entry, error) {

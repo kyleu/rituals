@@ -83,7 +83,7 @@ type sessionDTO struct {
 	Created  time.Time  `db:"created"`
 }
 
-func (dto *sessionDTO) ToSession() *Session {
+func (dto *sessionDTO) toSession() *Session {
 	return &Session{
 		ID:       dto.ID,
 		Slug:     dto.Slug,

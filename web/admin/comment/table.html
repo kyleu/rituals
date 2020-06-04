@@ -1,23 +1,22 @@
 <%: func CommentTable(comments comment.Comments, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
-
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% templates.ComponentTableHeader(util.KeyComment, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyComment, util.WithID(util.KeyModel), util.Title(util.KeyModel), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyComment, util.WithID(util.KeyUser), util.WithID(util.KeyUser), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyComment, util.KeyContent, util.Title(util.KeyContent), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyComment, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyComment, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyComment, util.WithID(util.KeyModel), util.Title(util.KeyModel), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyComment, util.WithID(util.KeyUser), util.WithID(util.KeyUser), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyComment, util.KeyContent, util.Title(util.KeyContent), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyComment, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range comments { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentUUID(&model.ID, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentChannel(model.Svc, &model.ModelID, ctx, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.ID.String()) %>"><% templates.ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyComment, util.KeyDetail), `id`, model.ID.String()) %>"><% components.UUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% Channel(model.Svc, &model.ModelID, ctx, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%== model.HTML %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

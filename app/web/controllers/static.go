@@ -15,6 +15,11 @@ func Favicon(w http.ResponseWriter, r *http.Request) {
 	zipResponse(w, r, data, hash, contentType, err)
 }
 
+func RobotsTxt(w http.ResponseWriter, r *http.Request) {
+	data, hash, contentType, err := assets.Asset("web/assets", "/robots.txt")
+	zipResponse(w, r, data, hash, contentType, err)
+}
+
 func Static(w http.ResponseWriter, r *http.Request) {
 	path, err := filepath.Abs(strings.TrimPrefix(r.URL.Path, "/assets"))
 	if err == nil {

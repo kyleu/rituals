@@ -23,7 +23,7 @@ type updateCommentParams struct {
 
 func onAddComment(s *Service, ch Channel, userID uuid.UUID, param addCommentParams) error {
 	param.Content = strings.TrimSpace(param.Content)
-	if param.Content == "" {
+	if len(param.Content) == 0 {
 		return errors.New("add some content")
 	}
 	if param.TargetType == "root" {
@@ -42,7 +42,7 @@ func onAddComment(s *Service, ch Channel, userID uuid.UUID, param addCommentPara
 
 func onUpdateComment(s *Service, ch Channel, userID uuid.UUID, param updateCommentParams) error {
 	param.Content = strings.TrimSpace(param.Content)
-	if param.Content == "" {
+	if len(param.Content) == 0 {
 		return errors.New("add some content")
 	}
 	s.Logger.Debug(fmt.Sprintf("updating comment [%s]: %v", param.ID, param.Content))

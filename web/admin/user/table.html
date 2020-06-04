@@ -3,23 +3,23 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% templates.ComponentTableHeader(util.KeyUser, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyUser, util.KeyName, "Name", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyUser, util.KeyRole, "Role", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyUser, util.KeyTheme, "Theme", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyUser, "locale", "Locale", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyUser, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyUser, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyUser, util.KeyName, "Name", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyUser, util.KeyRole, "Role", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyUser, util.KeyTheme, "Theme", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyUser, "locale", "Locale", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyUser, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, u := range users { %>
     <tr>
-      <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, u.UserID.String()) %>"><% templates.ComponentUUID(&u.UserID, buffer) %></a></td>
+      <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, u.UserID.String()) %>"><% components.UUID(&u.UserID, buffer) %></a></td>
       <td><%= u.Name %></td>
       <td><%= u.Role %></td>
       <td><%= u.Theme %></td>
       <td><%=v u.Locale %></td>
-      <td><% templates.ComponentDateTime(&u.Created, buffer) %></td>
+      <td><% components.DateTime(&u.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

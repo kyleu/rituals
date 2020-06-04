@@ -32,14 +32,14 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		record := ctx.App.Auth.GetByID(*authID)
 		if record == nil {
 			ctx.Session.AddFlash("error:Can't load auth [" + authID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.KeyAuth)), nil
 		}
 
 		user := ctx.App.User.GetByID(record.UserID, false)
 		if user == nil {
 			ctx.Session.AddFlash("error:Can't load user [" + record.UserID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.KeyAuth)), nil
 		}
 

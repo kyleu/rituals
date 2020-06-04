@@ -27,7 +27,7 @@ namespace permission {
       if (section) {
         const checkbox = dom.req<HTMLInputElement>(`#perm-${key}-checkbox`);
         checkbox.checked = perms.length > 0;
-        dom.setDisplay(section, el.value !== "");
+        dom.setDisplay(section, el.value.length !== 0);
       }
       collection.findGroup(permissions, key);
     }

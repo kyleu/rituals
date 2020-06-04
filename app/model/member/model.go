@@ -55,7 +55,7 @@ type entryDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto *entryDTO) ToEntry() *Entry {
+func (dto *entryDTO) toEntry() *Entry {
 	return &Entry{
 		UserID:  dto.UserID,
 		Name:    dto.Name,
@@ -74,3 +74,12 @@ type Entry struct {
 }
 
 type Entries []*Entry
+
+func (es Entries) GetName(userID uuid.UUID) string {
+	for _, e := range es {
+		if e.UserID == userID {
+			return e.Name
+		}
+	}
+	return "{former member}"
+}

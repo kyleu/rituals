@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"strings"
 
 	"emperror.dev/errors"
@@ -64,12 +65,12 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 	q := query.SQLSelect("*", util.KeyAuth, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
-		util.LogError(s.logger, "error retrieving auth entries for user [%v]: %+v", userID, err)
+		s.logger.Error(fmt.Sprintf("error retrieving auth entries for user [%v]: %+v", userID, err))
 		return nil, nil
 	}
 	rec := make(Records, 0, len(dtos))
 	for _, dto := range dtos {
-		rec = append(rec, dto.ToRecord())
+		rec = append(rec, dto.toRecord())
 	}
 	disp := make(Displays, 0, len(rec))
 	for _, r := range rec {
@@ -131,7 +132,7 @@ func (s *Service) Handle(profile *util.UserProfile, prv *Provider, code string) 
 
 func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, error) {
 	p.Name = record.Name
-	if p.Name == "" {
+	if len(p.Name) == 0 {
 		p.Name = record.Provider.Title + " User"
 	}
 	p.Picture = record.Picture

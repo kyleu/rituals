@@ -1,0 +1,24 @@
+<%: func TranscriptCommentListHTML(comments comment.Comments, members member.Entries, buffer *bytes.Buffer) %>
+<% if len(comments) > 0 { %>
+<div>
+  <h4>Comments</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Comment</th>
+        <th><%= util.Title(util.KeyCreated) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for _, c := range comments { %>
+        <tr>
+          <td><%= members.GetName(c.UserID) %></td>
+          <td><%== c.HTML %></td>
+          <td><% components.DateTime(&c.Created, buffer) %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% } %>

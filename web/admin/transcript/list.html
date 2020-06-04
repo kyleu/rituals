@@ -1,6 +1,6 @@
 <%: func TranscriptList(transcripts transcript.Transcripts, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -11,7 +11,7 @@
             <form action="<%= ctx.Route(util.AdminLink(util.KeyTranscript, `run`), util.KeyKey, t.Key) %>">
             <div class="right">
               <div class="right uk-margin-small-left"><button class="uk-button uk-button-default" type="submit">Go</button></div>
-              <div class="right uk-margin-small-left" style="width: 80px;"><% templates.ComponentSelect("format", []string{"html", "json"}, "html", _buffer) %></div>
+              <div class="right uk-margin-small-left" style="width: 80px;"><% components.Select("format", []string{"html", "json"}, "html", _buffer) %></div>
               <div class="right" style="width: 100px;"><input class="uk-input" name="param" placeholder="param" type="text" value="" /></div>
             </div>
             <h3 class="uk-card-title"><a class="theme" href=""><%= t.Title %></a></h3>

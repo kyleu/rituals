@@ -20,7 +20,7 @@ type commentDTO struct {
 	Created    time.Time  `db:"created"`
 }
 
-func (dto *commentDTO) ToComment() *Comment {
+func (dto *commentDTO) toComment() *Comment {
 	return &Comment{
 		ID:         dto.ID,
 		Svc:        util.ServiceFromString(dto.Svc),

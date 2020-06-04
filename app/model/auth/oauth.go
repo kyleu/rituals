@@ -19,7 +19,7 @@ func (s *Service) getConfig(secure bool, prv *Provider) *oauth2.Config {
 	idKey, secretKey := envsFor(prv)
 	id := os.Getenv(idKey)
 	secret := os.Getenv(secretKey)
-	if id == "" || secret == "" {
+	if len(id) == 0 || len(secret) == 0 {
 		return nil
 	}
 

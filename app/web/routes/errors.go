@@ -3,14 +3,13 @@ package routes
 import (
 	"context"
 	"fmt"
+	"github.com/kyleu/rituals.dev/gen/components"
 	"io"
 	"net/http"
 
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/web"
-	"github.com/kyleu/rituals.dev/gen/templates"
-
 	"github.com/kyleu/rituals.dev/app/util"
+	"github.com/kyleu/rituals.dev/app/web"
 
 	"github.com/kyleu/rituals.dev/app/config"
 
@@ -47,8 +46,8 @@ func internalServerError(router *mux.Router, info *config.AppInfo, w http.Respon
 			e = errors.New(fmt.Sprintf("err [%v] is of type [%T]", err, err))
 		}
 
-		_, _ = templates.InternalServerError(util.GetErrorDetail(e), r, ctx, w)
-		util.LogWarn(ctx.Logger, "[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, e)
+		_, _ = components.InternalServerError(util.GetErrorDetail(e), r, ctx, w)
+		ctx.Logger.Warn(fmt.Sprintf("[%v %v] returned [%d]: %+v", r.Method, r.URL.Path, st, e))
 	}
 }
 

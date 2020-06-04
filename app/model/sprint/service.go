@@ -88,10 +88,10 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting sprint by id [%v]: %+v", id, err)
+		s.logger.Error(fmt.Sprintf("error getting sprint by id [%v]: %+v", id, err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetBySlug(slug string) *Session {
@@ -102,10 +102,10 @@ func (s *Service) GetBySlug(slug string) *Session {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting sprint by slug [%v]: %+v", slug, err)
+		s.logger.Error(fmt.Sprintf("error getting sprint by slug [%v]: %+v", slug, err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
@@ -175,7 +175,7 @@ func (s *Service) GetByIDPointer(sprintID *uuid.UUID) *Session {
 func toSessions(dtos []sessionDTO) Sessions {
 	ret := make(Sessions, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
+		ret = append(ret, dto.toSession())
 	}
 	return ret
 }

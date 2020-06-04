@@ -1,7 +1,7 @@
 <%: func HomeLink(key string, count int64, recent *time.Time, ctx web.RequestContext, buffer *bytes.Buffer) %>
 <tr>
   <td><a class="theme" href="<%= ctx.Route(util.AdminLink(key)) %>"><%= util.PluralTitle(key) %></a></td>
-  <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(recent, buffer) %></td>
+  <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(recent, buffer) %></td>
   <td class="uk-table-shrink uk-text-nowrap uk-text-right">
     <% if count > -1 { %>
       <%=v count %>

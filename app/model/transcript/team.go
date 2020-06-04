@@ -25,6 +25,14 @@ type TeamResponse struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
+func (r *TeamResponse) x() {
+	// r.Session.ID
+	// r.Session.Slug
+	// r.Session.Title
+	// r.Session.Owner
+	// r.Session.Created
+}
+
 var Team = Transcript{
 	Key:         util.SvcTeam.Key,
 	Title:       util.SvcTeam.Title,

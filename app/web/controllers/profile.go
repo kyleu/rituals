@@ -18,10 +18,6 @@ import (
 
 func Profile(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
-		if !tempSecurityCheck(&ctx) {
-			return tmpl(templates.StaticMessage("Coming soon!", ctx, w))
-		}
-
 		params := act.ParamSetFromRequest(r)
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		ctx.Title = "User Profile"
@@ -53,7 +49,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 		ctx.Session.AddFlash("success:Profile saved")
-		act.SaveSession(w, r, ctx)
+		act.SaveSession(w, r, &ctx)
 		return ctx.Route("home"), nil
 	})
 }

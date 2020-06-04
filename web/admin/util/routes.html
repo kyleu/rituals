@@ -1,6 +1,6 @@
 <%: func RoutesList(ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -8,14 +8,14 @@
       <table class="uk-table uk-table-divider uk-table-small">
         <thead>
           <tr>
-            <th>Name</th>
+            <th><%= util.Title(util.KeyName) %></th>
             <th>Methods</th>
             <th>Path</th>
           </tr>
         </thead>
         <tbody>
           <% for _, r := range util.ExtractRoutes(ctx.Routes) { %>
-            <% if r.Methods == "" { %>
+            <% if len(r.Methods) == 0 { %>
             <tr>
               <th colspan="3"><div class="uk-margin-top"><%= strings.TrimPrefix(r.Path, "/") %></div></th>
             </tr>

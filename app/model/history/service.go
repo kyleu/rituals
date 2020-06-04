@@ -48,7 +48,7 @@ func (s *Service) Get(slug string) *Entry {
 		s.logger.Warn(fmt.Sprintf("error getting %v history: %+v", s.svc.Key, err))
 		return nil
 	}
-	return dto.ToEntry()
+	return dto.toEntry()
 }
 
 func (s *Service) UpdateSlug(sessID uuid.UUID, oSlug string, oTitle string, title string, userID uuid.UUID) (string, error) {
@@ -100,7 +100,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
 func toEntries(dtos []entryDTO) Entries {
 	ret := make(Entries, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToEntry())
+		ret = append(ret, dto.toEntry())
 	}
 	return ret
 }

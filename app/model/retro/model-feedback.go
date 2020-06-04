@@ -30,7 +30,7 @@ type feedbackDTO struct {
 	Created  time.Time `db:"created"`
 }
 
-func (dto *feedbackDTO) ToFeedback() *Feedback {
+func (dto *feedbackDTO) toFeedback() *Feedback {
 	return &Feedback{
 		ID:       dto.ID,
 		RetroID:  dto.RetroID,

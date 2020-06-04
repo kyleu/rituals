@@ -32,7 +32,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Retro.GetByID(*retroID)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load retro [" + retroID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.SvcRetro.Key)), nil
 		}
 

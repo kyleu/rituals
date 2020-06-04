@@ -44,7 +44,7 @@ func (s *Service) GetReports(standupID uuid.UUID, params *query.Params) Reports 
 
 	ret := make(Reports, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToReport())
+		ret = append(ret, dto.toReport())
 	}
 	return ret
 }
@@ -58,7 +58,7 @@ func (s *Service) GetReportByID(reportID uuid.UUID) (*Report, error) {
 		return nil, err
 	}
 
-	return dto.ToReport(), nil
+	return dto.toReport(), nil
 }
 
 func (s *Service) GetReportStandupID(reportID uuid.UUID) (*uuid.UUID, error) {

@@ -2,19 +2,19 @@
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% templates.ComponentTableHeader(util.KeyVote, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyVote, util.KeyChoice, util.Title(util.KeyChoice), params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyVote, "updated", "Updated", params, ctx, buffer) %>
-      <% templates.ComponentTableHeader(util.KeyVote, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyVote, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyVote, util.KeyChoice, util.Title(util.KeyChoice), params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyVote, "updated", "Updated", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyVote, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range votes { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% templates.ComponentUUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
       <td><%= model.Choice %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Updated, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% templates.ComponentDateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Updated, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

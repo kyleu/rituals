@@ -231,5 +231,16 @@ values
   ('70000008-0000-0000-0000-000000000000', 'retro', '50000000-0000-0000-0000-000000000000', 'feedback', '51000000-0000-0000-0000-000000000000', 'F0000000-0000-0000-0000-000000000000', 'feedback comment', '<div>feedback comment</div>')
 ;
 
+insert into email
+  (id, recipients, subject, data, plain, html, user_id, status)
+values
+  (concat('nightly-', to_char(now(), 'YYYY-MM-DD')), '{kyle@kyleu.com}', 'subject', '{}', 'plain', 'html', 'F0000000-0000-0000-0000-000000000000', 'ok')
+;
+
+insert into migration
+  (idx, title, src)
+values
+  (0, 'Baseline', '-baseline schema-')
+;
 
 -- <%: func SeedData(w io.Writer) %>

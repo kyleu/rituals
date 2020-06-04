@@ -66,7 +66,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Sprint.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.SvcSprint.Key + ".list"), nil
 		}
 		if sess.Slug != key {

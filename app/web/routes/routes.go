@@ -79,6 +79,8 @@ func BuildRouter(app *config.AppInfo) (*mux.Router, error) {
 
 	// Assets
 	r.Path(p("favicon.ico")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Favicon))).Name(n("favicon"))
+	r.Path(p("robots.txt")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.RobotsTxt))).Name(n("robots"))
+	r.Path(p("sitemap.xml")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.SitemapXML))).Name(n("sitemap"))
 	r.PathPrefix(p("assets")).Methods(http.MethodGet).Handler(addContext(r, app, http.HandlerFunc(controllers.Static))).Name(n("assets"))
 
 	r.PathPrefix("").Handler(addContext(r, app, http.HandlerFunc(controllers.NotFound)))

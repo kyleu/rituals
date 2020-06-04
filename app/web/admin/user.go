@@ -34,7 +34,7 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		u := ctx.App.User.GetByID(*userID, false)
 		if u == nil {
 			ctx.Session.AddFlash("error:Can't load user [" + userID.String() + "]")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route(util.AdminLink(util.KeyUser)), nil
 		}
 

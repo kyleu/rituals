@@ -121,7 +121,7 @@ type recordDTO struct {
 	Created      time.Time  `db:"created"`
 }
 
-func (dto *recordDTO) ToRecord() *Record {
+func (dto *recordDTO) toRecord() *Record {
 	return &Record{
 		ID:           dto.ID,
 		UserID:       dto.UserID,

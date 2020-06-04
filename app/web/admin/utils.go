@@ -44,7 +44,7 @@ func adminAct(w http.ResponseWriter, r *http.Request, f func(web.RequestContext)
 				return act.RespondJSON(w, ae, ctx.Logger)
 			}
 			ctx.Session.AddFlash("error:You're not an administrator, silly")
-			act.SaveSession(w, r, ctx)
+			act.SaveSession(w, r, &ctx)
 			return ctx.Route("home"), nil
 		}
 		return f(ctx)

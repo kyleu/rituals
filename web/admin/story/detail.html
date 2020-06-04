@@ -1,6 +1,6 @@
 <%: func StoryDetail(model *estimate.Story, votes estimate.Votes, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,32 +9,32 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th>ID</th>
+            <th><%= util.Title(util.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th>Estimate</th>
+            <th><%= util.SvcEstimate.Title %></th>
             <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcEstimate.Key, util.KeyDetail), `id`, model.EstimateID.String()) %>"><%= model.EstimateID.String() %></a></td>
           </tr>
           <tr>
-            <th>Index</th>
+            <th><%= util.Title(util.KeyIdx) %></th>
             <td><%=v model.Idx %></td>
           </tr>
           <tr>
-            <th>Status</th>
+            <th><%= util.Title(util.KeyStatus) %></th>
             <td><%= model.Status.String() %></td>
           </tr>
           <tr>
-            <th>Title</th>
+            <th><%= util.Title(util.KeyTitle) %></th>
             <td><%= model.Title %></td>
           </tr>
           <tr>
-            <th>User</th>
+            <th><%= util.Title(util.KeyUser) %></th>
             <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
           </tr>
           <tr>
-            <th>Created</th>
-            <td><% templates.ComponentDateTime(&model.Created, _buffer) %></td>
+            <th><%= util.Title(util.KeyCreated) %></th>
+            <td><% components.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

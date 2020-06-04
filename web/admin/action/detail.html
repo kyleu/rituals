@@ -1,6 +1,6 @@
 <%: func ActionDetail(model *action.Action, user *user.SystemUser, ctx web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% templates.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,12 +9,12 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th>ID</th>
+            <th><%= util.Title(util.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th>Model</th>
-            <td><% templates.ComponentChannel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
+            <th><%= util.Title(util.KeyModel) %></th>
+            <td><% Channel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
           </tr>
           <tr>
             <th>User ID</th>
@@ -34,7 +34,7 @@
           </tr>
           <tr>
             <th><%= util.Title(util.KeyCreated) %></th>
-            <td><% templates.ComponentDateTime(&model.Created, _buffer) %></td>
+            <td><% components.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

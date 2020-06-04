@@ -7,7 +7,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
 	"github.com/kyleu/rituals.dev/app/model/user"
-	"strings"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/database"
@@ -56,7 +55,7 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, choices
 	model := NewSession(title, slug, userID, choices, teamID, sprintID)
 
 	q := query.SQLInsert(s.svc.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyChoice)}, 1)
-	choiceString := "{" + strings.Join(model.Choices, ",") + "}"
+	choiceString := database.ArrayToString(model.Choices)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String(), choiceString)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new estimate session")
@@ -90,10 +89,10 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 		if err == sql.ErrNoRows {
 			return nil
 		}
-		util.LogError(s.logger, "error getting estimate session by id [%v]: %+v", id, err)
+		s.logger.Error(fmt.Sprintf("error getting estimate session by id [%v]: %+v", id, err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetBySlug(slug string) *Session {
@@ -108,10 +107,10 @@ func (s *Service) GetBySlug(slug string) *Session {
 			}
 			return nil
 		}
-		util.LogError(s.logger, "error getting estimate session by slug [%v]: %+v", slug, err)
+		s.logger.Error(fmt.Sprintf("error getting estimate session by slug [%v]: %+v", slug, err))
 		return nil
 	}
-	return dto.ToSession()
+	return dto.toSession()
 }
 
 func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
@@ -166,7 +165,7 @@ func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, choices []string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
 	cols := []string{util.KeyTitle, util.Plural(util.KeyChoice), util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key)}
 	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf(util.KeyID+" = $%v", len(cols)+1))
-	choiceString := "{" + strings.Join(choices, ",") + "}"
+	choiceString := database.ArrayToString(choices)
 	err := s.db.UpdateOne(q, nil, title, choiceString, teamID, sprintID, sessionID)
 	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
 	return errors.Wrap(err, "error updating estimate session")
@@ -175,7 +174,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, choices []str
 func toSessions(dtos []sessionDTO) Sessions {
 	ret := make(Sessions, 0, len(dtos))
 	for _, dto := range dtos {
-		ret = append(ret, dto.ToSession())
+		ret = append(ret, dto.toSession())
 	}
 	return ret
 }

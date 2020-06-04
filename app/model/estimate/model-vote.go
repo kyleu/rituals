@@ -24,7 +24,7 @@ type voteDTO struct {
 	Created time.Time `db:"created"`
 }
 
-func (dto *voteDTO) ToVote() *Vote {
+func (dto *voteDTO) toVote() *Vote {
 	return &Vote{
 		StoryID: dto.StoryID,
 		UserID:  dto.UserID,

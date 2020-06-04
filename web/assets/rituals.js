@@ -73,6 +73,9 @@ var auth;
     }
     auth.applyAuths = applyAuths;
     function active() {
+        if (!auths) {
+            return [];
+        }
         return auths;
     }
     auth.active = active;
@@ -192,7 +195,7 @@ var comment;
     comment.remove = remove;
     function setCount(t, comments, cc, force) {
         dom.req(".text", cc).innerText = comments.length.toString();
-        if (t !== "root" && t !== "modal" && t !== "") {
+        if (t !== "root" && t !== "modal" && t.length !== 0) {
             dom.setDisplay(cc, (comments.length !== 0) || force === true);
         }
     }
@@ -563,6 +566,9 @@ var member;
         }
         const others = members.filter(x => !isSelf(x));
         dom.setContent("#member-detail", member_1.renderMembers(others));
+        if (others.length > 0) {
+            modal.hide('welcome');
+        }
         renderOnline();
     }
     member_1.setMembers = setMembers;
@@ -886,7 +892,7 @@ var permission;
             if (section) {
                 const checkbox = dom.req(`#perm-${key}-checkbox`);
                 checkbox.checked = perms.length > 0;
-                dom.setDisplay(section, el.value !== "");
+                dom.setDisplay(section, el.value.length !== 0);
             }
             collection.findGroup(permissions, key);
         }
@@ -2462,7 +2468,7 @@ var vote;
     vote.setVotes = setVotes;
     function onVoteUpdate(v) {
         let x = estimate.cache.votes;
-        x = x.filter(v => v.userID !== v.userID || v.storyID !== v.storyID);
+        x = x.filter(vt => vt.userID !== v.userID || vt.storyID !== v.storyID);
         x.push(v);
         estimate.cache.votes = x;
         if (v.storyID === estimate.cache.activeStory) {
@@ -2495,6 +2501,8 @@ var vote;
     }
     vote.viewVotes = viewVotes;
     function viewActiveVotes(votes, activeVote) {
+        console.log("!!!!!!!!");
+        console.log(votes);
         dom.setContent("#story-vote-members", vote.renderVoteMembers(member.getMembers(), votes));
         dom.setContent("#story-vote-choices", vote.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
     }
