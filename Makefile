@@ -39,13 +39,9 @@ endif
 compile-templates:
 	bin/templates.sh
 
-.PHONY: build-%
-build-%: goversion compile-templates
-ifeq (${VERBOSE}, 1)
-	go env
-endif
-
-	go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/$* ./cmd/$*
+.PHONY: compile-templates-force
+compile-templates-force:
+	bin/force-templates.sh
 
 .PHONY: build
 build: goversion compile-templates ## Build all binaries
@@ -57,13 +53,19 @@ endif
 	go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./cmd/...
 
 .PHONY: build-release
-build-release: ## Build all binaries without debug information
+build-release: goversion compile-templates ## Build all binaries without debug information
+	@go-embed -input web/assets -output app/web/assets/assets.go
+	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
+	@git checkout app/web/assets/assets.go
+
+.PHONY: build-release-force
+build-release-force: goversion compile-templates-force ## Build all binaries without debug information
 	@go-embed -input web/assets -output app/web/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
 	@git checkout app/web/assets/assets.go
 
 .PHONY: build-debug
-build-debug: ## Build all binaries with remote debugging capabilities
+build-debug: goversion compile-templates ## Build all binaries with remote debugging capabilities
 	@${MAKE} GOARGS="${GOARGS} -gcflags \"all=-N -l\"" BUILD_DIR="${BUILD_DIR}/debug" build
 
 .PHONY: lint

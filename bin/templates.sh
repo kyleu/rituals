@@ -12,7 +12,7 @@ function tmpl {
   ftgt="tmp/$1.hashcode.tmp"
 
   if [ ! -d "gen/$1" ]; then
-    rm "$fsrc"
+    rm -f "$fsrc"
   fi
 
   find -s "$2" -type f -exec md5sum {} \; | md5sum > "$ftgt"

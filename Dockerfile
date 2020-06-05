@@ -1,39 +1,40 @@
 # Build image
-FROM golang:1.13.0-alpine AS builder
+FROM golang:alpine AS builder
 
 ENV GOFLAGS="-mod=readonly"
 
 RUN apk add --update --no-cache ca-certificates make git curl build-base
 
-RUN mkdir -p /workspace
-WORKDIR /workspace
+RUN mkdir /rituals
 
-ARG GOPROXY
+WORKDIR /rituals
 
 RUN go get -u github.com/pyros2097/go-embed
 RUN go get -u github.com/shiyanhui/hero/hero
 RUN go get -u golang.org/x/tools/cmd/goimports
 
-COPY go.* /workspace/
-RUN go mod download
-
-COPY . /workspace
+ADD ./.git     /rituals/.git
+ADD ./Makefile /rituals/Makefile
+ADD ./go.mod   /rituals/go.mod
+ADD ./go.sum   /rituals/go.sum
+ADD ./app      /rituals/app
+ADD ./bin      /rituals/bin
+ADD ./client   /rituals/client
+ADD ./cmd      /rituals/cmd
+ADD ./query    /rituals/query
+ADD ./web      /rituals/web
 
 ARG BUILD_TARGET
 
-RUN set -xe && \
-    if [[ "${BUILD_TARGET}" == "debug" ]]; then \
-        cd /tmp; GOBIN=/workspace/build/debug go get github.com/go-delve/delve/cmd/dlv; cd -; \
-        make build-debug; \
-        mv build/debug /build; \
-    else \
-        make build-release; \
-        mv build/release /build; \
-    fi
+COPY go.* /rituals/
+RUN go mod download
 
+RUN set -xe && make build-release-force
+
+RUN mv build/release /build
 
 # Final image
-FROM alpine:3.10.1
+FROM alpine
 
 RUN apk add --update --no-cache ca-certificates tzdata bash curl
 
