@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	historyType         *graphql.Object
+	historyType *graphql.Object
 )
 
 func initHistory() {

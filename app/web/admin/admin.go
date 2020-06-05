@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web/act"

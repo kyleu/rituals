@@ -1,9 +1,10 @@
 package history
 
 import (
-	"github.com/gofrs/uuid"
 	"regexp"
 	"strings"
+
+	"github.com/gofrs/uuid"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -29,13 +30,13 @@ func (s *Service) NewSlugFor(modelID *uuid.UUID, title string) (string, error) {
 
 	if x.Next() {
 		junk := strings.ToLower(util.RandomString(randomStrLength))
-		slug, err = s.NewSlugFor(modelID, slug + "-" + junk)
+		slug, err = s.NewSlugFor(modelID, slug+"-"+junk)
 		if err != nil {
 			return slug, errors.Wrap(err, "error finding slug for new "+s.svc.Key+" session")
 		}
-	} else if(curr != nil && modelID != nil && curr.ModelID == *modelID) {
+	} else if curr != nil && modelID != nil && curr.ModelID == *modelID {
 		err = s.Remove(curr.Slug)
-		return slug, errors.Wrap(err, "unable to remove old history with slug [" + curr.Slug + "]")
+		return slug, errors.Wrap(err, "unable to remove old history with slug ["+curr.Slug+"]")
 	}
 
 	return slug, nil

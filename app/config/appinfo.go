@@ -16,21 +16,21 @@ import (
 )
 
 type AppInfo struct {
-	Debug      bool
-	Version    string
-	Commit     string
-	Logger     logur.Logger
-	User       *user.Service
-	Comment    *comment.Service
-	Auth       *auth.Service
-	Action     *action.Service
-	Team       *team.Service
-	Sprint     *sprint.Service
-	Estimate   *estimate.Service
-	Standup    *standup.Service
-	Retro      *retro.Service
-	Socket     *socket.Service
-	Database   *database.Service
+	Debug    bool
+	Version  string
+	Commit   string
+	Logger   logur.Logger
+	User     *user.Service
+	Comment  *comment.Service
+	Auth     *auth.Service
+	Action   *action.Service
+	Team     *team.Service
+	Sprint   *sprint.Service
+	Estimate *estimate.Service
+	Standup  *standup.Service
+	Retro    *retro.Service
+	Socket   *socket.Service
+	Database *database.Service
 }
 
 func (a *AppInfo) Valid() bool {

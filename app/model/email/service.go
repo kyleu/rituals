@@ -3,6 +3,7 @@ package email
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/util"

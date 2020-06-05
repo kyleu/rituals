@@ -2,8 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/model/comment"
 	"sync"
+
+	"github.com/kyleu/rituals.dev/app/model/comment"
 
 	"github.com/kyleu/rituals.dev/app/model/auth"
 
@@ -42,9 +43,9 @@ type Service struct {
 }
 
 func NewService(
-		logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
-		auths *auth.Service, teams *team.Service, sprints *sprint.Service,
-		estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
+	logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
+	auths *auth.Service, teams *team.Service, sprints *sprint.Service,
+	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
 	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeySocket})
 	return &Service{
 		connections:   make(map[uuid.UUID]*connection),

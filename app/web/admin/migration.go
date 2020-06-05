@@ -1,11 +1,12 @@
 package admin
 
 import (
-	"emperror.dev/errors"
 	"fmt"
-	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 	"strconv"
+
+	"emperror.dev/errors"
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
 )
 
 func MigrationList(w http.ResponseWriter, r *http.Request) {

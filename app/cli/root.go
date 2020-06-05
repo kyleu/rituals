@@ -2,6 +2,9 @@ package cli
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/kyleu/rituals.dev/app/model/action"
 	"github.com/kyleu/rituals.dev/app/model/auth"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -12,8 +15,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/model/team"
 	"github.com/kyleu/rituals.dev/app/model/user"
 	"github.com/kyleu/rituals.dev/app/socket"
-	"net/http"
-	"os"
 
 	"github.com/kyleu/rituals.dev/app/web/routes"
 
@@ -79,7 +80,7 @@ func InitApp(version string, commitHash string) (*config.AppInfo, error) {
 }
 
 func initAppInfo(logger log.Logger, version string, commitHash string) (*config.AppInfo, error) {
-	db, err := config.OpenDatabase(config.DBParams{Debug: verbose && debugSQL, Logger: logger, Wipe: wipeDatabase, Migrate: true})
+	db, err := config.OpenDatabase(config.DBParams{Debug: verbose && debugSQL, Wipe: wipeDatabase, Migrate: true, Logger: logger})
 	if err != nil {
 		return nil, errors.Wrap(err, "error opening database pool")
 	}

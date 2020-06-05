@@ -2,6 +2,7 @@ package gql
 
 import (
 	"fmt"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/graphql-go/graphql"

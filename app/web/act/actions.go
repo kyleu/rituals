@@ -2,10 +2,11 @@ package act
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/gen/components"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/kyleu/rituals.dev/gen/components"
 
 	"emperror.dev/errors"
 	"github.com/gorilla/sessions"
@@ -90,10 +91,10 @@ func logComplete(startNanos int64, ctx web.RequestContext, status int, r *http.R
 
 func TempSecurityCheck(ctx *web.RequestContext) bool {
 	if ctx.Profile.Role == util.RoleAdmin {
-		// return true
+		return true
 	}
 	if strings.Contains(ctx.App.Auth.Redir, "localhost") {
-		// return true
+		return true
 	}
 
 	s, ok := ctx.Session.Values["unlock"]

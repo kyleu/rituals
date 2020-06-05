@@ -52,6 +52,11 @@ func (s *Service) Get(slug string) *Entry {
 }
 
 func (s *Service) UpdateSlug(sessID uuid.UUID, oSlug string, oTitle string, title string, userID uuid.UUID) (string, error) {
+	nSlug := slugify(title)
+	if oSlug == nSlug {
+		return oSlug, nil
+	}
+
 	tgt, err := s.NewSlugFor(&sessID, title)
 	if err != nil {
 		return "", errors.Wrap(err, "error getting new slug slug for ["+title+"]")
@@ -82,7 +87,7 @@ func (s *Service) UpdateSlug(sessID uuid.UUID, oSlug string, oTitle string, titl
 func (s *Service) Remove(slug string) error {
 	q := query.SQLDelete(s.tableName, "slug = $1")
 	err := s.db.DeleteOne(q, nil, slug)
-	return errors.Wrap(err, "unable to remove " + s.svc.Key + " history for ["+slug+"]")
+	return errors.Wrap(err, "unable to remove "+s.svc.Key+" history for ["+slug+"]")
 }
 
 func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {

@@ -2,8 +2,9 @@ package admin
 
 import (
 	"encoding/json"
-	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"github.com/kyleu/rituals.dev/app/web/form"
 

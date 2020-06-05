@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
 
@@ -11,7 +12,6 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals.dev/app/web"
-
 )
 
 func CommentList(w http.ResponseWriter, r *http.Request) {

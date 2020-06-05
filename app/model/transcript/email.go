@@ -2,6 +2,8 @@ package transcript
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -11,7 +13,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/model/standup"
 	"github.com/kyleu/rituals.dev/app/model/team"
 	"github.com/kyleu/rituals.dev/app/util"
-	"time"
 )
 
 type EmailResponse struct {

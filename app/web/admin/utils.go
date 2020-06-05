@@ -1,9 +1,10 @@
 package admin
 
 import (
-	"github.com/kyleu/rituals.dev/gen/admintemplates"
 	"net/http"
 	"time"
+
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/web/act"

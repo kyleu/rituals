@@ -1,9 +1,10 @@
 package email
 
 import (
+	"time"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
-	"time"
 )
 
 type Email struct {

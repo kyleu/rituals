@@ -3,8 +3,9 @@ package standup
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/model/comment"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/model/comment"
 
 	"github.com/kyleu/rituals.dev/app/model/history"
 	"github.com/kyleu/rituals.dev/app/model/session"
@@ -151,7 +152,7 @@ func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
 	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
 	q := query.SQLSelect("*", s.svc.Key, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, nil, d, d.Add(time.Duration(24 * time.Hour)))
+	err := s.db.Select(&dtos, q, nil, d, d.Add(util.HoursInDay*time.Hour))
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving standups created on [%v]: %+v", d, err))
 		return nil

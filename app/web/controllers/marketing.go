@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/app/web/act"
 	"github.com/kyleu/rituals.dev/gen/templates"
-	"net/http"
 )
 
 func About(w http.ResponseWriter, r *http.Request) {
@@ -39,4 +40,3 @@ func Community(w http.ResponseWriter, r *http.Request) {
 		return tmpl(templates.Community(ctx, w))
 	})
 }
-

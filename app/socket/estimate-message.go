@@ -37,7 +37,7 @@ type submitVoteParams struct {
 }
 
 func onEstimateMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
-	dataSvc := s.estimates;
+	dataSvc := s.estimates
 	var err error
 	userID := conn.Profile.UserID
 	switch cmd {

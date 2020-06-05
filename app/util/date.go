@@ -7,6 +7,8 @@ import (
 )
 
 const YMD = "2006-01-02"
+const DateFull = "2006-01-02 15:04:05"
+const HoursInDay = 24
 
 func ToYMD(d *time.Time) string {
 	if d == nil {
@@ -25,8 +27,6 @@ func FromYMD(s string) (*time.Time, error) {
 	}
 	return &ret, nil
 }
-
-const DateFull = "2006-01-02 15:04:05"
 
 func ToDateString(d *time.Time) string {
 	if d == nil {

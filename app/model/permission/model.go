@@ -68,11 +68,11 @@ func (ps Permissions) Equals(filtered Permissions) bool {
 	if len(ps) != len(filtered) {
 		return false
 	}
-		for _, c := range ps {
-			if filtered.FindByKV(c.K, c.V) == nil {
-				return false
-			}
+	for _, c := range ps {
+		if filtered.FindByKV(c.K, c.V) == nil {
+			return false
 		}
+	}
 	return true
 }
 

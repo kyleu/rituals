@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/estimate"

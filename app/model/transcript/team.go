@@ -37,7 +37,7 @@ var Team = Transcript{
 	Key:         util.SvcTeam.Key,
 	Title:       util.SvcTeam.Title,
 	Description: util.SvcTeam.Description,
-	Resolve:     func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
+	Resolve: func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
 		if param == nil {
 			return app.Team.List(nil), nil
 		}

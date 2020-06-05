@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+
 	"github.com/gofrs/uuid"
 
 	"emperror.dev/errors"

@@ -1,68 +1,44 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
-	"github.com/kyleu/rituals.dev/app/database/query"
-	"github.com/kyleu/rituals.dev/app/util"
+	"logur.dev/logur"
+	"time"
 )
 
-func (s *Service) Migrate() error {
-	idx := s.maxMigrationIdx()
-	s.logger.Info(fmt.Sprintf("migrating database schema: %v", idx))
+func DBWipe(s *Service, logger logur.Logger) error {
+	for _, file := range initialSchemaMigrations {
+		_, err := exec(file, s, logger)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
-func (s *Service) ListMigrations(params *query.Params) Migrations {
-	params = query.ParamsWithDefaultOrdering(util.KeyMigration, params, query.DefaultCreatedOrdering...)
+func Migrate(s *Service) error {
+	maxIdx := maxMigrationIdx(s)
+	// s.logger.Info(fmt.Sprintf("migrating database schema: %v", maxIdx))
 
-	var dtos []migrationDTO
-	q := query.SQLSelect("*", util.KeyMigration, "", params.OrderByString(), params.Limit, params.Offset)
-	err := s.Select(&dtos, q, nil)
-
-	if err != nil {
-		s.logger.Error(fmt.Sprintf("error retrieving migrations: %+v", err))
-		return nil
-	}
-
-	return toMigrations(dtos)
-}
-
-func (s *Service) maxMigrationIdx() int64 {
-	q := query.SQLSelectSimple("max(idx) as x", util.KeyMigration, "")
-	max, err := s.SingleInt(q, nil)
-	if err != nil {
-		s.logger.Error(fmt.Sprintf("error getting migrations: %+v", err))
-		return -1
-	}
-	return max
-}
-
-func (s *Service) GetMigrationByIdx(idx int) *Migration {
-	var dto = &migrationDTO{}
-	q := query.SQLSelectSimple("*", util.KeyMigration, "idx = $1")
-	err := s.Get(dto, q, nil, idx)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil
+	for i, file := range databaseMigrations {
+		idx := i + 1
+		if (idx) > maxIdx {
+			s.logger.Info(fmt.Sprintf("applying database migration [%v]: %v", idx, file.Name))
+			sql, err := exec(file, s, s.logger)
+			if err != nil {
+				return err
+			}
+			err = newMigration(s, Migration{
+				Idx:     idx,
+				Title:   file.Name,
+				Src:     sql,
+				Created: time.Time{},
+			})
+			if err != nil {
+				return err
+			}
 		}
-		s.logger.Error(fmt.Sprintf("error getting migration by idx [%v]: %+v", idx, err))
-		return nil
-	}
-	return dto.toMigration()
-}
-
-func (s *Service) newMigration(e Migration) error {
-	q := query.SQLInsert(util.KeyMigration, []string{util.KeyIdx, util.KeyTitle, "src"}, 1)
-	return s.Insert(q, nil, e.Idx, e.Title, e.Src)
-}
-
-func toMigrations(dtos []migrationDTO) Migrations {
-	ret := make(Migrations, 0, len(dtos))
-
-	for _, dto := range dtos {
-		ret = append(ret, dto.toMigration())
 	}
 
-	return ret
+	return nil
 }

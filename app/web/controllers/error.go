@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/kyleu/rituals.dev/gen/components"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/gen/components"
 
 	"github.com/kyleu/rituals.dev/app/web"
 )

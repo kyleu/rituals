@@ -1,9 +1,10 @@
 package admin
 
 import (
+	"net/http"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/gen/admintemplates"
-	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/web/act"
 

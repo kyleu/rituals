@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/app/web/act"
-	"net/http"
-	"strings"
 )
 
 func SitemapXML(w http.ResponseWriter, r *http.Request) {

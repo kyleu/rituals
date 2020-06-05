@@ -2,14 +2,15 @@ package email
 
 import (
 	"bytes"
-	"emperror.dev/errors"
 	"fmt"
+	"time"
+
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/transcript"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/gen/transcripttemplates"
-	"time"
 )
 
 var nightlyRecipients = []string{"kyle@kyleu.com"}

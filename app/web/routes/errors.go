@@ -3,9 +3,10 @@ package routes
 import (
 	"context"
 	"fmt"
-	"github.com/kyleu/rituals.dev/gen/components"
 	"io"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/gen/components"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"

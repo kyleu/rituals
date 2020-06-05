@@ -37,7 +37,7 @@ func onRetroConnect(s *Service, conn *connection, retroID uuid.UUID) error {
 }
 
 func joinRetroSession(s *Service, conn *connection, ch Channel) error {
-	dataSvc := s.retros;
+	dataSvc := s.retros
 	if ch.Svc != util.SvcRetro {
 		return errors.New("retro cannot handle [" + ch.Svc.Key + "] message")
 	}
