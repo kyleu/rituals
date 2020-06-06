@@ -5,18 +5,24 @@ namespace permission {
     readonly access: string;
   }
 
-  let permissions: collection.Group<string, Permission>[] = [];
+  export let permissions: collection.Group<string, Permission>[] = [];
 
   export interface Email {
     readonly matched: boolean,
     readonly domain: string
   }
 
+  export function applyPermissions(perms: permission.Permission[] | null) {
+    permissions = collection.groupBy(perms, x => x.k).groups;
+  }
+
   export function setPerms() {
-    dom.setDisplay("#public-link-container", permissions === null || permissions.length === 0);
-    dom.setDisplay("#private-link-container", permissions !== null && permissions.length > 0);
+    const pub = permissions === null || permissions.length === 0;
+    dom.setDisplay("#public-link-container", pub);
+    dom.setDisplay("#private-link-container", !pub);
+    updateView();
     ["team", "sprint"].forEach(setModelPerms);
-    auth.allProviders.forEach(setProviderPerms);
+    auth.allProviders.forEach(permission.setProviderPerms);
   }
 
   export function setModelPerms(key: string) {
@@ -33,64 +39,33 @@ namespace permission {
     }
   }
 
-  // noinspection JSUnusedGlobalSymbols
-  export function onChanged(k: string, v: string, checked: boolean) {
-    switch (k) {
-      case "email":
-        return onEmailChanged(v, checked);
-      case "provider":
-        return onProviderChanged(v, checked);
+
+  function readPermission(k: string): ReadonlyArray<Permission> {
+    const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`)
+    if(!checkbox || !checkbox.checked) {
+      return [];
     }
+
+    const emails = dom.els<HTMLInputElement>(`.perm-${k}-email`);
+    const v = emails.filter(e => e.checked).map(e => e.value).join(",");
+
+    const access = "member";
+
+    return [{k, v, access}];
   }
 
-  function onEmailChanged(key: string, checked: boolean) {
-    const checkbox = dom.opt<HTMLInputElement>(`#perm-${key}-checkbox`);
-    if(checkbox && checked && !checkbox.checked) {
-      checkbox.checked = true;
-    }
-  }
+  export function readPermissions(): ReadonlyArray<Permission> {
+    const ret = [];
 
-  function onProviderChanged(key: string, checked: boolean) {
-    dom.els<HTMLInputElement>(`.perm-${key}-email`).forEach(el => {
-      el.disabled = !checked;
-      if (!checked) {
-        el.checked = false;
-      }
-    })
-  }
+    ret.push(...readPermission("team"));
+    ret.push(...readPermission("sprint"));
+    ret.push(...readPermission("github"));
+    ret.push(...readPermission("google"));
+    ret.push(...readPermission("slack"));
+    ret.push(...readPermission("facebook"));
+    ret.push(...readPermission("amazon"));
+    ret.push(...readPermission("microsoft"));
 
-  function setProviderPerms(p: auth.Provider) {
-    const perms = collection.findGroup(permissions, p.key);
-    const auths = auth.active().filter(a => a.provider === p.key);
-
-    const section = dom.opt(`#perm-${p.key}-section`);
-    if (section) {
-      const checkbox = dom.req<HTMLInputElement>(`#perm-${p.key}-checkbox`);
-      checkbox.checked = perms.length > 0;
-
-      const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-      const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({matched: true, domain: x}));
-
-      const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => {
-        return {matched: false, domain: getDomain(m.email)};
-      });
-      emails.push(...additional);
-      emails.sort();
-
-      dom.setDisplay(emailContainer, emails.length > 0);
-      dom.setContent(emailContainer, emails.length === 0 ? document.createElement("span") : permission.renderEmails(p.key, emails))
-    }
-  }
-
-  function getDomain(email: string) {
-    const idx = email.lastIndexOf("@");
-    if (idx === -1) {
-      return email;
-    }
-    return email.substr(idx);
-  }
-
-  export function applyPermissions(perms: permission.Permission[] | null) {
-    permissions = collection.groupBy(perms, x => x.k).groups;
+    return ret;
   }
 }

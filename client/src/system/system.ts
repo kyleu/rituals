@@ -28,10 +28,10 @@ namespace system {
 
       comment.applyComments(sj.comments);
 
-      if (sj.team) {
+      if (sj.team !== undefined) {
         session.setTeam(sj.team);
       }
-      if (sj.sprint) {
+      if (sj.sprint !== undefined) {
         session.setSprint(sj.sprint);
       }
     }

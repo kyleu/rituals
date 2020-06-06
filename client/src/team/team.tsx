@@ -1,7 +1,11 @@
 namespace team {
-  export function renderTeamLink(tm: team.Detail) {
+  export function renderTeamLink(tm: team.Detail, bare?: boolean) {
     const profile = system.cache.getProfile();
-    return <span> in <a class={`${profile.linkColor}-fg`} href={`/team/${tm.slug}`}>{tm.title}</a></span>
+    const a = <a class={`${profile.linkColor}-fg`} href={`/team/${tm.slug}`}>{tm.title}</a>
+    if (bare) {
+      return a;
+    }
+    return <span>in {a}</span>;
   }
 
   export function renderTeamSelect(teams: ReadonlyArray<team.Detail>, activeID: string | undefined) {

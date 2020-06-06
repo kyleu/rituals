@@ -38,11 +38,11 @@ namespace dom {
     if (typeof el === "string") {
       el = req<HTMLSelectElement>(el);
     }
-    el.innerHTML = "";
+    dom.clear(el);
     for (const c of categories) {
       const opt = document.createElement("option");
       opt.value = c;
-      opt.innerText = c;
+      dom.setText(opt, c);
       el.appendChild(opt);
     }
   }

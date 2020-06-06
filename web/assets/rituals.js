@@ -194,7 +194,7 @@ var comment;
     }
     comment.remove = remove;
     function setCount(t, comments, cc, force) {
-        dom.req(".text", cc).innerText = comments.length.toString();
+        dom.setText(dom.req(".text", cc), comments.length.toString());
         if (t !== "root" && t !== "modal" && t.length !== 0) {
             dom.setDisplay(cc, (comments.length !== 0) || force === true);
         }
@@ -350,7 +350,9 @@ var estimate;
     estimate.onEstimateMessage = onEstimateMessage;
     function setEstimateDetail(detail) {
         estimate.cache.detail = detail;
-        dom.setValue("#model-choices-input", detail.choices.join(", "));
+        const cs = detail.choices.join(", ");
+        dom.setValue("#model-choices-input", cs);
+        dom.setText("#session-view-section .choices", cs);
         story.viewActiveStory();
         session.setDetail(detail);
     }
@@ -911,28 +913,121 @@ var services;
 })(services || (services = {}));
 var permission;
 (function (permission) {
-    let permissions = [];
+    permission.permissions = [];
+    function applyPermissions(perms) {
+        permission.permissions = collection.groupBy(perms, x => x.k).groups;
+    }
+    permission.applyPermissions = applyPermissions;
     function setPerms() {
-        dom.setDisplay("#public-link-container", permissions === null || permissions.length === 0);
-        dom.setDisplay("#private-link-container", permissions !== null && permissions.length > 0);
+        const pub = permission.permissions === null || permission.permissions.length === 0;
+        dom.setDisplay("#public-link-container", pub);
+        dom.setDisplay("#private-link-container", !pub);
+        permission.updateView();
         ["team", "sprint"].forEach(setModelPerms);
-        auth.allProviders.forEach(setProviderPerms);
+        auth.allProviders.forEach(permission.setProviderPerms);
     }
     permission.setPerms = setPerms;
     function setModelPerms(key) {
         const el = dom.opt(`#model-${key}-select select`);
         if (el) {
-            const perms = collection.findGroup(permissions, key);
+            const perms = collection.findGroup(permission.permissions, key);
             const section = dom.opt(`#perm-${key}-section`);
             if (section) {
                 const checkbox = dom.req(`#perm-${key}-checkbox`);
                 checkbox.checked = perms.length > 0;
                 dom.setDisplay(section, el.value.length !== 0);
             }
-            collection.findGroup(permissions, key);
+            collection.findGroup(permission.permissions, key);
         }
     }
     permission.setModelPerms = setModelPerms;
+    function readPermission(k) {
+        const checkbox = dom.opt(`#perm-${k}-checkbox`);
+        if (!checkbox || !checkbox.checked) {
+            return [];
+        }
+        const emails = dom.els(`.perm-${k}-email`);
+        const v = emails.filter(e => e.checked).map(e => e.value).join(",");
+        const access = "member";
+        return [{ k, v, access }];
+    }
+    function readPermissions() {
+        const ret = [];
+        ret.push(...readPermission("team"));
+        ret.push(...readPermission("sprint"));
+        ret.push(...readPermission("github"));
+        ret.push(...readPermission("google"));
+        ret.push(...readPermission("slack"));
+        ret.push(...readPermission("facebook"));
+        ret.push(...readPermission("amazon"));
+        ret.push(...readPermission("microsoft"));
+        return ret;
+    }
+    permission.readPermissions = readPermissions;
+})(permission || (permission = {}));
+var permission;
+(function (permission) {
+    function renderEmails(key, emails) {
+        const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
+        const oc = `permission.onChanged('email', '${key}', this.checked)`;
+        return JSX("ul", null, emails.map(e => {
+            return JSX("li", null,
+                JSX("label", null,
+                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc }),
+                    "Using email address ",
+                    e.domain));
+        }));
+    }
+    permission.renderEmails = renderEmails;
+    function renderMessage(p) {
+        switch (p.key) {
+            case services.team.key:
+                return JSX("li", null, "Must be a member of this session's team");
+            case services.sprint.key:
+                return JSX("li", null, "Must be a member of this session's team");
+            default:
+                let x = collection.flatten(p.members.map(x => x.k.split(",").map(x => x.trim()).filter(x => x.length > 0)));
+                if (x.length === 0) {
+                    return JSX("li", null,
+                        "Must sign in with ",
+                        p.key);
+                }
+                return JSX("li", null,
+                    "Must sign in with ",
+                    p.key,
+                    " using an email address from ",
+                    x.join(" or "));
+        }
+    }
+    function renderView(perms) {
+        if (perms.length === 0) {
+            return JSX("div", null, "public");
+        }
+        return JSX("ul", null, perms.map(p => renderMessage(p)));
+    }
+    permission.renderView = renderView;
+})(permission || (permission = {}));
+var permission;
+(function (permission) {
+    function setProviderPerms(p) {
+        const perms = collection.findGroup(permission.permissions, p.key);
+        const auths = auth.active().filter(a => a.provider === p.key);
+        const section = dom.opt(`#perm-${p.key}-section`);
+        if (section) {
+            const checkbox = dom.req(`#perm-${p.key}-checkbox`);
+            checkbox.checked = perms.length > 0;
+            const emailContainer = dom.req(`#perm-${p.key}-email-container`);
+            const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({ matched: true, domain: x }));
+            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => {
+                return { matched: false, domain: getDomain(m.email) };
+            });
+            emails.push(...additional);
+            emails.sort();
+            dom.setDisplay(emailContainer, emails.length > 0);
+            dom.setContent(emailContainer, emails.length === 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
+        }
+    }
+    permission.setProviderPerms = setProviderPerms;
     // noinspection JSUnusedGlobalSymbols
     function onChanged(k, v, checked) {
         switch (k) {
@@ -957,24 +1052,6 @@ var permission;
             }
         });
     }
-    function setProviderPerms(p) {
-        const perms = collection.findGroup(permissions, p.key);
-        const auths = auth.active().filter(a => a.provider === p.key);
-        const section = dom.opt(`#perm-${p.key}-section`);
-        if (section) {
-            const checkbox = dom.req(`#perm-${p.key}-checkbox`);
-            checkbox.checked = perms.length > 0;
-            const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-            const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({ matched: true, domain: x }));
-            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => {
-                return { matched: false, domain: getDomain(m.email) };
-            });
-            emails.push(...additional);
-            emails.sort();
-            dom.setDisplay(emailContainer, emails.length > 0);
-            dom.setContent(emailContainer, emails.length === 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
-        }
-    }
     function getDomain(email) {
         const idx = email.lastIndexOf("@");
         if (idx === -1) {
@@ -982,48 +1059,15 @@ var permission;
         }
         return email.substr(idx);
     }
-    function applyPermissions(perms) {
-        permissions = collection.groupBy(perms, x => x.k).groups;
-    }
-    permission.applyPermissions = applyPermissions;
 })(permission || (permission = {}));
 var permission;
 (function (permission) {
-    function renderEmails(key, emails) {
-        const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
-        const oc = `permission.onChanged('email', '${key}', this.checked)`;
-        return JSX("ul", null, emails.map(e => {
-            return JSX("li", null,
-                JSX("label", null,
-                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc }),
-                    "Using email address ",
-                    e.domain));
-        }));
+    function updateView() {
+        const ci = dom.req("#session-view-section .perms");
+        dom.clear(ci);
+        ci.appendChild(permission.renderView(permission.permissions));
     }
-    permission.renderEmails = renderEmails;
-    function readPermission(k) {
-        const checkbox = dom.opt(`#perm-${k}-checkbox`);
-        if (!checkbox || !checkbox.checked) {
-            return [];
-        }
-        const emails = dom.els(`.perm-${k}-email`);
-        const v = emails.filter(e => e.checked).map(e => e.value).join(",");
-        const access = "member";
-        return [{ k, v, access }];
-    }
-    function readPermissions() {
-        const ret = [];
-        ret.push(...readPermission("team"));
-        ret.push(...readPermission("sprint"));
-        ret.push(...readPermission("github"));
-        ret.push(...readPermission("google"));
-        ret.push(...readPermission("slack"));
-        ret.push(...readPermission("facebook"));
-        ret.push(...readPermission("amazon"));
-        ret.push(...readPermission("microsoft"));
-        return ret;
-    }
-    permission.readPermissions = readPermissions;
+    permission.updateView = updateView;
 })(permission || (permission = {}));
 var report;
 (function (report_1) {
@@ -1210,7 +1254,9 @@ var retro;
     retro.onRetroMessage = onRetroMessage;
     function setRetroDetail(detail) {
         retro.cache.detail = detail;
-        dom.setValue("#model-categories-input", detail.categories.join(", "));
+        const cs = detail.categories.join(", ");
+        dom.setValue("#model-categories-input", cs);
+        dom.setText("#session-view-section .categories", cs);
         dom.setOptions("#feedback-category", detail.categories);
         dom.setOptions("#feedback-edit-category", detail.categories);
         feedback.setFeedback(retro.cache.feedback);
@@ -1235,16 +1281,19 @@ var session;
         system.cache.session = session;
         document.title = session.title;
         dom.setText("#model-title", session.title);
+        dom.setText("#session-view-section .uk-modal-title", session.title);
         dom.setValue("#model-title-input", session.title);
         const items = dom.els("#navbar .uk-navbar-item");
         if (items.length > 0) {
-            items[items.length - 1].innerText = session.title;
+            dom.setText(items[items.length - 1], session.title);
         }
         if (oldSlug !== session.slug) {
             window.history.replaceState(null, "", document.location.href.replace(oldSlug, session.slug));
             console.log("slugChanged!!!!!");
         }
-        modal.hide("session");
+        if (member.selfCanEdit()) {
+            modal.hide("session");
+        }
     }
     session_1.setDetail = setDetail;
     function onSessionJoin(param) {
@@ -1260,25 +1309,36 @@ var session;
         }
     }
     session_1.showWelcomeMessage = showWelcomeMessage;
-    function setSprint(spr) {
-        modal.hide("session");
-        const lc = dom.req("#sprint-link-container");
-        lc.innerHTML = "";
-        if (spr) {
-            lc.appendChild(sprint.renderSprintLink(spr));
-            dom.req("#sprint-warning-name").innerText = spr.title;
-        }
-    }
-    session_1.setSprint = setSprint;
     function setTeam(tm) {
-        modal.hide("session");
-        const container = dom.req("#team-link-container");
-        container.innerHTML = "";
+        const lc = dom.req("#team-link-container");
+        const t = dom.req("#session-view-section .team");
+        dom.clear(lc);
+        dom.setDisplay("#team-warning-container", tm !== undefined);
         if (tm) {
-            container.appendChild(team.renderTeamLink(tm));
+            lc.appendChild(team.renderTeamLink(tm));
+            dom.clear(t).appendChild(team.renderTeamLink(tm, true));
+            dom.setText("#team-warning-name", tm.title);
+        }
+        else {
+            dom.setHTML(t, "-none-");
         }
     }
     session_1.setTeam = setTeam;
+    function setSprint(spr) {
+        const lc = dom.req("#sprint-link-container");
+        const s = dom.req("#session-view-section .sprint");
+        dom.clear(lc);
+        dom.setDisplay("#sprint-warning-container", spr !== undefined);
+        if (spr) {
+            lc.appendChild(sprint.renderSprintLink(spr));
+            dom.clear(s).appendChild(sprint.renderSprintLink(spr, true));
+            dom.setText("#sprint-warning-name", spr.title);
+        }
+        else {
+            dom.setHTML(s, "-none-");
+        }
+    }
+    session_1.setSprint = setSprint;
     function onModalOpen(param) {
         const sessionInput = dom.setValue("#model-title-input", dom.req("#model-title").innerText);
         setTimeout(() => sessionInput.focus(), 250);
@@ -1488,11 +1548,15 @@ var sprint;
         }
     }
     sprint.renderSprintDates = renderSprintDates;
-    function renderSprintLink(spr) {
+    function renderSprintLink(spr, bare) {
         const profile = system.cache.getProfile();
+        const a = JSX("a", { class: `${profile.linkColor}-fg`, href: `/sprint/${spr.slug}` }, spr.title);
+        if (bare) {
+            return a;
+        }
         return JSX("span", null,
-            JSX("a", { class: `${profile.linkColor}-fg`, href: `/sprint/${spr.slug}` }, spr.title),
-            "\u00A0");
+            a,
+            " ");
     }
     sprint.renderSprintLink = renderSprintLink;
     function renderSprintSelect(sprints, activeID) {
@@ -1813,10 +1877,10 @@ var system;
             member.applyMembers(sj.members);
             member.applyOnline(sj.online);
             comment.applyComments(sj.comments);
-            if (sj.team) {
+            if (sj.team !== undefined) {
                 session.setTeam(sj.team);
             }
-            if (sj.sprint) {
+            if (sj.sprint !== undefined) {
                 session.setSprint(sj.sprint);
             }
         }
@@ -1943,11 +2007,15 @@ var team;
 })(team || (team = {}));
 var team;
 (function (team) {
-    function renderTeamLink(tm) {
+    function renderTeamLink(tm, bare) {
         const profile = system.cache.getProfile();
+        const a = JSX("a", { class: `${profile.linkColor}-fg`, href: `/team/${tm.slug}` }, tm.title);
+        if (bare) {
+            return a;
+        }
         return JSX("span", null,
-            " in ",
-            JSX("a", { class: `${profile.linkColor}-fg`, href: `/team/${tm.slug}` }, tm.title));
+            "in ",
+            a);
     }
     team.renderTeamLink = renderTeamLink;
     function renderTeamSelect(teams, activeID) {
@@ -2164,7 +2232,7 @@ var dom;
         if (typeof el === "string") {
             el = req(el);
         }
-        el.innerHTML = "";
+        dom.clear(el);
         el.appendChild(e);
         return el;
     }
@@ -2177,6 +2245,10 @@ var dom;
         return el;
     }
     dom.setText = setText;
+    function clear(el) {
+        return setHTML(el, "");
+    }
+    dom.clear = clear;
 })(dom || (dom = {}));
 var dom;
 (function (dom) {
@@ -2214,11 +2286,11 @@ var dom;
         if (typeof el === "string") {
             el = dom.req(el);
         }
-        el.innerHTML = "";
+        dom.clear(el);
         for (const c of categories) {
             const opt = document.createElement("option");
             opt.value = c;
-            opt.innerText = c;
+            dom.setText(opt, c);
             el.appendChild(opt);
         }
     }
@@ -2254,7 +2326,7 @@ function JSX(tag, attrs) {
         if (name && attrs.hasOwnProperty(name)) {
             const v = attrs[name];
             if (name === "dangerouslySetInnerHTML") {
-                e.innerHTML = v["__html"];
+                dom.setHTML(e, v["__html"]);
             }
             else if (v === true) {
                 e.setAttribute(name, name);

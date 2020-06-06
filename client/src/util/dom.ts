@@ -60,7 +60,7 @@ namespace dom {
     if (typeof el === "string") {
       el = req(el);
     }
-    el.innerHTML = "";
+    dom.clear(el);
     el.appendChild(e);
     return el;
   }
@@ -71,5 +71,9 @@ namespace dom {
     }
     el.innerText = text;
     return el;
+  }
+
+  export function clear(el: string | HTMLElement) {
+    return setHTML(el, "");
   }
 }

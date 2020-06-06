@@ -15,7 +15,7 @@ function JSX(tag: string, attrs: any) {
     if (name && attrs.hasOwnProperty(name)) {
       const v = attrs[name];
       if (name === "dangerouslySetInnerHTML") {
-        e.innerHTML = v["__html"];
+        dom.setHTML(e, v["__html"]);
       } else if (v === true) {
         e.setAttribute(name, name);
       } else if (v !== false && v !== null && v !== undefined) {

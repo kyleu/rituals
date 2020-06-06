@@ -9,19 +9,28 @@
 </div>
 <div id="modal-session" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
-    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
-    <div class="uk-modal-header">
-      <h2 class="uk-modal-title">Edit <%= util.SvcTeam.Title %></h2>
-    </div>
-    <form class="uk-form-stacked" onsubmit="team.onSubmitTeamSession();return false;">
+    <div id="session-view-section">
+      <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+      <div class="uk-modal-header"><h2 class="uk-modal-title"><%= util.SvcTeam.Title %></h2></div>
       <div class="uk-modal-body" data-uk-overflow-auto>
-        <fieldset class="uk-fieldset">
-          <% TeamForm(model.Title, auths, false, ctx, buffer) %>
-        </fieldset>
+        <% TeamView(model, ctx, buffer) %>
       </div>
       <div class="uk-modal-footer uk-text-right">
-        <button class="uk-button uk-button-default" type="submit">Save</button>
+        <button class="uk-button uk-button-default" onclick="modal.hide('session');">Close</button>
       </div>
-    </form>
+    </div>
+
+    <div id="session-edit-section">
+      <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+      <div class="uk-modal-header"><h2 class="uk-modal-title"><%= util.SvcTeam.Title %></h2></div>
+      <form class="uk-form-stacked" onsubmit="team.onSubmitTeamSession();return false;">
+        <div class="uk-modal-body" data-uk-overflow-auto>
+          <% TeamForm(model.Title, auths, false, ctx, buffer) %>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+          <button class="uk-button uk-button-default" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

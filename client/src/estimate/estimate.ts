@@ -92,7 +92,9 @@ namespace estimate {
 
   function setEstimateDetail(detail: Detail) {
     cache.detail = detail;
-    dom.setValue("#model-choices-input", detail.choices.join(", "));
+    const cs = detail.choices.join(", ");
+    dom.setValue("#model-choices-input", cs);
+    dom.setText("#session-view-section .choices", cs);
     story.viewActiveStory();
     session.setDetail(detail);
   }

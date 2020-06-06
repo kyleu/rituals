@@ -20,9 +20,13 @@ namespace sprint {
     }
   }
 
-  export function renderSprintLink(spr: sprint.Detail) {
+  export function renderSprintLink(spr: sprint.Detail, bare?: boolean) {
     const profile = system.cache.getProfile();
-    return <span><a class={`${profile.linkColor}-fg`} href={`/sprint/${spr.slug}`}>{spr.title}</a>&nbsp;</span>
+    const a = <a class={`${profile.linkColor}-fg`} href={`/sprint/${spr.slug}`}>{spr.title}</a>
+    if(bare) {
+      return a;
+    }
+    return <span>{a} </span>;
   }
 
   export function renderSprintSelect(sprints: ReadonlyArray<sprint.Detail>, activeID: string | undefined) {

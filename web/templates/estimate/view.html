@@ -1,8 +1,21 @@
 <%: func EstimateView(s *estimate.Session, ctx *web.RequestContext, buffer *bytes.Buffer) %>
-<pre>
-  Title:
-  Choices: <%= strings.Join(s.Choices, `,`) %>
-  Team:
-  Sprint:
-  Perms:
-</pre>
+<table class="uk-table uk-table-divider uk-text-left">
+  <tbody>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap">Choices</td>
+      <td><span class="choices">...</span></td>
+    </tr>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap">Team</td>
+      <td><span class="team">...</span></td>
+    </tr>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap">Sprint</td>
+      <td><span class="sprint">...</span></td>
+    </tr>
+    <tr>
+      <td class="uk-table-shrink uk-text-nowrap">Permissions</td>
+      <td class="perms">...</td>
+    </tr>
+  </tbody>
+</table>

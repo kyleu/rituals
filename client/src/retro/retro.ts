@@ -70,7 +70,9 @@ namespace retro {
 
   function setRetroDetail(detail: Detail) {
     cache.detail = detail;
-    dom.setValue("#model-categories-input", detail.categories.join(", "));
+    const cs = detail.categories.join(", ");
+    dom.setValue("#model-categories-input", cs);
+    dom.setText("#session-view-section .categories", cs);
     dom.setOptions("#feedback-category", detail.categories);
     dom.setOptions("#feedback-edit-category", detail.categories);
     feedback.setFeedback(retro.cache.feedback);

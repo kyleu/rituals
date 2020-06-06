@@ -11,17 +11,19 @@
 </div>
 <div id="modal-session" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
-    <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div id="session-view-section">
-      <div class="uk-modal-header">
-        <h2 class="uk-modal-title">View <%= util.SvcEstimate.Title %></h2>
+      <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+      <div class="uk-modal-header"><h2 class="uk-modal-title"><%= util.SvcEstimate.Title %></h2></div>
+      <div class="uk-modal-body" data-uk-overflow-auto>
+        <% EstimateView(model, ctx, buffer) %>
       </div>
-      <p>Choices: </p>
+      <div class="uk-modal-footer uk-text-right">
+        <button class="uk-button uk-button-default" onclick="modal.hide('session');">Close</button>
+      </div>
     </div>
     <div id="session-edit-section">
-      <div class="uk-modal-header">
-        <h2 class="uk-modal-title">Edit <%= util.SvcEstimate.Title %></h2>
-      </div>
+      <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
+      <div class="uk-modal-header"><h2 class="uk-modal-title"><%= util.SvcEstimate.Title %></h2></div>
       <form class="uk-form-stacked" onsubmit="estimate.onSubmitEstimateSession();return false;">
         <div class="uk-modal-body" data-uk-overflow-auto>
           <% EstimateForm(model.Title, model.Choices, nil, nil, auths, false, ctx, buffer) %>

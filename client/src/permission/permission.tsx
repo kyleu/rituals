@@ -14,32 +14,25 @@ namespace permission {
     </ul>;
   }
 
-  function readPermission(k: string): ReadonlyArray<Permission> {
-    const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`)
-    if(!checkbox || !checkbox.checked) {
-      return [];
+  function renderMessage(p: collection.Group<string, permission.Permission>) {
+    switch(p.key) {
+      case services.team.key:
+        return <li>Must be a member of this session's team</li>
+      case services.sprint.key:
+        return <li>Must be a member of this session's team</li>
+      default:
+        let x = collection.flatten(p.members.map(x => x.k.split(",").map(x => x.trim()).filter(x => x.length > 0)));
+        if (x.length === 0) {
+          return <li>Must sign in with {p.key}</li>
+        }
+        return <li>Must sign in with {p.key} using an email address from {x.join(" or ")}</li>
     }
-
-    const emails = dom.els<HTMLInputElement>(`.perm-${k}-email`);
-    const v = emails.filter(e => e.checked).map(e => e.value).join(",");
-
-    const access = "member";
-
-    return [{k, v, access}];
   }
 
-  export function readPermissions(): ReadonlyArray<Permission> {
-    const ret = [];
-
-    ret.push(...readPermission("team"));
-    ret.push(...readPermission("sprint"));
-    ret.push(...readPermission("github"));
-    ret.push(...readPermission("google"));
-    ret.push(...readPermission("slack"));
-    ret.push(...readPermission("facebook"));
-    ret.push(...readPermission("amazon"));
-    ret.push(...readPermission("microsoft"));
-
-    return ret;
+  export function renderView(perms: collection.Group<string, Permission>[]) {
+    if (perms.length === 0) {
+      return <div>public</div>;
+    }
+    return <ul>{perms.map(p => renderMessage(p))}</ul>;
   }
 }

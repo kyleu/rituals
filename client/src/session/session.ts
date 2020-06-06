@@ -26,10 +26,11 @@ namespace session {
     system.cache.session = session;
     document.title = session.title;
     dom.setText("#model-title", session.title);
+    dom.setText("#session-view-section .uk-modal-title", session.title);
     dom.setValue("#model-title-input", session.title);
     const items = dom.els("#navbar .uk-navbar-item");
     if (items.length > 0) {
-      items[items.length - 1].innerText = session.title;
+      dom.setText(items[items.length - 1], session.title);
     }
 
     if (oldSlug !== session.slug) {
@@ -37,7 +38,9 @@ namespace session {
       console.log("slugChanged!!!!!");
     }
 
-    modal.hide("session");
+    if(member.selfCanEdit()) {
+      modal.hide("session");
+    }
   }
 
   export function onSessionJoin(param: SessionJoined) {
@@ -54,24 +57,31 @@ namespace session {
     }
   }
 
-  export function setSprint(spr: sprint.Detail | undefined) {
-    modal.hide("session");
-
-    const lc = dom.req("#sprint-link-container");
-
-    lc.innerHTML = "";
-    if(spr) {
-      lc.appendChild(sprint.renderSprintLink(spr));
-      dom.req("#sprint-warning-name").innerText = spr.title;
+  export function setTeam(tm: team.Detail | undefined) {
+    const lc = dom.req("#team-link-container");
+    const t = dom.req("#session-view-section .team");
+    dom.clear(lc);
+    dom.setDisplay("#team-warning-container", tm !== undefined);
+    if(tm) {
+      lc.appendChild(team.renderTeamLink(tm));
+      dom.clear(t).appendChild(team.renderTeamLink(tm, true));
+      dom.setText("#team-warning-name", tm.title);
+    } else {
+      dom.setHTML(t, "-none-");
     }
   }
 
-  export function setTeam(tm: team.Detail | undefined) {
-    modal.hide("session");
-    const container = dom.req("#team-link-container");
-    container.innerHTML = "";
-    if(tm) {
-      container.appendChild(team.renderTeamLink(tm));
+  export function setSprint(spr: sprint.Detail | undefined) {
+    const lc = dom.req("#sprint-link-container");
+    const s = dom.req("#session-view-section .sprint");
+    dom.clear(lc);
+    dom.setDisplay("#sprint-warning-container", spr !== undefined);
+    if(spr) {
+      lc.appendChild(sprint.renderSprintLink(spr));
+      dom.clear(s).appendChild(sprint.renderSprintLink(spr, true));
+      dom.setText("#sprint-warning-name", spr.title);
+    } else {
+      dom.setHTML(s, "-none-");
     }
   }
 
