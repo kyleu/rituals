@@ -1,4 +1,4 @@
-<%: func ActionCard(actions action.Actions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ActionCard(actions action.Actions, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Actions</h3>
   <% if len(actions) == 0 { %>

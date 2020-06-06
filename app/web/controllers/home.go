@@ -10,7 +10,7 @@ import (
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		teams := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))

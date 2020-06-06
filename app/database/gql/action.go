@@ -15,16 +15,16 @@ var (
 )
 
 func initAction() {
-	actionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	actionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		id := util.MapGetUUID(p.Args, util.KeyID, ctx.Logger)
 		return ctx.App.Action.GetByID(*id), nil
 	}
 
-	actionsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	actionsResolver = func(params graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Action.List(paramSetFromGraphQLParams(util.KeyAction, params, ctx.Logger)), nil
 	}
 
-	actionUserResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	actionUserResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.User.GetByID(p.Source.(*action.Action).UserID, false), nil
 	}
 

@@ -1,4 +1,4 @@
-<%: func ConnectionDetail(model *socket.Status, msg *socket.Message, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func ConnectionDetail(model *socket.Status, msg *socket.Message, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

@@ -1,4 +1,4 @@
-<%: func Community(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func Community(ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ nav { %><% components.NavbarStatic("community", ctx, _buffer) %><% } %>
 <%@ body { %>

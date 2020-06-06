@@ -1,4 +1,4 @@
-<%: func PermissionTeamError(svc util.Service, errors permission.Errors, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func PermissionTeamError(svc util.Service, errors permission.Errors, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <% for _, e := range errors { %>
   <li>
     <p>

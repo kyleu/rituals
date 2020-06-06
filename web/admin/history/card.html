@@ -1,4 +1,4 @@
-<%: func HistoryCard(histories history.Entries, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func HistoryCard(histories history.Entries, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">History</h3>
   <% if len(histories) == 0 { %>

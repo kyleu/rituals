@@ -1,4 +1,4 @@
-<%: func Index(ctx web.RequestContext, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, w io.Writer) (int, error) %>
+<%: func Index(ctx *web.RequestContext, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ nav { %><% components.NavbarStatic("", ctx, _buffer) %><% } %>
 <%@ body { %>

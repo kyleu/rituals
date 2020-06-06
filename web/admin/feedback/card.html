@@ -1,4 +1,4 @@
-<%: func FeedbackCard(feedbacks retro.Feedbacks, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func FeedbackCard(feedbacks retro.Feedbacks, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Feedback</h3>
   <% if len(feedbacks) == 0 { %>

@@ -1,4 +1,4 @@
-<%: func StandupSession(model *standup.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func StandupSession(model *standup.Session, auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body">
   <h3 class="uk-card-title">
     <% ComponentSessionIcon(util.SvcStandup, ctx, buffer) %>

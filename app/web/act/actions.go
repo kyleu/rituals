@@ -23,14 +23,14 @@ type errorResult struct {
 	Message string
 }
 
-func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (string, error)) {
+func Act(w http.ResponseWriter, r *http.Request, f func(*web.RequestContext) (string, error)) {
 	startNanos := time.Now().UnixNano()
 	ctx := web.ExtractContext(w, r, false)
 
-	if !TempSecurityCheck(&ctx) {
+	if !TempSecurityCheck(ctx) {
 		if strings.Contains(ctx.Request.RawQuery, "unlock=true") {
 			ctx.Session.Values["unlock"] = true
-			SaveSession(w, r, &ctx)
+			SaveSession(w, r, ctx)
 		} else {
 			_, _ = templates.StaticMessage("Coming soon!", ctx, w)
 			return
@@ -38,7 +38,7 @@ func Act(w http.ResponseWriter, r *http.Request, f func(web.RequestContext) (str
 	}
 
 	if len(ctx.Flashes) > 0 {
-		SaveSession(w, r, &ctx)
+		SaveSession(w, r, ctx)
 	}
 
 	redir, err := f(ctx)
@@ -81,7 +81,7 @@ func SaveSession(w http.ResponseWriter, r *http.Request, ctx *web.RequestContext
 	}
 }
 
-func logComplete(startNanos int64, ctx web.RequestContext, status int, r *http.Request) {
+func logComplete(startNanos int64,  ctx *web.RequestContext, status int, r *http.Request) {
 	delta := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
 	ms := util.MicrosToMillis(language.AmericanEnglish, int(delta))
 	args := map[string]interface{}{"elapsed": delta, util.KeyStatus: status}

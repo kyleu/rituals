@@ -12,19 +12,19 @@ import (
 )
 
 type migrationFile struct {
-	Name string
-	F    func(*strings.Builder)
+	Title string
+	F     func(*strings.Builder)
 }
 
 var initialSchemaMigrations = []migrationFile{
-	{Name: "reset", F: func(sb *strings.Builder) { query.ResetDatabase(sb) }},
-	{Name: "create-types", F: func(sb *strings.Builder) { query.CreateTypes(sb) }},
-	{Name: "create-tables", F: func(sb *strings.Builder) { query.CreateTables(sb) }},
-	{Name: "seed-data", F: func(sb *strings.Builder) { query.SeedData(sb) }},
+	{Title: "reset", F: func(sb *strings.Builder) { query.ResetDatabase(sb) }},
+	{Title: "create-types", F: func(sb *strings.Builder) { query.CreateTypes(sb) }},
+	{Title: "create-tables", F: func(sb *strings.Builder) { query.CreateTables(sb) }},
+	{Title: "seed-data", F: func(sb *strings.Builder) { query.SeedData(sb) }},
 }
 
 var databaseMigrations = []migrationFile{
-	{Name: "first-migration", F: func(sb *strings.Builder) { query.Migration1(sb) }},
+	{Title: "first-migration", F: func(sb *strings.Builder) { query.Migration1(sb) }},
 }
 
 func exec(file migrationFile, s *Service, logger logur.Logger) (string, error) {
@@ -36,11 +36,11 @@ func exec(file migrationFile, s *Service, logger logur.Logger) (string, error) {
 	for _, q := range sqls {
 		_, err := s.Exec(q, nil, -1)
 		if err != nil {
-			return "", errors.Wrap(err, "cannot execute ["+file.Name+"]")
+			return "", errors.Wrap(err, "cannot execute ["+file.Title+"]")
 		}
 	}
 	elapsed := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
 	ms := util.MicrosToMillis(language.AmericanEnglish, int(elapsed))
-	logger.Debug(fmt.Sprintf("ran initial query [%s] in [%v]", file.Name, ms))
+	logger.Debug(fmt.Sprintf("ran query [%s] in [%v]", file.Title, ms))
 	return sql, nil
 }

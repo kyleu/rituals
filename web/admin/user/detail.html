@@ -1,4 +1,4 @@
-<%: func UserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func UserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

@@ -8,7 +8,7 @@ type Sandbox struct {
 	Key         string                                            `json:"key"`
 	Title       string                                            `json:"title"`
 	Description string                                            `json:"description,omitempty"`
-	Resolve     func(ctx web.RequestContext) (interface{}, error) `json:"-"`
+	Resolve     func(ctx *web.RequestContext) (interface{}, error) `json:"-"`
 }
 
 type Sandboxes = []*Sandbox

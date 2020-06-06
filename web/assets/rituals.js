@@ -541,72 +541,7 @@ var feedback;
 })(feedback || (feedback = {}));
 var member;
 (function (member_1) {
-    let online = [];
-    let members = [];
-    let me;
-    function isSelf(x) {
-        return x.userID === system.cache.getProfile().userID;
-    }
-    function getMembers() {
-        return members;
-    }
-    member_1.getMembers = getMembers;
-    function getMember(id) {
-        return members.filter(m => m.userID === id).shift();
-    }
-    member_1.getMember = getMember;
-    function setMembers() {
-        const self = members.filter(isSelf).shift();
-        if (self) {
-            me = self;
-            dom.setContent("#self-picture", member_1.setPicture(self.picture));
-            dom.setText("#member-self .member-name", self.name);
-            dom.setValue("#self-name-input", self.name);
-            dom.setText("#member-self .member-role", self.role);
-        }
-        const others = members.filter(x => !isSelf(x));
-        dom.setContent("#member-detail", member_1.renderMembers(others));
-        if (others.length > 0) {
-            modal.hide('welcome');
-        }
-        renderOnline();
-    }
-    member_1.setMembers = setMembers;
-    function onMemberRemove(member) {
-        var _a;
-        if (member === system.cache.getProfile().userID) {
-            notify.notify(`you have left this ${(_a = system.cache.currentService) === null || _a === void 0 ? void 0 : _a.key}`, true);
-            document.location.href = "/";
-        }
-        else {
-            modal.hide("member");
-            const unfiltered = members;
-            const ms = unfiltered.filter(m => m.userID !== member);
-            ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
-            members = ms;
-            setMembers();
-        }
-    }
-    member_1.onMemberRemove = onMemberRemove;
-    function onMemberUpdate(member) {
-        if (isSelf(member)) {
-            me = member;
-            modal.hide("self");
-        }
-        else {
-            modal.hide("member");
-        }
-        const unfiltered = members;
-        const curr = unfiltered.filter(m => m.userID === member.userID).shift();
-        const nameChanged = (curr === null || curr === void 0 ? void 0 : curr.name) !== member.name;
-        const ms = unfiltered.filter(m => m.userID !== member.userID);
-        if (ms.length === members.length) {
-            notify.notify(`${member.name} has joined`, true);
-        }
-        ms.push(member);
-        ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
-        members = ms;
-        setMembers();
+    function memberUpdateDom(nameChanged) {
         if (nameChanged) {
             switch (system.cache.currentService) {
                 case services.team:
@@ -633,61 +568,9 @@ var member;
             }
         }
     }
-    member_1.onMemberUpdate = onMemberUpdate;
-    function onOnlineUpdate(update) {
-        if (update.connected) {
-            if (!online.find(x => x === update.userID)) {
-                online.push(update.userID);
-            }
-        }
-        else {
-            online = online.filter(x => x !== update.userID);
-        }
-        renderOnline();
-    }
-    member_1.onOnlineUpdate = onOnlineUpdate;
-    function renderOnline() {
-        for (const member of members) {
-            const el = dom.opt(`#member-${member.userID} .online-indicator`);
-            if (el) {
-                if (!online.find(x => x === member.userID)) {
-                    el.classList.add("offline");
-                }
-                else {
-                    el.classList.remove("offline");
-                }
-            }
-        }
-    }
-    function onSubmitSelf() {
-        const name = dom.req("#self-name-input").value;
-        const choice = dom.req("#self-name-choice-global").checked ? "global" : "local";
-        const picture = dom.req("#self-picture-input").value;
-        const msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name, choice, picture } };
-        socket.send(msg);
-    }
-    member_1.onSubmitSelf = onSubmitSelf;
-    let activeMember;
-    function getActiveMember() {
-        if (!activeMember) {
-            console.warn("no active member");
-            return undefined;
-        }
-        const curr = members.filter(x => x.userID === activeMember).shift();
-        if (!curr) {
-            console.warn(`cannot load active member [${activeMember}]`);
-        }
-        return curr;
-    }
-    function viewActiveMember(p) {
-        if (p) {
-            activeMember = p;
-        }
-        const member = getActiveMember();
-        if (!member) {
-            return;
-        }
-        const owner = (me === null || me === void 0 ? void 0 : me.role) == "owner";
+    member_1.memberUpdateDom = memberUpdateDom;
+    function activeMemberDom(member) {
+        const owner = member_1.selfCanEdit();
         dom.setDisplay("#modal-member .owner-form", owner);
         dom.setDisplay("#modal-member .member-form", !owner);
         dom.setDisplay("#modal-member .owner-actions", owner);
@@ -696,7 +579,78 @@ var member;
         dom.setText("#member-modal-name", member.name);
         dom.setText("#member-modal-role", member.role);
     }
-    member_1.viewActiveMember = viewActiveMember;
+    member_1.activeMemberDom = activeMemberDom;
+})(member || (member = {}));
+var member;
+(function (member_2) {
+    let members = [];
+    let activeMember;
+    function getMember(id) {
+        return members.filter(m => m.userID === id).shift();
+    }
+    member_2.getMember = getMember;
+    function getMembers() {
+        return members;
+    }
+    member_2.getMembers = getMembers;
+    function setMembers() {
+        member_2.updateSelf(members.filter(member_2.isSelf).shift());
+        const others = members.filter(x => !member_2.isSelf(x));
+        dom.setContent("#member-detail", member_2.renderMembers(others));
+        if (others.length > 0) {
+            modal.hide('welcome');
+        }
+        member_2.renderOnline();
+    }
+    member_2.setMembers = setMembers;
+    function onMemberUpdate(member) {
+        if (member_2.isSelf(member)) {
+            modal.hide("self");
+        }
+        else {
+            modal.hide("member");
+        }
+        const unfiltered = members;
+        const curr = unfiltered.filter(m => m.userID === member.userID).shift();
+        const nameChanged = (curr === null || curr === void 0 ? void 0 : curr.name) !== member.name;
+        const ms = unfiltered.filter(m => m.userID !== member.userID);
+        if (ms.length === members.length) {
+            notify.notify(`${member.name} has joined`, true);
+        }
+        ms.push(member);
+        ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+        members = ms;
+        setMembers();
+        member_2.memberUpdateDom(nameChanged);
+    }
+    member_2.onMemberUpdate = onMemberUpdate;
+    function onMemberRemove(member) {
+        var _a;
+        if (member === system.cache.getProfile().userID) {
+            notify.notify(`you have left this ${(_a = system.cache.currentService) === null || _a === void 0 ? void 0 : _a.key}`, true);
+            document.location.href = "/";
+        }
+        else {
+            modal.hide("member");
+            const unfiltered = members;
+            const ms = unfiltered.filter(m => m.userID !== member);
+            ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+            members = ms;
+            setMembers();
+        }
+    }
+    member_2.onMemberRemove = onMemberRemove;
+    function viewActiveMember(p) {
+        if (p) {
+            activeMember = p;
+        }
+        const member = getActiveMember();
+        if (!member) {
+            return;
+        }
+        member_2.activeMemberDom(member);
+    }
+    member_2.viewActiveMember = viewActiveMember;
     function removeMember(id = activeMember) {
         if (!id) {
             console.warn(`cannot load active member [${activeMember}]`);
@@ -710,7 +664,7 @@ var member;
             socket.send(msg);
         }
     }
-    member_1.removeMember = removeMember;
+    member_2.removeMember = removeMember;
     function saveRole() {
         const curr = getActiveMember();
         if (!curr) {
@@ -728,18 +682,25 @@ var member;
             socket.send(msg);
         }
     }
-    member_1.saveRole = saveRole;
+    member_2.saveRole = saveRole;
     function applyMembers(m) {
         members = m;
     }
-    member_1.applyMembers = applyMembers;
-    function applyOnline(o) {
-        online = o;
+    member_2.applyMembers = applyMembers;
+    function getActiveMember() {
+        if (!activeMember) {
+            console.warn("no active member");
+            return undefined;
+        }
+        const curr = members.filter(x => x.userID === activeMember).shift();
+        if (!curr) {
+            console.warn(`cannot load active member [${activeMember}]`);
+        }
+        return curr;
     }
-    member_1.applyOnline = applyOnline;
 })(member || (member = {}));
 var member;
-(function (member_2) {
+(function (member_3) {
     function renderMember(member) {
         const profile = system.cache.getProfile();
         return JSX("div", { class: "section", onclick: `modal.open('member', '${member.userID}');` },
@@ -755,7 +716,7 @@ var member;
             return JSX("ul", { class: "uk-list uk-list-divider" }, members.map(m => JSX("li", { id: `member-${m.userID}` }, renderMember(m))));
         }
     }
-    member_2.renderMembers = renderMembers;
+    member_3.renderMembers = renderMembers;
     function renderTitle(member) {
         if (!member) {
             return JSX("span", null, "{former member}");
@@ -772,7 +733,7 @@ var member;
                 JSX("span", { class: "profile-icon uk-icon", "data-uk-icon": "user" })),
             JSX("div", { class: "left" }, member.name));
     }
-    member_2.renderTitle = renderTitle;
+    member_3.renderTitle = renderTitle;
     function renderHeader(m, t, close) {
         return JSX("header", { class: "uk-comment-header uk-position-relative" },
             close ? close : JSX("span", null),
@@ -786,12 +747,12 @@ var member;
                     JSX("h4", { class: "uk-comment-title uk-margin-remove" }, m === null || m === void 0 ? void 0 : m.name),
                     JSX("p", { class: "uk-comment-meta uk-margin-remove-top" }, date.toDateTimeString(new Date(t))))));
     }
-    member_2.renderHeader = renderHeader;
+    member_3.renderHeader = renderHeader;
     function viewSelf() {
         const selfInput = dom.setValue("#self-name-input", dom.req("#member-self .member-name").innerText);
         setTimeout(() => selfInput.focus(), 250);
     }
-    member_2.viewSelf = viewSelf;
+    member_3.viewSelf = viewSelf;
     function setPicture(url) {
         if (url && url.length > 0 && url != "none") {
             return JSX("div", { class: "model-icon profile-image" },
@@ -799,7 +760,81 @@ var member;
         }
         return JSX("span", { class: "model-icon h3-icon", onclick: "modal.open('self');", "data-uk-icon": "icon: user;" });
     }
-    member_2.setPicture = setPicture;
+    member_3.setPicture = setPicture;
+})(member || (member = {}));
+var member;
+(function (member_4) {
+    let online = [];
+    function onOnlineUpdate(update) {
+        if (update.connected) {
+            if (!online.find(x => x === update.userID)) {
+                online.push(update.userID);
+            }
+        }
+        else {
+            online = online.filter(x => x !== update.userID);
+        }
+        renderOnline();
+    }
+    member_4.onOnlineUpdate = onOnlineUpdate;
+    function applyOnline(o) {
+        online = o;
+    }
+    member_4.applyOnline = applyOnline;
+    function renderOnline() {
+        for (const member of member_4.getMembers()) {
+            const el = dom.opt(`#member-${member.userID} .online-indicator`);
+            if (el) {
+                if (!online.find(x => x === member.userID)) {
+                    el.classList.add("offline");
+                }
+                else {
+                    el.classList.remove("offline");
+                }
+            }
+        }
+    }
+    member_4.renderOnline = renderOnline;
+    function canEdit(m) {
+        return m.role == "owner";
+    }
+})(member || (member = {}));
+var member;
+(function (member) {
+    let me;
+    function isSelf(x) {
+        return x.userID === system.cache.getProfile().userID;
+    }
+    member.isSelf = isSelf;
+    function selfCanEdit() {
+        return me !== undefined && canEdit(me);
+    }
+    member.selfCanEdit = selfCanEdit;
+    function updateSelf(self) {
+        if (self) {
+            me = self;
+            dom.setContent("#self-picture", member.setPicture(self.picture));
+            dom.setText("#member-self .member-name", self.name);
+            dom.setValue("#self-name-input", self.name);
+            dom.setText("#member-self .member-role", self.role);
+            const e = canEdit(self);
+            dom.setDisplay("#history-container", e);
+            dom.setDisplay("#session-edit-section", e);
+            dom.setDisplay("#session-view-section", !e);
+        }
+    }
+    member.updateSelf = updateSelf;
+    function onSubmitSelf() {
+        const name = dom.req("#self-name-input").value;
+        const choice = dom.req("#self-name-choice-global").checked ? "global" : "local";
+        const picture = dom.req("#self-picture-input").value;
+        const msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name, choice, picture } };
+        socket.send(msg);
+    }
+    member.onSubmitSelf = onSubmitSelf;
+    function canEdit(m) {
+        return m.role == "owner";
+    }
 })(member || (member = {}));
 var command;
 (function (command) {

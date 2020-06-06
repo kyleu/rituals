@@ -1,4 +1,4 @@
-<%: func IndexPanel(svc util.Service, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func IndexPanel(svc util.Service, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <h3 class="uk-card-title">
   <span class="right">
     <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="list" href="<%= ctx.Route(svc.Key + `.list`) %>" title="show <%= svc.Key %> list"></a>

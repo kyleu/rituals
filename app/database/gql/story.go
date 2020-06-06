@@ -14,12 +14,12 @@ var (
 )
 
 func initStory() {
-	storyResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	storyResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		id := util.MapGetUUID(p.Args, util.KeyID, ctx.Logger)
 		return ctx.App.Estimate.GetStoryByID(*id)
 	}
 
-	storiesResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	storiesResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Estimate.GetStories(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyStory, p, ctx.Logger)), nil
 	}
 

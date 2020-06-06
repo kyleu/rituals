@@ -1,4 +1,4 @@
-<%: func RetroList(retros retro.Sessions, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func RetroList(retros retro.Sessions, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

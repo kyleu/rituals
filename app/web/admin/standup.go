@@ -15,7 +15,7 @@ import (
 )
 
 func StandupList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = util.SvcStandup.Title + " List"
 
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
@@ -27,7 +27,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 }
 
 func StandupDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		standupID, err := act.IDFromParams(util.SvcStandup.Key, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
@@ -35,7 +35,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Standup.GetByID(*standupID)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load standup [" + standupID.String() + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.SvcStandup.Key)), nil
 		}
 

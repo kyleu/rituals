@@ -1,4 +1,4 @@
-<%: func AuthDetail(model *auth.Record, user *user.SystemUser, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func AuthDetail(model *auth.Record, user *user.SystemUser, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

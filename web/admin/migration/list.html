@@ -1,4 +1,4 @@
-<%: func MigrationList(migrations database.Migrations, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func MigrationList(migrations database.Migrations, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

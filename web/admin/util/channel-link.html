@@ -1,4 +1,4 @@
-<%: func Channel(svc util.Service, id *uuid.UUID, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func Channel(svc util.Service, id *uuid.UUID, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <% if id == nil { %>
   &lt;nil&gt;
 <% } else { %>

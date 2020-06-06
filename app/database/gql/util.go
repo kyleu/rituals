@@ -14,7 +14,7 @@ import (
 
 var graphQLInitialized = false
 
-type Callback func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error)
+type Callback func(p graphql.ResolveParams,  ctx *web.RequestContext) (interface{}, error)
 
 func paramSetFromGraphQLParams(key string, params graphql.ResolveParams, logger logur.Logger) *query.Params {
 	orderings := make(query.Orderings, 0)

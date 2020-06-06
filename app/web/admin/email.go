@@ -17,7 +17,7 @@ import (
 )
 
 func EmailList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Email List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyEmail, util.Plural(util.KeyEmail))
 
@@ -29,7 +29,7 @@ func EmailList(w http.ResponseWriter, r *http.Request) {
 }
 
 func EmailDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		emailID, ok := mux.Vars(r)[util.KeyID]
 		if !ok {
 			return eresp(errors.New("invalid email id"), "")
@@ -38,7 +38,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 		e := emailSvc.GetByID(emailID)
 		if e == nil {
 			ctx.Session.AddFlash("error:Can't load email [" + emailID + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.KeyEmail)), nil
 		}
 

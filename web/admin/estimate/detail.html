@@ -1,4 +1,4 @@
-<%: func EstimateDetail(model *estimate.Session, stories estimate.Stories, data *session.Data, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func EstimateDetail(model *estimate.Session, stories estimate.Stories, data *session.Data, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

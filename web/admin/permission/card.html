@@ -1,4 +1,4 @@
-<%: func PermissionCard(perms permission.Permissions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func PermissionCard(perms permission.Permissions, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Permissions</h3>
   <% if len(perms) == 0 { %>

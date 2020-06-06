@@ -17,7 +17,7 @@ import (
 )
 
 func Profile(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		ctx.Title = "User Profile"
@@ -27,7 +27,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProfileSave(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		prof := &form.ProfileForm{}
 		err := form.Decode(r, prof, ctx.Logger)
 		if err != nil {
@@ -49,13 +49,13 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 		ctx.Session.AddFlash("success:Profile saved")
-		act.SaveSession(w, r, &ctx)
+		act.SaveSession(w, r, ctx)
 		return ctx.Route("home"), nil
 	})
 }
 
 func ProfilePic(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}
@@ -75,7 +75,7 @@ func ProfilePic(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProfileTheme(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		theme := util.ThemeFromString(key)
 		ctx.Profile.Theme = theme

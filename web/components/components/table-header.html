@@ -1,4 +1,4 @@
-<%: func TableHeader(section string, key string, title string, params *query.Params, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func TableHeader(section string, key string, title string, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <% if params == nil { %>
   <% params = &query.Params{Key: section} %>
   <th class="uk-transition-toggle uk-text-nowrap">

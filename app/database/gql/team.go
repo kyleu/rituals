@@ -18,31 +18,31 @@ var (
 func initTeam() {
 	svc := util.SvcTeam
 
-	teamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
-	teamsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamsResolver = func(params graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
-	teamActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamActionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	teamMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamMemberResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.Data.Members.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
-	teamPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamPermissionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.Data.Permissions.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	teamCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamCommentResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.Data.GetComments(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
-	teamHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	teamHistoryResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		ret := ctx.App.Team.Data.History.GetByModelID(p.Source.(*team.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}

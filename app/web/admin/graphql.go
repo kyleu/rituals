@@ -20,7 +20,7 @@ import (
 var graphQLService *gql.Service
 
 func GraphQLRun(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
 			return eresp(err, "")

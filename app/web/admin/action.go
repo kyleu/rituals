@@ -15,7 +15,7 @@ import (
 )
 
 func ActionList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Action List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAction, util.Plural(util.KeyAction))
 		params := act.ParamSetFromRequest(r)
@@ -25,7 +25,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 }
 
 func ActionDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
 		actionID, err := act.IDFromParams(util.KeyAction, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
@@ -33,13 +33,13 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 		a := ctx.App.Action.GetByID(*actionID)
 		if a == nil {
 			ctx.Session.AddFlash("error:Can't load action [" + actionID.String() + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.KeyAction)), nil
 		}
 		user := ctx.App.User.GetByID(a.UserID, false)
 		if user == nil {
 			ctx.Session.AddFlash("error:Can't load user [" + a.UserID.String() + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.KeyAction)), nil
 		}
 

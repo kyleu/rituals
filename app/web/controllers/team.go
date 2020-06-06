@@ -15,7 +15,7 @@ import (
 )
 
 func TeamList(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		sessions := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
@@ -28,7 +28,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamNew(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User)
@@ -48,12 +48,12 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Team.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load team [" + key + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcTeam.Key + ".list"), nil
 		}
 		if sess.Slug != key {
@@ -61,7 +61,7 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
-		auths, permErrors, bc := check(&ctx, ctx.App.Team.Data.Permissions, params)
+		auths, permErrors, bc := check(ctx, ctx.App.Team.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 

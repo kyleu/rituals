@@ -1,4 +1,4 @@
-<%: func RetroSession(model *retro.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func RetroSession(model *retro.Session, auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <% ComponentSessionIcon(util.SvcRetro, ctx, buffer) %>

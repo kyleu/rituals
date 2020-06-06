@@ -16,7 +16,7 @@ import (
 )
 
 func AuthSubmit(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}
@@ -40,7 +40,7 @@ func AuthSubmit(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthCallback(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}
@@ -60,14 +60,14 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Session.AddFlash("success:Signed in as " + record.Name)
-		act.SaveSession(w, r, &ctx)
+		act.SaveSession(w, r, ctx)
 
 		return u, nil
 	})
 }
 
 func AuthSignout(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}

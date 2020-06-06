@@ -1,4 +1,4 @@
-<%: func RetroWorkspace(model *retro.Session, auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func RetroWorkspace(model *retro.Session, auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ head { %><% components.Init(util.SvcRetro, model.ID, _buffer) %><% } %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>

@@ -1,4 +1,4 @@
-<%: func ComponentSessionTitle(v string, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ComponentSessionTitle(v string, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-margin">
   <label class="uk-form-label" for="model-title-input">Title</label>
   <input class="uk-input" id="model-title-input" type="text" name="<%= util.KeyTitle %>" placeholder="Name your session" value="<%= v %>" />

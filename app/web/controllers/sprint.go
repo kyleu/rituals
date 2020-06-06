@@ -14,7 +14,7 @@ import (
 )
 
 func SprintList(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		sessions := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
@@ -28,7 +28,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 }
 
 func SprintNew(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
 		startDate, err := util.FromYMD(r.Form.Get("startDate"))
@@ -61,12 +61,12 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 }
 
 func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Sprint.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcSprint.Key + ".list"), nil
 		}
 		if sess.Slug != key {
@@ -74,7 +74,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
-		auths, permErrors, bc := check(&ctx, ctx.App.Sprint.Data.Permissions, params)
+		auths, permErrors, bc := check(ctx, ctx.App.Sprint.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 

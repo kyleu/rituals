@@ -1,4 +1,4 @@
-<%: func TeamSession(model *team.Session, auths auth.Records, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func TeamSession(model *team.Session, auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <% ComponentSessionIcon(util.SvcTeam, ctx, buffer) %>
@@ -11,7 +11,7 @@
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
-      <h2 class="uk-modal-title">Edit Team</h2>
+      <h2 class="uk-modal-title">Edit <%= util.SvcTeam.Title %></h2>
     </div>
     <form class="uk-form-stacked" onsubmit="team.onSubmitTeamSession();return false;">
       <div class="uk-modal-body" data-uk-overflow-auto>

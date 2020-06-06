@@ -1,4 +1,4 @@
-<%: func TranscriptRun(t *transcript.Transcript, content interface{}, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func TranscriptRun(t *transcript.Transcript, content interface{}, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

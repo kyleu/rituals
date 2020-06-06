@@ -1,4 +1,4 @@
-<%: func ModulesList(ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func ModulesList(ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

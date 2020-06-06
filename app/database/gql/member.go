@@ -23,7 +23,7 @@ func initMember() {
 		},
 	})
 
-	memberProfileResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	memberProfileResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.User.GetByID(p.Source.(*member.Entry).UserID, false), nil
 	}
 

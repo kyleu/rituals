@@ -10,7 +10,7 @@ import (
 )
 
 func SitemapXML(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		ret := make([]string, 0)
 		ret = append(ret, `<?xml version="1.0" encoding="UTF-8"?>`)
 		ret = append(ret, `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)

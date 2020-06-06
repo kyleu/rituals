@@ -1,0 +1,8 @@
+<%: func EstimateView(s *estimate.Session, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<pre>
+  Title:
+  Choices: <%= strings.Join(s.Choices, `,`) %>
+  Team:
+  Sprint:
+  Perms:
+</pre>

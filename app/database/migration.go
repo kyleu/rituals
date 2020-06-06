@@ -1,8 +1,10 @@
 package database
 
 import (
+	"emperror.dev/errors"
 	"fmt"
 	"logur.dev/logur"
+	"strings"
 	"time"
 )
 
@@ -17,28 +19,58 @@ func DBWipe(s *Service, logger logur.Logger) error {
 }
 
 func Migrate(s *Service) error {
+	var err error
+
 	maxIdx := maxMigrationIdx(s)
 	// s.logger.Info(fmt.Sprintf("migrating database schema: %v", maxIdx))
 
 	for i, file := range databaseMigrations {
 		idx := i + 1
-		if (idx) > maxIdx {
-			s.logger.Info(fmt.Sprintf("applying database migration [%v]: %v", idx, file.Name))
-			sql, err := exec(file, s, s.logger)
-			if err != nil {
-				return err
+		switch {
+		case idx == maxIdx:
+			m := s.GetMigrationByIdx(maxIdx)
+			if m != nil {
+				if m.Title != file.Title {
+					s.logger.Info(fmt.Sprintf("migration [%v] name has changed from [%v] to [%v]", idx, m.Title, file.Title))
+					err = s.RemoveMigrationByIdx(idx, s.logger)
+					if err != nil {
+						return err
+					}
+					err = applyMigration(s, idx, file)
+					continue
+				}
+				sb := &strings.Builder{}
+				file.F(sb)
+				nc := sb.String()
+				if nc != m.Src {
+					s.logger.Info(fmt.Sprintf("migration [%v:%v] content has changed from [%vB] to [%vB]", idx, file.Title, len(nc), len(m.Src)))
+					err = s.RemoveMigrationByIdx(idx, s.logger)
+					if err != nil {
+						return err
+					}
+					err = applyMigration(s, idx, file)
+				}
 			}
-			err = newMigration(s, Migration{
-				Idx:     idx,
-				Title:   file.Name,
-				Src:     sql,
-				Created: time.Time{},
-			})
-			if err != nil {
-				return err
-			}
+			case idx > maxIdx:
+				err = applyMigration(s, idx, file)
+		default:
+			// noop
 		}
 	}
 
-	return nil
+	return errors.Wrap(err, "error running database migration")
+}
+
+func applyMigration(s *Service, idx int, file migrationFile) error {
+	s.logger.Info(fmt.Sprintf("applying database migration [%v]: %v", idx, file.Title))
+	sql, err := exec(file, s, s.logger)
+	if err != nil {
+		return err
+	}
+	return newMigration(s, Migration{
+		Idx:     idx,
+		Title:   file.Title,
+		Src:     sql,
+		Created: time.Time{},
+	})
 }

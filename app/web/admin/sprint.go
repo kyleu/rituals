@@ -15,7 +15,7 @@ import (
 )
 
 func SprintList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Sprint List"
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcSprint.Key, util.SvcSprint.Plural)
 
@@ -26,7 +26,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 }
 
 func SprintDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		sprintID, err := act.IDFromParams(util.SvcSprint.Key, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
@@ -34,7 +34,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Sprint.GetByID(*sprintID)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load sprint [" + sprintID.String() + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.SvcSprint.Key)), nil
 		}
 

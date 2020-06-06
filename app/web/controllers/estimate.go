@@ -16,7 +16,7 @@ import (
 )
 
 func EstimateList(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		sessions := ctx.App.Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
@@ -31,7 +31,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 }
 
 func EstimateNew(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
 		choicesString := r.Form.Get(util.Plural(util.KeyChoice))
@@ -66,12 +66,12 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 }
 
 func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Estimate.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + key + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcEstimate.Key + ".list"), nil
 		}
 		if sess.Slug != key {
@@ -79,7 +79,7 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := check(&ctx, ctx.App.Estimate.Data.Permissions, params)
+		auths, permErrors, bc := check(ctx, ctx.App.Estimate.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 

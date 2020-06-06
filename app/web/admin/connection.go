@@ -19,7 +19,7 @@ import (
 )
 
 func ConnectionList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Connection List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyConnection, util.Plural(util.KeyConnection))
 
@@ -30,7 +30,7 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 }
 
 func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		connectionID, err := act.IDFromParams(util.KeyConnection, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
@@ -49,7 +49,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func ConnectionPost(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		connectionID, err := act.IDFromParams(util.KeyConnection, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")

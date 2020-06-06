@@ -1,4 +1,4 @@
-<%: func Profile(auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func Profile(auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ nav { %><% components.NavbarStatic("profile", ctx, _buffer) %><% } %>
 <%@ body { %>

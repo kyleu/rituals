@@ -68,4 +68,5 @@ namespace member {
     }
     return <span class="model-icon h3-icon" onclick="modal.open('self');" data-uk-icon="icon: user;"/>
   }
+
 }

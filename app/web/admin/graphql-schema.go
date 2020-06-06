@@ -12,7 +12,7 @@ import (
 )
 
 func GraphiQL(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
 			return eresp(err, "")
@@ -25,7 +25,7 @@ func GraphiQL(w http.ResponseWriter, r *http.Request) {
 }
 
 func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
 			return eresp(err, "")
@@ -41,7 +41,7 @@ func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
 }
 
 func GraphQLVoyagerMutation(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
 			return eresp(err, "")

@@ -15,15 +15,15 @@ var (
 )
 
 func initSandbox() {
-	sandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sandboxResolver = func(p graphql.ResolveParams,  ctx *web.RequestContext) (interface{}, error) {
 		return sandbox.FromString(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
-	sandboxesResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sandboxesResolver = func(params graphql.ResolveParams,  ctx *web.RequestContext) (interface{}, error) {
 		return sandbox.AllSandboxes, nil
 	}
 
-	callSandboxResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	callSandboxResolver = func(p graphql.ResolveParams,  ctx *web.RequestContext) (interface{}, error) {
 		key := util.MapGetString(p.Args, util.KeyKey, ctx.Logger)
 		sb := sandbox.FromString(key)
 		if sb == nil {

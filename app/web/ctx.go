@@ -24,7 +24,7 @@ type RequestContext struct {
 	Title       string
 	Breadcrumbs Breadcrumbs
 	Flashes     []string
-	Session     sessions.Session
+	Session     *sessions.Session
 }
 
 func (r *RequestContext) Route(act string, pairs ...string) string {
@@ -41,7 +41,7 @@ func (r *RequestContext) Route(act string, pairs ...string) string {
 	return u.Path
 }
 
-func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) RequestContext {
+func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) *RequestContext {
 	ai, ok := r.Context().Value(util.InfoKey).(*config.AppInfo)
 	if !ok {
 		ai.Logger.Warn("cannot load AppInfo")
@@ -82,7 +82,7 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 
 	logger := logur.WithFields(ai.Logger, map[string]interface{}{"path": r.URL.Path, "method": r.Method})
 
-	return RequestContext{
+	return &RequestContext{
 		App:         ai,
 		Logger:      logger,
 		Profile:     prof,
@@ -91,7 +91,7 @@ func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) R
 		Title:       util.AppName,
 		Breadcrumbs: nil,
 		Flashes:     flashes,
-		Session:     *session,
+		Session:     session,
 	}
 }
 

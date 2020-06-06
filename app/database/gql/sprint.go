@@ -19,15 +19,15 @@ var (
 func initSprint() {
 	svc := util.SvcSprint
 
-	sprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
-	sprintsResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintsResolver = func(params graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
-	sprintTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintTeamResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		sess := p.Source.(*sprint.Session)
 		if sess.TeamID != nil {
 			return ctx.App.Team.GetByID(*sess.TeamID), nil
@@ -35,36 +35,36 @@ func initSprint() {
 		return nil, nil
 	}
 
-	sprintActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintActionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	sprintMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintMemberResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.Data.Members.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
-	sprintPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintPermissionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.Data.Permissions.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	sprintCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintCommentResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.Data.GetComments(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
-	sprintHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintHistoryResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		ret := ctx.App.Sprint.Data.History.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
-	sprintEstimateResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintEstimateResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Estimate.GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
-	sprintStandupResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintStandupResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Standup.GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
-	sprintRetroResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	sprintRetroResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 

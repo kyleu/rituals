@@ -28,36 +28,36 @@ func initRetro() {
 		},
 	})
 
-	retroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.GetBySlug(util.MapGetString(p.Args, util.KeyKey, ctx.Logger)), nil
 	}
 
-	retrosResolver = func(params graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retrosResolver = func(params graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
-	retroActionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroActionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Action.GetBySvcModel(svc, p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyAction, p, ctx.Logger)), nil
 	}
 
-	retroMemberResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroMemberResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.Data.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyMember, p, ctx.Logger)), nil
 	}
 
-	retroPermissionResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroPermissionResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.Data.Permissions.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyPermission, p, ctx.Logger)), nil
 	}
 
-	retroCommentResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroCommentResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.Data.GetComments(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyComment, p, ctx.Logger)), nil
 	}
 
-	retroHistoryResolver := func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroHistoryResolver := func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		ret := ctx.App.Retro.Data.History.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(util.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
-	retroTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroTeamResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		sess := p.Source.(*retro.Session)
 		if sess.TeamID != nil {
 			return ctx.App.Team.GetByID(*sess.TeamID), nil
@@ -65,7 +65,7 @@ func initRetro() {
 		return nil, nil
 	}
 
-	retroSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	retroSprintResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		sess := p.Source.(*retro.Session)
 		if sess.SprintID != nil {
 			return ctx.App.Sprint.GetByID(*sess.SprintID), nil

@@ -18,7 +18,7 @@ var homeSections = []string{
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 		ctx.Title = "Admin"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.AdminLink()), util.KeyAdmin)
@@ -31,7 +31,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func Source(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		http.ServeFile(w, r, "./"+r.URL.Path)
 		return "", nil
 	})

@@ -13,7 +13,7 @@ var (
 )
 
 func initComment() {
-	commentUserResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	commentUserResolver = func(p graphql.ResolveParams,  ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.User.GetByID(p.Source.(*comment.Comment).UserID, false), nil
 	}
 

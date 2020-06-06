@@ -2,7 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"emperror.dev/errors"
 	"fmt"
+	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -35,6 +37,15 @@ func (s *Service) GetMigrationByIdx(idx int) *Migration {
 		return nil
 	}
 	return dto.toMigration()
+}
+
+func (s *Service) RemoveMigrationByIdx(idx int, logger logur.Logger) error {
+	q := query.SQLDelete(util.KeyMigration, "idx = $1")
+	_, err := s.Delete(q, nil, 1, idx)
+	if err != nil {
+		return errors.Wrap(err, "error removing migration")
+	}
+	return nil
 }
 
 func newMigration(s *Service, e Migration) error {

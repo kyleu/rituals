@@ -9,7 +9,7 @@ var Testbed = Sandbox{
 	Key:         "testbed",
 	Title:       "Testbed",
 	Description: "This could do anything, be careful",
-	Resolve: func(ctx web.RequestContext) (interface{}, error) {
+	Resolve: func(ctx *web.RequestContext) (interface{}, error) {
 		es := email.NewService(ctx.App.Database, ctx.Logger)
 		err := es.SendNightlyEmail(ctx.App, ctx.Profile.UserID, nil, false)
 		if err != nil {

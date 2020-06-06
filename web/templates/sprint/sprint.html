@@ -1,4 +1,4 @@
-<%: func SprintWorkspace(model *sprint.Session, auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func SprintWorkspace(model *sprint.Session, auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ head { %><% components.Init(util.SvcSprint, model.ID, _buffer) %><% } %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>

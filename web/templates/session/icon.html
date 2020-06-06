@@ -1,7 +1,7 @@
-<%: func ComponentSessionIcon(svc util.Service, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ComponentSessionIcon(svc util.Service, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="right">
   <a id="public-link-container" class="theme uk-icon uk-margin-small-left left" onclick="modal.open('session');" data-uk-icon="unlock" title="this <%= svc.Key %> is available to anyone with this url"></a>
   <a id="private-link-container" class="theme uk-icon uk-margin-small-left left" onclick="modal.open('session');" data-uk-icon="lock" title="private <%= svc.Key %>"></a>
-  <a class="theme uk-icon uk-margin-small-left left" onclick="modal.open('<%= util.KeyAction %>');return false;" data-uk-icon="rss" title="view history"></a>
+  <a id="history-container" class="theme uk-icon uk-margin-small-left left" onclick="modal.open('<%= util.KeyAction %>');return false;" data-uk-icon="rss" title="view history"></a>
   <div class="uk-margin-small-left left"><% ComponentCommentBadge("root", ctx, buffer) %></div>
 </div>

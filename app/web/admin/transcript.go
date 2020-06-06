@@ -18,7 +18,7 @@ import (
 )
 
 func TranscriptList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
 		ctx.Title = util.PluralTitle(util.KeyTranscript)
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyTranscript, util.Plural(util.KeyTranscript))
 		return tmpl(admintemplates.TranscriptList(transcript.AllTranscripts, ctx, w))
@@ -26,7 +26,7 @@ func TranscriptList(w http.ResponseWriter, r *http.Request) {
 }
 
 func TranscriptRun(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		t := transcript.FromString(key)
 		if t == nil {

@@ -1,4 +1,4 @@
-<%: func SprintCard(sprints sprint.Sessions, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintCard(sprints sprint.Sessions, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Sprints</h3>
   <% if len(sprints) == 0 { %>

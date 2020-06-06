@@ -1,4 +1,4 @@
-<%: func Home(ctx web.RequestContext, sections []string, countMap map[string]int64, recentMap map[string]*time.Time, params *query.Params, w io.Writer) (int, error) %>
+<%: func Home(ctx *web.RequestContext, sections []string, countMap map[string]int64, recentMap map[string]*time.Time, params *query.Params, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

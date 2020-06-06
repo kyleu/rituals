@@ -17,7 +17,7 @@ import (
 )
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = util.PluralTitle(util.KeySandbox)
 		ctx.Breadcrumbs = adminBC(ctx, util.KeySandbox, util.Plural(util.KeySandbox))
 		return tmpl(admintemplates.SandboxList(sandbox.AllSandboxes, ctx, w))
@@ -25,7 +25,7 @@ func SandboxList(w http.ResponseWriter, r *http.Request) {
 }
 
 func SandboxRun(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sb := sandbox.FromString(key)
 		if sb == nil {

@@ -16,7 +16,7 @@ import (
 )
 
 func EstimateList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Estimate List"
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
 
@@ -27,7 +27,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 }
 
 func EstimateDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		estimateID, err := act.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
@@ -35,7 +35,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Estimate.GetByID(*estimateID)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.SvcEstimate.Key)), nil
 		}
 
@@ -56,7 +56,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func StoryDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		storyID, err := act.IDFromParams(util.KeyStory, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
@@ -72,7 +72,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		sess := ctx.App.Estimate.GetByID(*estimateID)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.AdminLink(util.SvcEstimate.Key)), nil
 		}
 

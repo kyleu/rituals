@@ -1,4 +1,4 @@
-<%: func MemberCard(members member.Entries, params query.ParamSet, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberCard(members member.Entries, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Members</h3>
   <% if len(members) == 0 { %>

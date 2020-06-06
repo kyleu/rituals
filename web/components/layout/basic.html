@@ -16,10 +16,6 @@
 <% } %>
 <%@ body { %><% } %>
 </div>
-<script>
-  window.addEventListener("load", function() {
-    dom.initDom('<%= ctx.Profile.Theme.String() %>', '<%= ctx.Profile.LinkColor %>');
-  }, false);
-</script>
+<% InitDom(ctx, _buffer) %>
 </body>
 </html>

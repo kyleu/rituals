@@ -17,27 +17,27 @@ var (
 )
 
 func initProfile() {
-	profileResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	profileResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.Profile.ToProfile(), nil
 	}
 
-	profileTeamResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	profileTeamResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Team.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger)), nil
 	}
 
-	profileSprintResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	profileSprintResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Sprint.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger)), nil
 	}
 
-	profileEstimateResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	profileEstimateResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Estimate.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
-	profileStandupResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	profileStandupResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Standup.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
-	profileRetroResolver = func(p graphql.ResolveParams, ctx web.RequestContext) (interface{}, error) {
+	profileRetroResolver = func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error) {
 		return ctx.App.Retro.GetByMember(p.Source.(util.Profile).UserID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 

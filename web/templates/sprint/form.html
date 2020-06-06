@@ -1,4 +1,4 @@
-<%: func SprintForm(title string, startDate *time.Time, endDate *time.Time, teams team.Sessions, auths auth.Records, showName bool, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintForm(title string, startDate *time.Time, endDate *time.Time, teams team.Sessions, auths auth.Records, showName bool, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">

@@ -15,8 +15,11 @@ func (s *Service) Insert(q string, tx *sqlx.Tx, values ...interface{}) error {
 		s.logger.Debug(fmt.Sprintf("inserting row\nSQL: %v\nValues: %v", q, util.ValueStrings(values)))
 	}
 	aff, err := s.execUnknown(q, tx, values...)
-	if err != nil || aff == 0 {
-		return errors.Wrap(err, fmt.Sprintf("no rows affected by insert using sql [%v] and %v values", q, len(values)))
+	if err != nil {
+		return err
+	}
+	if aff == 0 {
+		return errors.New(fmt.Sprintf("no rows affected by insert using sql [%v] and %v values", q, len(values)))
 	}
 	return nil
 }

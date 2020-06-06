@@ -1,4 +1,4 @@
-<%: func EstimateForm(title string, choices []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func EstimateForm(title string, choices []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">

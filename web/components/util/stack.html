@@ -1,4 +1,4 @@
-<%: func errorStack(ed *util.ErrorDetail, ctx web.RequestContext, buffer *bytes.Buffer) %>
+<%: func errorStack(ed *util.ErrorDetail, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 
 <% if ed.StackTrace != nil { %>
   <div class="uk-margin-top">

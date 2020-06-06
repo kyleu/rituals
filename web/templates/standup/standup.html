@@ -1,4 +1,4 @@
-<%: func StandupWorkspace(model *standup.Session, auths auth.Records, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func StandupWorkspace(model *standup.Session, auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ head { %><% components.Init(util.SvcStandup, model.ID, _buffer) %><% } %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>

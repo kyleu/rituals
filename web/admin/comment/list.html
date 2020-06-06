@@ -1,4 +1,4 @@
-<%: func CommentList(comments comment.Comments, params query.ParamSet, ctx web.RequestContext, w io.Writer) (int, error) %>
+<%: func CommentList(comments comment.Comments, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>

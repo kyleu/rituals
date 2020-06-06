@@ -71,7 +71,7 @@ func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID
 	return auths, currTeams, currSprints
 }
 
-func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records, ctx web.RequestContext, w http.ResponseWriter) (string, error) {
+func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records,  ctx *web.RequestContext, w http.ResponseWriter) (string, error) {
 	return tmpl(templates.PermissionErrors(svc, errors, auths, ctx, w))
 }
 

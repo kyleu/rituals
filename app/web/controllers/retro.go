@@ -17,7 +17,7 @@ import (
 )
 
 func RetroList(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		sessions := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
@@ -32,7 +32,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 }
 
 func RetroNew(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
 		categoriesString := r.Form.Get(util.Plural(util.KeyCategory))
@@ -67,12 +67,12 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 }
 
 func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func(ctx web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Retro.GetBySlug(key)
 		if sess == nil {
 			ctx.Session.AddFlash("error:Can't load retro [" + key + "]")
-			act.SaveSession(w, r, &ctx)
+			act.SaveSession(w, r, ctx)
 			return ctx.Route(util.SvcRetro.Key + ".list"), nil
 		}
 		if sess.Slug != key {
@@ -80,7 +80,7 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := check(&ctx, ctx.App.Retro.Data.Permissions, params)
+		auths, permErrors, bc := check(ctx, ctx.App.Retro.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
