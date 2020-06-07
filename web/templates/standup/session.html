@@ -1,7 +1,7 @@
 <%: func StandupSession(model *standup.Session, auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body">
   <h3 class="uk-card-title">
-    <% ComponentSessionIcon(util.SvcStandup, ctx, buffer) %>
+    <% SessionIcon(util.SvcStandup, model.ID, model.Slug, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="modal.open('<%= util.KeySession %>');" data-uk-icon="icon: <%= util.SvcStandup.Icon %>;"></span>
     <span id="model-title" onclick="modal.open('<%= util.KeySession %>');"><%= model.Title %></span>
   </h3>

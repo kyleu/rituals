@@ -15,7 +15,7 @@ import (
 )
 
 func CommentList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Comment List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyComment, util.Plural(util.KeyComment))
 
@@ -26,16 +26,15 @@ func CommentList(w http.ResponseWriter, r *http.Request) {
 }
 
 func CommentDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		commentID, err := act.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "invalid comment id")
 		}
 		e := ctx.App.Comment.GetByID(*commentID)
 		if e == nil {
-			ctx.Session.AddFlash("error:Can't load comment [" + commentID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyComment)), nil
+			msg := "can't load comment [" + commentID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyComment), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

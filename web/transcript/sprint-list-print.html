@@ -1,0 +1,24 @@
+<%: func SprintListPrint(models sprint.Sessions, tx *transcript.Context, buffer *bytes.Buffer) %>
+<% if len(models) > 0 { %>
+<div class="section">
+  <h4><%= util.SvcSprint.PluralTitle %></h4>
+  <table>
+    <thead>
+    <tr>
+      <th>Slug</th>
+      <th>Title</th>
+      <th>Created</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for _, model := range models { %>
+    <tr>
+      <td><a href="<%= tx.Route(util.SvcSprint.Key, util.KeyKey, model.Slug) %>"><%= model.Slug %></a></td>
+      <td><%= model.Title %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+    </tr>
+    <% } %>
+    </tbody>
+  </table>
+</div>
+<% } %>

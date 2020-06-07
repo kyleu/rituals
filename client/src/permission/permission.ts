@@ -8,8 +8,8 @@ namespace permission {
   export let permissions: collection.Group<string, Permission>[] = [];
 
   export interface Email {
-    readonly matched: boolean,
-    readonly domain: string
+    readonly matched: boolean;
+    readonly domain: string;
   }
 
   export function applyPermissions(perms: permission.Permission[] | null) {
@@ -39,10 +39,9 @@ namespace permission {
     }
   }
 
-
   function readPermission(k: string): ReadonlyArray<Permission> {
-    const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`)
-    if(!checkbox || !checkbox.checked) {
+    const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`);
+    if (!checkbox || !checkbox.checked) {
       return [];
     }
 
@@ -51,7 +50,7 @@ namespace permission {
 
     const access = "member";
 
-    return [{k, v, access}];
+    return [{ k, v, access }];
   }
 
   export function readPermissions(): ReadonlyArray<Permission> {

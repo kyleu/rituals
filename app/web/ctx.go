@@ -28,17 +28,7 @@ type RequestContext struct {
 }
 
 func (r *RequestContext) Route(act string, pairs ...string) string {
-	route := r.Routes.Get(act)
-	if route == nil {
-		r.App.Logger.Warn("cannot find route at path [" + act + "]")
-		return "/routenotfound"
-	}
-	u, err := route.URL(pairs...)
-	if err != nil {
-		r.App.Logger.Warn("cannot bind route at path [" + act + "]")
-		return "/routeerror"
-	}
-	return u.Path
+	return Route(nil, r.Routes, r.Logger, act, pairs...)
 }
 
 func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) *RequestContext {

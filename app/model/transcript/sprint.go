@@ -1,6 +1,8 @@
 package transcript
 
 import (
+	"errors"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -29,22 +31,24 @@ var Sprint = Transcript{
 	Key:         util.SvcSprint.Key,
 	Title:       util.SvcSprint.Title,
 	Description: util.SvcSprint.Description,
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
-		if param == nil {
+	Resolve: func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		if len(slug) == 0 {
 			return app.Sprint.List(nil), nil
 		}
-		sprintID := param.(uuid.UUID)
-		sess := app.Sprint.GetByID(sprintID)
+		sess := app.Sprint.GetBySlug(slug)
 		dataSvc := app.Sprint.Data
+		if sess == nil {
+			return nil, errors.New("no session available matching [" + slug + "]")
+		}
 		return SprintResponse{
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
-			Comments:    dataSvc.GetComments(sprintID, nil),
-			Members:     dataSvc.Members.GetByModelID(sprintID, nil),
-			Estimates:   app.Estimate.GetBySprintID(sprintID, nil),
-			Standups:    app.Standup.GetBySprintID(sprintID, nil),
-			Retros:      app.Retro.GetBySprintID(sprintID, nil),
-			Permissions: dataSvc.Permissions.GetByModelID(sprintID, nil),
+			Comments:    dataSvc.GetComments(sess.ID, nil),
+			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
+			Estimates:   app.Estimate.GetBySprintID(sess.ID, nil),
+			Standups:    app.Standup.GetBySprintID(sess.ID, nil),
+			Retros:      app.Retro.GetBySprintID(sess.ID, nil),
+			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},
 }

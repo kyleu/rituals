@@ -18,7 +18,7 @@ import (
 )
 
 func MigrationList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Migration List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyMigration, util.Plural(util.KeyMigration))
 
@@ -29,7 +29,7 @@ func MigrationList(w http.ResponseWriter, r *http.Request) {
 }
 
 func MigrationDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		migrationIdxStr, ok := mux.Vars(r)[util.KeyIdx]
 		if !ok {
 			return eresp(errors.New("invalid migration id"), "")
@@ -37,9 +37,8 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 		migrationIdx, _ := strconv.ParseInt(migrationIdxStr, 10, 64)
 		e := ctx.App.Database.GetMigrationByIdx(int(migrationIdx))
 		if e == nil {
-			ctx.Session.AddFlash("error:Can't load migration [" + migrationIdxStr + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyMigration)), nil
+			msg := "can't load migration [" + migrationIdxStr + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyMigration), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

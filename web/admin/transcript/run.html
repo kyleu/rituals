@@ -1,4 +1,4 @@
-<%: func TranscriptRun(t *transcript.Transcript, content interface{}, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func TranscriptRun(t *transcript.Transcript, param interface{}, rsp interface{}, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
 <%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
@@ -6,23 +6,14 @@
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <%
-        switch t.Key {
-        case transcript.Email.Key:
-          transcripttemplates.TranscriptEmailHTML(content.(transcript.EmailResponse), _buffer)
-        case transcript.Team.Key:
-          transcripttemplates.TranscriptTeamHTML(content.(transcript.TeamResponse), _buffer)
-        case transcript.Sprint.Key:
-          transcripttemplates.TranscriptSprintHTML(content.(transcript.SprintResponse), _buffer)
-        case transcript.Estimate.Key:
-          transcripttemplates.TranscriptEstimateHTML(content.(transcript.EstimateResponse), _buffer)
-        case transcript.Standup.Key:
-          transcripttemplates.TranscriptStandupHTML(content.(transcript.StandupResponse), _buffer)
-        case transcript.Retro.Key:
-          transcripttemplates.TranscriptRetroHTML(content.(transcript.RetroResponse), _buffer)
-        default:
-          _, _ = w.Write([]byte("Invalid transcript type"))
+        tx := &transcript.Context{
+          UserID: ctx.Profile.UserID,
+          App:    ctx.App,
+          Logger: ctx.App.Logger,
+          Routes: ctx.Routes,
         }
       %>
+      <% transcripttemplates.PrintResponse(t, rsp, tx, _buffer) %>
     </div>
   </div>
 </div>

@@ -15,7 +15,7 @@ import (
 )
 
 func AuthList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Auth List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAuth, util.Plural(util.KeyAuth))
 		params := act.ParamSetFromRequest(r)
@@ -25,23 +25,21 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		authID, err := act.IDFromParams(util.KeyAuth, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
 		}
 		record := ctx.App.Auth.GetByID(*authID)
 		if record == nil {
-			ctx.Session.AddFlash("error:Can't load auth [" + authID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyAuth)), nil
+			msg := "can't load auth [" + authID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyAuth), w, r, ctx)
 		}
 
 		user := ctx.App.User.GetByID(record.UserID, false)
 		if user == nil {
-			ctx.Session.AddFlash("error:Can't load user [" + record.UserID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyAuth)), nil
+			msg := "can't load user [" + record.UserID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyAuth), w, r, ctx)
 		}
 
 		ctx.Title = user.Name

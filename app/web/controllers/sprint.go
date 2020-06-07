@@ -3,6 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web/act"
 
@@ -14,7 +17,7 @@ import (
 )
 
 func SprintList(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		sessions := ctx.App.Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
@@ -28,7 +31,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 }
 
 func SprintNew(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
 		startDate, err := util.FromYMD(r.Form.Get("startDate"))
@@ -61,19 +64,18 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 }
 
 func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Sprint.GetBySlug(key)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load sprint [" + key + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.SvcSprint.Key + ".list"), nil
+			msg := "can't load sprint [" + key + "]"
+			return act.FlashAndRedir(false, msg, util.SvcSprint.Key+".list", w, r, ctx)
 		}
 		if sess.Slug != key {
 			return ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
+		params := &PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
 		auths, permErrors, bc := check(ctx, ctx.App.Sprint.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
@@ -85,4 +87,15 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = sess.Title
 		return tmpl(templates.SprintWorkspace(sess, auths, ctx, w))
 	})
+}
+
+func SprintExport(w http.ResponseWriter, r *http.Request) {
+	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+		sess := ctx.App.Sprint.GetBySlug(key)
+		if sess == nil {
+			return nil, "", "", nil
+		}
+		return &sess.ID, sess.Slug, sess.Title, ctx.App.Sprint.Data.Permissions
+	}
+	ExportAct(util.SvcSprint, f, w, r)
 }

@@ -1,4 +1,4 @@
-<%: func Profile(auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func Profile(auths auth.Records, ref string, ctx *web.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
 <%@ nav { %><% components.NavbarStatic("profile", ctx, _buffer) %><% } %>
 <%@ body { %>
@@ -15,6 +15,7 @@
         <div id="profile-card" class="uk-card uk-card-body">
           <h3 class="uk-card-title">Profile</h3>
           <form class="uk-form-horizontal" action="<%= ctx.Route(`profile.save`) %>" method="post">
+            <input type="hidden" name="ref" value="<%= ref %>" />
             <div class="uk-margin">
               <label class="uk-form-label" for="username">Username</label>
               <div class="uk-form-controls">

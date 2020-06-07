@@ -15,7 +15,7 @@ namespace profile {
     const nb = dom.req("#navbar");
     nb.className = `${c}-bg uk-navbar-container uk-navbar`;
     const colors = document.querySelectorAll(".nav_swatch");
-    colors.forEach(function(i) {
+    colors.forEach(function (i) {
       i.classList.remove("active");
     });
     el.classList.add("active");
@@ -34,14 +34,14 @@ namespace profile {
       });
     });
     const colors = document.querySelectorAll(".link_swatch");
-    colors.forEach(function(i) {
+    colors.forEach(function (i) {
       i.classList.remove("active");
     });
     el.classList.add("active");
   }
 
   export function setPicture(p: string) {
-    dom.setValue('#self-picture-input', p);
+    dom.setValue("#self-picture-input", p);
     return false;
   }
 }

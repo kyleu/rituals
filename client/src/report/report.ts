@@ -16,7 +16,7 @@ namespace report {
   export function onSubmitReport() {
     const d = dom.req<HTMLInputElement>("#report-date").value;
     const content = dom.req<HTMLInputElement>("#report-content").value;
-    const msg = {svc: services.standup.key, cmd: command.client.addReport, param: {d, content}};
+    const msg = { svc: services.standup.key, cmd: command.client.addReport, param: { d, content } };
     socket.send(msg);
     return false;
   }
@@ -24,7 +24,7 @@ namespace report {
   export function onEditReport() {
     const d = dom.req<HTMLInputElement>("#report-edit-date").value;
     const content = dom.req<HTMLInputElement>("#report-edit-content").value;
-    const msg = {svc: services.standup.key, cmd: command.client.updateReport, param: {id: standup.cache.activeReport, d, content}};
+    const msg = { svc: services.standup.key, cmd: command.client.updateReport, param: { id: standup.cache.activeReport, d, content } };
     socket.send(msg);
     return false;
   }
@@ -33,7 +33,7 @@ namespace report {
     const id = standup.cache.activeReport;
     if (id) {
       UIkit.modal.confirm("Delete this report?").then(function () {
-        const msg = {svc: services.standup.key, cmd: command.client.removeReport, param: id};
+        const msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
         socket.send(msg);
         modal.hide("report");
       });
@@ -84,7 +84,7 @@ namespace report {
 
     function toCollection(d: string): DayReports {
       const sorted = reports.filter(r => r.d === d).sort((l, r) => (l.created > r.created ? -1 : 1));
-      return {"d": d, "reports": sorted};
+      return { d: d, reports: sorted };
     }
 
     return reports.map(r => r.d).filter(distinct).sort().reverse().map(toCollection);
@@ -93,7 +93,7 @@ namespace report {
   function setFor(report: report.Report, userID: string) {
     const same = report.userID === userID;
     dom.setValue(dom.req<HTMLInputElement>("#report-edit-date"), same ? report.d : "");
-    contents.onContentDisplay("report", same, report.content, report.html)
+    contents.onContentDisplay("report", same, report.content, report.html);
     comment.setActive("report", report.id);
     comment.setCounts();
   }

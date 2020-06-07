@@ -16,7 +16,7 @@ func SitemapXML(w http.ResponseWriter, r *http.Request) {
 		ret = append(ret, `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 		for _, rt := range util.ExtractRoutes(ctx.Routes) {
 			if routeMatches(rt) {
-				url := ctx.App.Auth.Redir + rt.Path
+				url := ctx.App.Auth.FullURL(rt.Path)
 				ret = append(ret, `  <url>`)
 				ret = append(ret, `     <loc>`+url+`</loc>`)
 				ret = append(ret, `     <changefreq>always</changefreq>`)

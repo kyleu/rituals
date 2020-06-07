@@ -1,0 +1,3 @@
+<%: func ExportLink(svc util.Service, slug string, fmt transcript.Format, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<li><a class="theme" href="<%= ctx.Route(svc.Key + `.export`, `key`, slug, `fmt`, fmt.Key) %>"><span class="uk-margin-small-right" data-uk-icon="<%= fmt.Icon %>"></span> <%= fmt.Title %></a></li>
+

@@ -34,9 +34,8 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		sess := ctx.App.Standup.GetByID(*standupID)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load standup [" + standupID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.SvcStandup.Key)), nil
+			msg := "can't load standup [" + standupID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.SvcStandup.Key), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

@@ -11,7 +11,7 @@ var rituals;
     }
     rituals.onError = onError;
     function init(svc, id) {
-        window.onbeforeunload = function () {
+        window.onbeforeunload = () => {
             socket.setAppUnloading();
         };
         socket.socketConnect(services.fromKey(svc), id);
@@ -21,7 +21,11 @@ var rituals;
 var action;
 (function (action) {
     function loadActions() {
-        socket.send({ svc: services.system.key, cmd: command.client.getActions, param: null });
+        socket.send({
+            svc: services.system.key,
+            cmd: command.client.getActions,
+            param: null,
+        });
     }
     action.loadActions = loadActions;
     function viewActions(actions) {
@@ -33,19 +37,19 @@ var action;
 (function (action_1) {
     function renderAction(action) {
         const c = JSON.stringify(action.content, null, 2);
-        return JSX("tr", null,
+        return (JSX("tr", null,
             JSX("td", null, member.renderTitle(member.getMember(action.userID))),
             JSX("td", null, action.act),
             JSX("td", null, c === "null" ? "" : JSX("pre", null, c)),
             JSX("td", null, action.note),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.created))));
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(action.created)))));
     }
     function renderActions(actions) {
         if (actions.length === 0) {
             return JSX("div", null, "No actions available");
         }
         else {
-            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
+            return (JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
                 JSX("thead", null,
                     JSX("tr", null,
                         JSX("th", null, "User"),
@@ -53,7 +57,7 @@ var action;
                         JSX("th", null, "Content"),
                         JSX("th", null, "Note"),
                         JSX("th", null, "Created"))),
-                JSX("tbody", null, actions.map(a => renderAction(a))));
+                JSX("tbody", null, actions.map(a => renderAction(a)))));
         }
     }
     action_1.renderActions = renderActions;
@@ -100,10 +104,18 @@ var comment;
     comment.show = show;
     function add(t) {
         const textarea = dom.req(`#comment-add-content-${t}`);
-        const v = textarea.value;
+        const v = textarea.value.trim();
+        if (v.length === 0) {
+            notify.notify("enter some content", true);
+            return;
+        }
         textarea.value = "";
         const param = { targetType: activeType, targetID: activeID, content: v };
-        socket.send({ svc: services.system.key, cmd: command.client.addComment, param: param });
+        socket.send({
+            svc: services.system.key,
+            cmd: command.client.addComment,
+            param: param,
+        });
     }
     comment.add = add;
     function onCommentUpdate(u) {
@@ -113,7 +125,7 @@ var comment;
     }
     comment.onCommentUpdate = onCommentUpdate;
     function find(t, id) {
-        if ((!t) || t === "modal") {
+        if (!t || t === "modal") {
             t = activeType;
             if (!id) {
                 id = activeID;
@@ -128,7 +140,7 @@ var comment;
         return activeComments.filter(x => x.targetType === t);
     }
     function load(t, id) {
-        if ((!t) || t === "modal") {
+        if (!t || t === "modal") {
             t = activeType;
             if (!id) {
                 id = activeID;
@@ -144,9 +156,11 @@ var comment;
         if (t !== "root") {
             t = "modal";
         }
-        const el = dom.req(`#drop-comment-${t} .uk-comment-list`);
-        dom.setContent(el, comment.renderComments(comments, system.cache.getProfile()));
-        el.scrollTop = el.scrollHeight;
+        dom.setContent(`#drop-comment-${t} .uk-card-body`, comment.renderComments(comments, system.cache.getProfile()));
+        const el = dom.opt(`#drop-comment-${t} .uk-comment-list`);
+        if (el) {
+            el.scrollTop = el.scrollHeight;
+        }
     }
     comment.load = load;
     function setCounts() {
@@ -173,7 +187,7 @@ var comment;
         }
     }
     comment.setCounts = setCounts;
-    function closeModal() {
+    function closeDrop() {
         if (activeType === "story") {
             modal.openSoon("story");
         }
@@ -185,10 +199,14 @@ var comment;
         }
         activeType = undefined;
     }
-    comment.closeModal = closeModal;
+    comment.closeDrop = closeDrop;
     function remove(id) {
         if (confirm("remove this comment?")) {
-            socket.send({ svc: services.system.key, cmd: command.client.removeComment, param: id });
+            socket.send({
+                svc: services.system.key,
+                cmd: command.client.removeComment,
+                param: id,
+            });
         }
         return false;
     }
@@ -196,11 +214,11 @@ var comment;
     function setCount(t, comments, cc, force) {
         dom.setText(dom.req(".text", cc), comments.length.toString());
         if (t !== "root" && t !== "modal" && t.length !== 0) {
-            dom.setDisplay(cc, (comments.length !== 0) || force === true);
+            dom.setDisplay(cc, comments.length !== 0 || force === true);
         }
     }
     function onCommentRemoved(id) {
-        activeComments = activeComments.filter((c) => c.id !== id);
+        activeComments = activeComments.filter(c => c.id !== id);
         setCounts();
         load();
     }
@@ -209,31 +227,31 @@ var comment;
 var comment;
 (function (comment_1) {
     function renderComment(comment, profile) {
-        let close = comment.userID === profile.userID ? JSX("div", { class: "right" },
-            JSX("a", { class: `${profile.linkColor}-fg`, "data-uk-icon": "close", href: "", onclick: `return comment.remove('${comment.id}');`, title: "remove your comment" })) : JSX("span", null);
-        return JSX("li", null,
+        let close = comment.userID === profile.userID ? (JSX("div", { class: "right" },
+            JSX("a", { class: `${profile.linkColor}-fg uk-margin-small-right`, "data-uk-icon": "close", href: "", onclick: `return comment.remove('${comment.id}');`, title: "remove your comment" }))) : (JSX("span", null));
+        return (JSX("li", null,
             JSX("article", { class: "uk-comment uk-visible-toggle uk-transition-toggle", tabindex: "-1" },
                 member.renderHeader(member.getMember(comment.userID), comment.created, close),
                 JSX("div", { class: "uk-comment-body" },
                     JSX("div", { dangerouslySetInnerHTML: { __html: comment.html } })),
-                JSX("hr", null)));
+                JSX("hr", null))));
     }
     function renderComments(comments, profile) {
         if (comments.length === 0) {
-            return JSX("div", null, "No comments available");
+            return JSX("p", { class: "uk-margin-bottom" }, "No comments yet, why not add one?");
         }
         else {
-            return JSX("div", null, comments.map(c => renderComment(c, profile)));
+            return JSX("ul", { class: "uk-comment-list" }, comments.map(c => renderComment(c, profile)));
         }
     }
     comment_1.renderComments = renderComments;
     function renderCount(k, v) {
         const profile = system.cache.getProfile();
-        return JSX("div", { class: "comment-count-container uk-margin-small-left left hidden", "data-comment-type": k, "data-comment-id": v },
+        return (JSX("div", { class: "comment-count-container uk-margin-small-left left hidden", "data-comment-type": k, "data-comment-id": v },
             JSX("a", { class: `${profile.linkColor}-fg`, title: "view comments" },
                 JSX("div", { class: "comment-count" },
                     JSX("span", { class: "uk-icon", "data-uk-icon": "comment" }),
-                    JSX("span", { class: "text" }))));
+                    JSX("span", { class: "text" })))));
     }
     comment_1.renderCount = renderCount;
 })(comment || (comment = {}));
@@ -257,10 +275,10 @@ var contents;
 (function (contents_1) {
     function renderSprintContent(svc, session) {
         const profile = system.cache.getProfile();
-        return JSX("tr", null,
+        return (JSX("tr", null,
             JSX("td", null,
                 JSX("a", { class: `${profile.linkColor}-fg`, href: `/${svc.key}/${session.slug}` }, session.title)),
-            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created))));
+            JSX("td", { class: "uk-table-shrink uk-text-nowrap" }, date.toDateTimeString(new Date(session.created)))));
     }
     function toContent(svc, sessions) {
         return sessions.map(s => {
@@ -274,12 +292,277 @@ var contents;
             return JSX("div", null, `No ${tgt.plural} in this ${src.key}`);
         }
         else {
-            return JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
-                JSX("tbody", null, contents.map(a => renderSprintContent(a.svc, a.session))));
+            return (JSX("table", { class: "uk-table uk-table-divider uk-text-left" },
+                JSX("tbody", null, contents.map(a => renderSprintContent(a.svc, a.session)))));
         }
     }
     contents_1.renderContents = renderContents;
 })(contents || (contents = {}));
+var dom;
+(function (dom) {
+    function initDom(t, color) {
+        try {
+            style.themeLinks(color);
+            style.setTheme(t);
+        }
+        catch (e) {
+            console.warn("error setting style", e);
+        }
+        try {
+            modal.wire();
+        }
+        catch (e) {
+            console.warn("error wiring modals", e);
+        }
+        try {
+            drop.wire();
+        }
+        catch (e) {
+            console.warn("error wiring drops", e);
+        }
+        try {
+            tags.wire();
+        }
+        catch (e) {
+            console.warn("error wiring tag editors", e);
+        }
+    }
+    dom.initDom = initDom;
+    function els(selector, context) {
+        return UIkit.util.$$(selector, context);
+    }
+    dom.els = els;
+    function opt(selector, context) {
+        const e = els(selector, context);
+        switch (e.length) {
+            case 0:
+                return undefined;
+            case 1:
+                return e[0];
+            default:
+                console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`);
+        }
+    }
+    dom.opt = opt;
+    function req(selector, context) {
+        const res = opt(selector, context);
+        if (!res) {
+            console.warn(`no element found for selector [${selector}]`);
+        }
+        return res;
+    }
+    dom.req = req;
+    function setHTML(el, html) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerHTML = html;
+        return el;
+    }
+    dom.setHTML = setHTML;
+    function setDisplay(el, condition, v = "block") {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.style.display = condition ? v : "none";
+        return el;
+    }
+    dom.setDisplay = setDisplay;
+    function setContent(el, e) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        dom.clear(el);
+        el.appendChild(e);
+        return el;
+    }
+    dom.setContent = setContent;
+    function setText(el, text) {
+        if (typeof el === "string") {
+            el = req(el);
+        }
+        el.innerText = text;
+        return el;
+    }
+    dom.setText = setText;
+    function clear(el) {
+        return setHTML(el, "");
+    }
+    dom.clear = clear;
+})(dom || (dom = {}));
+var dom;
+(function (dom) {
+    function setValue(el, text) {
+        if (typeof el === "string") {
+            el = dom.req(el);
+        }
+        el.value = text;
+        return el;
+    }
+    dom.setValue = setValue;
+    function wireTextarea(text) {
+        function resize() {
+            text.style.height = "auto";
+            text.style.height = `${text.scrollHeight < 64 ? 64 : text.scrollHeight + 6}px`;
+        }
+        function delayedResize() {
+            window.setTimeout(resize, 0);
+        }
+        const x = text.dataset["autoresize"];
+        if (!x) {
+            text.dataset["autoresize"] = "true";
+            text.addEventListener("change", resize, false);
+            text.addEventListener("cut", delayedResize, false);
+            text.addEventListener("paste", delayedResize, false);
+            text.addEventListener("drop", delayedResize, false);
+            text.addEventListener("keydown", delayedResize, false);
+            text.focus();
+            text.select();
+        }
+        resize();
+    }
+    dom.wireTextarea = wireTextarea;
+    function setOptions(el, categories) {
+        if (typeof el === "string") {
+            el = dom.req(el);
+        }
+        dom.clear(el);
+        categories.forEach(c => {
+            const opt = document.createElement("option");
+            opt.value = c;
+            dom.setText(opt, c);
+            el.appendChild(opt);
+        });
+    }
+    dom.setOptions = setOptions;
+    function setSelectOption(el, o) {
+        if (typeof el === "string") {
+            el = dom.req(el);
+        }
+        for (let i = 0; i < el.children.length; i++) {
+            const e = el.children.item(i);
+            e.selected = e.value === o;
+        }
+    }
+    dom.setSelectOption = setSelectOption;
+    function insertAtCaret(e, text) {
+        if (e.selectionStart || e.selectionStart === 0) {
+            let startPos = e.selectionStart;
+            let endPos = e.selectionEnd;
+            e.value = e.value.substring(0, startPos) + text + e.value.substring(endPos, e.value.length);
+            e.selectionStart = startPos + text.length;
+            e.selectionEnd = startPos + text.length;
+        }
+        else {
+            e.value += text;
+        }
+    }
+    dom.insertAtCaret = insertAtCaret;
+})(dom || (dom = {}));
+// noinspection JSUnusedGlobalSymbols
+function JSX(tag, attrs) {
+    const e = document.createElement(tag);
+    for (const name in attrs) {
+        if (name && attrs.hasOwnProperty(name)) {
+            const v = attrs[name];
+            if (name === "dangerouslySetInnerHTML") {
+                dom.setHTML(e, v["__html"]);
+            }
+            else if (v === true) {
+                e.setAttribute(name, name);
+            }
+            else if (v !== false && v !== null && v !== undefined) {
+                e.setAttribute(name, v.toString());
+            }
+        }
+    }
+    for (let i = 2; i < arguments.length; i++) {
+        let child = arguments[i];
+        if (Array.isArray(child)) {
+            child.forEach(c => {
+                e.appendChild(c);
+            });
+        }
+        else if (child === undefined || child === null) {
+            throw `child for tag [${tag}] is ${child}`;
+        }
+        else {
+            if (!child.nodeType) {
+                child = document.createTextNode(child.toString());
+            }
+            e.appendChild(child);
+        }
+    }
+    return e;
+}
+var style;
+(function (style) {
+    function setTheme(theme) {
+        wireEmoji(theme);
+        const card = dom.els(".uk-card");
+        switch (theme) {
+            case "auto":
+                let t = "light";
+                if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                    t = "dark";
+                }
+                setTheme(t);
+                fetch("/profile/theme/" + t).then(r => r.text()).then(() => {
+                    // console.log(`Set theme to [${t}]`);
+                });
+                break;
+            case "light":
+                document.documentElement.classList.remove("uk-light");
+                document.body.classList.remove("uk-light");
+                document.documentElement.classList.add("uk-dark");
+                document.body.classList.add("uk-dark");
+                card.forEach(x => {
+                    x.classList.add("uk-card-default");
+                    x.classList.remove("uk-card-secondary");
+                });
+                break;
+            case "dark":
+                document.documentElement.classList.add("uk-light");
+                document.body.classList.add("uk-light");
+                document.documentElement.classList.remove("uk-dark");
+                document.body.classList.remove("uk-dark");
+                card.forEach(x => {
+                    x.classList.remove("uk-card-default");
+                    x.classList.add("uk-card-secondary");
+                });
+                break;
+            default:
+                console.warn("invalid theme");
+                break;
+        }
+    }
+    style.setTheme = setTheme;
+    function themeLinks(color) {
+        dom.els(".theme").forEach(el => {
+            el.classList.add(`${color}-fg`);
+        });
+    }
+    style.themeLinks = themeLinks;
+    function wireEmoji(t) {
+        if (typeof EmojiButton === "undefined") {
+            dom.els(".picker-toggle").forEach(el => dom.setDisplay(el, false));
+            return;
+        }
+        const opts = { position: "bottom-end", theme: t, zIndex: 1021 };
+        dom.els(".textarea-emoji").forEach(el => {
+            const toggle = dom.req(".picker-toggle", el);
+            toggle.addEventListener("click", () => {
+                const textarea = dom.req(".uk-textarea", el);
+                const picker = new EmojiButton(opts);
+                picker.on("emoji", (emoji) => {
+                    drop.onEmojiPicked();
+                    dom.insertAtCaret(textarea, emoji);
+                });
+                picker.togglePicker(toggle);
+            }, false);
+        });
+    }
+})(style || (style = {}));
 var estimate;
 (function (estimate) {
     class Cache {
@@ -352,7 +635,7 @@ var estimate;
         estimate.cache.detail = detail;
         const cs = detail.choices.join(", ");
         dom.setValue("#model-choices-input", cs);
-        dom.setText("#session-view-section .choices", cs);
+        dom.setContent("#session-view-section .choices", tags.renderTagsView(detail.choices));
         story.viewActiveStory();
         session.setDetail(detail);
     }
@@ -386,9 +669,254 @@ var estimate;
     }
     estimate.onStoryRemove = onStoryRemove;
     function preUpdate(id) {
-        return estimate.cache.stories.filter((p) => p.id !== id);
+        return estimate.cache.stories.filter(p => p.id !== id);
     }
 })(estimate || (estimate = {}));
+var drop;
+(function (drop) {
+    function wire() {
+        UIkit.util.on(".drop", "show", onDropOpen);
+        UIkit.util.on(".drop", "beforehide", onDropBeforeHide);
+        UIkit.util.on(".drop", "hide", onDropHide);
+        events.register("comment", comment.load, comment.closeDrop);
+        events.register("export");
+    }
+    drop.wire = wire;
+    function onDropOpen(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        const key = el.dataset["key"] || "";
+        let t = el.dataset["t"] || "";
+        const f = events.getOpenEvent(key);
+        if (f) {
+            f(t);
+        }
+        else {
+            console.warn(`no drop open handler registered for [${key}]`);
+        }
+    }
+    function onDropHide(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        if (el.classList.contains("uk-open")) {
+            const key = el.dataset["key"] || "";
+            const t = el.dataset["t"] || "";
+            const f = events.getCloseEvent(key);
+            if (f) {
+                f(t);
+            }
+        }
+    }
+    let emojiPicked = false;
+    function onEmojiPicked() {
+        emojiPicked = true;
+        setTimeout(() => (emojiPicked = false), 200);
+    }
+    drop.onEmojiPicked = onEmojiPicked;
+    function onDropBeforeHide(e) {
+        if (emojiPicked) {
+            e.preventDefault();
+        }
+    }
+})(drop || (drop = {}));
+var events;
+(function (events) {
+    let openEvents = new Map();
+    let closeEvents = new Map();
+    function register(key, o, c) {
+        if (!o) {
+            o = () => { };
+        }
+        openEvents.set(key, o);
+        if (c) {
+            closeEvents.set(key, c);
+        }
+    }
+    events.register = register;
+    function getOpenEvent(key) {
+        return openEvents.get(key);
+    }
+    events.getOpenEvent = getOpenEvent;
+    function getCloseEvent(key) {
+        return closeEvents.get(key);
+    }
+    events.getCloseEvent = getCloseEvent;
+})(events || (events = {}));
+var modal;
+(function (modal) {
+    let activeParam;
+    function wire() {
+        UIkit.util.on(".modal", "show", onModalOpen);
+        UIkit.util.on(".modal", "hide", onModalHide);
+        events.register("welcome");
+        // session
+        events.register("session", session.onModalOpen);
+        events.register("action", action.loadActions);
+        // member
+        events.register("self", member.viewSelf);
+        events.register("invitation");
+        events.register("member", member.viewActiveMember);
+        // estimate
+        events.register("add-story", story.viewAddStory);
+        events.register("story", story.viewActiveStory);
+        // standup
+        events.register("add-report", report.viewAddReport);
+        events.register("report", report.viewReport);
+        // retro
+        events.register("add-feedback", feedback.viewAddFeedback);
+        events.register("feedback", feedback.viewFeedback);
+    }
+    modal.wire = wire;
+    function open(key, param) {
+        activeParam = param;
+        const m = UIkit.modal(`#modal-${key}`);
+        if (!m) {
+            console.warn(`no modal available with key [${key}]`);
+        }
+        m.show();
+        return false;
+    }
+    modal.open = open;
+    function openSoon(key) {
+        setTimeout(() => open(key), 0);
+    }
+    modal.openSoon = openSoon;
+    function hide(key) {
+        const m = UIkit.modal(`#modal-${key}`);
+        const el = m.$el;
+        if (el.classList.contains("uk-open")) {
+            m.hide();
+        }
+    }
+    modal.hide = hide;
+    function onModalOpen(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        if (el.id.indexOf("modal") !== 0) {
+            return;
+        }
+        const key = el.id.substr("modal-".length);
+        const f = events.getOpenEvent(key);
+        if (f) {
+            f(activeParam);
+        }
+        else {
+            console.warn(`no modal open handler registered for [${key}]`);
+        }
+        activeParam = undefined;
+    }
+    function onModalHide(e) {
+        if (!e.target) {
+            return;
+        }
+        const el = e.target;
+        if (el.classList.contains("uk-open")) {
+            const key = el.id.substr("modal-".length);
+            const f = events.getCloseEvent(key);
+            if (f) {
+                f(activeParam);
+            }
+            activeParam = undefined;
+        }
+    }
+})(modal || (modal = {}));
+var tags;
+(function (tags) {
+    function wire() {
+        UIkit.util.on(".tag-editor", "moved", onTagEditorUpdate);
+        UIkit.util.on(".tag-editor", "added", onTagEditorUpdate);
+        UIkit.util.on(".tag-editor", "removed", onTagEditorUpdate);
+        events.register("choices");
+        events.register("categories");
+    }
+    tags.wire = wire;
+    function removeTag(el) {
+        const itemEl = el.parentElement;
+        const editorEl = itemEl.parentElement;
+        itemEl.remove();
+        updateEditor(editorEl);
+    }
+    tags.removeTag = removeTag;
+    function addTag(el) {
+        const editorEl = el.parentElement;
+        if (!editorEl) {
+            return;
+        }
+        const itemEl = tags.renderItem();
+        editorEl.insertBefore(itemEl, dom.req(".add-item", editorEl));
+        editTag(itemEl);
+    }
+    tags.addTag = addTag;
+    function editTag(el) {
+        const valueEl = dom.req(".value", el);
+        const editorEl = dom.req(".editor", el);
+        dom.setDisplay(valueEl, false);
+        dom.setDisplay(editorEl, true);
+        const input = tags.renderInput(valueEl.innerText);
+        input.onblur = function () {
+            valueEl.innerText = input.value;
+            dom.setDisplay(valueEl, true);
+            dom.setDisplay(editorEl, false);
+            updateEditor(el.parentElement);
+        };
+        input.onkeypress = function (e) {
+            if (e.key === "Enter") {
+                input.blur();
+                return false;
+            }
+            return true;
+        };
+        dom.setContent(editorEl, input);
+        input.focus();
+    }
+    tags.editTag = editTag;
+    function onTagEditorUpdate(e) {
+        if (!e.target) {
+            console.warn("no event target");
+            return;
+        }
+        const el = e.target;
+        updateEditor(el);
+    }
+    function updateEditor(el) {
+        const key = el.dataset["key"] || "";
+        const f = events.getOpenEvent(key);
+        if (f) {
+            f();
+        }
+        else {
+            console.warn(`no tag open handler registered for [${key}]`);
+        }
+        const ret = dom.els(".item", el).map(el => el.innerText);
+        dom.setValue(`#model-${key}-input`, ret.join(","));
+    }
+})(tags || (tags = {}));
+var tags;
+(function (tags) {
+    function renderInput(v) {
+        return JSX("input", { type: "text", class: "uk-input", value: v });
+    }
+    tags.renderInput = renderInput;
+    function renderItem() {
+        return JSX("span", { class: "item" },
+            JSX("span", { class: "value", onclick: "tags.editTag(this.parentElement);" }),
+            JSX("span", { class: "editor" }),
+            JSX("span", { class: "close", "data-uk-icon": "icon: close; ratio: 0.6;", onclick: "tags.removeTag(this);" }));
+    }
+    tags.renderItem = renderItem;
+    function renderTagsView(a) {
+        return JSX("div", { class: "tag-view" },
+            a.map(s => JSX("span", { class: "item" }, s)),
+            JSX("div", { class: "clear" }));
+    }
+    tags.renderTagsView = renderTagsView;
+})(tags || (tags = {}));
 var feedback;
 (function (feedback_1) {
     function setFeedback(feedback) {
@@ -469,7 +997,7 @@ var feedback;
     }
     feedback_1.onFeedbackRemoved = onFeedbackRemoved;
     function preUpdate(id) {
-        return retro.cache.feedback.filter((p) => p.id !== id);
+        return retro.cache.feedback.filter(p => p.id !== id);
     }
     function postUpdate(x, id) {
         feedback.setFeedback(x);
@@ -494,7 +1022,7 @@ var feedback;
         dom.setSelectOption("#feedback-category", p);
         const feedbackContent = dom.setValue("#feedback-content", "");
         dom.wireTextarea(feedbackContent);
-        setTimeout((() => feedbackContent.focus()), 250);
+        setTimeout(() => feedbackContent.focus(), 250);
     }
     feedback_1.viewAddFeedback = viewAddFeedback;
     function viewFeedback(p) {
@@ -511,12 +1039,12 @@ var feedback;
 (function (feedback) {
     function renderFeedback(model) {
         const profile = system.cache.getProfile();
-        const ret = JSX("div", { id: `feedback-${model.id}`, class: "feedback-detail section", onclick: `modal.open('feedback', '${model.id}');` },
+        const ret = (JSX("div", { id: `feedback-${model.id}`, class: "feedback-detail section", onclick: `modal.open('feedback', '${model.id}');` },
             JSX("div", { class: "feedback-comments right" }, comment.renderCount("feedback", model.id)),
             JSX("div", { class: "left" },
                 JSX("a", { class: `${profile.linkColor}-fg section-link` }, member.renderTitle(member.getMember(model.userID)))),
             JSX("div", { class: "clear" }),
-            JSX("div", { class: "feedback-content" }, "loading..."));
+            JSX("div", { class: "feedback-content" }, "loading...")));
         if (model.html.length > 0) {
             dom.setHTML(dom.req(".feedback-content", ret), model.html).style.display = "block";
         }
@@ -525,18 +1053,18 @@ var feedback;
     function renderFeedbackArray(f) {
         var _a;
         if (f.length === 0) {
-            return JSX("div", null,
-                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-feedback');", type: "button" }, "Add Feedback"));
+            return (JSX("div", null,
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-feedback');", type: "button" }, "Add Feedback")));
         }
         else {
             const cats = feedback.getFeedbackCategories(f, ((_a = retro.cache.detail) === null || _a === void 0 ? void 0 : _a.categories) || []);
             const profile = system.cache.getProfile();
-            return JSX("div", { class: "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "data-uk-grid": true }, cats.map(cat => JSX("div", { class: "feedback-list uk-transition-toggle" },
+            return (JSX("div", { class: "uk-grid-small uk-grid-match uk-child-width-expand@m uk-grid-divider", "data-uk-grid": true }, cats.map(cat => (JSX("div", { class: "feedback-list uk-transition-toggle" },
                 JSX("div", { class: "feedback-category-header" },
                     JSX("span", { class: "right" },
                         JSX("a", { class: `${profile.linkColor}-fg uk-icon-button uk-transition-fade`, "data-uk-icon": "plus", onclick: `modal.open('add-feedback', '${cat.category}');`, title: "add feedback" })),
                     JSX("span", { class: "feedback-category-title", onclick: `modal.open('add-feedback', '${cat.category}');` }, cat.category)),
-                JSX("div", null, cat.feedback.map(fb => JSX("div", null, renderFeedback(fb)))))));
+                JSX("div", null, cat.feedback.map(fb => (JSX("div", null, renderFeedback(fb))))))))));
         }
     }
     feedback.renderFeedbackArray = renderFeedbackArray;
@@ -600,7 +1128,7 @@ var member;
         const others = members.filter(x => !member_2.isSelf(x));
         dom.setContent("#member-detail", member_2.renderMembers(others));
         if (others.length > 0) {
-            modal.hide('welcome');
+            modal.hide("welcome");
         }
         member_2.renderOnline();
     }
@@ -620,7 +1148,7 @@ var member;
             notify.notify(`${member.name} has joined`, true);
         }
         ms.push(member);
-        ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+        ms.sort((l, r) => (l.name > r.name ? 1 : -1));
         members = ms;
         setMembers();
         member_2.memberUpdateDom(nameChanged);
@@ -636,7 +1164,7 @@ var member;
             modal.hide("member");
             const unfiltered = members;
             const ms = unfiltered.filter(m => m.userID !== member);
-            ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+            ms.sort((l, r) => (l.name > r.name ? 1 : -1));
             members = ms;
             setMembers();
         }
@@ -705,17 +1233,17 @@ var member;
 (function (member_3) {
     function renderMember(member) {
         const profile = system.cache.getProfile();
-        return JSX("div", { class: "section", onclick: `modal.open('member', '${member.userID}');` },
+        return (JSX("div", { class: "section", onclick: `modal.open('member', '${member.userID}');` },
             JSX("div", { title: "user is offline", class: "right uk-article-meta online-indicator" }, "offline"),
-            JSX("div", { class: `${profile.linkColor}-fg section-link` }, renderTitle(member)));
+            JSX("div", { class: `${profile.linkColor}-fg section-link` }, renderTitle(member))));
     }
     function renderMembers(members) {
         if (members.length === 0) {
-            return JSX("div", null,
-                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('invitation');", type: "button" }, "Invite Members"));
+            return (JSX("div", null,
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('invitation');", type: "button" }, "Invite Members")));
         }
         else {
-            return JSX("ul", { class: "uk-list uk-list-divider" }, members.map(m => JSX("li", { id: `member-${m.userID}` }, renderMember(m))));
+            return (JSX("ul", { class: "uk-list uk-list-divider" }, members.map(m => (JSX("li", { id: `member-${m.userID}` }, renderMember(m))))));
         }
     }
     member_3.renderMembers = renderMembers;
@@ -724,30 +1252,30 @@ var member;
             return JSX("span", null, "{former member}");
         }
         if (member.picture && member.picture.length > 0 && member.picture != "none") {
-            return JSX("div", null,
+            return (JSX("div", null,
                 JSX("div", { class: "profile-image" },
                     JSX("img", { class: "uk-border-circle", src: member.picture, alt: member.name })),
                 JSX("div", { class: "left" }, member.name),
-                JSX("div", { class: "clear" }));
+                JSX("div", { class: "clear" })));
         }
-        return JSX("div", null,
+        return (JSX("div", null,
             JSX("div", { class: "profile-image" },
-                JSX("span", { class: "profile-icon uk-icon", "data-uk-icon": "user" })),
-            JSX("div", { class: "left" }, member.name));
+                JSX("span", { class: "profile-icon", "data-uk-icon": "user" })),
+            JSX("div", { class: "left" }, member.name)));
     }
     member_3.renderTitle = renderTitle;
     function renderHeader(m, t, close) {
-        return JSX("header", { class: "uk-comment-header uk-position-relative" },
+        return (JSX("header", { class: "uk-comment-header uk-position-relative" },
             close ? close : JSX("span", null),
             JSX("div", { class: "uk-grid-collapse uk-flex-middle", "uk-grid": true },
-                JSX("div", { class: "uk-width-auto" }, (m && m.picture && m.picture.length > 0) ? JSX("div", null,
+                JSX("div", { class: "uk-width-auto" }, m && m.picture && m.picture.length > 0 ? (JSX("div", null,
                     JSX("div", { class: "profile-image" },
-                        JSX("img", { class: "uk-border-circle", src: m.picture, alt: m.name }))) : JSX("div", null,
+                        JSX("img", { class: "uk-border-circle", src: m.picture, alt: m.name })))) : (JSX("div", null,
                     JSX("div", { class: "profile-image" },
-                        JSX("span", { class: "profile-icon uk-icon", "data-uk-icon": "user" })))),
+                        JSX("span", { class: "profile-icon", "data-uk-icon": "user" }))))),
                 JSX("div", { class: "uk-width-expand" },
                     JSX("h4", { class: "uk-comment-title uk-margin-remove" }, m === null || m === void 0 ? void 0 : m.name),
-                    JSX("p", { class: "uk-comment-meta uk-margin-remove-top" }, date.toDateTimeString(new Date(t))))));
+                    JSX("p", { class: "uk-comment-meta uk-margin-remove-top" }, date.toDateTimeString(new Date(t)))))));
     }
     member_3.renderHeader = renderHeader;
     function viewSelf() {
@@ -757,8 +1285,8 @@ var member;
     member_3.viewSelf = viewSelf;
     function setPicture(url) {
         if (url && url.length > 0 && url != "none") {
-            return JSX("div", { class: "model-icon profile-image" },
-                JSX("img", { class: "uk-border-circle", src: url, alt: "your picture" }));
+            return (JSX("div", { class: "model-icon profile-image" },
+                JSX("img", { class: "uk-border-circle", src: url, alt: "your picture" })));
         }
         return JSX("span", { class: "model-icon h3-icon", onclick: "modal.open('self');", "data-uk-icon": "icon: user;" });
     }
@@ -784,7 +1312,7 @@ var member;
     }
     member_4.applyOnline = applyOnline;
     function renderOnline() {
-        for (const member of member_4.getMembers()) {
+        member_4.getMembers().forEach(member => {
             const el = dom.opt(`#member-${member.userID} .online-indicator`);
             if (el) {
                 if (!online.find(x => x === member.userID)) {
@@ -794,12 +1322,9 @@ var member;
                     el.classList.remove("offline");
                 }
             }
-        }
+        });
     }
     member_4.renderOnline = renderOnline;
-    function canEdit(m) {
-        return m.role == "owner";
-    }
 })(member || (member = {}));
 var member;
 (function (member) {
@@ -970,13 +1495,13 @@ var permission;
     function renderEmails(key, emails) {
         const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
         const oc = `permission.onChanged('email', '${key}', this.checked)`;
-        return JSX("ul", null, emails.map(e => {
-            return JSX("li", null,
+        return (JSX("ul", null, emails.map(e => {
+            return (JSX("li", null,
                 JSX("label", null,
-                    e.matched ? JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc }) : JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc }),
+                    e.matched ? (JSX("input", { class: cls, type: "checkbox", value: e.domain, checked: "checked", onchange: oc })) : (JSX("input", { class: cls, type: "checkbox", value: e.domain, onchange: oc })),
                     "Using email address ",
-                    e.domain));
-        }));
+                    e.domain)));
+        })));
     }
     permission.renderEmails = renderEmails;
     function renderMessage(p) {
@@ -984,9 +1509,9 @@ var permission;
             case services.team.key:
                 return JSX("li", null, "Must be a member of this session's team");
             case services.sprint.key:
-                return JSX("li", null, "Must be a member of this session's team");
+                return JSX("li", null, "Must be a member of this session's sprint");
             default:
-                let x = collection.flatten(p.members.map(x => x.k.split(",").map(x => x.trim()).filter(x => x.length > 0)));
+                let x = collection.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
                 if (x.length === 0) {
                     return JSX("li", null,
                         "Must sign in with ",
@@ -1017,10 +1542,8 @@ var permission;
             const checkbox = dom.req(`#perm-${p.key}-checkbox`);
             checkbox.checked = perms.length > 0;
             const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-            const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({ matched: true, domain: x }));
-            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => {
-                return { matched: false, domain: getDomain(m.email) };
-            });
+            const emails = collection.flatten(perms.map(x => x.v.split(",").filter(y => y.length > 0))).map(z => ({ matched: true, domain: z }));
+            const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => ({ matched: false, domain: getDomain(m.email) }));
             emails.push(...additional);
             emails.sort();
             dom.setDisplay(emailContainer, emails.length > 0);
@@ -1138,7 +1661,7 @@ var report;
         }
         function toCollection(d) {
             const sorted = reports.filter(r => r.d === d).sort((l, r) => (l.created > r.created ? -1 : 1));
-            return { "d": d, "reports": sorted };
+            return { d: d, reports: sorted };
         }
         return reports.map(r => r.d).filter(distinct).sort().reverse().map(toCollection);
     }
@@ -1171,12 +1694,12 @@ var report;
 (function (report) {
     function renderReport(model) {
         const profile = system.cache.getProfile();
-        const ret = JSX("div", { id: `report-${model.id}`, class: "report-detail section", onclick: `modal.open('report', '${model.id}');` },
+        const ret = (JSX("div", { id: `report-${model.id}`, class: "report-detail section", onclick: `modal.open('report', '${model.id}');` },
             JSX("div", { class: "report-comments right" }, comment.renderCount("report", model.id)),
             JSX("div", { class: "left" },
                 JSX("a", { class: `${profile.linkColor}-fg section-link` }, member.renderTitle(member.getMember(model.userID)))),
             JSX("div", { class: "clear" }),
-            JSX("div", { class: "report-content" }, "loading..."));
+            JSX("div", { class: "report-content" }, "loading...")));
         if (model.html.length > 0) {
             dom.setHTML(dom.req(".report-content", ret), model.html).style.display = "block";
         }
@@ -1184,16 +1707,16 @@ var report;
     }
     function renderReports(reports) {
         if (reports.length === 0) {
-            return JSX("div", null,
-                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-report');", type: "button" }, "Add Report"));
+            return (JSX("div", null,
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-report');", type: "button" }, "Add Report")));
         }
         else {
             const dates = report.getReportDates(reports);
-            return JSX("ul", { class: "uk-list" }, dates.map(day => JSX("li", { id: `report-date-${day.d}` },
+            return (JSX("ul", { class: "uk-list" }, dates.map(day => (JSX("li", { id: `report-date-${day.d}` },
                 JSX("h5", null,
                     JSX("div", { class: "right uk-article-meta" }, date.dow(date.dateFromYMD(day.d).getDay())),
                     date.toDateString(date.dateFromYMD(day.d))),
-                JSX("ul", null, day.reports.map(r => JSX("li", null, renderReport(r)))))));
+                JSX("ul", null, day.reports.map(r => (JSX("li", null, renderReport(r))))))))));
         }
     }
     report.renderReports = renderReports;
@@ -1256,7 +1779,7 @@ var retro;
         retro.cache.detail = detail;
         const cs = detail.categories.join(", ");
         dom.setValue("#model-categories-input", cs);
-        dom.setText("#session-view-section .categories", cs);
+        dom.setContent("#session-view-section .categories", tags.renderTagsView(detail.categories));
         dom.setOptions("#feedback-category", detail.categories);
         dom.setOptions("#feedback-edit-category", detail.categories);
         feedback.setFeedback(retro.cache.feedback);
@@ -1289,7 +1812,6 @@ var session;
         }
         if (oldSlug !== session.slug) {
             window.history.replaceState(null, "", document.location.href.replace(oldSlug, session.slug));
-            console.log("slugChanged!!!!!");
         }
         if (member.selfCanEdit()) {
             modal.hide("session");
@@ -1316,7 +1838,7 @@ var session;
         dom.setDisplay("#team-warning-container", tm !== undefined);
         if (tm) {
             lc.appendChild(team.renderTeamLink(tm));
-            dom.clear(t).appendChild(team.renderTeamLink(tm, true));
+            dom.setContent(t, team.renderTeamLink(tm, true));
             dom.setText("#team-warning-name", tm.title);
         }
         else {
@@ -1331,7 +1853,7 @@ var session;
         dom.setDisplay("#sprint-warning-container", spr !== undefined);
         if (spr) {
             lc.appendChild(sprint.renderSprintLink(spr));
-            dom.clear(s).appendChild(sprint.renderSprintLink(spr, true));
+            dom.setContent(s, sprint.renderSprintLink(spr, true));
             dom.setText("#sprint-warning-name", spr.title);
         }
         else {
@@ -1368,17 +1890,17 @@ var socket;
         system.cache.currentID = id;
         system.cache.connectTime = Date.now();
         socket = new WebSocket(socketUrl());
-        socket.onopen = function () {
+        socket.onopen = () => {
             send({ svc: svc.key, cmd: command.client.connect, param: id });
         };
-        socket.onmessage = function (event) {
+        socket.onmessage = (event) => {
             const msg = JSON.parse(event.data);
             onSocketMessage(msg);
         };
-        socket.onerror = function (event) {
+        socket.onerror = (event) => {
             rituals.onError(services.system, event.type);
         };
-        socket.onclose = function () {
+        socket.onclose = () => {
             onSocketClose();
         };
     }
@@ -1520,19 +2042,19 @@ var sprint;
 (function (sprint) {
     function renderSprintDates(startDate, endDate) {
         function f(p, d) {
-            return JSX("span", null,
+            return (JSX("span", null,
                 p,
                 " ",
-                JSX("span", { class: "sprint-date", onclick: "modal.open('session');" }, d ? date.toDateString(d) : ""));
+                JSX("span", { class: "sprint-date", onclick: "modal.open('session');" }, d ? date.toDateString(d) : "")));
         }
         const s = f("starts", startDate);
         const e = f("ends", endDate);
         if (startDate) {
             if (endDate) {
-                return JSX("span", null,
+                return (JSX("span", null,
                     s,
                     ", ",
-                    e);
+                    e));
             }
             else {
                 return s;
@@ -1550,7 +2072,7 @@ var sprint;
     sprint.renderSprintDates = renderSprintDates;
     function renderSprintLink(spr, bare) {
         const profile = system.cache.getProfile();
-        const a = JSX("a", { class: `${profile.linkColor}-fg`, href: `/sprint/${spr.slug}` }, spr.title);
+        const a = (JSX("a", { class: `${profile.linkColor}-fg`, href: `/sprint/${spr.slug}` }, spr.title));
         if (bare) {
             return a;
         }
@@ -1560,11 +2082,11 @@ var sprint;
     }
     sprint.renderSprintLink = renderSprintLink;
     function renderSprintSelect(sprints, activeID) {
-        return JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('sprint')" },
+        return (JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('sprint')" },
             JSX("option", { value: "" }, "- no sprint -"),
             sprints.map(s => {
-                return s.id === activeID ? JSX("option", { selected: "selected", value: s.id }, s.title) : JSX("option", { value: s.id }, s.title);
-            }));
+                return s.id === activeID ? (JSX("option", { selected: "selected", value: s.id }, s.title)) : (JSX("option", { value: s.id }, s.title));
+            })));
     }
     sprint.renderSprintSelect = renderSprintSelect;
 })(sprint || (sprint = {}));
@@ -1646,7 +2168,7 @@ var standup;
         notify.notify("report has been deleted", true);
     }
     function preUpdate(id) {
-        return standup.cache.reports.filter((p) => p.id !== id);
+        return standup.cache.reports.filter(p => p.id !== id);
     }
     function postUpdate(x, id) {
         report.setReports(x);
@@ -1667,12 +2189,12 @@ var story;
                 el.classList.remove("active");
             }
         }
-        for (const el of dom.els(".story-status-body")) {
+        dom.els(".story-status-body").forEach(el => {
             setActive(el, status);
-        }
-        for (const el of dom.els(".story-status-actions")) {
+        });
+        dom.els(".story-status-actions").forEach(el => {
             setActive(el, status);
-        }
+        });
         let txt = "";
         switch (status) {
             case "pending":
@@ -1799,7 +2321,7 @@ var story;
         const strings = stories.filter(s => s.status === "complete").map(s => s.finalVote).filter(c => c.length > 0);
         const floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));
         let sum = 0;
-        floats.forEach(f => sum += f);
+        floats.forEach(f => (sum += f));
         const curr = dom.opt("#story-total");
         const panel = dom.req("#story-list");
         if (curr !== undefined) {
@@ -1815,19 +2337,19 @@ var story;
 (function (story_2) {
     function renderStory(story) {
         const profile = system.cache.getProfile();
-        return JSX("li", { id: `story-${story.id}`, class: "section", onclick: `modal.open('story', '${story.id}');` },
+        return (JSX("li", { id: `story-${story.id}`, class: "section", onclick: `modal.open('story', '${story.id}');` },
             JSX("div", { class: "right uk-article-meta story-status" }, story.status),
             JSX("div", { class: `${profile.linkColor}-fg section-link left` }, story.title),
-            JSX("div", { class: "left", style: "margin-top: 4px;" }, comment.renderCount("story", story.id)));
+            JSX("div", { class: "left", style: "margin-top: 4px;" }, comment.renderCount("story", story.id))));
     }
     function renderStories(stories) {
         if (stories.length === 0) {
-            return JSX("div", { id: "story-list" },
-                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-story');", type: "button" }, "Add Story"));
+            return (JSX("div", { id: "story-list" },
+                JSX("button", { class: "uk-button uk-button-default", onclick: "modal.open('add-story');", type: "button" }, "Add Story")));
         }
         else {
-            return JSX("table", { class: "uk-table uk-table-divider uk-table-small" },
-                JSX("ul", { id: "story-list", class: "uk-list uk-list-divider" }, stories.map(s => renderStory(s))));
+            return (JSX("table", { class: "uk-table uk-table-divider uk-table-small" },
+                JSX("ul", { id: "story-list", class: "uk-list uk-list-divider" }, stories.map(s => renderStory(s)))));
         }
     }
     story_2.renderStories = renderStories;
@@ -1843,10 +2365,11 @@ var story;
     }
     story_2.renderStatus = renderStatus;
     function renderTotal(sum) {
-        return JSX("li", { id: "story-total" },
+        return (JSX("li", { id: "story-total" },
             JSX("div", { class: "right uk-article-meta" },
                 JSX("span", { class: "vote-badge" }, sum)),
-            " Total");
+            " ",
+            "Total"));
     }
     story_2.renderTotal = renderTotal;
     function viewAddStory() {
@@ -2009,7 +2532,7 @@ var team;
 (function (team) {
     function renderTeamLink(tm, bare) {
         const profile = system.cache.getProfile();
-        const a = JSX("a", { class: `${profile.linkColor}-fg`, href: `/team/${tm.slug}` }, tm.title);
+        const a = (JSX("a", { class: `${profile.linkColor}-fg`, href: `/team/${tm.slug}` }, tm.title));
         if (bare) {
             return a;
         }
@@ -2019,11 +2542,11 @@ var team;
     }
     team.renderTeamLink = renderTeamLink;
     function renderTeamSelect(teams, activeID) {
-        return JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('team')" },
+        return (JSX("select", { class: "uk-select", onchange: "permission.setModelPerms('team')" },
             JSX("option", { value: "" }, "- no team -"),
             teams.map(t => {
-                return t.id === activeID ? JSX("option", { selected: "selected", value: t.id }, t.title) : JSX("option", { value: t.id }, t.title);
-            }));
+                return t.id === activeID ? (JSX("option", { selected: "selected", value: t.id }, t.title)) : (JSX("option", { value: t.id }, t.title));
+            })));
     }
     team.renderTeamSelect = renderTeamSelect;
 })(team || (team = {}));
@@ -2061,7 +2584,7 @@ var profile;
     }
     profile.setLinkColor = setLinkColor;
     function setPicture(p) {
-        dom.setValue('#self-picture-input', p);
+        dom.setValue("#self-picture-input", p);
         return false;
     }
     profile.setPicture = setPicture;
@@ -2093,7 +2616,7 @@ var collection;
     function groupBy(list, func) {
         const res = new GroupSet();
         if (list) {
-            list.forEach((o) => {
+            list.forEach(o => {
                 const group = res.findOrInsert(func(o));
                 group.members.push(o);
             });
@@ -2102,11 +2625,11 @@ var collection;
     }
     collection.groupBy = groupBy;
     function findGroup(groups, key) {
-        for (const g of groups) {
+        groups.forEach(g => {
             if (g.key === key) {
                 return g.members;
             }
-        }
+        });
         return [];
     }
     collection.findGroup = findGroup;
@@ -2128,7 +2651,7 @@ var date;
     date_1.dateToYMD = dateToYMD;
     function dateFromYMD(s) {
         const d = new Date(s);
-        return new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+        return new Date(d.getTime() + d.getTimezoneOffset() * 60000);
     }
     date_1.dateFromYMD = dateFromYMD;
     function dow(i) {
@@ -2170,327 +2693,6 @@ var date;
     }
     date_1.utcDate = utcDate;
 })(date || (date = {}));
-var dom;
-(function (dom) {
-    function initDom(t, color) {
-        try {
-            style.themeLinks(color);
-            style.setTheme(t);
-        }
-        catch (e) {
-            console.warn("error setting style", e);
-        }
-        try {
-            modal.wire();
-        }
-        catch (e) {
-            console.warn("error wiring modals", e);
-        }
-    }
-    dom.initDom = initDom;
-    function els(selector, context) {
-        return UIkit.util.$$(selector, context);
-    }
-    dom.els = els;
-    function opt(selector, context) {
-        const e = els(selector, context);
-        switch (e.length) {
-            case 0:
-                return undefined;
-            case 1:
-                return e[0];
-            default:
-                console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`);
-        }
-    }
-    dom.opt = opt;
-    function req(selector, context) {
-        const res = opt(selector, context);
-        if (!res) {
-            console.warn(`no element found for selector [${selector}]`);
-        }
-        return res;
-    }
-    dom.req = req;
-    function setHTML(el, html) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.innerHTML = html;
-        return el;
-    }
-    dom.setHTML = setHTML;
-    function setDisplay(el, condition, v = "block") {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.style.display = condition ? v : "none";
-        return el;
-    }
-    dom.setDisplay = setDisplay;
-    function setContent(el, e) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        dom.clear(el);
-        el.appendChild(e);
-        return el;
-    }
-    dom.setContent = setContent;
-    function setText(el, text) {
-        if (typeof el === "string") {
-            el = req(el);
-        }
-        el.innerText = text;
-        return el;
-    }
-    dom.setText = setText;
-    function clear(el) {
-        return setHTML(el, "");
-    }
-    dom.clear = clear;
-})(dom || (dom = {}));
-var dom;
-(function (dom) {
-    function setValue(el, text) {
-        if (typeof el === "string") {
-            el = dom.req(el);
-        }
-        el.value = text;
-        return el;
-    }
-    dom.setValue = setValue;
-    function wireTextarea(text) {
-        function resize() {
-            text.style.height = "auto";
-            text.style.height = `${text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)}px`;
-        }
-        function delayedResize() {
-            window.setTimeout(resize, 0);
-        }
-        const x = text.dataset["autoresize"];
-        if (!x) {
-            text.dataset["autoresize"] = "true";
-            text.addEventListener("change", resize, false);
-            text.addEventListener("cut", delayedResize, false);
-            text.addEventListener("paste", delayedResize, false);
-            text.addEventListener("drop", delayedResize, false);
-            text.addEventListener("keydown", delayedResize, false);
-            text.focus();
-            text.select();
-        }
-        resize();
-    }
-    dom.wireTextarea = wireTextarea;
-    function setOptions(el, categories) {
-        if (typeof el === "string") {
-            el = dom.req(el);
-        }
-        dom.clear(el);
-        for (const c of categories) {
-            const opt = document.createElement("option");
-            opt.value = c;
-            dom.setText(opt, c);
-            el.appendChild(opt);
-        }
-    }
-    dom.setOptions = setOptions;
-    function setSelectOption(el, o) {
-        if (typeof el === "string") {
-            el = dom.req(el);
-        }
-        for (let i = 0; i < el.children.length; i++) {
-            const e = el.children.item(i);
-            e.selected = e.value === o;
-        }
-    }
-    dom.setSelectOption = setSelectOption;
-    function insertAtCaret(e, text) {
-        if (e.selectionStart || e.selectionStart === 0) {
-            var startPos = e.selectionStart;
-            var endPos = e.selectionEnd;
-            e.value = e.value.substring(0, startPos) + text + e.value.substring(endPos, e.value.length);
-            e.selectionStart = startPos + text.length;
-            e.selectionEnd = startPos + text.length;
-        }
-        else {
-            e.value += text;
-        }
-    }
-    dom.insertAtCaret = insertAtCaret;
-})(dom || (dom = {}));
-// noinspection JSUnusedGlobalSymbols
-function JSX(tag, attrs) {
-    const e = document.createElement(tag);
-    for (const name in attrs) {
-        if (name && attrs.hasOwnProperty(name)) {
-            const v = attrs[name];
-            if (name === "dangerouslySetInnerHTML") {
-                dom.setHTML(e, v["__html"]);
-            }
-            else if (v === true) {
-                e.setAttribute(name, name);
-            }
-            else if (v !== false && v !== null && v !== undefined) {
-                e.setAttribute(name, v.toString());
-            }
-        }
-    }
-    for (let i = 2; i < arguments.length; i++) {
-        let child = arguments[i];
-        if (Array.isArray(child)) {
-            child.forEach(c => {
-                e.appendChild(c);
-            });
-        }
-        else if (child === undefined || child === null) {
-            throw `child for tag [${tag}] is ${child}`;
-        }
-        else {
-            if (!child.nodeType) {
-                child = document.createTextNode(child.toString());
-            }
-            e.appendChild(child);
-        }
-    }
-    return e;
-}
-var modal;
-(function (modal) {
-    let openEvents = new Map();
-    let closeEvents = new Map();
-    let activeParam;
-    function register(key, o, c) {
-        if (!o) {
-            o = () => { };
-        }
-        openEvents.set(key, o);
-        if (c) {
-            closeEvents.set(key, c);
-        }
-    }
-    modal.register = register;
-    function wire() {
-        UIkit.util.on(".drop", "show", onDropOpen);
-        UIkit.util.on(".drop", "beforehide", onDropBeforeHide);
-        UIkit.util.on(".drop", "hide", onDropHide);
-        UIkit.util.on(".modal", "show", onModalOpen);
-        UIkit.util.on(".modal", "hide", onModalHide);
-        register("welcome");
-        // session
-        register("session", session.onModalOpen);
-        register("action", action.loadActions);
-        register("comment", comment.load, comment.closeModal);
-        // member
-        register("self", member.viewSelf);
-        register("invitation");
-        register("member", member.viewActiveMember);
-        // estimate
-        register("add-story", story.viewAddStory);
-        register("story", story.viewActiveStory);
-        // standup
-        register("add-report", report.viewAddReport);
-        register("report", report.viewReport);
-        // retro
-        register("add-feedback", feedback.viewAddFeedback);
-        register("feedback", feedback.viewFeedback);
-    }
-    modal.wire = wire;
-    function open(key, param) {
-        activeParam = param;
-        const m = UIkit.modal(`#modal-${key}`);
-        if (!m) {
-            console.warn(`no modal available with key [${key}]`);
-        }
-        m.show();
-        return false;
-    }
-    modal.open = open;
-    function openSoon(key) {
-        setTimeout(() => open(key), 0);
-    }
-    modal.openSoon = openSoon;
-    function hide(key) {
-        const m = UIkit.modal(`#modal-${key}`);
-        const el = m.$el;
-        if (el.classList.contains("uk-open")) {
-            m.hide();
-        }
-    }
-    modal.hide = hide;
-    function onModalOpen(e) {
-        if (!e.target) {
-            return;
-        }
-        const el = e.target;
-        if (el.id.indexOf("modal") !== 0) {
-            return;
-        }
-        const key = el.id.substr("modal-".length);
-        const f = openEvents.get(key);
-        if (f) {
-            f(activeParam);
-        }
-        else {
-            console.warn(`no modal open handler registered for [${key}]`);
-        }
-        activeParam = undefined;
-    }
-    function onModalHide(e) {
-        if (!e.target) {
-            return;
-        }
-        const el = e.target;
-        if (el.classList.contains("uk-open")) {
-            const key = el.id.substr("modal-".length);
-            const f = closeEvents.get(key);
-            if (f) {
-                f(activeParam);
-            }
-            activeParam = undefined;
-        }
-    }
-    function onDropOpen(e) {
-        if (!e.target) {
-            return;
-        }
-        const el = e.target;
-        const key = el.dataset["key"] || "";
-        let t = el.dataset["t"] || "";
-        const f = openEvents.get(key);
-        if (f) {
-            f(t);
-        }
-        else {
-            console.warn(`no modal open handler registered for [${key}]`);
-        }
-    }
-    function onDropHide(e) {
-        if (!e.target) {
-            return;
-        }
-        const el = e.target;
-        if (el.classList.contains("uk-open")) {
-            const key = el.dataset["key"] || "";
-            const t = el.dataset["t"] || "";
-            const f = closeEvents.get(key);
-            if (f) {
-                f(t);
-            }
-        }
-    }
-    let emojiPicked = false;
-    function onEmojiPicked() {
-        emojiPicked = true;
-        setTimeout(() => emojiPicked = false, 200);
-    }
-    modal.onEmojiPicked = onEmojiPicked;
-    function onDropBeforeHide(e) {
-        if (emojiPicked) {
-            e.preventDefault();
-        }
-    }
-})(modal || (modal = {}));
 var notify;
 (function (notify_1) {
     function notify(msg, status) {
@@ -2498,74 +2700,6 @@ var notify;
     }
     notify_1.notify = notify;
 })(notify || (notify = {}));
-var style;
-(function (style) {
-    function setTheme(theme) {
-        wireEmoji(theme);
-        const card = dom.els(".uk-card");
-        switch (theme) {
-            case "auto":
-                let t = "light";
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    t = "dark";
-                }
-                setTheme(t);
-                fetch("/profile/theme/" + t).then(r => r.text()).then(body => {
-                    console.log(`Set theme to [${t}]`);
-                });
-                break;
-            case "light":
-                document.documentElement.classList.remove("uk-light");
-                document.body.classList.remove("uk-light");
-                document.documentElement.classList.add("uk-dark");
-                document.body.classList.add("uk-dark");
-                card.forEach(x => {
-                    x.classList.add("uk-card-default");
-                    x.classList.remove("uk-card-secondary");
-                });
-                break;
-            case "dark":
-                document.documentElement.classList.add("uk-light");
-                document.body.classList.add("uk-light");
-                document.documentElement.classList.remove("uk-dark");
-                document.body.classList.remove("uk-dark");
-                card.forEach(x => {
-                    x.classList.remove("uk-card-default");
-                    x.classList.add("uk-card-secondary");
-                });
-                break;
-            default:
-                console.warn("invalid theme");
-                break;
-        }
-    }
-    style.setTheme = setTheme;
-    function themeLinks(color) {
-        dom.els(".theme").forEach(el => {
-            el.classList.add(`${color}-fg`);
-        });
-    }
-    style.themeLinks = themeLinks;
-    function wireEmoji(t) {
-        if (typeof EmojiButton === 'undefined') {
-            dom.els(".picker-toggle").forEach(el => dom.setDisplay(el, false));
-            return;
-        }
-        const opts = { position: "bottom-end", theme: t, zIndex: 1021 };
-        dom.els(".textarea-emoji").forEach(el => {
-            const toggle = dom.req(".picker-toggle", el);
-            toggle.addEventListener("click", () => {
-                const textarea = dom.req(".uk-textarea", el);
-                const picker = new EmojiButton(opts);
-                picker.on('emoji', (emoji) => {
-                    modal.onEmojiPicked();
-                    dom.insertAtCaret(textarea, emoji);
-                });
-                picker.togglePicker(toggle);
-            }, false);
-        });
-    }
-})(style || (style = {}));
 var vote;
 (function (vote) {
     function setVotes(votes) {
@@ -2608,8 +2742,6 @@ var vote;
     }
     vote.viewVotes = viewVotes;
     function viewActiveVotes(votes, activeVote) {
-        console.log("!!!!!!!!");
-        console.log(votes);
         dom.setContent("#story-vote-members", vote.renderVoteMembers(member.getMembers(), votes));
         dom.setContent("#story-vote-choices", vote.renderVoteChoices(estimate.cache.detail.choices, activeVote === null || activeVote === void 0 ? void 0 : activeVote.choice));
     }
@@ -2636,7 +2768,7 @@ var vote;
         const max = Math.max(...floats);
         const sum = floats.reduce((x, y) => x + y, 0);
         const mode = floats.reduce(function (current, item) {
-            const val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+            const val = (current.numMapping[item] = (current.numMapping[item] || 0) + 1);
             if (val > current.greatestFreq) {
                 current.greatestFreq = val;
                 current.mode = item;
@@ -2644,10 +2776,13 @@ var vote;
             return current;
         }, { mode: null, greatestFreq: -Infinity, numMapping: {} }).mode;
         return {
-            count, min, max, sum,
+            count,
+            min,
+            max,
+            sum,
             mean: count === 0 ? 0 : sum / count,
             median: count === 0 ? 0 : floats[Math.floor(floats.length / 2)],
-            mode: count === 0 ? 0 : mode
+            mode: count === 0 ? 0 : mode,
         };
     }
     vote.getVoteResults = getVoteResults;
@@ -2655,47 +2790,49 @@ var vote;
 var vote;
 (function (vote_1) {
     function renderVoteMember(member, hasVote) {
-        return JSX("div", { class: "vote-member", title: `${member.name} has ${hasVote ? "voted" : "not voted"}` },
+        return (JSX("div", { class: "vote-member", title: `${member.name} has ${hasVote ? "voted" : "not voted"}` },
             JSX("div", null,
                 JSX("span", { "data-uk-icon": `icon: ${hasVote ? "check" : "minus"}; ratio: 1.6` })),
-            member.name);
+            member.name));
     }
     function renderVoteMembers(members, votes) {
         return JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-around" }, members.map(m => renderVoteMember(m, votes.filter(v => v.userID === m.userID).length > 0)));
     }
     vote_1.renderVoteMembers = renderVoteMembers;
     function renderVoteChoices(choices, choice) {
-        return JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-center" }, choices.map(c => JSX("div", { class: `vote-choice uk-border-circle uk-box-shadow-hover-medium${(c === choice ? ` active ${system.cache.getProfile().linkColor}-border` : "")}`, onclick: `vote.onSubmitVote('${c}');` }, c)));
+        return (JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-center" }, choices.map(c => (JSX("div", { class: `vote-choice uk-border-circle uk-box-shadow-hover-medium${c === choice ? ` active ${system.cache.getProfile().linkColor}-border` : ""}`, onclick: `vote.onSubmitVote('${c}');` }, c)))));
     }
     vote_1.renderVoteChoices = renderVoteChoices;
     function renderVoteResult(member, choice) {
         if (!choice) {
-            return JSX("div", { class: "vote-result" },
+            return (JSX("div", { class: "vote-result" },
                 JSX("div", null,
                     JSX("span", { class: "uk-border-circle" },
                         JSX("span", { "data-uk-icon": "icon: minus; ratio: 1.6" }))),
                 " ",
-                member.name);
+                member.name));
         }
-        return JSX("div", { class: "vote-result" },
+        return (JSX("div", { class: "vote-result" },
             JSX("div", null,
                 JSX("span", { class: "uk-border-circle" }, choice)),
             " ",
-            member.name);
+            member.name));
     }
     function renderVoteResults(members, votes) {
-        return JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-around" }, members.map(m => {
+        return (JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-around" }, members.map(m => {
             const vote = votes.filter(v => {
                 return v.userID === m.userID;
             });
             return renderVoteResult(m, vote.length > 0 ? vote[0].choice : undefined);
-        }));
+        })));
     }
     vote_1.renderVoteResults = renderVoteResults;
     function renderVoteSummary(votes) {
         const results = vote_1.getVoteResults(votes);
-        function trim(n) { return n.toString().substr(0, 4); }
-        return JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-center result-container" },
+        function trim(n) {
+            return n.toString().substr(0, 4);
+        }
+        return (JSX("div", { class: "uk-flex uk-flex-wrap uk-flex-center result-container" },
             JSX("div", { class: "result" },
                 JSX("div", { class: "secondary uk-border-circle" },
                     trim(results.count),
@@ -2721,7 +2858,7 @@ var vote;
             JSX("div", { class: "result" },
                 JSX("div", { class: "secondary uk-border-circle" }, trim(results.mode)),
                 " ",
-                JSX("div", null, "mode")));
+                JSX("div", null, "mode"))));
     }
     vote_1.renderVoteSummary = renderVoteSummary;
 })(vote || (vote = {}));

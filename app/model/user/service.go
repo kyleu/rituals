@@ -82,6 +82,18 @@ func (s *Service) GetByID(id uuid.UUID, addIfMissing bool) *SystemUser {
 	return ret
 }
 
+func (s *Service) GetByCreated(d *time.Time, params *query.Params) SystemUsers {
+	params = query.ParamsWithDefaultOrdering(util.KeySystemUser, params, query.DefaultCreatedOrdering...)
+	var ret SystemUsers
+	q := query.SQLSelect("*", util.KeySystemUser, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&ret, q, nil, d, d.Add(util.HoursInDay*time.Hour))
+	if err != nil {
+		s.logger.Error(fmt.Sprintf("error retrieving users created on [%v]: %+v", d, err))
+		return nil
+	}
+	return ret
+}
+
 func (s *Service) SaveProfile(prof *util.UserProfile) (*util.UserProfile, error) {
 	s.logger.Debug("updating user [" + prof.UserID.String() + "] from profile")
 	cols := []string{"name", "role", "theme", "nav_color", "link_color", "picture", "locale"}

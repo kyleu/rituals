@@ -3,6 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+
 	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -15,7 +18,7 @@ import (
 )
 
 func TeamList(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 
 		sessions := ctx.App.Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
@@ -28,7 +31,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamNew(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		_ = r.ParseForm()
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User)
@@ -48,19 +51,18 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Team.GetBySlug(key)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load team [" + key + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.SvcTeam.Key + ".list"), nil
+			msg := "can't load team [" + key + "]"
+			return act.FlashAndRedir(false, msg, util.SvcTeam.Key+".list", w, r, ctx)
 		}
 		if sess.Slug != key {
 			return ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
+		params := &PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
 		auths, permErrors, bc := check(ctx, ctx.App.Team.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
@@ -73,4 +75,15 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 
 		return tmpl(templates.TeamWorkspace(sess, auths, ctx, w))
 	})
+}
+
+func TeamExport(w http.ResponseWriter, r *http.Request) {
+	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+		sess := ctx.App.Team.GetBySlug(key)
+		if sess == nil {
+			return nil, "", "", nil
+		}
+		return &sess.ID, sess.Slug, sess.Title, ctx.App.Team.Data.Permissions
+	}
+	ExportAct(util.SvcTeam, f, w, r)
 }

@@ -8,12 +8,12 @@ namespace style {
     switch (theme) {
       case "auto":
         let t = "light";
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
           t = "dark";
         }
-        setTheme(t)
-        fetch("/profile/theme/" + t).then(r => r.text()).then(body => {
-          console.log(`Set theme to [${t}]`);
+        setTheme(t);
+        fetch("/profile/theme/" + t).then(r => r.text()).then(() => {
+          // console.log(`Set theme to [${t}]`);
         });
         break;
       case "light":
@@ -49,22 +49,26 @@ namespace style {
   }
 
   function wireEmoji(t: string) {
-    if (typeof EmojiButton === 'undefined') {
+    if (typeof EmojiButton === "undefined") {
       dom.els(".picker-toggle").forEach(el => dom.setDisplay(el, false));
       return;
     }
-    const opts = {position: "bottom-end", theme: t, zIndex: 1021};
+    const opts = { position: "bottom-end", theme: t, zIndex: 1021 };
     dom.els(".textarea-emoji").forEach(el => {
       const toggle = dom.req(".picker-toggle", el);
-      toggle.addEventListener("click", () => {
-        const textarea = dom.req<HTMLTextAreaElement>(".uk-textarea", el);
-        const picker = new EmojiButton(opts);
-        picker.on('emoji', (emoji: string) => {
-          modal.onEmojiPicked();
-          dom.insertAtCaret(textarea, emoji);
-        });
-        picker.togglePicker(toggle);
-      }, false);
-    })
+      toggle.addEventListener(
+        "click",
+        () => {
+          const textarea = dom.req<HTMLTextAreaElement>(".uk-textarea", el);
+          const picker = new EmojiButton(opts);
+          picker.on("emoji", (emoji: string) => {
+            drop.onEmojiPicked();
+            dom.insertAtCaret(textarea, emoji);
+          });
+          picker.togglePicker(toggle);
+        },
+        false
+      );
+    });
   }
 }

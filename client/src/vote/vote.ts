@@ -42,9 +42,9 @@ namespace vote {
 
     switch (s.status) {
       case "pending":
-        const same = system.cache.getProfile().userID === s.userID
-        dom.setDisplay("#story-edit-section", same)
-        dom.setDisplay("#story-view-section", !same)
+        const same = system.cache.getProfile().userID === s.userID;
+        dom.setDisplay("#story-edit-section", same);
+        dom.setDisplay("#story-view-section", !same);
         break;
       case "active":
         viewActiveVotes(votes, activeVote);
@@ -58,8 +58,6 @@ namespace vote {
   }
 
   function viewActiveVotes(votes: ReadonlyArray<Vote>, activeVote: Vote | undefined) {
-    console.log("!!!!!!!!");
-    console.log(votes);
     dom.setContent("#story-vote-members", renderVoteMembers(member.getMembers(), votes));
     dom.setContent("#story-vote-choices", renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
   }
@@ -71,7 +69,7 @@ namespace vote {
 
   // noinspection JSUnusedGlobalSymbols
   export function onSubmitVote(choice: string) {
-    const msg = {svc: services.estimate.key, cmd: command.client.submitVote, param: {storyID: estimate.cache.activeStory, choice}};
+    const msg = { svc: services.estimate.key, cmd: command.client.submitVote, param: { storyID: estimate.cache.activeStory, choice } };
     socket.send(msg);
   }
 
@@ -91,20 +89,26 @@ namespace vote {
 
     const sum = floats.reduce((x, y) => x + y, 0);
 
-    const mode = floats.reduce(function (current: any, item) {
-      const val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
-      if (val > current.greatestFreq) {
-        current.greatestFreq = val;
-        current.mode = item;
-      }
-      return current;
-    }, {mode: null, greatestFreq: -Infinity, numMapping: {}}).mode;
+    const mode = floats.reduce(
+      function (current: any, item) {
+        const val = (current.numMapping[item] = (current.numMapping[item] || 0) + 1);
+        if (val > current.greatestFreq) {
+          current.greatestFreq = val;
+          current.mode = item;
+        }
+        return current;
+      },
+      { mode: null, greatestFreq: -Infinity, numMapping: {} }
+    ).mode;
 
     return {
-      count, min, max, sum,
+      count,
+      min,
+      max,
+      sum,
       mean: count === 0 ? 0 : sum / count,
       median: count === 0 ? 0 : floats[Math.floor(floats.length / 2)],
-      mode: count === 0 ? 0 : mode
+      mode: count === 0 ? 0 : mode,
     };
   }
 }

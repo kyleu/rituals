@@ -31,7 +31,7 @@ namespace sprint {
         session.showWelcomeMessage(sj.members.length);
         break;
       case command.server.teamUpdate:
-        const tm = param as team.Detail | undefined
+        const tm = param as team.Detail | undefined;
         if (sprint.cache.detail) {
           sprint.cache.detail.teamID = tm?.id;
         }
@@ -41,7 +41,7 @@ namespace sprint {
         setSprintDetail(param as Detail);
         break;
       case command.server.sessionRemove:
-        system.onSessionRemove(services.sprint)
+        system.onSessionRemove(services.sprint);
         break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
@@ -77,20 +77,20 @@ namespace sprint {
     const endDate = dom.opt<HTMLInputElement>("#sprint-end-date-input")?.value;
     const permissions = permission.readPermissions();
 
-    const msg = {svc: services.sprint.key, cmd: command.client.updateSession, param: {title, startDate, endDate, teamID, permissions}};
+    const msg = { svc: services.sprint.key, cmd: command.client.updateSession, param: { title, startDate, endDate, teamID, permissions } };
     socket.send(msg);
   }
 
   export function refreshSprints() {
     const sprintSelect = dom.opt("#model-sprint-select");
     if (sprintSelect) {
-      socket.send({svc: services.system.key, cmd: command.client.getSprints, param: null});
+      socket.send({ svc: services.system.key, cmd: command.client.getSprints, param: null });
     }
   }
 
   export function viewSprints(sprints: ReadonlyArray<sprint.Detail>) {
     const c = dom.opt("#model-sprint-container");
-    if(c) {
+    if (c) {
       // dom.setDisplay(c, sprints.length > 0)
       dom.setContent("#model-sprint-select", renderSprintSelect(sprints, system.cache.session?.sprintID));
       permission.setModelPerms("sprint");

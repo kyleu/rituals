@@ -1,16 +1,14 @@
-<%: func ComponentCommentBadge(t string, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func CommentBadge(t string, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-inline comment-count-container left" data-comment-type="<%= t %>">
-  <a class="theme" onclick="" title="view comments">
+  <a class="theme" title="view comments">
     <div class="comment-count">
       <span class="uk-icon" data-uk-icon="comment"></span>
       <span class="text"></span>
     </div>
   </a>
-  <div id="drop-comment-<%= t %>" class="drop uk-box-shadow-large" data-uk-drop="mode: click; pos: bottom;" data-key="comment" data-t="<%= t %>">
+  <div id="drop-comment-<%= t %>" class="drop comment-drop uk-box-shadow-large" data-uk-drop="mode: click; pos: bottom;" data-key="comment" data-t="<%= t %>">
     <div class="uk-card">
-      <div class="uk-card-body">
-        <ul class="uk-comment-list uk-list-divider"></ul>
-      </div>
+      <div class="uk-card-body"></div>
       <div class="uk-card-footer">
         <form onsubmit="comment.add('<%= t %>');return false;">
           <% components.Textarea(web.InputParams{ID: "comment-add-content-" + t, Placeholder: "Markdown and HTML supported"}, buffer) %>

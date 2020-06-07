@@ -9,15 +9,15 @@ namespace story {
       }
     }
 
-    for (const el of dom.els(".story-status-body")) {
+    dom.els(".story-status-body").forEach(el => {
       setActive(el, status);
-    }
-    for (const el of dom.els(".story-status-actions")) {
+    });
+    dom.els(".story-status-actions").forEach(el => {
       setActive(el, status);
-    }
+    });
 
     let txt = "";
-    switch(status) {
+    switch (status) {
       case "pending":
         txt = "Story";
         break;
@@ -38,8 +38,8 @@ namespace story {
     if (!story) {
       return;
     }
-    const param = {storyID: story.id, status};
-    socket.send({svc: services.estimate.key, cmd: command.client.setStoryStatus, param: param});
+    const param = { storyID: story.id, status };
+    socket.send({ svc: services.estimate.key, cmd: command.client.setStoryStatus, param: param });
   }
 
   export function setStoryStatus(storyID: string, status: string, currStory: story.Story | undefined, calcTotal: boolean) {
@@ -64,7 +64,7 @@ namespace story {
       }
     });
     setStoryStatus(u.storyID, u.status, currStory, true);
-    if(u.storyID === estimate.cache.activeStory) {
+    if (u.storyID === estimate.cache.activeStory) {
       viewStoryStatus(u.status);
     }
   }

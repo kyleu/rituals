@@ -3,7 +3,7 @@
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">
     <label class="uk-form-label" for="model-choices-input">Choices</label>
-    <input class="uk-input" id="model-choices-input" name="<%= util.Plural(util.KeyChoice) %>" type="text" value="<%= strings.Join(choices, `,`) %>" />
+    <% components.TagEditor(util.Plural(util.KeyChoice), choices, buffer) %>
   </div>
   <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>

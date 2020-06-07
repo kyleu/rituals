@@ -22,7 +22,8 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
-		return tmpl(templates.Profile(auths, ctx, w))
+		ref := r.Header.Get("Referer")
+		return tmpl(templates.Profile(auths, ref, ctx, w))
 	})
 }
 
@@ -48,9 +49,11 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return eresp(err, "")
 		}
-		ctx.Session.AddFlash("success:Profile saved")
-		act.SaveSession(w, r, ctx)
-		return ctx.Route("home"), nil
+		ref := strings.TrimSpace(prof.Ref)
+		if len(ref) == 0 || strings.HasPrefix(ref, "http") {
+			ref = "home"
+		}
+		return act.FlashAndRedir(true, "Profile saved", ref, w, r, ctx)
 	})
 }
 

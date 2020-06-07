@@ -1,6 +1,7 @@
 package transcript
 
 import (
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -25,33 +26,28 @@ type TeamResponse struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func (r *TeamResponse) x() {
-	// r.Session.ID
-	// r.Session.Slug
-	// r.Session.Title
-	// r.Session.Owner
-	// r.Session.Created
-}
-
 var Team = Transcript{
 	Key:         util.SvcTeam.Key,
 	Title:       util.SvcTeam.Title,
 	Description: util.SvcTeam.Description,
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
-		if param == nil {
+	Resolve: func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		if len(slug) == 0 {
 			return app.Team.List(nil), nil
 		}
-		teamID := param.(uuid.UUID)
+		sess := app.Team.GetBySlug(slug)
+		if sess == nil {
+			return nil, errors.New("no session available matching [" + slug + "]")
+		}
 		dataSvc := app.Sprint.Data
 		return TeamResponse{
-			Session:     app.Team.GetByID(teamID),
-			Comments:    dataSvc.GetComments(teamID, nil),
-			Members:     dataSvc.Members.GetByModelID(teamID, nil),
-			Sprints:     app.Sprint.GetByTeamID(teamID, nil),
-			Estimates:   app.Estimate.GetByTeamID(teamID, nil),
-			Standups:    app.Standup.GetByTeamID(teamID, nil),
-			Retros:      app.Retro.GetByTeamID(teamID, nil),
-			Permissions: dataSvc.Permissions.GetByModelID(teamID, nil),
+			Session:     sess,
+			Comments:    dataSvc.GetComments(sess.ID, nil),
+			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
+			Sprints:     app.Sprint.GetByTeamID(sess.ID, nil),
+			Estimates:   app.Estimate.GetByTeamID(sess.ID, nil),
+			Standups:    app.Standup.GetByTeamID(sess.ID, nil),
+			Retros:      app.Retro.GetByTeamID(sess.ID, nil),
+			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},
 }

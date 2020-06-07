@@ -16,13 +16,12 @@ import (
 )
 
 func AuthSubmit(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}
 		prv := auth.ProviderFromString(mux.Vars(r)[util.KeyKey])
 		ref := r.Header.Get("Referer")
-		secure := strings.HasSuffix(r.Proto, "s")
 		state := "/"
 		if len(ref) > 0 {
 			u, err := url.Parse(ref)
@@ -31,7 +30,7 @@ func AuthSubmit(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		u := ctx.App.Auth.URLFor(state, secure, prv)
+		u := ctx.App.Auth.URLFor(state, prv)
 		if len(u) == 0 {
 			return enew(prv.Title + " is disabled")
 		}
@@ -40,7 +39,7 @@ func AuthSubmit(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthCallback(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}
@@ -59,15 +58,13 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 
-		ctx.Session.AddFlash("success:Signed in as " + record.Name)
-		act.SaveSession(w, r, ctx)
-
-		return u, nil
+		msg := "signed in as " + record.Name
+		return act.FlashAndRedir(true, msg, u, w, r, ctx)
 	})
 }
 
 func AuthSignout(w http.ResponseWriter, r *http.Request) {
-	act.Act(w, r, func( ctx *web.RequestContext) (string, error) {
+	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}

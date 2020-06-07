@@ -15,7 +15,7 @@ import (
 )
 
 func UserList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "User List"
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyUser, util.Plural(util.KeyUser))
 
@@ -26,16 +26,15 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		userID, err := act.IDFromParams(util.KeyUser, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
 		}
 		u := ctx.App.User.GetByID(*userID, false)
 		if u == nil {
-			ctx.Session.AddFlash("error:Can't load user [" + userID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyUser)), nil
+			msg := "can't load user [" + userID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyUser), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

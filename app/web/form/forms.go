@@ -16,6 +16,7 @@ type ProfileForm struct {
 	Theme     string `mapstructure:"theme"`
 	LinkColor string `mapstructure:"linkColor"`
 	NavColor  string `mapstructure:"navColor"`
+	Ref       string `mapstructure:"ref"`
 }
 
 type ConnectionForm struct {
@@ -37,10 +38,12 @@ func Decode(r *http.Request, tgt interface{}, logger logur.Logger) error {
 	}
 
 	if logger != nil {
-		msg := fmt.Sprintf("Parsed [%T] form with unused keys [%v]", tgt, strings.Join(md.Unused, ", "))
-		logger.Warn(msg)
-		bytes, _ := json.Marshal(tgt)
-		logger.Warn(string(bytes))
+		if len(md.Unused) > 0 {
+			msg := fmt.Sprintf("parsed [%T] form with unused keys [%v]", tgt, strings.Join(md.Unused, ", "))
+			logger.Warn(msg)
+			bytes, _ := json.Marshal(tgt)
+			logger.Warn(string(bytes))
+		}
 	}
 	return nil
 }

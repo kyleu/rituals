@@ -14,7 +14,7 @@
               <div class="right uk-margin-small-left" style="width: 80px;"><% components.Select("format", []string{"html", "json"}, "html", _buffer) %></div>
               <div class="right" style="width: 100px;"><input class="uk-input" name="param" placeholder="param" type="text" value="" /></div>
             </div>
-            <h3 class="uk-card-title"><a class="theme" href=""><%= t.Title %></a></h3>
+            <h3 class="uk-card-title"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyTranscript, `run`), util.KeyKey, t.Key) %>"><%= t.Title %></a></h3>
             <p><%= t.Description %></p>
             </form>
           </div>

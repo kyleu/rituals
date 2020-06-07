@@ -1,14 +1,15 @@
 package database
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+	"time"
+
+	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/gen/query"
 	"golang.org/x/text/language"
 	"logur.dev/logur"
-	"strings"
-	"time"
 )
 
 type migrationFile struct {

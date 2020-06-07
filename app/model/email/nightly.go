@@ -6,8 +6,6 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/transcript"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/gen/transcripttemplates"
@@ -15,22 +13,29 @@ import (
 
 var nightlyRecipients = []string{"kyle@kyleu.com"}
 
-func (s *Service) SendNightlyEmail(app *config.AppInfo, userID uuid.UUID, d *time.Time, force bool) error {
+func (s *Service) GetNightlyEmail(ymd string, tx *transcript.Context) (string, *transcript.EmailResponse, error) {
+	rsp, err := transcript.Email.Resolve(tx.App, tx.UserID, ymd)
+	if err != nil {
+		return "", nil, errors.Wrap(err, "error running email transcript")
+	}
+	er := rsp.(transcript.EmailResponse)
+
+	b := &bytes.Buffer{}
+	transcripttemplates.EmailPrint(er, tx, b)
+
+	return b.String(), &er, nil
+}
+
+func (s *Service) SendNightlyEmail(d *time.Time, force bool, tx *transcript.Context) error {
 	ymd, skip := shouldSkip(s, d)
 	if !force && skip {
 		return nil
 	}
 
-	rsp, err := transcript.Email.Resolve(app, userID, ymd, "html")
+	html, er, err := s.GetNightlyEmail(ymd, tx)
 	if err != nil {
-		return errors.Wrap(err, "error running email transcript")
+		return err
 	}
-	er := rsp.(transcript.EmailResponse)
-
-	b := &bytes.Buffer{}
-	transcripttemplates.TranscriptEmailHTML(er, b)
-
-	html := b.String()
 
 	err = s.sendSMTP(nightlyRecipients, er.Subject(), html)
 	if err != nil {
@@ -44,7 +49,7 @@ func (s *Service) SendNightlyEmail(app *config.AppInfo, userID uuid.UUID, d *tim
 		Data:       er,
 		Plain:      "",
 		HTML:       html,
-		UserID:     userID,
+		UserID:     tx.UserID,
 		Status:     "ok",
 		Created:    time.Time{},
 	})

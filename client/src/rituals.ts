@@ -9,7 +9,7 @@ namespace rituals {
   }
 
   export function init(svc: string, id: string) {
-    window.onbeforeunload = function () {
+    window.onbeforeunload = () => {
       socket.setAppUnloading();
     };
 

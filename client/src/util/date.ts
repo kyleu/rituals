@@ -8,7 +8,7 @@ namespace date {
 
   export function dateFromYMD(s: string) {
     const d = new Date(s);
-    return new Date(d.getTime() + (d.getTimezoneOffset() * 60000));
+    return new Date(d.getTime() + d.getTimezoneOffset() * 60000);
   }
 
   export function dow(i: number) {

@@ -111,6 +111,11 @@ h4 {
   }
 }
 
+// Comments
+.uk-comment-list > :nth-child(n+2) {
+  margin-top: 0;
+}
+
 // Pre
 pre {
   background-color: transparent;

@@ -11,7 +11,11 @@ namespace action {
   }
 
   export function loadActions() {
-    socket.send({svc: services.system.key, cmd: command.client.getActions, param: null});
+    socket.send({
+      svc: services.system.key,
+      cmd: command.client.getActions,
+      param: null,
+    });
   }
 
   export function viewActions(actions: ReadonlyArray<Action>) {

@@ -3,7 +3,7 @@
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">
     <label class="uk-form-label" for="model-categories-input"><%= util.PluralTitle(util.KeyCategory) %></label>
-    <input class="uk-input" id="model-categories-input" type="text" name="categories" value="<%= strings.Join(categories, `,`) %>" />
+    <% components.TagEditor("categories", categories, buffer) %>
   </div>
   <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>

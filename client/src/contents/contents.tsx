@@ -1,16 +1,22 @@
 namespace contents {
   function renderSprintContent(svc: services.Service, session: session.Session) {
     const profile = system.cache.getProfile();
-    return <tr>
-      <td><a class={`${profile.linkColor}-fg`} href={`/${svc.key}/${session.slug}`}>{session.title}</a></td>
-      <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(session.created))}</td>
-    </tr>;
+    return (
+      <tr>
+        <td>
+          <a class={`${profile.linkColor}-fg`} href={`/${svc.key}/${session.slug}`}>
+            {session.title}
+          </a>
+        </td>
+        <td class="uk-table-shrink uk-text-nowrap">{date.toDateTimeString(new Date(session.created))}</td>
+      </tr>
+    );
   }
 
   function toContent(svc: services.Service, sessions: ReadonlyArray<session.Session>) {
     return sessions.map(s => {
-      return {svc: svc, session: s}
-    })
+      return { svc: svc, session: s };
+    });
   }
 
   export function renderContents(src: services.Service, tgt: services.Service, sessions: ReadonlyArray<session.Session>) {
@@ -20,12 +26,11 @@ namespace contents {
     if (contents.length === 0) {
       return <div>{`No ${tgt.plural} in this ${src.key}`}</div>;
     } else {
-      return <table class="uk-table uk-table-divider uk-text-left">
-        <tbody>
-        {contents.map(a => renderSprintContent(a.svc, a.session))}
-        </tbody>
-      </table>;
+      return (
+        <table class="uk-table uk-table-divider uk-text-left">
+          <tbody>{contents.map(a => renderSprintContent(a.svc, a.session))}</tbody>
+        </table>
+      );
     }
   }
-
 }

@@ -54,7 +54,7 @@ namespace estimate {
         setEstimateDetail(param as Detail);
         break;
       case command.server.sessionRemove:
-        system.onSessionRemove(services.estimate)
+        system.onSessionRemove(services.estimate);
         break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
@@ -71,7 +71,7 @@ namespace estimate {
         if (estimate.cache.detail) {
           estimate.cache.detail.sprintID = spr?.id;
         }
-        session.setSprint(spr)
+        session.setSprint(spr);
         break;
       case command.server.storyUpdate:
         onStoryUpdate(param as story.Story);
@@ -94,7 +94,7 @@ namespace estimate {
     cache.detail = detail;
     const cs = detail.choices.join(", ");
     dom.setValue("#model-choices-input", cs);
-    dom.setText("#session-view-section .choices", cs);
+    dom.setContent("#session-view-section .choices", tags.renderTagsView(detail.choices));
     story.viewActiveStory();
     session.setDetail(detail);
   }
@@ -106,7 +106,7 @@ namespace estimate {
     const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
     const permissions = permission.readPermissions();
 
-    const msg = {svc: services.estimate.key, cmd: command.client.updateSession, param: {title, choices, teamID, sprintID, permissions}};
+    const msg = { svc: services.estimate.key, cmd: command.client.updateSession, param: { title, choices, teamID, sprintID, permissions } };
     socket.send(msg);
   }
 
@@ -130,6 +130,6 @@ namespace estimate {
   }
 
   function preUpdate(id: string) {
-    return estimate.cache.stories.filter((p) => p.id !== id);
+    return estimate.cache.stories.filter(p => p.id !== id);
   }
 }

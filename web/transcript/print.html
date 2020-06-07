@@ -1,0 +1,11 @@
+<%: func Print(t *transcript.Transcript, rsp interface{}, tx *transcript.Context, w io.Writer) (int, error) %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><%= t.Title %></title>
+</head>
+<body>
+<% HeaderPrint(tx, _buffer) %>
+<% PrintResponse(t, rsp, tx, _buffer) %>
+</body>
+</html>

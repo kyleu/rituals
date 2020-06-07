@@ -20,7 +20,7 @@ namespace story {
 
   export function onSubmitStory() {
     const title = dom.req<HTMLInputElement>("#story-title-input").value;
-    const msg = {svc: services.estimate.key, cmd: command.client.addStory, param: {title}};
+    const msg = { svc: services.estimate.key, cmd: command.client.addStory, param: { title } };
     socket.send(msg);
     return false;
   }
@@ -31,8 +31,8 @@ namespace story {
     if (title === null) {
       return false;
     }
-    if(title && title !== s.title) {
-      const msg = {svc: services.estimate.key, cmd: command.client.updateStory, param: { storyID: s.id, title }};
+    if (title && title !== s.title) {
+      const msg = { svc: services.estimate.key, cmd: command.client.updateStory, param: { storyID: s.id, title } };
       socket.send(msg);
     }
     return false;
@@ -42,7 +42,7 @@ namespace story {
     const id = estimate.cache.activeStory;
     if (id) {
       UIkit.modal.confirm("Delete this story?").then(function () {
-        const msg = {svc: services.estimate.key, cmd: command.client.removeStory, param: id};
+        const msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
         socket.send(msg);
         modal.hide("story");
       });
@@ -81,13 +81,13 @@ namespace story {
     const strings = stories.filter(s => s.status === "complete").map(s => s.finalVote).filter(c => c.length > 0);
     const floats = strings.map(c => parseFloat(c)).filter(f => !isNaN(f));
     let sum = 0;
-    floats.forEach(f => sum += f);
+    floats.forEach(f => (sum += f));
     const curr = dom.opt("#story-total");
     const panel = dom.req("#story-list");
     if (curr !== undefined) {
       panel.removeChild(curr);
     }
-    if(sum > 0) {
+    if (sum > 0) {
       panel.appendChild(renderTotal(sum));
     }
   }

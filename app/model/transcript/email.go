@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/model/user"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -17,6 +20,8 @@ import (
 
 type EmailResponse struct {
 	Date      *time.Time
+	Users     user.SystemUsers  `json:"users"`
+	Auths     auth.Records      `json:"records"`
 	Teams     team.Sessions     `json:"teams"`
 	Sprints   sprint.Sessions   `json:"sprints"`
 	Estimates estimate.Sessions `json:"estimates"`
@@ -30,25 +35,27 @@ func (er *EmailResponse) Subject() string {
 }
 
 func (er *EmailResponse) Opener() string {
-	msg := "Today there were %v teams, %v sprints, %v estimates, %v standups, %v retros, and %v comments"
-	return fmt.Sprintf(msg, len(er.Teams), len(er.Sprints), len(er.Estimates), len(er.Standups), len(er.Retros), len(er.Comments))
+	msg := "Today there were %v users, %v auths, %v teams, %v sprints, %v estimates, %v standups, %v retros, and %v comments"
+	return fmt.Sprintf(msg, len(er.Users), len(er.Auths), len(er.Teams), len(er.Sprints), len(er.Estimates), len(er.Standups), len(er.Retros), len(er.Comments))
 }
 
 var Email = Transcript{
 	Key:         "email",
 	Title:       "Email",
 	Description: "Nightly email report",
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
-		if param == nil || len(param.(string)) == 0 {
+	Resolve: func(app *config.AppInfo, userID uuid.UUID, param string) (interface{}, error) {
+		if len(param) == 0 {
 			n := time.Now()
 			param = util.ToYMD(&n)
 		}
-		d, err := util.FromYMD(param.(string))
+		d, err := util.FromYMD(param)
 		if err != nil {
 			return nil, err
 		}
 		return EmailResponse{
 			Date:      d,
+			Users:     app.User.GetByCreated(d, nil),
+			Auths:     app.Auth.GetByCreated(d, nil),
 			Teams:     app.Team.GetByCreated(d, nil),
 			Sprints:   app.Sprint.GetByCreated(d, nil),
 			Estimates: app.Estimate.GetByCreated(d, nil),

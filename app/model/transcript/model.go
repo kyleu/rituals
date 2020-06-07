@@ -5,7 +5,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/config"
 )
 
-type Resolver func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error)
+type Resolver func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error)
 
 type Transcript struct {
 	Key         string   `json:"key"`

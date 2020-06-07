@@ -15,7 +15,7 @@ import (
 )
 
 func RetroList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = util.SvcRetro.Title + " List"
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
 		params := act.ParamSetFromRequest(r)
@@ -25,16 +25,15 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 }
 
 func RetroDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		retroID, err := act.IDFromParams(util.SvcRetro.Key, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
 		}
 		sess := ctx.App.Retro.GetByID(*retroID)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load retro [" + retroID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.SvcRetro.Key)), nil
+			msg := "can't load retro [" + retroID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.SvcRetro.Key), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

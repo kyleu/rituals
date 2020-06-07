@@ -25,22 +25,20 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 }
 
 func ActionDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		actionID, err := act.IDFromParams(util.KeyAction, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
 		}
 		a := ctx.App.Action.GetByID(*actionID)
 		if a == nil {
-			ctx.Session.AddFlash("error:Can't load action [" + actionID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyAction)), nil
+			msg := "can't load action [" + actionID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyAction), w, r, ctx)
 		}
 		user := ctx.App.User.GetByID(a.UserID, false)
 		if user == nil {
-			ctx.Session.AddFlash("error:Can't load user [" + a.UserID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyAction)), nil
+			msg := "can't load user [" + a.UserID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyUser), w, r, ctx)
 		}
 
 		ctx.Title = user.Name

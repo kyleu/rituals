@@ -1,6 +1,7 @@
 package transcript
 
 import (
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -26,20 +27,23 @@ var Retro = Transcript{
 	Key:         util.SvcRetro.Key,
 	Title:       util.SvcRetro.Title,
 	Description: util.SvcRetro.Description,
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
-		if param == nil {
+	Resolve: func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		if len(slug) == 0 {
 			return app.Retro.List(nil), nil
 		}
-		sprintID := param.(uuid.UUID)
-		sess := app.Retro.GetByID(sprintID)
+		sess := app.Retro.GetBySlug(slug)
+		if sess == nil {
+			return nil, errors.New("no session available matching [" + slug + "]")
+		}
 		dataSvc := app.Retro.Data
 		return RetroResponse{
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
-			Comments:    dataSvc.GetComments(sprintID, nil),
-			Members:     dataSvc.Members.GetByModelID(sprintID, nil),
+			Sprint:      app.Sprint.GetByIDPointer(sess.SprintID),
+			Comments:    dataSvc.GetComments(sess.ID, nil),
+			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
 			Feedback:    app.Retro.GetFeedback(sess.ID, nil),
-			Permissions: dataSvc.Permissions.GetByModelID(sprintID, nil),
+			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},
 }

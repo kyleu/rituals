@@ -15,7 +15,7 @@ import (
 )
 
 func TeamList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Team List"
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
 
@@ -26,16 +26,15 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func( ctx *web.RequestContext) (string, error) {
+	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		teamID, err := act.IDFromParams(util.SvcTeam.Key, mux.Vars(r))
 		if err != nil {
 			return eresp(err, "")
 		}
 		sess := ctx.App.Team.GetByID(*teamID)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load team [" + teamID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.SvcTeam.Key)), nil
+			msg := "can't load team [" + teamID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.SvcTeam.Key), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

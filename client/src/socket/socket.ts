@@ -27,30 +27,30 @@ namespace socket {
     system.cache.connectTime = Date.now();
 
     socket = new WebSocket(socketUrl());
-    socket.onopen = function () {
-      send({svc: svc.key, cmd: command.client.connect, param: id});
+    socket.onopen = () => {
+      send({ svc: svc.key, cmd: command.client.connect, param: id });
     };
-    socket.onmessage = function (event) {
+    socket.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       onSocketMessage(msg);
     };
-    socket.onerror = function (event) {
+    socket.onerror = (event) => {
       rituals.onError(services.system, event.type);
     };
-    socket.onclose = function () {
+    socket.onclose = () => {
       onSocketClose();
     };
   }
 
   export function send(msg: Message) {
-    if(debug) {
+    if (debug) {
       console.debug("out", msg);
     }
     socket.send(JSON.stringify(msg));
   }
 
   export function onSocketMessage(msg: Message) {
-    if(debug) {
+    if (debug) {
       console.debug("in", msg);
     }
     switch (msg.svc) {
@@ -79,7 +79,7 @@ namespace socket {
 
   function onSocketClose() {
     function disconnect(seconds: number) {
-      if(debug) {
+      if (debug) {
         console.info(`socket closed, reconnecting in ${seconds} seconds`);
       }
       setTimeout(() => {

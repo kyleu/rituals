@@ -30,7 +30,8 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 		}
 		if v[0] != code {
 			if v[0] == (code + "!") {
-				web.SetSessionUser(uuid.FromStringOrNil("F0000000-0000-0000-0000-000000000000"), ctx.Session, r, w, ctx.Logger)
+				admin := uuid.FromStringOrNil("F0000000-0000-0000-0000-000000000000")
+				web.SetSessionUser(admin, ctx.Session, r, w, ctx.Logger)
 				return ctx.Route(util.KeyAdmin), nil
 			}
 			return tmpl(templates.StaticMessage("Invalid code", ctx, w))
@@ -41,9 +42,7 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 			return eresp(err, "")
 		}
 
-		ctx.Session.AddFlash("success:You're a wizard, Harry!")
-		act.SaveSession(w, r, ctx)
-
-		return ctx.Route(util.KeyAdmin), nil
+		msg := "you're a wizard, Harry!"
+		return act.FlashAndRedir(true, msg, util.KeyAdmin, w, r, ctx)
 	})
 }

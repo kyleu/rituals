@@ -10,8 +10,8 @@ namespace comment {
   }
 
   let activeComments: comment.Comment[] = [];
-  let activeType: string | undefined
-  let activeID: string | undefined
+  let activeType: string | undefined;
+  let activeID: string | undefined;
 
   export function applyComments(comments: comment.Comment[]) {
     activeComments = comments;
@@ -28,10 +28,18 @@ namespace comment {
 
   export function add(t: string) {
     const textarea = dom.req<HTMLTextAreaElement>(`#comment-add-content-${t}`);
-    const v = textarea.value;
+    const v = textarea.value.trim();
+    if (v.length === 0) {
+      notify.notify("enter some content", true);
+      return;
+    }
     textarea.value = "";
-    const param = {targetType: activeType, targetID: activeID, content: v};
-    socket.send({svc: services.system.key, cmd: command.client.addComment, param: param});
+    const param = { targetType: activeType, targetID: activeID, content: v };
+    socket.send({
+      svc: services.system.key,
+      cmd: command.client.addComment,
+      param: param,
+    });
   }
 
   export function onCommentUpdate(u: Comment) {
@@ -41,25 +49,25 @@ namespace comment {
   }
 
   function find(t: string | undefined, id: string | undefined) {
-    if ((!t) || t === "modal") {
+    if (!t || t === "modal") {
       t = activeType;
-      if(!id) {
+      if (!id) {
         id = activeID;
       }
     }
     if (t === "root") {
       t = "";
     }
-    if(id) {
+    if (id) {
       return activeComments.filter(x => x.targetType === t && x.targetID == id);
     }
     return activeComments.filter(x => x.targetType === t);
   }
 
   export function load(t?: string, id?: string) {
-    if ((!t) || t === "modal") {
+    if (!t || t === "modal") {
       t = activeType;
-      if(!id) {
+      if (!id) {
         id = activeID;
       }
     }
@@ -74,24 +82,26 @@ namespace comment {
     if (t !== "root") {
       t = "modal";
     }
-    const el = dom.req(`#drop-comment-${t} .uk-comment-list`);
-    dom.setContent(el, renderComments(comments, system.cache.getProfile()));
-    el.scrollTop = el.scrollHeight;
+    dom.setContent(`#drop-comment-${t} .uk-card-body`, renderComments(comments, system.cache.getProfile()));
+    const el = dom.opt(`#drop-comment-${t} .uk-comment-list`);
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }
 
   export function setCounts() {
     const containers = dom.els(`.comment-count-container`);
-    let matchedModal = false
+    let matchedModal = false;
     const modalCount = dom.opt(`#comment-count-modal`);
     containers.forEach(cc => {
       const t = cc.dataset["commentType"];
       const id = cc.dataset["commentId"];
-      if(!t) {
+      if (!t) {
         throw `invalid comment type [${t}] with id [${id}]`;
       }
       let comments = find(t, id);
       setCount(t, comments, cc);
-      if(activeType === t) {
+      if (activeType === t) {
         if (modalCount) {
           setCount(t, comments, modalCount);
           matchedModal = true;
@@ -103,7 +113,7 @@ namespace comment {
     }
   }
 
-  export function closeModal() {
+  export function closeDrop() {
     if (activeType === "story") {
       modal.openSoon("story");
     } else if (activeType === "report") {
@@ -116,7 +126,11 @@ namespace comment {
 
   export function remove(id: string) {
     if (confirm("remove this comment?")) {
-      socket.send({svc: services.system.key, cmd: command.client.removeComment, param: id});
+      socket.send({
+        svc: services.system.key,
+        cmd: command.client.removeComment,
+        param: id,
+      });
     }
     return false;
   }
@@ -124,12 +138,12 @@ namespace comment {
   function setCount(t: string, comments: ReadonlyArray<Comment>, cc: HTMLElement, force?: boolean) {
     dom.setText(dom.req(".text", cc), comments.length.toString());
     if (t !== "root" && t !== "modal" && t.length !== 0) {
-      dom.setDisplay(cc, (comments.length !== 0) || force === true);
+      dom.setDisplay(cc, comments.length !== 0 || force === true);
     }
   }
 
   export function onCommentRemoved(id: string) {
-    activeComments = activeComments.filter((c) => c.id !== id);
+    activeComments = activeComments.filter(c => c.id !== id);
     setCounts();
     load();
   }

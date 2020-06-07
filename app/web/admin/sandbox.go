@@ -31,7 +31,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		if sb == nil {
 			return "", util.IDError(util.KeySandbox, key)
 		}
-		content, err := sb.Resolve(ctx)
+		content, rsp, err := sb.Resolve(ctx)
 		if err != nil {
 			return eresp(err, "error running sandbox ["+key+"]")
 		}
@@ -41,6 +41,6 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.Breadcrumb{Path: ctx.Route(util.AdminLink(util.KeySandbox+".run"), util.KeyKey, key), Title: key})
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.SandboxRun(sb, util.ToJSON(content, ctx.Logger), ctx, w))
+		return tmpl(admintemplates.SandboxRun(sb, content, util.ToJSON(rsp, ctx.Logger), ctx, w))
 	})
 }

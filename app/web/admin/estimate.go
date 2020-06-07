@@ -34,9 +34,8 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		sess := ctx.App.Estimate.GetByID(*estimateID)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.SvcEstimate.Key)), nil
+			msg := "can't load estimate [" + estimateID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.SvcEstimate.Key), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)
@@ -71,9 +70,8 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		sess := ctx.App.Estimate.GetByID(*estimateID)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load estimate [" + estimateID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.SvcEstimate.Key)), nil
+			msg := "can't load estimate [" + estimateID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.SvcEstimate.Key), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

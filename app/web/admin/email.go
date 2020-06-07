@@ -37,9 +37,8 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 		emailSvc := email.NewService(ctx.App.Database, ctx.Logger)
 		e := emailSvc.GetByID(emailID)
 		if e == nil {
-			ctx.Session.AddFlash("error:Can't load email [" + emailID + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.KeyEmail)), nil
+			msg := "can't load email [" + emailID + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.KeyEmail), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

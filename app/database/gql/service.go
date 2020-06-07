@@ -45,7 +45,7 @@ func NewService(app *config.AppInfo) (*Service, error) {
 	return &svc, nil
 }
 
-func (s *Service) Run(operationName string, doc string, variables map[string]interface{},  ctx *web.RequestContext) (*graphql.Result, error) {
+func (s *Service) Run(operationName string, doc string, variables map[string]interface{}, ctx *web.RequestContext) (*graphql.Result, error) {
 	params := graphql.Params{
 		Schema:         s.schema,
 		RequestString:  doc,
@@ -67,7 +67,7 @@ func (s *Service) Run(operationName string, doc string, variables map[string]int
 	return r, nil
 }
 
-func ctxF(f func(p graphql.ResolveParams,  ctx *web.RequestContext) (interface{}, error)) func(graphql.ResolveParams) (interface{}, error) {
+func ctxF(f func(p graphql.ResolveParams, ctx *web.RequestContext) (interface{}, error)) func(graphql.ResolveParams) (interface{}, error) {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		c, ok := p.Context.Value(util.ContextKey).(*web.RequestContext)
 		if !ok {

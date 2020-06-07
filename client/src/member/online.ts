@@ -18,11 +18,11 @@ namespace member {
   }
 
   export function applyOnline(o: string[]) {
-    online = o
+    online = o;
   }
 
   export function renderOnline() {
-    for (const member of getMembers()) {
+    getMembers().forEach(member => {
       const el = dom.opt(`#member-${member.userID} .online-indicator`);
       if (el) {
         if (!online.find(x => x === member.userID)) {
@@ -31,10 +31,6 @@ namespace member {
           el.classList.remove("offline");
         }
       }
-    }
-  }
-
-  function canEdit(m: member.Member) {
-    return m.role == "owner";
+    });
   }
 }

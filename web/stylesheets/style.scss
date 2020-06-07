@@ -152,9 +152,7 @@ h3 a:hover {
   margin-bottom: 8px;
 }
 
-.drop {
-  font-size: 16px;
-  text-align: left;
+.comment-drop {
   width: 482px;
   .uk-comment-list {
     max-height: 400px;
@@ -163,6 +161,11 @@ h3 a:hover {
   .uk-card {
     width: 480px;
   }
+}
+
+.drop {
+  font-size: 16px;
+  text-align: left;
   .uk-card-body {
     padding-bottom: 0;
     p {
@@ -184,6 +187,7 @@ h3 a:hover {
 }
 
 @import "form.scss";
+@import "tags.scss";
 @import "profile.scss";
 @import "permission.scss";
 @import "members.scss";

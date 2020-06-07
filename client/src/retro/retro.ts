@@ -38,7 +38,7 @@ namespace retro {
         setRetroDetail(param as Detail);
         break;
       case command.server.sessionRemove:
-        system.onSessionRemove(services.retro)
+        system.onSessionRemove(services.retro);
         break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
@@ -72,7 +72,7 @@ namespace retro {
     cache.detail = detail;
     const cs = detail.categories.join(", ");
     dom.setValue("#model-categories-input", cs);
-    dom.setText("#session-view-section .categories", cs);
+    dom.setContent("#session-view-section .categories", tags.renderTagsView(detail.categories));
     dom.setOptions("#feedback-category", detail.categories);
     dom.setOptions("#feedback-edit-category", detail.categories);
     feedback.setFeedback(retro.cache.feedback);
@@ -86,7 +86,7 @@ namespace retro {
     const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
     const permissions = permission.readPermissions();
 
-    const msg = {svc: services.retro.key, cmd: command.client.updateSession, param: {title, categories, teamID, sprintID, permissions}};
+    const msg = { svc: services.retro.key, cmd: command.client.updateSession, param: { title, categories, teamID, sprintID, permissions } };
     socket.send(msg);
   }
 }

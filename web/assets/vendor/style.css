@@ -12442,6 +12442,10 @@ h4 {
   color: #999;
 }
 
+.uk-comment-list > :nth-child(n+2) {
+  margin-top: 0;
+}
+
 pre {
   background-color: transparent;
   border: none;
@@ -12581,17 +12585,20 @@ h3 a:hover {
   margin-bottom: 8px;
 }
 
-.drop {
-  font-size: 16px;
-  text-align: left;
+.comment-drop {
   width: 482px;
 }
-.drop .uk-comment-list {
+.comment-drop .uk-comment-list {
   max-height: 400px;
   overflow: auto;
 }
-.drop .uk-card {
+.comment-drop .uk-card {
   width: 480px;
+}
+
+.drop {
+  font-size: 16px;
+  text-align: left;
 }
 .drop .uk-card-body {
   padding-bottom: 0;
@@ -12623,6 +12630,43 @@ h3 a:hover {
   position: absolute;
   top: 4px;
   right: 8px;
+}
+
+.tag-editor .item, .tag-view .item {
+  float: left;
+  background-color: #AAA5;
+  margin-right: 6px;
+  box-sizing: border-box;
+  min-width: 22px;
+  height: 22px;
+  padding: 4px 6px;
+  border-radius: 500px;
+  vertical-align: middle;
+  font-size: 14px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tag-editor .close {
+  cursor: pointer;
+}
+.tag-editor .value {
+  padding: 0 4px;
+}
+.tag-editor .editor {
+  display: none;
+}
+.tag-editor .editor input {
+  height: 22px;
+  margin: 0;
+  padding-left: 2px;
+  width: 100px;
+}
+.tag-editor .add-item {
+  cursor: pointer;
+  float: left;
+  margin-top: 3px;
 }
 
 .swatch {

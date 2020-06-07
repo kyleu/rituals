@@ -1,6 +1,5 @@
 declare namespace JSX {
-  interface Element extends HTMLElement {
-  }
+  interface Element extends HTMLElement {}
 
   // noinspection JSUnusedGlobalSymbols
   interface IntrinsicElements {

@@ -5,6 +5,10 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gorilla/mux"
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"logur.dev/logur"
+
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/sessions"
@@ -69,4 +73,21 @@ func PathParams(s string) []string {
 	}
 
 	return ret
+}
+
+func Route(auth *auth.Service, routes *mux.Router, logger logur.Logger, act string, pairs ...string) string {
+	route := routes.Get(act)
+	if route == nil {
+		logger.Warn("cannot find route at path [" + act + "]")
+		return "/routenotfound"
+	}
+	u, err := route.URL(pairs...)
+	if err != nil {
+		logger.Warn("cannot bind route at path [" + act + "]")
+		return "/routeerror"
+	}
+	if auth == nil {
+		return u.Path
+	}
+	return auth.FullURL(u.Path)
 }

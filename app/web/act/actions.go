@@ -9,7 +9,6 @@ import (
 	"github.com/kyleu/rituals.dev/gen/components"
 
 	"emperror.dev/errors"
-	"github.com/gorilla/sessions"
 	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -73,34 +72,10 @@ func RespondJSON(w http.ResponseWriter, body interface{}, logger logur.Logger) (
 	return "", nil
 }
 
-func SaveSession(w http.ResponseWriter, r *http.Request, ctx *web.RequestContext) {
-	ctx.Session.Options = &sessions.Options{Path: "/", HttpOnly: true, SameSite: http.SameSiteDefaultMode}
-	err := ctx.Session.Save(r, w)
-	if err != nil {
-		ctx.Logger.Warn("unable to save session to response")
-	}
-}
-
-func logComplete(startNanos int64,  ctx *web.RequestContext, status int, r *http.Request) {
+func logComplete(startNanos int64, ctx *web.RequestContext, status int, r *http.Request) {
 	delta := (time.Now().UnixNano() - startNanos) / int64(time.Microsecond)
 	ms := util.MicrosToMillis(language.AmericanEnglish, int(delta))
 	args := map[string]interface{}{"elapsed": delta, util.KeyStatus: status}
 	msg := fmt.Sprintf("[%v %v] returned [%v] in [%v]", r.Method, r.URL.Path, status, ms)
 	ctx.Logger.Debug(msg, args)
-}
-
-func TempSecurityCheck(ctx *web.RequestContext) bool {
-	if ctx.Profile.Role == util.RoleAdmin {
-		return true
-	}
-	if strings.Contains(ctx.App.Auth.Redir, "localhost") {
-		return true
-	}
-
-	s, ok := ctx.Session.Values["unlock"]
-	if ok && s.(bool) {
-		return true
-	}
-
-	return false
 }

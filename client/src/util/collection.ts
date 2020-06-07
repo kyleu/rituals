@@ -25,7 +25,7 @@ namespace collection {
   export function groupBy<K, V>(list: V[] | null, func: (x: V) => K): GroupSet<K, V> {
     const res = new GroupSet<K, V>();
     if (list) {
-      list.forEach((o) => {
+      list.forEach(o => {
         const group = res.findOrInsert(func(o));
         group.members.push(o);
       });
@@ -34,12 +34,12 @@ namespace collection {
   }
 
   export function findGroup<K, V>(groups: collection.Group<K, V>[], key: K): ReadonlyArray<V> {
-    for (const g of groups) {
+    groups.forEach(g => {
       if (g.key === key) {
         return g.members;
       }
-    }
-    return []
+    });
+    return [];
   }
 
   export function flatten<T>(a: ReadonlyArray<ReadonlyArray<T>>): ReadonlyArray<T> {

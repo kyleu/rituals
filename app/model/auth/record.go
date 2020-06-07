@@ -3,6 +3,7 @@ package auth
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -33,6 +34,18 @@ func (s *Service) List(params *query.Params) Records {
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving auth records: %+v", err))
+		return nil
+	}
+	return toRecords(dtos)
+}
+
+func (s *Service) GetByCreated(d *time.Time, params *query.Params) Records {
+	params = query.ParamsWithDefaultOrdering(util.KeySystemUser, params, query.DefaultCreatedOrdering...)
+	var dtos []recordDTO
+	q := query.SQLSelect("*", util.KeySystemUser, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, d, d.Add(util.HoursInDay*time.Hour))
+	if err != nil {
+		s.logger.Error(fmt.Sprintf("error retrieving auth records created on [%v]: %+v", d, err))
 		return nil
 	}
 	return toRecords(dtos)

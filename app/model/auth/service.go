@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/database/query"
@@ -17,7 +16,7 @@ import (
 type Service struct {
 	Enabled          bool
 	EnabledProviders Providers
-	Redir            string
+	redir            string
 	actions          *action.Service
 	db               *database.Service
 	logger           logur.Logger
@@ -30,10 +29,13 @@ func NewService(enabled bool, redir string, actions *action.Service, db *databas
 	if !strings.HasPrefix(redir, "http") {
 		redir = "https://" + redir
 	}
+	if !strings.HasSuffix(redir, "/") {
+		redir += "/"
+	}
 
 	svc := Service{
 		Enabled: enabled,
-		Redir:   redir,
+		redir:   redir,
 		actions: actions,
 		db:      db,
 		logger:  logger,
@@ -41,7 +43,7 @@ func NewService(enabled bool, redir string, actions *action.Service, db *databas
 	}
 
 	for _, p := range AllProviders {
-		cfg := svc.getConfig(false, p)
+		cfg := svc.getConfig(p)
 		if cfg != nil {
 			svc.EnabledProviders = append(svc.EnabledProviders, p)
 		}
@@ -79,68 +81,6 @@ func (s *Service) GetDisplayByUserID(userID uuid.UUID, params *query.Params) (Re
 	return rec, disp
 }
 
-func (s *Service) Handle(profile *util.UserProfile, prv *Provider, code string) (*Record, error) {
-	if !s.Enabled {
-		return nil, ErrorAuthDisabled
-	}
-
-	if profile == nil {
-		return nil, errors.New("no user profile for auth")
-	}
-
-	cfg := s.getConfig(false, prv)
-	if cfg == nil {
-		return nil, errors.New("no auth config for [" + prv.Key + "]")
-	}
-
-	record, err := s.decodeRecord(prv, code)
-	if err != nil {
-		return nil, errors.Wrap(err, "error retrieving auth profile")
-	}
-	if record == nil {
-		return nil, errors.New("cannot retrieve auth profile")
-	}
-	record.UserID = profile.UserID
-
-	curr := s.GetByProviderID(record.Provider.Key, record.ProviderID)
-	if curr == nil {
-		record, err = s.NewRecord(record)
-		if err != nil {
-			return nil, errors.Wrap(err, "error saving new auth record")
-		}
-
-		return s.mergeProfile(profile, record)
-	}
-	if curr.UserID == profile.UserID {
-		record.ID = curr.ID
-
-		err = s.UpdateRecord(record)
-		if err != nil {
-			return nil, errors.Wrap(err, "error updating auth record")
-		}
-
-		return s.mergeProfile(profile, record)
-	}
-
-	record, err = s.NewRecord(record)
-	if err != nil {
-		return nil, errors.Wrap(err, "error saving new auth record")
-	}
-
-	return s.mergeProfile(profile, record)
-}
-
-func (s *Service) mergeProfile(p *util.UserProfile, record *Record) (*Record, error) {
-	p.Name = record.Name
-	if len(p.Name) == 0 {
-		p.Name = record.Provider.Title + " User"
-	}
-	p.Picture = record.Picture
-
-	_, err := s.users.SaveProfile(p)
-	if err != nil {
-		return nil, errors.Wrap(err, "error saving user profile")
-	}
-
-	return record, nil
+func (s *Service) FullURL(path string) string {
+	return s.redir + strings.TrimPrefix(path, "/")
 }

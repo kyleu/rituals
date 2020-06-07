@@ -24,7 +24,7 @@ namespace feedback {
   export function onSubmitFeedback() {
     const category = dom.req<HTMLInputElement>("#feedback-category").value;
     const content = dom.req<HTMLInputElement>("#feedback-content").value;
-    const msg = {svc: services.retro.key, cmd: command.client.addFeedback, param: {category, content}};
+    const msg = { svc: services.retro.key, cmd: command.client.addFeedback, param: { category, content } };
     socket.send(msg);
     return false;
   }
@@ -33,7 +33,7 @@ namespace feedback {
     const id = retro.cache.activeFeedback;
     const category = dom.req<HTMLInputElement>("#feedback-edit-category").value;
     const content = dom.req<HTMLInputElement>("#feedback-edit-content").value;
-    const msg = {svc: services.retro.key, cmd: command.client.updateFeedback, param: {id, category, content}};
+    const msg = { svc: services.retro.key, cmd: command.client.updateFeedback, param: { id, category, content } };
     socket.send(msg);
     return false;
   }
@@ -42,7 +42,7 @@ namespace feedback {
     const id = retro.cache.activeFeedback;
     if (id) {
       UIkit.modal.confirm("Delete this feedback?").then(function () {
-        socket.send({svc: services.retro.key, cmd: command.client.removeFeedback, param: id});
+        socket.send({ svc: services.retro.key, cmd: command.client.removeFeedback, param: id });
         modal.hide("feedback");
       });
     }
@@ -94,7 +94,7 @@ namespace feedback {
   }
 
   function preUpdate(id: string) {
-    return retro.cache.feedback.filter((p) => p.id !== id);
+    return retro.cache.feedback.filter(p => p.id !== id);
   }
 
   function postUpdate(x: feedback.Feedback[], id: string) {
@@ -107,13 +107,13 @@ namespace feedback {
   export function getFeedbackCategories(feedback: ReadonlyArray<feedback.Feedback>, categories: ReadonlyArray<string>) {
     function toCollection(c: string): FeedbackCategory {
       const reports = feedback.filter(r => r.category === c).sort((l, r) => (l.created > r.created ? -1 : 1));
-      return {category: c, feedback: reports};
+      return { category: c, feedback: reports };
     }
 
     const ret = categories.map(toCollection);
     const extras = feedback.filter(r => !categories.find(x => x === r.category));
     if (extras.length > 0) {
-      ret.push({category: "unknown", feedback: extras});
+      ret.push({ category: "unknown", feedback: extras });
     }
     return ret;
   }
@@ -122,7 +122,7 @@ namespace feedback {
     dom.setSelectOption("#feedback-category", p);
     const feedbackContent = dom.setValue("#feedback-content", "");
     dom.wireTextarea(feedbackContent as HTMLTextAreaElement);
-    setTimeout((() => feedbackContent.focus()), 250);
+    setTimeout(() => feedbackContent.focus(), 250);
   }
 
   export function viewFeedback(p: string | undefined) {

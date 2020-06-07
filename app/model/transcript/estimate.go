@@ -1,6 +1,7 @@
 package transcript
 
 import (
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"
@@ -27,21 +28,24 @@ var Estimate = Transcript{
 	Key:         util.SvcEstimate.Key,
 	Title:       util.SvcEstimate.Title,
 	Description: util.SvcEstimate.Description,
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, param interface{}, format string) (interface{}, error) {
-		if param == nil {
+	Resolve: func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		if len(slug) == 0 {
 			return app.Estimate.List(nil), nil
 		}
-		sprintID := param.(uuid.UUID)
-		sess := app.Estimate.GetByID(sprintID)
+		sess := app.Estimate.GetBySlug(slug)
+		if sess == nil {
+			return nil, errors.New("no session available matching [" + slug + "]")
+		}
 		dataSvc := app.Estimate.Data
 		return EstimateResponse{
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
-			Comments:    dataSvc.GetComments(sprintID, nil),
-			Members:     dataSvc.Members.GetByModelID(sprintID, nil),
+			Sprint:      app.Sprint.GetByIDPointer(sess.SprintID),
+			Comments:    dataSvc.GetComments(sess.ID, nil),
+			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
 			Stories:     app.Estimate.GetStories(sess.ID, nil),
 			Votes:       app.Estimate.GetEstimateVotes(sess.ID, nil),
-			Permissions: dataSvc.Permissions.GetByModelID(sprintID, nil),
+			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},
 }

@@ -3,6 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/retro"
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -71,15 +74,14 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Retro.GetBySlug(key)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load retro [" + key + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.SvcRetro.Key + ".list"), nil
+			msg := "can't load retro [" + key + "]"
+			return act.FlashAndRedir(false, msg, util.SvcRetro.Key+".list", w, r, ctx)
 		}
 		if sess.Slug != key {
 			return ctx.Route(util.SvcRetro.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		params := &PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
 		auths, permErrors, bc := check(ctx, ctx.App.Retro.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
@@ -91,4 +93,15 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = sess.Title
 		return tmpl(templates.RetroWorkspace(sess, auths, ctx, w))
 	})
+}
+
+func RetroExport(w http.ResponseWriter, r *http.Request) {
+	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+		sess := ctx.App.Retro.GetBySlug(key)
+		if sess == nil {
+			return nil, "", "", nil
+		}
+		return &sess.ID, sess.Slug, sess.Title, ctx.App.Retro.Data.Permissions
+	}
+	ExportAct(util.SvcRetro, f, w, r)
 }

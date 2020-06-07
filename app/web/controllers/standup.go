@@ -3,6 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+
 	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -63,15 +66,14 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Standup.GetBySlug(key)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load standup [" + key + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.SvcStandup.Key + ".list"), nil
+			msg := "can't load standup [" + key + "]"
+			return act.FlashAndRedir(false, msg, util.SvcStandup.Key+".list", w, r, ctx)
 		}
 		if sess.Slug != key {
 			return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		params := &PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
 		auths, permErrors, bc := check(ctx, ctx.App.Standup.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
@@ -83,4 +85,15 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = sess.Title
 		return tmpl(templates.StandupWorkspace(sess, auths, ctx, w))
 	})
+}
+
+func StandupExport(w http.ResponseWriter, r *http.Request) {
+	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+		sess := ctx.App.Standup.GetBySlug(key)
+		if sess == nil {
+			return nil, "", "", nil
+		}
+		return &sess.ID, sess.Slug, sess.Title, ctx.App.Standup.Data.Permissions
+	}
+	ExportAct(util.SvcStandup, f, w, r)
 }

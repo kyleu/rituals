@@ -2,8 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/database/query"

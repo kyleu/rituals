@@ -9,16 +9,16 @@ namespace permission {
       checkbox.checked = perms.length > 0;
 
       const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-      const emails = collection.flatten(perms.map(x => x.v.split(",").filter(x => x.length > 0))).map(x => ({matched: true, domain: x}));
+      const emails = collection.flatten(perms.map(x => x.v.split(",").filter(y => y.length > 0))).map(z => ({ matched: true, domain: z }));
 
-      const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => {
-        return {matched: false, domain: getDomain(m.email)};
-      });
+      const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => (
+        { matched: false, domain: getDomain(m.email) }
+      ));
       emails.push(...additional);
       emails.sort();
 
       dom.setDisplay(emailContainer, emails.length > 0);
-      dom.setContent(emailContainer, emails.length === 0 ? document.createElement("span") : permission.renderEmails(p.key, emails))
+      dom.setContent(emailContainer, emails.length === 0 ? document.createElement("span") : permission.renderEmails(p.key, emails));
     }
   }
 
@@ -34,7 +34,7 @@ namespace permission {
 
   function onEmailChanged(key: string, checked: boolean) {
     const checkbox = dom.opt<HTMLInputElement>(`#perm-${key}-checkbox`);
-    if(checkbox && checked && !checkbox.checked) {
+    if (checkbox && checked && !checkbox.checked) {
       checkbox.checked = true;
     }
   }
@@ -45,7 +45,7 @@ namespace permission {
       if (!checked) {
         el.checked = false;
       }
-    })
+    });
   }
 
   function getDomain(email: string) {

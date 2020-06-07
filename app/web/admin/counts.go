@@ -3,6 +3,8 @@ package admin
 import (
 	"time"
 
+	"github.com/kyleu/rituals.dev/app/model/transcript"
+
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/database"
 	"github.com/kyleu/rituals.dev/app/model/sandbox"
@@ -26,7 +28,7 @@ func SectionCounts(sections []string, routes util.RouteDescriptions, db *databas
 
 func sectionCount(routes util.RouteDescriptions, db *database.Service, sck *socket.Service, section string) (int64, *time.Time, error) {
 	switch section {
-	case util.KeyGraphQL, util.KeyTranscript:
+	case util.KeyGraphQL:
 		return -1, nil, nil
 	case util.KeyConnection:
 		return int64(sck.Count()), nil, nil
@@ -36,6 +38,8 @@ func sectionCount(routes util.RouteDescriptions, db *database.Service, sck *sock
 		return int64(len(routes)), nil, nil
 	case util.KeySandbox:
 		return int64(len(sandbox.AllSandboxes)), nil, nil
+	case util.KeyTranscript:
+		return int64(len(transcript.AllTranscripts)), nil, nil
 	case util.KeyUser:
 		return databaseWork(db, util.KeySystemUser)
 	default:

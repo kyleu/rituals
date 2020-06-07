@@ -23,8 +23,8 @@ namespace member {
 
     const others = members.filter(x => !isSelf(x));
     dom.setContent("#member-detail", renderMembers(others));
-    if(others.length > 0) {
-      modal.hide('welcome');
+    if (others.length > 0) {
+      modal.hide("welcome");
     }
     renderOnline();
   }
@@ -44,7 +44,7 @@ namespace member {
       notify.notify(`${member.name} has joined`, true);
     }
     ms.push(member);
-    ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+    ms.sort((l, r) => (l.name > r.name ? 1 : -1));
 
     members = ms;
     setMembers();
@@ -59,7 +59,7 @@ namespace member {
       modal.hide("member");
       const unfiltered = members;
       const ms = unfiltered.filter(m => m.userID !== member);
-      ms.sort((l, r) => (l.name > r.name) ? 1 : -1);
+      ms.sort((l, r) => (l.name > r.name ? 1 : -1));
       members = ms;
       setMembers();
     }
@@ -81,35 +81,35 @@ namespace member {
       console.warn(`cannot load active member [${activeMember}]`);
     }
     if (id === "self") {
-      id = system.cache.getProfile().userID
+      id = system.cache.getProfile().userID;
     }
     const svc = system.cache.currentService!;
-    if(confirm(`Are you sure you wish to leave this ${svc.key}?`)) {
-      const msg = {svc: svc.key, cmd: command.client.removeMember, param: id};
+    if (confirm(`Are you sure you wish to leave this ${svc.key}?`)) {
+      const msg = { svc: svc.key, cmd: command.client.removeMember, param: id };
       socket.send(msg);
     }
   }
 
   export function saveRole() {
-    const curr = getActiveMember()
-    if(!curr) {
+    const curr = getActiveMember();
+    if (!curr) {
       console.warn("no active member");
-      return
+      return;
     }
     const src = curr.role;
     const tgt = dom.req<HTMLSelectElement>("#member-modal-role-select").value;
 
-    if(src === tgt) {
+    if (src === tgt) {
       modal.hide("member");
     } else {
       const svc = system.cache.currentService!;
-      const msg = {svc: svc.key, cmd: command.client.updateMember, param: {id: curr.userID, role: tgt}};
+      const msg = { svc: svc.key, cmd: command.client.updateMember, param: { id: curr.userID, role: tgt } };
       socket.send(msg);
     }
   }
 
   export function applyMembers(m: member.Member[]) {
-    members = m
+    members = m;
   }
 
   function getActiveMember() {

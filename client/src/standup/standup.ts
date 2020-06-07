@@ -37,7 +37,7 @@ namespace standup {
         setStandupDetail(param as Detail);
         break;
       case command.server.sessionRemove:
-        system.onSessionRemove(services.standup)
+        system.onSessionRemove(services.standup);
         break;
       case command.server.permissionsUpdate:
         system.setPermissions(param as permission.Permission[]);
@@ -78,7 +78,7 @@ namespace standup {
     const sprintID = dom.req<HTMLSelectElement>("#model-sprint-select select").value;
     const permissions = permission.readPermissions();
 
-    const msg = {svc: services.standup.key, cmd: command.client.updateSession, param: {title, teamID, sprintID, permissions}};
+    const msg = { svc: services.standup.key, cmd: command.client.updateSession, param: { title, teamID, sprintID, permissions } };
     socket.send(msg);
   }
 
@@ -95,13 +95,13 @@ namespace standup {
   }
 
   function preUpdate(id: string) {
-    return cache.reports.filter((p) => p.id !== id);
+    return cache.reports.filter(p => p.id !== id);
   }
 
   function postUpdate(x: report.Report[], id: string) {
     report.setReports(x);
 
-    if(id === standup.cache.activeReport) {
+    if (id === standup.cache.activeReport) {
       modal.hide("report");
     }
   }

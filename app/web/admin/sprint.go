@@ -33,9 +33,8 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		sess := ctx.App.Sprint.GetByID(*sprintID)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load sprint [" + sprintID.String() + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.AdminLink(util.SvcSprint.Key)), nil
+			msg := "can't load sprint [" + sprintID.String() + "]"
+			return act.FlashAndRedir(false, msg, util.AdminLink(util.SvcSprint.Key), w, r, ctx)
 		}
 
 		params := act.ParamSetFromRequest(r)

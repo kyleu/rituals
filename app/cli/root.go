@@ -124,6 +124,6 @@ func MakeServer(info *config.AppInfo, address string, port uint16) error {
 		msg += " (verbose)"
 	}
 	info.Logger.Info(fmt.Sprintf(msg, util.AppName, address, port))
-	err = http.ListenAndServe(fmt.Sprint(address, ":", port), handlers.CORS()(r))
+	err = http.ListenAndServe(fmt.Sprintf("%v:%v", address, port), handlers.CORS()(r))
 	return errors.Wrap(err, "unable to run http server")
 }

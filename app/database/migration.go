@@ -1,11 +1,12 @@
 package database
 
 import (
-	"emperror.dev/errors"
 	"fmt"
-	"logur.dev/logur"
 	"strings"
 	"time"
+
+	"emperror.dev/errors"
+	"logur.dev/logur"
 )
 
 func DBWipe(s *Service, logger logur.Logger) error {
@@ -29,30 +30,31 @@ func Migrate(s *Service) error {
 		switch {
 		case idx == maxIdx:
 			m := s.GetMigrationByIdx(maxIdx)
-			if m != nil {
-				if m.Title != file.Title {
-					s.logger.Info(fmt.Sprintf("migration [%v] name has changed from [%v] to [%v]", idx, m.Title, file.Title))
-					err = s.RemoveMigrationByIdx(idx, s.logger)
-					if err != nil {
-						return err
-					}
-					err = applyMigration(s, idx, file)
-					continue
-				}
-				sb := &strings.Builder{}
-				file.F(sb)
-				nc := sb.String()
-				if nc != m.Src {
-					s.logger.Info(fmt.Sprintf("migration [%v:%v] content has changed from [%vB] to [%vB]", idx, file.Title, len(nc), len(m.Src)))
-					err = s.RemoveMigrationByIdx(idx, s.logger)
-					if err != nil {
-						return err
-					}
-					err = applyMigration(s, idx, file)
-				}
+			if m == nil {
+				continue
 			}
-			case idx > maxIdx:
+			if m.Title != file.Title {
+				s.logger.Info(fmt.Sprintf("migration [%v] name has changed from [%v] to [%v]", idx, m.Title, file.Title))
+				err = s.RemoveMigrationByIdx(idx, s.logger)
+				if err != nil {
+					return err
+				}
 				err = applyMigration(s, idx, file)
+				continue
+			}
+			sb := &strings.Builder{}
+			file.F(sb)
+			nc := sb.String()
+			if nc != m.Src {
+				s.logger.Info(fmt.Sprintf("migration [%v:%v] content has changed from [%vB] to [%vB]", idx, file.Title, len(nc), len(m.Src)))
+				err = s.RemoveMigrationByIdx(idx, s.logger)
+				if err != nil {
+					return err
+				}
+				err = applyMigration(s, idx, file)
+			}
+		case idx > maxIdx:
+			err = applyMigration(s, idx, file)
 		default:
 			// noop
 		}

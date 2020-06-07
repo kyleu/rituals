@@ -8,14 +8,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func (s *Service) callbackURL(secure bool, k string) string {
-	if secure {
-		return s.Redir + "/auth/callback/" + k
-	}
-	return s.Redir + "/auth/callback/" + k
+func (s *Service) callbackURL(k string) string {
+	return s.FullURL("auth/callback/" + k)
 }
 
-func (s *Service) getConfig(secure bool, prv *Provider) *oauth2.Config {
+func (s *Service) getConfig(prv *Provider) *oauth2.Config {
 	idKey, secretKey := envsFor(prv)
 	id := os.Getenv(idKey)
 	secret := os.Getenv(secretKey)
@@ -27,15 +24,15 @@ func (s *Service) getConfig(secure bool, prv *Provider) *oauth2.Config {
 		ClientID:     id,
 		ClientSecret: secret,
 		Endpoint:     prv.Endpoint,
-		RedirectURL:  s.callbackURL(secure, prv.Key),
+		RedirectURL:  s.callbackURL(prv.Key),
 		Scopes:       prv.Scopes,
 	}
 
 	return &ret
 }
 
-func (s *Service) URLFor(state string, secure bool, prv *Provider) string {
-	cfg := s.getConfig(secure, prv)
+func (s *Service) URLFor(state string, prv *Provider) string {
+	cfg := s.getConfig(prv)
 	if cfg == nil {
 		return ""
 	}
@@ -43,7 +40,7 @@ func (s *Service) URLFor(state string, secure bool, prv *Provider) string {
 }
 
 func (s *Service) getToken(prv *Provider, code string) (*oauth2.Token, error) {
-	cfg := s.getConfig(false, prv)
+	cfg := s.getConfig(prv)
 	if cfg == nil {
 		return nil, errors.New("no auth config for [" + prv.Key + "]")
 	}

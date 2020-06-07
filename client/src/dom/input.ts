@@ -10,7 +10,7 @@ namespace dom {
   export function wireTextarea(text: HTMLTextAreaElement) {
     function resize() {
       text.style.height = "auto";
-      text.style.height = `${text.scrollHeight < 64 ? 64 : (text.scrollHeight + 6)}px`;
+      text.style.height = `${text.scrollHeight < 64 ? 64 : text.scrollHeight + 6}px`;
     }
 
     function delayedResize() {
@@ -39,12 +39,12 @@ namespace dom {
       el = req<HTMLSelectElement>(el);
     }
     dom.clear(el);
-    for (const c of categories) {
+    categories.forEach(c => {
       const opt = document.createElement("option");
       opt.value = c;
       dom.setText(opt, c);
-      el.appendChild(opt);
-    }
+      (el as HTMLSelectElement).appendChild(opt);
+    });
   }
 
   export function setSelectOption(el: string | HTMLSelectElement, o: string | undefined) {
@@ -59,8 +59,8 @@ namespace dom {
 
   export function insertAtCaret(e: HTMLTextAreaElement, text: string) {
     if (e.selectionStart || e.selectionStart === 0) {
-      var startPos = e.selectionStart;
-      var endPos = e.selectionEnd;
+      let startPos = e.selectionStart;
+      let endPos = e.selectionEnd;
       e.value = e.value.substring(0, startPos) + text + e.value.substring(endPos, e.value.length);
       e.selectionStart = startPos + text.length;
       e.selectionEnd = startPos + text.length;

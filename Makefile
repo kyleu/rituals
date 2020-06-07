@@ -24,6 +24,7 @@ endif
 clean: ## Clean builds
 	rm -rf ${BUILD_DIR}/
 	rm -rf gen
+	rm -rf out
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes

@@ -3,6 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/gofrs/uuid"
+	"github.com/kyleu/rituals.dev/app/model/permission"
+
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -70,15 +73,14 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[util.KeyKey]
 		sess := ctx.App.Estimate.GetBySlug(key)
 		if sess == nil {
-			ctx.Session.AddFlash("error:Can't load estimate [" + key + "]")
-			act.SaveSession(w, r, ctx)
-			return ctx.Route(util.SvcEstimate.Key + ".list"), nil
+			msg := "can't load estimate [" + key + "]"
+			return act.FlashAndRedir(false, msg, util.SvcEstimate.Key+".list", w, r, ctx)
 		}
 		if sess.Slug != key {
 			return ctx.Route(util.SvcEstimate.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		params := &PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
 		auths, permErrors, bc := check(ctx, ctx.App.Estimate.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
@@ -90,4 +92,15 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = sess.Title
 		return tmpl(templates.EstimateWorkspace(sess, auths, ctx, w))
 	})
+}
+
+func EstimateExport(w http.ResponseWriter, r *http.Request) {
+	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+		sess := ctx.App.Estimate.GetBySlug(key)
+		if sess == nil {
+			return nil, "", "", nil
+		}
+		return &sess.ID, sess.Slug, sess.Title, ctx.App.Estimate.Data.Permissions
+	}
+	ExportAct(util.SvcEstimate, f, w, r)
 }

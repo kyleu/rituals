@@ -13,6 +13,16 @@ namespace dom {
     } catch (e) {
       console.warn("error wiring modals", e);
     }
+    try {
+      drop.wire();
+    } catch (e) {
+      console.warn("error wiring drops", e);
+    }
+    try {
+      tags.wire();
+    } catch (e) {
+      console.warn("error wiring tag editors", e);
+    }
   }
 
   export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): ReadonlyArray<T> {
@@ -27,7 +37,7 @@ namespace dom {
       case 1:
         return e[0];
       default:
-        console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`)
+        console.warn(`found [${e.length}] elements with selector [${selector}], wanted zero or one`);
     }
   }
 

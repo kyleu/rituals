@@ -12,6 +12,9 @@ type saveProfileParams struct {
 }
 
 func saveProfile(s *Service, conn *connection, userID uuid.UUID, p *saveProfileParams) error {
+	if len(p.Name) == 0 {
+		p.Name = "Unnamed Member"
+	}
 	if p.Choice == "global" {
 		err := s.UpdateMember(userID, p.Name, p.Picture)
 		if err != nil {

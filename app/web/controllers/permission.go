@@ -22,9 +22,8 @@ type PermissionParams struct {
 	SprintID *uuid.UUID
 }
 
-func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionParams) (auth.Records, permission.Errors, web.Breadcrumbs) {
+func check(ctx *web.RequestContext, permSvc *permission.Service, p *PermissionParams) (auth.Records, permission.Errors, web.Breadcrumbs) {
 	var bc web.Breadcrumbs
-	bc = web.BreadcrumbsSimple(ctx.Route(p.Svc.Key+".list"), p.Svc.Plural)
 
 	auths, currTeams, currSprints := authsTeamsAndSprints(ctx, p.TeamID, p.SprintID)
 
@@ -41,7 +40,9 @@ func check(ctx *web.RequestContext, permSvc *permission.Service, p PermissionPar
 	}
 
 	if sp != nil {
-		bc = append(web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, util.KeyKey, sp.Slug), sp.Title), bc...)
+		bc = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key, util.KeyKey, sp.Slug), sp.Title)
+	} else {
+		bc = web.BreadcrumbsSimple(ctx.Route(p.Svc.Key+".list"), p.Svc.Plural)
 	}
 
 	_, permErrors := permSvc.Check(ctx.App.Auth.Enabled, p.Svc, p.ModelID, auths, tp, sp)
@@ -71,7 +72,7 @@ func authsTeamsAndSprints(ctx *web.RequestContext, tm *uuid.UUID, spr *uuid.UUID
 	return auths, currTeams, currSprints
 }
 
-func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records,  ctx *web.RequestContext, w http.ResponseWriter) (string, error) {
+func permErrorTemplate(svc util.Service, errors permission.Errors, auths auth.Records, ctx *web.RequestContext, w http.ResponseWriter) (string, error) {
 	return tmpl(templates.PermissionErrors(svc, errors, auths, ctx, w))
 }
 

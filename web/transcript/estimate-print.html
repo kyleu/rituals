@@ -1,0 +1,8 @@
+<%: func EstimatePrint(r transcript.EstimateResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Session.Title %></h3>
+  <div><% CommentListPrint(r.Comments, r.Members, buffer) %></div>
+  <hr />
+  <h3>Debug</h3>
+  <pre><%= util.ToJSON(r, nil) %></pre>
+</div>

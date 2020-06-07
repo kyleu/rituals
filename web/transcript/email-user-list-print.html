@@ -1,0 +1,22 @@
+<%: func EmailUserListPrint(models user.SystemUsers, tx *transcript.Context, buffer *bytes.Buffer) %>
+<% if len(models) > 0 { %>
+  <div class="section">
+    <h4><%= util.PluralTitle(util.KeyUser) %></h4>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for _, model := range models { %>
+          <tr>
+            <td><a href="<%= tx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), util.KeyID, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
+            <td><%= model.Name %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

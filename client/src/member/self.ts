@@ -11,7 +11,7 @@ namespace member {
 
   export function updateSelf(self: member.Member | undefined) {
     if (self) {
-      me = self
+      me = self;
       dom.setContent("#self-picture", setPicture(self.picture));
       dom.setText("#member-self .member-name", self.name);
       dom.setValue("#self-name-input", self.name);
@@ -27,7 +27,7 @@ namespace member {
     const name = dom.req<HTMLInputElement>("#self-name-input").value;
     const choice = dom.req<HTMLInputElement>("#self-name-choice-global").checked ? "global" : "local";
     const picture = dom.req<HTMLInputElement>("#self-picture-input").value;
-    const msg = {svc: services.system.key, cmd: command.client.updateProfile, param: {name, choice, picture}};
+    const msg = { svc: services.system.key, cmd: command.client.updateProfile, param: { name, choice, picture } };
     socket.send(msg);
   }
 

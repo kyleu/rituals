@@ -35,10 +35,9 @@ namespace session {
 
     if (oldSlug !== session.slug) {
       window.history.replaceState(null, "", document.location.href.replace(oldSlug, session.slug));
-      console.log("slugChanged!!!!!");
     }
 
-    if(member.selfCanEdit()) {
+    if (member.selfCanEdit()) {
       modal.hide("session");
     }
   }
@@ -62,9 +61,9 @@ namespace session {
     const t = dom.req("#session-view-section .team");
     dom.clear(lc);
     dom.setDisplay("#team-warning-container", tm !== undefined);
-    if(tm) {
+    if (tm) {
       lc.appendChild(team.renderTeamLink(tm));
-      dom.clear(t).appendChild(team.renderTeamLink(tm, true));
+      dom.setContent(t, team.renderTeamLink(tm, true));
       dom.setText("#team-warning-name", tm.title);
     } else {
       dom.setHTML(t, "-none-");
@@ -76,9 +75,9 @@ namespace session {
     const s = dom.req("#session-view-section .sprint");
     dom.clear(lc);
     dom.setDisplay("#sprint-warning-container", spr !== undefined);
-    if(spr) {
+    if (spr) {
       lc.appendChild(sprint.renderSprintLink(spr));
-      dom.clear(s).appendChild(sprint.renderSprintLink(spr, true));
+      dom.setContent(s, sprint.renderSprintLink(spr, true));
       dom.setText("#sprint-warning-name", spr.title);
     } else {
       dom.setHTML(s, "-none-");

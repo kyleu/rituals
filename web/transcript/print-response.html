@@ -1,0 +1,29 @@
+<%: func PrintResponse(t *transcript.Transcript, rsp interface{}, tx *transcript.Context, buffer *bytes.Buffer) %>
+<%
+	switch rsp.(type) {
+	case transcript.EmailResponse:
+		EmailPrint(rsp.(transcript.EmailResponse), tx, buffer)
+	case team.Sessions:
+		TeamListPrint(rsp.(team.Sessions), tx, buffer)
+	case transcript.TeamResponse:
+		TeamPrint(rsp.(transcript.TeamResponse), tx, buffer)
+	case sprint.Sessions:
+		SprintListPrint(rsp.(sprint.Sessions), tx, buffer)
+	case transcript.SprintResponse:
+		SprintPrint(rsp.(transcript.SprintResponse), tx, buffer)
+	case estimate.Sessions:
+		EstimateListPrint(rsp.(estimate.Sessions), tx, buffer)
+	case transcript.EstimateResponse:
+		EstimatePrint(rsp.(transcript.EstimateResponse), tx, buffer)
+	case standup.Sessions:
+		StandupListPrint(rsp.(standup.Sessions), tx, buffer)
+	case transcript.StandupResponse:
+		StandupPrint(rsp.(transcript.StandupResponse), tx, buffer)
+	case retro.Sessions:
+		RetroListPrint(rsp.(retro.Sessions), tx, buffer)
+	case transcript.RetroResponse:
+		RetroPrint(rsp.(transcript.RetroResponse), tx, buffer)
+	default:
+    _, _ = buffer.Write([]byte(fmt.Sprintf("Invalid transcript type [%T]", rsp)))
+  }
+%>
