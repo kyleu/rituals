@@ -1,8 +1,0 @@
-<%: func TeamPrint(r transcript.TeamResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
-<div>
-  <h3><%= r.Session.Title %></h3>
-  <p><% CommentListPrint(r.Comments, r.Members, buffer) %></p>
-  <hr />
-  <h3>Debug</h3>
-  <pre><%= util.ToJSON(r, nil) %></pre>
-</div>

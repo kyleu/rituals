@@ -17,6 +17,7 @@ import (
 )
 
 type SprintResponse struct {
+	Svc         util.Service           `json:"-"`
 	Session     *sprint.Session        `json:"session"`
 	Team        *team.Session          `json:"team"`
 	Comments    comment.Comments       `json:"comments"`
@@ -41,6 +42,7 @@ var Sprint = Transcript{
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
 		return SprintResponse{
+			Svc:         util.SvcSprint,
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
 			Comments:    dataSvc.GetComments(sess.ID, nil),

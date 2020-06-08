@@ -1,0 +1,23 @@
+<%: func PrintTeamList(models team.Sessions, tx *transcript.Context, buffer *bytes.Buffer) %>
+<% if len(models) > 0 { %>
+<hr />
+<section>
+  <h4><%= util.SvcTeam.PluralTitle %></h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for _, model := range models { %>
+        <tr>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
+          <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</section>
+<% } %>

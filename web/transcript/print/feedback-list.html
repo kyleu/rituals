@@ -1,0 +1,27 @@
+<%: func PrintFeedbackList(models retro.Feedbacks, members member.Entries, buffer *bytes.Buffer) %>
+<% if len(models) > 0 { %>
+<hr />
+<section>
+  <h4><%= util.Title(util.KeyFeedback) %></h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Creator</th>
+        <th>Content</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% for _, model := range models { %>
+      <tr>
+        <td><%= model.Category %></td>
+        <td><%= members.GetName(model.UserID) %></td>
+        <td><%== model.HTML %></td>
+        <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      </tr>
+    <% } %>
+    </tbody>
+  </table>
+</section>
+<% } %>

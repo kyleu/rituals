@@ -16,6 +16,7 @@ import (
 )
 
 type TeamResponse struct {
+	Svc         util.Service           `json:"-"`
 	Session     *team.Session          `json:"session"`
 	Comments    comment.Comments       `json:"comments"`
 	Members     member.Entries         `json:"members"`
@@ -40,6 +41,7 @@ var Team = Transcript{
 		}
 		dataSvc := app.Sprint.Data
 		return TeamResponse{
+			Svc:         util.SvcTeam,
 			Session:     sess,
 			Comments:    dataSvc.GetComments(sess.ID, nil),
 			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),

@@ -14,6 +14,7 @@ import (
 )
 
 type RetroResponse struct {
+	Svc         util.Service           `json:"-"`
 	Session     *retro.Session         `json:"session"`
 	Team        *team.Session          `json:"team"`
 	Sprint      *sprint.Session        `json:"sprint"`
@@ -37,6 +38,7 @@ var Retro = Transcript{
 		}
 		dataSvc := app.Retro.Data
 		return RetroResponse{
+			Svc:         util.SvcRetro,
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
 			Sprint:      app.Sprint.GetByIDPointer(sess.SprintID),

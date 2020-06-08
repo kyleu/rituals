@@ -1,0 +1,27 @@
+<%: func PrintEmailRetroList(models retro.Sessions, tx *transcript.Context, buffer *bytes.Buffer) %>
+<% if len(models) > 0 { %>
+<hr />
+<section>
+  <h4><%= util.SvcRetro.PluralTitle %></h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Slug</th>
+        <th>Title</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for _, model := range models { %>
+        <tr>
+          <td><a href="<%= tx.Route(util.AdminLink(util.SvcRetro.Key, util.KeyDetail), util.KeyID, model.ID.String()) %>"><% components.UUID(&model.ID, buffer) %></a></td>
+          <td><a href="<%= tx.Route(util.SvcRetro.Key, util.KeyKey, model.Slug) %>"><%= model.Slug %></a></td>
+          <td><%= model.Title %></td>
+          <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</section>
+<% } %>

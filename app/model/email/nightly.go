@@ -21,7 +21,7 @@ func (s *Service) GetNightlyEmail(ymd string, tx *transcript.Context) (string, *
 	er := rsp.(transcript.EmailResponse)
 
 	b := &bytes.Buffer{}
-	transcripttemplates.EmailPrint(er, tx, b)
+	transcripttemplates.PrintEmail(er, tx, b)
 
 	return b.String(), &er, nil
 }

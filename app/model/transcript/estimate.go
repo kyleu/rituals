@@ -14,6 +14,7 @@ import (
 )
 
 type EstimateResponse struct {
+	Svc         util.Service           `json:"-"`
 	Session     *estimate.Session      `json:"session"`
 	Team        *team.Session          `json:"team"`
 	Sprint      *sprint.Session        `json:"sprint"`
@@ -38,6 +39,7 @@ var Estimate = Transcript{
 		}
 		dataSvc := app.Estimate.Data
 		return EstimateResponse{
+			Svc:         util.SvcEstimate,
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
 			Sprint:      app.Sprint.GetByIDPointer(sess.SprintID),

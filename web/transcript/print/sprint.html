@@ -1,0 +1,25 @@
+<%: func PrintSprint(r transcript.SprintResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Session.Title %></h3>
+
+  <table>
+    <tbody>
+      <% if r.Team != nil { %>
+        <tr>
+          <th><%= util.SvcTeam.Title %></th>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
+        </tr>
+      <% } %>
+      <tr>
+        <th><%= util.Title(util.KeyCreated) %></th>
+        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <% PrintPermissionList(r.Permissions, buffer) %>
+  <% PrintEstimateList(r.Estimates, tx, buffer) %>
+  <% PrintStandupList(r.Standups, tx, buffer) %>
+  <% PrintRetroList(r.Retros, tx, buffer) %>
+  <% PrintCommentList(r.Comments, r.Members, buffer) %>
+</div>

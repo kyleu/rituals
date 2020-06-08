@@ -1,0 +1,27 @@
+<%: func PrintReportList(models standup.Reports, members member.Entries, buffer *bytes.Buffer) %>
+<% if len(models) > 0 { %>
+<hr />
+<section>
+  <h4><%= util.PluralTitle(util.KeyReport) %></h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Creator</th>
+        <th>Content</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% for _, model := range models { %>
+      <tr>
+        <td><%= model.D %></td>
+        <td><%= members.GetName(model.UserID) %></td>
+        <td><%== model.HTML %></td>
+        <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      </tr>
+    <% } %>
+    </tbody>
+  </table>
+</section>
+<% } %>

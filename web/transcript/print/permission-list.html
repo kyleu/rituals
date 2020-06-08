@@ -1,0 +1,10 @@
+<%: func PrintPermissionList(perms permission.Permissions, buffer *bytes.Buffer) %>
+<% if len(perms) > 0 { %>
+<hr />
+<div>
+  <h4><%= util.PluralTitle(util.KeyPermission) %></h4>
+  <pre><%= util.ToJSON(perms, nil) %></pre>
+</div>
+<% } else { %>
+  <p>accessible to anyone with the url</p>
+<% } %>

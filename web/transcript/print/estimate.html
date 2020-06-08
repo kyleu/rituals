@@ -1,0 +1,33 @@
+<%: func PrintEstimate(r transcript.EstimateResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Session.Title %></h3>
+
+  <table>
+    <tbody>
+      <% if r.Team != nil { %>
+        <tr>
+          <th><%= util.SvcTeam.Title %></th>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
+        </tr>
+      <% } %>
+      <% if r.Sprint != nil { %>
+        <tr>
+          <th><%= util.SvcSprint.Title %></th>
+          <td><a href="<%= tx.Route(util.SvcSprint.Key, util.KeyKey, r.Sprint.Slug) %>"><%= r.Sprint.Title %></a></td>
+        </tr>
+      <% } %>
+      <tr>
+        <th><%= util.PluralTitle(util.KeyChoice) %></th>
+        <td><%= strings.Join(r.Session.Choices, ", ") %></td>
+      </tr>
+      <tr>
+        <th><%= util.Title(util.KeyCreated) %></th>
+        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <% PrintPermissionList(r.Permissions, buffer) %>
+  <% PrintStoryList(r.Stories, r.Votes, r.Members, buffer) %>
+  <% PrintCommentList(r.Comments, r.Members, buffer) %>
+</div>

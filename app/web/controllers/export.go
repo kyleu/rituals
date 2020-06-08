@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/model/transcript/pdf"
 	"net/http"
 
 	"github.com/gofrs/uuid"
@@ -70,6 +71,12 @@ func exportTemplate(t *transcript.Transcript, rsp interface{}, fmt transcript.Fo
 	switch fmt {
 	case transcript.FormatJSON:
 		return act.RespondJSON(w, rsp, ctx.Logger)
+	case transcript.FormatPDF:
+		ba, err := pdf.Render(rsp)
+		if err != nil {
+			return eresp(err, "unable to render pdf")
+		}
+		return act.RespondPDF(w, ba)
 	case transcript.FormatPrint:
 		tx := &transcript.Context{UserID: ctx.Profile.UserID, App: ctx.App, Logger: ctx.App.Logger, Routes: ctx.Routes}
 		return tmpl(transcripttemplates.Print(t, rsp, tx, w))

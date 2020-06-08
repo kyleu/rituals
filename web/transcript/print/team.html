@@ -1,0 +1,20 @@
+<%: func PrintTeam(r transcript.TeamResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
+<div>
+  <h3><a class="theme" href="<%= tx.Route(r.Svc.Key, `key`, r.Session.Slug) %>"><%= r.Session.Title %></a></h3>
+
+  <table>
+    <tbody>
+      <tr>
+        <th><%= util.Title(util.KeyCreated) %></th>
+        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <% PrintPermissionList(r.Permissions, buffer) %>
+  <% PrintSprintList(r.Sprints, tx, buffer) %>
+  <% PrintEstimateList(r.Estimates, tx, buffer) %>
+  <% PrintStandupList(r.Standups, tx, buffer) %>
+  <% PrintRetroList(r.Retros, tx, buffer) %>
+  <% PrintCommentList(r.Comments, r.Members, buffer) %>
+</div>

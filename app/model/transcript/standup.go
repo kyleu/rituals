@@ -14,6 +14,7 @@ import (
 )
 
 type StandupResponse struct {
+	Svc         util.Service           `json:"-"`
 	Session     *standup.Session       `json:"session"`
 	Team        *team.Session          `json:"team"`
 	Sprint      *sprint.Session        `json:"sprint"`
@@ -37,6 +38,7 @@ var Standup = Transcript{
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
 		return StandupResponse{
+			Svc:         util.SvcStandup,
 			Session:     sess,
 			Team:        app.Team.GetByIDPointer(sess.TeamID),
 			Sprint:      app.Sprint.GetByIDPointer(sess.SprintID),

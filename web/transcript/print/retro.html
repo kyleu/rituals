@@ -1,0 +1,34 @@
+<%: func PrintRetro(r transcript.RetroResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Session.Title %></h3>
+
+  <table>
+    <tbody>
+      <% if r.Team != nil { %>
+        <tr>
+          <th><%= util.SvcTeam.Title %></th>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
+        </tr>
+      <% } %>
+      <% if r.Sprint != nil { %>
+        <tr>
+          <th><%= util.SvcSprint.Title %></th>
+          <td><a href="<%= tx.Route(util.SvcSprint.Key, util.KeyKey, r.Sprint.Slug) %>"><%= r.Sprint.Title %></a></td>
+        </tr>
+      <% } %>
+      <tr>
+        <th><%= util.PluralTitle(util.KeyCategory) %></th>
+        <td><%= strings.Join(r.Session.Categories, ", ") %></td>
+      </tr>
+      <tr>
+        <th><%= util.Title(util.KeyCreated) %></th>
+        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <% PrintPermissionList(r.Permissions, buffer) %>
+  <% PrintFeedbackList(r.Feedback, r.Members, buffer) %>
+  <% PrintCommentList(r.Comments, r.Members, buffer) %>
+</div>

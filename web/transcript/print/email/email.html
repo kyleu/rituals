@@ -1,0 +1,13 @@
+<%: func PrintEmail(r transcript.EmailResponse, tx *transcript.Context, buffer *bytes.Buffer) %>
+<div>
+  <h3><%= r.Subject() %></h3>
+  <p><%= r.Opener() %></p>
+  <% PrintEmailUserList(r.Users, tx, buffer) %>
+  <% PrintEmailAuthList(r.Auths, tx, buffer) %>
+  <% PrintEmailTeamList(r.Teams, tx, buffer) %>
+  <% PrintEmailSprintList(r.Sprints, tx, buffer) %>
+  <% PrintEmailEstimateList(r.Estimates, tx, buffer) %>
+  <% PrintEmailStandupList(r.Standups, tx, buffer) %>
+  <% PrintEmailRetroList(r.Retros, tx, buffer) %>
+  <% PrintEmailCommentList(r.Comments, buffer) %>
+</div>

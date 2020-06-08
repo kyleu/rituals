@@ -66,10 +66,17 @@ func RespondJSON(w http.ResponseWriter, body interface{}, logger logur.Logger) (
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	b := util.ToJSONBytes(body, logger)
 	_, err := w.Write(b)
-	if err != nil {
-		return "", errors.Wrap(err, "")
+	return "", errors.Wrap(err, "cannot write to response")
+}
+
+func RespondPDF(w http.ResponseWriter, ba []byte) (string, error) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	if len(ba) == 0 {
+		return "", errors.New("no bytes available to write")
 	}
-	return "", nil
+	_, err := w.Write(ba)
+	return "", errors.Wrap(err, "cannot write to response")
 }
 
 func logComplete(startNanos int64, ctx *web.RequestContext, status int, r *http.Request) {
