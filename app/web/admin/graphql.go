@@ -23,7 +23,7 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 		if err != nil {
@@ -58,7 +58,7 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 }
 
 func graphQLResponse(w http.ResponseWriter, res *graphql.Result, logger logur.Logger) (string, error) {
-	return act.RespondJSON(w, res, logger)
+	return act.RespondJSON(w, "", res, logger)
 }
 
 func prepareService(app *config.AppInfo) error {

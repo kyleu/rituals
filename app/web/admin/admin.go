@@ -24,9 +24,9 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.AdminLink()), util.KeyAdmin)
 		countMap, recentMap, err := SectionCounts(homeSections, util.ExtractRoutes(ctx.Routes), ctx.App.Database, ctx.App.Socket)
 		if err != nil {
-			return eresp(err, "error getting section counts")
+			return act.EResp(err, "error getting section counts")
 		}
-		return tmpl(admintemplates.Home(ctx, homeSections, countMap, recentMap, params.Get(util.KeyAdmin, ctx.Logger), w))
+		return act.T(admintemplates.Home(ctx, homeSections, countMap, recentMap, params.Get(util.KeyAdmin, ctx.Logger), w))
 	})
 }
 

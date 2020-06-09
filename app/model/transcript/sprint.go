@@ -1,8 +1,7 @@
 package transcript
 
 import (
-	"errors"
-
+	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/model/comment"

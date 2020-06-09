@@ -21,7 +21,7 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		users := ctx.App.User.List(params.Get(util.KeyUser, ctx.Logger))
-		return tmpl(admintemplates.UserList(users, params, ctx, w))
+		return act.T(admintemplates.UserList(users, params, ctx, w))
 	})
 }
 
@@ -29,7 +29,7 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		userID, err := act.IDFromParams(util.KeyUser, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		u := ctx.App.User.GetByID(*userID, false)
 		if u == nil {
@@ -53,6 +53,6 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, userID.String()), u.Name)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.UserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))
+		return act.T(admintemplates.UserDetail(u, auths, teams, sprints, estimates, standups, retros, actions, params, ctx, w))
 	})
 }

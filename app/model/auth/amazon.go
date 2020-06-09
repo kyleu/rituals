@@ -14,10 +14,9 @@ import (
 var amazonScopes = []string{"profile"}
 
 type amazonUser struct {
-	ID      string `json:"login"`
+	ID      string `json:"user_id"`
 	Email   string `json:"email"`
 	Name    string `json:"name"`
-	Picture string `json:"avatar_url"`
 }
 
 func amazonAuth(tok *oauth2.Token) (*Record, error) {
@@ -56,7 +55,7 @@ func amazonAuth(tok *oauth2.Token) (*Record, error) {
 		Expires:    &tok.Expiry,
 		Name:       user.Name,
 		Email:      user.Email,
-		Picture:    user.Picture,
+		Picture:    "",
 		Created:    time.Time{},
 	}
 	return &ret, nil

@@ -25,7 +25,7 @@ func ConnectionList(w http.ResponseWriter, r *http.Request) {
 
 		p := act.ParamSetFromRequest(r)
 		connections := ctx.App.Socket.List(p.Get(util.KeySocket, ctx.Logger))
-		return tmpl(admintemplates.ConnectionList(connections, p, ctx, w))
+		return act.T(admintemplates.ConnectionList(connections, p, ctx, w))
 	})
 }
 
@@ -33,7 +33,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		connectionID, err := act.IDFromParams(util.KeyConnection, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		connection := ctx.App.Socket.GetByID(*connectionID)
 		ctx.Title = connection.ID.String()
@@ -44,7 +44,7 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = bc
 
 		msg := socket.NewMessage(util.SvcSystem, socket.ServerCmdPong, nil)
-		return tmpl(admintemplates.ConnectionDetail(connection, msg, ctx, w))
+		return act.T(admintemplates.ConnectionDetail(connection, msg, ctx, w))
 	})
 }
 
@@ -52,14 +52,14 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		connectionID, err := act.IDFromParams(util.KeyConnection, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		connection := ctx.App.Socket.GetByID(*connectionID)
 
 		frm := &form.ConnectionForm{}
 		err = form.Decode(r, frm, ctx.Logger)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		var param []map[string]interface{}
@@ -68,7 +68,7 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 		msg := socket.NewMessage(svc, frm.Cmd, param)
 		err = ctx.App.Socket.WriteMessage(*connectionID, msg)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		ctx.Title = connectionID.String()
@@ -78,6 +78,6 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.ConnectionDetail(connection, msg, ctx, w))
+		return act.T(admintemplates.ConnectionDetail(connection, msg, ctx, w))
 	})
 }

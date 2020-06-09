@@ -3,9 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/permission"
-
 	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -26,7 +23,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = util.PluralTitle(util.SvcTeam.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key+".list"), util.SvcTeam.Plural)
-		return tmpl(templates.TeamList(sessions, auths, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, w))
+		return act.T(templates.TeamList(sessions, auths, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, w))
 	})
 }
 
@@ -38,12 +35,12 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 
 		sess, err := ctx.App.Team.New(sf.Title, ctx.Profile.UserID, sf.MemberName)
 		if err != nil {
-			return eresp(err, "error creating team session")
+			return act.EResp(err, "error creating team session")
 		}
 
 		_, err = ctx.App.Team.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
-			return eresp(err, "error setting permissions for new session")
+			return act.EResp(err, "error setting permissions for new session")
 		}
 
 		return ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug), nil
@@ -62,28 +59,34 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := &PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
-		auths, permErrors, bc := check(ctx, ctx.App.Team.Data.Permissions, params)
+		params := &act.PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
+		auths, permErrors, bc := act.CheckPerms(ctx, ctx.App.Team.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcTeam, permErrors, auths, ctx, w)
+			return act.PermErrorTemplate(util.SvcTeam, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
 
-		return tmpl(templates.TeamWorkspace(sess, auths, ctx, w))
+		return act.T(templates.TeamWorkspace(sess, auths, ctx, w))
 	})
 }
 
 func TeamExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+	f := func(key string, ctx *web.RequestContext) act.ExportParams {
 		sess := ctx.App.Team.GetBySlug(key)
 		if sess == nil {
-			return nil, "", "", nil
+			return act.ExportParams{}
 		}
-		return &sess.ID, sess.Slug, sess.Title, ctx.App.Team.Data.Permissions
+		return act.ExportParams{
+			ModelID: &sess.ID,
+			Slug:    sess.Slug,
+			Title:   sess.Title,
+			Path:    ctx.Route(util.SvcTeam.Key, util.KeyKey, sess.Slug),
+			PermSvc: ctx.App.Team.Data.Permissions,
+		}
 	}
-	ExportAct(util.SvcTeam, f, w, r)
+	act.ExportAct(util.SvcTeam, f, w, r)
 }

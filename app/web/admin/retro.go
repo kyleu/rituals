@@ -20,7 +20,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
 		params := act.ParamSetFromRequest(r)
 		retros := ctx.App.Retro.List(params.Get(util.SvcRetro.Key, ctx.Logger))
-		return tmpl(admintemplates.RetroList(retros, params, ctx, w))
+		return act.T(admintemplates.RetroList(retros, params, ctx, w))
 	})
 }
 
@@ -28,7 +28,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		retroID, err := act.IDFromParams(util.SvcRetro.Key, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		sess := ctx.App.Retro.GetByID(*retroID)
 		if sess == nil {
@@ -48,6 +48,6 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, retroID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.RetroDetail(sess, feedbacks, data, params, ctx, w))
+		return act.T(admintemplates.RetroDetail(sess, feedbacks, data, params, ctx, w))
 	})
 }

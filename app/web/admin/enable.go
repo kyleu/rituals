@@ -26,7 +26,7 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 			ctx.Logger.Warn("### admin enable request")
 			ctx.Logger.Warn("### to enable admin access for this user")
 			ctx.Logger.Warn("### add \"?code=" + code + "\" to your url")
-			return tmpl(templates.StaticMessage("To become an admin, follow the instructions in your server logs", ctx, w))
+			return act.T(templates.StaticMessage("To become an admin, follow the instructions in your server logs", ctx, w))
 		}
 		if v[0] != code {
 			if v[0] == (code + "!") {
@@ -34,12 +34,12 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 				web.SetSessionUser(admin, ctx.Session, r, w, ctx.Logger)
 				return ctx.Route(util.KeyAdmin), nil
 			}
-			return tmpl(templates.StaticMessage("Invalid code", ctx, w))
+			return act.T(templates.StaticMessage("Invalid code", ctx, w))
 		}
 
 		err := ctx.App.User.SetRole(ctx.Profile.UserID, util.RoleAdmin)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		msg := "you're a wizard, Harry!"

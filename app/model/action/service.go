@@ -3,6 +3,7 @@ package action
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/kyleu/rituals.dev/app/database"
 
@@ -40,16 +41,16 @@ func (s *Service) New(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act
 	return s.GetByID(id), nil
 }
 
-func (s *Service) PostRef(svc util.Service, modelID *uuid.UUID, refSvc util.Service, refID uuid.UUID, userID uuid.UUID, act string, note string) {
+func (s *Service) PostRef(svc util.Service, modelID *uuid.UUID, refSvc util.Service, refID uuid.UUID, userID uuid.UUID, act string, notes ...string) {
 	if modelID != nil {
 		actionContent := map[string]interface{}{util.KeySvc: refSvc.Key, util.KeyID: refID}
-		s.Post(svc, *modelID, userID, act, actionContent, note)
+		s.Post(svc, *modelID, userID, act, actionContent, notes...)
 	}
 }
 
-func (s *Service) Post(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, note string) {
+func (s *Service) Post(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, notes ...string) {
 	go func() {
-		_, err := s.New(svc, modelID, userID, act, content, note)
+		_, err := s.New(svc, modelID, userID, act, content, strings.Join(notes, "\n\n"))
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("unable to save new action: %+v", err))
 		}

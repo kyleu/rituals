@@ -47,7 +47,7 @@ func Act(w http.ResponseWriter, r *http.Request, f func(*web.RequestContext) (st
 			ctx.Title = "Error"
 		}
 		if IsContentTypeJSON(GetContentType(r)) {
-			_, _ = RespondJSON(w, errorResult{Status: util.KeyError, Message: err.Error()}, ctx.Logger)
+			_, _ = RespondJSON(w, "", errorResult{Status: util.KeyError, Message: err.Error()}, ctx.Logger)
 		} else {
 			_, _ = components.InternalServerError(util.GetErrorDetail(err), r, ctx, w)
 		}
@@ -61,16 +61,34 @@ func Act(w http.ResponseWriter, r *http.Request, f func(*web.RequestContext) (st
 	}
 }
 
-func RespondJSON(w http.ResponseWriter, body interface{}, logger logur.Logger) (string, error) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	b := util.ToJSONBytes(body, logger)
-	_, err := w.Write(b)
-	return "", errors.Wrap(err, "cannot write to response")
+func T(_ int, err error) (string, error) {
+	return "", err
 }
 
-func RespondPDF(w http.ResponseWriter, ba []byte) (string, error) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+func EResp(err error, msgs ...string) (string, error) {
+	msg := strings.Join(msgs, "\n")
+	if len(msg) == 0 {
+		return "", err
+	}
+	return "", errors.Wrap(err, msg)
+}
+
+func ENew(msg string) (string, error) {
+	return "", errors.New(msg)
+}
+
+func RespondJSON(w http.ResponseWriter, filename string, body interface{}, logger logur.Logger) (string, error) {
+	return RespondMIME(filename, "application/json", "pdf", util.ToJSONBytes(body, logger), w)
+}
+
+func RespondMIME(filename string, mime string, ext string, ba []byte, w http.ResponseWriter) (string, error) {
+	w.Header().Set("Content-Type", mime + "; charset=UTF-8")
+	if len(filename) > 0 {
+		if !strings.HasSuffix(filename, "." + ext) {
+			filename = filename + "." + ext
+		}
+		w.Header().Set("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if len(ba) == 0 {
 		return "", errors.New("no bytes available to write")

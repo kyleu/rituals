@@ -24,7 +24,7 @@ func MigrationList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		migrations := ctx.App.Database.ListMigrations(params.Get(util.KeyMigration, ctx.Logger))
-		return tmpl(admintemplates.MigrationList(migrations, params, ctx, w))
+		return act.T(admintemplates.MigrationList(migrations, params, ctx, w))
 	})
 }
 
@@ -32,7 +32,7 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		migrationIdxStr, ok := mux.Vars(r)[util.KeyIdx]
 		if !ok {
-			return eresp(errors.New("invalid migration id"), "")
+			return act.EResp(errors.New("invalid migration id"))
 		}
 		migrationIdx, _ := strconv.ParseInt(migrationIdxStr, 10, 64)
 		e := ctx.App.Database.GetMigrationByIdx(int(migrationIdx))
@@ -51,6 +51,6 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyIdx, idxStr), idxStr)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.MigrationDetail(e, params, ctx, w))
+		return act.T(admintemplates.MigrationDetail(e, params, ctx, w))
 	})
 }

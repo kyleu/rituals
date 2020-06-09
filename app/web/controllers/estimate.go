@@ -3,9 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/permission"
-
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -29,7 +26,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = util.SvcEstimate.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key+".list"), util.SvcEstimate.Plural)
-		return tmpl(templates.EstimateList(sessions, teams, sprints, auths, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, w))
+		return act.T(templates.EstimateList(sessions, teams, sprints, auths, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, w))
 	})
 }
 
@@ -47,21 +44,21 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 
 		sess, err := ctx.App.Estimate.New(sf.Title, ctx.Profile.UserID, sf.MemberName, choices, sf.TeamID, sf.SprintID)
 		if err != nil {
-			return eresp(err, "error creating estimate session")
+			return act.EResp(err, "error creating estimate session")
 		}
 
 		_, err = ctx.App.Estimate.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
-			return eresp(err, "error setting permissions for new session")
+			return act.EResp(err, "error setting permissions for new session")
 		}
 
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint, sf.SprintID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 
 		return ctx.Route(util.SvcEstimate.Key, util.KeyKey, sess.Slug), nil
@@ -80,27 +77,33 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcEstimate.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := &PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := check(ctx, ctx.App.Estimate.Data.Permissions, params)
+		params := &act.PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		auths, permErrors, bc := act.CheckPerms(ctx, ctx.App.Estimate.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcEstimate, permErrors, auths, ctx, w)
+			return act.PermErrorTemplate(util.SvcEstimate, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		return tmpl(templates.EstimateWorkspace(sess, auths, ctx, w))
+		return act.T(templates.EstimateWorkspace(sess, auths, ctx, w))
 	})
 }
 
 func EstimateExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+	f := func(key string, ctx *web.RequestContext) act.ExportParams {
 		sess := ctx.App.Estimate.GetBySlug(key)
 		if sess == nil {
-			return nil, "", "", nil
+			return act.ExportParams{}
 		}
-		return &sess.ID, sess.Slug, sess.Title, ctx.App.Estimate.Data.Permissions
+		return act.ExportParams{
+			ModelID: &sess.ID,
+			Slug:    sess.Slug,
+			Title:   sess.Title,
+			Path:    ctx.Route(util.SvcEstimate.Key, util.KeyKey, sess.Slug),
+			PermSvc: ctx.App.Estimate.Data.Permissions,
+		}
 	}
-	ExportAct(util.SvcEstimate, f, w, r)
+	act.ExportAct(util.SvcEstimate, f, w, r)
 }

@@ -34,11 +34,11 @@ namespace collection {
   }
 
   export function findGroup<K, V>(groups: collection.Group<K, V>[], key: K): ReadonlyArray<V> {
-    groups.forEach(g => {
+    for (const g of groups) {
       if (g.key === key) {
         return g.members;
       }
-    });
+    }
     return [];
   }
 

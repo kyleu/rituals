@@ -17,7 +17,7 @@
         <% TeamHistory(model, ctx, _buffer) %>
       </div>
       <div class="uk-width-1-3@m">
-        <% MemberOther(ctx, _buffer) %>
+        <% MemberOther(ctx, ctx.Route(util.SvcTeam.Key, util.KeyKey, model.Slug), _buffer) %>
       </div>
     </div>
   </div>

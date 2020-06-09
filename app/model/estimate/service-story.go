@@ -2,8 +2,6 @@ package estimate
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/kyleu/rituals.dev/app/model/action"
 
 	"github.com/kyleu/rituals.dev/app/database/query"
@@ -105,7 +103,7 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 
 func (s *Service) postStory(story *Story, userID uuid.UUID, act string) {
 	actionContent := map[string]interface{}{"storyID": story.ID}
-	s.Data.Actions.Post(s.svc, story.EstimateID, userID, act, actionContent, "")
+	s.Data.Actions.Post(s.svc, story.EstimateID, userID, act, actionContent)
 }
 
 func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID uuid.UUID) (bool, string, error) {
@@ -121,42 +119,17 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 
 	if status == StoryStatusComplete {
 		votes := s.GetStoryVotes(storyID, nil)
-		finalVote = calcFinalVote(votes)
+		vr := CalculateVoteResult(votes)
+		finalVote = vr.FinalVote
 	}
 	cols := []string{"status", "final_vote"}
 	q := query.SQLUpdate(util.KeyStory, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err = s.db.UpdateOne(q, nil, status.String(), finalVote, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID, util.KeyStatus: status, "finalVote": finalVote}
-	s.Data.Actions.Post(s.svc, story.EstimateID, userID, action.ActStoryStatus, actionContent, "")
+	s.Data.Actions.Post(s.svc, story.EstimateID, userID, action.ActStoryStatus, actionContent)
 
 	return true, finalVote, errors.Wrap(err, "error updating story status")
-}
-
-func calcFinalVote(votes Votes) string {
-	choices := make([]float64, 0)
-	for _, v := range votes {
-		f, err := strconv.ParseFloat(v.Choice, 64)
-		if err == nil {
-			choices = append(choices, f)
-		}
-	}
-
-	sum := float64(0)
-	for _, f := range choices {
-		sum += f
-	}
-
-	final := float64(0)
-	if len(choices) > 0 {
-		final = sum / float64(len(choices))
-	}
-	ret := fmt.Sprint(final)
-	min := 4
-	if len(ret) < min {
-		return ret
-	}
-	return ret[0:4]
 }
 
 func toStories(dtos []storyDTO) Stories {

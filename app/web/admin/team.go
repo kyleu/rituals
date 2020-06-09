@@ -21,7 +21,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		teams := ctx.App.Team.List(params.Get(util.SvcTeam.Key, ctx.Logger))
-		return tmpl(admintemplates.TeamList(teams, params, ctx, w))
+		return act.T(admintemplates.TeamList(teams, params, ctx, w))
 	})
 }
 
@@ -29,7 +29,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		teamID, err := act.IDFromParams(util.SvcTeam.Key, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		sess := ctx.App.Team.GetByID(*teamID)
 		if sess == nil {
@@ -51,6 +51,6 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, teamID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.TeamDetail(sess, sprints, estimates, standups, retros, data, params, ctx, w))
+		return act.T(admintemplates.TeamDetail(sess, sprints, estimates, standups, retros, data, params, ctx, w))
 	})
 }

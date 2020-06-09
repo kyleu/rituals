@@ -35,7 +35,7 @@ namespace socket {
       onSocketMessage(msg);
     };
     socket.onerror = (event) => {
-      rituals.onError(services.system, event.type);
+      // rituals.onError(services.system, event.type);
     };
     socket.onclose = () => {
       onSocketClose();

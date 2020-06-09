@@ -17,7 +17,7 @@
         <% RetroFeedback(ctx, _buffer) %>
       </div>
       <div class="uk-width-1-4@m">
-        <% MemberOther(ctx, _buffer) %>
+        <% MemberOther(ctx, ctx.Route(util.SvcRetro.Key, util.KeyKey, model.Slug), _buffer) %>
       </div>
     </div>
   </div>

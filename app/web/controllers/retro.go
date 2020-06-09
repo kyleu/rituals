@@ -3,9 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/permission"
-
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/model/retro"
 	"github.com/kyleu/rituals.dev/app/web/act"
@@ -30,7 +27,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = util.SvcRetro.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key+".list"), util.SvcRetro.Plural)
-		return tmpl(templates.RetroList(sessions, teams, sprints, auths, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, w))
+		return act.T(templates.RetroList(sessions, teams, sprints, auths, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, w))
 	})
 }
 
@@ -48,21 +45,21 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 
 		sess, err := ctx.App.Retro.New(sf.Title, ctx.Profile.UserID, sf.MemberName, categories, sf.TeamID, sf.SprintID)
 		if err != nil {
-			return eresp(err, "error creating retro session")
+			return act.EResp(err, "error creating retro session")
 		}
 
 		_, err = ctx.App.Retro.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
-			return eresp(err, "error setting permissions for new session")
+			return act.EResp(err, "error setting permissions for new session")
 		}
 
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint, sf.SprintID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 
 		return ctx.Route(util.SvcRetro.Key, util.KeyKey, sess.Slug), nil
@@ -81,27 +78,33 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcRetro.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := &PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := check(ctx, ctx.App.Retro.Data.Permissions, params)
+		params := &act.PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		auths, permErrors, bc := act.CheckPerms(ctx, ctx.App.Retro.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcRetro, permErrors, auths, ctx, w)
+			return act.PermErrorTemplate(util.SvcRetro, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		return tmpl(templates.RetroWorkspace(sess, auths, ctx, w))
+		return act.T(templates.RetroWorkspace(sess, auths, ctx, w))
 	})
 }
 
 func RetroExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+	f := func(key string, ctx *web.RequestContext) act.ExportParams {
 		sess := ctx.App.Retro.GetBySlug(key)
 		if sess == nil {
-			return nil, "", "", nil
+			return act.ExportParams{}
 		}
-		return &sess.ID, sess.Slug, sess.Title, ctx.App.Retro.Data.Permissions
+		return act.ExportParams{
+			ModelID: &sess.ID,
+			Slug:    sess.Slug,
+			Title:   sess.Title,
+			Path:    ctx.Route(util.SvcRetro.Key, util.KeyKey, sess.Slug),
+			PermSvc: ctx.App.Retro.Data.Permissions,
+		}
 	}
-	ExportAct(util.SvcRetro, f, w, r)
+	act.ExportAct(util.SvcRetro, f, w, r)
 }

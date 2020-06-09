@@ -3,9 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/permission"
-
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web/act"
 
@@ -26,7 +23,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = util.PluralTitle(util.SvcSprint.Key)
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Plural)
-		return tmpl(templates.SprintList(sessions, teams, auths, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, w))
+		return act.T(templates.SprintList(sessions, teams, auths, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, w))
 	})
 }
 
@@ -36,28 +33,28 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 
 		startDate, err := util.FromYMD(r.Form.Get("startDate"))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		endDate, err := util.FromYMD(r.Form.Get("endDate"))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User)
 
 		sess, err := ctx.App.Sprint.New(sf.Title, ctx.Profile.UserID, sf.MemberName, startDate, endDate, sf.TeamID)
 		if err != nil {
-			return eresp(err, "error creating sprint session")
+			return act.EResp(err, "error creating sprint session")
 		}
 
 		_, err = ctx.App.Sprint.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
-			return eresp(err, "error setting permissions for new session")
+			return act.EResp(err, "error setting permissions for new session")
 		}
 
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 		return ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug), nil
 	})
@@ -75,27 +72,33 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := &PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
-		auths, permErrors, bc := check(ctx, ctx.App.Sprint.Data.Permissions, params)
+		params := &act.PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
+		auths, permErrors, bc := act.CheckPerms(ctx, ctx.App.Sprint.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcSprint, permErrors, auths, ctx, w)
+			return act.PermErrorTemplate(util.SvcSprint, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		return tmpl(templates.SprintWorkspace(sess, auths, ctx, w))
+		return act.T(templates.SprintWorkspace(sess, auths, ctx, w))
 	})
 }
 
 func SprintExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+	f := func(key string, ctx *web.RequestContext) act.ExportParams {
 		sess := ctx.App.Sprint.GetBySlug(key)
 		if sess == nil {
-			return nil, "", "", nil
+			return act.ExportParams{}
 		}
-		return &sess.ID, sess.Slug, sess.Title, ctx.App.Sprint.Data.Permissions
+		return act.ExportParams{
+			ModelID: &sess.ID,
+			Slug:    sess.Slug,
+			Title:   sess.Title,
+			Path:    ctx.Route(util.SvcSprint.Key, util.KeyKey, sess.Slug),
+			PermSvc: ctx.App.Sprint.Data.Permissions,
+		}
 	}
-	ExportAct(util.SvcSprint, f, w, r)
+	act.ExportAct(util.SvcSprint, f, w, r)
 }

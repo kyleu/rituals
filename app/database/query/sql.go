@@ -63,8 +63,8 @@ func SQLSelect(columns string, tables string, where string, orderBy string, limi
 	return "select " + columns + " from " + tables + whereClause + orderByClause + limitClause + offsetClause
 }
 
-func SQLSelectSimple(columns string, tables string, where string) string {
-	return SQLSelect(columns, tables, where, "", 0, 0)
+func SQLSelectSimple(columns string, tables string, where ...string) string {
+	return SQLSelect(columns, tables, strings.Join(where, " and "), "", 0, 0)
 }
 
 func SQLUpdate(table string, columns []string, where string) string {

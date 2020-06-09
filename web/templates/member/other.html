@@ -1,4 +1,4 @@
-<%: func MemberOther(ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberOther(ctx *web.RequestContext, path string, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
@@ -16,13 +16,14 @@
       <h2 class="uk-modal-title">Invite Member</h2>
     </div>
     <div class="uk-modal-body" data-uk-overflow-auto>
-      <p>For now, just share the url of this page from your address bar</p>
       <p id="team-warning-container">
         Joining this session will also join the current team, <span id="team-warning-name"></span>
       </p>
       <p id="sprint-warning-container">
         Joining this session will also join the current sprint, <span id="sprint-warning-name"></span>
       </p>
+      <p>For now, just share the url of this page from your address bar, or be the world's first person to use a QR code</p>
+      <p><img src="<%= ctx.Route(`qr`) %>?path=<%= url.QueryEscape(path) %>" width="128" height="128" alt="lol qr code wat" /></p>
     </div>
   </div>
 </div>

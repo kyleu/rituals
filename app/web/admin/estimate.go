@@ -22,7 +22,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		estimates := ctx.App.Estimate.List(params.Get(util.SvcEstimate.Key, ctx.Logger))
-		return tmpl(admintemplates.EstimateList(estimates, params, ctx, w))
+		return act.T(admintemplates.EstimateList(estimates, params, ctx, w))
 	})
 }
 
@@ -30,7 +30,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		estimateID, err := act.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		sess := ctx.App.Estimate.GetByID(*estimateID)
 		if sess == nil {
@@ -50,7 +50,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, estimateID.String()), sess.Slug)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.EstimateDetail(sess, stories, data, params, ctx, w))
+		return act.T(admintemplates.EstimateDetail(sess, stories, data, params, ctx, w))
 	})
 }
 
@@ -58,15 +58,15 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		storyID, err := act.IDFromParams(util.KeyStory, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		story, err := ctx.App.Estimate.GetStoryByID(*storyID)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		estimateID, err := ctx.App.Estimate.GetStoryEstimateID(*storyID)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		sess := ctx.App.Estimate.GetByID(*estimateID)
 		if sess == nil {
@@ -85,6 +85,6 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		str := fmt.Sprint("story ", story.Idx)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(sl, util.KeyID, storyID.String()), str)...)
 		ctx.Breadcrumbs = bc
-		return tmpl(admintemplates.StoryDetail(story, votes, params, ctx, w))
+		return act.T(admintemplates.StoryDetail(story, votes, params, ctx, w))
 	})
 }

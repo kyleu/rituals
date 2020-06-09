@@ -3,7 +3,11 @@
 <hr />
 <div>
   <h4><%= util.PluralTitle(util.KeyPermission) %></h4>
-  <pre><%= util.ToJSON(perms, nil) %></pre>
+  <ul>
+    <% for _, p := range perms { %>
+      <li><%= p.Message() %></li>
+    <% } %>
+  </ul>
 </div>
 <% } else { %>
   <p>accessible to anyone with the url</p>

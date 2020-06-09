@@ -47,3 +47,23 @@ type Comment struct {
 }
 
 type Comments []*Comment
+
+func (cs Comments) ForType(t string) Comments {
+	var ret Comments
+	for _, c := range cs {
+		if c.TargetType == t {
+			ret = append(ret, c)
+		}
+	}
+	return ret
+}
+
+func (cs Comments) ForID(id uuid.UUID) Comments {
+	var ret Comments
+	for _, c := range cs {
+		if c.TargetID != nil && *c.TargetID == id {
+			ret = append(ret, c)
+		}
+	}
+	return ret
+}

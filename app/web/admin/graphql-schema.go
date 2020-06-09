@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/app/web/act"
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/database/gql"
@@ -15,12 +16,12 @@ func GraphiQL(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
 		ctx.Title = "GraphiQL"
-		return tmpl(templates.GraphiQL(ctx, w))
+		return act.T(templates.GraphiQL(ctx, w))
 	})
 }
 
@@ -28,7 +29,7 @@ func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
@@ -36,7 +37,7 @@ func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link), "query")...)
 		ctx.Breadcrumbs = bc
 		ctx.Title = "GraphQL Voyager"
-		return tmpl(templates.GraphQLVoyager(gql.QueryName, ctx, w))
+		return act.T(templates.GraphQLVoyager(gql.QueryName, ctx, w))
 	})
 }
 
@@ -44,7 +45,7 @@ func GraphQLVoyagerMutation(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		err := prepareService(ctx.App)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
@@ -52,6 +53,6 @@ func GraphQLVoyagerMutation(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link), "mutation")...)
 		ctx.Breadcrumbs = bc
 		ctx.Title = "GraphQL Voyager"
-		return tmpl(templates.GraphQLVoyager(gql.MutationName, ctx, w))
+		return act.T(templates.GraphQLVoyager(gql.MutationName, ctx, w))
 	})
 }

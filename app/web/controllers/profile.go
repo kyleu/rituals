@@ -23,7 +23,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "User Profile"
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
 		ref := r.Header.Get("Referer")
-		return tmpl(templates.Profile(auths, ref, ctx, w))
+		return act.T(templates.Profile(auths, ref, ctx, w))
 	})
 }
 
@@ -32,7 +32,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 		prof := &form.ProfileForm{}
 		err := form.Decode(r, prof, ctx.Logger)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 
 		if len(strings.TrimSpace(prof.Username)) == 0 {
@@ -47,7 +47,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 		_ = ctx.App.User.GetByID(ctx.Profile.UserID, true)
 		_, err = ctx.App.User.SaveProfile(ctx.Profile)
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		ref := strings.TrimSpace(prof.Ref)
 		if len(ref) == 0 || strings.HasPrefix(ref, "http") {
@@ -64,13 +64,13 @@ func ProfilePic(w http.ResponseWriter, r *http.Request) {
 		}
 		id, err := act.IDFromParams(util.KeyID, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "invalid id")
+			return act.EResp(err, "invalid id")
 		}
 		a := ctx.App.Auth.GetByID(*id)
 		ctx.Profile.Picture = a.Picture
 		_, err = ctx.App.User.SaveProfile(ctx.Profile)
 		if err != nil {
-			return eresp(err, "can't save profile")
+			return act.EResp(err, "can't save profile")
 		}
 
 		return ctx.Route(util.KeyProfile), nil
@@ -85,10 +85,10 @@ func ProfileTheme(w http.ResponseWriter, r *http.Request) {
 		ctx.App.User.GetByID(ctx.Profile.UserID, true)
 		_, err := ctx.App.User.SaveProfile(ctx.Profile)
 		if err != nil {
-			return eresp(err, "can't save profile")
+			return act.EResp(err, "can't save profile")
 		}
 
 		_, err = w.Write([]byte(""))
-		return eresp(err, "")
+		return act.EResp(err)
 	})
 }

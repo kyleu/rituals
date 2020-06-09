@@ -29,7 +29,7 @@ func (s *Service) Register(modelID uuid.UUID, userID uuid.UUID, memberName strin
 			s.logger.Error(fmt.Sprintf("error retrieving updated member for user [%v] and model [%v]: %+v", modelID, userID, err))
 		}
 
-		s.actions.Post(s.svc, modelID, userID, action.ActMemberAdd, nil, "")
+		s.actions.Post(s.svc, modelID, userID, action.ActMemberAdd, nil)
 	}
 
 	return dto

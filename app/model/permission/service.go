@@ -97,7 +97,7 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 	}
 
 	actionContent := map[string]interface{}{"k": k, "access": access}
-	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, actionContent, "")
+	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, actionContent)
 
 	return dto
 }
@@ -155,7 +155,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 		return nil, errors.Wrap(err, fmt.Sprintf("error committing permissions transaction for model [%v]: %+v", modelID, err))
 	}
 
-	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, perms, "")
+	s.actions.Post(s.svc, modelID, userID, action.ActPermissions, perms)
 
 	return perms, nil
 }

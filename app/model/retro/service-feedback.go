@@ -57,7 +57,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": id}
-	s.Data.Actions.Post(s.svc, retroID, userID, action.ActFeedbackAdd, actionContent, "")
+	s.Data.Actions.Post(s.svc, retroID, userID, action.ActFeedbackAdd, actionContent)
 
 	return s.GetFeedbackByID(id)
 }
@@ -80,7 +80,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 	}
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.Data.Actions.Post(s.svc, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent, "")
+	s.Data.Actions.Post(s.svc, fb.RetroID, userID, action.ActFeedbackUpdate, actionContent)
 
 	return s.GetFeedbackByID(feedbackID)
 }
@@ -98,7 +98,7 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	err = s.db.DeleteOne(q, nil, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}
-	s.Data.Actions.Post(s.svc, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent, "")
+	s.Data.Actions.Post(s.svc, feedback.RetroID, userID, action.ActFeedbackRemove, actionContent)
 
 	return err
 }

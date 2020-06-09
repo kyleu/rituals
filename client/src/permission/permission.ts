@@ -13,7 +13,8 @@ namespace permission {
   }
 
   export function applyPermissions(perms: permission.Permission[] | null) {
-    permissions = collection.groupBy(perms, x => x.k).groups;
+    const cached = collection.groupBy(perms, x => x.k).groups;
+    permissions = cached;
   }
 
   export function setPerms() {

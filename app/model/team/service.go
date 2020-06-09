@@ -64,7 +64,7 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string) (*Sessi
 
 	s.Data.Members.Register(model.ID, userID, memberName, member.RoleOwner)
 
-	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
+	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil)
 	return &model, nil
 }
 
@@ -160,7 +160,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, userID uuid.U
 	cols := []string{"title"}
 	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, sessionID)
-	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
+	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil)
 	return errors.Wrap(err, "error updating team session")
 }
 

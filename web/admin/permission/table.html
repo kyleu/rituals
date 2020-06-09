@@ -5,6 +5,7 @@
     <tr>
       <% components.TableHeader(util.KeyPermission, "k", "K", params, ctx, buffer) %>
       <% components.TableHeader(util.KeyPermission, "v", "V", params, ctx, buffer) %>
+      <% components.TableHeader(util.KeyPermission, "message", "Message", params, ctx, buffer) %>
       <% components.TableHeader(util.KeyPermission, "access", "Access", params, ctx, buffer) %>
       <% components.TableHeader(util.KeyPermission, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
     </tr>
@@ -14,6 +15,7 @@
     <tr>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.K %></td>
       <td><%= model.V %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><%= model.Message() %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Access.String() %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
     </tr>

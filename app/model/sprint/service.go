@@ -63,8 +63,8 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, startDa
 
 	s.Data.Members.Register(model.ID, userID, memberName, member.RoleOwner)
 
-	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
-	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd, "")
+	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil)
+	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd)
 
 	return &model, nil
 }
@@ -162,7 +162,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.
 	cols := []string{util.KeyTitle, "start_date", "end_date", util.WithDBID(util.SvcTeam.Key)}
 	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, startDate, endDate, teamID, sessionID)
-	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
+	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil)
 	return errors.Wrap(err, "error updating sprint session")
 }
 

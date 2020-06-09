@@ -72,6 +72,8 @@ var FormatTrello = Format{
 	Icon:  "album",
 }
 
+var PrintFormats = []Format{FormatPrint, FormatPDF, FormatJSON, FormatExcel}
+
 var AllFormats = []Format{
 	FormatPrint, FormatPDF, FormatJSON, FormatExcel,
 	FormatAsana, FormatConfluence, FormatGitHub, FormatGoogleDocs, FormatSlack, FormatTrello,

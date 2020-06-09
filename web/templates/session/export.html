@@ -1,7 +1,7 @@
 <%: func ExportOptions(svc util.Service, slug string, ctx *web.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-inline left">
   <a class="theme uk-icon left" data-uk-icon="cloud-download" title="export this <%= svc.Key %>"></a>
-  <div class="drop uk-box-shadow-large" data-uk-drop="mode: click; pos: bottom;" data-key="export" data-t="export">
+  <div id="export-drop" class="drop uk-box-shadow-large" data-uk-drop="mode: click; pos: bottom;" data-key="<%= util.KeyExport %>" data-t="<%= util.KeyExport %>">
     <div class="uk-card uk-card-body">
       <ul class="uk-list uk-list-divider uk-margin-medium-bottom">
         <% for _, fmt := range transcript.AllFormats { %>

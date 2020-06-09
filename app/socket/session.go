@@ -62,7 +62,7 @@ func getSessionResult(s *Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch Cha
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
-	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil, "")
+	s.actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil)
 
 	return SessionResult{
 		Auth:        displays,

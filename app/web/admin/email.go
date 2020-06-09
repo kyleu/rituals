@@ -24,7 +24,7 @@ func EmailList(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		emailSvc := email.NewService(ctx.App.Database, ctx.Logger)
 		emails := emailSvc.List(params.Get(util.KeyEmail, ctx.Logger))
-		return tmpl(admintemplates.EmailList(emails, params, ctx, w))
+		return act.T(admintemplates.EmailList(emails, params, ctx, w))
 	})
 }
 
@@ -32,7 +32,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		emailID, ok := mux.Vars(r)[util.KeyID]
 		if !ok {
-			return eresp(errors.New("invalid email id"), "")
+			return act.EResp(errors.New("invalid email id"))
 		}
 		emailSvc := email.NewService(ctx.App.Database, ctx.Logger)
 		e := emailSvc.GetByID(emailID)
@@ -49,6 +49,6 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, e.ID), e.ID)...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.EmailDetail(e, params, ctx, w))
+		return act.T(admintemplates.EmailDetail(e, params, ctx, w))
 	})
 }

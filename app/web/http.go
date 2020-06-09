@@ -1,6 +1,8 @@
 package web
 
 import (
+	"emperror.dev/errors"
+	"fmt"
 	"os"
 	"regexp"
 	"strings"
@@ -78,12 +80,14 @@ func PathParams(s string) []string {
 func Route(auth *auth.Service, routes *mux.Router, logger logur.Logger, act string, pairs ...string) string {
 	route := routes.Get(act)
 	if route == nil {
-		logger.Warn("cannot find route at path [" + act + "]")
+		msg := "cannot find route at path [" + act + "]"
+		logger.Warn(fmt.Sprintf("%v: %+v", msg, errors.New(msg)))
 		return "/routenotfound"
 	}
 	u, err := route.URL(pairs...)
 	if err != nil {
-		logger.Warn("cannot bind route at path [" + act + "]")
+		msg := "cannot bind route at path [" + act + "]"
+		logger.Warn(fmt.Sprintf("%v: %+v", msg, errors.New(msg)))
 		return "/routeerror"
 	}
 	if auth == nil {

@@ -5,8 +5,6 @@ import (
 	"fmt"
 
 	"emperror.dev/errors"
-	"logur.dev/logur"
-
 	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/util"
 )
@@ -40,7 +38,7 @@ func (s *Service) GetMigrationByIdx(idx int) *Migration {
 	return dto.toMigration()
 }
 
-func (s *Service) RemoveMigrationByIdx(idx int, logger logur.Logger) error {
+func (s *Service) RemoveMigrationByIdx(idx int) error {
 	q := query.SQLDelete(util.KeyMigration, "idx = $1")
 	_, err := s.Delete(q, nil, 1, idx)
 	if err != nil {
@@ -55,7 +53,7 @@ func newMigration(s *Service, e Migration) error {
 }
 
 func maxMigrationIdx(s *Service) int {
-	q := query.SQLSelectSimple("max(idx) as x", util.KeyMigration, "")
+	q := query.SQLSelectSimple("max(idx) as x", util.KeyMigration)
 	max, err := s.SingleInt(q, nil)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error getting migrations: %+v", err))

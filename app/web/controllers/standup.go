@@ -3,9 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/permission"
-
 	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -28,7 +25,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = util.SvcStandup.PluralTitle
 		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Plural)
-		return tmpl(templates.StandupList(sessions, teams, sprints, auths, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, w))
+		return act.T(templates.StandupList(sessions, teams, sprints, auths, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, w))
 	})
 }
 
@@ -40,21 +37,21 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 
 		sess, err := ctx.App.Standup.New(sf.Title, ctx.Profile.UserID, sf.MemberName, sf.TeamID, sf.SprintID)
 		if err != nil {
-			return eresp(err, "error creating standup session")
+			return act.EResp(err, "error creating standup session")
 		}
 
 		_, err = ctx.App.Standup.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
-			return eresp(err, "error setting permissions for new session")
+			return act.EResp(err, "error setting permissions for new session")
 		}
 
 		err = ctx.App.Socket.SendContentUpdate(util.SvcTeam, sf.TeamID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 		err = ctx.App.Socket.SendContentUpdate(util.SvcSprint, sf.SprintID)
 		if err != nil {
-			return eresp(err, "cannot send content update")
+			return act.EResp(err, "cannot send content update")
 		}
 
 		return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
@@ -73,27 +70,33 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug), nil
 		}
 
-		params := &PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := check(ctx, ctx.App.Standup.Data.Permissions, params)
+		params := &act.PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		auths, permErrors, bc := act.CheckPerms(ctx, ctx.App.Standup.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return permErrorTemplate(util.SvcStandup, permErrors, auths, ctx, w)
+			return act.PermErrorTemplate(util.SvcStandup, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
-		return tmpl(templates.StandupWorkspace(sess, auths, ctx, w))
+		return act.T(templates.StandupWorkspace(sess, auths, ctx, w))
 	})
 }
 
 func StandupExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *web.RequestContext) (*uuid.UUID, string, string, *permission.Service) {
+	f := func(key string, ctx *web.RequestContext) act.ExportParams {
 		sess := ctx.App.Standup.GetBySlug(key)
 		if sess == nil {
-			return nil, "", "", nil
+			return act.ExportParams{}
 		}
-		return &sess.ID, sess.Slug, sess.Title, ctx.App.Standup.Data.Permissions
+		return act.ExportParams{
+			ModelID: &sess.ID,
+			Slug:    sess.Slug,
+			Title:   sess.Title,
+			Path:    ctx.Route(util.SvcStandup.Key, util.KeyKey, sess.Slug),
+			PermSvc: ctx.App.Standup.Data.Permissions,
+		}
 	}
-	ExportAct(util.SvcStandup, f, w, r)
+	act.ExportAct(util.SvcStandup, f, w, r)
 }

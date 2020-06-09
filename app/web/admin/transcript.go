@@ -20,7 +20,7 @@ func TranscriptList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = util.PluralTitle(util.KeyTranscript)
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyTranscript, util.Plural(util.KeyTranscript))
-		return tmpl(admintemplates.TranscriptList(transcript.AllTranscripts, ctx, w))
+		return act.T(admintemplates.TranscriptList(transcript.AllTranscripts, ctx, w))
 	})
 }
 
@@ -47,19 +47,9 @@ func TranscriptRun(w http.ResponseWriter, r *http.Request) {
 
 		content, err := t.Resolve(ctx.App, ctx.Profile.UserID, param)
 		if err != nil {
-			return eresp(err, "error running transcript ["+key+"]")
+			return act.EResp(err, "error running transcript ["+key+"]")
 		}
 
-		switch format {
-		case transcript.FormatJSON:
-			return act.RespondJSON(w, content, ctx.Logger)
-		default:
-			ctx.Title = t.Title + " Transcript"
-			bc := adminBC(ctx, util.KeyTranscript, util.Plural(util.KeyTranscript))
-			bc = append(bc, web.Breadcrumb{Path: ctx.Route(util.AdminLink(util.KeyTranscript+".run"), util.KeyKey, key), Title: key})
-			ctx.Breadcrumbs = bc
-
-			return tmpl(admintemplates.TranscriptRun(t, param, content, ctx, w))
-		}
+		return act.ExportTemplate(t, r.URL.Path, content, format, ctx, w)
 	})
 }

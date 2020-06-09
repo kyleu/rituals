@@ -1,6 +1,8 @@
 package permission
 
 import (
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/util"
 	"sort"
 	"strings"
 	"time"
@@ -30,6 +32,23 @@ type Permission struct {
 	V       string      `json:"v"`
 	Access  member.Role `json:"access"`
 	Created time.Time   `json:"-"`
+}
+
+func (p *Permission) Message() string {
+	switch p.K {
+	case util.SvcTeam.Key:
+		return "Must be a member of this session's team"
+	case util.SvcSprint.Key:
+		return "Must be a member of this session's sprint"
+	default:
+		prov := auth.ProviderFromString(p.K)
+		emails := strings.Split(p.V, ",")
+		msg := "Must sign in with " + prov.Title
+		if len(emails) == 0 {
+			msg += " using an email address from " + strings.Join(emails, " or ")
+		}
+		return msg
+	}
 }
 
 type Permissions []*Permission

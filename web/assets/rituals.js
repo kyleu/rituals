@@ -1440,7 +1440,8 @@ var permission;
 (function (permission) {
     permission.permissions = [];
     function applyPermissions(perms) {
-        permission.permissions = collection.groupBy(perms, x => x.k).groups;
+        const cached = collection.groupBy(perms, x => x.k).groups;
+        permission.permissions = cached;
     }
     permission.applyPermissions = applyPermissions;
     function setPerms() {
@@ -1898,7 +1899,7 @@ var socket;
             onSocketMessage(msg);
         };
         socket.onerror = (event) => {
-            rituals.onError(services.system, event.type);
+            // rituals.onError(services.system, event.type);
         };
         socket.onclose = () => {
             onSocketClose();
@@ -2625,11 +2626,11 @@ var collection;
     }
     collection.groupBy = groupBy;
     function findGroup(groups, key) {
-        groups.forEach(g => {
+        for (const g of groups) {
             if (g.key === key) {
                 return g.members;
             }
-        });
+        }
         return [];
     }
     collection.findGroup = findGroup;

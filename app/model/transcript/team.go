@@ -39,7 +39,7 @@ var Team = Transcript{
 		if sess == nil {
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
-		dataSvc := app.Sprint.Data
+		dataSvc := app.Team.Data
 		return TeamResponse{
 			Svc:         util.SvcTeam,
 			Session:     sess,

@@ -20,7 +20,7 @@ func SandboxList(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = util.PluralTitle(util.KeySandbox)
 		ctx.Breadcrumbs = adminBC(ctx, util.KeySandbox, util.Plural(util.KeySandbox))
-		return tmpl(admintemplates.SandboxList(sandbox.AllSandboxes, ctx, w))
+		return act.T(admintemplates.SandboxList(sandbox.AllSandboxes, ctx, w))
 	})
 }
 
@@ -33,7 +33,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		}
 		content, rsp, err := sb.Resolve(ctx)
 		if err != nil {
-			return eresp(err, "error running sandbox ["+key+"]")
+			return act.EResp(err, "error running sandbox ["+key+"]")
 		}
 
 		ctx.Title = sb.Title + " Sandbox"
@@ -41,6 +41,6 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.Breadcrumb{Path: ctx.Route(util.AdminLink(util.KeySandbox+".run"), util.KeyKey, key), Title: key})
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.SandboxRun(sb, content, util.ToJSON(rsp, ctx.Logger), ctx, w))
+		return act.T(admintemplates.SandboxRun(sb, content, util.ToJSON(rsp, ctx.Logger), ctx, w))
 	})
 }

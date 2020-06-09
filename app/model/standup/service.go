@@ -64,9 +64,9 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, teamID 
 
 	s.Data.Members.Register(model.ID, userID, memberName, member.RoleOwner)
 
-	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil, "")
-	s.Data.Actions.PostRef(util.SvcSprint, model.SprintID, s.svc, model.ID, userID, action.ActContentAdd, "")
-	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd, "")
+	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil)
+	s.Data.Actions.PostRef(util.SvcSprint, model.SprintID, s.svc, model.ID, userID, action.ActContentAdd)
+	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd)
 
 	return &model, nil
 }
@@ -164,7 +164,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.
 	cols := []string{util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key)}
 	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, teamID, sprintID, sessionID)
-	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil, "")
+	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil)
 	return errors.Wrap(err, "error updating standup session")
 }
 

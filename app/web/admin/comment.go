@@ -21,7 +21,7 @@ func CommentList(w http.ResponseWriter, r *http.Request) {
 
 		params := act.ParamSetFromRequest(r)
 		comments := ctx.App.Comment.List(params.Get(util.KeyComment, ctx.Logger))
-		return tmpl(admintemplates.CommentList(comments, params, ctx, w))
+		return act.T(admintemplates.CommentList(comments, params, ctx, w))
 	})
 }
 
@@ -29,7 +29,7 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		commentID, err := act.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "invalid comment id")
+			return act.EResp(err, "invalid comment id")
 		}
 		e := ctx.App.Comment.GetByID(*commentID)
 		if e == nil {
@@ -45,6 +45,6 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, e.ID.String()), e.ID.String())...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.CommentDetail(e, params, ctx, w))
+		return act.T(admintemplates.CommentDetail(e, params, ctx, w))
 	})
 }

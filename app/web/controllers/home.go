@@ -20,6 +20,6 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		retros := ctx.App.Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
 
 		ctx.Title = util.AppName
-		return tmpl(templates.Index(ctx, teams, sprints, estimates, standups, retros, w))
+		return act.T(templates.Index(ctx, teams, sprints, estimates, standups, retros, w))
 	})
 }

@@ -16,6 +16,16 @@ type Vote struct {
 
 type Votes = []*Vote
 
+func VotesForStory(v Votes, storyID uuid.UUID) Votes {
+	var ret Votes
+	for _, vote := range v {
+		if vote.StoryID == storyID {
+			ret = append(ret, vote)
+		}
+	}
+	return ret
+}
+
 type voteDTO struct {
 	StoryID uuid.UUID `db:"story_id"`
 	UserID  uuid.UUID `db:"user_id"`

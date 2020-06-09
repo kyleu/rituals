@@ -20,7 +20,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = adminBC(ctx, util.KeyAction, util.Plural(util.KeyAction))
 		params := act.ParamSetFromRequest(r)
 		actions := ctx.App.Action.List(params.Get(util.KeyAction, ctx.Logger))
-		return tmpl(admintemplates.ActionList(actions, params, ctx, w))
+		return act.T(admintemplates.ActionList(actions, params, ctx, w))
 	})
 }
 
@@ -28,7 +28,7 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		actionID, err := act.IDFromParams(util.KeyAction, mux.Vars(r))
 		if err != nil {
-			return eresp(err, "")
+			return act.EResp(err)
 		}
 		a := ctx.App.Action.GetByID(*actionID)
 		if a == nil {
@@ -48,6 +48,6 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, s), s[0:8])...)
 		ctx.Breadcrumbs = bc
 
-		return tmpl(admintemplates.ActionDetail(a, user, ctx, w))
+		return act.T(admintemplates.ActionDetail(a, user, ctx, w))
 	})
 }

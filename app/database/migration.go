@@ -35,7 +35,7 @@ func Migrate(s *Service) error {
 			}
 			if m.Title != file.Title {
 				s.logger.Info(fmt.Sprintf("migration [%v] name has changed from [%v] to [%v]", idx, m.Title, file.Title))
-				err = s.RemoveMigrationByIdx(idx, s.logger)
+				err = s.RemoveMigrationByIdx(idx)
 				if err != nil {
 					return err
 				}
@@ -47,7 +47,7 @@ func Migrate(s *Service) error {
 			nc := sb.String()
 			if nc != m.Src {
 				s.logger.Info(fmt.Sprintf("migration [%v:%v] content has changed from [%vB] to [%vB]", idx, file.Title, len(nc), len(m.Src)))
-				err = s.RemoveMigrationByIdx(idx, s.logger)
+				err = s.RemoveMigrationByIdx(idx)
 				if err != nil {
 					return err
 				}
