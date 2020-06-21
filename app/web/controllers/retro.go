@@ -26,7 +26,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcRetro.PluralTitle
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcRetro.Key+".list"), util.SvcRetro.Plural)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.SvcRetro.Plural)}
 		return act.T(templates.RetroList(sessions, teams, sprints, auths, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, w))
 	})
 }

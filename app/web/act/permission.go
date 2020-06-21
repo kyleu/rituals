@@ -1,13 +1,14 @@
 package act
 
 import (
+	"net/http"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/model/auth"
 	"github.com/kyleu/rituals.dev/app/model/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
-	"net/http"
 )
 
 type PermissionParams struct {

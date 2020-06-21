@@ -16,5 +16,5 @@ type Context struct {
 }
 
 func (r *Context) Route(act string, pairs ...string) string {
-	return r.App.Auth.FullURL(web.Route(nil, r.Routes, r.Logger, act, pairs...))
+	return r.App.Auth.FullURL(web.Route(r.Routes, r.Logger, act, pairs...))
 }

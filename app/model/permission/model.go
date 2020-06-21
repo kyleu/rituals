@@ -1,11 +1,12 @@
 package permission
 
 import (
-	"github.com/kyleu/rituals.dev/app/model/auth"
-	"github.com/kyleu/rituals.dev/app/util"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/model/member"

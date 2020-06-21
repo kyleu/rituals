@@ -47,8 +47,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcSprint.Key, util.SvcSprint.Plural)
-		link := util.AdminLink(util.SvcSprint.Key, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, sprintID.String()), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.SprintDetail(sess, estimates, standups, retros, data, params, ctx, w))

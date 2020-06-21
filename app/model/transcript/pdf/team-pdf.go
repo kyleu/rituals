@@ -14,40 +14,18 @@ func renderTeam(rsp transcript.TeamResponse, m pdfgen.Maroto) (string, error) {
 	detailRow(util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
 	detailRow(util.Title(util.KeyCreated), util.ToDateString(&rsp.Session.Created), m)
 
-	var err error
-	_, err = renderPermissionList(rsp.Permissions, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderMemberList(rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderSprintList(rsp.Sprints, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderEstimateList(rsp.Estimates, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderStandupList(rsp.Standups, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderRetroList(rsp.Retros, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderCommentList(rsp.Comments, rsp.Members, m, true)
-	if err != nil {
-		return "", err
-	}
+	renderPermissionList(rsp.Permissions, m)
+	renderMemberList(rsp.Members, m)
+	renderSprintList(rsp.Sprints, rsp.Members, m)
+	renderEstimateList(rsp.Estimates, rsp.Members, m)
+	renderStandupList(rsp.Standups, rsp.Members, m)
+	renderRetroList(rsp.Retros, rsp.Members, m)
+	renderCommentList(rsp.Comments, rsp.Members, m, true)
 
 	return rsp.Session.Slug, nil
 }
 
-func renderTeamList(sessions team.Sessions, members member.Entries, m pdfgen.Maroto) (string, error) {
+func renderTeamList(sessions team.Sessions, members member.Entries, m pdfgen.Maroto) {
 	hr(m)
 	if len(sessions) > 0 {
 		caption(util.SvcTeam.PluralTitle, m)
@@ -58,5 +36,4 @@ func renderTeamList(sessions team.Sessions, members member.Entries, m pdfgen.Mar
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
-	return "", nil
 }

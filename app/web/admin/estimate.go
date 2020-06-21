@@ -46,8 +46,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
-		link := util.AdminLink(util.SvcEstimate.Key, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, estimateID.String()), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.EstimateDetail(sess, stories, data, params, ctx, w))
@@ -81,9 +80,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		bc := adminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
 		el := util.AdminLink(util.SvcEstimate.Key, util.KeyDetail)
 		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(el, util.KeyID, story.EstimateID.String()), sess.Slug)...)
-		sl := util.AdminLink(util.KeyStory, util.KeyDetail)
-		str := fmt.Sprint("story ", story.Idx)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(sl, util.KeyID, storyID.String()), str)...)
+		bc = append(bc, web.BreadcrumbSelf(fmt.Sprint("story ", story.Idx)))
 		ctx.Breadcrumbs = bc
 		return act.T(admintemplates.StoryDetail(story, votes, params, ctx, w))
 	})

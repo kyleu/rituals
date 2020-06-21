@@ -38,7 +38,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sb.Title + " Sandbox"
 		bc := adminBC(ctx, util.KeySandbox, util.Plural(util.KeySandbox))
-		bc = append(bc, web.Breadcrumb{Path: ctx.Route(util.AdminLink(util.KeySandbox+".run"), util.KeyKey, key), Title: key})
+		bc = append(bc, web.BreadcrumbSelf(key))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.SandboxRun(sb, content, util.ToJSON(rsp, ctx.Logger), ctx, w))

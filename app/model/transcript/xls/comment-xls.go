@@ -7,7 +7,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func renderCommentList(comments comment.Comments, members member.Entries, f *excelize.File) (string, string, error) {
+func renderCommentList(comments comment.Comments, members member.Entries, f *excelize.File) {
 	key := util.Plural(util.KeyComment)
 	if len(comments) > 0 {
 		f.NewSheet(key)
@@ -21,5 +21,4 @@ func renderCommentList(comments comment.Comments, members member.Entries, f *exc
 		setData(key, 2, data, f)
 		setColumnWidths(key, []int{16, 64, 16}, f)
 	}
-	return key, util.Title(util.KeyComment) + " export", nil
 }

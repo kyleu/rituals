@@ -10,4 +10,4 @@ cd $project_dir
 bin/build-css.sh
 bin/build-client.sh
 make build-release
-build/release/rituals server
+build/release/rituals

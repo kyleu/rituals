@@ -21,7 +21,7 @@ type SessionResult struct {
 func (s *Service) sendInitial(ch Channel, conn *connection, entry *member.Entry, msg *Message, sprintID *uuid.UUID, sprintEntry *member.Entry) error {
 	err := s.WriteMessage(conn.ID, msg)
 	if err != nil {
-		return errors.Wrap(err, "error writing initial estimate message")
+		return errors.Wrap(err, "error writing initial message")
 	}
 
 	if sprintEntry != nil {

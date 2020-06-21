@@ -1,8 +1,9 @@
 package xls
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/model/retro"
@@ -27,29 +28,34 @@ func Render(rsp interface{}, url string) (string, []byte, error) {
 }
 
 func renderResponse(rsp interface{}, f *excelize.File) (string, string, error) {
-	switch rsp.(type) {
+	switch r := rsp.(type) {
 	case transcript.EmailResponse:
-		return renderEmail(rsp.(transcript.EmailResponse), f)
+		return renderEmail(r, f)
 	case team.Sessions:
-		return renderTeamList(rsp.(team.Sessions), nil, f)
+		fn, title := renderTeamList(r, nil, f)
+		return fn, title, nil
 	case transcript.TeamResponse:
-		return renderTeam(rsp.(transcript.TeamResponse), f)
+		return renderTeam(r, f)
 	case sprint.Sessions:
-		return renderSprintList(rsp.(sprint.Sessions), nil, f)
+		fn, title := renderSprintList(r, nil, f)
+		return fn, title, nil
 	case transcript.SprintResponse:
-		return renderSprint(rsp.(transcript.SprintResponse), f)
+		return renderSprint(r, f)
 	case estimate.Sessions:
-		return renderEstimateList(rsp.(estimate.Sessions), nil, f)
+		fn, title := renderEstimateList(r, nil, f)
+		return fn, title, nil
 	case transcript.EstimateResponse:
-		return renderEstimate(rsp.(transcript.EstimateResponse), f)
+		return renderEstimate(r, f)
 	case standup.Sessions:
-		return renderStandupList(rsp.(standup.Sessions), nil, f)
+		fn, title := renderStandupList(r, nil, f)
+		return fn, title, nil
 	case transcript.StandupResponse:
-		return renderStandup(rsp.(transcript.StandupResponse), f)
+		return renderStandup(r, f)
 	case retro.Sessions:
-		return renderRetroList(rsp.(retro.Sessions), nil, f)
+		fn, title := renderRetroList(r, nil, f)
+		return fn, title, nil
 	case transcript.RetroResponse:
-		return renderRetro(rsp.(transcript.RetroResponse), f)
+		return renderRetro(r, f)
 	default:
 		return util.KeyError, util.Title(util.KeyError), errors.New(fmt.Sprintf("Invalid transcript type [%T]", rsp))
 	}

@@ -1,12 +1,13 @@
 package xls
 
 import (
+	"strings"
+
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/model/transcript"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
 func renderEstimate(rsp transcript.EstimateResponse, f *excelize.File) (string, string, error) {
@@ -25,28 +26,15 @@ func renderEstimate(rsp transcript.EstimateResponse, f *excelize.File) (string, 
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	var err error
-	_, _, err = renderPermissionList(rsp.Permissions, 8, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderStoryList(rsp.Stories, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderMemberList(rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderCommentList(rsp.Comments, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
+	renderPermissionList(rsp.Permissions, 8, f)
+	renderStoryList(rsp.Stories, rsp.Members, f)
+	renderMemberList(rsp.Members, f)
+	renderCommentList(rsp.Comments, rsp.Members, f)
 
 	return rsp.Session.Slug, util.SvcEstimate.Title + " export", nil
 }
 
-func renderEstimateList(sessions estimate.Sessions, members member.Entries, f *excelize.File) (string, string, error) {
+func renderEstimateList(sessions estimate.Sessions, members member.Entries, f *excelize.File) (string, string) {
 	svc := util.SvcEstimate
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
@@ -60,10 +48,10 @@ func renderEstimateList(sessions estimate.Sessions, members member.Entries, f *e
 		setData(svc.Plural, 2, data, f)
 		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export", nil
+	return svc.Plural, svc.Title + " export"
 }
 
-func renderStoryList(stories estimate.Stories, members member.Entries, f *excelize.File) (string, string, error) {
+func renderStoryList(stories estimate.Stories, members member.Entries, f *excelize.File) (string, string) {
 	key := util.Plural(util.KeyStory)
 	if len(stories) > 0 {
 		f.NewSheet(key)
@@ -77,5 +65,5 @@ func renderStoryList(stories estimate.Stories, members member.Entries, f *exceli
 		setData(key, 2, data, f)
 		setColumnWidths(key, []int{32, 16, 16}, f)
 	}
-	return key, util.Title(util.KeyStory) + " export", nil
+	return key, util.Title(util.KeyStory) + " export"
 }

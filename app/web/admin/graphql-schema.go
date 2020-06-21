@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"github.com/kyleu/rituals.dev/app/web/act"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/database/gql"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -33,8 +34,7 @@ func GraphQLVoyagerQuery(w http.ResponseWriter, r *http.Request) {
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
-		link := util.AdminLink(util.KeyVoyager, "query")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link), "query")...)
+		bc = append(bc, web.BreadcrumbSelf("query"))
 		ctx.Breadcrumbs = bc
 		ctx.Title = "GraphQL Voyager"
 		return act.T(templates.GraphQLVoyager(gql.QueryName, ctx, w))
@@ -49,8 +49,7 @@ func GraphQLVoyagerMutation(w http.ResponseWriter, r *http.Request) {
 		}
 
 		bc := adminBC(ctx, util.KeyGraphiQL, util.KeyGraphQL)
-		link := util.AdminLink(util.KeyVoyager, "mutation")
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link), "mutation")...)
+		bc = append(bc, web.BreadcrumbSelf("mutation"))
 		ctx.Breadcrumbs = bc
 		ctx.Title = "GraphQL Voyager"
 		return act.T(templates.GraphQLVoyager(gql.MutationName, ctx, w))

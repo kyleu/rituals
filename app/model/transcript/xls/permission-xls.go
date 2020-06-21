@@ -3,10 +3,9 @@ package xls
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/rituals.dev/app/model/permission"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func renderPermissionList(permissions permission.Permissions, firstRow int, f *excelize.File) (string, string, error) {
+func renderPermissionList(permissions permission.Permissions, firstRow int, f *excelize.File) {
 	if len(permissions) > 0 {
 		var data [][]interface{}
 		for _, p := range permissions {
@@ -14,5 +13,4 @@ func renderPermissionList(permissions permission.Permissions, firstRow int, f *e
 		}
 		setData(defSheet, firstRow, data, f)
 	}
-	return util.KeyPermission, util.Title(util.KeyPermission) + " export", nil
 }

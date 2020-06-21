@@ -24,28 +24,15 @@ func renderStandup(rsp transcript.StandupResponse, f *excelize.File) (string, st
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	var err error
-	_, _, err = renderPermissionList(rsp.Permissions, 8, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderReportList(rsp.Reports, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderMemberList(rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderCommentList(rsp.Comments, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
+	renderPermissionList(rsp.Permissions, 8, f)
+	renderReportList(rsp.Reports, rsp.Members, f)
+	renderMemberList(rsp.Members, f)
+	renderCommentList(rsp.Comments, rsp.Members, f)
 
 	return rsp.Session.Slug, util.SvcStandup.Title + " export", nil
 }
 
-func renderStandupList(sessions standup.Sessions, members member.Entries, f *excelize.File) (string, string, error) {
+func renderStandupList(sessions standup.Sessions, members member.Entries, f *excelize.File) (string, string) {
 	svc := util.SvcStandup
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
@@ -59,11 +46,10 @@ func renderStandupList(sessions standup.Sessions, members member.Entries, f *exc
 		setData(svc.Plural, 2, data, f)
 		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export", nil
-
+	return svc.Plural, svc.Title + " export"
 }
 
-func renderReportList(reports standup.Reports, members member.Entries, f *excelize.File) (string, string, error) {
+func renderReportList(reports standup.Reports, members member.Entries, f *excelize.File) (string, string) {
 	key := util.Plural(util.KeyReport)
 	if len(reports) > 0 {
 		f.NewSheet(key)
@@ -77,5 +63,5 @@ func renderReportList(reports standup.Reports, members member.Entries, f *exceli
 		setData(key, 2, data, f)
 		setColumnWidths(key, []int{16, 16, 64, 16}, f)
 	}
-	return key, util.Title(util.KeyStory) + " export", nil
+	return key, key + " export"
 }

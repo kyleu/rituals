@@ -21,7 +21,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	adminAct(w, r, func(ctx *web.RequestContext) (string, error) {
 		params := act.ParamSetFromRequest(r)
 		ctx.Title = "Admin"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.AdminLink()), util.KeyAdmin)
+		ctx.Breadcrumbs = web.BreadcrumbsSimple("", util.KeyAdmin)
 		countMap, recentMap, err := SectionCounts(homeSections, util.ExtractRoutes(ctx.Routes), ctx.App.Database, ctx.App.Socket)
 		if err != nil {
 			return act.EResp(err, "error getting section counts")

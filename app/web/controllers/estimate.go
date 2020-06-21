@@ -25,7 +25,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcEstimate.PluralTitle
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcEstimate.Key+".list"), util.SvcEstimate.Plural)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.SvcEstimate.Plural)}
 		return act.T(templates.EstimateList(sessions, teams, sprints, auths, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, w))
 	})
 }

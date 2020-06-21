@@ -40,7 +40,7 @@ var wipeDatabase bool
 func Configure(version string, commitHash string) cobra.Command {
 	rootCmd := cobra.Command{
 		Use:   util.AppName,
-		Short: "Command line interface for " + util.AppName + ", the database user interface",
+		Short: "Command line interface for " + util.AppName,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			info, err := InitApp(version, commitHash)
 			if err != nil {

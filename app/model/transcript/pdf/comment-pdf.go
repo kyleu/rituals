@@ -7,7 +7,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func renderCommentList(comments comment.Comments, members member.Entries, m pdfgen.Maroto, showTitle bool) (string, error) {
+func renderCommentList(comments comment.Comments, members member.Entries, m pdfgen.Maroto, showTitle bool) {
 	if len(comments) > 0 {
 		if showTitle {
 			hr(m)
@@ -22,5 +22,4 @@ func renderCommentList(comments comment.Comments, members member.Entries, m pdfg
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
-	return "", nil
 }

@@ -24,7 +24,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcStandup.PluralTitle
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcStandup.Key+".list"), util.SvcStandup.Plural)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.SvcStandup.Plural)}
 		return act.T(templates.StandupList(sessions, teams, sprints, auths, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, w))
 	})
 }

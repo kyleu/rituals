@@ -46,9 +46,8 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 		title := fmt.Sprintf("Migration %v: %v", e.Idx, e.Title)
 		ctx.Title = title
 		bc := adminBC(ctx, util.KeyMigration, util.Plural(util.KeyMigration))
-		link := util.AdminLink(util.KeyMigration, util.KeyDetail)
 		idxStr := fmt.Sprintf("%v", e.Idx)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyIdx, idxStr), idxStr)...)
+		bc = append(bc, web.BreadcrumbSelf(idxStr))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.MigrationDetail(e, params, ctx, w))

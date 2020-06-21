@@ -1,18 +1,18 @@
 package pdf
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+	"strings"
+
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/kyleu/rituals.dev/app/model/comment"
 	"github.com/kyleu/rituals.dev/app/model/estimate"
 	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/model/transcript"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
-func renderEstimate(rsp transcript.EstimateResponse, m pdfgen.Maroto) (string, error) {
+func renderEstimate(rsp transcript.EstimateResponse, m pdfgen.Maroto) string {
 	hr(m)
 	caption(rsp.Session.Title, m)
 	detailRow(util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
@@ -25,28 +25,15 @@ func renderEstimate(rsp transcript.EstimateResponse, m pdfgen.Maroto) (string, e
 	}
 	detailRow(util.Title(util.KeyCreated), util.ToDateString(&rsp.Session.Created), m)
 
-	var err error
-	_, err = renderPermissionList(rsp.Permissions, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderMemberList(rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	err = renderStoryList(rsp.Stories, rsp.Votes, rsp.Members, rsp.Comments.ForType("story"), m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderCommentList(rsp.Comments.ForType(""), rsp.Members, m, true)
-	if err != nil {
-		return "", err
-	}
+	renderPermissionList(rsp.Permissions, m)
+	renderMemberList(rsp.Members, m)
+	renderStoryList(rsp.Stories, rsp.Votes, rsp.Members, rsp.Comments.ForType("story"), m)
+	renderCommentList(rsp.Comments.ForType(""), rsp.Members, m, true)
 
-	return rsp.Session.Slug, nil
+	return rsp.Session.Slug
 }
 
-func renderEstimateList(sessions estimate.Sessions, members member.Entries, m pdfgen.Maroto) (string, error) {
+func renderEstimateList(sessions estimate.Sessions, members member.Entries, m pdfgen.Maroto) {
 	if len(sessions) > 0 {
 		hr(m)
 		caption(util.SvcEstimate.PluralTitle, m)
@@ -57,22 +44,17 @@ func renderEstimateList(sessions estimate.Sessions, members member.Entries, m pd
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
-	return "", nil
 }
 
-func renderStoryList(stories estimate.Stories, votes estimate.Votes, members member.Entries, commments comment.Comments, m pdfgen.Maroto) error {
+func renderStoryList(stories estimate.Stories, votes estimate.Votes, members member.Entries, comments comment.Comments, m pdfgen.Maroto) {
 	if len(stories) > 0 {
 		for _, story := range stories {
-			err := renderStory(story, votes, members, commments, m)
-			if err != nil {
-				return errors.Wrap(err, "")
-			}
+			renderStory(story, votes, members, comments, m)
 		}
 	}
-	return nil
 }
 
-func renderStory(story *estimate.Story, votes estimate.Votes, members member.Entries, commments comment.Comments, m pdfgen.Maroto) error {
+func renderStory(story *estimate.Story, votes estimate.Votes, members member.Entries, comments comment.Comments, m pdfgen.Maroto) {
 	hr(m)
 	tr(func() {
 		th(story.ID.String(), 11, m)
@@ -113,12 +95,8 @@ func renderStory(story *estimate.Story, votes estimate.Votes, members member.Ent
 			td(res.Median, 2, m)
 		}, 8, m)
 	}
-	storyComments := commments.ForID(story.ID)
+	storyComments := comments.ForID(story.ID)
 	if len(storyComments) > 0 {
-		_, err := renderCommentList(storyComments, members, m, false)
-		if err != nil {
-			return err
-		}
+		renderCommentList(storyComments, members, m, false)
 	}
-	return nil
 }

@@ -1,14 +1,14 @@
 package web
 
 import (
-	"emperror.dev/errors"
 	"fmt"
 	"os"
 	"regexp"
 	"strings"
 
+	"emperror.dev/errors"
+
 	"github.com/gorilla/mux"
-	"github.com/kyleu/rituals.dev/app/model/auth"
 	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/util"
@@ -19,6 +19,10 @@ import (
 type Breadcrumb struct {
 	Path  string
 	Title string
+}
+
+func BreadcrumbSelf(title string) Breadcrumb {
+	return Breadcrumb{Path: "", Title: title}
 }
 
 type Breadcrumbs []Breadcrumb
@@ -77,21 +81,18 @@ func PathParams(s string) []string {
 	return ret
 }
 
-func Route(auth *auth.Service, routes *mux.Router, logger logur.Logger, act string, pairs ...string) string {
+func Route(routes *mux.Router, logger logur.Logger, act string, pairs ...string) string {
 	route := routes.Get(act)
 	if route == nil {
 		msg := "cannot find route at path [" + act + "]"
 		logger.Warn(fmt.Sprintf("%v: %+v", msg, errors.New(msg)))
-		return "/routenotfound"
+		return "/route/notfound/" + act
 	}
 	u, err := route.URL(pairs...)
 	if err != nil {
 		msg := "cannot bind route at path [" + act + "]"
 		logger.Warn(fmt.Sprintf("%v: %+v", msg, errors.New(msg)))
-		return "/routeerror"
+		return "/route/error/" + act
 	}
-	if auth == nil {
-		return u.Path
-	}
-	return auth.FullURL(u.Path)
+	return u.Path
 }

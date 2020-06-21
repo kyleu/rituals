@@ -1,6 +1,9 @@
 package act
 
 import (
+	"net/http"
+	"strings"
+
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
@@ -12,8 +15,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/gen/templates"
 	"github.com/kyleu/rituals.dev/gen/transcripttemplates"
-	"net/http"
-	"strings"
 )
 
 type ExportParams struct {
@@ -65,7 +66,7 @@ func ExportTemplate(t *transcript.Transcript, path string, rsp interface{}, fmt 
 	switch fmt {
 	case transcript.FormatJSON:
 		fn := strings.Split(path, "/")
-		return RespondJSON(w, fn[len(fn) - 1], rsp, ctx.Logger)
+		return RespondJSON(w, fn[len(fn)-1], rsp, ctx.Logger)
 	case transcript.FormatPDF:
 		filename, ba, err := pdf.Render(rsp, ctx.App.Auth.FullURL(path))
 		if err != nil {

@@ -12,7 +12,7 @@ import (
 func About(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "About " + util.AppName
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyAbout), util.KeyAbout)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.KeyAbout)}
 		return act.T(templates.StaticAbout(ctx, w))
 	})
 }
@@ -20,7 +20,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 func Pricing(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Pricing"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("pricing"), "pricing")
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf("pricing")}
 		return act.T(templates.Pricing(ctx, w))
 	})
 }
@@ -28,7 +28,7 @@ func Pricing(w http.ResponseWriter, r *http.Request) {
 func Features(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Features"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("features"), "features")
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf("features")}
 		return act.T(templates.Features(ctx, w))
 	})
 }
@@ -36,7 +36,7 @@ func Features(w http.ResponseWriter, r *http.Request) {
 func Community(w http.ResponseWriter, r *http.Request) {
 	act.Act(w, r, func(ctx *web.RequestContext) (string, error) {
 		ctx.Title = "Community"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route("community"), "community")
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf("community")}
 		return act.T(templates.Community(ctx, w))
 	})
 }

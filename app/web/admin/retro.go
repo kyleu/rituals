@@ -44,8 +44,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
-		link := util.AdminLink(util.SvcRetro.Key, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, retroID.String()), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.RetroDetail(sess, feedbacks, data, params, ctx, w))

@@ -6,7 +6,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func renderMemberList(members member.Entries, m pdfgen.Maroto) (string, error) {
+func renderMemberList(members member.Entries, m pdfgen.Maroto) {
 	if len(members) > 0 {
 		hr(m)
 		cols := []string{util.Title(util.KeyMember), util.Title(util.KeyRole), util.Title(util.KeyCreated)}
@@ -16,5 +16,4 @@ func renderMemberList(members member.Entries, m pdfgen.Maroto) (string, error) {
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
-	return "", nil
 }

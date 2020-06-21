@@ -28,7 +28,7 @@ type RequestContext struct {
 }
 
 func (r *RequestContext) Route(act string, pairs ...string) string {
-	return Route(nil, r.Routes, r.Logger, act, pairs...)
+	return Route(r.Routes, r.Logger, act, pairs...)
 }
 
 func ExtractContext(w http.ResponseWriter, r *http.Request, addIfMissing bool) *RequestContext {

@@ -15,7 +15,6 @@ func serializeUUID(value interface{}) interface{} {
 		if err != nil {
 			return nil
 		}
-
 		return string(buff)
 	case *uuid.UUID:
 		if value == nil {

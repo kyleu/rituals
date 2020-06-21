@@ -7,15 +7,15 @@ import (
 )
 
 type VoteResult struct {
-	Votes   Votes     `json:"votes"`
+	Votes     Votes `json:"votes"`
 	FinalVote string
-	Count int
-	Min string
-	Max string
-	Sum string
-	Mean string
-	Median string
-	Mode string
+	Count     int
+	Min       string
+	Max       string
+	Sum       string
+	Mean      string
+	Median    string
+	Mode      string
 }
 
 func CalculateVoteResult(v Votes) VoteResult {
@@ -34,10 +34,10 @@ func CalculateVoteResult(v Votes) VoteResult {
 
 	var min, max float64
 	for i, e := range choices {
-		if i==0 || e < min {
+		if i == 0 || e < min {
 			min = e
 		}
-		if i==0 || e > max {
+		if i == 0 || e > max {
 			max = e
 		}
 	}
@@ -46,7 +46,7 @@ func CalculateVoteResult(v Votes) VoteResult {
 	if len(choices) > 0 {
 		final = sum / float64(len(choices))
 		mean = sum / float64(len(choices))
-		median = choices[int(math.Floor(float64(len(choices)) / 2.0))]
+		median = choices[int(math.Floor(float64(len(choices))/2.0))]
 	}
 
 	return VoteResult{
@@ -78,12 +78,12 @@ func modeCalc(x Votes) string {
 		count := 0
 		for _, e2 := range x {
 			if e.Choice == e2.Choice {
-				count = count + 1
+				count++
 			}
 		}
 		if count > maxCount {
-				maxCount = count
-				maxValue = e.Choice
+			maxCount = count
+			maxValue = e.Choice
 		}
 	}
 	return maxValue

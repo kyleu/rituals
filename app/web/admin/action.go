@@ -43,9 +43,8 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = user.Name
 		bc := adminBC(ctx, util.KeyAction, util.Plural(util.KeyAction))
-		link := util.AdminLink(util.KeyAction, util.KeyDetail)
 		s := actionID.String()
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, s), s[0:8])...)
+		bc = append(bc, web.BreadcrumbSelf(s[0:8]))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.ActionDetail(a, user, ctx, w))

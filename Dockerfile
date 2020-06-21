@@ -51,4 +51,4 @@ RUN if [[ "${BUILD_TARGET}" == "debug" ]]; then apk add --update --no-cache libc
 COPY --from=builder /build/* /usr/local/bin/
 
 EXPOSE 6660
-CMD ["rituals", "server"]
+CMD ["rituals"]

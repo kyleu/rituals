@@ -41,8 +41,7 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = e.ID.String()
 		bc := adminBC(ctx, util.KeyComment, util.Plural(util.KeyComment))
-		link := util.AdminLink(util.KeyComment, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, e.ID.String()), e.ID.String())...)
+		bc = append(bc, web.BreadcrumbSelf(e.ID.String()))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.CommentDetail(e, params, ctx, w))

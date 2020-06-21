@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/kyleu/rituals.dev/app/web"
 	"github.com/kyleu/rituals.dev/app/web/act"
 	"github.com/skip2/go-qrcode"
-	"net/http"
 )
 
 func QRCode(w http.ResponseWriter, r *http.Request) {

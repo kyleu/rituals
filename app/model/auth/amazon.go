@@ -14,9 +14,9 @@ import (
 var amazonScopes = []string{"profile"}
 
 type amazonUser struct {
-	ID      string `json:"user_id"`
-	Email   string `json:"email"`
-	Name    string `json:"name"`
+	ID    string `json:"user_id"`
+	Email string `json:"email"`
+	Name  string `json:"name"`
 }
 
 func amazonAuth(tok *oauth2.Token) (*Record, error) {

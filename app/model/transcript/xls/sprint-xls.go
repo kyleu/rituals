@@ -21,36 +21,17 @@ func renderSprint(rsp transcript.SprintResponse, f *excelize.File) (string, stri
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	var err error
-	_, _, err = renderPermissionList(rsp.Permissions, 8, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderEstimateList(rsp.Estimates, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderStandupList(rsp.Standups, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderRetroList(rsp.Retros, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderMemberList(rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderCommentList(rsp.Comments, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
+	renderPermissionList(rsp.Permissions, 8, f)
+	renderEstimateList(rsp.Estimates, rsp.Members, f)
+	renderStandupList(rsp.Standups, rsp.Members, f)
+	renderRetroList(rsp.Retros, rsp.Members, f)
+	renderMemberList(rsp.Members, f)
+	renderCommentList(rsp.Comments, rsp.Members, f)
 
 	return rsp.Session.Slug, util.SvcSprint.Title + " export", nil
 }
 
-func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excelize.File) (string, string, error) {
+func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excelize.File) (string, string) {
 	svc := util.SvcSprint
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
@@ -64,6 +45,5 @@ func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excel
 		setData(svc.Plural, 2, data, f)
 		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export", nil
-
+	return svc.Plural, svc.Title + " export"
 }

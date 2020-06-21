@@ -1,12 +1,13 @@
 package xls
 
 import (
+	"strings"
+
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/model/retro"
 	"github.com/kyleu/rituals.dev/app/model/transcript"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
 func renderRetro(rsp transcript.RetroResponse, f *excelize.File) (string, string, error) {
@@ -26,28 +27,15 @@ func renderRetro(rsp transcript.RetroResponse, f *excelize.File) (string, string
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	var err error
-	_, _, err = renderPermissionList(rsp.Permissions, 8, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderFeedbackList(rsp.Feedback, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderMemberList(rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
-	_, _, err = renderCommentList(rsp.Comments, rsp.Members, f)
-	if err != nil {
-		return "", "", err
-	}
+	renderPermissionList(rsp.Permissions, 8, f)
+	renderFeedbackList(rsp.Feedback, rsp.Members, f)
+	renderMemberList(rsp.Members, f)
+	renderCommentList(rsp.Comments, rsp.Members, f)
 
 	return rsp.Session.Slug, util.SvcRetro.Title + " export", nil
 }
 
-func renderRetroList(sessions retro.Sessions, members member.Entries, f *excelize.File) (string, string, error) {
+func renderRetroList(sessions retro.Sessions, members member.Entries, f *excelize.File) (string, string) {
 	svc := util.SvcRetro
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
@@ -61,10 +49,10 @@ func renderRetroList(sessions retro.Sessions, members member.Entries, f *exceliz
 		setData(svc.Plural, 2, data, f)
 		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export", nil
+	return svc.Plural, svc.Title + " export"
 }
 
-func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *excelize.File) (string, string, error) {
+func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *excelize.File) (string, string) {
 	key := util.KeyFeedback
 	if len(feedbacks) > 0 {
 		f.NewSheet(key)
@@ -78,5 +66,5 @@ func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *ex
 		setData(key, 2, data, f)
 		setColumnWidths(key, []int{16, 16, 64, 16}, f)
 	}
-	return key, util.Title(util.KeyStory) + " export", nil
+	return key, key + " export"
 }

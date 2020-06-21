@@ -47,8 +47,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		data := ctx.App.Team.Data.GetData(*teamID, params, ctx.Logger)
 
 		bc := adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
-		link := util.AdminLink(util.SvcTeam.Key, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, teamID.String()), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.TeamDetail(sess, sprints, estimates, standups, retros, data, params, ctx, w))

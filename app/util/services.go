@@ -1,6 +1,9 @@
 package util
 
-import "strings"
+import (
+	"encoding/json"
+	"strings"
+)
 
 type Service struct {
 	Key         string
@@ -11,7 +14,18 @@ type Service struct {
 	Icon        string
 }
 
-// Services
+func (t Service) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Key)
+}
+
+func (t *Service) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	*t = ServiceFromString(s)
+	return nil
+}
 
 var SvcSystem = Service{
 	Key:         KeySystem,

@@ -45,8 +45,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = e.ID
 		bc := adminBC(ctx, util.KeyEmail, util.Plural(util.KeyEmail))
-		link := util.AdminLink(util.KeyEmail, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, e.ID), e.ID)...)
+		bc = append(bc, web.BreadcrumbSelf(e.ID))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.EmailDetail(e, params, ctx, w))

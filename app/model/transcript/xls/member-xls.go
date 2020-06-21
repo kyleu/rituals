@@ -6,7 +6,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func renderMemberList(members member.Entries, f *excelize.File) (string, string, error) {
+func renderMemberList(members member.Entries, f *excelize.File) {
 	key := util.Plural(util.KeyMember)
 	if len(members) > 0 {
 		f.NewSheet(key)
@@ -20,5 +20,4 @@ func renderMemberList(members member.Entries, f *excelize.File) (string, string,
 		setData(key, 2, data, f)
 		setColumnWidths(key, []int{16, 16, 16}, f)
 	}
-	return key, util.Title(util.KeyMember) + " export", nil
 }

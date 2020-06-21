@@ -21,7 +21,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		params := act.ParamSetFromRequest(r)
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 		ctx.Title = "User Profile"
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.KeyProfile), util.KeyProfile)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.KeyProfile)}
 		ref := r.Header.Get("Referer")
 		return act.T(templates.Profile(auths, ref, ctx, w))
 	})

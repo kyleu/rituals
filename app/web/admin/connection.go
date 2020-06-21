@@ -38,9 +38,8 @@ func ConnectionDetail(w http.ResponseWriter, r *http.Request) {
 		connection := ctx.App.Socket.GetByID(*connectionID)
 		ctx.Title = connection.ID.String()
 		bc := adminBC(ctx, util.KeyConnection, util.Plural(util.KeyConnection))
-		link := util.AdminLink(util.KeyConnection, util.KeyDetail)
 		str := connectionID.String()
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
+		bc = append(bc, web.BreadcrumbSelf(str[0:8]))
 		ctx.Breadcrumbs = bc
 
 		msg := socket.NewMessage(util.SvcSystem, socket.ServerCmdPong, nil)
@@ -73,9 +72,8 @@ func ConnectionPost(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = connectionID.String()
 		bc := adminBC(ctx, util.KeyConnection, util.Plural(util.KeyConnection))
-		link := util.AdminLink(util.KeyConnection, util.KeyDetail)
 		str := connectionID.String()
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, str), str[0:8])...)
+		bc = append(bc, web.BreadcrumbSelf(str[0:8]))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.ConnectionDetail(connection, msg, ctx, w))

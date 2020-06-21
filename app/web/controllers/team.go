@@ -22,7 +22,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.PluralTitle(util.SvcTeam.Key)
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcTeam.Key+".list"), util.SvcTeam.Plural)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.SvcTeam.Plural)}
 		return act.T(templates.TeamList(sessions, auths, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, w))
 	})
 }

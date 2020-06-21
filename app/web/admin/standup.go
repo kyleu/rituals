@@ -46,8 +46,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = sess.Title
 		bc := adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
-		link := util.AdminLink(util.SvcStandup.Key, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, standupID.String()), sess.Slug)...)
+		bc = append(bc, web.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.StandupDetail(sess, reports, data, params, ctx, w))

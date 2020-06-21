@@ -1,15 +1,16 @@
 package pdf
 
 import (
+	"strings"
+
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/model/retro"
 	"github.com/kyleu/rituals.dev/app/model/transcript"
 	"github.com/kyleu/rituals.dev/app/util"
-	"strings"
 )
 
-func renderRetro(rsp transcript.RetroResponse, m pdfgen.Maroto) (string, error) {
+func renderRetro(rsp transcript.RetroResponse, m pdfgen.Maroto) string {
 	hr(m)
 	caption(rsp.Session.Title, m)
 	detailRow(util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
@@ -22,28 +23,15 @@ func renderRetro(rsp transcript.RetroResponse, m pdfgen.Maroto) (string, error) 
 	}
 	detailRow(util.Title(util.KeyCreated), util.ToDateString(&rsp.Session.Created), m)
 
-	var err error
-	_, err = renderPermissionList(rsp.Permissions, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderMemberList(rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderFeedbackLists(rsp.Session.Categories, rsp.Feedback, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderCommentList(rsp.Comments, rsp.Members, m, true)
-	if err != nil {
-		return "", err
-	}
+	renderPermissionList(rsp.Permissions, m)
+	renderMemberList(rsp.Members, m)
+	renderFeedbackLists(rsp.Session.Categories, rsp.Feedback, rsp.Members, m)
+	renderCommentList(rsp.Comments, rsp.Members, m, true)
 
-	return rsp.Session.Slug, nil
+	return rsp.Session.Slug
 }
 
-func renderRetroList(sessions retro.Sessions, members member.Entries, m pdfgen.Maroto) (string, error) {
+func renderRetroList(sessions retro.Sessions, members member.Entries, m pdfgen.Maroto) {
 	if len(sessions) > 0 {
 		hr(m)
 		caption(util.SvcRetro.PluralTitle, m)
@@ -54,10 +42,9 @@ func renderRetroList(sessions retro.Sessions, members member.Entries, m pdfgen.M
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
-	return "", nil
 }
 
-func renderFeedbackLists(categories []string, feedbacks retro.Feedbacks, members member.Entries, m pdfgen.Maroto) (string, error) {
+func renderFeedbackLists(categories []string, feedbacks retro.Feedbacks, members member.Entries, m pdfgen.Maroto) {
 	for _, c := range categories {
 		var fs retro.Feedbacks
 		for _, f := range feedbacks {
@@ -76,5 +63,4 @@ func renderFeedbackLists(categories []string, feedbacks retro.Feedbacks, members
 			table(cols, data, []uint{3, 6, 3}, m)
 		}
 	}
-	return "", nil
 }

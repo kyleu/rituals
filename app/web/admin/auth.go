@@ -44,8 +44,7 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 
 		ctx.Title = user.Name
 		bc := adminBC(ctx, util.KeyAuth, util.Plural(util.KeyAuth))
-		link := util.AdminLink(util.KeyAuth, util.KeyDetail)
-		bc = append(bc, web.BreadcrumbsSimple(ctx.Route(link, util.KeyID, authID.String()), authID.String()[0:8])...)
+		bc = append(bc, web.BreadcrumbSelf(authID.String()[0:8]))
 		ctx.Breadcrumbs = bc
 
 		return act.T(admintemplates.AuthDetail(record, user, ctx, w))

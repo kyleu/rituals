@@ -22,7 +22,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		auths := ctx.App.Auth.GetByUserID(ctx.Profile.UserID, params.Get(util.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.PluralTitle(util.SvcSprint.Key)
-		ctx.Breadcrumbs = web.BreadcrumbsSimple(ctx.Route(util.SvcSprint.Key+".list"), util.SvcSprint.Plural)
+		ctx.Breadcrumbs = web.Breadcrumbs{web.BreadcrumbSelf(util.SvcSprint.Plural)}
 		return act.T(templates.SprintList(sessions, teams, auths, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, w))
 	})
 }

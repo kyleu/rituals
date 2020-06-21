@@ -17,36 +17,17 @@ func renderSprint(rsp transcript.SprintResponse, m pdfgen.Maroto) (string, error
 	}
 	detailRow(util.Title(util.KeyCreated), util.ToDateString(&rsp.Session.Created), m)
 
-	var err error
-	_, err = renderPermissionList(rsp.Permissions, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderMemberList(rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderEstimateList(rsp.Estimates, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderStandupList(rsp.Standups, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderRetroList(rsp.Retros, rsp.Members, m)
-	if err != nil {
-		return "", err
-	}
-	_, err = renderCommentList(rsp.Comments, rsp.Members, m, true)
-	if err != nil {
-		return "", err
-	}
+	renderPermissionList(rsp.Permissions, m)
+	renderMemberList(rsp.Members, m)
+	renderEstimateList(rsp.Estimates, rsp.Members, m)
+	renderStandupList(rsp.Standups, rsp.Members, m)
+	renderRetroList(rsp.Retros, rsp.Members, m)
+	renderCommentList(rsp.Comments, rsp.Members, m, true)
 
 	return rsp.Session.Slug, nil
 }
 
-func renderSprintList(sessions sprint.Sessions, members member.Entries, m pdfgen.Maroto) (string, error) {
+func renderSprintList(sessions sprint.Sessions, members member.Entries, m pdfgen.Maroto) {
 	if len(sessions) > 0 {
 		hr(m)
 		caption(util.SvcSprint.PluralTitle, m)
@@ -57,5 +38,4 @@ func renderSprintList(sessions sprint.Sessions, members member.Entries, m pdfgen
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
-	return "", nil
 }

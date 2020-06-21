@@ -1,14 +1,15 @@
 package controllers
 
 import (
+	"net/url"
+	"strings"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/model/auth"
 	"github.com/kyleu/rituals.dev/app/model/member"
 	"github.com/kyleu/rituals.dev/app/model/permission"
 	"github.com/kyleu/rituals.dev/app/model/user"
 	"github.com/kyleu/rituals.dev/app/util"
-	"net/url"
-	"strings"
 )
 
 type formResult struct {

@@ -1,8 +1,9 @@
 package pdf
 
 import (
-	"emperror.dev/errors"
 	"fmt"
+
+	"emperror.dev/errors"
 	"github.com/johnfercher/maroto/pkg/consts"
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/johnfercher/maroto/pkg/props"
@@ -26,32 +27,33 @@ func Render(rsp interface{}, url string) (string, []byte, error) {
 }
 
 func renderResponse(rsp interface{}, m pdfgen.Maroto) (string, error) {
-	switch rsp.(type) {
+	switch r := rsp.(type) {
 	case transcript.EmailResponse:
-		return renderEmail(rsp.(transcript.EmailResponse), m)
+		return renderEmail(r, m)
 	case team.Sessions:
-		return renderTeamList(rsp.(team.Sessions), nil, m)
+		renderTeamList(r, nil, m)
 	case transcript.TeamResponse:
-		return renderTeam(rsp.(transcript.TeamResponse), m)
+		return renderTeam(r, m)
 	case sprint.Sessions:
-		return renderSprintList(rsp.(sprint.Sessions), nil, m)
+		renderSprintList(r, nil, m)
 	case transcript.SprintResponse:
-		return renderSprint(rsp.(transcript.SprintResponse), m)
+		return renderSprint(r, m)
 	case estimate.Sessions:
-		return renderEstimateList(rsp.(estimate.Sessions), nil, m)
+		renderEstimateList(r, nil, m)
 	case transcript.EstimateResponse:
-		return renderEstimate(rsp.(transcript.EstimateResponse), m)
+		return renderEstimate(r, m), nil
 	case standup.Sessions:
-		return renderStandupList(rsp.(standup.Sessions), nil, m)
+		renderStandupList(r, nil, m)
 	case transcript.StandupResponse:
-		return renderStandup(rsp.(transcript.StandupResponse), m)
+		return renderStandup(r, m), nil
 	case retro.Sessions:
-		return renderRetroList(rsp.(retro.Sessions), nil, m)
+		renderRetroList(r, nil, m)
 	case transcript.RetroResponse:
-		return renderRetro(rsp.(transcript.RetroResponse), m)
+		return renderRetro(r, m), nil
 	default:
 		return "error", errors.New(fmt.Sprintf("Invalid transcript type [%T]", rsp))
 	}
+	return "", nil
 }
 
 func newDoc() pdfgen.Maroto {
@@ -62,10 +64,12 @@ func newDoc() pdfgen.Maroto {
 
 func writeDocHeader(url string, m pdfgen.Maroto) {
 	m.RegisterHeader(func() {
-		tr(func() { col(func() {
-			m.Text(util.AppName, props.Text{Size: 16, Align: consts.Left})
-			m.Text(url, props.Text{Size: 8, Align: consts.Right})
-		}, 12, m) }, 10, m)
+		tr(func() {
+			col(func() {
+				m.Text(util.AppName, props.Text{Size: 16, Align: consts.Left})
+				m.Text(url, props.Text{Size: 8, Align: consts.Right})
+			}, 12, m)
+		}, 10, m)
 	})
 }
 
