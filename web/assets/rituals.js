@@ -329,7 +329,18 @@ var dom;
     }
     dom.initDom = initDom;
     function els(selector, context) {
-        return UIkit.util.$$(selector, context);
+        let result;
+        if (context) {
+            result = context.querySelectorAll(selector);
+        }
+        else {
+            result = document.querySelectorAll(selector);
+        }
+        const ret = [];
+        result.forEach(v => {
+            ret.push(v);
+        });
+        return ret;
     }
     dom.els = els;
     function opt(selector, context) {
@@ -675,9 +686,11 @@ var estimate;
 var drop;
 (function (drop) {
     function wire() {
-        UIkit.util.on(".drop", "show", onDropOpen);
-        UIkit.util.on(".drop", "beforehide", onDropBeforeHide);
-        UIkit.util.on(".drop", "hide", onDropHide);
+        dom.els(".drop").forEach(el => {
+            el.addEventListener("show", onDropOpen);
+            el.addEventListener("beforehide", onDropBeforeHide);
+            el.addEventListener("hide", onDropHide);
+        });
         events.register("comment", comment.load, comment.closeDrop);
         events.register("export");
     }
@@ -750,8 +763,10 @@ var modal;
 (function (modal) {
     let activeParam;
     function wire() {
-        UIkit.util.on(".modal", "show", onModalOpen);
-        UIkit.util.on(".modal", "hide", onModalHide);
+        dom.els(".modal").forEach(el => {
+            el.addEventListener("show", onModalOpen);
+            el.addEventListener("hide", onModalHide);
+        });
         events.register("welcome");
         // session
         events.register("session", session.onModalOpen);
@@ -773,10 +788,7 @@ var modal;
     modal.wire = wire;
     function open(key, param) {
         activeParam = param;
-        const m = UIkit.modal(`#modal-${key}`);
-        if (!m) {
-            console.warn(`no modal available with key [${key}]`);
-        }
+        const m = notify.modal(`#modal-${key}`);
         m.show();
         return false;
     }
@@ -786,7 +798,7 @@ var modal;
     }
     modal.openSoon = openSoon;
     function hide(key) {
-        const m = UIkit.modal(`#modal-${key}`);
+        const m = notify.modal(`#modal-${key}`);
         const el = m.$el;
         if (el.classList.contains("uk-open")) {
             m.hide();
@@ -829,9 +841,11 @@ var modal;
 var tags;
 (function (tags) {
     function wire() {
-        UIkit.util.on(".tag-editor", "moved", onTagEditorUpdate);
-        UIkit.util.on(".tag-editor", "added", onTagEditorUpdate);
-        UIkit.util.on(".tag-editor", "removed", onTagEditorUpdate);
+        dom.els(".tag-editor").forEach(el => {
+            el.addEventListener("moved", onTagEditorUpdate);
+            el.addEventListener("added", onTagEditorUpdate);
+            el.addEventListener("removed", onTagEditorUpdate);
+        });
         events.register("choices");
         events.register("categories");
     }
@@ -946,7 +960,7 @@ var feedback;
     function onRemoveFeedback() {
         const id = retro.cache.activeFeedback;
         if (id) {
-            UIkit.modal.confirm("Delete this feedback?").then(function () {
+            notify.confirm("Delete this feedback?", function () {
                 socket.send({ svc: services.retro.key, cmd: command.client.removeFeedback, param: id });
                 modal.hide("feedback");
             });
@@ -1614,7 +1628,7 @@ var report;
     function onRemoveReport() {
         const id = standup.cache.activeReport;
         if (id) {
-            UIkit.modal.confirm("Delete this report?").then(function () {
+            notify.confirm("Delete this report?", function () {
                 const msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
                 socket.send(msg);
                 modal.hide("report");
@@ -2283,7 +2297,7 @@ var story;
     function onRemoveStory() {
         const id = estimate.cache.activeStory;
         if (id) {
-            UIkit.modal.confirm("Delete this story?").then(function () {
+            notify.confirm("Delete this story?", function () {
                 const msg = { svc: services.estimate.key, cmd: command.client.removeStory, param: id };
                 socket.send(msg);
                 modal.hide("story");
@@ -2700,6 +2714,18 @@ var notify;
         UIkit.notification(msg, { status: status ? "success" : "danger", pos: "top-right" });
     }
     notify_1.notify = notify;
+    function confirm(msg, f) {
+        UIkit.modal.confirm(msg).then(f);
+    }
+    notify_1.confirm = confirm;
+    function modal(key) {
+        const m = UIkit.modal(key);
+        if (!m) {
+            console.warn(`no modal available with key [${key}]`);
+        }
+        return m;
+    }
+    notify_1.modal = modal;
 })(notify || (notify = {}));
 var vote;
 (function (vote) {

@@ -12,7 +12,7 @@ namespace action {
     );
   }
 
-  export function renderActions(actions: ReadonlyArray<Action>) {
+  export function renderActions(actions: readonly Action[]) {
     if (actions.length === 0) {
       return <div>No actions available</div>;
     } else {

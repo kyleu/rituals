@@ -61,24 +61,6 @@ const (
 	KeyVoyager    = "voyager"
 )
 
-func Plural(k string) string {
-	if len(k) == 0 {
-		return k
-	}
-	switch k {
-	case KeyGraphQL, KeyRoutes, KeyModules:
-		return k
-	case KeyCategory:
-		return "categories"
-	case KeyStory:
-		return "stories"
-	case KeySandbox:
-		return "sandboxes"
-	default:
-		return k + "s"
-	}
-}
-
 func Title(k string) string {
 	if len(k) == 0 {
 		return k
@@ -95,7 +77,7 @@ func Title(k string) string {
 }
 
 func PluralTitle(k string) string {
-	return Title(Plural(k))
+	return Plural(Title(k))
 }
 
 func WithID(k string) string {

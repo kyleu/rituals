@@ -10,11 +10,11 @@ namespace vote {
     );
   }
 
-  export function renderVoteMembers(members: ReadonlyArray<member.Member>, votes: ReadonlyArray<Vote>) {
+  export function renderVoteMembers(members: readonly member.Member[], votes: readonly Vote[]) {
     return <div class="uk-flex uk-flex-wrap uk-flex-around">{members.map(m => renderVoteMember(m, votes.filter(v => v.userID === m.userID).length > 0))}</div>;
   }
 
-  export function renderVoteChoices(choices: ReadonlyArray<string>, choice: string | undefined) {
+  export function renderVoteChoices(choices: readonly string[], choice: string | undefined) {
     return (
       <div class="uk-flex uk-flex-wrap uk-flex-center">
         {choices.map(c => (
@@ -52,7 +52,7 @@ namespace vote {
     );
   }
 
-  export function renderVoteResults(members: ReadonlyArray<member.Member>, votes: ReadonlyArray<Vote>) {
+  export function renderVoteResults(members: readonly member.Member[], votes: readonly Vote[]) {
     return (
       <div class="uk-flex uk-flex-wrap uk-flex-around">
         {members.map(m => {
@@ -65,7 +65,7 @@ namespace vote {
     );
   }
 
-  export function renderVoteSummary(votes: ReadonlyArray<Vote>) {
+  export function renderVoteSummary(votes: readonly Vote[]) {
     const results = getVoteResults(votes);
     function trim(n: number) {
       return n.toString().substr(0, 4);

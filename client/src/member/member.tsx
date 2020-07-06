@@ -11,7 +11,7 @@ namespace member {
     );
   }
 
-  export function renderMembers(members: ReadonlyArray<Member>) {
+  export function renderMembers(members: readonly Member[]) {
     if (members.length === 0) {
       return (
         <div>

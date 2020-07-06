@@ -57,12 +57,12 @@ namespace vote {
     }
   }
 
-  function viewActiveVotes(votes: ReadonlyArray<Vote>, activeVote: Vote | undefined) {
+  function viewActiveVotes(votes: readonly Vote[], activeVote: Vote | undefined) {
     dom.setContent("#story-vote-members", renderVoteMembers(member.getMembers(), votes));
     dom.setContent("#story-vote-choices", renderVoteChoices(estimate.cache.detail!.choices, activeVote?.choice));
   }
 
-  function viewVoteResults(votes: ReadonlyArray<Vote>) {
+  function viewVoteResults(votes: readonly Vote[]) {
     dom.setContent("#story-vote-results", renderVoteResults(member.getMembers(), votes));
     dom.setContent("#story-vote-summary", renderVoteSummary(votes));
   }
@@ -73,7 +73,7 @@ namespace vote {
     socket.send(msg);
   }
 
-  export function getVoteResults(votes: ReadonlyArray<Vote>): VoteResults {
+  export function getVoteResults(votes: readonly Vote[]): VoteResults {
     const floats = votes.map(v => {
       const n = parseFloat(v.choice);
       if (isNaN(n)) {

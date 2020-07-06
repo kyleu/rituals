@@ -2,8 +2,10 @@ namespace modal {
   let activeParam: string | undefined;
 
   export function wire() {
-    UIkit.util.on(".modal", "show", onModalOpen);
-    UIkit.util.on(".modal", "hide", onModalHide);
+    dom.els(".modal").forEach(el => {
+      el.addEventListener("show", onModalOpen);
+      el.addEventListener("hide", onModalHide);
+    });
 
     events.register("welcome");
 
@@ -31,10 +33,7 @@ namespace modal {
 
   export function open(key: string, param?: string) {
     activeParam = param;
-    const m = UIkit.modal(`#modal-${key}`);
-    if (!m) {
-      console.warn(`no modal available with key [${key}]`);
-    }
+    const m = notify.modal(`#modal-${key}`);
     m.show();
     return false;
   }
@@ -44,7 +43,7 @@ namespace modal {
   }
 
   export function hide(key: string) {
-    const m = UIkit.modal(`#modal-${key}`);
+    const m = notify.modal(`#modal-${key}`);
     const el: HTMLElement = m.$el;
     if (el.classList.contains("uk-open")) {
       m.hide();

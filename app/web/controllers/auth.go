@@ -43,6 +43,7 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 		if !ctx.App.Auth.Enabled {
 			return "", auth.ErrorAuthDisabled
 		}
+		_, _ = ctx.App.User.SaveProfile(ctx.Profile)
 		prv := auth.ProviderFromString(mux.Vars(r)[util.KeyKey])
 		code, ok := r.URL.Query()["code"]
 		if !ok || len(code) == 0 {

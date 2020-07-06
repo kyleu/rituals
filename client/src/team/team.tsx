@@ -12,7 +12,7 @@ namespace team {
     return <span>in {a}</span>;
   }
 
-  export function renderTeamSelect(teams: ReadonlyArray<team.Detail>, activeID: string | undefined) {
+  export function renderTeamSelect(teams: readonly team.Detail[], activeID: string | undefined) {
     return (
       <select class="uk-select" onchange="permission.setModelPerms('team')">
         <option value="">- no team -</option>

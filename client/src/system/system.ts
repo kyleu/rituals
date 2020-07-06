@@ -56,13 +56,13 @@ namespace system {
         rituals.onError(services.system, param as string);
         break;
       case command.server.actions:
-        action.viewActions(param as ReadonlyArray<action.Action>);
+        action.viewActions(param as readonly action.Action[]);
         break;
       case command.server.teams:
-        team.viewTeams(param as ReadonlyArray<team.Detail>);
+        team.viewTeams(param as readonly team.Detail[]);
         break;
       case command.server.sprints:
-        sprint.viewSprints(param as ReadonlyArray<sprint.Detail>);
+        sprint.viewSprints(param as readonly sprint.Detail[]);
         break;
       case command.server.memberUpdate:
         member.onMemberUpdate(param as member.Member);

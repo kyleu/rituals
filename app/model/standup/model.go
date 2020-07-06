@@ -39,7 +39,8 @@ func (t Status) MarshalJSON() ([]byte, error) {
 
 func (t *Status) UnmarshalJSON(data []byte) error {
 	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
+	err := json.Unmarshal(data, &s)
+	if err != nil {
 		return err
 	}
 	*t = statusFromString(s)

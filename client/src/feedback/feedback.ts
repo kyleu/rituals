@@ -41,7 +41,7 @@ namespace feedback {
   export function onRemoveFeedback() {
     const id = retro.cache.activeFeedback;
     if (id) {
-      UIkit.modal.confirm("Delete this feedback?").then(function () {
+      notify.confirm("Delete this feedback?", function () {
         socket.send({ svc: services.retro.key, cmd: command.client.removeFeedback, param: id });
         modal.hide("feedback");
       });
@@ -104,7 +104,7 @@ namespace feedback {
     }
   }
 
-  export function getFeedbackCategories(feedback: ReadonlyArray<feedback.Feedback>, categories: ReadonlyArray<string>) {
+  export function getFeedbackCategories(feedback: readonly feedback.Feedback[], categories: readonly string[]) {
     function toCollection(c: string): FeedbackCategory {
       const reports = feedback.filter(r => r.category === c).sort((l, r) => (l.created > r.created ? -1 : 1));
       return { category: c, feedback: reports };

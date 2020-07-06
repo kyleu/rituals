@@ -74,7 +74,7 @@ namespace team {
     }
   }
 
-  export function viewTeams(teams: ReadonlyArray<team.Detail>) {
+  export function viewTeams(teams: readonly team.Detail[]) {
     const c = dom.opt("#model-team-container");
     if (c) {
       // dom.setDisplay(c, teams.length > 0)

@@ -32,7 +32,7 @@ namespace report {
   export function onRemoveReport() {
     const id = standup.cache.activeReport;
     if (id) {
-      UIkit.modal.confirm("Delete this report?").then(function () {
+      notify.confirm("Delete this report?", function () {
         const msg = { svc: services.standup.key, cmd: command.client.removeReport, param: id };
         socket.send(msg);
         modal.hide("report");
@@ -77,8 +77,8 @@ namespace report {
     modal.hide("add-report");
   }
 
-  export function getReportDates(reports: ReadonlyArray<Report>): DayReports[] {
-    function distinct(v: string, i: number, s: ReadonlyArray<any>) {
+  export function getReportDates(reports: readonly Report[]): DayReports[] {
+    function distinct(v: string, i: number, s: readonly any[]) {
       return s.indexOf(v) === i;
     }
 

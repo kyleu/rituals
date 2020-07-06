@@ -40,7 +40,7 @@ namespace permission {
     }
   }
 
-  function readPermission(k: string): ReadonlyArray<Permission> {
+  function readPermission(k: string): readonly Permission[] {
     const checkbox = dom.opt<HTMLInputElement>(`#perm-${k}-checkbox`);
     if (!checkbox || !checkbox.checked) {
       return [];
@@ -54,7 +54,7 @@ namespace permission {
     return [{ k, v, access }];
   }
 
-  export function readPermissions(): ReadonlyArray<Permission> {
+  export function readPermissions(): readonly Permission[] {
     const ret = [];
 
     ret.push(...readPermission("team"));

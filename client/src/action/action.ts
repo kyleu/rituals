@@ -18,7 +18,7 @@ namespace action {
     });
   }
 
-  export function viewActions(actions: ReadonlyArray<Action>) {
+  export function viewActions(actions: readonly Action[]) {
     dom.setContent("#action-list", renderActions(actions));
   }
 }

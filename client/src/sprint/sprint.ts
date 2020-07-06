@@ -88,7 +88,7 @@ namespace sprint {
     }
   }
 
-  export function viewSprints(sprints: ReadonlyArray<sprint.Detail>) {
+  export function viewSprints(sprints: readonly sprint.Detail[]) {
     const c = dom.opt("#model-sprint-container");
     if (c) {
       // dom.setDisplay(c, sprints.length > 0)

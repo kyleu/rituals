@@ -14,6 +14,7 @@ require (
 	github.com/gorilla/websocket v1.4.1
 	github.com/graphql-go/graphql v0.7.9
 	github.com/jackc/pgx/v4 v4.6.0
+	github.com/jinzhu/inflection v1.0.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/johnfercher/maroto v0.27.0
 	github.com/mattn/go-runewidth v0.0.8 // indirect

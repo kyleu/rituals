@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/gorilla/sessions"
-	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 )
 
@@ -45,15 +44,4 @@ func FlashAndRedir(success bool, msg string, redir string, w http.ResponseWriter
 		return "/", nil
 	}
 	return ctx.Route(redir), nil
-}
-
-func TempSecurityCheck(ctx *web.RequestContext) bool {
-	if ctx.Profile.Role == util.RoleAdmin {
-		return true
-	}
-	s, ok := ctx.Session.Values["unlock"]
-	if ok {
-		return s.(bool)
-	}
-	return false
 }

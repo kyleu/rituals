@@ -135,7 +135,7 @@ namespace comment {
     return false;
   }
 
-  function setCount(t: string, comments: ReadonlyArray<Comment>, cc: HTMLElement, force?: boolean) {
+  function setCount(t: string, comments: readonly Comment[], cc: HTMLElement, force?: boolean) {
     dom.setText(dom.req(".text", cc), comments.length.toString());
     if (t !== "root" && t !== "modal" && t.length !== 0) {
       dom.setDisplay(cc, comments.length !== 0 || force === true);

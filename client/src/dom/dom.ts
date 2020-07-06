@@ -25,8 +25,18 @@ namespace dom {
     }
   }
 
-  export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): ReadonlyArray<T> {
-    return UIkit.util.$$(selector, context) as ReadonlyArray<T>;
+  export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): readonly T[] {
+    let result: NodeListOf<Element>;
+    if (context) {
+      result = context.querySelectorAll(selector);
+    } else {
+      result = document.querySelectorAll(selector);
+    }
+    const ret: T[] = []
+    result.forEach(v => {
+      ret.push(v as T);
+    });
+    return ret;
   }
 
   export function opt<T extends HTMLElement>(selector: string, context?: HTMLElement): T | undefined {

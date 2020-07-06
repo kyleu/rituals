@@ -27,7 +27,7 @@ namespace comment {
     );
   }
 
-  export function renderComments(comments: ReadonlyArray<comment.Comment>, profile: profile.Profile) {
+  export function renderComments(comments: readonly comment.Comment[], profile: profile.Profile) {
     if (comments.length === 0) {
       return <p class="uk-margin-bottom">No comments yet, why not add one?</p>;
     } else {

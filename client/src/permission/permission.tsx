@@ -1,5 +1,5 @@
 namespace permission {
-  export function renderEmails(key: string, emails: ReadonlyArray<Email>) {
+  export function renderEmails(key: string, emails: readonly Email[]) {
     const cls = `uk-checkbox uk-margin-small-right perm-${key}-email`;
     const oc = `permission.onChanged('email', '${key}', this.checked)`;
     return (

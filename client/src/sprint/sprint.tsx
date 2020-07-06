@@ -44,7 +44,7 @@ namespace sprint {
     return <span>{a} </span>;
   }
 
-  export function renderSprintSelect(sprints: ReadonlyArray<sprint.Detail>, activeID: string | undefined) {
+  export function renderSprintSelect(sprints: readonly sprint.Detail[], activeID: string | undefined) {
     return (
       <select class="uk-select" onchange="permission.setModelPerms('sprint')">
         <option value="">- no sprint -</option>

@@ -19,7 +19,7 @@ namespace feedback {
     return ret;
   }
 
-  export function renderFeedbackArray(f: ReadonlyArray<feedback.Feedback>) {
+  export function renderFeedbackArray(f: readonly feedback.Feedback[]) {
     if (f.length === 0) {
       return (
         <div>

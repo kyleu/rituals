@@ -25,9 +25,9 @@ namespace auth {
     readonly domain: string;
   }
 
-  let auths: ReadonlyArray<auth.Auth> = [];
+  let auths: readonly auth.Auth[] = [];
 
-  export function applyAuths(as: ReadonlyArray<auth.Auth>) {
+  export function applyAuths(as: readonly auth.Auth[]) {
     auths = as;
   }
 

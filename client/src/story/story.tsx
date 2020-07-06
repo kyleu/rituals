@@ -12,7 +12,7 @@ namespace story {
     );
   }
 
-  export function renderStories(stories: ReadonlyArray<story.Story>) {
+  export function renderStories(stories: readonly story.Story[]) {
     if (stories.length === 0) {
       return (
         <div id="story-list">

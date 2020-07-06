@@ -13,13 +13,13 @@ namespace contents {
     );
   }
 
-  function toContent(svc: services.Service, sessions: ReadonlyArray<session.Session>) {
+  function toContent(svc: services.Service, sessions: readonly session.Session[]) {
     return sessions.map(s => {
       return { svc: svc, session: s };
     });
   }
 
-  export function renderContents(src: services.Service, tgt: services.Service, sessions: ReadonlyArray<session.Session>) {
+  export function renderContents(src: services.Service, tgt: services.Service, sessions: readonly session.Session[]) {
     const contents = toContent(tgt, sessions);
     contents.sort((l, r) => (l.session.created > r.session.created ? -1 : 1));
 

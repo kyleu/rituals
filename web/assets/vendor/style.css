@@ -12461,6 +12461,10 @@ pre {
   text-transform: none;
 }
 
+.uk-card-default {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
 .right {
   float: right;
 }

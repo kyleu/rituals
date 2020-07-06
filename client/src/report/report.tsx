@@ -19,7 +19,7 @@ namespace report {
     return ret;
   }
 
-  export function renderReports(reports: ReadonlyArray<Report>) {
+  export function renderReports(reports: readonly Report[]) {
     if (reports.length === 0) {
       return (
         <div>

@@ -1,8 +1,10 @@
 namespace drop {
   export function wire() {
-    UIkit.util.on(".drop", "show", onDropOpen);
-    UIkit.util.on(".drop", "beforehide", onDropBeforeHide);
-    UIkit.util.on(".drop", "hide", onDropHide);
+    dom.els(".drop").forEach(el => {
+      el.addEventListener("show", onDropOpen);
+      el.addEventListener("beforehide", onDropBeforeHide);
+      el.addEventListener("hide", onDropHide);
+    });
 
     events.register("comment", comment.load, comment.closeDrop);
     events.register("export");

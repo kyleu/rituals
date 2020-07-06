@@ -13,7 +13,6 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
-	"github.com/kyleu/rituals.dev/gen/templates"
 	"golang.org/x/text/language"
 )
 
@@ -25,16 +24,6 @@ type errorResult struct {
 func Act(w http.ResponseWriter, r *http.Request, f func(*web.RequestContext) (string, error)) {
 	startNanos := time.Now().UnixNano()
 	ctx := web.ExtractContext(w, r, false)
-
-	if !TempSecurityCheck(ctx) {
-		if strings.Contains(ctx.Request.RawQuery, "unlock=true") {
-			ctx.Session.Values["unlock"] = true
-			SaveSession(w, r, ctx)
-		} else {
-			_, _ = templates.StaticMessage("Coming soon!", ctx, w)
-			return
-		}
-	}
 
 	if len(ctx.Flashes) > 0 {
 		SaveSession(w, r, ctx)

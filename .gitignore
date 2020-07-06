@@ -1,6 +1,7 @@
 /.vscode
 /.idea
 /build
+/out
 /project
 /tmp
 /vendor
