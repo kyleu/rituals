@@ -7,7 +7,7 @@ cd "$DIR"
 ./bin/build-css.sh
 
 arch=amd64
-os=linux
+os=darwin
 
 echo "Building [$os $arch]..."
 env GOOS=$os GOARCH=$arch make build-release

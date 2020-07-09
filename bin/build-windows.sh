@@ -7,9 +7,9 @@ cd "$DIR"
 ./bin/build-css.sh
 
 arch=amd64
-os=linux
+os=windows
 
 echo "Building [$os $arch]..."
 env GOOS=$os GOARCH=$arch make build-release
 mkdir -p ./build/$os/$arch
-mv ./build/release/rituals ./build/$os/$arch/rituals
+mv ./build/release/rituals.exe ./build/$os/$arch/rituals.exe
