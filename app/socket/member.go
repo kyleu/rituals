@@ -3,7 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/member"
+	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 

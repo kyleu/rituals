@@ -2,7 +2,7 @@ package gql
 
 import (
 	"github.com/graphql-go/graphql"
-	"github.com/kyleu/rituals.dev/app/model/permission"
+	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 

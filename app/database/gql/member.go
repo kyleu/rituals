@@ -2,7 +2,7 @@ package gql
 
 import (
 	"github.com/graphql-go/graphql"
-	"github.com/kyleu/rituals.dev/app/model/member"
+	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/app/web"
 )

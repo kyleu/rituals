@@ -9,7 +9,7 @@ import (
 
 	"github.com/kyleu/rituals.dev/app/util"
 
-	"github.com/kyleu/rituals.dev/app/model/transcript"
+	"github.com/kyleu/rituals.dev/app/transcript"
 
 	"github.com/kyleu/rituals.dev/app/web"
 

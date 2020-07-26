@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/auth"
 	"github.com/kyleu/rituals.dev/app/web/form"
 
 	"github.com/kyleu/rituals.dev/app/web/act"

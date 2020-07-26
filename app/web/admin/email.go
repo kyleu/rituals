@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/model/email"
+	"github.com/kyleu/rituals.dev/app/email"
 	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"github.com/kyleu/rituals.dev/app/web/act"

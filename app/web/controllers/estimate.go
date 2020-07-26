@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/kyleu/rituals.dev/app/database/query"
-	"github.com/kyleu/rituals.dev/app/model/estimate"
+	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/web/act"
 
 	"github.com/kyleu/rituals.dev/app/util"

@@ -4,24 +4,24 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/kyleu/rituals.dev/app/model/comment"
+	"github.com/kyleu/rituals.dev/app/comment"
 
-	"github.com/kyleu/rituals.dev/app/model/auth"
+	"github.com/kyleu/rituals.dev/app/auth"
 
-	"github.com/kyleu/rituals.dev/app/model/team"
+	"github.com/kyleu/rituals.dev/app/team"
 
+	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/database/query"
-	"github.com/kyleu/rituals.dev/app/model/action"
-	"github.com/kyleu/rituals.dev/app/model/sprint"
+	"github.com/kyleu/rituals.dev/app/sprint"
 
-	"github.com/kyleu/rituals.dev/app/model/retro"
-	"github.com/kyleu/rituals.dev/app/model/standup"
-	"github.com/kyleu/rituals.dev/app/model/user"
+	"github.com/kyleu/rituals.dev/app/retro"
+	"github.com/kyleu/rituals.dev/app/standup"
+	"github.com/kyleu/rituals.dev/app/user"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/estimate"
+	"github.com/kyleu/rituals.dev/app/estimate"
 	"logur.dev/logur"
 )
 

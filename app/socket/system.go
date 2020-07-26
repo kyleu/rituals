@@ -6,7 +6,7 @@ import (
 	"github.com/gofrs/uuid"
 
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/model/session"
+	"github.com/kyleu/rituals.dev/app/session"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 

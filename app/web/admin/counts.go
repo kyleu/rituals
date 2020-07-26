@@ -3,11 +3,11 @@ package admin
 import (
 	"time"
 
-	"github.com/kyleu/rituals.dev/app/model/transcript"
+	"github.com/kyleu/rituals.dev/app/transcript"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/database"
-	"github.com/kyleu/rituals.dev/app/model/sandbox"
+	"github.com/kyleu/rituals.dev/app/sandbox"
 	"github.com/kyleu/rituals.dev/app/socket"
 	"github.com/kyleu/rituals.dev/app/util"
 )

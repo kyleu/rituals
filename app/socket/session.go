@@ -3,10 +3,10 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/model/action"
-	"github.com/kyleu/rituals.dev/app/model/auth"
-	"github.com/kyleu/rituals.dev/app/model/member"
-	"github.com/kyleu/rituals.dev/app/model/permission"
+	"github.com/kyleu/rituals.dev/app/action"
+	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/rituals.dev/app/member"
+	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 

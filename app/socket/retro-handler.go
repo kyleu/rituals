@@ -6,7 +6,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/database/query"
-	"github.com/kyleu/rituals.dev/app/model/retro"
+	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
