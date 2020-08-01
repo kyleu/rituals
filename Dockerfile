@@ -3,7 +3,7 @@ FROM golang:alpine AS builder
 
 ENV GOFLAGS="-mod=readonly"
 
-RUN apk add --update --no-cache ca-certificates make git curl build-base
+RUN apk add --update --no-cache ca-certificates make git bash curl build-base
 
 RUN mkdir /rituals
 
@@ -29,7 +29,7 @@ ARG BUILD_TARGET
 COPY go.* /rituals/
 RUN go mod download
 
-RUN set -xe && make build-release-force
+RUN set -xe && bash -c 'make build-release-force'
 
 RUN mv build/release /build
 
@@ -48,7 +48,7 @@ ARG BUILD_TARGET
 
 RUN if [[ "${BUILD_TARGET}" == "debug" ]]; then apk add --update --no-cache libc6-compat; fi
 
-COPY --from=builder /build/* /usr/local/bin/
+COPY --from=builder /build/* /rituals/
 
 EXPOSE 6660
-CMD ["rituals"]
+CMD ["/rituals/rituals"]
