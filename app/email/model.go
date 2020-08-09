@@ -1,10 +1,10 @@
 package email
 
 import (
+	"github.com/kyleu/npn/npndatabase"
 	"time"
 
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/database/query"
 )
 
 type Email struct {
@@ -36,7 +36,7 @@ type emailDTO struct {
 func (dto *emailDTO) toEmail() *Email {
 	return &Email{
 		ID:         dto.ID,
-		Recipients: query.StringToArray(dto.Recipients),
+		Recipients: npndatabase.StringToArray(dto.Recipients),
 		Subject:    dto.Subject,
 		Data:       dto.Data,
 		Plain:      dto.Plain,

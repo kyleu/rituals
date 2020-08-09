@@ -1,13 +1,13 @@
-<%: func SprintForm(title string, startDate *time.Time, endDate *time.Time, teams team.Sessions, auths auth.Records, showName bool, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintForm(title string, startDate *time.Time, endDate *time.Time, teams team.Sessions, auths auth.Records, showName bool, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">
     <label class="uk-form-label" for="sprint-start-date-input">Start Date</label>
-    <input class="uk-input" id="sprint-start-date-input" type="date" name="startDate" value="<%= util.ToYMD(startDate) %>" />
+    <input class="uk-input" id="sprint-start-date-input" type="date" name="startDate" value="<%= npncore.ToYMD(startDate) %>" />
   </div>
   <div class="uk-margin">
     <label class="uk-form-label" for="sprint-end-date-input">End Date</label>
-    <input class="uk-input" id="sprint-end-date-input" type="date" name="endDate" value="<%= util.ToYMD(endDate) %>" />
+    <input class="uk-input" id="sprint-end-date-input" type="date" name="endDate" value="<%= npncore.ToYMD(endDate) %>" />
   </div>
   <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>

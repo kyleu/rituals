@@ -1,6 +1,6 @@
-<%: func UserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func UserDetail(user *user.SystemUser, auths auth.Records, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, actions action.Actions, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,11 +9,11 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th><%= util.Title(util.KeyID) %></th>
+            <th><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= user.UserID.String() %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyName) %></th>
+            <th><%= npncore.Title(npncore.KeyName) %></th>
             <td><%= user.Name %></td>
           </tr>
           <tr>
@@ -45,8 +45,8 @@
             <td><%=v user.Locale %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyCreated) %></th>
-            <td><% components.DateTime(&user.Created, _buffer) %></td>
+            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <td><% npntemplate.DateTime(&user.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>
@@ -55,7 +55,7 @@
     <% if len(auths) > 0 { %>
       <div class="uk-card uk-card-body uk-margin-top">
         <h3 class="uk-card-title">Auth Records</h3>
-        <% AuthTable(auths, params.Get(util.KeyAuth, ctx.Logger), ctx, _buffer) %>
+        <% AuthTable(auths, params.Get(npncore.KeyAuth, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(teams) > 0 { %>
@@ -91,7 +91,7 @@
     <% if len(actions) > 0 { %>
       <div class="uk-card uk-card-body uk-margin-top">
         <h3 class="uk-card-title">Actions</h3>
-        <% ActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
+        <% ActionTable(actions, params.Get(npncore.KeyAction, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
   </div>

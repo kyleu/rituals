@@ -2,6 +2,7 @@ package pdf
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/johnfercher/maroto/pkg/consts"
@@ -13,7 +14,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/transcript"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 func Render(rsp interface{}, url string) (string, []byte, error) {
@@ -66,7 +66,7 @@ func writeDocHeader(url string, m pdfgen.Maroto) {
 	m.RegisterHeader(func() {
 		tr(func() {
 			col(func() {
-				m.Text(util.AppName, props.Text{Size: 16, Align: consts.Left})
+				m.Text(npncore.AppName, props.Text{Size: 16, Align: consts.Left})
 				m.Text(url, props.Text{Size: 8, Align: consts.Right})
 			}, 12, m)
 		}, 10, m)
@@ -80,7 +80,7 @@ func response(fn string, m pdfgen.Maroto) (string, []byte, error) {
 	}
 
 	if len(fn) == 0 {
-		fn = util.KeyExport
+		fn = npncore.KeyExport
 	}
 	return fn, buff.Bytes(), nil
 }

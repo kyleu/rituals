@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 	"strings"
 	"time"
 
@@ -17,7 +18,7 @@ func onAddReport(s *Service, ch Channel, userID uuid.UUID, param addReportParams
 		return err
 	}
 	content := getContent(param.Content)
-	s.Logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", util.ToYMD(d), userID))
+	s.Logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", npncore.ToYMD(d), userID))
 	report, err := s.standups.NewReport(ch.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new report")
@@ -32,7 +33,7 @@ func onEditReport(s *Service, ch Channel, userID uuid.UUID, param editReportPara
 		return err
 	}
 	content := getContent(param.Content)
-	s.Logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", util.ToYMD(d), userID))
+	s.Logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", npncore.ToYMD(d), userID))
 	report, err := s.standups.UpdateReport(param.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update report")
@@ -60,7 +61,7 @@ func parseDate(s string) (*time.Time, error) {
 	dString := strings.TrimSpace(s)
 	if len(dString) == 0 {
 		t := time.Now()
-		dString = util.ToYMD(&t)
+		dString = npncore.ToYMD(&t)
 	}
-	return util.FromYMD(dString)
+	return npncore.FromYMD(dString)
 }

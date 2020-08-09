@@ -1,12 +1,12 @@
-<%: func MigrationList(migrations database.Migrations, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func MigrationList(migrations npndatabase.Migrations, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
-      <h3 class="uk-card-title"><%= util.PluralTitle(util.KeyMigration) %></h3>
-      <% MigrationTable(migrations, params.Get(util.KeyMigration, ctx.Logger), ctx, _buffer) %>
+      <h3 class="uk-card-title"><%= npncore.PluralTitle(npncore.KeyMigration) %></h3>
+      <% MigrationTable(migrations, params.Get(npncore.KeyMigration, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

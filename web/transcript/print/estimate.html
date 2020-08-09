@@ -7,22 +7,22 @@
       <% if r.Team != nil { %>
         <tr>
           <th><%= util.SvcTeam.Title %></th>
-          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, npncore.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
         </tr>
       <% } %>
       <% if r.Sprint != nil { %>
         <tr>
           <th><%= util.SvcSprint.Title %></th>
-          <td><a href="<%= tx.Route(util.SvcSprint.Key, util.KeyKey, r.Sprint.Slug) %>"><%= r.Sprint.Title %></a></td>
+          <td><a href="<%= tx.Route(util.SvcSprint.Key, npncore.KeyKey, r.Sprint.Slug) %>"><%= r.Sprint.Title %></a></td>
         </tr>
       <% } %>
       <tr>
-        <th><%= util.PluralTitle(util.KeyChoice) %></th>
+        <th><%= npncore.PluralTitle(npncore.KeyChoice) %></th>
         <td><%= strings.Join(r.Session.Choices, ", ") %></td>
       </tr>
       <tr>
-        <th><%= util.Title(util.KeyCreated) %></th>
-        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+        <th><%= npncore.Title(npncore.KeyCreated) %></th>
+        <td><% npntemplate.DateTime(&r.Session.Created, buffer) %></td>
       </tr>
     </tbody>
   </table>

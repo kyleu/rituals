@@ -2,11 +2,11 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 type retroSessionSaveParams struct {
@@ -36,31 +36,31 @@ func onRetroMessage(s *Service, conn *connection, cmd string, param json.RawMess
 	switch cmd {
 	case ClientCmdConnect:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRetroConnect(s, conn, u)
 	case ClientCmdUpdateSession:
 		rss := retroSessionSaveParams{}
-		util.FromJSON(param, &rss, s.Logger)
+		_ = npncore.FromJSON(param, &rss)
 		err = onRetroSessionSave(s, *conn.Channel, userID, rss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdAddFeedback:
 		afp := addFeedbackParams{}
-		util.FromJSON(param, &afp, s.Logger)
+		_ = npncore.FromJSON(param, &afp)
 		err = onAddFeedback(s, *conn.Channel, userID, afp)
 	case ClientCmdUpdateFeedback:
 		efp := editFeedbackParams{}
-		util.FromJSON(param, &efp, s.Logger)
+		_ = npncore.FromJSON(param, &efp)
 		err = onEditFeedback(s, *conn.Channel, userID, efp)
 	case ClientCmdRemoveFeedback:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveFeedback(s, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled retro command [" + cmd + "]")

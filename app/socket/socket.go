@@ -3,6 +3,7 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
@@ -33,7 +34,7 @@ func (s *Service) Write(connID uuid.UUID, message string) error {
 }
 
 func (s *Service) WriteMessage(connID uuid.UUID, message *Message) error {
-	return s.Write(connID, util.ToJSON(message, s.Logger))
+	return s.Write(connID, npncore.ToJSON(message, s.Logger))
 }
 
 func (s *Service) WriteChannel(channel Channel, message *Message, except ...uuid.UUID) error {
@@ -48,7 +49,7 @@ func (s *Service) WriteChannel(channel Channel, message *Message, except ...uuid
 			connID := conn
 
 			go func() {
-				_ = s.Write(connID, util.ToJSON(message, s.Logger))
+				_ = s.Write(connID, npncore.ToJSON(message, s.Logger))
 			}()
 		}
 	}

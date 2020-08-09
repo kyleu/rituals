@@ -5,8 +5,8 @@
   <table>
     <tbody>
       <tr>
-        <th><%= util.Title(util.KeyCreated) %></th>
-        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+        <th><%= npncore.Title(npncore.KeyCreated) %></th>
+        <td><% npntemplate.DateTime(&r.Session.Created, buffer) %></td>
       </tr>
     </tbody>
   </table>

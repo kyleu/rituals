@@ -2,6 +2,7 @@ package xls
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -11,7 +12,6 @@ import (
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/transcript"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 var defSheet = "Sheet1"
@@ -57,7 +57,7 @@ func renderResponse(rsp interface{}, f *excelize.File) (string, string, error) {
 	case transcript.RetroResponse:
 		return renderRetro(r, f)
 	default:
-		return util.KeyError, util.Title(util.KeyError), errors.New(fmt.Sprintf("Invalid transcript type [%T]", rsp))
+		return npncore.KeyError, npncore.Title(npncore.KeyError), errors.New(fmt.Sprintf("Invalid transcript type [%T]", rsp))
 	}
 }
 
@@ -68,9 +68,9 @@ func newDoc() *excelize.File {
 }
 
 func writeAboutSheet(url string, title string, f *excelize.File) {
-	key := util.AppName
+	key := npncore.AppName
 	f.NewSheet(key)
-	f.SetCellValue(key, "A1", util.AppName)
+	f.SetCellValue(key, "A1", npncore.AppName)
 	f.SetCellValue(key, "A2", url)
 	f.SetCellValue(key, "A3", title)
 	setColumnWidths(key, []int{64}, f)
@@ -83,7 +83,7 @@ func response(fn string, f *excelize.File) (string, []byte, error) {
 	}
 
 	if len(fn) == 0 {
-		fn = util.KeyExport
+		fn = npncore.KeyExport
 	}
 	return fn, buff.Bytes(), nil
 }

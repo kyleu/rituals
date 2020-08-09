@@ -3,20 +3,19 @@ package retro
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 	"time"
 
 	"github.com/kyleu/rituals.dev/app/comment"
 
 	"github.com/kyleu/rituals.dev/app/history"
 	"github.com/kyleu/rituals.dev/app/session"
-	"github.com/kyleu/rituals.dev/app/user"
-
-	"github.com/kyleu/rituals.dev/app/database"
+	"github.com/kyleu/npn/npnservice/user"
 
 	"github.com/kyleu/rituals.dev/app/permission"
 
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/database/query"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -27,14 +26,14 @@ import (
 
 type Service struct {
 	Data   *session.DataServices
-	db     *database.Service
+	db     *npndatabase.Service
 	logger logur.Logger
 	svc    util.Service
 }
 
-func NewService(actions *action.Service, users *user.Service, comments *comment.Service, db *database.Service, logger logur.Logger) *Service {
+func NewService(actions *action.Service, users *user.Service, comments *comment.Service, db *npndatabase.Service, logger logur.Logger) *Service {
 	svc := util.SvcRetro
-	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: svc.Key})
+	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: svc.Key})
 
 	data := session.DataServices{
 		Svc:         svc,
@@ -56,8 +55,8 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, categor
 
 	model := NewSession(title, slug, userID, categories, teamID, sprintID)
 
-	q := query.SQLInsert(s.svc.Key, []string{util.KeyID, util.KeySlug, util.KeyTitle, util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key), util.KeyOwner, util.KeyStatus, util.Plural(util.KeyCategory)}, 1)
-	categoriesString := database.ArrayToString(model.Categories)
+	q := npndatabase.SQLInsert(s.svc.Key, []string{npncore.KeyID, npncore.KeySlug, npncore.KeyTitle, npncore.WithDBID(util.SvcTeam.Key), npncore.WithDBID(util.SvcSprint.Key), npncore.KeyOwner, npncore.KeyStatus, npncore.Plural(npncore.KeyCategory)}, 1)
+	categoriesString := npndatabase.ArrayToString(model.Categories)
 	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.SprintID, model.Owner, model.Status.String(), categoriesString)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new retro session")
@@ -72,10 +71,10 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, categor
 	return &model, nil
 }
 
-func (s *Service) List(params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
+func (s *Service) List(params *npncore.Params) Sessions {
+	params = npncore.ParamsWithDefaultOrdering(s.svc.Key, params, npncore.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", s.svc.Key, "", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", s.svc.Key, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving retro sessions: %+v", err))
@@ -86,7 +85,7 @@ func (s *Service) List(params *query.Params) Sessions {
 
 func (s *Service) GetByID(id uuid.UUID) *Session {
 	dto := &sessionDTO{}
-	q := query.SQLSelectSimple("*", s.svc.Key, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple("*", s.svc.Key, npncore.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -100,7 +99,7 @@ func (s *Service) GetByID(id uuid.UUID) *Session {
 
 func (s *Service) GetBySlug(slug string) *Session {
 	var dto = &sessionDTO{}
-	q := query.SQLSelectSimple("*", s.svc.Key, "slug = $1")
+	q := npndatabase.SQLSelectSimple("*", s.svc.Key, "slug = $1")
 	err := s.db.Get(dto, q, nil, slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -112,11 +111,11 @@ func (s *Service) GetBySlug(slug string) *Session {
 	return dto.toSession()
 }
 
-func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultMCreatedOrdering...)
+func (s *Service) GetByMember(userID uuid.UUID, params *npncore.Params) Sessions {
+	params = npncore.ParamsWithDefaultOrdering(s.svc.Key, params, npncore.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	t := "retro join retro_member m on id = m." + util.WithDBID(s.svc.Key)
-	q := query.SQLSelect("retro.*", t, "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	t := "retro join retro_member m on id = m." + npncore.WithDBID(s.svc.Key)
+	q := npndatabase.SQLSelect("retro.*", t, "m.user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving retros for user [%v]: %+v", userID, err))
@@ -125,10 +124,10 @@ func (s *Service) GetByMember(userID uuid.UUID, params *query.Params) Sessions {
 	return toSessions(dtos)
 }
 
-func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
+func (s *Service) GetByTeamID(teamID uuid.UUID, params *npncore.Params) Sessions {
+	params = npncore.ParamsWithDefaultOrdering(s.svc.Key, params, npncore.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", s.svc.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", s.svc.Key, "team_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, teamID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving retros for team [%v]: %+v", teamID, err))
@@ -137,10 +136,10 @@ func (s *Service) GetByTeamID(teamID uuid.UUID, params *query.Params) Sessions {
 	return toSessions(dtos)
 }
 
-func (s *Service) GetBySprintID(sprintID uuid.UUID, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
+func (s *Service) GetBySprintID(sprintID uuid.UUID, params *npncore.Params) Sessions {
+	params = npncore.ParamsWithDefaultOrdering(s.svc.Key, params, npncore.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", s.svc.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", s.svc.Key, "sprint_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, sprintID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving retros for sprint [%v]: %+v", sprintID, err))
@@ -149,11 +148,11 @@ func (s *Service) GetBySprintID(sprintID uuid.UUID, params *query.Params) Sessio
 	return toSessions(dtos)
 }
 
-func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
-	params = query.ParamsWithDefaultOrdering(s.svc.Key, params, query.DefaultCreatedOrdering...)
+func (s *Service) GetByCreated(d *time.Time, params *npncore.Params) Sessions {
+	params = npncore.ParamsWithDefaultOrdering(s.svc.Key, params, npncore.DefaultCreatedOrdering...)
 	var dtos []sessionDTO
-	q := query.SQLSelect("*", s.svc.Key, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, nil, d, d.Add(util.HoursInDay*time.Hour))
+	q := npndatabase.SQLSelect("*", s.svc.Key, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, d, d.Add(npncore.HoursInDay*time.Hour))
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving retros created on [%v]: %+v", d, err))
 		return nil
@@ -162,9 +161,9 @@ func (s *Service) GetByCreated(d *time.Time, params *query.Params) Sessions {
 }
 
 func (s *Service) UpdateSession(sessionID uuid.UUID, title string, categories []string, teamID *uuid.UUID, sprintID *uuid.UUID, userID uuid.UUID) error {
-	cols := []string{"title", util.Plural(util.KeyCategory), util.WithDBID(util.SvcTeam.Key), util.WithDBID(util.SvcSprint.Key)}
-	q := query.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
-	categoriesString := database.ArrayToString(categories)
+	cols := []string{"title", npncore.Plural(npncore.KeyCategory), npncore.WithDBID(util.SvcTeam.Key), npncore.WithDBID(util.SvcSprint.Key)}
+	q := npndatabase.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", npncore.KeyID, len(cols)+1))
+	categoriesString := npndatabase.ArrayToString(categories)
 	err := s.db.UpdateOne(q, nil, title, categoriesString, teamID, sprintID, sessionID)
 	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil)
 	return errors.Wrap(err, "error updating retro session")

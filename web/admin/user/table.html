@@ -1,25 +1,25 @@
-<%: func UserTable(users user.SystemUsers, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func UserTable(users user.SystemUsers, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.KeyUser, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyUser, util.KeyName, "Name", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyUser, util.KeyRole, "Role", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyUser, util.KeyTheme, "Theme", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyUser, "locale", "Locale", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyUser, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyUser, npncore.KeyID, npncore.Title(npncore.KeyID), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyUser, npncore.KeyName, "Name", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyUser, npncore.KeyRole, "Role", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyUser, npncore.KeyTheme, "Theme", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyUser, "locale", "Locale", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyUser, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, u := range users { %>
     <tr>
-      <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, u.UserID.String()) %>"><% components.UUID(&u.UserID, buffer) %></a></td>
+      <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, u.UserID.String()) %>"><% npntemplate.UUID(&u.UserID, buffer) %></a></td>
       <td><%= u.Name %></td>
       <td><%= u.Role %></td>
       <td><%= u.Theme %></td>
       <td><%=v u.Locale %></td>
-      <td><% components.DateTime(&u.Created, buffer) %></td>
+      <td><% npntemplate.DateTime(&u.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

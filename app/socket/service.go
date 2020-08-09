@@ -2,21 +2,21 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 	"sync"
 
 	"github.com/kyleu/rituals.dev/app/comment"
 
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/rituals.dev/app/team"
 
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/sprint"
 
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/rituals.dev/app/user"
+	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
@@ -46,7 +46,7 @@ func NewService(
 	logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
 	auths *auth.Service, teams *team.Service, sprints *sprint.Service,
 	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeySocket})
+	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: npncore.KeySocket})
 	return &Service{
 		connections:   make(map[uuid.UUID]*connection),
 		connectionsMu: sync.Mutex{},
@@ -68,8 +68,8 @@ func NewService(
 var systemID = uuid.FromStringOrNil("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF")
 var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem, ChannelID: &systemID}
 
-func (s *Service) List(params *query.Params) Statuses {
-	params = query.ParamsWithDefaultOrdering(util.KeyConnection, params)
+func (s *Service) List(params *npncore.Params) Statuses {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyConnection, params)
 	ret := make(Statuses, 0)
 	ret = append(ret, &systemStatus)
 	var idx = 0
@@ -132,7 +132,7 @@ func onMessage(s *Service, connID uuid.UUID, message Message) error {
 	case util.SvcRetro.Key:
 		err = onRetroMessage(s, c, message.Cmd, message.Param)
 	default:
-		err = errors.New(util.IDErrorString(util.KeyService, message.Svc))
+		err = errors.New(npncore.IDErrorString(npncore.KeyService, message.Svc))
 	}
 	return errors.Wrap(err, "error handling socket message ["+message.String()+"]")
 }

@@ -1,12 +1,12 @@
-<%: func EmailList(emails email.Emails, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func EmailList(emails email.Emails, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
-      <h3 class="uk-card-title"><%= util.PluralTitle(util.KeyEmail) %></h3>
-      <% EmailTable(emails, params.Get(util.KeyEmail, ctx.Logger), ctx, _buffer) %>
+      <h3 class="uk-card-title"><%= npncore.PluralTitle(npncore.KeyEmail) %></h3>
+      <% EmailTable(emails, params.Get(npncore.KeyEmail, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

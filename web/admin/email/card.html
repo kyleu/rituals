@@ -1,9 +1,9 @@
-<%: func EmailCard(emails email.Emails, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func EmailCard(emails email.Emails, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Emails</h3>
   <% if len(emails) == 0 { %>
     <p>No emails available</p>
   <% } else { %>
-    <% EmailTable(emails, params.Get(util.KeyEmail, ctx.Logger), ctx, buffer) %>
+    <% EmailTable(emails, params.Get(npncore.KeyEmail, ctx.Logger), ctx, buffer) %>
   <% } %>
 </div>

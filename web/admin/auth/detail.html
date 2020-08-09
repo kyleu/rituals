@@ -1,6 +1,6 @@
-<%: func AuthDetail(model *auth.Record, user *user.SystemUser, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func AuthDetail(model *auth.Record, user *user.SystemUser, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,13 +9,13 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th><%= util.Title(util.KeyID) %></th>
+            <th><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyUser) %></th>
+            <th><%= npncore.Title(npncore.KeyUser) %></th>
             <td>
-              <a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a>
+              <a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a>
               <div><%= user.Name %></div>
             </td>
           </tr>
@@ -41,14 +41,14 @@
           </tr>
           <tr>
             <th>Expires</th>
-            <td><% components.DateTime(model.Expires, _buffer) %></td>
+            <td><% npntemplate.DateTime(model.Expires, _buffer) %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyName) %></th>
+            <th><%= npncore.Title(npncore.KeyName) %></th>
             <td><%= model.Name %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyEmail) %></th>
+            <th><%= npncore.Title(npncore.KeyEmail) %></th>
             <td><%= model.Email %></td>
           </tr>
           <tr>
@@ -60,8 +60,8 @@
             </td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyCreated) %></th>
-            <td><% components.DateTime(&model.Created, _buffer) %></td>
+            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

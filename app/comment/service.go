@@ -3,27 +3,26 @@ package comment
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/kyleu/rituals.dev/app/database"
-
 	"logur.dev/logur"
 
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/database/query"
 )
 
 type Service struct {
 	actions *action.Service
-	db      *database.Service
+	db      *npndatabase.Service
 	logger  logur.Logger
 }
 
-func NewService(actions *action.Service, db *database.Service, logger logur.Logger) *Service {
+func NewService(actions *action.Service, db *npndatabase.Service, logger logur.Logger) *Service {
 	return &Service{
 		actions: actions,
 		db:      db,
@@ -31,11 +30,11 @@ func NewService(actions *action.Service, db *database.Service, logger logur.Logg
 	}
 }
 
-func (s *Service) List(params *query.Params) Comments {
-	params = query.ParamsWithDefaultOrdering(util.KeyComment, params, query.DefaultCreatedOrdering...)
+func (s *Service) List(params *npncore.Params) Comments {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyComment, params, npncore.DefaultCreatedOrdering...)
 
 	var dtos []commentDTO
-	q := query.SQLSelect("*", util.KeyComment, "", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", npncore.KeyComment, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 
 	if err != nil {
@@ -46,11 +45,11 @@ func (s *Service) List(params *query.Params) Comments {
 	return toComments(dtos)
 }
 
-func (s *Service) GetByModelID(svc util.Service, modelID uuid.UUID, params *query.Params) Comments {
-	var defaultOrdering = query.Orderings{{Column: util.KeyCreated, Asc: true}}
-	params = query.ParamsWithDefaultOrdering(util.KeyComment, params, defaultOrdering...)
+func (s *Service) GetByModelID(svc util.Service, modelID uuid.UUID, params *npncore.Params) Comments {
+	var defaultOrdering = npncore.Orderings{{Column: npncore.KeyCreated, Asc: true}}
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyComment, params, defaultOrdering...)
 	var dtos []commentDTO
-	q := query.SQLSelect("*", util.KeyComment, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", npncore.KeyComment, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, svc.Key, modelID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving comment entries for [%v:%v]: %+v", svc.Key, modelID, err))
@@ -61,7 +60,7 @@ func (s *Service) GetByModelID(svc util.Service, modelID uuid.UUID, params *quer
 
 func (s *Service) GetByID(id uuid.UUID) *Comment {
 	dto := commentDTO{}
-	q := query.SQLSelectSimple("*", util.KeyComment, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple("*", npncore.KeyComment, npncore.KeyID+" = $1")
 	err := s.db.Get(&dto, q, nil, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -75,11 +74,11 @@ func (s *Service) GetByID(id uuid.UUID) *Comment {
 }
 
 func (s *Service) Add(svc util.Service, modelID uuid.UUID, targetType string, targetID *uuid.UUID, content string, userID uuid.UUID) (*Comment, error) {
-	id := util.UUID()
+	id := npncore.UUID()
 	html := util.ToHTML(content)
-	q := query.SQLInsert(util.KeyComment, []string{
-		util.KeyID, util.KeySvc, util.WithDBID(util.KeyModel), "target_type", util.WithDBID("target"),
-		util.WithDBID(util.KeyUser), util.KeyContent, util.KeyHTML,
+	q := npndatabase.SQLInsert(npncore.KeyComment, []string{
+		npncore.KeyID, npncore.KeySvc, npncore.WithDBID(npncore.KeyModel), "target_type", npncore.WithDBID("target"),
+		npncore.WithDBID(npncore.KeyUser), npncore.KeyContent, npncore.KeyHTML,
 	}, 1)
 	err := s.db.Insert(q, nil, id, svc.Key, modelID, targetType, targetID, userID, content, html)
 	if err != nil {
@@ -90,7 +89,7 @@ func (s *Service) Add(svc util.Service, modelID uuid.UUID, targetType string, ta
 
 func (s *Service) Update(id uuid.UUID, content string, userID uuid.UUID) (*Comment, error) {
 	html := util.ToHTML(content)
-	q := query.SQLUpdate(util.KeyComment, []string{util.KeyContent, util.KeyHTML}, "id = $3 and user_id = $4")
+	q := npndatabase.SQLUpdate(npncore.KeyComment, []string{npncore.KeyContent, npncore.KeyHTML}, "id = $3 and user_id = $4")
 	err := s.db.UpdateOne(q, nil, content, html, id, userID)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to update comment")
@@ -99,16 +98,16 @@ func (s *Service) Update(id uuid.UUID, content string, userID uuid.UUID) (*Comme
 }
 
 func (s *Service) RemoveComment(commentID uuid.UUID) error {
-	q := query.SQLDelete(util.KeyComment, util.KeyID+" = $1")
+	q := npndatabase.SQLDelete(npncore.KeyComment, npncore.KeyID+" = $1")
 	err := s.db.DeleteOne(q, nil, commentID)
 	return errors.Wrap(err, "unable to remove comment ["+commentID.String()+"]")
 }
 
-func (s *Service) GetByCreated(d *time.Time, params *query.Params) Comments {
-	params = query.ParamsWithDefaultOrdering(util.KeyComment, params, query.DefaultCreatedOrdering...)
+func (s *Service) GetByCreated(d *time.Time, params *npncore.Params) Comments {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyComment, params, npncore.DefaultCreatedOrdering...)
 	var dtos []commentDTO
-	q := query.SQLSelect("*", util.KeyComment, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, nil, d, d.Add(util.HoursInDay*time.Hour))
+	q := npndatabase.SQLSelect("*", npncore.KeyComment, "created between $1 and $2", params.OrderByString(), params.Limit, params.Offset)
+	err := s.db.Select(&dtos, q, nil, d, d.Add(npncore.HoursInDay*time.Hour))
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving comments created on [%v]: %+v", d, err))
 		return nil

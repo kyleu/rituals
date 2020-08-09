@@ -1,12 +1,12 @@
-<%: func ActionList(actions action.Actions, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func ActionList(actions action.Actions, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">App Actions</h3>
-      <% ActionTable(actions, params.Get(util.KeyAction, ctx.Logger), ctx, _buffer) %>
+      <% ActionTable(actions, params.Get(npncore.KeyAction, ctx.Logger), ctx, _buffer) %>
     </div>
   </div>
 </div>

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 	"time"
 
 	"emperror.dev/errors"
@@ -14,18 +15,18 @@ func onSprintSessionSave(s *Service, ch Channel, userID uuid.UUID, param sprintS
 	dataSvc := s.sprints
 	title := util.ServiceTitle(util.SvcSprint, param.Title)
 
-	teamID := util.GetUUIDFromString(param.TeamID)
+	teamID := npncore.GetUUIDFromString(param.TeamID)
 	var startDate *time.Time
 	var endDate *time.Time
 
 	if len(param.StartDate) > 0 {
-		d, e := util.FromYMD(param.StartDate)
+		d, e := npncore.FromYMD(param.StartDate)
 		if e == nil {
 			startDate = d
 		}
 	}
 	if len(param.EndDate) > 0 {
-		d, e := util.FromYMD(param.EndDate)
+		d, e := npncore.FromYMD(param.EndDate)
 		if e == nil {
 			endDate = d
 		}

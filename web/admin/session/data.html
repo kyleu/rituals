@@ -1,4 +1,4 @@
-<%: func SessionData(data *session.Data, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SessionData(data *session.Data, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <% MemberCard(data.Members, params, ctx, buffer) %>
 <% CommentCard(data.Comments, params, ctx, buffer) %>

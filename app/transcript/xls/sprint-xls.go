@@ -2,6 +2,7 @@ package xls
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/transcript"
@@ -10,13 +11,13 @@ import (
 
 func renderSprint(rsp transcript.SprintResponse, f *excelize.File) (string, string, error) {
 	data := [][]interface{}{
-		{util.Title(util.KeyTitle), rsp.Session.Title},
-		{util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
+		{npncore.Title(npncore.KeyTitle), rsp.Session.Title},
+		{npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
 	}
 	if rsp.Team != nil {
 		data = append(data, []interface{}{util.SvcTeam.Title, rsp.Team.Title})
 	}
-	data = append(data, []interface{}{util.Title(util.KeyCreated), rsp.Session.Created})
+	data = append(data, []interface{}{npncore.Title(npncore.KeyCreated), rsp.Session.Created})
 
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
@@ -36,7 +37,7 @@ func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excel
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{util.Title(util.KeyTitle), util.Title(util.KeyOwner), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {

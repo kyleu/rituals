@@ -1,11 +1,11 @@
-<%: func EstimateStory(ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func EstimateStory(ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
       <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="modal.open('add-<%= util.KeyStory %>');return false;" title="add story"></a>
     </span>
     <span class="model-icon h3-icon" onclick="modal.open('add-<%= util.KeyStory %>');" data-uk-icon="icon: <%= util.SvcEstimate.Icon %>;"></span>
-    <span class="modal-title" onclick="modal.open('add-<%= util.KeyStory %>');"><%= util.PluralTitle(util.KeyStory) %></span>
+    <span class="modal-title" onclick="modal.open('add-<%= util.KeyStory %>');"><%= npncore.PluralTitle(util.KeyStory) %></span>
   </h3>
   <p id="story-detail">Loading...</p>
 </div>

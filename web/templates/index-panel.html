@@ -1,4 +1,4 @@
-<%: func IndexPanel(svc util.Service, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func IndexPanel(svc util.Service, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <h3 class="uk-card-title">
   <span class="right">
     <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="list" href="<%= ctx.Route(svc.Key + `.list`) %>" title="show <%= svc.Key %> list"></a>
@@ -9,6 +9,6 @@
 <form method="post" action="<%= ctx.Route(svc.Key + `.new`) %>">
   <div class="uk-inline uk-display-block">
     <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new <%= svc.Key %>"></button>
-    <input class="uk-input" type="text" id="team-title" name="<%= util.KeyTitle %>" placeholder="Title" />
+    <input class="uk-input" type="text" id="team-title" name="<%= npncore.KeyTitle %>" placeholder="Title" />
   </div>
 </form>

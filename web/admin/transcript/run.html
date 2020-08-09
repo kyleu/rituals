@@ -1,6 +1,6 @@
-<%: func TranscriptRun(t *transcript.Transcript, param interface{}, rsp interface{}, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func TranscriptRun(t *transcript.Transcript, param interface{}, rsp interface{}, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,7 +9,7 @@
         tx := &transcript.Context{
           UserID: ctx.Profile.UserID,
           App:    ctx.App,
-          Logger: ctx.App.Logger,
+          Logger: ctx.App.Logger(),
           Routes: ctx.Routes,
         }
       %>

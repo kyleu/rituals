@@ -2,22 +2,23 @@ package estimate
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
 	"github.com/kyleu/rituals.dev/app/action"
 
-	"github.com/kyleu/rituals.dev/app/database/query"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) Stories {
-	var defaultOrdering = query.Orderings{{Column: util.KeyIdx, Asc: true}}
+func (s *Service) GetStories(estimateID uuid.UUID, params *npncore.Params) Stories {
+	var defaultOrdering = npncore.Orderings{{Column: npncore.KeyIdx, Asc: true}}
 
-	params = query.ParamsWithDefaultOrdering(util.KeyStory, params, defaultOrdering...)
+	params = npncore.ParamsWithDefaultOrdering(util.KeyStory, params, defaultOrdering...)
 	var dtos []storyDTO
-	q := query.SQLSelect("*", util.KeyStory, "estimate_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", util.KeyStory, "estimate_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, estimateID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving stories for estimate [%v]: %+v", estimateID, err))
@@ -28,7 +29,7 @@ func (s *Service) GetStories(estimateID uuid.UUID, params *query.Params) Stories
 
 func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 	dto := &storyDTO{}
-	q := query.SQLSelectSimple("*", util.KeyStory, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple("*", util.KeyStory, npncore.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, storyID)
 	if err != nil {
 		return nil, err
@@ -38,7 +39,7 @@ func (s *Service) GetStoryByID(storyID uuid.UUID) (*Story, error) {
 
 func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelectSimple(util.WithDBID(s.svc.Key), util.KeyStory, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple(npncore.WithDBID(s.svc.Key), util.KeyStory, npncore.KeyID+" = $1")
 	err := s.db.Get(&ret, q, nil, storyID)
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 }
 
 func (s *Service) NewStory(estimateID uuid.UUID, title string, userID uuid.UUID) (*Story, error) {
-	id := util.UUID()
+	id := npncore.UUID()
 
 	q := `insert into story (id, estimate_id, idx, user_id, title, final_vote) values (
     $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5, ''
@@ -66,7 +67,7 @@ func (s *Service) NewStory(estimateID uuid.UUID, title string, userID uuid.UUID)
 }
 
 func (s *Service) UpdateStory(storyID uuid.UUID, title string, userID uuid.UUID) (*Story, error) {
-	q := query.SQLUpdate(util.KeyStory, []string{util.KeyTitle}, util.KeyID+" = $2")
+	q := npndatabase.SQLUpdate(util.KeyStory, []string{npncore.KeyTitle}, npncore.KeyID+" = $2")
 	err := s.db.UpdateOne(q, nil, title, storyID)
 	if err != nil {
 		return nil, err
@@ -89,13 +90,13 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load story [" + storyID.String() + "] for removal")
 	}
 
-	q1 := query.SQLDelete(util.KeyVote, "story_id = $1")
+	q1 := npndatabase.SQLDelete(util.KeyVote, "story_id = $1")
 	_, err = s.db.Delete(q1, nil, -1, storyID)
 	if err != nil {
 		return err
 	}
 
-	q2 := query.SQLDelete(util.KeyStory, util.KeyID+" = $1")
+	q2 := npndatabase.SQLDelete(util.KeyStory, npncore.KeyID+" = $1")
 	err = s.db.DeleteOne(q2, nil, storyID)
 
 	s.postStory(story, userID, action.ActStoryRemove)
@@ -124,10 +125,10 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 		finalVote = vr.FinalVote
 	}
 	cols := []string{"status", "final_vote"}
-	q := query.SQLUpdate(util.KeyStory, cols, fmt.Sprintf("%v = $%v", util.KeyID, len(cols)+1))
+	q := npndatabase.SQLUpdate(util.KeyStory, cols, fmt.Sprintf("%v = $%v", npncore.KeyID, len(cols)+1))
 	err = s.db.UpdateOne(q, nil, status.String(), finalVote, storyID)
 
-	actionContent := map[string]interface{}{"storyID": storyID, util.KeyStatus: status, "finalVote": finalVote}
+	actionContent := map[string]interface{}{"storyID": storyID, npncore.KeyStatus: status, "finalVote": finalVote}
 	s.Data.Actions.Post(s.svc, story.EstimateID, userID, action.ActStoryStatus, actionContent)
 
 	return true, finalVote, errors.Wrap(err, "error updating story status")

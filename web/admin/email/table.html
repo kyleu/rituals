@@ -1,21 +1,21 @@
-<%: func EmailTable(emails email.Emails, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func EmailTable(emails email.Emails, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.KeyEmail, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyEmail, "subject", "Subject", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyEmail, util.KeyStatus, util.Title(util.KeyStatus), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyStory, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyEmail, npncore.KeyID, npncore.Title(npncore.KeyID), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyEmail, "subject", "Subject", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyEmail, npncore.KeyStatus, npncore.Title(npncore.KeyStatus), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range emails { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyEmail, util.KeyDetail), `id`, model.ID) %>"><%= model.ID %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyEmail, npncore.KeyDetail), `id`, model.ID) %>"><%= model.ID %></a></td>
       <td><%= model.Subject %></td>
       <td><%= model.Status %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

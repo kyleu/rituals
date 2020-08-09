@@ -2,6 +2,7 @@ package xls
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/transcript"
@@ -10,8 +11,8 @@ import (
 
 func renderStandup(rsp transcript.StandupResponse, f *excelize.File) (string, string, error) {
 	data := [][]interface{}{
-		{util.Title(util.KeyTitle), rsp.Session.Title},
-		{util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
+		{npncore.Title(npncore.KeyTitle), rsp.Session.Title},
+		{npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
 	}
 	if rsp.Team != nil {
 		data = append(data, []interface{}{util.SvcTeam.Title, rsp.Team.Title})
@@ -19,7 +20,7 @@ func renderStandup(rsp transcript.StandupResponse, f *excelize.File) (string, st
 	if rsp.Sprint != nil {
 		data = append(data, []interface{}{util.SvcSprint.Title, rsp.Sprint.Title})
 	}
-	data = append(data, []interface{}{util.Title(util.KeyCreated), rsp.Session.Created})
+	data = append(data, []interface{}{npncore.Title(npncore.KeyCreated), rsp.Session.Created})
 
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
@@ -37,7 +38,7 @@ func renderStandupList(sessions standup.Sessions, members member.Entries, f *exc
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{util.Title(util.KeyTitle), util.Title(util.KeyOwner), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {
@@ -50,11 +51,11 @@ func renderStandupList(sessions standup.Sessions, members member.Entries, f *exc
 }
 
 func renderReportList(reports standup.Reports, members member.Entries, f *excelize.File) (string, string) {
-	key := util.Plural(util.KeyReport)
+	key := npncore.Plural(npncore.KeyReport)
 	if len(reports) > 0 {
 		f.NewSheet(key)
 
-		setColumnHeaders(key, []string{"Day", util.Title(util.KeyUser), util.Title(util.KeyContent), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(key, []string{"Day", npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range reports {

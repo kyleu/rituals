@@ -1,6 +1,6 @@
-<%: func PermissionErrors(svc util.Service, errors permission.Errors, auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func PermissionErrors(svc util.Service, errors permission.Errors, auths auth.Records, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -22,7 +22,7 @@
     <!--
     <div class="uk-card uk-card-body uk-margin-top">
       <h3 class="uk-card-title">Details</h3>
-      <pre><%= util.ToJSON(errors, ctx.Logger) %></pre>
+      <pre><%= npncore.ToJSON(errors, ctx.Logger) %></pre>
     </div>
     -->
   </div>

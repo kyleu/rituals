@@ -2,7 +2,7 @@
 <% if len(models) > 0 { %>
 <hr />
 <section>
-  <h4><%= util.PluralTitle(util.KeyUser) %></h4>
+  <h4><%= npncore.PluralTitle(npncore.KeyUser) %></h4>
   <table>
     <thead>
       <tr>
@@ -13,7 +13,7 @@
     <tbody>
       <% for _, model := range models { %>
         <tr>
-          <td><a href="<%= tx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), util.KeyID, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
+          <td><a href="<%= tx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), npncore.KeyID, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, buffer) %></a></td>
           <td><%= model.Name %></td>
         </tr>
       <% } %>

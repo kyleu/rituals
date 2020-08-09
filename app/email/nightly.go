@@ -3,11 +3,11 @@ package email
 import (
 	"bytes"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
 	"time"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/transcript"
-	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/gen/transcripttemplates"
 )
 
@@ -62,7 +62,7 @@ func shouldSkip(s *Service, d *time.Time) (string, bool) {
 		n := time.Now()
 		d = &n
 	}
-	ymd := util.ToYMD(d)
+	ymd := npncore.ToYMD(d)
 	curr := s.GetByID("nightly-" + ymd)
 	if curr != nil {
 		s.logger.Info(fmt.Sprintf("skipping nightly email for [%v], it was sent at [%v]", ymd, curr.Created))

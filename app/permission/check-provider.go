@@ -1,9 +1,10 @@
 package permission
 
 import (
+	"github.com/kyleu/npn/npncore"
 	"strings"
 
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
@@ -52,7 +53,7 @@ func providerCheck(svc util.Service, p *auth.Provider, perms Permissions, auths 
 	}
 
 	if len(emailDomains) > 0 {
-		msg += " with email address " + util.OxfordComma(emailDomains, "or")
+		msg += " with email address " + npncore.OxfordComma(emailDomains, "or")
 	}
 
 	msg += " to access this " + svc.Key

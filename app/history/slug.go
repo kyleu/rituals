@@ -1,14 +1,12 @@
 package history
 
 import (
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 	"regexp"
 	"strings"
 
 	"github.com/gofrs/uuid"
-
-	"github.com/kyleu/rituals.dev/app/util"
-
-	"github.com/kyleu/rituals.dev/app/database/query"
 
 	"emperror.dev/errors"
 )
@@ -16,11 +14,11 @@ import (
 func (s *Service) NewSlugFor(modelID *uuid.UUID, title string) (string, error) {
 	randomStrLength := 4
 	if len(title) == 0 {
-		title = strings.ToLower(util.RandomString(randomStrLength))
+		title = strings.ToLower(npncore.RandomString(randomStrLength))
 	}
 	slug := slugify(title)
 
-	q := query.SQLSelectSimple(util.KeyID, s.svc.Key, "slug = $1")
+	q := npndatabase.SQLSelectSimple(npncore.KeyID, s.svc.Key, "slug = $1")
 	x, err := s.db.Query(q, nil, slug)
 	if err != nil {
 		return slug, errors.Wrap(err, "error fetching existing slug")
@@ -29,7 +27,7 @@ func (s *Service) NewSlugFor(modelID *uuid.UUID, title string) (string, error) {
 	curr := s.Get(slug)
 
 	if x.Next() {
-		junk := strings.ToLower(util.RandomString(randomStrLength))
+		junk := strings.ToLower(npncore.RandomString(randomStrLength))
 		slug, err = s.NewSlugFor(modelID, slug+"-"+junk)
 		if err != nil {
 			return slug, errors.Wrap(err, "error finding slug for new "+s.svc.Key+" session")

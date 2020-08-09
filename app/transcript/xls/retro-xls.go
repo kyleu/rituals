@@ -1,6 +1,7 @@
 package xls
 
 import (
+	"github.com/kyleu/npn/npncore"
 	"strings"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -12,9 +13,9 @@ import (
 
 func renderRetro(rsp transcript.RetroResponse, f *excelize.File) (string, string, error) {
 	data := [][]interface{}{
-		{util.Title(util.KeyTitle), rsp.Session.Title},
-		{util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
-		{util.PluralTitle(util.KeyCategory), strings.Join(rsp.Session.Categories, ", ")},
+		{npncore.Title(npncore.KeyTitle), rsp.Session.Title},
+		{npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
+		{npncore.PluralTitle(npncore.KeyCategory), strings.Join(rsp.Session.Categories, ", ")},
 	}
 	if rsp.Team != nil {
 		data = append(data, []interface{}{util.SvcTeam.Title, rsp.Team.Title})
@@ -22,7 +23,7 @@ func renderRetro(rsp transcript.RetroResponse, f *excelize.File) (string, string
 	if rsp.Sprint != nil {
 		data = append(data, []interface{}{util.SvcSprint.Title, rsp.Sprint.Title})
 	}
-	data = append(data, []interface{}{util.Title(util.KeyCreated), rsp.Session.Created})
+	data = append(data, []interface{}{npncore.Title(npncore.KeyCreated), rsp.Session.Created})
 
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
@@ -40,7 +41,7 @@ func renderRetroList(sessions retro.Sessions, members member.Entries, f *exceliz
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{util.Title(util.KeyTitle), util.Title(util.KeyOwner), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {
@@ -57,7 +58,7 @@ func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *ex
 	if len(feedbacks) > 0 {
 		f.NewSheet(key)
 
-		setColumnHeaders(key, []string{util.Title(util.KeyUser), util.Title(util.KeyCategory), util.Title(util.KeyContent), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(key, []string{npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyCategory), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, f := range feedbacks {

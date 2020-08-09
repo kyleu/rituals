@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 	"strings"
 )
 
@@ -29,10 +30,10 @@ func (t *Service) UnmarshalJSON(data []byte) error {
 }
 
 var SvcSystem = Service{
-	Key:         KeySystem,
-	Title:       Title(KeySystem),
-	Plural:      Plural(KeySystem),
-	PluralTitle: PluralTitle(KeySystem),
+	Key:         npncore.KeySystem,
+	Title:       npncore.Title(npncore.KeySystem),
+	Plural:      npncore.Plural(npncore.KeySystem),
+	PluralTitle: npncore.PluralTitle(npncore.KeySystem),
 	Description: "",
 	Icon:        "close",
 }

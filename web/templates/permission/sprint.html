@@ -1,8 +1,8 @@
-<%: func PermissionSprintError(svc util.Service, errors permission.Errors, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func PermissionSprintError(svc util.Service, errors permission.Errors, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <% for _, e := range errors { %>
   <li>
     <p>
-      To access this <%= svc.Key %>, you must be a member of sprint <a class="theme profile-link" href="<%= ctx.Route(util.SvcSprint.Key, util.KeyKey, e.Match) %>"><%= e.Message %></a>
+      To access this <%= svc.Key %>, you must be a member of sprint <a class="theme profile-link" href="<%= ctx.Route(util.SvcSprint.Key, npncore.KeyKey, e.Match) %>"><%= e.Message %></a>
     </p>
   </li>
 <% } %>

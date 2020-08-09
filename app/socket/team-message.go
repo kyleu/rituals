@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -21,19 +22,19 @@ func onTeamMessage(s *Service, conn *connection, cmd string, param json.RawMessa
 	switch cmd {
 	case ClientCmdConnect:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onTeamConnect(s, conn, u)
 	case ClientCmdUpdateSession:
 		tss := teamSessionSaveParams{}
-		util.FromJSON(param, &tss, s.Logger)
+		_ = npncore.FromJSON(param, &tss)
 		err = onTeamSessionSave(s, *conn.Channel, userID, tss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled team command [" + cmd + "]")

@@ -2,13 +2,12 @@ package estimate
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 	"strings"
 	"time"
 
-	"github.com/kyleu/rituals.dev/app/database/query"
-
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 type Status struct {
@@ -52,7 +51,7 @@ func (t *Status) UnmarshalJSON(data []byte) error {
 var DefaultChoices = []string{"0", "0.5", "1", "2", "3", "5", "8", "13", "100", "?"}
 
 func choicesFromDB(s string) []string {
-	ret := query.StringToArray(s)
+	ret := npndatabase.StringToArray(s)
 	if len(ret) == 0 {
 		return DefaultChoices
 	}
@@ -75,7 +74,7 @@ type Sessions []*Session
 
 func NewSession(title string, slug string, userID uuid.UUID, choices []string, teamID *uuid.UUID, sprintID *uuid.UUID) Session {
 	return Session{
-		ID:       util.UUID(),
+		ID:       npncore.UUID(),
 		Slug:     slug,
 		Title:    strings.TrimSpace(title),
 		TeamID:   teamID,

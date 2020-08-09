@@ -2,11 +2,11 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 type estimateSessionSaveParams struct {
@@ -43,39 +43,39 @@ func onEstimateMessage(s *Service, conn *connection, cmd string, param json.RawM
 	switch cmd {
 	case ClientCmdConnect:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onEstimateConnect(s, conn, u)
 	case ClientCmdUpdateSession:
 		ess := estimateSessionSaveParams{}
-		util.FromJSON(param, &ess, s.Logger)
+		_ = npncore.FromJSON(param, &ess)
 		err = onEstimateSessionSave(s, conn, userID, ess)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdAddStory:
 		asp := addStoryParams{}
-		util.FromJSON(param, &asp, s.Logger)
+		_ = npncore.FromJSON(param, &asp)
 		err = onAddStory(s, *conn.Channel, userID, asp)
 	case ClientCmdUpdateStory:
 		usp := updateStoryParams{}
-		util.FromJSON(param, &usp, s.Logger)
+		_ = npncore.FromJSON(param, &usp)
 		err = onUpdateStory(s, *conn.Channel, userID, usp)
 	case ClientCmdRemoveStory:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveStory(s, *conn.Channel, userID, u)
 	case ClientCmdSetStoryStatus:
 		sssp := setStoryStatusParams{}
-		util.FromJSON(param, &sssp, s.Logger)
+		_ = npncore.FromJSON(param, &sssp)
 		err = onSetStoryStatus(s, *conn.Channel, userID, sssp)
 	case ClientCmdSubmitVote:
 		svp := submitVoteParams{}
-		util.FromJSON(param, &svp, s.Logger)
+		_ = npncore.FromJSON(param, &svp)
 		err = onSubmitVote(s, *conn.Channel, userID, svp)
 	default:
 		err = errors.New("unhandled estimate command [" + cmd + "]")

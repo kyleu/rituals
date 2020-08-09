@@ -3,6 +3,8 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npnuser"
 	"sync"
 
 	"github.com/gofrs/uuid"
@@ -12,7 +14,7 @@ import (
 
 type connection struct {
 	ID      uuid.UUID
-	Profile util.Profile
+	Profile npnuser.Profile
 	Svc     util.Service
 	ModelID *uuid.UUID
 	Channel *Channel
@@ -44,7 +46,7 @@ type Message struct {
 }
 
 func NewMessage(svc util.Service, cmd string, param interface{}) *Message {
-	return &Message{Svc: svc.Key, Cmd: cmd, Param: json.RawMessage(util.ToJSON(param, nil))}
+	return &Message{Svc: svc.Key, Cmd: cmd, Param: json.RawMessage(npncore.ToJSON(param, nil))}
 }
 
 func (m *Message) String() string {

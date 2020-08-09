@@ -2,10 +2,9 @@ package standup
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 	"strings"
 	"time"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -62,7 +61,7 @@ type Sessions []*Session
 
 func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID) Session {
 	return Session{
-		ID:       util.UUID(),
+		ID:       npncore.UUID(),
 		Slug:     slug,
 		Title:    strings.TrimSpace(title),
 		Owner:    userID,

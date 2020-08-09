@@ -1,6 +1,6 @@
-<%: func TeamList(teams team.Sessions, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func TeamList(teams team.Sessions, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">

@@ -3,20 +3,19 @@ package email
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
-	"github.com/kyleu/rituals.dev/app/database"
-	"github.com/kyleu/rituals.dev/app/database/query"
-	"github.com/kyleu/rituals.dev/app/util"
 	"logur.dev/logur"
 )
 
 type Service struct {
 	logger  logur.Logger
-	db      *database.Service
+	db      *npndatabase.Service
 	Enabled bool
 }
 
-func NewService(db *database.Service, logger logur.Logger) *Service {
+func NewService(db *npndatabase.Service, logger logur.Logger) *Service {
 	cfg := getCfg()
 	if !cfg.Enabled() {
 		logger.Warn("email service in not enabled")
@@ -28,11 +27,11 @@ func NewService(db *database.Service, logger logur.Logger) *Service {
 	return &Service{logger: logger, db: db, Enabled: cfg.Enabled()}
 }
 
-func (s *Service) List(params *query.Params) Emails {
-	params = query.ParamsWithDefaultOrdering(util.KeyEmail, params, query.DefaultCreatedOrdering...)
+func (s *Service) List(params *npncore.Params) Emails {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyEmail, params, npncore.DefaultCreatedOrdering...)
 
 	var dtos []emailDTO
-	q := query.SQLSelect("*", util.KeyEmail, "", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", npncore.KeyEmail, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 
 	if err != nil {
@@ -45,7 +44,7 @@ func (s *Service) List(params *query.Params) Emails {
 
 func (s *Service) GetByID(id string) *Email {
 	var dto = &emailDTO{}
-	q := query.SQLSelectSimple("*", util.KeyEmail, "id = $1")
+	q := npndatabase.SQLSelectSimple("*", npncore.KeyEmail, "id = $1")
 	err := s.db.Get(dto, q, nil, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -58,9 +57,9 @@ func (s *Service) GetByID(id string) *Email {
 }
 
 func (s *Service) New(e Email) error {
-	q := query.SQLInsert(util.KeyEmail, []string{util.KeyID, "recipients", "subject", "data", "plain", util.KeyHTML, util.WithDBID(util.KeyUser), util.KeyStatus}, 1)
-	toS := database.ArrayToString(e.Recipients)
-	json := util.ToJSON(e.Data, s.logger)
+	q := npndatabase.SQLInsert(npncore.KeyEmail, []string{npncore.KeyID, "recipients", "subject", "data", "plain", npncore.KeyHTML, npncore.WithDBID(npncore.KeyUser), npncore.KeyStatus}, 1)
+	toS := npndatabase.ArrayToString(e.Recipients)
+	json := npncore.ToJSON(e.Data, s.logger)
 	return s.db.Insert(q, nil, e.ID, toS, e.Subject, json, e.Plain, e.HTML, e.UserID, e.Status)
 }
 

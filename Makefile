@@ -45,9 +45,6 @@ compile-templates-force:
 	echo "updating [query/sql] templates"
 	rm -rf gen/query
 	hero -extensions .sql -source "query/sql" -pkgname query -dest gen/query
-	echo "updating [web/components] templates"
-	rm -rf gen/components
-	hero -extensions .html -source "web/components" -pkgname components -dest gen/components
 	echo "updating [web/transcript] templates"
 	rm -rf gen/transcripttemplates
 	hero -extensions .html -source "web/transcript" -pkgname transcripttemplates -dest gen/transcripttemplates
@@ -69,13 +66,13 @@ endif
 
 .PHONY: build-release
 build-release: goversion compile-templates ## Build all binaries without debug information
-	@go-embed -input web/assets -output app/web/assets/assets.go
+	@go-embed -input web/assets -output app/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
 	@git checkout app/web/assets/assets.go
 
 .PHONY: build-release-force
 build-release-force: goversion compile-templates-force ## Build all binaries without debug information
-	@go-embed -input web/assets -output app/web/assets/assets.go
+	@go-embed -input web/assets -output app/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
 	@git checkout app/web/assets/assets.go
 

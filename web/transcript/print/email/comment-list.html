@@ -8,7 +8,7 @@
         <tr>
           <th>Member</th>
           <th>Comment</th>
-          <th><%= util.Title(util.KeyCreated) %></th>
+          <th><%= npncore.Title(npncore.KeyCreated) %></th>
         </tr>
       </thead>
       <tbody>
@@ -16,7 +16,7 @@
           <tr>
             <td><%= c.UserID.String() %></td>
             <td><%== c.HTML %></td>
-            <td><% components.DateTime(&c.Created, buffer) %></td>
+            <td><% npntemplate.DateTime(&c.Created, buffer) %></td>
           </tr>
         <% } %>
       </tbody>

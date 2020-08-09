@@ -1,4 +1,4 @@
-<%: func TeamHistory(model *team.Session, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func TeamHistory(model *team.Session, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body">
   <div>
     <h3 class="left uk-card-title">
@@ -10,7 +10,7 @@
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new sprint"></button>
-          <input class="uk-input" type="text" id="sprint-title" name="<%= util.KeyTitle %>" placeholder="<%= util.Title(util.KeyTitle) %>" />
+          <input class="uk-input" type="text" id="sprint-title" name="<%= npncore.KeyTitle %>" placeholder="<%= npncore.Title(npncore.KeyTitle) %>" />
         </div>
       </form>
     </div>
@@ -27,7 +27,7 @@
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new estimate"></button>
-          <input class="uk-input" type="text" id="estimate-title" name="<%= util.KeyTitle %>" placeholder="<%= util.Title(util.KeyTitle) %>" />
+          <input class="uk-input" type="text" id="estimate-title" name="<%= npncore.KeyTitle %>" placeholder="<%= npncore.Title(npncore.KeyTitle) %>" />
         </div>
       </form>
     </div>
@@ -44,7 +44,7 @@
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new standup"></button>
-          <input class="uk-input" type="text" id="standup-title" name="<%= util.KeyTitle %>" placeholder="<%= util.Title(util.KeyTitle) %>" />
+          <input class="uk-input" type="text" id="standup-title" name="<%= npncore.KeyTitle %>" placeholder="<%= npncore.Title(npncore.KeyTitle) %>" />
         </div>
       </form>
     </div>
@@ -61,7 +61,7 @@
         <input type="hidden" name="team" value="<%=v model.ID %>" />
         <div class="uk-inline uk-display-block">
           <button type="submit" class="uk-form-icon uk-form-icon-flip" data-uk-icon="icon: plus" title="new retro"></button>
-          <input class="uk-input" type="text" id="retro-title" name="<%= util.KeyTitle %>" placeholder="<%= util.Title(util.KeyTitle) %>" />
+          <input class="uk-input" type="text" id="retro-title" name="<%= npncore.KeyTitle %>" placeholder="<%= npncore.Title(npncore.KeyTitle) %>" />
         </div>
       </form>
     </div>

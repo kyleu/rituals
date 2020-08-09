@@ -1,10 +1,9 @@
 package sprint
 
 import (
+	"github.com/kyleu/npn/npncore"
 	"strings"
 	"time"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -24,7 +23,7 @@ type Sessions []*Session
 
 func NewSession(title string, slug string, userID uuid.UUID, teamID *uuid.UUID, startDate *time.Time, endDate *time.Time) Session {
 	return Session{
-		ID:        util.UUID(),
+		ID:        npncore.UUID(),
 		Slug:      slug,
 		Title:     strings.TrimSpace(title),
 		TeamID:    teamID,

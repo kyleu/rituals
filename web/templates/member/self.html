@@ -1,4 +1,4 @@
-<%: func MemberSelf(auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberSelf(auths auth.Records, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle" id="member-self">
   <h3 class="uk-card-title">
     <span class="right">
@@ -42,7 +42,7 @@
               <label class="uk-form-label" for="self-picture-input">Picture</label>
               <input class="uk-input" id="self-picture-input" type="hidden" />
               <% if len(auths) == 0 { %>
-                <div>To set a profile picture, <a class="theme" href="<%= ctx.Route(util.KeyProfile) %>">sign in</a></div>
+                <div>To set a profile picture, <a class="theme" href="<%= ctx.Route(npncore.KeyProfile) %>">sign in</a></div>
               <% } else { %>
                 <% for _, a := range auths { %>
                   <div class="profile-picture-choice">

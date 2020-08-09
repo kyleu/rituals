@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/gofrs/uuid"
 
@@ -23,19 +24,19 @@ func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMes
 		err = s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdPong, param))
 	case ClientCmdAddComment:
 		acp := addCommentParams{}
-		util.FromJSON(param, &acp, s.Logger)
+		_ = npncore.FromJSON(param, &acp)
 		err = onAddComment(s, *conn.Channel, userID, acp)
 	case ClientCmdUpdateComment:
 		ucp := updateCommentParams{}
-		util.FromJSON(param, &ucp, s.Logger)
+		_ = npncore.FromJSON(param, &ucp)
 		err = onUpdateComment(s, *conn.Channel, userID, ucp)
 	case ClientCmdRemoveComment:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveComment(s, *conn.Channel, userID, u)
 	case ClientCmdUpdateProfile:
 		snp := &saveProfileParams{}
-		util.FromJSON(param, snp, s.Logger)
+		_ = npncore.FromJSON(param, snp)
 		err = saveProfile(s, conn, userID, snp)
 	case ClientCmdGetActions:
 		err = sendActions(s, conn)

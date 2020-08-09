@@ -1,25 +1,25 @@
-<%: func StoryTable(stories estimate.Stories, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func StoryTable(stories estimate.Stories, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.KeyStory, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyStory, util.KeyIdx, util.Title(util.KeyIdx), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyStory, util.KeyStatus, util.Title(util.KeyStatus), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyStory, util.KeyTitle, util.Title(util.KeyTitle), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyStory, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyStory, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.KeyID, npncore.Title(npncore.KeyID), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.KeyIdx, npncore.Title(npncore.KeyIdx), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.KeyStatus, npncore.Title(npncore.KeyStatus), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.KeyTitle, npncore.Title(npncore.KeyTitle), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.WithID(npncore.KeyUser), npncore.Title(npncore.KeyUser), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyStory, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range stories { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyStory, util.KeyDetail), `id`, model.ID.String()) %>"><% components.UUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(util.KeyStory, npncore.KeyDetail), `id`, model.ID.String()) %>"><% npntemplate.UUID(&model.ID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%=v model.Idx %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Status.String() %></td>
       <td><%= model.Title %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

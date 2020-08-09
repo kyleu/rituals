@@ -3,8 +3,8 @@ package permission
 import (
 	"database/sql"
 	"fmt"
-
-	"github.com/kyleu/rituals.dev/app/database"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
 	"emperror.dev/errors"
 
@@ -15,36 +15,35 @@ import (
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/database/query"
 )
 
 type Service struct {
 	actions   *action.Service
-	db        *database.Service
+	db        *npndatabase.Service
 	logger    logur.Logger
 	svc       util.Service
 	tableName string
 	colName   string
 }
 
-func NewService(actions *action.Service, db *database.Service, logger logur.Logger, svc util.Service) *Service {
+func NewService(actions *action.Service, db *npndatabase.Service, logger logur.Logger, svc util.Service) *Service {
 	return &Service{
 		actions:   actions,
 		db:        db,
 		logger:    logger,
 		svc:       svc,
 		tableName: svc.Key + "_permission",
-		colName:   util.WithDBID(svc.Key),
+		colName:   npncore.WithDBID(svc.Key),
 	}
 }
 
-var defaultOrdering = query.Orderings{{Column: "k", Asc: true}, {Column: "v", Asc: true}}
+var defaultOrdering = npncore.Orderings{{Column: "k", Asc: true}, {Column: "v", Asc: true}}
 
-func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
-	params = query.ParamsWithDefaultOrdering(util.KeyPermission, params, defaultOrdering...)
+func (s *Service) GetByModelID(id uuid.UUID, params *npncore.Params) Permissions {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyPermission, params, defaultOrdering...)
 	var dtos []permissionDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
-	q := query.SQLSelect(fmt.Sprintf("k, v, access, created"), s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect(fmt.Sprintf("k, v, access, created"), s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving permission entries for model [%v]: %+v", id, err))
@@ -60,7 +59,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Permissions {
 func (s *Service) Get(modelID uuid.UUID, k string, v string) (*Permission, error) {
 	dto := permissionDTO{}
 	where := fmt.Sprintf("%s = $1 and k = $2 and v = $3", s.colName)
-	q := query.SQLSelectSimple("k, v, access, created", s.tableName, where)
+	q := npndatabase.SQLSelectSimple("k, v, access, created", s.tableName, where)
 	err := s.db.Get(&dto, q, nil, modelID, modelID, k, v)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -78,13 +77,13 @@ func (s *Service) Set(modelID uuid.UUID, k string, v string, access member.Role,
 		return nil
 	}
 	if dto == nil {
-		q := query.SQLInsert(s.tableName, []string{s.colName, "k", "v", "access"}, 1)
+		q := npndatabase.SQLInsert(s.tableName, []string{s.colName, "k", "v", "access"}, 1)
 		err = s.db.Insert(q, nil, modelID, k, v, access.Key)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
 		}
 	} else {
-		q := query.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName+" = $3 and k = $4")
+		q := npndatabase.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName+" = $3 and k = $4")
 		err = s.db.UpdateOne(q, nil, access.Key, v, modelID, k)
 		if err != nil {
 			s.logger.Error(fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, k, v, err))
@@ -127,7 +126,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 	}
 
 	for _, p := range u {
-		q := query.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName+" = $3 and k = $4")
+		q := npndatabase.SQLUpdate(s.tableName, []string{"access", "v"}, s.colName+" = $3 and k = $4")
 		err := s.db.UpdateOne(q, tx, p.Access.Key, p.V, modelID, p.K)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error updating permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))
@@ -135,7 +134,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 	}
 
 	for _, p := range i {
-		q := query.SQLInsert(s.tableName, []string{s.colName, "k", "v", "access"}, 1)
+		q := npndatabase.SQLInsert(s.tableName, []string{s.colName, "k", "v", "access"}, 1)
 		err := s.db.Insert(q, tx, modelID, p.K, p.V, p.Access.Key)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error inserting permission for model [%v] and k/v [%v/%v]: %+v", modelID, p.K, p.V, err))
@@ -143,7 +142,7 @@ func (s *Service) SetAll(modelID uuid.UUID, perms Permissions, userID uuid.UUID)
 	}
 
 	for _, p := range r {
-		q := query.SQLDelete(s.tableName, fmt.Sprintf("%v = $1 and k = $2", s.colName))
+		q := npndatabase.SQLDelete(s.tableName, fmt.Sprintf("%v = $1 and k = $2", s.colName))
 		_, err := s.db.Delete(q, tx, -1, modelID, p.K)
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error removing existing permission from model [%v]: %+v", modelID, err))

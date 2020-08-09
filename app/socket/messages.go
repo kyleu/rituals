@@ -1,6 +1,8 @@
 package socket
 
-import "github.com/kyleu/rituals.dev/app/util"
+import (
+	"github.com/kyleu/npn/npncore"
+)
 
 // Client Messages
 const (
@@ -39,7 +41,7 @@ const (
 
 // Server Messages
 const (
-	ServerCmdError = util.KeyError
+	ServerCmdError = npncore.KeyError
 	ServerCmdPong  = "pong"
 
 	ServerCmdSessionJoined = "session-joined"

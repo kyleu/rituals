@@ -1,6 +1,6 @@
-<%: func Index(ctx *web.RequestContext, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, w io.Writer) (int, error) %>
+<%: func Index(ctx *npnweb.RequestContext, teams team.Sessions, sprints sprint.Sessions, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
-<%@ nav { %><% components.NavbarStatic("", ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,14 +9,14 @@
         <div class="uk-card uk-card-body">
           <h3 class="uk-card-title">
             <span class="right">
-              <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= util.AppName %>"></a>
+              <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= npncore.AppName %>"></a>
             </span>
-            <% if ctx.Profile.Role == util.RoleAdmin { %>
+            <% if ctx.Profile.Role == npnuser.RoleAdmin { %>
             <span class="right">
               <a class="theme uk-icon-button" data-uk-icon="info" href="<%= ctx.Route(`admin`) %>" title="you have admin rights"></a>
             </span>
             <% } %>
-            <%= util.AppName %>
+            <%= npncore.AppName %>
           </h3>
           <p>Work with your team to estimate work, track your progress, and gather feedback</p>
         </div>
@@ -28,7 +28,7 @@
           <ul class="uk-list uk-list-divider uk-margin-top">
             <% for _, t := range teams { %>
             <li>
-              <a class="theme" href="<%= ctx.Route(util.SvcTeam.Key, util.KeyKey, t.Slug) %>"><%= t.Title %></a>
+              <a class="theme" href="<%= ctx.Route(util.SvcTeam.Key, npncore.KeyKey, t.Slug) %>"><%= t.Title %></a>
             </li>
             <% } %>
           </ul>
@@ -42,7 +42,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range sprints { %>
                 <li>
-                  <a class="theme" href="<%= ctx.Route(util.SvcSprint.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
+                  <a class="theme" href="<%= ctx.Route(util.SvcSprint.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -56,7 +56,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range estimates { %>
                 <li>
-                  <a class="theme" href="<%= ctx.Route(util.SvcEstimate.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
+                  <a class="theme" href="<%= ctx.Route(util.SvcEstimate.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -70,7 +70,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range standups { %>
                 <li>
-                  <a class="theme" href="<%= ctx.Route(util.SvcStandup.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
+                  <a class="theme" href="<%= ctx.Route(util.SvcStandup.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>
@@ -84,7 +84,7 @@
             <ul class="uk-list uk-list-divider uk-margin-top">
               <% for _, s := range retros { %>
                 <li>
-                  <a class="theme" href="<%= ctx.Route(util.SvcRetro.Key, util.KeyKey, s.Slug) %>"><%= s.Title %></a>
+                  <a class="theme" href="<%= ctx.Route(util.SvcRetro.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
                 </li>
               <% } %>
             </ul>

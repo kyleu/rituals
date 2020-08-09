@@ -2,16 +2,16 @@ package xls
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/rituals.dev/app/member"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 func renderMemberList(members member.Entries, f *excelize.File) {
-	key := util.Plural(util.KeyMember)
+	key := npncore.Plural(npncore.KeyMember)
 	if len(members) > 0 {
 		f.NewSheet(key)
 
-		setColumnHeaders(key, []string{util.Title(util.KeyTitle), util.Title(util.KeyRole), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(key, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyRole), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, m := range members {

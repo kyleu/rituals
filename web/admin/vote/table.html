@@ -1,20 +1,20 @@
-<%: func VoteTable(votes estimate.Votes, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func VoteTable(votes estimate.Votes, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.KeyVote, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyVote, util.KeyChoice, util.Title(util.KeyChoice), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyVote, "updated", "Updated", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyVote, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(util.KeyVote, npncore.WithID(npncore.KeyUser), npncore.Title(npncore.KeyUser), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyVote, npncore.KeyChoice, npncore.Title(npncore.KeyChoice), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyVote, "updated", "Updated", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.KeyVote, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range votes { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, buffer) %></a></td>
       <td><%= model.Choice %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Updated, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Updated, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

@@ -3,24 +3,23 @@ package action
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 	"strings"
-
-	"github.com/kyleu/rituals.dev/app/database"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/util"
 	"logur.dev/logur"
 )
 
 type Service struct {
-	db     *database.Service
+	db     *npndatabase.Service
 	logger logur.Logger
 }
 
-func NewService(db *database.Service, logger logur.Logger) *Service {
-	logger = logur.WithFields(logger, map[string]interface{}{util.KeyService: util.KeyAction})
+func NewService(db *npndatabase.Service, logger logur.Logger) *Service {
+	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: npncore.KeyAction})
 	svc := Service{
 		db:     db,
 		logger: logger,
@@ -30,9 +29,9 @@ func NewService(db *database.Service, logger logur.Logger) *Service {
 }
 
 func (s *Service) New(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
-	id := util.UUID()
-	q := query.SQLInsert(util.KeyAction, []string{util.KeyID, util.KeySvc, util.WithDBID(util.KeyModel), util.WithDBID(util.KeyUser), util.KeyAct, util.KeyContent, util.KeyNote}, 1)
-	err := s.db.Insert(q, nil, id, svc.Key, modelID, userID, act, util.ToJSON(content, s.logger), note)
+	id := npncore.UUID()
+	q := npndatabase.SQLInsert(npncore.KeyAction, []string{npncore.KeyID, npncore.KeySvc, npncore.WithDBID(npncore.KeyModel), npncore.WithDBID(npncore.KeyUser), npncore.KeyAct, npncore.KeyContent, npncore.KeyNote}, 1)
+	err := s.db.Insert(q, nil, id, svc.Key, modelID, userID, act, npncore.ToJSON(content, s.logger), note)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new ["+svc.Key+"] action")
@@ -43,7 +42,7 @@ func (s *Service) New(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act
 
 func (s *Service) PostRef(svc util.Service, modelID *uuid.UUID, refSvc util.Service, refID uuid.UUID, userID uuid.UUID, act string, notes ...string) {
 	if modelID != nil {
-		actionContent := map[string]interface{}{util.KeySvc: refSvc.Key, util.KeyID: refID}
+		actionContent := map[string]interface{}{npncore.KeySvc: refSvc.Key, npncore.KeyID: refID}
 		s.Post(svc, *modelID, userID, act, actionContent, notes...)
 	}
 }
@@ -57,11 +56,11 @@ func (s *Service) Post(svc util.Service, modelID uuid.UUID, userID uuid.UUID, ac
 	}()
 }
 
-func (s *Service) List(params *query.Params) Actions {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
+func (s *Service) List(params *npncore.Params) Actions {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyAction, params, npncore.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
-	q := query.SQLSelect("*", util.KeyAction, "", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", npncore.KeyAction, "", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil)
 
 	if err != nil {
@@ -74,7 +73,7 @@ func (s *Service) List(params *query.Params) Actions {
 
 func (s *Service) GetByID(id uuid.UUID) *Action {
 	dto := actionDTO{}
-	q := query.SQLSelectSimple("*", util.KeyAction, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple("*", npncore.KeyAction, npncore.KeyID+" = $1")
 	err := s.db.Get(&dto, q, nil, id)
 
 	if err != nil {
@@ -88,11 +87,11 @@ func (s *Service) GetByID(id uuid.UUID) *Action {
 	return dto.toAction()
 }
 
-func (s *Service) GetByUser(userID uuid.UUID, params *query.Params) Actions {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
+func (s *Service) GetByUser(userID uuid.UUID, params *npncore.Params) Actions {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyAction, params, npncore.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
-	q := query.SQLSelect("*", util.KeyAction, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", npncore.KeyAction, "user_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, userID)
 
 	if err != nil {
@@ -102,12 +101,12 @@ func (s *Service) GetByUser(userID uuid.UUID, params *query.Params) Actions {
 	return toActions(dtos)
 }
 
-func (s *Service) GetBySvcModel(svc util.Service, modelID uuid.UUID, params *query.Params) Actions {
-	params = query.ParamsWithDefaultOrdering(util.KeyAction, params, query.DefaultCreatedOrdering...)
+func (s *Service) GetBySvcModel(svc util.Service, modelID uuid.UUID, params *npncore.Params) Actions {
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyAction, params, npncore.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 
-	q := query.SQLSelect("*", util.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", npncore.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, svc.Key, modelID)
 
 	if err != nil {

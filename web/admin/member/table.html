@@ -1,21 +1,21 @@
-<%: func MemberTable(members member.Entries, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func MemberTable(members member.Entries, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.KeyMember, util.WithID(util.KeyUser), "User ID", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyMember, util.KeyName, "Name", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyMember, util.KeyRole, "Role", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyMember, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyMember, npncore.WithID(npncore.KeyUser), "User ID", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyMember, npncore.KeyName, "Name", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyMember, npncore.KeyRole, "Role", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyMember, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range members { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, buffer) %></a></td>
       <td><%= model.Name %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Role.String() %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

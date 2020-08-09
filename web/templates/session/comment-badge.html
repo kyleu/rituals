@@ -1,4 +1,4 @@
-<%: func CommentBadge(t string, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func CommentBadge(t string, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-inline comment-count-container left" data-comment-type="<%= t %>">
   <a class="theme" title="view comments">
     <div class="comment-count">
@@ -11,7 +11,7 @@
       <div class="uk-card-body"></div>
       <div class="uk-card-footer">
         <form onsubmit="comment.add('<%= t %>');return false;">
-          <% components.Textarea(web.InputParams{ID: "comment-add-content-" + t, Placeholder: "Markdown and HTML supported"}, buffer) %>
+          <% npntemplate.Textarea(npnweb.InputParams{ID: "comment-add-content-" + t, Placeholder: "Markdown and HTML supported"}, buffer) %>
           <div class="uk-text-right"><button class="uk-button uk-button-default uk-margin-top" type="submit">Add Comment</button></div>
         </form>
       </div>

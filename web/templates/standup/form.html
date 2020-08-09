@@ -1,4 +1,4 @@
-<%: func StandupForm(title string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func StandupForm(title string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <% if showName { %>

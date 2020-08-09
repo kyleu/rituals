@@ -1,4 +1,4 @@
-<%: func ComponentSessionPerm(svc util.Service, showTeam bool, showSprint bool, auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ComponentSessionPerm(svc util.Service, showTeam bool, showSprint bool, auths auth.Records, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-margin">
   <label class="uk-form-label" for="model-perm-form">Permissions</label>
   <div id="model-perm-form">
@@ -6,7 +6,7 @@
       <% if !(showTeam || showSprint || len(auths) > 0){ %>
         <li>
           Control access to this <%= svc.Key %> by
-          <a class="theme" href="<%= ctx.Route(util.KeyProfile) %>">signing in</a>
+          <a class="theme" href="<%= ctx.Route(npncore.KeyProfile) %>">signing in</a>
         </li>
       <% } %>
       <% if showTeam { %>
@@ -23,8 +23,8 @@
           </label>
         </li>
       <% } %>
-      <% if ctx.App.Auth.Enabled { %>
-        <% for _, p := range ctx.App.Auth.EnabledProviders { %>
+      <% if ctx.App.Auth().Enabled { %>
+        <% for _, p := range ctx.App.Auth().EnabledProviders { %>
           <%
             pcls := "uk-checkbox uk-margin-small-right"
             poc := "permission.onChanged('provider', '" +  p.Key + "', this.checked)"
@@ -44,7 +44,7 @@
             <div id="perm-<%= p.Key %>-email-container">
               <ul>
                 <% for _, e := range a.Emails() { %>
-                  <% domain := util.GetDomain(e) %>
+                  <% domain := npncore.GetDomain(e) %>
                   <li>
                     <label>
                       <input class="<%= cls %>" type="checkbox" name="perm-<%= p.Key %>-email" value="<%= domain %>" onchange="<%= oc %>" />

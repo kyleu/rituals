@@ -2,12 +2,10 @@ package retro
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 	"strings"
 	"time"
-
-	"github.com/kyleu/rituals.dev/app/database/query"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -51,7 +49,7 @@ func (t *Status) UnmarshalJSON(data []byte) error {
 var DefaultCategories = []string{"good", "bad", "improve"}
 
 func categoriesFromDB(s string) []string {
-	ret := query.StringToArray(s)
+	ret := npndatabase.StringToArray(s)
 	if len(ret) == 0 {
 		return DefaultCategories
 	}
@@ -74,7 +72,7 @@ type Sessions []*Session
 
 func NewSession(title string, slug string, userID uuid.UUID, categories []string, teamID *uuid.UUID, sprintID *uuid.UUID) Session {
 	return Session{
-		ID:         util.UUID(),
+		ID:         npncore.UUID(),
 		Slug:       slug,
 		Title:      strings.TrimSpace(title),
 		TeamID:     teamID,

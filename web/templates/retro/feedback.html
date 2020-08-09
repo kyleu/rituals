@@ -1,4 +1,4 @@
-<%: func RetroFeedback(ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func RetroFeedback(ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body">
   <h3 class="uk-card-title">
     <span class="model-icon h3-icon" onclick="modal.open('add-<%= util.KeyFeedback %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>
@@ -16,12 +16,12 @@
       <div class="uk-modal-body" data-uk-overflow-auto>
         <fieldset class="uk-fieldset">
           <div class="uk-margin">
-            <label class="uk-form-label" for="feedback-category"><%= util.Title(util.KeyCategory) %></label>
+            <label class="uk-form-label" for="feedback-category"><%= npncore.Title(npncore.KeyCategory) %></label>
             <select class="uk-select" id="feedback-category"></select>
           </div>
           <div class="uk-margin">
-            <label class="uk-form-label" for="feedback-content"><%= util.Title(util.KeyFeedback) %></label>
-            <% components.Textarea(web.InputParams{ID: "feedback-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+            <label class="uk-form-label" for="feedback-content"><%= npncore.Title(util.KeyFeedback) %></label>
+            <% npntemplate.Textarea(npnweb.InputParams{ID: "feedback-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
           </div>
         </fieldset>
       </div>
@@ -40,12 +40,12 @@
     <div class="uk-modal-body" data-uk-overflow-auto>
       <div class="content-edit">
         <div class="uk-margin">
-          <label class="uk-form-label" for="feedback-edit-category"><%= util.Title(util.KeyCategory) %></label>
+          <label class="uk-form-label" for="feedback-edit-category"><%= npncore.Title(npncore.KeyCategory) %></label>
           <select class="uk-select" id="feedback-edit-category"></select>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label" for="feedback-edit-content"><%= util.Title(util.KeyContent) %></label>
-          <% components.Textarea(web.InputParams{ID: "feedback-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+          <label class="uk-form-label" for="feedback-edit-content"><%= npncore.Title(npncore.KeyContent) %></label>
+          <% npntemplate.Textarea(npnweb.InputParams{ID: "feedback-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
         </div>
       </div>
       <div class="content-view"></div>

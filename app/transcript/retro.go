@@ -3,8 +3,9 @@ package transcript
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnweb"
+	"github.com/kyleu/rituals.dev/app"
 	"github.com/kyleu/rituals.dev/app/comment"
-	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -28,23 +29,23 @@ var Retro = Transcript{
 	Key:         util.SvcRetro.Key,
 	Title:       util.SvcRetro.Title,
 	Description: util.SvcRetro.Description,
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+	Resolve: func(ai npnweb.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
 		if len(slug) == 0 {
-			return app.Retro.List(nil), nil
+			return app.Retro(ai).List(nil), nil
 		}
-		sess := app.Retro.GetBySlug(slug)
+		sess := app.Retro(ai).GetBySlug(slug)
 		if sess == nil {
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
-		dataSvc := app.Retro.Data
+		dataSvc := app.Retro(ai).Data
 		return RetroResponse{
 			Svc:         util.SvcRetro,
 			Session:     sess,
-			Team:        app.Team.GetByIDPointer(sess.TeamID),
-			Sprint:      app.Sprint.GetByIDPointer(sess.SprintID),
+			Team:        app.Team(ai).GetByIDPointer(sess.TeamID),
+			Sprint:      app.Sprint(ai).GetByIDPointer(sess.SprintID),
 			Comments:    dataSvc.GetComments(sess.ID, nil),
 			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
-			Feedback:    app.Retro.GetFeedback(sess.ID, nil),
+			Feedback:    app.Retro(ai).GetFeedback(sess.ID, nil),
 			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},

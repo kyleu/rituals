@@ -7,12 +7,12 @@
       <% if r.Team != nil { %>
         <tr>
           <th><%= util.SvcTeam.Title %></th>
-          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, npncore.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
         </tr>
       <% } %>
       <tr>
-        <th><%= util.Title(util.KeyCreated) %></th>
-        <td><% components.DateTime(&r.Session.Created, buffer) %></td>
+        <th><%= npncore.Title(npncore.KeyCreated) %></th>
+        <td><% npntemplate.DateTime(&r.Session.Created, buffer) %></td>
       </tr>
     </tbody>
   </table>

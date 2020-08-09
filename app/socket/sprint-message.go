@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -25,19 +26,19 @@ func onSprintMessage(s *Service, conn *connection, cmd string, param json.RawMes
 	switch cmd {
 	case ClientCmdConnect:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onSprintConnect(s, conn, u)
 	case ClientCmdUpdateSession:
 		sss := sprintSessionSaveParams{}
-		util.FromJSON(param, &sss, s.Logger)
+		_ = npncore.FromJSON(param, &sss)
 		err = onSprintSessionSave(s, *conn.Channel, userID, sss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled sprint command [" + cmd + "]")

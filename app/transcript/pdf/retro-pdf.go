@@ -1,6 +1,7 @@
 package pdf
 
 import (
+	"github.com/kyleu/npn/npncore"
 	"strings"
 
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
@@ -13,15 +14,15 @@ import (
 func renderRetro(rsp transcript.RetroResponse, m pdfgen.Maroto) string {
 	hr(m)
 	caption(rsp.Session.Title, m)
-	detailRow(util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
-	detailRow(util.PluralTitle(util.KeyCategory), strings.Join(rsp.Session.Categories, ", "), m)
+	detailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
+	detailRow(npncore.PluralTitle(npncore.KeyCategory), strings.Join(rsp.Session.Categories, ", "), m)
 	if rsp.Team != nil {
 		detailRow(util.SvcTeam.Title, rsp.Team.Title, m)
 	}
 	if rsp.Sprint != nil {
 		detailRow(util.SvcSprint.Title, rsp.Sprint.Title, m)
 	}
-	detailRow(util.Title(util.KeyCreated), util.ToDateString(&rsp.Session.Created), m)
+	detailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
 
 	renderPermissionList(rsp.Permissions, m)
 	renderMemberList(rsp.Members, m)
@@ -35,10 +36,10 @@ func renderRetroList(sessions retro.Sessions, members member.Entries, m pdfgen.M
 	if len(sessions) > 0 {
 		hr(m)
 		caption(util.SvcRetro.PluralTitle, m)
-		cols := []string{util.Title(util.KeyOwner), util.Title(util.KeyTitle), util.Title(util.KeyCreated)}
+		cols := []string{npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyCreated)}
 		var data [][]string
 		for _, s := range sessions {
-			data = append(data, []string{members.GetName(s.Owner), s.Title, util.ToDateString(&s.Created)})
+			data = append(data, []string{members.GetName(s.Owner), s.Title, npncore.ToDateString(&s.Created)})
 		}
 		table(cols, data, []uint{3, 6, 3}, m)
 	}
@@ -55,10 +56,10 @@ func renderFeedbackLists(categories []string, feedbacks retro.Feedbacks, members
 		if len(fs) > 0 {
 			hr(m)
 			caption(c, m)
-			cols := []string{util.Title(util.KeyUser), util.Title(util.KeyContent), util.Title(util.KeyCreated)}
+			cols := []string{npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}
 			var data [][]string
 			for _, s := range fs {
-				data = append(data, []string{members.GetName(s.UserID), s.Content, util.ToDateString(&s.Created)})
+				data = append(data, []string{members.GetName(s.UserID), s.Content, npncore.ToDateString(&s.Created)})
 			}
 			table(cols, data, []uint{3, 6, 3}, m)
 		}

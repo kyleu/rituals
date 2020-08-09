@@ -1,11 +1,11 @@
-<%: func StandupReport(ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func StandupReport(ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="modal.open('add-<%= util.KeyReport %>');return false;" title="add <%= util.KeyReport %>"></a>
+      <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="modal.open('add-<%= npncore.KeyReport %>');return false;" title="add <%= npncore.KeyReport %>"></a>
     </span>
-    <span class="model-icon h3-icon" onclick="modal.open('add-<%= util.KeyReport %>');" data-uk-icon="icon: <%= util.SvcStandup.Icon %>;"></span>
-    <span class="modal-title" onclick="modal.open('add-<%= util.KeyReport %>');"><%= util.PluralTitle(util.KeyReport) %></span>
+    <span class="model-icon h3-icon" onclick="modal.open('add-<%= npncore.KeyReport %>');" data-uk-icon="icon: <%= util.SvcStandup.Icon %>;"></span>
+    <span class="modal-title" onclick="modal.open('add-<%= npncore.KeyReport %>');"><%= npncore.PluralTitle(npncore.KeyReport) %></span>
   </h3>
   <p id="report-detail">Loading...</p>
 </div>
@@ -24,7 +24,7 @@
           </div>
           <div class="uk-margin">
             <label class="uk-form-label" for="report-content">Report</label>
-            <% components.Textarea(web.InputParams{ID: "report-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+            <% npntemplate.Textarea(npnweb.InputParams{ID: "report-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
           </div>
         </fieldset>
       </div>
@@ -34,7 +34,7 @@
     </form>
   </div>
 </div>
-<div id="modal-<%= util.KeyReport %>" class="modal" data-uk-modal>
+<div id="modal-<%= npncore.KeyReport %>" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
     <div class="uk-modal-header">
@@ -48,7 +48,7 @@
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="report-edit-content">Content</label>
-          <% components.Textarea(web.InputParams{ID: "report-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
+          <% npntemplate.Textarea(npnweb.InputParams{ID: "report-edit-content", Placeholder: "Markdown and HTML supported"}, buffer) %>
         </div>
       </div>
       <div class="content-view"></div>
@@ -60,7 +60,7 @@
         <button class="uk-button uk-button-default" type="button" onclick="report.onEditReport();">Save</button>
       </div>
       <div class="buttons-view">
-        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= util.KeyReport %>');">Close</button>
+        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= npncore.KeyReport %>');">Close</button>
       </div>
     </div>
   </div>

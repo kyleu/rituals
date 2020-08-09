@@ -3,8 +3,9 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/util"
@@ -80,7 +81,7 @@ func (s *Service) sendPermErrors(connID uuid.UUID, svc util.Service, permErrors 
 }
 
 func errorNoSession(s *Service, svc util.Service, connID uuid.UUID, chID uuid.UUID) error {
-	msg := util.IDErrorString(util.KeySession, chID.String())
+	msg := npncore.IDErrorString(npncore.KeySession, chID.String())
 	err := s.WriteMessage(connID, NewMessage(util.SvcEstimate, ServerCmdSessionRemove, msg))
 	if err != nil {
 		return errors.Wrap(err, "error writing error message")

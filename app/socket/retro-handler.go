@@ -2,10 +2,11 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/util"
 )
@@ -14,13 +15,13 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	dataSvc := s.retros
 	title := util.ServiceTitle(util.SvcRetro, param.Title)
 
-	categories := query.StringToArray(param.Categories)
+	categories := npndatabase.StringToArray(param.Categories)
 	if len(categories) == 0 {
 		categories = retro.DefaultCategories
 	}
 
-	sprintID := util.GetUUIDFromString(param.SprintID)
-	teamID := util.GetUUIDFromString(param.TeamID)
+	sprintID := npncore.GetUUIDFromString(param.SprintID)
+	teamID := npncore.GetUUIDFromString(param.TeamID)
 
 	curr := dataSvc.GetByID(ch.ID)
 	if curr == nil {
@@ -36,7 +37,7 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
 
 	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
-	s.Logger.Debug(fmt.Sprintf(msg, title, util.OxfordComma(categories, "and"), sprintID, teamID))
+	s.Logger.Debug(fmt.Sprintf(msg, title, npncore.OxfordComma(categories, "and"), sprintID, teamID))
 
 	err := dataSvc.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"

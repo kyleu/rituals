@@ -22,7 +22,7 @@ func (s *Service) SendContentUpdate(svc util.Service, id *uuid.UUID) error {
 func getContent(c string) string {
 	c = strings.TrimSpace(c)
 	if len(c) == 0 {
-		c = util.KeyNoText
+		c = "-no text-"
 	}
 	return c
 }

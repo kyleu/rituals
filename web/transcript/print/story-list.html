@@ -2,7 +2,7 @@
 <% if len(models) > 0 { %>
 <hr />
 <section>
-  <h4><%= util.PluralTitle(util.KeyStory) %></h4>
+  <h4><%= npncore.PluralTitle(util.KeyStory) %></h4>
   <table>
     <thead>
       <tr>
@@ -20,7 +20,7 @@
           <td><%= model.Status.String() %></td>
           <td><%= model.FinalVote %></td>
           <td><%= members.GetName(model.UserID) %></td>
-          <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+          <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
         </tr>
       <% } %>
     </tbody>

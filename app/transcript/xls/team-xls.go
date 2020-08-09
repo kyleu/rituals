@@ -2,6 +2,7 @@ package xls
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/transcript"
@@ -10,9 +11,9 @@ import (
 
 func renderTeam(rsp transcript.TeamResponse, f *excelize.File) (string, string, error) {
 	data := [][]interface{}{
-		{util.Title(util.KeyTitle), rsp.Session.Title},
-		{util.Title(util.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
-		{util.Title(util.KeyCreated), rsp.Session.Created},
+		{npncore.Title(npncore.KeyTitle), rsp.Session.Title},
+		{npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner)},
+		{npncore.Title(npncore.KeyCreated), rsp.Session.Created},
 	}
 
 	setData(defSheet, 1, data, f)
@@ -34,7 +35,7 @@ func renderTeamList(sessions team.Sessions, members member.Entries, f *excelize.
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{util.Title(util.KeyTitle), util.Title(util.KeyOwner), util.Title(util.KeyCreated)}, f)
+		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {

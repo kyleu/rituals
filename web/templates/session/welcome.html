@@ -1,4 +1,4 @@
-<%: func ComponentSessionWelcome(svc util.Service, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ComponentSessionWelcome(svc util.Service, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div id="modal-welcome" class="modal" data-uk-modal>
   <div class="uk-modal-dialog uk-margin-auto-vertical">
     <button class="uk-button uk-modal-close-default" type="button" data-uk-close></button>
@@ -9,7 +9,7 @@
       <p>Enjoy your new <%= svc.Key %>!</p>
       <p>
         Invite new members by sharing this page's url, or restrict access to this <%= svc.Key %> by
-        <a class="theme" href="" onclick="modal.hide('welcome');modal.open('<%= util.KeySession %>');return false;">editing permissions</a>.
+        <a class="theme" href="" onclick="modal.hide('welcome');modal.open('<%= npncore.KeySession %>');return false;">editing permissions</a>.
       </p>
     </div>
     <div class="uk-modal-footer uk-text-right">

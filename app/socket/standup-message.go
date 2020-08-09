@@ -2,11 +2,11 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 type standupSessionSaveParams struct {
@@ -35,31 +35,31 @@ func onStandupMessage(s *Service, conn *connection, cmd string, param json.RawMe
 	switch cmd {
 	case ClientCmdConnect:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onStandupConnect(s, conn, u)
 	case ClientCmdUpdateSession:
 		sss := standupSessionSaveParams{}
-		util.FromJSON(param, &sss, s.Logger)
+		_ = npncore.FromJSON(param, &sss)
 		err = onStandupSessionSave(s, *conn.Channel, userID, sss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onUpdateMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdRemoveMember:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveMember(s, dataSvc.Data.Members, *conn.Channel, userID, u)
 	case ClientCmdAddReport:
 		arp := addReportParams{}
-		util.FromJSON(param, &arp, s.Logger)
+		_ = npncore.FromJSON(param, &arp)
 		err = onAddReport(s, *conn.Channel, userID, arp)
 	case ClientCmdUpdateReport:
 		erp := editReportParams{}
-		util.FromJSON(param, &erp, s.Logger)
+		_ = npncore.FromJSON(param, &erp)
 		err = onEditReport(s, *conn.Channel, userID, erp)
 	case ClientCmdRemoveReport:
 		var u uuid.UUID
-		util.FromJSON(param, &u, s.Logger)
+		_ = npncore.FromJSON(param, &u)
 		err = onRemoveReport(s, *conn.Channel, userID, u)
 	default:
 		err = errors.New("unhandled standup command [" + cmd + "]")

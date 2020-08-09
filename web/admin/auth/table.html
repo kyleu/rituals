@@ -1,27 +1,27 @@
-<%: func AuthTable(auths auth.Records, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func AuthTable(auths auth.Records, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.KeyAuth, util.KeyID, util.Title(util.KeyID), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyAuth, util.WithID(util.KeyUser), util.Title(util.KeyUser), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyAuth, util.KeyProvider, util.Title(util.KeyProvider), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyAuth, "providerID", "Provider ID", params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyAuth, util.KeyName, util.Title(util.KeyName), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyAuth, util.KeyEmail, util.Title(util.KeyEmail), params, ctx, buffer) %>
-      <% components.TableHeader(util.KeyAuth, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, npncore.KeyID, npncore.Title(npncore.KeyID), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, npncore.WithID(npncore.KeyUser), npncore.Title(npncore.KeyUser), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, npncore.KeyProvider, npncore.Title(npncore.KeyProvider), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, "providerID", "Provider ID", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, npncore.KeyName, npncore.Title(npncore.KeyName), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, npncore.KeyEmail, npncore.Title(npncore.KeyEmail), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(npncore.KeyAuth, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range auths { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyAuth, util.KeyDetail), `id`, model.ID.String()) %>"><% components.UUID(&model.ID, buffer) %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyAuth, npncore.KeyDetail), `id`, model.ID.String()) %>"><% npntemplate.UUID(&model.ID, buffer) %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Provider.Key %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.ProviderID %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Name %></td>
       <td class="uk-table-shrink uk-text-nowrap"><%= model.Email %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

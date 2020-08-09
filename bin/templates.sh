@@ -28,7 +28,6 @@ function tmpl {
 }
 
 tmpl "query" "query/sql"
-tmpl "components" "web/components"
 tmpl "transcripttemplates" "web/transcript"
 tmpl "templates" "web/templates"
 tmpl "admintemplates" "web/admin"

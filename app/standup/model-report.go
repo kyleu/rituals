@@ -1,9 +1,8 @@
 package standup
 
 import (
+	"github.com/kyleu/npn/npncore"
 	"time"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gofrs/uuid"
 )
@@ -34,7 +33,7 @@ func (dto *reportDTO) toReport() *Report {
 	return &Report{
 		ID:        dto.ID,
 		StandupID: dto.StandupID,
-		D:         util.ToYMD(&dto.D),
+		D:         npncore.ToYMD(&dto.D),
 		UserID:    dto.UserID,
 		Content:   dto.Content,
 		HTML:      dto.HTML,

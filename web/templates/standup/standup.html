@@ -1,7 +1,7 @@
-<%: func StandupWorkspace(model *standup.Session, auths auth.Records, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func StandupWorkspace(model *standup.Session, auths auth.Records, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/basic.html" %>
-<%@ head { %><% components.Init(util.SvcStandup, model.ID, _buffer) %><% } %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ head { %><% npntemplate.Init(util.SvcStandup.Key, model.ID, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -17,7 +17,7 @@
         <% StandupReport(ctx, _buffer) %>
       </div>
       <div class="uk-width-1-3@m">
-        <% MemberOther(ctx, ctx.Route(util.SvcStandup.Key, util.KeyKey, model.Slug), _buffer) %>
+        <% MemberOther(ctx, ctx.Route(util.SvcStandup.Key, npncore.KeyKey, model.Slug), _buffer) %>
       </div>
     </div>
   </div>

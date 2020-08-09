@@ -3,7 +3,7 @@ package transcript
 import (
 	"encoding/json"
 
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/npn/npnservice/auth"
 )
 
 type Format struct {

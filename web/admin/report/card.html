@@ -1,9 +1,9 @@
-<%: func ReportCard(reports standup.Reports, params query.ParamSet, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func ReportCard(reports standup.Reports, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-margin-top">
   <h3 class="uk-card-title">Reports</h3>
   <% if len(reports) == 0 { %>
     <p>No reports available</p>
   <% } else { %>
-    <% ReportTable(reports, params.Get(util.KeyReport, ctx.Logger), ctx, buffer) %>
+    <% ReportTable(reports, params.Get(npncore.KeyReport, ctx.Logger), ctx, buffer) %>
   <% } %>
 </div>

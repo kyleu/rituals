@@ -2,7 +2,7 @@
 <% if len(perms) > 0 { %>
 <hr />
 <div>
-  <h4><%= util.PluralTitle(util.KeyPermission) %></h4>
+  <h4><%= npncore.PluralTitle(npncore.KeyPermission) %></h4>
   <ul>
     <% for _, p := range perms { %>
       <li><%= p.Message() %></li>

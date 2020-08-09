@@ -1,21 +1,21 @@
-<%: func SprintTable(sprints sprint.Sessions, params *query.Params, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func SprintTable(sprints sprint.Sessions, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
   <thead>
     <tr>
-      <% components.TableHeader(util.SvcSprint.Key, util.KeyTitle, util.Title(util.KeyTitle), params, ctx, buffer) %>
-      <% components.TableHeader(util.SvcSprint.Key, "startDate", "Start Date", params, ctx, buffer) %>
-      <% components.TableHeader(util.SvcSprint.Key, "endDate", "End Date", params, ctx, buffer) %>
-      <% components.TableHeader(util.SvcSprint.Key, util.KeyCreated, util.Title(util.KeyCreated), params, ctx, buffer) %>
+      <% npntemplate.TableHeader(util.SvcSprint.Key, npncore.KeyTitle, npncore.Title(npncore.KeyTitle), params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.SvcSprint.Key, "startDate", "Start Date", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.SvcSprint.Key, "endDate", "End Date", params, ctx.Request, buffer) %>
+      <% npntemplate.TableHeader(util.SvcSprint.Key, npncore.KeyCreated, npncore.Title(npncore.KeyCreated), params, ctx.Request, buffer) %>
     </tr>
   </thead>
   <tbody>
   <% for _, model := range sprints { %>
     <tr>
-      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.SvcSprint.Key, util.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.Date(model.StartDate, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.Date(model.EndDate, buffer) %></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(util.SvcSprint.Key, npncore.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.Date(model.StartDate, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.Date(model.EndDate, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
   <% } %>
   </tbody>

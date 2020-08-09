@@ -15,10 +15,10 @@
     <tbody>
       <% for _, model := range models { %>
         <tr>
-          <td><a href="<%= tx.Route(util.AdminLink(util.SvcTeam.Key, util.KeyDetail), util.KeyID, model.ID.String()) %>"><% components.UUID(&model.ID, buffer) %></a></td>
-          <td><a href="<%= tx.Route(util.SvcTeam.Key, util.KeyKey, model.Slug) %>"><%= model.Slug %></a></td>
+          <td><a href="<%= tx.Route(npnweb.AdminLink(util.SvcTeam.Key, npncore.KeyDetail), npncore.KeyID, model.ID.String()) %>"><% npntemplate.UUID(&model.ID, buffer) %></a></td>
+          <td><a href="<%= tx.Route(util.SvcTeam.Key, npncore.KeyKey, model.Slug) %>"><%= model.Slug %></a></td>
           <td><%= model.Title %></td>
-          <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+          <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
         </tr>
       <% } %>
     </tbody>

@@ -1,8 +1,10 @@
 package sandbox
 
-import "github.com/kyleu/rituals.dev/app/web"
+import (
+	"github.com/kyleu/npn/npnweb"
+)
 
-type Resolver func(ctx *web.RequestContext) (string, interface{}, error)
+type Resolver func(ctx *npnweb.RequestContext) (string, interface{}, error)
 
 type Sandbox struct {
 	Key         string   `json:"key"`

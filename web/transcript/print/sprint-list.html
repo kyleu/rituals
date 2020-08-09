@@ -13,8 +13,8 @@
     <tbody>
     <% for _, model := range models { %>
     <tr>
-      <td><a href="<%= tx.Route(util.SvcSprint.Key, util.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% components.DateTime(&model.Created, buffer) %></td>
+      <td><a href="<%= tx.Route(util.SvcSprint.Key, npncore.KeyKey, model.Slug) %>"><%= model.Title %></a></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>
     </tr>
     <% } %>
     </tbody>

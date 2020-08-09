@@ -1,6 +1,6 @@
-<%: func ConnectionDetail(model *socket.Status, msg *socket.Message, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func ConnectionDetail(model *socket.Status, msg *socket.Message, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,23 +9,23 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
         <tr>
-          <th><%= util.Title(util.KeyID) %></th>
+          <th><%= npncore.Title(npncore.KeyID) %></th>
           <td><%= model.ID.String() %></td>
         </tr>
         <tr>
           <th>User ID</th>
-          <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
+          <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a></td>
         </tr>
         </tbody>
       </table>
     </div>
     <div class="uk-card uk-card-body">
-      <form class="uk-form-stacked" action="<%= ctx.Route(util.AdminLink(util.KeyConnection, `post`)) %>" method="post">
-        <input name=util.KeyID type="hidden" value="<%=v model.ID %>" />
+      <form class="uk-form-stacked" action="<%= ctx.Route(npnweb.AdminLink(npncore.KeyConnection, `post`)) %>" method="post">
+        <input name=npncore.KeyID type="hidden" value="<%=v model.ID %>" />
         <fieldset class="uk-fieldset">
           <div class="uk-margin-small">
-            <label class="uk-form-label" for="<%= util.KeySvc %>">Service</label>
-            <% components.Select(util.KeySvc, []string{util.SvcSystem.Key, util.SvcEstimate.Key, util.SvcStandup.Key, util.SvcRetro.Key}, msg.Svc, _buffer) %>
+            <label class="uk-form-label" for="<%= npncore.KeySvc %>">Service</label>
+            <% npntemplate.Select(npncore.KeySvc, []string{util.SvcSystem.Key, util.SvcEstimate.Key, util.SvcStandup.Key, util.SvcRetro.Key}, msg.Svc, _buffer) %>
           </div>
 
           <div class="uk-margin">
@@ -35,7 +35,7 @@
 
           <div class="uk-margin">
             <label class="uk-form-label" for="param">Param</label>
-            <% components.Textarea(web.InputParams{Name: "param", Value: util.ToJSON(msg.Param, ctx.Logger)}, _buffer) %>
+            <% npntemplate.Textarea(npnweb.InputParams{Name: "param", Value: npncore.ToJSON(msg.Param, ctx.Logger)}, _buffer) %>
           </div>
 
           <div class="uk-margin-top">

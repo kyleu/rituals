@@ -2,7 +2,7 @@ package permission
 
 import (
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/auth"
+	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 

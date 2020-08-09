@@ -2,10 +2,10 @@ package transcript
 
 import (
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/config"
+	"github.com/kyleu/npn/npnweb"
 )
 
-type Resolver func(app *config.AppInfo, userID uuid.UUID, slug string) (interface{}, error)
+type Resolver func(app npnweb.AppInfo, userID uuid.UUID, slug string) (interface{}, error)
 
 type Transcript struct {
 	Key         string   `json:"key"`

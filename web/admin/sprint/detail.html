@@ -1,51 +1,51 @@
-<%: func SprintDetail(model *sprint.Session, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, data *session.Data, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func SprintDetail(model *sprint.Session, estimates estimate.Sessions, standups standup.Sessions, retros retro.Sessions, data *session.Data, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">
-        <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcSprint.Key, util.KeyKey, model.Slug) %>">Join</a></div>
+        <div class="right"><a class="uk-button uk-button-default" href="<%= ctx.Route(util.SvcSprint.Key, npncore.KeyKey, model.Slug) %>">Join</a></div>
         Sprint
       </h3>
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th><%= util.Title(util.KeyID) %></th>
+            <th><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeySlug) %></th>
+            <th><%= npncore.Title(npncore.KeySlug) %></th>
             <td><%= model.Slug %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyTitle) %></th>
+            <th><%= npncore.Title(npncore.KeyTitle) %></th>
             <td><%= model.Title %></td>
           </tr>
           <tr>
             <th><%= util.SvcTeam.Title %></th>
             <td>
               <% if model.TeamID != nil { %>
-                <a class="theme" href="<%= ctx.Route(util.AdminLink(util.SvcTeam.Key, util.KeyDetail), `id`, model.TeamID.String()) %>"><% components.UUID(model.TeamID, _buffer) %></a>
+                <a class="theme" href="<%= ctx.Route(npnweb.AdminLink(util.SvcTeam.Key, npncore.KeyDetail), `id`, model.TeamID.String()) %>"><% npntemplate.UUID(model.TeamID, _buffer) %></a>
               <% } %>
             </td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyOwner) %></th>
-            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.Owner.String()) %>"><% components.UUID(&model.Owner, _buffer) %></a></td>
+            <th><%= npncore.Title(npncore.KeyOwner) %></th>
+            <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.Owner.String()) %>"><% npntemplate.UUID(&model.Owner, _buffer) %></a></td>
           </tr>
           <tr>
             <th>Start Date</th>
-            <td><% components.Date(model.StartDate, _buffer) %></td>
+            <td><% npntemplate.Date(model.StartDate, _buffer) %></td>
           </tr>
           <tr>
             <th>End Date</th>
-            <td><% components.Date(model.EndDate, _buffer) %></td>
+            <td><% npntemplate.Date(model.EndDate, _buffer) %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyCreated) %></th>
-            <td><% components.DateTime(&model.Created, _buffer) %></td>
+            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

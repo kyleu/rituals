@@ -2,20 +2,21 @@ package transcript
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npnweb"
+	"github.com/kyleu/rituals.dev/app"
 	"time"
 
-	"github.com/kyleu/rituals.dev/app/auth"
-	"github.com/kyleu/rituals.dev/app/user"
+	"github.com/kyleu/npn/npnservice/auth"
+	"github.com/kyleu/npn/npnservice/user"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/comment"
-	"github.com/kyleu/rituals.dev/app/config"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/team"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
 type EmailResponse struct {
@@ -31,7 +32,7 @@ type EmailResponse struct {
 }
 
 func (er *EmailResponse) Subject() string {
-	return fmt.Sprintf("[%v] %v report", util.ToYMD(er.Date), util.AppName)
+	return fmt.Sprintf("[%v] %v report", npncore.ToYMD(er.Date), npncore.AppName)
 }
 
 func (er *EmailResponse) Opener() string {
@@ -43,25 +44,25 @@ var Email = Transcript{
 	Key:         "email",
 	Title:       "Email",
 	Description: "Nightly email report",
-	Resolve: func(app *config.AppInfo, userID uuid.UUID, param string) (interface{}, error) {
+	Resolve: func(ai npnweb.AppInfo, userID uuid.UUID, param string) (interface{}, error) {
 		if len(param) == 0 {
 			n := time.Now()
-			param = util.ToYMD(&n)
+			param = npncore.ToYMD(&n)
 		}
-		d, err := util.FromYMD(param)
+		d, err := npncore.FromYMD(param)
 		if err != nil {
 			return nil, err
 		}
 		return EmailResponse{
 			Date:      d,
-			Users:     app.User.GetByCreated(d, nil),
-			Auths:     app.Auth.GetByCreated(d, nil),
-			Teams:     app.Team.GetByCreated(d, nil),
-			Sprints:   app.Sprint.GetByCreated(d, nil),
-			Estimates: app.Estimate.GetByCreated(d, nil),
-			Standups:  app.Standup.GetByCreated(d, nil),
-			Retros:    app.Retro.GetByCreated(d, nil),
-			Comments:  app.Comment.GetByCreated(d, nil),
+			Users:     ai.User().GetByCreated(d, nil),
+			Auths:     ai.Auth().GetByCreated(d, nil),
+			Teams:     app.Team(ai).GetByCreated(d, nil),
+			Sprints:   app.Sprint(ai).GetByCreated(d, nil),
+			Estimates: app.Estimate(ai).GetByCreated(d, nil),
+			Standups:  app.Standup(ai).GetByCreated(d, nil),
+			Retros:    app.Retro(ai).GetByCreated(d, nil),
+			Comments:  app.Comment(ai).GetByCreated(d, nil),
 		}, nil
 	},
 }

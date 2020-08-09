@@ -1,9 +1,9 @@
-<%: func RetroForm(title string, categories []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func RetroForm(title string, categories []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">
-    <label class="uk-form-label" for="model-categories-input"><%= util.PluralTitle(util.KeyCategory) %></label>
-    <% components.TagEditor("categories", categories, buffer) %>
+    <label class="uk-form-label" for="model-categories-input"><%= npncore.PluralTitle(npncore.KeyCategory) %></label>
+    <% npntemplate.TagEditor("categories", categories, buffer) %>
   </div>
   <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>

@@ -1,6 +1,8 @@
 package socket
 
 import (
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npnuser"
 	"sync"
 
 	"emperror.dev/errors"
@@ -9,9 +11,9 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, error) {
+func (s *Service) Register(profile npnuser.Profile, c *websocket.Conn) (uuid.UUID, error) {
 	conn := &connection{
-		ID:      util.UUID(),
+		ID:      npncore.UUID(),
 		Profile: profile,
 		Svc:     util.SvcSystem,
 		ModelID: nil,
@@ -30,7 +32,7 @@ func (s *Service) Register(profile util.Profile, c *websocket.Conn) (uuid.UUID, 
 func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
 	conn, ok := s.connections[connID]
 	if !ok {
-		return false, errors.New(util.IDErrorString(util.KeyConnection, connID.String()))
+		return false, errors.New(npncore.IDErrorString(npncore.KeyConnection, connID.String()))
 	}
 	left := false
 
@@ -50,5 +52,5 @@ func (s *Service) Disconnect(connID uuid.UUID) (bool, error) {
 }
 
 func invalidConnection(id uuid.UUID) error {
-	return errors.New(util.IDErrorString(util.KeyConnection, id.String()))
+	return errors.New(npncore.IDErrorString(npncore.KeyConnection, id.String()))
 }

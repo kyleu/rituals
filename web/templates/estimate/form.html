@@ -1,9 +1,9 @@
-<%: func EstimateForm(title string, choices []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func EstimateForm(title string, choices []string, teams team.Sessions, sprints sprint.Sessions, auths auth.Records, showName bool, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <fieldset class="uk-fieldset">
   <% ComponentSessionTitle(title, ctx, buffer) %>
   <div class="uk-margin">
     <label class="uk-form-label" for="model-choices-input">Choices</label>
-    <% components.TagEditor(util.Plural(util.KeyChoice), choices, buffer) %>
+    <% npntemplate.TagEditor(npncore.Plural(npncore.KeyChoice), choices, buffer) %>
   </div>
   <% if showName { %>
   <% ComponentSessionMemberName(ctx.Profile.Name, ctx, buffer) %>

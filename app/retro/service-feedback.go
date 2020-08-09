@@ -2,20 +2,21 @@ package retro
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/database/query"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-var defaultFeedbackOrdering = query.Orderings{{Column: util.KeyCategory, Asc: true}, {Column: util.KeyIdx, Asc: true}, {Column: util.KeyCreated, Asc: false}}
+var defaultFeedbackOrdering = npncore.Orderings{{Column: npncore.KeyCategory, Asc: true}, {Column: npncore.KeyIdx, Asc: true}, {Column: npncore.KeyCreated, Asc: false}}
 
-func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) Feedbacks {
-	params = query.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)
+func (s *Service) GetFeedback(retroID uuid.UUID, params *npncore.Params) Feedbacks {
+	params = npncore.ParamsWithDefaultOrdering(util.KeyFeedback, params, defaultFeedbackOrdering...)
 	var dtos []feedbackDTO
-	q := query.SQLSelect("*", util.KeyFeedback, "retro_id = $1", params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("*", util.KeyFeedback, "retro_id = $1", params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, retroID)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving feedback for retro [%v]: %+v", retroID, err))
@@ -26,7 +27,7 @@ func (s *Service) GetFeedback(retroID uuid.UUID, params *query.Params) Feedbacks
 
 func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 	dto := &feedbackDTO{}
-	q := query.SQLSelectSimple("*", util.KeyFeedback, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple("*", util.KeyFeedback, npncore.KeyID+" = $1")
 	err := s.db.Get(dto, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
@@ -36,7 +37,7 @@ func (s *Service) GetFeedbackByID(feedbackID uuid.UUID) (*Feedback, error) {
 
 func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 	ret := uuid.UUID{}
-	q := query.SQLSelectSimple(util.WithDBID(s.svc.Key), util.KeyFeedback, util.KeyID+" = $1")
+	q := npndatabase.SQLSelectSimple(npncore.WithDBID(s.svc.Key), util.KeyFeedback, npncore.KeyID+" = $1")
 	err := s.db.Get(&ret, q, nil, feedbackID)
 	if err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func (s *Service) GetFeedbackRetroID(feedbackID uuid.UUID) (*uuid.UUID, error) {
 }
 
 func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string, userID uuid.UUID) (*Feedback, error) {
-	id := util.UUID()
+	id := npncore.UUID()
 	html := util.ToHTML(content)
 
 	q := `insert into feedback (id, retro_id, idx, user_id, category, content, html) values (
@@ -65,7 +66,7 @@ func (s *Service) NewFeedback(retroID uuid.UUID, category string, content string
 func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content string, userID uuid.UUID) (*Feedback, error) {
 	html := util.ToHTML(content)
 
-	q := query.SQLUpdate(util.KeyFeedback, []string{util.KeyCategory, util.KeyContent, util.KeyHTML}, util.KeyID+" = $4")
+	q := npndatabase.SQLUpdate(util.KeyFeedback, []string{npncore.KeyCategory, npncore.KeyContent, npncore.KeyHTML}, npncore.KeyID+" = $4")
 	err := s.db.UpdateOne(q, nil, category, content, html, feedbackID)
 	if err != nil {
 		return nil, err
@@ -94,7 +95,7 @@ func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
 	}
 
-	q := query.SQLDelete(util.KeyFeedback, util.KeyID+" = $1")
+	q := npndatabase.SQLDelete(util.KeyFeedback, npncore.KeyID+" = $1")
 	err = s.db.DeleteOne(q, nil, feedbackID)
 
 	actionContent := map[string]interface{}{"feedbackID": feedbackID}

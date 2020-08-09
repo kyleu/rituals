@@ -3,10 +3,10 @@ package member
 import (
 	"database/sql"
 	"fmt"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
-	"github.com/kyleu/rituals.dev/app/user"
-
-	"github.com/kyleu/rituals.dev/app/database"
+	"github.com/kyleu/npn/npnservice/user"
 
 	"emperror.dev/errors"
 
@@ -16,20 +16,19 @@ import (
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/action"
-	"github.com/kyleu/rituals.dev/app/database/query"
 )
 
 type Service struct {
 	actions   *action.Service
 	users     *user.Service
-	db        *database.Service
+	db        *npndatabase.Service
 	logger    logur.Logger
 	svc       util.Service
 	tableName string
 	colName   string
 }
 
-func NewService(actions *action.Service, users *user.Service, db *database.Service, logger logur.Logger, svc util.Service) *Service {
+func NewService(actions *action.Service, users *user.Service, db *npndatabase.Service, logger logur.Logger, svc util.Service) *Service {
 	return &Service{
 		actions:   actions,
 		users:     users,
@@ -37,21 +36,21 @@ func NewService(actions *action.Service, users *user.Service, db *database.Servi
 		logger:    logger,
 		svc:       svc,
 		tableName: svc.Key + "_member",
-		colName:   util.WithDBID(svc.Key),
+		colName:   npncore.WithDBID(svc.Key),
 	}
 }
 
 const nameClause = "(case when name = '' then (select name from system_user su where su.id = user_id) else name end) as name"
 const pictureClause = "(case when picture = '' then (select picture from system_user su where su.id = user_id) else picture end) as picture"
 
-func (s *Service) GetByModelID(id uuid.UUID, params *query.Params) Entries {
-	var defaultOrdering = query.Orderings{{Column: util.KeyName, Asc: true}}
-	params = query.ParamsWithDefaultOrdering(util.KeyMember, params, defaultOrdering...)
+func (s *Service) GetByModelID(id uuid.UUID, params *npncore.Params) Entries {
+	var defaultOrdering = npncore.Orderings{{Column: npncore.KeyName, Asc: true}}
+	params = npncore.ParamsWithDefaultOrdering(npncore.KeyMember, params, defaultOrdering...)
 	var dtos []entryDTO
 
 	where := fmt.Sprintf("%s = $1", s.colName)
 	cols := fmt.Sprintf("user_id, %s, %s, role, created", nameClause, pictureClause)
-	q := query.SQLSelect(cols, s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect(cols, s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving member entries for model [%v]: %+v", id, err))
@@ -69,7 +68,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 	dto := entryDTO{}
 	cols := fmt.Sprintf("user_id, %s, %s, role, created", nameClause, pictureClause)
 	where := fmt.Sprintf("%s = $1 and user_id = $2", s.colName)
-	q := query.SQLSelectSimple(cols, s.tableName, where)
+	q := npndatabase.SQLSelectSimple(cols, s.tableName, where)
 	err := s.db.Get(&dto, q, nil, modelID, userID)
 
 	if err == sql.ErrNoRows {
@@ -85,7 +84,7 @@ func (s *Service) Get(modelID uuid.UUID, userID uuid.UUID) (*Entry, error) {
 
 func (s *Service) Update(modelID uuid.UUID, userID uuid.UUID, name string, picture string) (*Entry, error) {
 	cols := []string{"name", "picture"}
-	q := query.SQLUpdate(s.tableName, cols, fmt.Sprintf("%v = $%v and user_id = $%v", s.colName, len(cols)+1, len(cols)+1+1))
+	q := npndatabase.SQLUpdate(s.tableName, cols, fmt.Sprintf("%v = $%v and user_id = $%v", s.colName, len(cols)+1, len(cols)+1+1))
 	err := s.db.Insert(q, nil, name, picture, modelID, userID)
 	if err != nil {
 		return nil, err
@@ -94,13 +93,13 @@ func (s *Service) Update(modelID uuid.UUID, userID uuid.UUID, name string, pictu
 }
 
 func (s *Service) RemoveMember(modelID uuid.UUID, src uuid.UUID, target uuid.UUID) error {
-	q := query.SQLDelete(s.tableName, fmt.Sprintf("%v = $1 and user_id = $2", s.colName))
+	q := npndatabase.SQLDelete(s.tableName, fmt.Sprintf("%v = $1 and user_id = $2", s.colName))
 	err := s.db.DeleteOne(q, nil, modelID, target)
 	return errors.Wrap(err, "unable to remove member ["+target.String()+"] as ["+src.String()+"]")
 }
 
 func (s *Service) UpdateMember(modelID uuid.UUID, src uuid.UUID, target uuid.UUID, role string) (*Entry, error) {
-	q := query.SQLUpdate(s.tableName, []string{"role"}, fmt.Sprintf("%v = $2 and user_id = $3", s.colName))
+	q := npndatabase.SQLUpdate(s.tableName, []string{"role"}, fmt.Sprintf("%v = $2 and user_id = $3", s.colName))
 	err := s.db.DeleteOne(q, nil, role, modelID, target)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to update member ["+target.String()+"] as ["+src.String()+"]")

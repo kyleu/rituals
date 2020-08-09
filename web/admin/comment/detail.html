@@ -1,6 +1,6 @@
-<%: func CommentDetail(model *comment.Comment, params query.ParamSet, ctx *web.RequestContext, w io.Writer) (int, error) %>
+<%: func CommentDetail(model *comment.Comment, params npncore.ParamSet, ctx *npnweb.RequestContext, w io.Writer) (int, error) %>
 <%~ "layout/admin.html" %>
-<%@ nav { %><% components.Navbar(ctx, _buffer) %><% } %>
+<%@ nav { %><% npntemplate.Navbar(ctx, _buffer) %><% } %>
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
@@ -9,28 +9,28 @@
       <table class="uk-table uk-table-divider uk-text-left">
         <tbody>
           <tr>
-            <th><%= util.Title(util.KeyID) %></th>
+            <th><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyModel) %></th>
+            <th><%= npncore.Title(npncore.KeyModel) %></th>
             <td><% Channel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyUser) %></th>
-            <td><a class="theme" href="<%= ctx.Route(util.AdminLink(util.KeyUser, util.KeyDetail), `id`, model.UserID.String()) %>"><% components.UUID(&model.UserID, _buffer) %></a></td>
+            <th><%= npncore.Title(npncore.KeyUser) %></th>
+            <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, _buffer) %></a></td>
           </tr>
           <tr>
             <th>Target</th>
             <td><%= model.TargetType %>:<%=v model.TargetID %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyHTML) %></th>
+            <th><%= npncore.Title(npncore.KeyHTML) %></th>
             <td><%== model.HTML %></td>
           </tr>
           <tr>
-            <th><%= util.Title(util.KeyCreated) %></th>
-            <td><% components.DateTime(&model.Created, _buffer) %></td>
+            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>
       </table>

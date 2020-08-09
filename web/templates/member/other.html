@@ -1,11 +1,11 @@
-<%: func MemberOther(ctx *web.RequestContext, path string, buffer *bytes.Buffer) %>
+<%: func MemberOther(ctx *npnweb.RequestContext, path string, buffer *bytes.Buffer) %>
 <div class="uk-card uk-card-body uk-transition-toggle">
   <h3 class="uk-card-title">
     <span class="right">
-      <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="modal.open('<%= util.KeyInvitation %>');return false;" title="invite members"></a>
+      <a class="theme uk-icon-button uk-transition-fade" data-uk-icon="plus" onclick="modal.open('<%= npncore.KeyInvitation %>');return false;" title="invite members"></a>
     </span>
-    <span class="model-icon h3-icon" onclick="modal.open('<%= util.KeyInvitation %>');" data-uk-icon="icon: users;"></span>
-    <span class="modal-title" onclick="modal.open('<%= util.KeyInvitation %>');">Members</span>
+    <span class="model-icon h3-icon" onclick="modal.open('<%= npncore.KeyInvitation %>');" data-uk-icon="icon: users;"></span>
+    <span class="modal-title" onclick="modal.open('<%= npncore.KeyInvitation %>');">Members</span>
   </h3>
   <p id="member-detail">Loading...</p>
 </div>
@@ -51,7 +51,7 @@
         <button class="uk-button uk-button-default" type="button" onclick="member.saveRole();">Save Changes</button>
       </div>
       <div class="member-actions">
-        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= util.KeyMember %>');">Close</button>
+        <button class="uk-button uk-button-default" type="button" onclick="modal.hide('<%= npncore.KeyMember %>');">Close</button>
       </div>
     </div>
   </div>

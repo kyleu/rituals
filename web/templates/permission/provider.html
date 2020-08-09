@@ -1,8 +1,8 @@
-<%: func PermissionProviderError(svc util.Service, provider *auth.Provider, errors permission.Errors, auths auth.Records, ctx *web.RequestContext, buffer *bytes.Buffer) %>
+<%: func PermissionProviderError(svc util.Service, provider *auth.Provider, errors permission.Errors, auths auth.Records, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 <% if len(errors) > 0 { %>
   <li>
     <p>
-      To access this <%= svc.Key %>, you must sign in to <a class="theme profile-link" href="<%= ctx.Route(`auth.submit`, util.KeyKey, provider.Key) %>"><%= provider.Title %></a>
+      To access this <%= svc.Key %>, you must sign in to <a class="theme profile-link" href="<%= ctx.Route(`auth.submit`, npncore.KeyKey, provider.Key) %>"><%= provider.Title %></a>
       <% var ms = errors.GetMatches() %>
       <% if len(ms) > 0 { %>
         using an email address from
@@ -14,7 +14,7 @@
         <% } %>
       <% } %>
       <% if len(auths) > 0 { %>
-        (you are currently signed in as <%= util.OxfordComma(auths.Emails(), "and") %>)
+        (you are currently signed in as <%= npncore.OxfordComma(auths.Emails(), "and") %>)
       <% } %>
     </p>
   </li>
