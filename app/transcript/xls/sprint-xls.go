@@ -22,7 +22,7 @@ func renderSprint(rsp transcript.SprintResponse, f *excelize.File) (string, stri
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	renderPermissionList(rsp.Permissions, 8, f)
+	renderPermissionList(rsp.Permissions, f)
 	renderEstimateList(rsp.Estimates, rsp.Members, f)
 	renderStandupList(rsp.Standups, rsp.Members, f)
 	renderRetroList(rsp.Retros, rsp.Members, f)

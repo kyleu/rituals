@@ -2,8 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/npn/npncore"
 	"sync"
+
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/kyleu/rituals.dev/app/comment"
 
@@ -14,9 +15,9 @@ import (
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/sprint"
 
+	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/retro"
 	"github.com/kyleu/rituals.dev/app/standup"
-	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"

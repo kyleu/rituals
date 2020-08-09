@@ -2,9 +2,10 @@ package standup
 
 import (
 	"encoding/json"
-	"github.com/kyleu/npn/npncore"
 	"strings"
 	"time"
+
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/gofrs/uuid"
 )

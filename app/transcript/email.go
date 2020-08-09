@@ -2,10 +2,11 @@ package transcript
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"time"
 
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnservice/user"

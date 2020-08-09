@@ -2,10 +2,11 @@ package retro
 
 import (
 	"encoding/json"
-	"github.com/kyleu/npn/npncore"
-	"github.com/kyleu/npn/npndatabase"
 	"strings"
 	"time"
+
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
 	"github.com/gofrs/uuid"
 )

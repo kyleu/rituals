@@ -3,6 +3,7 @@ package email
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
 

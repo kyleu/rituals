@@ -1,8 +1,9 @@
 package permission
 
 import (
-	"github.com/kyleu/npn/npncore"
 	"strings"
+
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/rituals.dev/app/util"

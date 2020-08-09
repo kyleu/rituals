@@ -2,6 +2,7 @@ package pdf
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"

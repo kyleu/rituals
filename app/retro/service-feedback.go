@@ -2,6 +2,7 @@ package retro
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
 

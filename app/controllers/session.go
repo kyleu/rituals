@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"github.com/kyleu/npn/npncore"
 	"net/url"
 	"strings"
 
+	"github.com/kyleu/npn/npncore"
+
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/npn/npnservice/auth"
+	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/permission"
-	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/util"
 )
 

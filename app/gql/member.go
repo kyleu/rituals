@@ -19,7 +19,7 @@ func initMember() {
 		Values: graphql.EnumValueConfigMap{
 			npncore.KeyOwner:  &graphql.EnumValueConfig{Value: npncore.KeyOwner},
 			npncore.KeyMember: &graphql.EnumValueConfig{Value: npncore.KeyMember},
-			"observer":     &graphql.EnumValueConfig{Value: "observer"},
+			"observer":        &graphql.EnumValueConfig{Value: "observer"},
 		},
 	})
 

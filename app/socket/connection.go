@@ -1,9 +1,10 @@
 package socket
 
 import (
+	"sync"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnuser"
-	"sync"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"

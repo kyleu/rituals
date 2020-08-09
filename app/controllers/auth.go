@@ -1,12 +1,13 @@
 package controllers
 
 import (
-	"github.com/kyleu/npn/npncontroller"
-	"github.com/kyleu/npn/npncore"
-	"github.com/kyleu/npn/npnweb"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/kyleu/npn/npncontroller"
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npnweb"
 
 	"github.com/kyleu/npn/npnservice/auth"
 

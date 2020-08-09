@@ -1,18 +1,18 @@
 package admin
 
 import (
+	"net/http"
+
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"net/http"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/email"
 	"github.com/kyleu/rituals.dev/gen/admintemplates"
 
 	"github.com/gorilla/mux"
-
 )
 
 func EmailList(w http.ResponseWriter, r *http.Request) {

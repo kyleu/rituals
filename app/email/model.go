@@ -1,8 +1,9 @@
 package email
 
 import (
-	"github.com/kyleu/npn/npndatabase"
 	"time"
+
+	"github.com/kyleu/npn/npndatabase"
 
 	"github.com/gofrs/uuid"
 )

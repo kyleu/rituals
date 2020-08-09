@@ -19,7 +19,7 @@ func renderTeam(rsp transcript.TeamResponse, f *excelize.File) (string, string, 
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	renderPermissionList(rsp.Permissions, 8, f)
+	renderPermissionList(rsp.Permissions, f)
 	renderSprintList(rsp.Sprints, rsp.Members, f)
 	renderEstimateList(rsp.Estimates, rsp.Members, f)
 	renderStandupList(rsp.Standups, rsp.Members, f)

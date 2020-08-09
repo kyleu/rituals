@@ -2,8 +2,9 @@ package pdf
 
 import (
 	"fmt"
-	"github.com/kyleu/npn/npncore"
 	"strings"
+
+	"github.com/kyleu/npn/npncore"
 
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/kyleu/rituals.dev/app/comment"

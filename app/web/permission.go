@@ -1,12 +1,13 @@
 package web
 
 import (
+	"net/http"
+
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"net/http"
 
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/npn/npnservice/auth"

@@ -3,9 +3,10 @@ package action
 import (
 	"database/sql"
 	"fmt"
+	"strings"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
-	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"

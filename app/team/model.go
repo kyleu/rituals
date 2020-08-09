@@ -1,9 +1,10 @@
 package team
 
 import (
-	"github.com/kyleu/npn/npncore"
 	"strings"
 	"time"
+
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/gofrs/uuid"
 )

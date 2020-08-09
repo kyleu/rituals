@@ -2,12 +2,15 @@ package admin
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
+
+	"github.com/kyleu/rituals.dev/gen/admintemplates"
+
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"net/http"
-	"strconv"
 
 	"emperror.dev/errors"
 
@@ -19,12 +22,9 @@ func MigrationList(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "Migration List"
 		ctx.Breadcrumbs = adminBC(ctx, npncore.KeyMigration, npncore.Plural(npncore.KeyMigration))
 
-		// params := npnweb.ParamSetFromRequest(r)
-		// migrations := app.Database(ctx.App).ListMigrations(params.Get(npncore.KeyMigration, ctx.Logger))
-		// return npncontroller.T(admintemplates.MigrationList(migrations, params, ctx, w))
-
-		// TODO
-		return "TODO", nil
+		params := npnweb.ParamSetFromRequest(r)
+		migrations := app.Database(ctx.App).ListMigrations(params.Get(npncore.KeyMigration, ctx.Logger))
+		return npncontroller.T(admintemplates.MigrationList(migrations, params, ctx, w))
 	})
 }
 
@@ -41,7 +41,7 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(npncore.KeyMigration), w, r, ctx)
 		}
 
-		// params := npnweb.ParamSetFromRequest(r)
+		params := npnweb.ParamSetFromRequest(r)
 
 		title := fmt.Sprintf("Migration %v: %v", e.Idx, e.Title)
 		ctx.Title = title
@@ -50,9 +50,6 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 		bc = append(bc, npnweb.BreadcrumbSelf(idxStr))
 		ctx.Breadcrumbs = bc
 
-		// return npncontroller.T(admintemplates.MigrationDetail(e, params, ctx, w))
-
-		// TODO
-		return "TODO", nil
+		return npncontroller.T(admintemplates.MigrationDetail(e, params, ctx, w))
 	})
 }

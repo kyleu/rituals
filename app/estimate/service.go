@@ -3,14 +3,15 @@ package estimate
 import (
 	"database/sql"
 	"fmt"
-	"github.com/kyleu/npn/npncore"
-	"github.com/kyleu/npn/npndatabase"
 	"time"
 
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
+
+	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/history"
 	"github.com/kyleu/rituals.dev/app/session"
-	"github.com/kyleu/npn/npnservice/user"
 
 	"github.com/kyleu/rituals.dev/app/permission"
 

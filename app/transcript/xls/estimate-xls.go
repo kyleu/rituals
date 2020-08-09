@@ -1,8 +1,9 @@
 package xls
 
 import (
-	"github.com/kyleu/npn/npncore"
 	"strings"
+
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/rituals.dev/app/estimate"
@@ -27,7 +28,7 @@ func renderEstimate(rsp transcript.EstimateResponse, f *excelize.File) (string, 
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	renderPermissionList(rsp.Permissions, 8, f)
+	renderPermissionList(rsp.Permissions, f)
 	renderStoryList(rsp.Stories, rsp.Members, f)
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)

@@ -36,9 +36,8 @@ type Service struct {
 	logger   logur.Logger
 }
 
-
 func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir string, version string, commitHash string, logger logur.Logger) *Service {
-	files := npncore.NewFileLoader("./." + npncore.AppName, logger)
+	files := npncore.NewFileLoader("./."+npncore.AppName, logger)
 	actionService := action.NewService(db, logger)
 	commentService := comment.NewService(actionService, db, logger)
 	userSvc := user.NewService(files, db, logger)

@@ -1,8 +1,9 @@
 package pdf
 
 import (
-	"github.com/kyleu/npn/npncore"
 	"sort"
+
+	"github.com/kyleu/npn/npncore"
 
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/kyleu/rituals.dev/app/member"

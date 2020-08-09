@@ -1,13 +1,14 @@
 package controllers
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npntemplate/gen/npntemplate"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/npn/npnweb"
-	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/kyleu/npn/npnservice/auth"

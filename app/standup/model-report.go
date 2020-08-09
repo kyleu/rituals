@@ -1,8 +1,9 @@
 package standup
 
 import (
-	"github.com/kyleu/npn/npncore"
 	"time"
+
+	"github.com/kyleu/npn/npncore"
 
 	"github.com/gofrs/uuid"
 )

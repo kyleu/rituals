@@ -2,12 +2,13 @@ package cli
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"net/http"
-	"os"
 
 	"github.com/kyleu/rituals.dev/app/routing"
 

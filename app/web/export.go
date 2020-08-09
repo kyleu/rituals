@@ -1,12 +1,13 @@
 package web
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npntemplate/gen/npntemplate"
 	"github.com/kyleu/npn/npnweb"
-	"net/http"
-	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"

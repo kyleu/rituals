@@ -25,7 +25,7 @@ func renderStandup(rsp transcript.StandupResponse, f *excelize.File) (string, st
 	setData(defSheet, 1, data, f)
 	setColumnWidths(defSheet, []int{16, 32}, f)
 
-	renderPermissionList(rsp.Permissions, 8, f)
+	renderPermissionList(rsp.Permissions, f)
 	renderReportList(rsp.Reports, rsp.Members, f)
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)

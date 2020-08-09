@@ -3,8 +3,9 @@ package email
 import (
 	"bytes"
 	"fmt"
-	"github.com/kyleu/npn/npncore"
 	"time"
+
+	"github.com/kyleu/npn/npncore"
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/transcript"

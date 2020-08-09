@@ -5,12 +5,12 @@ import (
 	"github.com/kyleu/rituals.dev/app/permission"
 )
 
-func renderPermissionList(permissions permission.Permissions, firstRow int, f *excelize.File) {
+func renderPermissionList(permissions permission.Permissions, f *excelize.File) {
 	if len(permissions) > 0 {
 		var data [][]interface{}
 		for _, p := range permissions {
 			data = append(data, []interface{}{"", p.Message()})
 		}
-		setData(defSheet, firstRow, data, f)
+		setData(defSheet, 8, data, f)
 	}
 }

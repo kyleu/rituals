@@ -2,9 +2,10 @@ package standup
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
-	"time"
 
 	"github.com/kyleu/rituals.dev/app/action"
 

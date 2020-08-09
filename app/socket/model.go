@@ -3,9 +3,10 @@ package socket
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnuser"
-	"sync"
 
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/websocket"

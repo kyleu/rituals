@@ -1,10 +1,11 @@
 package history
 
 import (
-	"github.com/kyleu/npn/npncore"
-	"github.com/kyleu/npn/npndatabase"
 	"regexp"
 	"strings"
+
+	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
 
 	"github.com/gofrs/uuid"
 

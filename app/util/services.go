@@ -2,8 +2,9 @@ package util
 
 import (
 	"encoding/json"
-	"github.com/kyleu/npn/npncore"
 	"strings"
+
+	"github.com/kyleu/npn/npncore"
 )
 
 type Service struct {

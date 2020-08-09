@@ -3,6 +3,7 @@ package permission
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
 
@@ -43,7 +44,7 @@ func (s *Service) GetByModelID(id uuid.UUID, params *npncore.Params) Permissions
 	params = npncore.ParamsWithDefaultOrdering(npncore.KeyPermission, params, defaultOrdering...)
 	var dtos []permissionDTO
 	where := fmt.Sprintf("%s = $1", s.colName)
-	q := npndatabase.SQLSelect(fmt.Sprintf("k, v, access, created"), s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
+	q := npndatabase.SQLSelect("k, v, access, created", s.tableName, where, params.OrderByString(), params.Limit, params.Offset)
 	err := s.db.Select(&dtos, q, nil, id)
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("error retrieving permission entries for model [%v]: %+v", id, err))
