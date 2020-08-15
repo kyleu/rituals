@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/rituals.dev/app/comment"
@@ -28,8 +29,8 @@ type EstimateSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onEstimateConnect(s *Service, conn *connection, estimateID uuid.UUID) error {
-	ch := Channel{Svc: util.SvcEstimate, ID: estimateID}
+func onEstimateConnect(s *npnconnection.Service, conn *npnconnection.Connection, estimateID uuid.UUID) error {
+	ch := npnconnection.Channel{Svc: util.SvcEstimate.Key, ID: estimateID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -38,10 +39,10 @@ func onEstimateConnect(s *Service, conn *connection, estimateID uuid.UUID) error
 	return errors.Wrap(err, "error joining estimate session")
 }
 
-func joinEstimateSession(s *Service, conn *connection, ch Channel) error {
-	dataSvc := s.estimates
-	if ch.Svc != util.SvcEstimate {
-		return errors.New("estimate cannot handle [" + ch.Svc.Key + "] message")
+func joinEstimateSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
+	dataSvc := estimates(s)
+	if ch.Svc != util.SvcEstimate.Key {
+		return errors.New("estimate cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess := dataSvc.GetByID(ch.ID)
@@ -67,6 +68,6 @@ func joinEstimateSession(s *Service, conn *connection, ch Channel) error {
 		Permissions: res.Perms,
 	}
 
-	msg := NewMessage(util.SvcEstimate, ServerCmdSessionJoined, sj)
-	return s.sendInitial(ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
+	msg := npnconnection.NewMessage(util.SvcEstimate.Key, ServerCmdSessionJoined, sj)
+	return sendInitial(s, ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
 }

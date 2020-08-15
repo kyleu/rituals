@@ -55,16 +55,16 @@ func (s *Service) New(title string, userID uuid.UUID, memberName string, startDa
 
 	model := NewSession(title, slug, userID, teamID, startDate, endDate)
 
-	q := npndatabase.SQLInsert(s.svc.Key, []string{npncore.KeyID, npncore.KeySlug, npncore.KeyTitle, npncore.WithDBID(util.SvcTeam.Key), npncore.KeyOwner, "start_date", "end_date"}, 1)
-	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.TeamID, model.Owner, model.StartDate, model.EndDate)
+	q := npndatabase.SQLInsert(s.svc.Key, []string{npncore.KeyID, npncore.KeySlug, npncore.KeyTitle, npncore.KeyStatus, npncore.WithDBID(util.SvcTeam.Key), npncore.KeyOwner, "start_date", "end_date"}, 1)
+	err = s.db.Insert(q, nil, model.ID, slug, model.Title, model.Status.String(), model.TeamID, model.Owner, model.StartDate, model.EndDate)
 	if err != nil {
 		return nil, errors.Wrap(err, "error saving new sprint session")
 	}
 
 	s.Data.Members.Register(model.ID, userID, memberName, member.RoleOwner)
 
-	s.Data.Actions.Post(s.svc, model.ID, userID, action.ActCreate, nil)
-	s.Data.Actions.PostRef(util.SvcTeam, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd)
+	s.Data.Actions.Post(s.svc.Key, model.ID, userID, action.ActCreate, nil)
+	s.Data.Actions.PostRef(util.SvcTeam.Key, model.TeamID, s.svc, model.ID, userID, action.ActContentAdd)
 
 	return &model, nil
 }
@@ -162,7 +162,7 @@ func (s *Service) UpdateSession(sessionID uuid.UUID, title string, teamID *uuid.
 	cols := []string{npncore.KeyTitle, "start_date", "end_date", npncore.WithDBID(util.SvcTeam.Key)}
 	q := npndatabase.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", npncore.KeyID, len(cols)+1))
 	err := s.db.UpdateOne(q, nil, title, startDate, endDate, teamID, sessionID)
-	s.Data.Actions.Post(s.svc, sessionID, userID, action.ActUpdate, nil)
+	s.Data.Actions.Post(s.svc.Key, sessionID, userID, action.ActUpdate, nil)
 	return errors.Wrap(err, "error updating sprint session")
 }
 

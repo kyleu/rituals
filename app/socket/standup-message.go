@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -28,8 +29,8 @@ type editReportParams struct {
 	Content string    `json:"content"`
 }
 
-func onStandupMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
-	dataSvc := s.standups
+func onStandupMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+	dataSvc := standups(s)
 	var err error
 	userID := conn.Profile.UserID
 

@@ -15,7 +15,7 @@ namespace modal {
 
     // member
     events.register("self", member.viewSelf);
-    events.register("invitation");
+    events.register("invitation", member.loadQR);
     events.register("member", member.viewActiveMember);
 
     // estimate

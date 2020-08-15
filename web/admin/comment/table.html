@@ -13,7 +13,7 @@
   <% for _, model := range comments { %>
     <tr>
       <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyComment, npncore.KeyDetail), `id`, model.ID.String()) %>"><% npntemplate.UUID(&model.ID, buffer) %></a></td>
-      <td class="uk-table-shrink uk-text-nowrap"><% Channel(model.Svc, &model.ModelID, ctx, buffer) %></td>
+      <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.Channel(model.Svc.Key, &model.ModelID, ctx, buffer) %></td>
       <td class="uk-table-shrink uk-text-nowrap"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, buffer) %></a></td>
       <td class="uk-table-shrink uk-text-nowrap"><%== model.HTML %></td>
       <td class="uk-table-shrink uk-text-nowrap"><% npntemplate.DateTime(&model.Created, buffer) %></td>

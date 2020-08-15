@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
 	"github.com/kyleu/rituals.dev/app/sprint"
@@ -10,11 +11,11 @@ import (
 )
 
 var (
-	sprintResolver           Callback
-	sprintsResolver          Callback
-	sprintActionResolver     Callback
-	sprintPermissionResolver Callback
-	sprintTeamResolver       Callback
+	sprintResolver           npngraphql.Callback
+	sprintsResolver          npngraphql.Callback
+	sprintActionResolver     npngraphql.Callback
+	sprintPermissionResolver npngraphql.Callback
+	sprintTeamResolver       npngraphql.Callback
 	sprintType               *graphql.Object
 )
 
@@ -26,7 +27,7 @@ func initSprint() {
 	}
 
 	sprintsResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Sprint(ctx.App).List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
+		return app.Sprint(ctx.App).List(npngraphql.ParamSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	sprintTeamResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
@@ -38,36 +39,36 @@ func initSprint() {
 	}
 
 	sprintActionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Action(ctx.App).GetBySvcModel(svc, p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
+		return app.Action(ctx.App).GetBySvcModel(svc.Key, p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
 	}
 
 	sprintMemberResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Sprint(ctx.App).Data.Members.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
+		return app.Sprint(ctx.App).Data.Members.GetByModelID(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
 	}
 
 	sprintPermissionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Sprint(ctx.App).Data.Permissions.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
+		return app.Sprint(ctx.App).Data.Permissions.GetByModelID(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
 	}
 
 	sprintCommentResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Sprint(ctx.App).Data.GetComments(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
+		return app.Sprint(ctx.App).Data.GetComments(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
 	}
 
 	sprintHistoryResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		ret := app.Sprint(ctx.App).Data.History.GetByModelID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
+		ret := app.Sprint(ctx.App).Data.History.GetByModelID(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
 	sprintEstimateResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
+		return app.Estimate(ctx.App).GetBySprintID(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
 	sprintStandupResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
+		return app.Standup(ctx.App).GetBySprintID(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
 	sprintRetroResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).GetBySprintID(p.Source.(*sprint.Session).ID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
+		return app.Retro(ctx.App).GetBySprintID(p.Source.(*sprint.Session).ID, npngraphql.ParamSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 
 	sprintType = graphql.NewObject(
@@ -75,7 +76,7 @@ func initSprint() {
 			Name: svc.Title,
 			Fields: graphql.Fields{
 				npncore.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(scalarUUID),
+					Type: graphql.NewNonNull(npngraphql.ScalarUUID),
 				},
 				npncore.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
@@ -101,38 +102,38 @@ func initSprint() {
 				npncore.Plural(npncore.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This sprint's members",
-					Args:        listArgs,
-					Resolve:     ctxF(sprintMemberResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(sprintMemberResolver),
 				},
 				util.SvcEstimate.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(estimateType)),
 					Description: "This sprint's estimates",
-					Args:        listArgs,
-					Resolve:     ctxF(sprintEstimateResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(sprintEstimateResolver),
 				},
 				util.SvcStandup.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(standupType)),
 					Description: "This sprint's standups",
-					Args:        listArgs,
-					Resolve:     ctxF(sprintStandupResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(sprintStandupResolver),
 				},
 				util.SvcRetro.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(retroType)),
 					Description: "This sprint's retros",
-					Args:        listArgs,
-					Resolve:     ctxF(sprintRetroResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(sprintRetroResolver),
 				},
 				npncore.Plural(npncore.KeyComment): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
 					Description: "This sprint's comments",
-					Args:        listArgs,
-					Resolve:     ctxF(sprintCommentResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(sprintCommentResolver),
 				},
 				npncore.KeyHistory: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
 					Description: "This sprint's name history",
-					Args:        listArgs,
-					Resolve:     ctxF(sprintHistoryResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(sprintHistoryResolver),
 				},
 			},
 		},
@@ -141,21 +142,21 @@ func initSprint() {
 	estimateType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        sprintType,
 		Description: "This estimate's sprint",
-		Args:        listArgs,
-		Resolve:     ctxF(estimateSprintResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(estimateSprintResolver),
 	})
 
 	standupType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        sprintType,
 		Description: "This standup's sprint",
-		Args:        listArgs,
-		Resolve:     ctxF(standupSprintResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(standupSprintResolver),
 	})
 
 	retroType.AddFieldConfig(svc.Key, &graphql.Field{
 		Type:        sprintType,
 		Description: "This retro's sprint",
-		Args:        listArgs,
-		Resolve:     ctxF(retroSprintResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(retroSprintResolver),
 	})
 }

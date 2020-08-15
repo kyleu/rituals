@@ -1,6 +1,5 @@
 namespace retro {
   interface Detail extends session.Session {
-    readonly status: { readonly key: string };
     readonly categories: string[];
   }
 
@@ -32,7 +31,7 @@ namespace retro {
         session.onSessionJoin(sj);
         setRetroDetail(sj.session);
         feedback.setFeedback(sj.feedback);
-        session.showWelcomeMessage(sj.members.length);
+        session.showWelcomeMessage(sj.session.status, sj.members.length);
         break;
       case command.server.sessionUpdate:
         setRetroDetail(param as Detail);

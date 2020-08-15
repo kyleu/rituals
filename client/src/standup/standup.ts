@@ -1,6 +1,5 @@
 namespace standup {
   interface Detail extends session.Session {
-    readonly status: { readonly key: string };
   }
 
   interface SessionJoined extends session.SessionJoined {
@@ -31,7 +30,7 @@ namespace standup {
         session.onSessionJoin(sj);
         setStandupDetail(sj.session);
         report.setReports(sj.reports);
-        session.showWelcomeMessage(sj.members.length);
+        session.showWelcomeMessage(sj.session.status, sj.members.length);
         break;
       case command.server.sessionUpdate:
         setStandupDetail(param as Detail);

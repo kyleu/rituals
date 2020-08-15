@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -12,7 +13,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
+func onSystemMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	userID := conn.Profile.UserID
 	if conn.Profile.UserID != userID {
 		return errors.New("received name change for wrong user [" + userID.String() + "]")
@@ -22,7 +23,7 @@ func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMes
 
 	switch cmd {
 	case ClientCmdPing:
-		err = s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdPong, param))
+		err = s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdPong, param))
 	case ClientCmdAddComment:
 		acp := addCommentParams{}
 		_ = npncore.FromJSON(param, &acp)
@@ -45,32 +46,38 @@ func onSystemMessage(s *Service, conn *connection, cmd string, param json.RawMes
 		err = sendTeams(s, conn, userID)
 	case ClientCmdGetSprints:
 		err = sendSprints(s, conn, userID)
+	case ClientCmdSetActive:
+		err = setActive(s, conn, session.StatusActive, userID)
 	default:
 		err = errors.New("unhandled system command [" + cmd + "]")
 	}
 	return errors.Wrap(err, "error handling system message")
 }
 
-func sendActions(s *Service, conn *connection) error {
+func sendActions(s *npnconnection.Service, conn *npnconnection.Connection) error {
 	if conn.ModelID == nil {
 		return errors.New("no active model for connection [" + conn.ID.String() + "]")
 	}
-	actions := s.actions.GetBySvcModel(conn.Svc, *conn.ModelID, nil)
-	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdActions, actions))
+	actions := actions(s).GetBySvcModel(conn.Svc, *conn.ModelID, nil)
+	return s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdActions, actions))
 }
 
-func dataFor(s *Service, svc util.Service) *session.DataServices {
+func setActive(s *npnconnection.Service, conn *npnconnection.Connection, status session.Status, userID uuid.UUID) error {
+	return dataFor(s, conn.Svc).Members.UpdateStatus(conn.Channel.ID, status.Key, userID)
+}
+
+func dataFor(s *npnconnection.Service, svc string) *session.DataServices {
 	switch svc {
-	case util.SvcTeam:
-		return s.teams.Data
-	case util.SvcSprint:
-		return s.sprints.Data
-	case util.SvcEstimate:
-		return s.estimates.Data
-	case util.SvcStandup:
-		return s.standups.Data
-	case util.SvcRetro:
-		return s.retros.Data
+	case util.SvcTeam.Key:
+		return teams(s).Data
+	case util.SvcSprint.Key:
+		return sprints(s).Data
+	case util.SvcEstimate.Key:
+		return estimates(s).Data
+	case util.SvcStandup.Key:
+		return standups(s).Data
+	case util.SvcRetro.Key:
+		return retros(s).Data
 	default:
 		return nil
 	}

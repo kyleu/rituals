@@ -112,6 +112,11 @@ namespace member {
     members = m;
   }
 
+  export function loadQR() {
+    const code = dom.req<HTMLImageElement>("#qrcode");
+    code.src = code.dataset["src"]!;
+  }
+
   function getActiveMember() {
     if (!activeMember) {
       console.warn("no active member");

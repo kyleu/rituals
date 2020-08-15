@@ -33,6 +33,7 @@ create table if not exists "team" (
   "id" uuid not null primary key,
   "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
+  "status" session_status not null,
   "owner" uuid references "system_user"("id"),
   "created" timestamp not null default now()
 );
@@ -72,6 +73,7 @@ create table if not exists "sprint" (
   "id" uuid not null primary key,
   "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
+  "status" session_status not null,
   "team_id" uuid references "team"("id"),
   "owner" uuid references "system_user"("id"),
   "start_date" date,
@@ -114,10 +116,10 @@ create table if not exists "estimate" (
   "id" uuid not null primary key,
   "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
+  "status" session_status not null,
   "team_id" uuid references "team"("id"),
   "sprint_id" uuid references "sprint"("id"),
   "owner" uuid references "system_user"("id"),
-  "status" estimate_status not null,
   "choices" varchar(2048)[] not null,
   "created" timestamp not null default now()
 );
@@ -158,7 +160,7 @@ create table if not exists "story" (
   "idx" int not null default 0,
   "user_id" uuid not null references "system_user"("id"),
   "title" varchar(2048) not null,
-  "status" story_status not null default 'pending',
+  "status" session_status not null,
   "final_vote" varchar(2048) not null,
   "created" timestamp not null default now()
 );
@@ -177,10 +179,10 @@ create table if not exists "standup" (
   "id" uuid not null primary key,
   "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
+  "status" session_status not null,
   "team_id" uuid references "team"("id"),
   "sprint_id" uuid references "sprint"("id"),
   "owner" uuid references "system_user"("id"),
-  "status" standup_status not null,
   "created" timestamp not null default now()
 );
 
@@ -229,10 +231,10 @@ create table if not exists "retro" (
   "id" uuid not null primary key,
   "slug" varchar(1024) not null unique,
   "title" varchar(2048) not null,
+  "status" session_status not null,
   "team_id" uuid references "team"("id"),
   "sprint_id" uuid references "sprint"("id"),
   "owner" uuid references "system_user"("id"),
-  "status" retro_status not null,
   "categories" varchar(2048)[] not null,
   "created" timestamp not null default now()
 );

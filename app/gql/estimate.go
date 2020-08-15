@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
 	"github.com/kyleu/rituals.dev/app/estimate"
@@ -10,12 +11,12 @@ import (
 )
 
 var (
-	estimateResolver           Callback
-	estimatesResolver          Callback
-	estimateActionResolver     Callback
-	estimatePermissionResolver Callback
-	estimateTeamResolver       Callback
-	estimateSprintResolver     Callback
+	estimateResolver           npngraphql.Callback
+	estimatesResolver          npngraphql.Callback
+	estimateActionResolver     npngraphql.Callback
+	estimatePermissionResolver npngraphql.Callback
+	estimateTeamResolver       npngraphql.Callback
+	estimateSprintResolver     npngraphql.Callback
 	estimateType               *graphql.Object
 )
 
@@ -38,27 +39,27 @@ func initEstimate() {
 	}
 
 	estimatesResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
+		return app.Estimate(ctx.App).List(npngraphql.ParamSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	estimateActionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Action(ctx.App).GetBySvcModel(svc, p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
+		return app.Action(ctx.App).GetBySvcModel(svc.Key, p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
 	}
 
 	estimatePermissionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).Data.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
+		return app.Estimate(ctx.App).Data.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
 	}
 
 	estimateMemberResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).Data.Members.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
+		return app.Estimate(ctx.App).Data.Members.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
 	}
 
 	estimateCommentResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).Data.GetComments(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
+		return app.Estimate(ctx.App).Data.GetComments(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
 	}
 
 	estimateHistoryResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		ret := app.Estimate(ctx.App).Data.History.GetByModelID(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
+		ret := app.Estimate(ctx.App).Data.History.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
@@ -83,7 +84,7 @@ func initEstimate() {
 			Name: svc.Title,
 			Fields: graphql.Fields{
 				npncore.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(scalarUUID),
+					Type: graphql.NewNonNull(npngraphql.ScalarUUID),
 				},
 				npncore.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
@@ -115,26 +116,26 @@ func initEstimate() {
 				npncore.Plural(util.KeyStory): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(storyType)),
 					Description: "This estimate's stories",
-					Args:        listArgs,
-					Resolve:     ctxF(storiesResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(storiesResolver),
 				},
 				npncore.Plural(npncore.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This estimate's members",
-					Args:        listArgs,
-					Resolve:     ctxF(estimateMemberResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(estimateMemberResolver),
 				},
 				npncore.Plural(npncore.KeyComment): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
 					Description: "This estimate's comments",
-					Args:        listArgs,
-					Resolve:     ctxF(estimateCommentResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(estimateCommentResolver),
 				},
 				npncore.KeyHistory: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
 					Description: "This estimate's name history",
-					Args:        listArgs,
-					Resolve:     ctxF(estimateHistoryResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(estimateHistoryResolver),
 				},
 			},
 		},

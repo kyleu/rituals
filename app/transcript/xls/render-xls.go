@@ -15,20 +15,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/transcript"
 )
 
-var defSheet = "Sheet1"
-
-func Render(rsp interface{}, url string) (string, []byte, error) {
-	f := newDoc()
-	filename, title, err := renderResponse(rsp, f)
-	if err != nil {
-		return filename, nil, err
-	}
-	writeAboutSheet(url, title, f)
-	setFirstSheetTitle(filename, f)
-	return response(filename, f)
-}
-
-func renderResponse(rsp interface{}, f *excelize.File) (string, string, error) {
+func RenderResponse(rsp interface{}, f *excelize.File) (string, string, error) {
 	switch r := rsp.(type) {
 	case transcript.EmailResponse:
 		return renderEmail(r, f)
@@ -60,31 +47,4 @@ func renderResponse(rsp interface{}, f *excelize.File) (string, string, error) {
 	default:
 		return npncore.KeyError, npncore.Title(npncore.KeyError), errors.New(fmt.Sprintf("Invalid transcript type [%T]", rsp))
 	}
-}
-
-func newDoc() *excelize.File {
-	f := excelize.NewFile()
-	f.SetActiveSheet(1)
-	return f
-}
-
-func writeAboutSheet(url string, title string, f *excelize.File) {
-	key := npncore.AppName
-	f.NewSheet(key)
-	f.SetCellValue(key, "A1", npncore.AppName)
-	f.SetCellValue(key, "A2", url)
-	f.SetCellValue(key, "A3", title)
-	setColumnWidths(key, []int{64}, f)
-}
-
-func response(fn string, f *excelize.File) (string, []byte, error) {
-	buff, err := f.WriteToBuffer()
-	if err != nil {
-		return fn, nil, errors.Wrap(err, "error writing PDF output")
-	}
-
-	if len(fn) == 0 {
-		fn = npncore.KeyExport
-	}
-	return fn, buff.Bytes(), nil
 }

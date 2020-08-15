@@ -4,11 +4,6 @@ create type model_service as enum ('team', 'sprint', 'estimate', 'standup', 'ret
 create type auth_provider as enum ('team', 'sprint', 'github', 'google', 'slack', 'facebook', 'amazon', 'microsoft');
 create type member_status as enum ('owner', 'member', 'observer');
 
-create type estimate_status as enum ('new', 'active', 'complete', 'deleted');
-create type story_status as enum('pending', 'active', 'complete', 'deleted');
-
-create type standup_status as enum ('new', 'deleted');
-
-create type retro_status as enum ('new', 'deleted');
+create type session_status as enum ('new', 'active', 'complete', 'deleted');
 
 -- <%: func CreateTypes(w io.Writer) %>

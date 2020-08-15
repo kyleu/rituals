@@ -13,9 +13,9 @@ import (
 )
 
 func AuthList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = "Auth List"
-		ctx.Breadcrumbs = adminBC(ctx, npncore.KeyAuth, npncore.Plural(npncore.KeyAuth))
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyAuth, npncore.Plural(npncore.KeyAuth))
 		params := npnweb.ParamSetFromRequest(r)
 		users := ctx.App.Auth().List(params.Get(npncore.KeyAuth, ctx.Logger))
 		return npncontroller.T(admintemplates.AuthList(users, params, ctx, w))
@@ -23,7 +23,7 @@ func AuthList(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		authID, err := npnweb.IDFromParams(npncore.KeyAuth, mux.Vars(r))
 		if err != nil {
 			return npncontroller.EResp(err)
@@ -41,7 +41,7 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = user.Name
-		bc := adminBC(ctx, npncore.KeyAuth, npncore.Plural(npncore.KeyAuth))
+		bc := npncontroller.AdminBC(ctx, npncore.KeyAuth, npncore.Plural(npncore.KeyAuth))
 		bc = append(bc, npnweb.BreadcrumbSelf(authID.String()[0:8]))
 		ctx.Breadcrumbs = bc
 

@@ -3,6 +3,7 @@ namespace command {
     ping: "ping",
 
     connect: "connect",
+    setActive: "set-active",
 
     getActions: "get-actions",
     getTeams: "get-teams",

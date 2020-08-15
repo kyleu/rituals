@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -9,10 +10,10 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onAddFeedback(s *Service, ch Channel, userID uuid.UUID, param addFeedbackParams) error {
+func onAddFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param addFeedbackParams) error {
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("adding [%s] feedback for [%s]", param.Category, userID))
-	fb, err := s.retros.NewFeedback(ch.ID, param.Category, content, userID)
+	fb, err := retros(s).NewFeedback(ch.ID, param.Category, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new feedback")
 	}
@@ -20,10 +21,10 @@ func onAddFeedback(s *Service, ch Channel, userID uuid.UUID, param addFeedbackPa
 	return errors.Wrap(err, "error sending feedback")
 }
 
-func onEditFeedback(s *Service, ch Channel, userID uuid.UUID, param editFeedbackParams) error {
+func onEditFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param editFeedbackParams) error {
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("updating [%s] feedback for [%s]", param.Category, userID))
-	feedback, err := s.retros.UpdateFeedback(param.ID, param.Category, content, userID)
+	feedback, err := retros(s).UpdateFeedback(param.ID, param.Category, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update feedback")
 	}
@@ -31,17 +32,17 @@ func onEditFeedback(s *Service, ch Channel, userID uuid.UUID, param editFeedback
 	return err
 }
 
-func onRemoveFeedback(s *Service, ch Channel, userID uuid.UUID, feedbackID uuid.UUID) error {
+func onRemoveFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, feedbackID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", feedbackID))
-	err := s.retros.RemoveFeedback(feedbackID, userID)
+	err := retros(s).RemoveFeedback(feedbackID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove feedback")
 	}
-	err = s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdFeedbackRemove, feedbackID))
+	err = s.WriteChannel(ch, npnconnection.NewMessage(util.SvcRetro.Key, ServerCmdFeedbackRemove, feedbackID))
 	return errors.Wrap(err, "error sending feedback removal notification")
 }
 
-func sendFeedbackUpdate(s *Service, ch Channel, fb *retro.Feedback) error {
-	err := s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdFeedbackUpdate, fb))
+func sendFeedbackUpdate(s *npnconnection.Service, ch npnconnection.Channel, fb *retro.Feedback) error {
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcRetro.Key, ServerCmdFeedbackUpdate, fb))
 	return errors.Wrap(err, "error sending feedback update")
 }

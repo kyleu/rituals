@@ -16,10 +16,10 @@ import (
 )
 
 func StandupList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = util.SvcStandup.Title + " List"
 
-		ctx.Breadcrumbs = adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
 
 		params := npnweb.ParamSetFromRequest(r)
 		standups := app.Standup(ctx.App).List(params.Get(util.SvcStandup.Key, ctx.Logger))
@@ -28,7 +28,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 }
 
 func StandupDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		standupID, err := npnweb.IDFromParams(util.SvcStandup.Key, mux.Vars(r))
 		if err != nil {
 			return npncontroller.EResp(err)
@@ -46,7 +46,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		data := app.Standup(ctx.App).Data.GetData(*standupID, params, ctx.Logger)
 
 		ctx.Title = sess.Title
-		bc := adminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
+		bc := npncontroller.AdminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
 		bc = append(bc, npnweb.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 	"strings"
 	"time"
 
@@ -13,14 +14,14 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onAddReport(s *Service, ch Channel, userID uuid.UUID, param addReportParams) error {
+func onAddReport(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param addReportParams) error {
 	d, err := parseDate(param.D)
 	if err != nil {
 		return err
 	}
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", npncore.ToYMD(d), userID))
-	report, err := s.standups.NewReport(ch.ID, *d, content, userID)
+	report, err := standups(s).NewReport(ch.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new report")
 	}
@@ -28,14 +29,14 @@ func onAddReport(s *Service, ch Channel, userID uuid.UUID, param addReportParams
 	return errors.Wrap(err, "error sending report")
 }
 
-func onEditReport(s *Service, ch Channel, userID uuid.UUID, param editReportParams) error {
+func onEditReport(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param editReportParams) error {
 	d, err := parseDate(param.D)
 	if err != nil {
 		return err
 	}
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", npncore.ToYMD(d), userID))
-	report, err := s.standups.UpdateReport(param.ID, *d, content, userID)
+	report, err := standups(s).UpdateReport(param.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update report")
 	}
@@ -43,18 +44,18 @@ func onEditReport(s *Service, ch Channel, userID uuid.UUID, param editReportPara
 	return err
 }
 
-func onRemoveReport(s *Service, ch Channel, userID uuid.UUID, reportID uuid.UUID) error {
+func onRemoveReport(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, reportID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", reportID))
-	err := s.standups.RemoveReport(reportID, userID)
+	err := standups(s).RemoveReport(reportID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove report")
 	}
-	err = s.WriteChannel(ch, NewMessage(util.SvcStandup, ServerCmdReportRemove, reportID))
+	err = s.WriteChannel(ch, npnconnection.NewMessage(util.SvcStandup.Key, ServerCmdReportRemove, reportID))
 	return errors.Wrap(err, "error sending report removal notification")
 }
 
-func sendReportUpdate(s *Service, ch Channel, report *standup.Report) error {
-	err := s.WriteChannel(ch, NewMessage(util.SvcStandup, ServerCmdReportUpdate, report))
+func sendReportUpdate(s *npnconnection.Service, ch npnconnection.Channel, report *standup.Report) error {
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcStandup.Key, ServerCmdReportUpdate, report))
 	return errors.Wrap(err, "error sending report update")
 }
 

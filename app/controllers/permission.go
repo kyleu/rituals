@@ -1,4 +1,4 @@
-package web
+package controllers
 
 import (
 	"net/http"
@@ -53,7 +53,7 @@ func CheckPerms(ctx *npnweb.RequestContext, permSvc *permission.Service, p *Perm
 		return auths, nil, bc
 	}
 
-	_, permErrors := permSvc.Check(ctx.App.Auth().Enabled, p.Svc, p.ModelID, auths, tp, sp)
+	_, permErrors := permSvc.Check(ctx.App.Auth().Enabled, p.Svc.Key, p.ModelID, auths, tp, sp)
 
 	if len(permErrors) == 0 {
 		bc = append(bc, npnweb.BreadcrumbsSimple(ctx.Route(p.Svc.Key, npncore.KeyKey, p.Slug), p.Title)...)

@@ -8,7 +8,7 @@
       <% for _, t := range transcripts { %>
         <div>
           <div class="uk-card uk-card-body">
-            <form action="<%= ctx.Route(npnweb.AdminLink(util.KeyTranscript, `run`), npncore.KeyKey, t.Key) %>">
+            <form action="<%= ctx.Route(npnweb.AdminLink(npncore.KeyTranscript, `run`), npncore.KeyKey, t.Key) %>">
             <div class="right">
               <div class="right uk-margin-small-left"><button class="uk-button uk-button-default" type="submit">Go</button></div>
               <div class="right uk-margin-small-left" style="width: 80px;">
@@ -20,7 +20,7 @@
               </div>
               <div class="right" style="width: 100px;"><input class="uk-input" name="param" placeholder="param" type="text" value="" /></div>
             </div>
-            <h3 class="uk-card-title"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(util.KeyTranscript, `run`), npncore.KeyKey, t.Key) %>"><%= t.Title %></a></h3>
+            <h3 class="uk-card-title"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyTranscript, `run`), npncore.KeyKey, t.Key) %>"><%= t.Title %></a></h3>
             <p><%= t.Description %></p>
             </form>
           </div>

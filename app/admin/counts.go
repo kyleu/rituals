@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/kyleu/npn/npnconnection"
 	"time"
 
 	"github.com/kyleu/npn/npncore"
@@ -11,11 +12,9 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/kyleu/rituals.dev/app/sandbox"
-	"github.com/kyleu/rituals.dev/app/socket"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func SectionCounts(sections []string, routes npnweb.RouteDescriptions, db *npndatabase.Service, socket *socket.Service) (map[string]int64, map[string]*time.Time, error) {
+func SectionCounts(sections []string, routes npnweb.RouteDescriptions, db *npndatabase.Service, socket *npnconnection.Service) (map[string]int64, map[string]*time.Time, error) {
 	countMap := make(map[string]int64)
 	recentMap := make(map[string]*time.Time)
 	for _, section := range sections {
@@ -29,7 +28,7 @@ func SectionCounts(sections []string, routes npnweb.RouteDescriptions, db *npnda
 	return countMap, recentMap, nil
 }
 
-func sectionCount(routes npnweb.RouteDescriptions, db *npndatabase.Service, sck *socket.Service, section string) (int64, *time.Time, error) {
+func sectionCount(routes npnweb.RouteDescriptions, db *npndatabase.Service, sck *npnconnection.Service, section string) (int64, *time.Time, error) {
 	switch section {
 	case npncore.KeyGraphQL:
 		return -1, nil, nil
@@ -41,7 +40,7 @@ func sectionCount(routes npnweb.RouteDescriptions, db *npndatabase.Service, sck 
 		return int64(len(routes)), nil, nil
 	case npncore.KeySandbox:
 		return int64(len(sandbox.AllSandboxes)), nil, nil
-	case util.KeyTranscript:
+	case npncore.KeyTranscript:
 		return int64(len(transcript.AllTranscripts)), nil, nil
 	case npncore.KeyUser:
 		return databaseWork(db, "system_user")

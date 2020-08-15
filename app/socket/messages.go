@@ -9,6 +9,7 @@ const (
 	ClientCmdPing = "ping"
 
 	ClientCmdConnect = "connect"
+	ClientCmdSetActive = "set-active"
 
 	ClientCmdGetActions = "get-actions"
 	ClientCmdGetTeams   = "get-teams"

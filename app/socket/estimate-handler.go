@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
@@ -12,8 +13,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onEstimateSessionSave(s *Service, conn *connection, userID uuid.UUID, param estimateSessionSaveParams) error {
-	dataSvc := s.estimates
+func onEstimateSessionSave(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID, param estimateSessionSaveParams) error {
+	dataSvc := estimates(s)
 	ch := *conn.Channel
 	title := util.ServiceTitle(util.SvcEstimate, param.Title)
 
@@ -30,13 +31,13 @@ func onEstimateSessionSave(s *Service, conn *connection, userID uuid.UUID, param
 		return errors.New("no estimate available with id [" + ch.ID.String() + "]")
 	}
 
-	sr := s.checkPerms(userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	sr := checkPerms(s, userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
 	if sr != nil {
 		return sr
 	}
 
-	teamChanged := differentPointerValues(curr.TeamID, teamID)
-	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
+	teamChanged := npnconnection.DifferentPointerValues(curr.TeamID, teamID)
+	sprintChanged := npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
 	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, npncore.OxfordComma(choices, "and"), teamID, sprintID))
@@ -59,7 +60,7 @@ func onEstimateSessionSave(s *Service, conn *connection, userID uuid.UUID, param
 	}
 
 	if teamChanged {
-		tm := s.teams.GetByIDPointer(teamID)
+		tm := teams(s).GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated estimate session")
@@ -67,14 +68,14 @@ func onEstimateSessionSave(s *Service, conn *connection, userID uuid.UUID, param
 	}
 
 	if sprintChanged {
-		spr := s.sprints.GetByIDPointer(sprintID)
+		spr := sprints(s).GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.Wrap(err, "error sending sprint for updated estimate session")
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
+	err = updatePerms(s, ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -82,12 +83,12 @@ func onEstimateSessionSave(s *Service, conn *connection, userID uuid.UUID, param
 	return nil
 }
 
-func sendEstimateSessionUpdate(s *Service, ch Channel) error {
-	est := s.estimates.GetByID(ch.ID)
+func sendEstimateSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
+	est := estimates(s).GetByID(ch.ID)
 	if est == nil {
 		return errors.New("cannot load estimate session [" + ch.ID.String() + "]")
 	}
 
-	err := s.WriteChannel(ch, NewMessage(util.SvcEstimate, ServerCmdSessionUpdate, est))
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcEstimate.Key, ServerCmdSessionUpdate, est))
 	return errors.Wrap(err, "error sending estimate session")
 }

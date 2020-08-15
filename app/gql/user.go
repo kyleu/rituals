@@ -3,13 +3,14 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/npn/npnweb"
 )
 
 var (
-	userResolver  Callback
-	usersResolver Callback
+	userResolver  npngraphql.Callback
+	usersResolver npngraphql.Callback
 )
 
 func initUser() {
@@ -23,7 +24,7 @@ func initUser() {
 	}
 
 	usersResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		curr := ctx.App.User().List(paramSetFromGraphQLParams(npncore.KeyUser, params, ctx.Logger))
+		curr := ctx.App.User().List(npngraphql.ParamSetFromGraphQLParams(npncore.KeyUser, params, ctx.Logger))
 		ret := make([]npnuser.Profile, 0, len(curr))
 		for _, u := range curr {
 			ret = append(ret, u.ToProfile().ToProfile())

@@ -2,11 +2,12 @@ package gql
 
 import (
 	"github.com/graphql-go/graphql"
+	"github.com/kyleu/npn/npngraphql"
 )
 
 const MutationName = "RitualsMutation"
 
-func mutationFields() graphql.Fields {
+func MutationFields() graphql.Fields {
 	return graphql.Fields{
 		"ping": &graphql.Field{
 			Type: graphql.String,
@@ -18,8 +19,8 @@ func mutationFields() graphql.Fields {
 		"callSandbox": &graphql.Field{
 			Type:        graphql.String,
 			Description: "Call sandbox",
-			Args:        keyArgs,
-			Resolve:     ctxF(callSandboxResolver),
+			Args:        npngraphql.KeyArgs,
+			Resolve:     npngraphql.CtxF(callSandboxResolver),
 		},
 	}
 }

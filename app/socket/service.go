@@ -1,8 +1,8 @@
 package socket
 
 import (
-	"fmt"
-	"sync"
+	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -21,119 +21,84 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"emperror.dev/errors"
-	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/estimate"
 	"logur.dev/logur"
 )
 
-type Service struct {
-	connections   map[uuid.UUID]*connection
-	connectionsMu sync.Mutex
-	channels      map[Channel][]uuid.UUID
-	channelsMu    sync.Mutex
-	Logger        logur.Logger
-	comments      *comment.Service
-	actions       *action.Service
-	users         *user.Service
-	auths         *auth.Service
-	teams         *team.Service
-	sprints       *sprint.Service
-	estimates     *estimate.Service
-	standups      *standup.Service
-	retros        *retro.Service
+type services struct {
+	comments  *comment.Service
+	actions   *action.Service
+	teams     *team.Service
+	sprints   *sprint.Service
+	estimates *estimate.Service
+	standups  *standup.Service
+	retros    *retro.Service
 }
 
 func NewService(
-	logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
-	auths *auth.Service, teams *team.Service, sprints *sprint.Service,
-	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *Service {
+		logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
+		auths *auth.Service, teams *team.Service, sprints *sprint.Service,
+		estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *npnconnection.Service {
 	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: npncore.KeySocket})
-	return &Service{
-		connections:   make(map[uuid.UUID]*connection),
-		connectionsMu: sync.Mutex{},
-		channels:      make(map[Channel][]uuid.UUID),
-		channelsMu:    sync.Mutex{},
-		Logger:        logger,
-		comments:      comments,
-		actions:       actions,
-		users:         users,
-		auths:         auths,
-		teams:         teams,
-		sprints:       sprints,
-		estimates:     estimates,
-		standups:      standups,
-		retros:        retros,
+
+	ctx := &services{
+		comments:  comments,
+		actions:   actions,
+		teams:     teams,
+		sprints:   sprints,
+		estimates: estimates,
+		standups:  standups,
+		retros:    retros,
 	}
+
+	return npnconnection.NewService(logger, users, auths, handler, ctx)
 }
 
-var systemID = uuid.FromStringOrNil("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF")
-var systemStatus = Status{ID: systemID, UserID: systemID, Username: "System Broadcast", ChannelSvc: util.SvcSystem, ChannelID: &systemID}
-
-func (s *Service) List(params *npncore.Params) Statuses {
-	params = npncore.ParamsWithDefaultOrdering(npncore.KeyConnection, params)
-	ret := make(Statuses, 0)
-	ret = append(ret, &systemStatus)
-	var idx = 0
-	for _, conn := range s.connections {
-		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
-			ret = append(ret, conn.ToStatus())
-		}
-		idx++
-	}
-	return ret
+func comments(s *npnconnection.Service) *comment.Service {
+	return s.Context.(*services).comments
 }
 
-func (s *Service) GetByID(id uuid.UUID) *Status {
-	if id == systemID {
-		return &systemStatus
-	}
-	conn, ok := s.connections[id]
-	if !ok {
-		s.Logger.Error(fmt.Sprintf("error getting connection by id [%v]", id))
-		return nil
-	}
-	return conn.ToStatus()
+func actions(s *npnconnection.Service) *action.Service {
+	return s.Context.(*services).actions
 }
 
-func (s *Service) Count() int {
-	return len(s.connections)
+func teams(s *npnconnection.Service) *team.Service {
+	return s.Context.(*services).teams
 }
 
-func (s *Service) RemoveComment(commentID uuid.UUID, userID uuid.UUID) error {
-	c := s.GetByID(commentID)
-	if c.UserID != userID {
-		return errors.New("This is not your comment")
-	}
-	return s.comments.RemoveComment(commentID)
+func sprints(s *npnconnection.Service) *sprint.Service {
+	return s.Context.(*services).sprints
 }
 
-func onMessage(s *Service, connID uuid.UUID, message Message) error {
-	if connID == systemID {
-		s.Logger.Warn("--- admin message received ---")
-		s.Logger.Warn(fmt.Sprint(message))
-		return nil
-	}
-	c, ok := s.connections[connID]
-	if !ok {
-		return invalidConnection(connID)
-	}
+func estimates(s *npnconnection.Service) *estimate.Service {
+	return s.Context.(*services).estimates
+}
+
+func standups(s *npnconnection.Service) *standup.Service {
+	return s.Context.(*services).standups
+}
+
+func retros(s *npnconnection.Service) *retro.Service {
+	return s.Context.(*services).retros
+}
+
+func handler(s *npnconnection.Service, c *npnconnection.Connection, svc string, cmd string, param json.RawMessage) error {
 	var err error
-
-	switch message.Svc {
+	switch svc {
 	case util.SvcSystem.Key:
-		err = onSystemMessage(s, c, message.Cmd, message.Param)
+		err = onSystemMessage(s, c, cmd, param)
 	case util.SvcTeam.Key:
-		err = onTeamMessage(s, c, message.Cmd, message.Param)
+		err = onTeamMessage(s, c, cmd, param)
 	case util.SvcSprint.Key:
-		err = onSprintMessage(s, c, message.Cmd, message.Param)
+		err = onSprintMessage(s, c, cmd, param)
 	case util.SvcEstimate.Key:
-		err = onEstimateMessage(s, c, message.Cmd, message.Param)
+		err = onEstimateMessage(s, c, cmd, param)
 	case util.SvcStandup.Key:
-		err = onStandupMessage(s, c, message.Cmd, message.Param)
+		err = onStandupMessage(s, c, cmd, param)
 	case util.SvcRetro.Key:
-		err = onRetroMessage(s, c, message.Cmd, message.Param)
+		err = onRetroMessage(s, c, cmd, param)
 	default:
-		err = errors.New(npncore.IDErrorString(npncore.KeyService, message.Svc))
+		err = errors.New(npncore.IDErrorString(npncore.KeyService, svc))
 	}
-	return errors.Wrap(err, "error handling socket message ["+message.String()+"]")
+	return errors.Wrap(err, "error handling socket message ["+cmd+"]")
 }

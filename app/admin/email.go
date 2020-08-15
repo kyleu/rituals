@@ -16,9 +16,9 @@ import (
 )
 
 func EmailList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = "Email List"
-		ctx.Breadcrumbs = adminBC(ctx, npncore.KeyEmail, npncore.Plural(npncore.KeyEmail))
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyEmail, npncore.Plural(npncore.KeyEmail))
 
 		params := npnweb.ParamSetFromRequest(r)
 		emailSvc := email.NewService(app.Database(ctx.App), ctx.Logger)
@@ -28,7 +28,7 @@ func EmailList(w http.ResponseWriter, r *http.Request) {
 }
 
 func EmailDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		emailID, ok := mux.Vars(r)[npncore.KeyID]
 		if !ok {
 			return npncontroller.EResp(errors.New("invalid email id"))
@@ -43,7 +43,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 		params := npnweb.ParamSetFromRequest(r)
 
 		ctx.Title = e.ID
-		bc := adminBC(ctx, npncore.KeyEmail, npncore.Plural(npncore.KeyEmail))
+		bc := npncontroller.AdminBC(ctx, npncore.KeyEmail, npncore.Plural(npncore.KeyEmail))
 		bc = append(bc, npnweb.BreadcrumbSelf(e.ID))
 		ctx.Breadcrumbs = bc
 

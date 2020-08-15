@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnconnection"
 )
 
 type saveProfileParams struct {
@@ -11,12 +12,12 @@ type saveProfileParams struct {
 	Picture string `json:"picture"`
 }
 
-func saveProfile(s *Service, conn *connection, userID uuid.UUID, p *saveProfileParams) error {
+func saveProfile(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID, p *saveProfileParams) error {
 	if len(p.Name) == 0 {
 		p.Name = "Unnamed Member"
 	}
 	if p.Choice == "global" {
-		err := s.UpdateMember(userID, p.Name, p.Picture)
+		err := UpdateMember(s, userID, p.Name, p.Picture)
 		if err != nil {
 			return err
 		}
@@ -40,5 +41,5 @@ func saveProfile(s *Service, conn *connection, userID uuid.UUID, p *saveProfileP
 	if conn.Channel == nil {
 		return errors.New("no channel registered for [" + conn.ID.String() + "]")
 	}
-	return s.sendMemberUpdate(*conn.Channel, current)
+	return sendMemberUpdate(s, *conn.Channel, current)
 }

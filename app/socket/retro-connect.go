@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/rituals.dev/app/comment"
@@ -27,8 +28,8 @@ type RetroSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onRetroConnect(s *Service, conn *connection, retroID uuid.UUID) error {
-	ch := Channel{Svc: util.SvcRetro, ID: retroID}
+func onRetroConnect(s *npnconnection.Service, conn *npnconnection.Connection, retroID uuid.UUID) error {
+	ch := npnconnection.Channel{Svc: util.SvcRetro.Key, ID: retroID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -37,10 +38,10 @@ func onRetroConnect(s *Service, conn *connection, retroID uuid.UUID) error {
 	return errors.Wrap(err, "error joining retro session")
 }
 
-func joinRetroSession(s *Service, conn *connection, ch Channel) error {
-	dataSvc := s.retros
-	if ch.Svc != util.SvcRetro {
-		return errors.New("retro cannot handle [" + ch.Svc.Key + "] message")
+func joinRetroSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
+	dataSvc := retros(s)
+	if ch.Svc != util.SvcRetro.Key {
+		return errors.New("retro cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess := dataSvc.GetByID(ch.ID)
@@ -64,6 +65,6 @@ func joinRetroSession(s *Service, conn *connection, ch Channel) error {
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}
-	msg := NewMessage(util.SvcRetro, ServerCmdSessionJoined, sj)
-	return s.sendInitial(ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
+	msg := npnconnection.NewMessage(util.SvcRetro.Key, ServerCmdSessionJoined, sj)
+	return sendInitial(s, ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
 }

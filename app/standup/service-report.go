@@ -26,7 +26,7 @@ func (s *Service) NewReport(standupID uuid.UUID, d time.Time, content string, us
 	}
 
 	actionContent := map[string]interface{}{"reportID": id}
-	s.Data.Actions.Post(s.svc, standupID, userID, action.ActReportAdd, actionContent)
+	s.Data.Actions.Post(s.svc.Key, standupID, userID, action.ActReportAdd, actionContent)
 
 	return s.GetReportByID(id)
 }
@@ -90,7 +90,7 @@ func (s *Service) UpdateReport(reportID uuid.UUID, d time.Time, content string, 
 	}
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.Data.Actions.Post(s.svc, report.StandupID, userID, action.ActReportUpdate, actionContent)
+	s.Data.Actions.Post(s.svc.Key, report.StandupID, userID, action.ActReportUpdate, actionContent)
 
 	return report, err
 }
@@ -107,7 +107,7 @@ func (s *Service) RemoveReport(reportID uuid.UUID, userID uuid.UUID) error {
 	err = s.db.DeleteOne(npndatabase.SQLDelete(npncore.KeyReport, npncore.KeyID+" = $1"), nil, reportID)
 
 	actionContent := map[string]interface{}{"reportID": reportID}
-	s.Data.Actions.Post(s.svc, report.StandupID, userID, action.ActReportRemove, actionContent)
+	s.Data.Actions.Post(s.svc.Key, report.StandupID, userID, action.ActReportRemove, actionContent)
 
 	return err
 }

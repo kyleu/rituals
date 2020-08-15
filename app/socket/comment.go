@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 	"strings"
 
 	"emperror.dev/errors"
@@ -21,7 +22,7 @@ type updateCommentParams struct {
 	Content string    `json:"content"`
 }
 
-func onAddComment(s *Service, ch Channel, userID uuid.UUID, param addCommentParams) error {
+func onAddComment(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param addCommentParams) error {
 	param.Content = strings.TrimSpace(param.Content)
 	if len(param.Content) == 0 {
 		return errors.New("add some content")
@@ -40,7 +41,7 @@ func onAddComment(s *Service, ch Channel, userID uuid.UUID, param addCommentPara
 	return errors.Wrap(err, "error sending story update")
 }
 
-func onUpdateComment(s *Service, ch Channel, userID uuid.UUID, param updateCommentParams) error {
+func onUpdateComment(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param updateCommentParams) error {
 	param.Content = strings.TrimSpace(param.Content)
 	if len(param.Content) == 0 {
 		return errors.New("add some content")
@@ -56,17 +57,17 @@ func onUpdateComment(s *Service, ch Channel, userID uuid.UUID, param updateComme
 	return errors.Wrap(err, "error sending comment update")
 }
 
-func onRemoveComment(s *Service, ch Channel, userID uuid.UUID, commentID uuid.UUID) error {
+func onRemoveComment(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, commentID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", commentID))
-	err := s.RemoveComment(commentID, userID)
+	err := comments(s).RemoveComment(commentID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove comment")
 	}
-	err = s.WriteChannel(ch, NewMessage(util.SvcSystem, ServerCmdCommentRemove, commentID))
+	err = s.WriteChannel(ch, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdCommentRemove, commentID))
 	return errors.Wrap(err, "error sending comment removal notification")
 }
 
-func sendCommentUpdate(s *Service, ch Channel, comment *comment.Comment) error {
-	err := s.WriteChannel(ch, NewMessage(util.SvcSystem, ServerCmdCommentUpdate, comment))
+func sendCommentUpdate(s *npnconnection.Service, ch npnconnection.Channel, comment *comment.Comment) error {
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdCommentUpdate, comment))
 	return errors.Wrap(err, "error sending comment update")
 }

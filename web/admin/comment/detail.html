@@ -14,7 +14,7 @@
           </tr>
           <tr>
             <th><%= npncore.Title(npncore.KeyModel) %></th>
-            <td><% Channel(model.Svc, &model.ModelID, ctx, _buffer) %></td>
+            <td><% npntemplate.Channel(model.Svc.Key, &model.ModelID, ctx, _buffer) %></td>
           </tr>
           <tr>
             <th><%= npncore.Title(npncore.KeyUser) %></th>

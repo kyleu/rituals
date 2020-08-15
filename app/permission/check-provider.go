@@ -6,10 +6,9 @@ import (
 	"github.com/kyleu/npn/npncore"
 
 	"github.com/kyleu/npn/npnservice/auth"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) checkAuths(authEnabled bool, svc util.Service, perms Permissions, auths auth.Records) Errors {
+func (s *Service) checkAuths(authEnabled bool, svc string, perms Permissions, auths auth.Records) Errors {
 	var ret Errors
 
 	if authEnabled {
@@ -21,7 +20,7 @@ func (s *Service) checkAuths(authEnabled bool, svc util.Service, perms Permissio
 	return ret
 }
 
-func providerCheck(svc util.Service, p *auth.Provider, perms Permissions, auths auth.Records) Errors {
+func providerCheck(svc string, p *auth.Provider, perms Permissions, auths auth.Records) Errors {
 	var authMatches = auths.FindByProvider(p.Key)
 	var permMatches = perms.FindByK(p.Key)
 	if len(permMatches) == 0 {
@@ -57,6 +56,6 @@ func providerCheck(svc util.Service, p *auth.Provider, perms Permissions, auths 
 		msg += " with email address " + npncore.OxfordComma(emailDomains, "or")
 	}
 
-	msg += " to access this " + svc.Key
-	return Errors{{Svc: svc.Key, Provider: p.Key, Match: strings.Join(emailDomains, ","), Message: msg}}
+	msg += " to access this " + svc
+	return Errors{{Svc: svc, Provider: p.Key, Match: strings.Join(emailDomains, ","), Message: msg}}
 }

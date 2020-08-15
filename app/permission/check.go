@@ -13,7 +13,7 @@ type Params struct {
 	Current []uuid.UUID
 }
 
-func (s *Service) Check(authEnabled bool, svc util.Service, modelID uuid.UUID, auths auth.Records, teamP *Params, sprintP *Params) (Permissions, Errors) {
+func (s *Service) Check(authEnabled bool, svc string, modelID uuid.UUID, auths auth.Records, teamP *Params, sprintP *Params) (Permissions, Errors) {
 	perms := s.GetByModelID(modelID, nil)
 
 	var ret Errors

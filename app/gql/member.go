@@ -3,12 +3,13 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app/member"
 )
 
 var (
-	memberProfileResolver Callback
+	memberProfileResolver npngraphql.Callback
 	memberRoleType        *graphql.Enum
 	memberType            *graphql.Object
 )

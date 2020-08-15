@@ -28,7 +28,7 @@ namespace sprint {
         session.onSessionJoin(sj);
         setSprintDetail(sj.session);
         setSprintContents(sj);
-        session.showWelcomeMessage(sj.members.length);
+        session.showWelcomeMessage(sj.session.status, sj.members.length);
         break;
       case command.server.teamUpdate:
         const tm = param as team.Detail | undefined;

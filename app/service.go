@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
 	"github.com/kyleu/npn/npnservice/auth"
@@ -29,7 +30,7 @@ type Service struct {
 	Estimate *estimate.Service
 	Standup  *standup.Service
 	Retro    *retro.Service
-	Socket   *socket.Service
+	Socket   *npnconnection.Service
 	Database *npndatabase.Service
 	version  string
 	commit   string
@@ -48,7 +49,6 @@ func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir str
 	standupSvc := standup.NewService(actionService, userSvc, commentService, db, logger)
 	retroSvc := retro.NewService(actionService, userSvc, commentService, db, logger)
 	socketSvc := socket.NewService(logger, actionService, userSvc, commentService, authSvc, teamSvc, sprintSvc, estimateSvc, standupSvc, retroSvc)
-
 	return &Service{
 		debug:    debug,
 		files:    files,
@@ -113,7 +113,7 @@ func Retro(a npnweb.AppInfo) *retro.Service {
 	return a.(*Service).Retro
 }
 
-func Socket(a npnweb.AppInfo) *socket.Service {
+func Socket(a npnweb.AppInfo) *npnconnection.Service {
 	return a.(*Service).Socket
 }
 

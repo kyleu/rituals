@@ -3,6 +3,7 @@ package pdf
 import (
 	pdfgen "github.com/johnfercher/maroto/pkg/pdf"
 	"github.com/kyleu/npn/npncore"
+	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/team"
 	"github.com/kyleu/rituals.dev/app/transcript"
@@ -10,10 +11,10 @@ import (
 )
 
 func renderTeam(rsp transcript.TeamResponse, m pdfgen.Maroto) (string, error) {
-	hr(m)
-	caption(rsp.Session.Title, m)
-	detailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
-	detailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
+	npnpdf.HR(m)
+	npnpdf.Caption(rsp.Session.Title, m)
+	npnpdf.DetailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
+	npnpdf.DetailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
 
 	renderPermissionList(rsp.Permissions, m)
 	renderMemberList(rsp.Members, m)
@@ -27,14 +28,14 @@ func renderTeam(rsp transcript.TeamResponse, m pdfgen.Maroto) (string, error) {
 }
 
 func renderTeamList(sessions team.Sessions, members member.Entries, m pdfgen.Maroto) {
-	hr(m)
+	npnpdf.HR(m)
 	if len(sessions) > 0 {
-		caption(util.SvcTeam.PluralTitle, m)
+		npnpdf.Caption(util.SvcTeam.PluralTitle, m)
 		cols := []string{npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyCreated)}
 		var data [][]string
 		for _, s := range sessions {
 			data = append(data, []string{members.GetName(s.Owner), s.Title, npncore.ToDateString(&s.Created)})
 		}
-		table(cols, data, []uint{3, 6, 3}, m)
+		npnpdf.Table(cols, data, []uint{3, 6, 3}, m)
 	}
 }

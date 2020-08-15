@@ -16,11 +16,11 @@ import (
 var homeSections = []string{
 	util.SvcTeam.Key, util.SvcSprint.Key, util.SvcEstimate.Key, util.SvcStandup.Key, util.SvcRetro.Key,
 	npncore.KeyUser, npncore.KeyAuth, npncore.KeyAction, npncore.KeyComment, npncore.KeyEmail, npncore.KeyMigration,
-	npncore.KeyConnection, npncore.KeySandbox, npncore.KeyRoutes, npncore.KeyModules, util.KeyTranscript, npncore.KeyGraphQL,
+	npncore.KeyConnection, npncore.KeySandbox, npncore.KeyRoutes, npncore.KeyModules, npncore.KeyTranscript, npncore.KeyGraphQL,
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		params := npnweb.ParamSetFromRequest(r)
 		ctx.Title = "Admin"
 		ctx.Breadcrumbs = npnweb.BreadcrumbsSimple("", npncore.KeyAdmin)

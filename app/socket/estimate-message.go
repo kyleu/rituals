@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -37,8 +38,8 @@ type submitVoteParams struct {
 	Choice  string    `json:"choice"`
 }
 
-func onEstimateMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
-	dataSvc := s.estimates
+func onEstimateMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+	dataSvc := estimates(s)
 	var err error
 	userID := conn.Profile.UserID
 	switch cmd {

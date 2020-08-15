@@ -74,14 +74,14 @@ func (s *Service) GetByID(id uuid.UUID) *Comment {
 	return dto.toComment()
 }
 
-func (s *Service) Add(svc util.Service, modelID uuid.UUID, targetType string, targetID *uuid.UUID, content string, userID uuid.UUID) (*Comment, error) {
+func (s *Service) Add(svc string, modelID uuid.UUID, targetType string, targetID *uuid.UUID, content string, userID uuid.UUID) (*Comment, error) {
 	id := npncore.UUID()
 	html := util.ToHTML(content)
 	q := npndatabase.SQLInsert(npncore.KeyComment, []string{
 		npncore.KeyID, npncore.KeySvc, npncore.WithDBID(npncore.KeyModel), "target_type", npncore.WithDBID("target"),
 		npncore.WithDBID(npncore.KeyUser), npncore.KeyContent, npncore.KeyHTML,
 	}, 1)
-	err := s.db.Insert(q, nil, id, svc.Key, modelID, targetType, targetID, userID, content, html)
+	err := s.db.Insert(q, nil, id, svc, modelID, targetType, targetID, userID, content, html)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to add comment")
 	}
@@ -98,10 +98,10 @@ func (s *Service) Update(id uuid.UUID, content string, userID uuid.UUID) (*Comme
 	return s.GetByID(id), nil
 }
 
-func (s *Service) RemoveComment(commentID uuid.UUID) error {
+func (s *Service) RemoveComment(commentID uuid.UUID, userID uuid.UUID) error {
 	q := npndatabase.SQLDelete(npncore.KeyComment, npncore.KeyID+" = $1")
 	err := s.db.DeleteOne(q, nil, commentID)
-	return errors.Wrap(err, "unable to remove comment ["+commentID.String()+"]")
+	return errors.Wrap(err, "unable to remove comment ["+commentID.String()+"] for user [" + userID.String() + "]")
 }
 
 func (s *Service) GetByCreated(d *time.Time, params *npncore.Params) Comments {

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -9,8 +10,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessionSaveParams) error {
-	dataSvc := s.teams
+func onTeamSessionSave(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param teamSessionSaveParams) error {
+	dataSvc := teams(s)
 	title := util.ServiceTitle(util.SvcTeam, param.Title)
 
 	curr := dataSvc.GetByID(ch.ID)
@@ -18,7 +19,7 @@ func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessi
 		return errors.New("no team available with id [" + ch.ID.String() + "]")
 	}
 
-	sr := s.checkPerms(userID, nil, nil, ch.Svc, ch.ID)
+	sr := checkPerms(s, userID, nil, nil, ch.Svc, ch.ID)
 	if sr != nil {
 		return sr
 	}
@@ -43,7 +44,7 @@ func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessi
 		return errors.Wrap(err, "error sending team session")
 	}
 
-	err = s.updatePerms(ch, userID, nil, nil, dataSvc.Data.Permissions, param.Permissions)
+	err = updatePerms(s, ch, userID, nil, nil, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -51,34 +52,34 @@ func onTeamSessionSave(s *Service, ch Channel, userID uuid.UUID, param teamSessi
 	return nil
 }
 
-func sendTeamUpdate(s *Service, ch Channel, curr *uuid.UUID, tm *team.Session) error {
-	err := s.WriteChannel(ch, NewMessage(ch.Svc, ServerCmdTeamUpdate, tm))
+func sendTeamUpdate(s *npnconnection.Service, ch npnconnection.Channel, curr *uuid.UUID, tm *team.Session) error {
+	err := s.WriteChannel(ch, npnconnection.NewMessage(ch.Svc, ServerCmdTeamUpdate, tm))
 	if err != nil {
 		return errors.Wrap(err, "error writing team update message")
 	}
 
-	err = s.SendContentUpdate(util.SvcTeam, curr)
+	err = SendContentUpdate(s, util.SvcTeam.Key, curr)
 	if err != nil {
 		return err
 	}
 	if tm != nil {
-		err = s.SendContentUpdate(util.SvcTeam, &tm.ID)
+		err = SendContentUpdate(s, util.SvcTeam.Key, &tm.ID)
 	}
 	return err
 }
 
-func sendTeamSessionUpdate(s *Service, ch Channel) error {
-	sess := s.teams.GetByID(ch.ID)
+func sendTeamSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
+	sess := teams(s).GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load team session [" + ch.ID.String() + "]")
 	}
-	err := s.WriteChannel(ch, NewMessage(util.SvcTeam, ServerCmdSessionUpdate, sess))
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcTeam.Key, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending team session")
 }
 
-func getTeamOpt(s *Service, teamID *uuid.UUID) *team.Session {
+func getTeamOpt(s *npnconnection.Service, teamID *uuid.UUID) *team.Session {
 	if teamID == nil {
 		return nil
 	}
-	return s.teams.GetByID(*teamID)
+	return teams(s).GetByID(*teamID)
 }

@@ -1,11 +1,14 @@
-package web
+package controllers
 
 import (
+	npnxls "github.com/kyleu/npn/npnexport/xls"
+	"github.com/kyleu/rituals.dev/app/transcript/pdf"
 	"net/http"
 	"strings"
 
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
+	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 	"github.com/kyleu/npn/npntemplate/gen/npntemplate"
 	"github.com/kyleu/npn/npnweb"
 
@@ -14,7 +17,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kyleu/rituals.dev/app/permission"
 	"github.com/kyleu/rituals.dev/app/transcript"
-	"github.com/kyleu/rituals.dev/app/transcript/pdf"
 	"github.com/kyleu/rituals.dev/app/transcript/xls"
 	"github.com/kyleu/rituals.dev/app/util"
 	"github.com/kyleu/rituals.dev/gen/transcripttemplates"
@@ -71,13 +73,13 @@ func ExportTemplate(t *transcript.Transcript, path string, rsp interface{}, fmt 
 		fn := strings.Split(path, "/")
 		return npncontroller.RespondJSON(w, fn[len(fn)-1], rsp, ctx.Logger)
 	case transcript.FormatPDF:
-		filename, ba, err := pdf.Render(rsp, ctx.App.Auth().FullURL(path))
+		filename, ba, err := npnpdf.Render(rsp, ctx.App.Auth().FullURL(path), pdf.RenderCallback)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to render pdf")
 		}
 		return npncontroller.RespondMIME(filename, "application/pdf", "pdf", ba, w)
 	case transcript.FormatExcel:
-		filename, ba, err := xls.Render(rsp, ctx.App.Auth().FullURL(path))
+		filename, ba, err := npnxls.Render(rsp, ctx.App.Auth().FullURL(path), xls.RenderResponse)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to render Excel")
 		}

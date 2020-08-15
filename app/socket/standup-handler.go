@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -10,8 +11,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standupSessionSaveParams) error {
-	dataSvc := s.standups
+func onStandupSessionSave(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param standupSessionSaveParams) error {
+	dataSvc := standups(s)
 	title := util.ServiceTitle(util.SvcStandup, param.Title)
 
 	sprintID := npncore.GetUUIDFromString(param.SprintID)
@@ -22,13 +23,13 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 		return errors.New("no standup available with id [" + ch.ID.String() + "]")
 	}
 
-	sr := s.checkPerms(userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	sr := checkPerms(s, userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
 	if sr != nil {
 		return sr
 	}
 
-	teamChanged := differentPointerValues(curr.TeamID, teamID)
-	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
+	teamChanged :=npnconnection.DifferentPointerValues(curr.TeamID, teamID)
+	sprintChanged :=npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
 	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
@@ -51,7 +52,7 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 	}
 
 	if teamChanged {
-		tm := s.teams.GetByIDPointer(teamID)
+		tm := teams(s).GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated retro session")
@@ -59,14 +60,14 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 	}
 
 	if sprintChanged {
-		spr := s.sprints.GetByIDPointer(sprintID)
+		spr := sprints(s).GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.Wrap(err, "error sending sprint for updated standup session")
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
+	err = updatePerms(s, ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -74,11 +75,11 @@ func onStandupSessionSave(s *Service, ch Channel, userID uuid.UUID, param standu
 	return nil
 }
 
-func sendStandupSessionUpdate(s *Service, ch Channel) error {
-	sess := s.standups.GetByID(ch.ID)
+func sendStandupSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
+	sess := standups(s).GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load standup session [" + ch.ID.String() + "]")
 	}
-	err := s.WriteChannel(ch, NewMessage(util.SvcStandup, ServerCmdSessionUpdate, sess))
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcStandup.Key, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending standup session")
 }

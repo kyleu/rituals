@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"fmt"
+	"github.com/kyleu/rituals.dev/app/session"
 
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
@@ -105,10 +106,10 @@ func (s *Service) RemoveStory(storyID uuid.UUID, userID uuid.UUID) error {
 
 func (s *Service) postStory(story *Story, userID uuid.UUID, act string) {
 	actionContent := map[string]interface{}{"storyID": story.ID}
-	s.Data.Actions.Post(s.svc, story.EstimateID, userID, act, actionContent)
+	s.Data.Actions.Post(s.svc.Key, story.EstimateID, userID, act, actionContent)
 }
 
-func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID uuid.UUID) (bool, string, error) {
+func (s *Service) SetStoryStatus(storyID uuid.UUID, status session.Status, userID uuid.UUID) (bool, string, error) {
 	story, err := s.GetStoryByID(storyID)
 	if err != nil {
 		return false, "", errors.Wrap(err, "cannot load story ["+storyID.String()+"]")
@@ -119,7 +120,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 
 	finalVote := ""
 
-	if status == StoryStatusComplete {
+	if status == session.StatusComplete {
 		votes := s.GetStoryVotes(storyID, nil)
 		vr := CalculateVoteResult(votes)
 		finalVote = vr.FinalVote
@@ -129,7 +130,7 @@ func (s *Service) SetStoryStatus(storyID uuid.UUID, status StoryStatus, userID u
 	err = s.db.UpdateOne(q, nil, status.String(), finalVote, storyID)
 
 	actionContent := map[string]interface{}{"storyID": storyID, npncore.KeyStatus: status, "finalVote": finalVote}
-	s.Data.Actions.Post(s.svc, story.EstimateID, userID, action.ActStoryStatus, actionContent)
+	s.Data.Actions.Post(s.svc.Key, story.EstimateID, userID, action.ActStoryStatus, actionContent)
 
 	return true, finalVote, errors.Wrap(err, "error updating story status")
 }

@@ -16,9 +16,9 @@ import (
 )
 
 func CommentList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = "Comment List"
-		ctx.Breadcrumbs = adminBC(ctx, npncore.KeyComment, npncore.Plural(npncore.KeyComment))
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyComment, npncore.Plural(npncore.KeyComment))
 
 		params := npnweb.ParamSetFromRequest(r)
 		comments := app.Comment(ctx.App).List(params.Get(npncore.KeyComment, ctx.Logger))
@@ -27,7 +27,7 @@ func CommentList(w http.ResponseWriter, r *http.Request) {
 }
 
 func CommentDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		commentID, err := npnweb.IDFromParams(util.SvcEstimate.Key, mux.Vars(r))
 		if err != nil {
 			return npncontroller.EResp(err, "invalid comment id")
@@ -41,7 +41,7 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 		params := npnweb.ParamSetFromRequest(r)
 
 		ctx.Title = e.ID.String()
-		bc := adminBC(ctx, npncore.KeyComment, npncore.Plural(npncore.KeyComment))
+		bc := npncontroller.AdminBC(ctx, npncore.KeyComment, npncore.Plural(npncore.KeyComment))
 		bc = append(bc, npnweb.BreadcrumbSelf(e.ID.String()))
 		ctx.Breadcrumbs = bc
 

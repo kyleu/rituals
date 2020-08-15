@@ -4,7 +4,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) checkModel(provider string, svc util.Service, perms Permissions, spr *Params) *Error {
+func (s *Service) checkModel(provider string, svc string, perms Permissions, spr *Params) *Error {
 	sp := perms.FindByK(util.SvcSprint.Key)
 
 	if len(sp) == 0 || spr == nil {
@@ -23,5 +23,5 @@ func (s *Service) checkModel(provider string, svc util.Service, perms Permission
 		return nil
 	}
 
-	return &Error{Svc: svc.Key, Provider: provider, Match: spr.Slug, Message: spr.Title}
+	return &Error{Svc: svc, Provider: provider, Match: spr.Slug, Message: spr.Title}
 }

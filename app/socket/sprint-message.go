@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -19,8 +20,8 @@ type sprintSessionSaveParams struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
-	dataSvc := s.sprints
+func onSprintMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+	dataSvc := sprints(s)
 	var err error
 	userID := conn.Profile.UserID
 
@@ -47,7 +48,7 @@ func onSprintMessage(s *Service, conn *connection, cmd string, param json.RawMes
 	return errors.Wrap(err, "error handling sprint message")
 }
 
-func sendSprints(s *Service, conn *connection, userID uuid.UUID) error {
-	sprints := s.sprints.GetByMember(userID, nil)
-	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdSprints, sprints))
+func sendSprints(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID) error {
+	sprints := sprints(s).GetByMember(userID, nil)
+	return s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdSprints, sprints))
 }

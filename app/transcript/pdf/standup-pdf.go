@@ -1,6 +1,7 @@
 package pdf
 
 import (
+	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 	"sort"
 
 	"github.com/kyleu/npn/npncore"
@@ -13,16 +14,16 @@ import (
 )
 
 func renderStandup(rsp transcript.StandupResponse, m pdfgen.Maroto) string {
-	hr(m)
-	caption(rsp.Session.Title, m)
-	detailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
+	npnpdf.HR(m)
+	npnpdf.Caption(rsp.Session.Title, m)
+	npnpdf.DetailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
 	if rsp.Team != nil {
-		detailRow(util.SvcTeam.Title, rsp.Team.Title, m)
+		npnpdf.DetailRow(util.SvcTeam.Title, rsp.Team.Title, m)
 	}
 	if rsp.Sprint != nil {
-		detailRow(util.SvcSprint.Title, rsp.Sprint.Title, m)
+		npnpdf.DetailRow(util.SvcSprint.Title, rsp.Sprint.Title, m)
 	}
-	detailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
+	npnpdf.DetailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
 
 	renderPermissionList(rsp.Permissions, m)
 	renderMemberList(rsp.Members, m)
@@ -34,14 +35,14 @@ func renderStandup(rsp transcript.StandupResponse, m pdfgen.Maroto) string {
 
 func renderStandupList(sessions standup.Sessions, members member.Entries, m pdfgen.Maroto) {
 	if len(sessions) > 0 {
-		hr(m)
-		caption(util.SvcStandup.PluralTitle, m)
+		npnpdf.HR(m)
+		npnpdf.Caption(util.SvcStandup.PluralTitle, m)
 		cols := []string{npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyCreated)}
 		var data [][]string
 		for _, s := range sessions {
 			data = append(data, []string{members.GetName(s.Owner), s.Title, npncore.ToDateString(&s.Created)})
 		}
-		table(cols, data, []uint{3, 6, 3}, m)
+		npnpdf.Table(cols, data, []uint{3, 6, 3}, m)
 	}
 }
 
@@ -57,8 +58,8 @@ func renderReportLists(reports standup.Reports, members member.Entries, m pdfgen
 		}
 		sort.Strings(days)
 		for _, day := range days {
-			hr(m)
-			caption(day, m)
+			npnpdf.HR(m)
+			npnpdf.Caption(day, m)
 			cols := []string{npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}
 			var data [][]string
 			for _, r := range reports {
@@ -66,7 +67,7 @@ func renderReportLists(reports standup.Reports, members member.Entries, m pdfgen
 					data = append(data, []string{members.GetName(r.UserID), r.Content, npncore.ToDateString(&r.Created)})
 				}
 			}
-			table(cols, data, []uint{3, 6, 3}, m)
+			npnpdf.Table(cols, data, []uint{3, 6, 3}, m)
 		}
 	}
 }

@@ -1,14 +1,13 @@
 package controllers
 
 import (
+	"github.com/kyleu/rituals.dev/app/socket"
 	"net/http"
 
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"github.com/kyleu/rituals.dev/app/web"
-
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
@@ -47,11 +46,11 @@ func StandupNew(w http.ResponseWriter, r *http.Request) {
 			return npncontroller.EResp(err, "error setting permissions for new session")
 		}
 
-		err = app.Socket(ctx.App).SendContentUpdate(util.SvcTeam, sf.TeamID)
+		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcTeam.Key, sf.TeamID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
-		err = app.Socket(ctx.App).SendContentUpdate(util.SvcSprint, sf.SprintID)
+		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcSprint.Key, sf.SprintID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
@@ -72,13 +71,13 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcStandup.Key, npncore.KeyKey, sess.Slug), nil
 		}
 
-		params := &web.PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := web.CheckPerms(ctx, app.Standup(ctx.App).Data.Permissions, params)
+		params := &PermissionParams{Svc: util.SvcStandup, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
+		auths, permErrors, bc := CheckPerms(ctx, app.Standup(ctx.App).Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return web.PermErrorTemplate(util.SvcStandup, permErrors, auths, ctx, w)
+			return PermErrorTemplate(util.SvcStandup, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
@@ -87,12 +86,12 @@ func StandupWorkspace(w http.ResponseWriter, r *http.Request) {
 }
 
 func StandupExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *npnweb.RequestContext) web.ExportParams {
+	f := func(key string, ctx *npnweb.RequestContext) ExportParams {
 		sess := app.Standup(ctx.App).GetBySlug(key)
 		if sess == nil {
-			return web.ExportParams{}
+			return ExportParams{}
 		}
-		return web.ExportParams{
+		return ExportParams{
 			ModelID: &sess.ID,
 			Slug:    sess.Slug,
 			Title:   sess.Title,
@@ -100,5 +99,5 @@ func StandupExport(w http.ResponseWriter, r *http.Request) {
 			PermSvc: app.Standup(ctx.App).Data.Permissions,
 		}
 	}
-	web.ExportAct(util.SvcStandup, f, w, r)
+	ExportAct(util.SvcStandup, f, w, r)
 }

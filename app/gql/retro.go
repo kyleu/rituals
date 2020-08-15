@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
 	"github.com/kyleu/rituals.dev/app/retro"
@@ -10,12 +11,12 @@ import (
 )
 
 var (
-	retroResolver           Callback
-	retrosResolver          Callback
-	retroActionResolver     Callback
-	retroPermissionResolver Callback
-	retroTeamResolver       Callback
-	retroSprintResolver     Callback
+	retroResolver           npngraphql.Callback
+	retrosResolver          npngraphql.Callback
+	retroActionResolver     npngraphql.Callback
+	retroPermissionResolver npngraphql.Callback
+	retroTeamResolver       npngraphql.Callback
+	retroSprintResolver     npngraphql.Callback
 	retroType               *graphql.Object
 )
 
@@ -35,27 +36,27 @@ func initRetro() {
 	}
 
 	retrosResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
+		return app.Retro(ctx.App).List(npngraphql.ParamSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	retroActionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Action(ctx.App).GetBySvcModel(svc, p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
+		return app.Action(ctx.App).GetBySvcModel(svc.Key, p.Source.(*retro.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
 	}
 
 	retroMemberResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).Data.Members.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
+		return app.Retro(ctx.App).Data.Members.GetByModelID(p.Source.(*retro.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
 	}
 
 	retroPermissionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).Data.Permissions.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
+		return app.Retro(ctx.App).Data.Permissions.GetByModelID(p.Source.(*retro.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
 	}
 
 	retroCommentResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).Data.GetComments(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
+		return app.Retro(ctx.App).Data.GetComments(p.Source.(*retro.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
 	}
 
 	retroHistoryResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		ret := app.Retro(ctx.App).Data.History.GetByModelID(p.Source.(*retro.Session).ID, paramSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
+		ret := app.Retro(ctx.App).Data.History.GetByModelID(p.Source.(*retro.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
@@ -80,7 +81,7 @@ func initRetro() {
 			Name: svc.Title,
 			Fields: graphql.Fields{
 				npncore.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(scalarUUID),
+					Type: graphql.NewNonNull(npngraphql.ScalarUUID),
 				},
 				npncore.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
@@ -112,20 +113,20 @@ func initRetro() {
 				npncore.Plural(npncore.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This retro's members",
-					Args:        listArgs,
-					Resolve:     ctxF(retroMemberResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(retroMemberResolver),
 				},
 				npncore.Plural(npncore.KeyComment): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
 					Description: "This retro's comments",
-					Args:        listArgs,
-					Resolve:     ctxF(retroCommentResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(retroCommentResolver),
 				},
 				npncore.KeyHistory: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
 					Description: "This retro's name history",
-					Args:        listArgs,
-					Resolve:     ctxF(retroHistoryResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(retroHistoryResolver),
 				},
 			},
 		},

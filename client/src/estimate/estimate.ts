@@ -1,6 +1,5 @@
 namespace estimate {
   interface Detail extends session.Session {
-    readonly status: { key: string };
     readonly choices: readonly string[];
   }
 
@@ -48,7 +47,7 @@ namespace estimate {
         setEstimateDetail(sj.session);
         story.setStories(sj.stories);
         vote.setVotes(sj.votes);
-        session.showWelcomeMessage(sj.members.length);
+        session.showWelcomeMessage(sj.session.status, sj.members.length);
         break;
       case command.server.sessionUpdate:
         setEstimateDetail(param as Detail);

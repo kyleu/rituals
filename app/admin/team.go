@@ -15,9 +15,9 @@ import (
 )
 
 func TeamList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = "Team List"
-		ctx.Breadcrumbs = adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
 
 		params := npnweb.ParamSetFromRequest(r)
 		teams := app.Team(ctx.App).List(params.Get(util.SvcTeam.Key, ctx.Logger))
@@ -26,7 +26,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		teamID, err := npnweb.IDFromParams(util.SvcTeam.Key, mux.Vars(r))
 		if err != nil {
 			return npncontroller.EResp(err)
@@ -46,7 +46,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 
 		data := app.Team(ctx.App).Data.GetData(*teamID, params, ctx.Logger)
 
-		bc := adminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
+		bc := npncontroller.AdminBC(ctx, util.SvcTeam.Key, util.SvcTeam.Plural)
 		bc = append(bc, npnweb.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 

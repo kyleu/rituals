@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
@@ -12,8 +13,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSessionSaveParams) error {
-	dataSvc := s.retros
+func onRetroSessionSave(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param retroSessionSaveParams) error {
+	dataSvc := retros(s)
 	title := util.ServiceTitle(util.SvcRetro, param.Title)
 
 	categories := npndatabase.StringToArray(param.Categories)
@@ -29,13 +30,13 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 		return errors.New("no retro available with id [" + ch.ID.String() + "]")
 	}
 
-	sr := s.checkPerms(userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	sr := checkPerms(s, userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
 	if sr != nil {
 		return sr
 	}
 
-	teamChanged := differentPointerValues(curr.TeamID, teamID)
-	sprintChanged := differentPointerValues(curr.SprintID, sprintID)
+	teamChanged :=npnconnection.DifferentPointerValues(curr.TeamID, teamID)
+	sprintChanged :=npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
 	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, npncore.OxfordComma(categories, "and"), sprintID, teamID))
@@ -58,7 +59,7 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	}
 
 	if teamChanged {
-		tm := s.teams.GetByIDPointer(teamID)
+		tm := teams(s).GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated retro session")
@@ -66,14 +67,14 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	}
 
 	if sprintChanged {
-		spr := s.sprints.GetByIDPointer(sprintID)
+		spr := sprints(s).GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.Wrap(err, "error sending sprint for updated retro session")
 		}
 	}
 
-	err = s.updatePerms(ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
+	err = updatePerms(s, ch, userID, teamID, sprintID, dataSvc.Data.Permissions, param.Permissions)
 	if err != nil {
 		return errors.Wrap(err, "error updating permissions")
 	}
@@ -81,12 +82,12 @@ func onRetroSessionSave(s *Service, ch Channel, userID uuid.UUID, param retroSes
 	return nil
 }
 
-func sendRetroSessionUpdate(s *Service, ch Channel) error {
-	sess := s.retros.GetByID(ch.ID)
+func sendRetroSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
+	sess := retros(s).GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load retro session [" + ch.ID.String() + "]")
 	}
 
-	err := s.WriteChannel(ch, NewMessage(util.SvcRetro, ServerCmdSessionUpdate, sess))
+	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcRetro.Key, ServerCmdSessionUpdate, sess))
 	return errors.Wrap(err, "error sending retro session")
 }

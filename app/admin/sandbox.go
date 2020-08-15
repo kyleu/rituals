@@ -15,9 +15,9 @@ import (
 )
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = npncore.PluralTitle(npncore.KeySandbox)
-		ctx.Breadcrumbs = adminBC(ctx, npncore.KeySandbox, npncore.Plural(npncore.KeySandbox))
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeySandbox, npncore.Plural(npncore.KeySandbox))
 		return npncontroller.T(admintemplates.SandboxList(sandbox.AllSandboxes, ctx, w))
 	})
 }
@@ -35,7 +35,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ctx.Title = sb.Title + " Sandbox"
-		bc := adminBC(ctx, npncore.KeySandbox, npncore.Plural(npncore.KeySandbox))
+		bc := npncontroller.AdminBC(ctx, npncore.KeySandbox, npncore.Plural(npncore.KeySandbox))
 		bc = append(bc, npnweb.BreadcrumbSelf(key))
 		ctx.Breadcrumbs = bc
 

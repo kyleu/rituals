@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -29,8 +30,8 @@ type editFeedbackParams struct {
 	Content  string    `json:"content"`
 }
 
-func onRetroMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
-	dataSvc := s.retros
+func onRetroMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+	dataSvc := retros(s)
 	var err error
 	userID := conn.Profile.UserID
 

@@ -1,6 +1,7 @@
 package xls
 
 import (
+	npnxls "github.com/kyleu/npn/npnexport/xls"
 	"strings"
 
 	"github.com/kyleu/npn/npncore"
@@ -26,8 +27,8 @@ func renderRetro(rsp transcript.RetroResponse, f *excelize.File) (string, string
 	}
 	data = append(data, []interface{}{npncore.Title(npncore.KeyCreated), rsp.Session.Created})
 
-	setData(defSheet, 1, data, f)
-	setColumnWidths(defSheet, []int{16, 32}, f)
+	npnxls.SetData(npnxls.DefSheet, 1, data, f)
+	npnxls.SetColumnWidths(npnxls.DefSheet, []int{16, 32}, f)
 
 	renderPermissionList(rsp.Permissions, f)
 	renderFeedbackList(rsp.Feedback, rsp.Members, f)
@@ -42,14 +43,14 @@ func renderRetroList(sessions retro.Sessions, members member.Entries, f *exceliz
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
+		npnxls.SetColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {
 			data = append(data, []interface{}{s.Title, members.GetName(s.Owner), s.Created})
 		}
-		setData(svc.Plural, 2, data, f)
-		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
+		npnxls.SetData(svc.Plural, 2, data, f)
+		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
 	return svc.Plural, svc.Title + " export"
 }
@@ -59,14 +60,14 @@ func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *ex
 	if len(feedbacks) > 0 {
 		f.NewSheet(key)
 
-		setColumnHeaders(key, []string{npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyCategory), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}, f)
+		npnxls.SetColumnHeaders(key, []string{npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyCategory), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, f := range feedbacks {
 			data = append(data, []interface{}{members.GetName(f.UserID), f.Category, f.Content, f.Created})
 		}
-		setData(key, 2, data, f)
-		setColumnWidths(key, []int{16, 16, 64, 16}, f)
+		npnxls.SetData(key, 2, data, f)
+		npnxls.SetColumnWidths(key, []int{16, 16, 64, 16}, f)
 	}
 	return key, key + " export"
 }

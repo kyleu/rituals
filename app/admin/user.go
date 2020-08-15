@@ -16,9 +16,9 @@ import (
 )
 
 func UserList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = "User List"
-		ctx.Breadcrumbs = adminBC(ctx, npncore.KeyUser, npncore.Plural(npncore.KeyUser))
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyUser, npncore.Plural(npncore.KeyUser))
 
 		params := npnweb.ParamSetFromRequest(r)
 		users := ctx.App.User().List(params.Get(npncore.KeyUser, ctx.Logger))
@@ -27,7 +27,7 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		userID, err := npnweb.IDFromParams(npncore.KeyUser, mux.Vars(r))
 		if err != nil {
 			return npncontroller.EResp(err)
@@ -49,7 +49,7 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		actions := app.Action(ctx.App).GetByUser(*userID, params.Get(npncore.KeyAction, ctx.Logger))
 
 		ctx.Title = u.Name
-		bc := adminBC(ctx, npncore.KeyUser, npncore.Plural(npncore.KeyUser))
+		bc := npncontroller.AdminBC(ctx, npncore.KeyUser, npncore.Plural(npncore.KeyUser))
 		bc = append(bc, npnweb.BreadcrumbSelf(u.Name))
 		ctx.Breadcrumbs = bc
 

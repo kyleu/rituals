@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -16,8 +17,8 @@ type teamSessionSaveParams struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onTeamMessage(s *Service, conn *connection, cmd string, param json.RawMessage) error {
-	dataSvc := s.teams
+func onTeamMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+	dataSvc := teams(s)
 	var err error
 	userID := conn.Profile.UserID
 	switch cmd {
@@ -43,7 +44,7 @@ func onTeamMessage(s *Service, conn *connection, cmd string, param json.RawMessa
 	return errors.Wrap(err, "error handling team message")
 }
 
-func sendTeams(s *Service, conn *connection, userID uuid.UUID) error {
-	teams := s.teams.GetByMember(userID, nil)
-	return s.WriteMessage(conn.ID, NewMessage(util.SvcSystem, ServerCmdTeams, teams))
+func sendTeams(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID) error {
+	teams := teams(s).GetByMember(userID, nil)
+	return s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdTeams, teams))
 }

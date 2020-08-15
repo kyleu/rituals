@@ -29,26 +29,26 @@ func NewService(db *npndatabase.Service, logger logur.Logger) *Service {
 	return &svc
 }
 
-func (s *Service) New(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
+func (s *Service) New(svc string, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, note string) (*Action, error) {
 	id := npncore.UUID()
 	q := npndatabase.SQLInsert(npncore.KeyAction, []string{npncore.KeyID, npncore.KeySvc, npncore.WithDBID(npncore.KeyModel), npncore.WithDBID(npncore.KeyUser), npncore.KeyAct, npncore.KeyContent, npncore.KeyNote}, 1)
-	err := s.db.Insert(q, nil, id, svc.Key, modelID, userID, act, npncore.ToJSON(content, s.logger), note)
+	err := s.db.Insert(q, nil, id, svc, modelID, userID, act, npncore.ToJSON(content, s.logger), note)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "error saving new ["+svc.Key+"] action")
+		return nil, errors.Wrap(err, "error saving new ["+svc+"] action")
 	}
 
 	return s.GetByID(id), nil
 }
 
-func (s *Service) PostRef(svc util.Service, modelID *uuid.UUID, refSvc util.Service, refID uuid.UUID, userID uuid.UUID, act string, notes ...string) {
+func (s *Service) PostRef(svc string, modelID *uuid.UUID, refSvc util.Service, refID uuid.UUID, userID uuid.UUID, act string, notes ...string) {
 	if modelID != nil {
 		actionContent := map[string]interface{}{npncore.KeySvc: refSvc.Key, npncore.KeyID: refID}
 		s.Post(svc, *modelID, userID, act, actionContent, notes...)
 	}
 }
 
-func (s *Service) Post(svc util.Service, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, notes ...string) {
+func (s *Service) Post(svc string, modelID uuid.UUID, userID uuid.UUID, act string, content interface{}, notes ...string) {
 	go func() {
 		_, err := s.New(svc, modelID, userID, act, content, strings.Join(notes, "\n\n"))
 		if err != nil {
@@ -102,13 +102,13 @@ func (s *Service) GetByUser(userID uuid.UUID, params *npncore.Params) Actions {
 	return toActions(dtos)
 }
 
-func (s *Service) GetBySvcModel(svc util.Service, modelID uuid.UUID, params *npncore.Params) Actions {
+func (s *Service) GetBySvcModel(svc string, modelID uuid.UUID, params *npncore.Params) Actions {
 	params = npncore.ParamsWithDefaultOrdering(npncore.KeyAction, params, npncore.DefaultCreatedOrdering...)
 
 	var dtos []actionDTO
 
 	q := npndatabase.SQLSelect("*", npncore.KeyAction, "svc = $1 and model_id = $2", params.OrderByString(), params.Limit, params.Offset)
-	err := s.db.Select(&dtos, q, nil, svc.Key, modelID)
+	err := s.db.Select(&dtos, q, nil, svc, modelID)
 
 	if err != nil {
 		s.logger.Error(fmt.Sprintf("unable to get actions for [%v:%v]: %+v", svc, modelID, err))

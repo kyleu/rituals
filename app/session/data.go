@@ -35,10 +35,11 @@ func (svcs *DataServices) GetData(id uuid.UUID, params npncore.ParamSet, logger 
 		Comments: svcs.GetComments(id, params.Get(npncore.KeyComment, logger)),
 		Perms:    svcs.Permissions.GetByModelID(id, params.Get(npncore.KeyPermission, logger)),
 		History:  svcs.History.GetByModelID(id, params.Get(npncore.KeyHistory, logger)),
-		Actions:  svcs.Actions.GetBySvcModel(util.SvcTeam, id, params.Get(npncore.KeyAction, logger)),
+		Actions:  svcs.Actions.GetBySvcModel(util.SvcTeam.Key, id, params.Get(npncore.KeyAction, logger)),
 	}
 }
 
 func (svcs *DataServices) GetComments(id uuid.UUID, params *npncore.Params) comment.Comments {
 	return svcs.Comments.GetByModelID(svcs.Svc, id, params)
 }
+

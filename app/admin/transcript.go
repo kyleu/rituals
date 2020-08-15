@@ -1,16 +1,13 @@
 package admin
 
 import (
+	"github.com/kyleu/rituals.dev/app/controllers"
 	"net/http"
 
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnweb"
-	"github.com/kyleu/rituals.dev/app/web"
-
 	"github.com/kyleu/rituals.dev/gen/admintemplates"
-
-	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/kyleu/rituals.dev/app/transcript"
 
@@ -18,9 +15,9 @@ import (
 )
 
 func TranscriptList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
-		ctx.Title = npncore.PluralTitle(util.KeyTranscript)
-		ctx.Breadcrumbs = adminBC(ctx, util.KeyTranscript, npncore.Plural(util.KeyTranscript))
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+		ctx.Title = npncore.PluralTitle(npncore.KeyTranscript)
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyTranscript, npncore.Plural(npncore.KeyTranscript))
 		return npncontroller.T(admintemplates.TranscriptList(transcript.AllTranscripts, ctx, w))
 	})
 }
@@ -30,7 +27,7 @@ func TranscriptRun(w http.ResponseWriter, r *http.Request) {
 		key := mux.Vars(r)[npncore.KeyKey]
 		t := transcript.FromString(key)
 		if t == nil {
-			return "", npncore.IDError(util.KeyTranscript, key)
+			return "", npncore.IDError(npncore.KeyTranscript, key)
 		}
 
 		param := r.URL.Query().Get("param")
@@ -51,6 +48,6 @@ func TranscriptRun(w http.ResponseWriter, r *http.Request) {
 			return npncontroller.EResp(err, "error running transcript ["+key+"]")
 		}
 
-		return web.ExportTemplate(t, r.URL.Path, content, format, ctx, w)
+		return controllers.ExportTemplate(t, r.URL.Path, content, format, ctx, w)
 	})
 }

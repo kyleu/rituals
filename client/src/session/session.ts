@@ -3,6 +3,7 @@ namespace session {
     readonly id: string;
     readonly slug: string;
     readonly title: string;
+    readonly status: string;
     teamID?: string;
     sprintID?: string;
     readonly owner: string;
@@ -18,7 +19,7 @@ namespace session {
     readonly comments: comment.Comment[];
     readonly online: string[];
     readonly team?: team.Detail;
-    readonly sprint?: team.Detail;
+    readonly sprint?: sprint.Detail;
   }
 
   export function setDetail(session: Session) {
@@ -50,8 +51,9 @@ namespace session {
     comment.setCounts();
   }
 
-  export function showWelcomeMessage(memberCount: number) {
-    if (memberCount === 1) {
+  export function showWelcomeMessage(status: string, memberCount: number) {
+    if (status === "new" && memberCount === 1) {
+      socket.send({svc: services.system.key, cmd: command.client.setActive, param: null});
       setTimeout(() => modal.open("welcome"), 300);
     }
   }

@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 )
 
 var (
@@ -18,7 +19,7 @@ func initHistory() {
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				npncore.WithID(npncore.KeyModel): &graphql.Field{
-					Type: graphql.NewNonNull(scalarUUID),
+					Type: graphql.NewNonNull(npngraphql.ScalarUUID),
 				},
 				"modelName": &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),

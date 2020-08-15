@@ -23,7 +23,7 @@
         Joining this session will also join the current sprint, <span id="sprint-warning-name"></span>
       </p>
       <p>For now, just share the url of this page from your address bar, or be the world's first person to use a QR code</p>
-      <p><img src="<%= ctx.Route(`qr`) %>?path=<%= url.QueryEscape(path) %>" width="128" height="128" alt="lol qr code wat" /></p>
+      <p><img id="qrcode" src="" data-src="<%= ctx.Route(`qr`) %>?path=<%= url.QueryEscape(path) %>" width="128" height="128" title="lol qr code wat" /></p>
     </div>
   </div>
 </div>

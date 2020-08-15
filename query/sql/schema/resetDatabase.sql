@@ -37,12 +37,9 @@ drop table if exists "migration";
 drop table if exists "system_user";
 
 drop type if exists "auth_provider";
-drop type if exists "estimate_status";
+drop type if exists "session_status";
 drop type if exists "member_status";
 drop type if exists "model_service";
-drop type if exists "retro_status";
-drop type if exists "standup_status";
-drop type if exists "story_status";
 drop type if exists "system_role";
 
 -- <%: func ResetDatabase(w io.Writer) %>

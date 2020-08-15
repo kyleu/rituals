@@ -3,7 +3,6 @@ package member
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
 
@@ -106,4 +105,12 @@ func (s *Service) UpdateMember(modelID uuid.UUID, src uuid.UUID, target uuid.UUI
 		return nil, errors.Wrap(err, "unable to update member ["+target.String()+"] as ["+src.String()+"]")
 	}
 	return s.Get(modelID, target)
+}
+
+func (s *Service) UpdateStatus(sessionID uuid.UUID, status string, userID uuid.UUID) error {
+	cols := []string{npncore.KeyStatus}
+	q := npndatabase.SQLUpdate(s.svc.Key, cols, fmt.Sprintf("%v = $%v", npncore.KeyID, len(cols)+1))
+	err := s.db.UpdateOne(q, nil, status, sessionID)
+	s.actions.Post(s.svc.Key, sessionID, userID, action.ActUpdate, nil)
+	return errors.Wrap(err, "error updating retro session")
 }

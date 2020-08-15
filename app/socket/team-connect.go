@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/rituals.dev/app/comment"
@@ -30,8 +31,8 @@ type TeamSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onTeamConnect(s *Service, conn *connection, teamID uuid.UUID) error {
-	ch := Channel{Svc: util.SvcTeam, ID: teamID}
+func onTeamConnect(s *npnconnection.Service, conn *npnconnection.Connection, teamID uuid.UUID) error {
+	ch := npnconnection.Channel{Svc: util.SvcTeam.Key, ID: teamID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -40,10 +41,10 @@ func onTeamConnect(s *Service, conn *connection, teamID uuid.UUID) error {
 	return errors.Wrap(err, "error joining team session")
 }
 
-func joinTeamSession(s *Service, conn *connection, ch Channel) error {
-	dataSvc := s.teams
-	if ch.Svc != util.SvcTeam {
-		return errors.New("team cannot handle [" + ch.Svc.Key + "] message")
+func joinTeamSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
+	dataSvc := teams(s)
+	if ch.Svc != util.SvcTeam.Key {
+		return errors.New("team cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess := dataSvc.GetByID(ch.ID)
@@ -61,13 +62,13 @@ func joinTeamSession(s *Service, conn *connection, ch Channel) error {
 		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Sprints:     s.sprints.GetByTeamID(ch.ID, nil),
-		Estimates:   s.estimates.GetByTeamID(ch.ID, nil),
-		Standups:    s.standups.GetByTeamID(ch.ID, nil),
-		Retros:      s.retros.GetByTeamID(ch.ID, nil),
+		Sprints:     sprints(s).GetByTeamID(ch.ID, nil),
+		Estimates:   estimates(s).GetByTeamID(ch.ID, nil),
+		Standups:    standups(s).GetByTeamID(ch.ID, nil),
+		Retros:      retros(s).GetByTeamID(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}
-	msg := NewMessage(util.SvcTeam, ServerCmdSessionJoined, sj)
-	return s.sendInitial(ch, conn, res.Entry, msg, nil, nil)
+	msg := npnconnection.NewMessage(util.SvcTeam.Key, ServerCmdSessionJoined, sj)
+	return sendInitial(s, ch, conn, res.Entry, msg, nil, nil)
 }

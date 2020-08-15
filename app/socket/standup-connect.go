@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/rituals.dev/app/comment"
@@ -27,8 +28,8 @@ type StandupSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onStandupConnect(s *Service, conn *connection, standupID uuid.UUID) error {
-	ch := Channel{Svc: util.SvcStandup, ID: standupID}
+func onStandupConnect(s *npnconnection.Service, conn *npnconnection.Connection, standupID uuid.UUID) error {
+	ch := npnconnection.Channel{Svc: util.SvcStandup.Key, ID: standupID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -37,10 +38,10 @@ func onStandupConnect(s *Service, conn *connection, standupID uuid.UUID) error {
 	return errors.Wrap(err, "error joining standup session")
 }
 
-func joinStandupSession(s *Service, conn *connection, ch Channel) error {
-	dataSvc := s.standups
-	if ch.Svc != util.SvcStandup {
-		return errors.New("standup cannot handle [" + ch.Svc.Key + "] message")
+func joinStandupSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
+	dataSvc := standups(s)
+	if ch.Svc != util.SvcStandup.Key {
+		return errors.New("standup cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess := dataSvc.GetByID(ch.ID)
@@ -64,6 +65,6 @@ func joinStandupSession(s *Service, conn *connection, ch Channel) error {
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}
-	msg := NewMessage(util.SvcStandup, ServerCmdSessionJoined, sj)
-	return s.sendInitial(ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
+	msg := npnconnection.NewMessage(util.SvcStandup.Key, ServerCmdSessionJoined, sj)
+	return sendInitial(s, ch, conn, res.Entry, msg, sess.SprintID, res.SprintEntry)
 }

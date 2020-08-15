@@ -3,6 +3,7 @@ package socket
 import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
+	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/rituals.dev/app/comment"
@@ -30,8 +31,8 @@ type SprintSessionJoined struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintConnect(s *Service, conn *connection, sprintID uuid.UUID) error {
-	ch := Channel{Svc: util.SvcSprint, ID: sprintID}
+func onSprintConnect(s *npnconnection.Service, conn *npnconnection.Connection, sprintID uuid.UUID) error {
+	ch := npnconnection.Channel{Svc: util.SvcSprint.Key, ID: sprintID}
 	err := s.Join(conn.ID, ch)
 	if err != nil {
 		return errors.Wrap(err, "error joining channel")
@@ -40,11 +41,11 @@ func onSprintConnect(s *Service, conn *connection, sprintID uuid.UUID) error {
 	return errors.Wrap(err, "error joining sprint session")
 }
 
-func joinSprintSession(s *Service, conn *connection, ch Channel) error {
-	dataSvc := s.sprints
+func joinSprintSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
+	dataSvc := sprints(s)
 
-	if ch.Svc != util.SvcSprint {
-		return errors.New("sprint cannot handle [" + ch.Svc.Key + "] message")
+	if ch.Svc != util.SvcSprint.Key {
+		return errors.New("sprint cannot handle [" + ch.Svc + "] message")
 	}
 
 	sess := dataSvc.GetByID(ch.ID)
@@ -63,12 +64,12 @@ func joinSprintSession(s *Service, conn *connection, ch Channel) error {
 		Team:        getTeamOpt(s, sess.TeamID),
 		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Estimates:   s.estimates.GetBySprintID(ch.ID, nil),
-		Standups:    s.standups.GetBySprintID(ch.ID, nil),
-		Retros:      s.retros.GetBySprintID(ch.ID, nil),
+		Estimates:   estimates(s).GetBySprintID(ch.ID, nil),
+		Standups:    standups(s).GetBySprintID(ch.ID, nil),
+		Retros:      retros(s).GetBySprintID(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}
-	msg := NewMessage(util.SvcSprint, ServerCmdSessionJoined, sj)
-	return s.sendInitial(ch, conn, res.Entry, msg, nil, nil)
+	msg := npnconnection.NewMessage(util.SvcSprint.Key, ServerCmdSessionJoined, sj)
+	return sendInitial(s, ch, conn, res.Entry, msg, nil, nil)
 }

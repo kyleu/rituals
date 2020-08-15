@@ -3,6 +3,7 @@ package xls
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/npn/npncore"
+	npnxls "github.com/kyleu/npn/npnexport/xls"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/standup"
 	"github.com/kyleu/rituals.dev/app/transcript"
@@ -22,8 +23,8 @@ func renderStandup(rsp transcript.StandupResponse, f *excelize.File) (string, st
 	}
 	data = append(data, []interface{}{npncore.Title(npncore.KeyCreated), rsp.Session.Created})
 
-	setData(defSheet, 1, data, f)
-	setColumnWidths(defSheet, []int{16, 32}, f)
+	npnxls.SetData(npnxls.DefSheet, 1, data, f)
+	npnxls.SetColumnWidths(npnxls.DefSheet, []int{16, 32}, f)
 
 	renderPermissionList(rsp.Permissions, f)
 	renderReportList(rsp.Reports, rsp.Members, f)
@@ -38,14 +39,14 @@ func renderStandupList(sessions standup.Sessions, members member.Entries, f *exc
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
+		npnxls.SetColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {
 			data = append(data, []interface{}{s.Title, members.GetName(s.Owner), s.Created})
 		}
-		setData(svc.Plural, 2, data, f)
-		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
+		npnxls.SetData(svc.Plural, 2, data, f)
+		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
 	return svc.Plural, svc.Title + " export"
 }
@@ -55,14 +56,14 @@ func renderReportList(reports standup.Reports, members member.Entries, f *exceli
 	if len(reports) > 0 {
 		f.NewSheet(key)
 
-		setColumnHeaders(key, []string{"Day", npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}, f)
+		npnxls.SetColumnHeaders(key, []string{"Day", npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range reports {
 			data = append(data, []interface{}{s.D, members.GetName(s.UserID), s.Content, s.Created})
 		}
-		setData(key, 2, data, f)
-		setColumnWidths(key, []int{16, 16, 64, 16}, f)
+		npnxls.SetData(key, 2, data, f)
+		npnxls.SetColumnWidths(key, []int{16, 16, 64, 16}, f)
 	}
 	return key, key + " export"
 }

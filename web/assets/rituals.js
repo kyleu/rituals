@@ -600,7 +600,7 @@ var estimate;
                 setEstimateDetail(sj.session);
                 story.setStories(sj.stories);
                 vote.setVotes(sj.votes);
-                session.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.session.status, sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setEstimateDetail(param);
@@ -773,7 +773,7 @@ var modal;
         events.register("action", action.loadActions);
         // member
         events.register("self", member.viewSelf);
-        events.register("invitation");
+        events.register("invitation", member.loadQR);
         events.register("member", member.viewActiveMember);
         // estimate
         events.register("add-story", story.viewAddStory);
@@ -1231,6 +1231,11 @@ var member;
         members = m;
     }
     member_2.applyMembers = applyMembers;
+    function loadQR() {
+        const code = dom.req("#qrcode");
+        code.src = code.dataset["src"];
+    }
+    member_2.loadQR = loadQR;
     function getActiveMember() {
         if (!activeMember) {
             console.warn("no active member");
@@ -1382,6 +1387,7 @@ var command;
     command.client = {
         ping: "ping",
         connect: "connect",
+        setActive: "set-active",
         getActions: "get-actions",
         getTeams: "get-teams",
         getSprints: "get-sprints",
@@ -1754,7 +1760,7 @@ var retro;
                 session.onSessionJoin(sj);
                 setRetroDetail(sj.session);
                 feedback.setFeedback(sj.feedback);
-                session.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.session.status, sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setRetroDetail(param);
@@ -1840,8 +1846,9 @@ var session;
         comment.setCounts();
     }
     session_1.onSessionJoin = onSessionJoin;
-    function showWelcomeMessage(memberCount) {
-        if (memberCount === 1) {
+    function showWelcomeMessage(status, memberCount) {
+        if (status === "new" && memberCount === 1) {
+            socket.send({ svc: services.system.key, cmd: command.client.setActive, param: null });
             setTimeout(() => modal.open("welcome"), 300);
         }
     }
@@ -1984,7 +1991,7 @@ var sprint;
                 session.onSessionJoin(sj);
                 setSprintDetail(sj.session);
                 setSprintContents(sj);
-                session.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.session.status, sj.members.length);
                 break;
             case command.server.teamUpdate:
                 const tm = param;
@@ -2123,7 +2130,7 @@ var standup;
                 session.onSessionJoin(sj);
                 setStandupDetail(sj.session);
                 report.setReports(sj.reports);
-                session.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.session.status, sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setStandupDetail(param);
@@ -2489,7 +2496,7 @@ var team;
                 session.onSessionJoin(sj);
                 setTeamDetail(sj.session);
                 setTeamHistory(sj);
-                session.showWelcomeMessage(sj.members.length);
+                session.showWelcomeMessage(sj.session.status, sj.members.length);
                 break;
             case command.server.sessionUpdate:
                 setTeamDetail(param);

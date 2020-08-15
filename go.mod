@@ -8,18 +8,21 @@ require (
 	emperror.dev/handler/logur v0.4.0
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/gofrs/uuid v3.3.0+incompatible
-	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.1
 	github.com/graphql-go/graphql v0.7.9
 	github.com/jackc/pgx v3.6.2+incompatible // indirect
 	github.com/johnfercher/maroto v0.27.0
 	github.com/jonboulle/clockwork v0.2.0 // indirect
-	github.com/kyleu/npn/npncontroller v0.0.4
+	github.com/kyleu/npn/npnasset v1.0.0
+	github.com/kyleu/npn/npnconnection v1.0.0
+	github.com/kyleu/npn/npncontroller v1.0.0
 	github.com/kyleu/npn/npncore v1.0.0
 	github.com/kyleu/npn/npndatabase v1.0.0
+	github.com/kyleu/npn/npnexport v1.0.0
+	github.com/kyleu/npn/npngraphql v1.0.0
 	github.com/kyleu/npn/npnservice v1.0.0
-	github.com/kyleu/npn/npntemplate v0.0.4
+	github.com/kyleu/npn/npntemplate v1.0.0
 	github.com/kyleu/npn/npnuser v1.0.0
 	github.com/kyleu/npn/npnweb v1.0.0
 	github.com/mattn/go-runewidth v0.0.8 // indirect
@@ -35,11 +38,19 @@ require (
 	logur.dev/logur v0.16.2
 )
 
+replace github.com/kyleu/npn/npnasset => ../npn/npnasset
+
+replace github.com/kyleu/npn/npnconnection => ../npn/npnconnection
+
 replace github.com/kyleu/npn/npncontroller => ../npn/npncontroller
 
 replace github.com/kyleu/npn/npncore => ../npn/npncore
 
 replace github.com/kyleu/npn/npndatabase => ../npn/npndatabase
+
+replace github.com/kyleu/npn/npnexport => ../npn/npnexport
+
+replace github.com/kyleu/npn/npngraphql => ../npn/npngraphql
 
 replace github.com/kyleu/npn/npnservice => ../npn/npnservice
 

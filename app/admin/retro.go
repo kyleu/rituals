@@ -15,9 +15,9 @@ import (
 )
 
 func RetroList(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		ctx.Title = util.SvcRetro.Title + " List"
-		ctx.Breadcrumbs = adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
+		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
 		params := npnweb.ParamSetFromRequest(r)
 		retros := app.Retro(ctx.App).List(params.Get(util.SvcRetro.Key, ctx.Logger))
 		return npncontroller.T(admintemplates.RetroList(retros, params, ctx, w))
@@ -25,7 +25,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 }
 
 func RetroDetail(w http.ResponseWriter, r *http.Request) {
-	adminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
+	npncontroller.AdminAct(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		retroID, err := npnweb.IDFromParams(util.SvcRetro.Key, mux.Vars(r))
 		if err != nil {
 			return npncontroller.EResp(err)
@@ -43,7 +43,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		data := app.Retro(ctx.App).Data.GetData(*retroID, params, ctx.Logger)
 
 		ctx.Title = sess.Title
-		bc := adminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
+		bc := npncontroller.AdminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
 		bc = append(bc, npnweb.BreadcrumbSelf(sess.Slug))
 		ctx.Breadcrumbs = bc
 

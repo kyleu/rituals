@@ -1,9 +1,10 @@
 package cli
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/kyleu/rituals.dev/app/gql"
+	"github.com/kyleu/rituals.dev/gen/query"
 	"os"
+	"strings"
 
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
@@ -15,7 +16,6 @@ import (
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	"emperror.dev/handler/logur"
-	"github.com/gorilla/handlers"
 	"github.com/spf13/cobra"
 	log "logur.dev/logur"
 )
@@ -30,6 +30,9 @@ var wipeDatabase bool
 
 // Configure configures a root command.
 func Configure(version string, commitHash string) cobra.Command {
+	npncore.AppKey = "rituals"
+	npncore.AppName = "rituals.dev"
+
 	rootCmd := cobra.Command{
 		Use:   npncore.AppName,
 		Short: "Command line interface for " + npncore.AppName,
@@ -39,7 +42,11 @@ func Configure(version string, commitHash string) cobra.Command {
 				return errors.Wrap(err, "error initializing application")
 			}
 
-			return MakeServer(info, addr, port)
+			r, err := routing.BuildRouter(info)
+			if err != nil {
+				return errors.WithMessage(err, "unable to construct routes")
+			}
+			return npnweb.MakeServer(info, r, addr, port)
 		},
 	}
 
@@ -57,8 +64,6 @@ func Configure(version string, commitHash string) cobra.Command {
 func InitApp(version string, commitHash string) (npnweb.AppInfo, error) {
 	_ = os.Setenv("TZ", "UTC")
 
-	npncore.AppKey = "rituals"
-	npncore.AppName = "rituals.dev"
 	npnweb.IconContent = "<span data-uk-icon=\"icon: git-fork; ratio: 1.6\"></span>"
 
 	logger := npncore.InitLogging(verbose)
@@ -72,10 +77,26 @@ func InitApp(version string, commitHash string) (npnweb.AppInfo, error) {
 		return nil, err
 	}
 
+	err = gql.InitService(ai)
+	if err != nil {
+		return nil, err
+	}
+
 	return ai, nil
 }
 
 func initAppInfo(logger log.Logger, version string, commitHash string) (npnweb.AppInfo, error) {
+	npndatabase.InitialSchemaMigrations = npndatabase.MigrationFiles{
+		{Title: "reset", F: func(sb *strings.Builder) { query.ResetDatabase(sb) }},
+		{Title: "create-types", F: func(sb *strings.Builder) { query.CreateTypes(sb) }},
+		{Title: "create-tables", F: func(sb *strings.Builder) { query.CreateTables(sb) }},
+		{Title: "seed-data", F: func(sb *strings.Builder) { query.SeedData(sb) }},
+	}
+
+	npndatabase.DatabaseMigrations = npndatabase.MigrationFiles{
+		{Title: "first-migration", F: func(sb *strings.Builder) { query.Migration1(sb) }},
+	}
+
 	db, err := npndatabase.OpenDatabase(npndatabase.DBParams{
 		Username: npncore.AppName, Password: npncore.AppName, DBName: npncore.AppName,
 		Debug: verbose && debugSQL, Wipe: wipeDatabase, Migrate: true, Logger: logger,
@@ -85,19 +106,4 @@ func initAppInfo(logger log.Logger, version string, commitHash string) (npnweb.A
 	}
 
 	return app.NewService(verbose, db, authEnabled, redir, version, commitHash, logger), nil
-}
-
-func MakeServer(info npnweb.AppInfo, address string, port uint16) error {
-	r, err := routing.BuildRouter(info)
-	if err != nil {
-		return errors.WithMessage(err, "unable to construct routes")
-	}
-
-	var msg = "%v is starting on [%v:%v]"
-	if info.Debug() {
-		msg += " (verbose)"
-	}
-	info.Logger().Info(fmt.Sprintf(msg, npncore.AppName, address, port))
-	err = http.ListenAndServe(fmt.Sprintf("%v:%v", address, port), handlers.CORS()(r))
-	return errors.Wrap(err, "unable to run http server")
 }

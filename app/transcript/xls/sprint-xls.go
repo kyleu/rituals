@@ -3,6 +3,7 @@ package xls
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/kyleu/npn/npncore"
+	npnxls "github.com/kyleu/npn/npnexport/xls"
 	"github.com/kyleu/rituals.dev/app/member"
 	"github.com/kyleu/rituals.dev/app/sprint"
 	"github.com/kyleu/rituals.dev/app/transcript"
@@ -19,8 +20,8 @@ func renderSprint(rsp transcript.SprintResponse, f *excelize.File) (string, stri
 	}
 	data = append(data, []interface{}{npncore.Title(npncore.KeyCreated), rsp.Session.Created})
 
-	setData(defSheet, 1, data, f)
-	setColumnWidths(defSheet, []int{16, 32}, f)
+	npnxls.SetData(npnxls.DefSheet, 1, data, f)
+	npnxls.SetColumnWidths(npnxls.DefSheet, []int{16, 32}, f)
 
 	renderPermissionList(rsp.Permissions, f)
 	renderEstimateList(rsp.Estimates, rsp.Members, f)
@@ -37,14 +38,14 @@ func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excel
 	if len(sessions) > 0 {
 		f.NewSheet(svc.Plural)
 
-		setColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
+		npnxls.SetColumnHeaders(svc.Plural, []string{npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyCreated)}, f)
 
 		var data [][]interface{}
 		for _, s := range sessions {
 			data = append(data, []interface{}{s.Title, members.GetName(s.Owner), s.Created})
 		}
-		setData(svc.Plural, 2, data, f)
-		setColumnWidths(svc.Plural, []int{16, 16, 16}, f)
+		npnxls.SetData(svc.Plural, 2, data, f)
+		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
 	return svc.Plural, svc.Title + " export"
 }

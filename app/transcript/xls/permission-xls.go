@@ -2,6 +2,7 @@ package xls
 
 import (
 	"github.com/360EntSecGroup-Skylar/excelize"
+	npnxls "github.com/kyleu/npn/npnexport/xls"
 	"github.com/kyleu/rituals.dev/app/permission"
 )
 
@@ -11,6 +12,6 @@ func renderPermissionList(permissions permission.Permissions, f *excelize.File) 
 		for _, p := range permissions {
 			data = append(data, []interface{}{"", p.Message()})
 		}
-		setData(defSheet, 8, data, f)
+		npnxls.SetData(npnxls.DefSheet, 8, data, f)
 	}
 }

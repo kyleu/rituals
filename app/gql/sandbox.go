@@ -3,14 +3,15 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app/sandbox"
 )
 
 var (
-	sandboxResolver     Callback
-	sandboxesResolver   Callback
-	callSandboxResolver Callback
+	sandboxResolver     npngraphql.Callback
+	sandboxesResolver   npngraphql.Callback
+	callSandboxResolver npngraphql.Callback
 	sandboxType         *graphql.Object
 )
 

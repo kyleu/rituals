@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/rituals.dev/app/permission"
 )
 
@@ -37,35 +38,35 @@ func initPermission() {
 	estimateType.AddFieldConfig(npncore.Plural(npncore.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This estimate's permissions",
-		Args:        listArgs,
-		Resolve:     ctxF(estimatePermissionResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(estimatePermissionResolver),
 	})
 
 	standupType.AddFieldConfig(npncore.Plural(npncore.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This standup's permissions",
-		Args:        listArgs,
-		Resolve:     ctxF(standupPermissionResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(standupPermissionResolver),
 	})
 
 	retroType.AddFieldConfig(npncore.Plural(npncore.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This retro's permissions",
-		Args:        listArgs,
-		Resolve:     ctxF(retroPermissionResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(retroPermissionResolver),
 	})
 
 	sprintType.AddFieldConfig(npncore.Plural(npncore.KeyPermission), &graphql.Field{
 		Type:        graphql.NewList(graphql.NewNonNull(permissionType)),
 		Description: "This sprint's permissions",
-		Args:        listArgs,
-		Resolve:     ctxF(sprintPermissionResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(sprintPermissionResolver),
 	})
 
 	teamType.AddFieldConfig(npncore.Plural(npncore.KeyPermission), &graphql.Field{
 		Type:        graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(permissionType))),
 		Description: "This team's permissions",
-		Args:        listArgs,
-		Resolve:     ctxF(teamPermissionResolver),
+		Args:        npngraphql.ListArgs,
+		Resolve:     npngraphql.CtxF(teamPermissionResolver),
 	})
 }

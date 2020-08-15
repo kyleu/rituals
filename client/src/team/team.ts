@@ -1,7 +1,5 @@
 namespace team {
   export interface Detail extends session.Session {
-    readonly startDate: string;
-    readonly endDate: string;
   }
 
   interface SessionJoined extends session.SessionJoined {
@@ -28,7 +26,7 @@ namespace team {
         session.onSessionJoin(sj);
         setTeamDetail(sj.session);
         setTeamHistory(sj);
-        session.showWelcomeMessage(sj.members.length);
+        session.showWelcomeMessage(sj.session.status, sj.members.length);
         break;
       case command.server.sessionUpdate:
         setTeamDetail(param as Detail);

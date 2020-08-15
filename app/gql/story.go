@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
 	"github.com/kyleu/rituals.dev/app/estimate"
@@ -10,8 +11,8 @@ import (
 )
 
 var (
-	storyResolver   Callback
-	storiesResolver Callback
+	storyResolver   npngraphql.Callback
+	storiesResolver npngraphql.Callback
 	storyType       *graphql.Object
 )
 
@@ -22,7 +23,7 @@ func initStory() {
 	}
 
 	storiesResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).GetStories(p.Source.(*estimate.Session).ID, paramSetFromGraphQLParams(util.KeyStory, p, ctx.Logger)), nil
+		return app.Estimate(ctx.App).GetStories(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(util.KeyStory, p, ctx.Logger)), nil
 	}
 
 	storyType = graphql.NewObject(

@@ -1,19 +1,19 @@
 package socket
 
 import (
+	"github.com/kyleu/npn/npnconnection"
 	"strings"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
-	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func (s *Service) SendContentUpdate(svc util.Service, id *uuid.UUID) error {
+func SendContentUpdate(s *npnconnection.Service, svc string, id *uuid.UUID) error {
 	if id != nil {
-		msg := NewMessage(svc, ServerCmdContentUpdate, nil)
-		err := s.WriteChannel(Channel{Svc: svc, ID: *id}, msg)
+		msg := npnconnection.NewMessage(svc, ServerCmdContentUpdate, nil)
+		err := s.WriteChannel(npnconnection.Channel{Svc: svc, ID: *id}, msg)
 		if err != nil {
-			return errors.Wrap(err, "error writing "+svc.Key+" content update message")
+			return errors.Wrap(err, "error writing "+svc+" content update message")
 		}
 	}
 	return nil

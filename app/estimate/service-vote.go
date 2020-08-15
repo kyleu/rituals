@@ -69,7 +69,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 		}
 
 		actionContent := map[string]interface{}{"storyID": storyID, npncore.KeyChoice: choice}
-		s.Data.Actions.Post(s.svc, *estimateID, userID, action.ActVoteAdd, actionContent)
+		s.Data.Actions.Post(s.svc.Key, *estimateID, userID, action.ActVoteAdd, actionContent)
 
 		return &Vote{StoryID: storyID, UserID: userID, Choice: choice}, nil
 	}
@@ -83,7 +83,7 @@ func (s *Service) UpdateVote(storyID uuid.UUID, userID uuid.UUID, choice string)
 	curr.Choice = choice
 
 	actionContent := map[string]interface{}{npncore.WithID(util.KeyStory): storyID, npncore.KeyChoice: choice}
-	s.Data.Actions.Post(s.svc, *estimateID, userID, action.ActVoteUpdate, actionContent)
+	s.Data.Actions.Post(s.svc.Key, *estimateID, userID, action.ActVoteUpdate, actionContent)
 
 	return curr, nil
 }

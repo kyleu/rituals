@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
 	"github.com/kyleu/rituals.dev/app/standup"
@@ -10,12 +11,12 @@ import (
 )
 
 var (
-	standupResolver           Callback
-	standupsResolver          Callback
-	standupActionResolver     Callback
-	standupPermissionResolver Callback
-	standupTeamResolver       Callback
-	standupSprintResolver     Callback
+	standupResolver           npngraphql.Callback
+	standupsResolver          npngraphql.Callback
+	standupActionResolver     npngraphql.Callback
+	standupPermissionResolver npngraphql.Callback
+	standupTeamResolver       npngraphql.Callback
+	standupSprintResolver     npngraphql.Callback
 	standupType               *graphql.Object
 )
 
@@ -35,27 +36,27 @@ func initStandup() {
 	}
 
 	standupsResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).List(paramSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
+		return app.Standup(ctx.App).List(npngraphql.ParamSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	standupActionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Action(ctx.App).GetBySvcModel(svc, p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
+		return app.Action(ctx.App).GetBySvcModel(svc.Key, p.Source.(*standup.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
 	}
 
 	standupMemberResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).Data.Members.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
+		return app.Standup(ctx.App).Data.Members.GetByModelID(p.Source.(*standup.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
 	}
 
 	standupPermissionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).Data.Permissions.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
+		return app.Standup(ctx.App).Data.Permissions.GetByModelID(p.Source.(*standup.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
 	}
 
 	standupCommentResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).Data.GetComments(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
+		return app.Standup(ctx.App).Data.GetComments(p.Source.(*standup.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
 	}
 
 	standupHistoryResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		ret := app.Standup(ctx.App).Data.History.GetByModelID(p.Source.(*standup.Session).ID, paramSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
+		ret := app.Standup(ctx.App).Data.History.GetByModelID(p.Source.(*standup.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
@@ -80,7 +81,7 @@ func initStandup() {
 			Name: svc.Title,
 			Fields: graphql.Fields{
 				npncore.KeyID: &graphql.Field{
-					Type: graphql.NewNonNull(scalarUUID),
+					Type: graphql.NewNonNull(npngraphql.ScalarUUID),
 				},
 				npncore.KeySlug: &graphql.Field{
 					Type: graphql.NewNonNull(graphql.String),
@@ -109,20 +110,20 @@ func initStandup() {
 				npncore.Plural(npncore.KeyMember): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(memberType)),
 					Description: "This standup's members",
-					Args:        listArgs,
-					Resolve:     ctxF(standupMemberResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(standupMemberResolver),
 				},
 				npncore.Plural(npncore.KeyComment): &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(commentType)),
 					Description: "This standups's comments",
-					Args:        listArgs,
-					Resolve:     ctxF(standupCommentResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(standupCommentResolver),
 				},
 				npncore.KeyHistory: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(historyType)),
 					Description: "This standup's name history",
-					Args:        listArgs,
-					Resolve:     ctxF(standupHistoryResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(standupHistoryResolver),
 				},
 			},
 		},

@@ -3,6 +3,7 @@ package gql
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npngraphql"
 	"github.com/kyleu/npn/npnuser"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
@@ -10,12 +11,12 @@ import (
 )
 
 var (
-	profileResolver         Callback
-	profileTeamResolver     Callback
-	profileSprintResolver   Callback
-	profileEstimateResolver Callback
-	profileStandupResolver  Callback
-	profileRetroResolver    Callback
+	profileResolver         npngraphql.Callback
+	profileTeamResolver     npngraphql.Callback
+	profileSprintResolver   npngraphql.Callback
+	profileEstimateResolver npngraphql.Callback
+	profileStandupResolver  npngraphql.Callback
+	profileRetroResolver    npngraphql.Callback
 	profileType             *graphql.Object
 )
 
@@ -25,23 +26,23 @@ func initProfile() {
 	}
 
 	profileTeamResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Team(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, paramSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger)), nil
+		return app.Team(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger)), nil
 	}
 
 	profileSprintResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Sprint(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, paramSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger)), nil
+		return app.Sprint(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger)), nil
 	}
 
 	profileEstimateResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, paramSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
+		return app.Estimate(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
 	profileStandupResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, paramSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
+		return app.Standup(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
 	profileRetroResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, paramSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
+		return app.Retro(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 
 	profileType = graphql.NewObject(
@@ -75,32 +76,32 @@ func initProfile() {
 				util.SvcTeam.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(teamType)),
 					Description: "Your current teams",
-					Args:        listArgs,
-					Resolve:     ctxF(profileTeamResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(profileTeamResolver),
 				},
 				util.SvcSprint.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(sprintType)),
 					Description: "Your current sprints",
-					Args:        listArgs,
-					Resolve:     ctxF(profileSprintResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(profileSprintResolver),
 				},
 				util.SvcEstimate.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(estimateType)),
 					Description: "Your current estimates",
-					Args:        listArgs,
-					Resolve:     ctxF(profileEstimateResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(profileEstimateResolver),
 				},
 				util.SvcStandup.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(standupType)),
 					Description: "Your current standups",
-					Args:        listArgs,
-					Resolve:     ctxF(profileStandupResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(profileStandupResolver),
 				},
 				util.SvcRetro.Plural: &graphql.Field{
 					Type:        graphql.NewList(graphql.NewNonNull(retroType)),
 					Description: "Your current retros",
-					Args:        listArgs,
-					Resolve:     ctxF(profileRetroResolver),
+					Args:        npngraphql.ListArgs,
+					Resolve:     npngraphql.CtxF(profileRetroResolver),
 				},
 			},
 		},
@@ -109,18 +110,18 @@ func initProfile() {
 	memberType.AddFieldConfig(npncore.KeyUser, &graphql.Field{
 		Type:        profileType,
 		Description: "The user associated to this member",
-		Resolve:     ctxF(memberProfileResolver),
+		Resolve:     npngraphql.CtxF(memberProfileResolver),
 	})
 
 	commentType.AddFieldConfig(npncore.KeyUser, &graphql.Field{
 		Type:        profileType,
 		Description: "The user associated to this comment",
-		Resolve:     ctxF(commentUserResolver),
+		Resolve:     npngraphql.CtxF(commentUserResolver),
 	})
 
 	actionType.AddFieldConfig(npncore.KeyUser, &graphql.Field{
 		Type:        profileType,
 		Description: "The user associated to this action",
-		Resolve:     ctxF(actionUserResolver),
+		Resolve:     npngraphql.CtxF(actionUserResolver),
 	})
 }

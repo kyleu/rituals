@@ -1,6 +1,7 @@
 package pdf
 
 import (
+	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 	"strings"
 
 	"github.com/kyleu/npn/npncore"
@@ -13,17 +14,17 @@ import (
 )
 
 func renderRetro(rsp transcript.RetroResponse, m pdfgen.Maroto) string {
-	hr(m)
-	caption(rsp.Session.Title, m)
-	detailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
-	detailRow(npncore.PluralTitle(npncore.KeyCategory), strings.Join(rsp.Session.Categories, ", "), m)
+	npnpdf.HR(m)
+	npnpdf.Caption(rsp.Session.Title, m)
+	npnpdf.DetailRow(npncore.Title(npncore.KeyOwner), rsp.Members.GetName(rsp.Session.Owner), m)
+	npnpdf.DetailRow(npncore.PluralTitle(npncore.KeyCategory), strings.Join(rsp.Session.Categories, ", "), m)
 	if rsp.Team != nil {
-		detailRow(util.SvcTeam.Title, rsp.Team.Title, m)
+		npnpdf.DetailRow(util.SvcTeam.Title, rsp.Team.Title, m)
 	}
 	if rsp.Sprint != nil {
-		detailRow(util.SvcSprint.Title, rsp.Sprint.Title, m)
+		npnpdf.DetailRow(util.SvcSprint.Title, rsp.Sprint.Title, m)
 	}
-	detailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
+	npnpdf.DetailRow(npncore.Title(npncore.KeyCreated), npncore.ToDateString(&rsp.Session.Created), m)
 
 	renderPermissionList(rsp.Permissions, m)
 	renderMemberList(rsp.Members, m)
@@ -35,14 +36,14 @@ func renderRetro(rsp transcript.RetroResponse, m pdfgen.Maroto) string {
 
 func renderRetroList(sessions retro.Sessions, members member.Entries, m pdfgen.Maroto) {
 	if len(sessions) > 0 {
-		hr(m)
-		caption(util.SvcRetro.PluralTitle, m)
+		npnpdf.HR(m)
+		npnpdf.Caption(util.SvcRetro.PluralTitle, m)
 		cols := []string{npncore.Title(npncore.KeyOwner), npncore.Title(npncore.KeyTitle), npncore.Title(npncore.KeyCreated)}
 		var data [][]string
 		for _, s := range sessions {
 			data = append(data, []string{members.GetName(s.Owner), s.Title, npncore.ToDateString(&s.Created)})
 		}
-		table(cols, data, []uint{3, 6, 3}, m)
+		npnpdf.Table(cols, data, []uint{3, 6, 3}, m)
 	}
 }
 
@@ -55,14 +56,14 @@ func renderFeedbackLists(categories []string, feedbacks retro.Feedbacks, members
 			}
 		}
 		if len(fs) > 0 {
-			hr(m)
-			caption(c, m)
+			npnpdf.HR(m)
+			npnpdf.Caption(c, m)
 			cols := []string{npncore.Title(npncore.KeyUser), npncore.Title(npncore.KeyContent), npncore.Title(npncore.KeyCreated)}
 			var data [][]string
 			for _, s := range fs {
 				data = append(data, []string{members.GetName(s.UserID), s.Content, npncore.ToDateString(&s.Created)})
 			}
-			table(cols, data, []uint{3, 6, 3}, m)
+			npnpdf.Table(cols, data, []uint{3, 6, 3}, m)
 		}
 	}
 }

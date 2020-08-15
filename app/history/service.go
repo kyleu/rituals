@@ -80,7 +80,7 @@ func (s *Service) UpdateSlug(sessID uuid.UUID, oSlug string, oTitle string, titl
 	}
 
 	actionContent := map[string]interface{}{"src": oSlug, "tgt": tgt}
-	s.actions.Post(s.svc, sessID, userID, action.ActUpdate, actionContent)
+	s.actions.Post(s.svc.Key, sessID, userID, action.ActUpdate, actionContent)
 	return tgt, nil
 }
 

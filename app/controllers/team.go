@@ -7,8 +7,6 @@ import (
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
-	"github.com/kyleu/rituals.dev/app/web"
-
 	"github.com/kyleu/rituals.dev/app/util"
 
 	"github.com/gorilla/mux"
@@ -61,13 +59,13 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 			return ctx.Route(util.SvcTeam.Key, npncore.KeyKey, sess.Slug), nil
 		}
 
-		params := &web.PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
-		auths, permErrors, bc := web.CheckPerms(ctx, app.Team(ctx.App).Data.Permissions, params)
+		params := &PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
+		auths, permErrors, bc := CheckPerms(ctx, app.Team(ctx.App).Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
 		if len(permErrors) > 0 {
-			return web.PermErrorTemplate(util.SvcTeam, permErrors, auths, ctx, w)
+			return PermErrorTemplate(util.SvcTeam, permErrors, auths, ctx, w)
 		}
 
 		ctx.Title = sess.Title
@@ -77,12 +75,12 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 }
 
 func TeamExport(w http.ResponseWriter, r *http.Request) {
-	f := func(key string, ctx *npnweb.RequestContext) web.ExportParams {
+	f := func(key string, ctx *npnweb.RequestContext) ExportParams {
 		sess := app.Team(ctx.App).GetBySlug(key)
 		if sess == nil {
-			return web.ExportParams{}
+			return ExportParams{}
 		}
-		return web.ExportParams{
+		return ExportParams{
 			ModelID: &sess.ID,
 			Slug:    sess.Slug,
 			Title:   sess.Title,
@@ -90,5 +88,5 @@ func TeamExport(w http.ResponseWriter, r *http.Request) {
 			PermSvc: app.Team(ctx.App).Data.Permissions,
 		}
 	}
-	web.ExportAct(util.SvcTeam, f, w, r)
+	ExportAct(util.SvcTeam, f, w, r)
 }
