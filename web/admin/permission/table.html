@@ -1,6 +1,6 @@
 <%: func PermissionTable(members permission.Permissions, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-
 <table class="uk-table uk-table-divider uk-text-left">
+  <caption class="hidden"><%= ctx.Title %></caption>
   <thead>
     <tr>
       <% npntemplate.TableHeader(npncore.KeyPermission, "k", "K", params, ctx.Request, buffer) %>

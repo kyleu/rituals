@@ -1,6 +1,7 @@
 <%: func TeamTable(teams team.Sessions, params *npncore.Params, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
 
 <table class="uk-table uk-table-divider uk-text-left">
+  <caption class="hidden">team list</caption>
   <thead>
     <tr>
       <% npntemplate.TableHeader(util.SvcTeam.Key, npncore.KeyTitle, npncore.Title(npncore.KeyTitle), params, ctx.Request, buffer) %>

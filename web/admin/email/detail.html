@@ -7,41 +7,42 @@
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><%= ctx.Title %></h3>
       <table class="uk-table uk-table-divider uk-text-left">
+        <caption class="hidden"><%= ctx.Title %></caption>
         <tbody>
           <tr>
-            <th><%= npncore.Title(npncore.KeyID) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID %></td>
           </tr>
           <tr>
-            <th>Recipients</th>
+            <th scope="row">Recipients</th>
             <td><%=v model.Recipients %></td>
           </tr>
           <tr>
-            <th>Subject</th>
+            <th scope="row">Subject</th>
             <td><%= model.Subject %></td>
           </tr>
           <tr>
-            <th>Data</th>
+            <th scope="row">Data</th>
             <td><%=v model.Data %></td>
           </tr>
           <tr>
-            <th>Plain</th>
+            <th scope="row">Plain</th>
             <td><%= model.Plain %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyHTML) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyHTML) %></th>
             <td><%== model.HTML %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyUser) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyUser) %></th>
             <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, _buffer) %></a></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyStatus) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyStatus) %></th>
             <td><%= model.Status %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
             <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>

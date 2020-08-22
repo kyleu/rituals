@@ -8,6 +8,7 @@
       <h3 class="uk-card-title">Administration</h3>
       <p>Privileged actions for <%= npncore.AppName %></p>
       <table class="uk-table uk-table-divider">
+        <caption class="hidden"><%= ctx.Title %></caption>
         <thead>
           <tr>
             <% npntemplate.TableHeader(npncore.KeyAdmin, npncore.KeyName, npncore.Title(npncore.KeyName), params, ctx.Request, _buffer) %>

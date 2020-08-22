@@ -7,28 +7,29 @@
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">Authorization</h3>
       <table class="uk-table uk-table-divider uk-text-left">
+        <caption class="hidden"><%= ctx.Title %></caption>
         <tbody>
           <tr>
-            <th><%= npncore.Title(npncore.KeyID) %></th>
+           <th scope="row"><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyUser) %></th>
+           <th scope="row"><%= npncore.Title(npncore.KeyUser) %></th>
             <td>
               <a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><%= model.UserID.String() %></a>
               <div><%= user.Name %></div>
             </td>
           </tr>
           <tr>
-            <th>Provider</th>
+            <th scope="row">Provider</th>
             <td><%= model.Provider.Key %></td>
           </tr>
           <tr>
-            <th>Provider ID</th>
+            <th scope="row">Provider ID</th>
             <td><%= model.ProviderID %></td>
           </tr>
           <tr>
-            <th>User List</th>
+            <th scope="row">User List</th>
             <td>
               <% if len(model.UserListID) > 0 { %>
               <%= model.UserListID %>:<%= model.UserListName %>
@@ -36,23 +37,23 @@
             </td>
           </tr>
           <tr>
-            <th>Access Token</th>
+            <th scope="row">Access Token</th>
             <td><pre><%= model.AccessToken %></pre></td>
           </tr>
           <tr>
-            <th>Expires</th>
+            <th scope="row">Expires</th>
             <td><% npntemplate.DateTime(model.Expires, _buffer) %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyName) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyName) %></th>
             <td><%= model.Name %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyEmail) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyEmail) %></th>
             <td><%= model.Email %></td>
           </tr>
           <tr>
-            <th>Picture</th>
+            <th scope="row">Picture</th>
             <td>
               <% if len(model.Picture) > 0 { %>
                 <img src="<%= model.Picture %>" />
@@ -60,7 +61,7 @@
             </td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
             <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>

@@ -10,21 +10,22 @@
         <%= util.SvcRetro.Title %>
       </h3>
       <table class="uk-table uk-table-divider uk-text-left">
+        <caption class="hidden"><%= ctx.Title %></caption>
         <tbody>
           <tr>
-            <th><%= npncore.Title(npncore.KeyID) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeySlug) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeySlug) %></th>
             <td><%= model.Slug %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyTitle) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyTitle) %></th>
             <td><%= model.Title %></td>
           </tr>
           <tr>
-            <th><%= util.SvcTeam.Title %></th>
+            <th scope="row"><%= util.SvcTeam.Title %></th>
             <td>
               <% if model.TeamID != nil { %>
                 <a class="theme" href="<%= ctx.Route(npnweb.AdminLink(util.SvcTeam.Key, npncore.KeyDetail), `id`, model.TeamID.String()) %>"><% npntemplate.UUID(model.TeamID, _buffer) %></a>
@@ -32,7 +33,7 @@
             </td>
           </tr>
           <tr>
-            <th><%= util.SvcSprint.Title %></th>
+            <th scope="row"><%= util.SvcSprint.Title %></th>
             <td>
               <% if model.SprintID != nil { %>
                 <a class="theme" href="<%= ctx.Route(npnweb.AdminLink(util.SvcSprint.Key, npncore.KeyDetail), `id`, model.SprintID.String()) %>"><% npntemplate.UUID(model.SprintID, _buffer) %></a>
@@ -40,15 +41,15 @@
             </td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyOwner) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyOwner) %></th>
             <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.Owner.String()) %>"><% npntemplate.UUID(&model.Owner, _buffer) %></a></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyStatus) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyStatus) %></th>
             <td><%= model.Status.String() %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
             <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>

@@ -3,15 +3,16 @@
   <h3><%= r.Session.Title %></h3>
 
   <table>
+    <caption class="hidden">sprint</caption>
     <tbody>
       <% if r.Team != nil { %>
         <tr>
-          <th><%= util.SvcTeam.Title %></th>
+          <th scope="row"><%= util.SvcTeam.Title %></th>
           <td><a href="<%= tx.Route(util.SvcTeam.Key, npncore.KeyKey, r.Team.Slug) %>"><%= r.Team.Title %></a></td>
         </tr>
       <% } %>
       <tr>
-        <th><%= npncore.Title(npncore.KeyCreated) %></th>
+        <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
         <td><% npntemplate.DateTime(&r.Session.Created, buffer) %></td>
       </tr>
     </tbody>

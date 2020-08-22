@@ -7,33 +7,34 @@
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title">User Detail</h3>
       <table class="uk-table uk-table-divider uk-text-left">
+        <caption class="hidden"><%= ctx.Title %></caption>
         <tbody>
           <tr>
-            <th><%= npncore.Title(npncore.KeyID) %></th>
+             <th scope="row"><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= user.UserID.String() %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyName) %></th>
+             <th scope="row"><%= npncore.Title(npncore.KeyName) %></th>
             <td><%= user.Name %></td>
           </tr>
           <tr>
-            <th>Role</th>
+             <th scope="row">Role</th>
             <td><%= user.Role %></td>
           </tr>
           <tr>
-            <th>Theme</th>
+             <th scope="row">Theme</th>
             <td><%= user.Theme %></td>
           </tr>
           <tr>
-            <th>Nav Color</th>
+             <th scope="row">Nav Color</th>
             <td><%= user.NavColor %></td>
           </tr>
           <tr>
-            <th>Link Color</th>
+             <th scope="row">Link Color</th>
             <td><%= user.LinkColor %></td>
           </tr>
           <tr>
-            <th>Picture</th>
+             <th scope="row">Picture</th>
             <td>
               <% if len(user.Picture) > 0 { %>
                 <img src="<%= user.Picture %>" />
@@ -41,11 +42,11 @@
             </td>
           </tr>
           <tr>
-            <th>Locale</th>
+             <th scope="row">Locale</th>
             <td><%=v user.Locale %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+             <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
             <td><% npntemplate.DateTime(&user.Created, _buffer) %></td>
           </tr>
         </tbody>

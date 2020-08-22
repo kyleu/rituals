@@ -34,7 +34,7 @@ func renderEstimate(rsp transcript.EstimateResponse, f *excelize.File) (string, 
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)
 
-	return rsp.Session.Slug, util.SvcEstimate.Title + " export", nil
+	return rsp.Session.Slug, util.SvcEstimate.Title + exportSuffix, nil
 }
 
 func renderEstimateList(sessions estimate.Sessions, members member.Entries, f *excelize.File) (string, string) {
@@ -51,7 +51,7 @@ func renderEstimateList(sessions estimate.Sessions, members member.Entries, f *e
 		npnxls.SetData(svc.Plural, 2, data, f)
 		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export"
+	return svc.Plural, svc.Title + exportSuffix
 }
 
 func renderStoryList(stories estimate.Stories, members member.Entries, f *excelize.File) (string, string) {
@@ -68,5 +68,5 @@ func renderStoryList(stories estimate.Stories, members member.Entries, f *exceli
 		npnxls.SetData(key, 2, data, f)
 		npnxls.SetColumnWidths(key, []int{32, 16, 16}, f)
 	}
-	return key, npncore.Title(util.KeyStory) + " export"
+	return key, npncore.Title(util.KeyStory) + exportSuffix
 }

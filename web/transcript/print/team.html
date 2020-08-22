@@ -3,9 +3,10 @@
   <h3><a class="theme" href="<%= tx.Route(r.Svc.Key, `key`, r.Session.Slug) %>"><%= r.Session.Title %></a></h3>
 
   <table>
+    <caption class="hidden">team</caption>
     <tbody>
       <tr>
-        <th><%= npncore.Title(npncore.KeyCreated) %></th>
+        <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
         <td><% npntemplate.DateTime(&r.Session.Created, buffer) %></td>
       </tr>
     </tbody>

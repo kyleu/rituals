@@ -28,7 +28,7 @@ func renderTeam(rsp transcript.TeamResponse, f *excelize.File) (string, string, 
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)
 
-	return rsp.Session.Slug, util.SvcTeam.Title + " export", nil
+	return rsp.Session.Slug, util.SvcTeam.Title + exportSuffix, nil
 }
 
 func renderTeamList(sessions team.Sessions, members member.Entries, f *excelize.File) (string, string) {
@@ -45,5 +45,5 @@ func renderTeamList(sessions team.Sessions, members member.Entries, f *excelize.
 		npnxls.SetData(svc.Plural, 2, data, f)
 		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export"
+	return svc.Plural, svc.Title + exportSuffix
 }

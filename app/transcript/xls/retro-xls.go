@@ -35,7 +35,7 @@ func renderRetro(rsp transcript.RetroResponse, f *excelize.File) (string, string
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)
 
-	return rsp.Session.Slug, util.SvcRetro.Title + " export", nil
+	return rsp.Session.Slug, util.SvcRetro.Title + exportSuffix, nil
 }
 
 func renderRetroList(sessions retro.Sessions, members member.Entries, f *excelize.File) (string, string) {
@@ -52,7 +52,7 @@ func renderRetroList(sessions retro.Sessions, members member.Entries, f *exceliz
 		npnxls.SetData(svc.Plural, 2, data, f)
 		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export"
+	return svc.Plural, svc.Title + exportSuffix
 }
 
 func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *excelize.File) (string, string) {
@@ -69,5 +69,5 @@ func renderFeedbackList(feedbacks retro.Feedbacks, members member.Entries, f *ex
 		npnxls.SetData(key, 2, data, f)
 		npnxls.SetColumnWidths(key, []int{16, 16, 64, 16}, f)
 	}
-	return key, key + " export"
+	return key, key + exportSuffix
 }

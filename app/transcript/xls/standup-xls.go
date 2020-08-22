@@ -31,7 +31,7 @@ func renderStandup(rsp transcript.StandupResponse, f *excelize.File) (string, st
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)
 
-	return rsp.Session.Slug, util.SvcStandup.Title + " export", nil
+	return rsp.Session.Slug, util.SvcStandup.Title + exportSuffix, nil
 }
 
 func renderStandupList(sessions standup.Sessions, members member.Entries, f *excelize.File) (string, string) {
@@ -48,7 +48,7 @@ func renderStandupList(sessions standup.Sessions, members member.Entries, f *exc
 		npnxls.SetData(svc.Plural, 2, data, f)
 		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export"
+	return svc.Plural, svc.Title + exportSuffix
 }
 
 func renderReportList(reports standup.Reports, members member.Entries, f *excelize.File) (string, string) {
@@ -65,5 +65,5 @@ func renderReportList(reports standup.Reports, members member.Entries, f *exceli
 		npnxls.SetData(key, 2, data, f)
 		npnxls.SetColumnWidths(key, []int{16, 16, 64, 16}, f)
 	}
-	return key, key + " export"
+	return key, key + exportSuffix
 }

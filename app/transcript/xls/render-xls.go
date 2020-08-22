@@ -15,6 +15,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/transcript"
 )
 
+const exportSuffix = " export"
+
 func RenderResponse(rsp interface{}, f *excelize.File) (string, string, error) {
 	switch r := rsp.(type) {
 	case transcript.EmailResponse:

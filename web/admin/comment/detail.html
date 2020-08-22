@@ -7,29 +7,30 @@
     <div class="uk-card uk-card-body">
       <h3 class="uk-card-title"><%= ctx.Title %></h3>
       <table class="uk-table uk-table-divider uk-text-left">
+        <caption class="hidden"><%= ctx.Title %></caption>
         <tbody>
           <tr>
-            <th><%= npncore.Title(npncore.KeyID) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyID) %></th>
             <td><%= model.ID.String() %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyModel) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyModel) %></th>
             <td><% npntemplate.Channel(model.Svc.Key, &model.ModelID, ctx, _buffer) %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyUser) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyUser) %></th>
             <td><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeyUser, npncore.KeyDetail), `id`, model.UserID.String()) %>"><% npntemplate.UUID(&model.UserID, _buffer) %></a></td>
           </tr>
           <tr>
-            <th>Target</th>
+            <th scope="row">Target</th>
             <td><%= model.TargetType %>:<%=v model.TargetID %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyHTML) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyHTML) %></th>
             <td><%== model.HTML %></td>
           </tr>
           <tr>
-            <th><%= npncore.Title(npncore.KeyCreated) %></th>
+            <th scope="row"><%= npncore.Title(npncore.KeyCreated) %></th>
             <td><% npntemplate.DateTime(&model.Created, _buffer) %></td>
           </tr>
         </tbody>

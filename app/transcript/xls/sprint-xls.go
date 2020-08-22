@@ -30,7 +30,7 @@ func renderSprint(rsp transcript.SprintResponse, f *excelize.File) (string, stri
 	renderMemberList(rsp.Members, f)
 	renderCommentList(rsp.Comments, rsp.Members, f)
 
-	return rsp.Session.Slug, util.SvcSprint.Title + " export", nil
+	return rsp.Session.Slug, util.SvcSprint.Title + exportSuffix, nil
 }
 
 func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excelize.File) (string, string) {
@@ -47,5 +47,5 @@ func renderSprintList(sessions sprint.Sessions, members member.Entries, f *excel
 		npnxls.SetData(svc.Plural, 2, data, f)
 		npnxls.SetColumnWidths(svc.Plural, []int{16, 16, 16}, f)
 	}
-	return svc.Plural, svc.Title + " export"
+	return svc.Plural, svc.Title + exportSuffix
 }
