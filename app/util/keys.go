@@ -1,7 +1,7 @@
 package util
 
 const (
-	KeyFeedback   = "feedback"
-	KeyStory      = "story"
-	KeyVote       = "vote"
+	KeyFeedback = "feedback"
+	KeyStory    = "story"
+	KeyVote     = "vote"
 )

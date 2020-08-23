@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
@@ -13,9 +14,8 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onEstimateSessionSave(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID, param estimateSessionSaveParams) error {
+func onEstimateSessionSave(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param estimateSessionSaveParams) error {
 	dataSvc := estimates(s)
-	ch := *conn.Channel
 	title := util.ServiceTitle(util.SvcEstimate, param.Title)
 
 	choices := npndatabase.StringToArray(param.Choices)

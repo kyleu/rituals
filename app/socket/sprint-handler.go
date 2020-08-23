@@ -2,8 +2,9 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/npn/npnconnection"
 	"time"
+
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -44,7 +45,7 @@ func onSprintSessionSave(s *npnconnection.Service, ch npnconnection.Channel, use
 		return sr
 	}
 
-	teamChanged :=npnconnection.DifferentPointerValues(curr.TeamID, teamID)
+	teamChanged := npnconnection.DifferentPointerValues(curr.TeamID, teamID)
 
 	msg := "saving sprint session [%s] in team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, teamID))

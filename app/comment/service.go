@@ -101,7 +101,7 @@ func (s *Service) Update(id uuid.UUID, content string, userID uuid.UUID) (*Comme
 func (s *Service) RemoveComment(commentID uuid.UUID, userID uuid.UUID) error {
 	q := npndatabase.SQLDelete(npncore.KeyComment, npncore.KeyID+" = $1")
 	err := s.db.DeleteOne(q, nil, commentID)
-	return errors.Wrap(err, "unable to remove comment ["+commentID.String()+"] for user [" + userID.String() + "]")
+	return errors.Wrap(err, "unable to remove comment ["+commentID.String()+"] for user ["+userID.String()+"]")
 }
 
 func (s *Service) GetByCreated(d *time.Time, params *npncore.Params) Comments {

@@ -75,7 +75,7 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 
 	fb, err := s.GetFeedbackByID(feedbackID)
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for update")
+		return nil, errors.Wrap(err, feedbackError(feedbackID, "update"))
 	}
 	if fb == nil {
 		return nil, errors.New("cannot load newly-updated feedback")
@@ -90,10 +90,10 @@ func (s *Service) UpdateFeedback(feedbackID uuid.UUID, category string, content 
 func (s *Service) RemoveFeedback(feedbackID uuid.UUID, userID uuid.UUID) error {
 	feedback, err := s.GetFeedbackByID(feedbackID)
 	if err != nil {
-		return errors.Wrap(err, "cannot load feedback ["+feedbackID.String()+"] for removal")
+		return errors.Wrap(err, feedbackError(feedbackID, "removal"))
 	}
 	if feedback == nil {
-		return errors.New("cannot load feedback [" + feedbackID.String() + "] for removal")
+		return errors.New(feedbackError(feedbackID, "removal"))
 	}
 
 	q := npndatabase.SQLDelete(util.KeyFeedback, npncore.KeyID+" = $1")
@@ -111,4 +111,8 @@ func toFeedbacks(dtos []feedbackDTO) Feedbacks {
 		ret = append(ret, dto.toFeedback())
 	}
 	return ret
+}
+
+func feedbackError(id uuid.UUID, act string) string {
+	return fmt.Sprintf("cannot load feedback [%v] for %v", id, act)
 }

@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"github.com/kyleu/npn/npnconnection"
 	"time"
+
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"

@@ -8,7 +8,7 @@ import (
 const (
 	ClientCmdPing = "ping"
 
-	ClientCmdConnect = "connect"
+	ClientCmdConnect   = "connect"
 	ClientCmdSetActive = "set-active"
 
 	ClientCmdGetActions = "get-actions"

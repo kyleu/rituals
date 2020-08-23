@@ -1,8 +1,9 @@
 package xls
 
 import (
-	npnxls "github.com/kyleu/npn/npnexport/xls"
 	"strings"
+
+	npnxls "github.com/kyleu/npn/npnexport/xls"
 
 	"github.com/kyleu/npn/npncore"
 

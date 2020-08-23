@@ -2,9 +2,10 @@ package socket
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/rituals.dev/app/session"
-	"strings"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -19,6 +20,8 @@ type StoryStatusChange struct {
 	Status    session.Status `json:"status"`
 	FinalVote string         `json:"finalVote"`
 }
+
+var storySendErrorMsg = "error sending story update"
 
 func onAddStory(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param addStoryParams) error {
 	param.Title = strings.TrimSpace(param.Title)
@@ -68,7 +71,7 @@ func onSetStoryStatus(s *npnconnection.Service, ch npnconnection.Channel, userID
 	if changed {
 		param := StoryStatusChange{StoryID: params.StoryID, Status: status, FinalVote: finalVote}
 		err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcEstimate.Key, ServerCmdStoryStatusChange, param))
-		return errors.Wrap(err, "error sending story update")
+		return errors.Wrap(err, storySendErrorMsg)
 	}
 
 	return nil
@@ -81,10 +84,10 @@ func onSubmitVote(s *npnconnection.Service, ch npnconnection.Channel, userID uui
 	}
 
 	err = s.WriteChannel(ch, npnconnection.NewMessage(util.SvcEstimate.Key, ServerCmdVoteUpdate, vote))
-	return errors.Wrap(err, "error sending story update")
+	return errors.Wrap(err, storySendErrorMsg)
 }
 
 func sendStoryUpdate(s *npnconnection.Service, ch npnconnection.Channel, story *estimate.Story) error {
 	err := s.WriteChannel(ch, npnconnection.NewMessage(util.SvcEstimate.Key, ServerCmdStoryUpdate, story))
-	return errors.Wrap(err, "error sending story update")
+	return errors.Wrap(err, storySendErrorMsg)
 }

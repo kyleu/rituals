@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+
 	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
@@ -50,7 +51,7 @@ func onEstimateMessage(s *npnconnection.Service, conn *npnconnection.Connection,
 	case ClientCmdUpdateSession:
 		ess := estimateSessionSaveParams{}
 		_ = npncore.FromJSON(param, &ess)
-		err = onEstimateSessionSave(s, conn, userID, ess)
+		err = onEstimateSessionSave(s, *conn.Channel, userID, ess)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
 		_ = npncore.FromJSON(param, &u)

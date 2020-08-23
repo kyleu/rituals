@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/kyleu/rituals.dev/app/socket"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/socket"
 
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"

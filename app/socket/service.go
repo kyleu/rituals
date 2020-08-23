@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+
 	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
@@ -36,9 +37,9 @@ type services struct {
 }
 
 func NewService(
-		logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
-		auths *auth.Service, teams *team.Service, sprints *sprint.Service,
-		estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *npnconnection.Service {
+	logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
+	auths *auth.Service, teams *team.Service, sprints *sprint.Service,
+	estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *npnconnection.Service {
 	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: npncore.KeySocket})
 
 	ctx := &services{

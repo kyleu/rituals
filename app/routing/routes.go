@@ -1,8 +1,9 @@
 package routing
 
 import (
-	"github.com/kyleu/npn/npnasset"
 	"net/http"
+
+	"github.com/kyleu/npn/npnasset"
 
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncontroller/routes"

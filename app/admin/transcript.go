@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"github.com/kyleu/rituals.dev/app/controllers"
 	"net/http"
+
+	"github.com/kyleu/rituals.dev/app/controllers"
 
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncore"

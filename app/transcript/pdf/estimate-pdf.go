@@ -2,8 +2,9 @@ package pdf
 
 import (
 	"fmt"
-	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 	"strings"
+
+	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 
 	"github.com/kyleu/npn/npncore"
 

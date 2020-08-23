@@ -1,9 +1,10 @@
 package team
 
 import (
-	"github.com/kyleu/rituals.dev/app/session"
 	"strings"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/session"
 
 	"github.com/kyleu/npn/npncore"
 
@@ -36,7 +37,7 @@ type sessionDTO struct {
 	ID      uuid.UUID `db:"id"`
 	Slug    string    `db:"slug"`
 	Title   string    `db:"title"`
-	Status    string     `db:"status"`
+	Status  string    `db:"status"`
 	Owner   uuid.UUID `db:"owner"`
 	Created time.Time `db:"created"`
 }

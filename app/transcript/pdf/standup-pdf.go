@@ -1,8 +1,9 @@
 package pdf
 
 import (
-	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 	"sort"
+
+	npnpdf "github.com/kyleu/npn/npnexport/pdf"
 
 	"github.com/kyleu/npn/npncore"
 

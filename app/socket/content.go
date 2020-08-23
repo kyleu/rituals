@@ -1,8 +1,9 @@
 package socket
 
 import (
-	"github.com/kyleu/npn/npnconnection"
 	"strings"
+
+	"github.com/kyleu/npn/npnconnection"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"

@@ -1,9 +1,10 @@
 package sprint
 
 import (
-	"github.com/kyleu/rituals.dev/app/session"
 	"strings"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/session"
 
 	"github.com/kyleu/npn/npncore"
 

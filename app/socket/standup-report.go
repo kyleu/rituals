@@ -2,9 +2,10 @@ package socket
 
 import (
 	"fmt"
-	"github.com/kyleu/npn/npnconnection"
 	"strings"
 	"time"
+
+	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
 

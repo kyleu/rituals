@@ -3,6 +3,8 @@ package session
 import (
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/npn/npncore"
+	"github.com/kyleu/npn/npndatabase"
+	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/rituals.dev/app/action"
 	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/history"
@@ -29,6 +31,17 @@ type DataServices struct {
 	Actions     *action.Service
 }
 
+func NewDataServices(svc util.Service, actions *action.Service, users *user.Service, comments *comment.Service, db *npndatabase.Service, logger logur.Logger) *DataServices {
+	return &DataServices{
+		Svc:         svc,
+		Members:     member.NewService(actions, users, db, logger, svc),
+		Comments:    comments,
+		Permissions: permission.NewService(actions, db, logger, svc),
+		History:     history.NewService(actions, db, logger, svc),
+		Actions:     actions,
+	}
+}
+
 func (svcs *DataServices) GetData(id uuid.UUID, params npncore.ParamSet, logger logur.Logger) *Data {
 	return &Data{
 		Members:  svcs.Members.GetByModelID(id, params.Get(npncore.KeyMember, logger)),
@@ -42,4 +55,3 @@ func (svcs *DataServices) GetData(id uuid.UUID, params npncore.ParamSet, logger 
 func (svcs *DataServices) GetComments(id uuid.UUID, params *npncore.Params) comment.Comments {
 	return svcs.Comments.GetByModelID(svcs.Svc, id, params)
 }
-

@@ -1,8 +1,9 @@
 package estimate
 
 import (
-	"github.com/kyleu/rituals.dev/app/session"
 	"time"
+
+	"github.com/kyleu/rituals.dev/app/session"
 
 	"github.com/gofrs/uuid"
 )

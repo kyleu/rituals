@@ -1,10 +1,11 @@
 package cli
 
 import (
-	"github.com/kyleu/rituals.dev/app/gql"
-	"github.com/kyleu/rituals.dev/gen/query"
 	"os"
 	"strings"
+
+	"github.com/kyleu/rituals.dev/app/gql"
+	"github.com/kyleu/rituals.dev/gen/query"
 
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"

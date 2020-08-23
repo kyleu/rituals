@@ -11,10 +11,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/comment"
 
 	"github.com/kyleu/npn/npnservice/user"
-	"github.com/kyleu/rituals.dev/app/history"
 	"github.com/kyleu/rituals.dev/app/session"
-
-	"github.com/kyleu/rituals.dev/app/permission"
 
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
@@ -35,16 +32,8 @@ func NewService(actions *action.Service, users *user.Service, comments *comment.
 	svc := util.SvcSprint
 	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: svc.Key})
 
-	data := session.DataServices{
-		Svc:         svc,
-		Members:     member.NewService(actions, users, db, logger, svc),
-		Comments:    comments,
-		Permissions: permission.NewService(actions, db, logger, svc),
-		History:     history.NewService(actions, db, logger, svc),
-		Actions:     actions,
-	}
-
-	return &Service{Data: &data, db: db, logger: logger, svc: svc}
+	data := session.NewDataServices(svc, actions, users, comments, db, logger)
+	return &Service{Data: data, db: db, logger: logger, svc: svc}
 }
 
 func (s *Service) New(title string, userID uuid.UUID, memberName string, startDate *time.Time, endDate *time.Time, teamID *uuid.UUID) (*Session, error) {

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npnconnection"
 
 	"github.com/kyleu/npn/npncore"
@@ -35,8 +36,8 @@ func onRetroSessionSave(s *npnconnection.Service, ch npnconnection.Channel, user
 		return sr
 	}
 
-	teamChanged :=npnconnection.DifferentPointerValues(curr.TeamID, teamID)
-	sprintChanged :=npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
+	teamChanged := npnconnection.DifferentPointerValues(curr.TeamID, teamID)
+	sprintChanged := npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
 	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, npncore.OxfordComma(categories, "and"), sprintID, teamID))
