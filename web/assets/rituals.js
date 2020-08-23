@@ -1138,8 +1138,8 @@ var member;
     }
     member_2.getMembers = getMembers;
     function setMembers() {
-        console.warn("!!!!!");
-        member_2.updateSelf(members.filter(member_2.isSelf).shift());
+        const slf = members.filter(member_2.isSelf).shift();
+        member_2.updateSelf(slf);
         const others = members.filter(x => !member_2.isSelf(x));
         dom.setContent("#member-detail", member_2.renderMembers(others));
         if (others.length > 0) {
@@ -1350,7 +1350,8 @@ var member;
 (function (member) {
     let me;
     function isSelf(x) {
-        return x.userID === system.cache.getProfile().userID;
+        const me = system.cache.getProfile().userID;
+        return x.userID === me;
     }
     member.isSelf = isSelf;
     function selfCanEdit() {
@@ -1358,17 +1359,18 @@ var member;
     }
     member.selfCanEdit = selfCanEdit;
     function updateSelf(self) {
+        let canEditFlag = false;
         if (self) {
             me = self;
             dom.setContent("#self-picture", member.setPicture(self.picture));
             dom.setText("#member-self .member-name", self.name);
             dom.setValue("#self-name-input", self.name);
             dom.setText("#member-self .member-role", self.role);
-            const e = canEdit(self);
-            dom.setDisplay("#history-container", e);
-            dom.setDisplay("#session-edit-section", e);
-            dom.setDisplay("#session-view-section", !e);
+            canEditFlag = canEdit(self);
         }
+        dom.setDisplay("#history-container", canEditFlag);
+        dom.setDisplay("#session-edit-section", canEditFlag);
+        dom.setDisplay("#session-view-section", !canEditFlag);
     }
     member.updateSelf = updateSelf;
     function onSubmitSelf() {

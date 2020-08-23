@@ -2,7 +2,8 @@ namespace member {
   let me: member.Member | undefined;
 
   export function isSelf(x: Member) {
-    return x.userID === system.cache.getProfile().userID;
+    const me = system.cache.getProfile().userID;
+    return x.userID === me;
   }
 
   export function selfCanEdit() {
@@ -10,17 +11,19 @@ namespace member {
   }
 
   export function updateSelf(self: member.Member | undefined) {
+    let canEditFlag = false;
     if (self) {
       me = self;
       dom.setContent("#self-picture", setPicture(self.picture));
       dom.setText("#member-self .member-name", self.name);
       dom.setValue("#self-name-input", self.name);
       dom.setText("#member-self .member-role", self.role);
-      const e = canEdit(self);
-      dom.setDisplay("#history-container", e);
-      dom.setDisplay("#session-edit-section", e);
-      dom.setDisplay("#session-view-section", !e);
+      canEditFlag = canEdit(self)
     }
+    dom.setDisplay("#history-container", canEditFlag);
+
+    dom.setDisplay("#session-edit-section", canEditFlag);
+    dom.setDisplay("#session-view-section", !canEditFlag);
   }
 
   export function onSubmitSelf() {
