@@ -29,11 +29,11 @@ namespace permission {
       case services.sprint.key:
         return <li>Must be a member of this session's sprint</li>;
       default:
-        let x = collection.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
-        if (x.length === 0) {
+        let col = collection.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
+        if (col.length === 0) {
           return <li>Must sign in with {p.key}</li>;
         }
-        return <li>Must sign in with {p.key} using an email address from {x.join(" or ")}</li>;
+        return <li>Must sign in with {p.key} using an email address from {col.join(" or ")}</li>;
     }
   }
 

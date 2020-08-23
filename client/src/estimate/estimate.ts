@@ -112,7 +112,7 @@ namespace estimate {
   export function onStoryUpdate(s: story.Story) {
     const x = preUpdate(s.id);
     x.push(s);
-    x.sort(s => s.idx);
+    x.sort(z => z.idx);
     if (s.id === estimate.cache.activeStory) {
       dom.setText("#story-title", s.title);
     }

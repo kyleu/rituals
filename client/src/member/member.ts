@@ -19,6 +19,7 @@ namespace member {
   }
 
   export function setMembers() {
+    console.warn("!!!!!");
     updateSelf(members.filter(isSelf).shift());
 
     const others = members.filter(x => !isSelf(x));

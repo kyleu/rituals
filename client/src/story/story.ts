@@ -28,9 +28,6 @@ namespace story {
   export function beginEditStory() {
     const s = getActiveStory()!;
     const title = prompt("Edit your story", s.title);
-    if (title === null) {
-      return false;
-    }
     if (title && title !== s.title) {
       const msg = { svc: services.estimate.key, cmd: command.client.updateStory, param: { storyID: s.id, title } };
       socket.send(msg);

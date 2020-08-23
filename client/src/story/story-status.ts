@@ -43,9 +43,9 @@ namespace story {
   }
 
   export function setStoryStatus(storyID: string, status: string, currStory: story.Story | undefined, calcTotal: boolean) {
-    if (currStory && currStory!.status === "complete") {
-      if (currStory!.finalVote.length > 0) {
-        status = currStory!.finalVote;
+    if (currStory && currStory.status === "complete") {
+      if (currStory.finalVote.length > 0) {
+        status = currStory.finalVote;
       }
     }
     dom.setContent(`#story-${storyID} .story-status`, renderStatus(status));

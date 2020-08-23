@@ -663,7 +663,7 @@ var estimate;
     function onStoryUpdate(s) {
         const x = preUpdate(s.id);
         x.push(s);
-        x.sort(s => s.idx);
+        x.sort(z => z.idx);
         if (s.id === estimate.cache.activeStory) {
             dom.setText("#story-title", s.title);
         }
@@ -907,7 +907,7 @@ var tags;
         else {
             console.warn(`no tag open handler registered for [${key}]`);
         }
-        const ret = dom.els(".item", el).map(el => el.innerText);
+        const ret = dom.els(".item", el).map(e => e.innerText);
         dom.setValue(`#model-${key}-input`, ret.join(","));
     }
 })(tags || (tags = {}));
@@ -1138,6 +1138,7 @@ var member;
     }
     member_2.getMembers = getMembers;
     function setMembers() {
+        console.warn("!!!!!");
         member_2.updateSelf(members.filter(member_2.isSelf).shift());
         const others = members.filter(x => !member_2.isSelf(x));
         dom.setContent("#member-detail", member_2.renderMembers(others));
@@ -1532,8 +1533,8 @@ var permission;
             case services.sprint.key:
                 return JSX("li", null, "Must be a member of this session's sprint");
             default:
-                let x = collection.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
-                if (x.length === 0) {
+                let col = collection.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
+                if (col.length === 0) {
                     return JSX("li", null,
                         "Must sign in with ",
                         p.key);
@@ -1542,7 +1543,7 @@ var permission;
                     "Must sign in with ",
                     p.key,
                     " using an email address from ",
-                    x.join(" or "));
+                    col.join(" or "));
         }
     }
     function renderView(perms) {
@@ -2291,9 +2292,6 @@ var story;
     function beginEditStory() {
         const s = getActiveStory();
         const title = prompt("Edit your story", s.title);
-        if (title === null) {
-            return false;
-        }
         if (title && title !== s.title) {
             const msg = { svc: services.estimate.key, cmd: command.client.updateStory, param: { storyID: s.id, title } };
             socket.send(msg);
