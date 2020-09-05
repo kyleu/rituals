@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
 
@@ -21,7 +22,7 @@ type sprintSessionSaveParams struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onSprintMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := sprints(s)
 	var err error
 	userID := conn.Profile.UserID
@@ -34,7 +35,7 @@ func onSprintMessage(s *npnconnection.Service, conn *npnconnection.Connection, c
 	case ClientCmdUpdateSession:
 		sss := sprintSessionSaveParams{}
 		_ = npncore.FromJSON(param, &sss)
-		err = onSprintSessionSave(s, *conn.Channel, userID, sss)
+		err = onSprintSessionSave(s, a, *conn.Channel, userID, sss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
 		_ = npncore.FromJSON(param, &u)

@@ -39,7 +39,7 @@
     <div class="uk-modal-body" data-uk-overflow-auto>
       <div id="story-title">Story Detail</div>
       <div class="modal-body-height">
-        <div id="story-status-body-pending" class="story-status-body active">
+        <div id="story-status-body-new" class="story-status-body active">
           <p id="story-view-section">
             Your story is ready to <a class="theme" href="" onclick="story.requestStoryStatus('active');return false;">start voting</a>
           </p>
@@ -65,13 +65,13 @@
     <div class="uk-modal-footer uk-text-right">
       <div id="modal-comment-count" class="left"><% CommentBadge("modal", ctx, buffer) %></div>
 
-      <div id="story-status-actions-pending" class="story-status-actions">
+      <div id="story-status-actions-new" class="story-status-actions">
         <button class="uk-button uk-button-default" type="button" onclick="story.onRemoveStory();">Delete</button>
         <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('active');">Start Voting</button>
       </div>
 
       <div id="story-status-actions-active" class="story-status-actions">
-        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('pending');">Reset</button>
+        <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('new');">Reset</button>
         <button class="uk-button uk-button-default" type="button" onclick="story.requestStoryStatus('complete');">Finish</button>
       </div>
 

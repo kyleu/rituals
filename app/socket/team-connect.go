@@ -51,7 +51,7 @@ func joinTeamSession(s *npnconnection.Service, conn *npnconnection.Connection, c
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, nil, nil, ch, conn)
+	res := getSessionResult(s, auths(s), nil, nil, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}

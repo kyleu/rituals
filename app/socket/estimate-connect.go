@@ -49,7 +49,7 @@ func joinEstimateSession(s *npnconnection.Service, conn *npnconnection.Connectio
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, sess.TeamID, sess.SprintID, ch, conn)
+	res := getSessionResult(s, auths(s), sess.TeamID, sess.SprintID, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
 
@@ -39,7 +40,7 @@ type submitVoteParams struct {
 	Choice  string    `json:"choice"`
 }
 
-func onEstimateMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onEstimateMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := estimates(s)
 	var err error
 	userID := conn.Profile.UserID
@@ -51,7 +52,7 @@ func onEstimateMessage(s *npnconnection.Service, conn *npnconnection.Connection,
 	case ClientCmdUpdateSession:
 		ess := estimateSessionSaveParams{}
 		_ = npncore.FromJSON(param, &ess)
-		err = onEstimateSessionSave(s, *conn.Channel, userID, ess)
+		err = onEstimateSessionSave(s, a, *conn.Channel, userID, ess)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
 		_ = npncore.FromJSON(param, &u)

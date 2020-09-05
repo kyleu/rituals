@@ -52,7 +52,7 @@ func joinSprintSession(s *npnconnection.Service, conn *npnconnection.Connection,
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, sess.TeamID, nil, ch, conn)
+	res := getSessionResult(s, auths(s), sess.TeamID, nil, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}

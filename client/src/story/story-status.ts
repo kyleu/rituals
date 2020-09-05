@@ -18,7 +18,7 @@ namespace story {
 
     let txt = "";
     switch (status) {
-      case "pending":
+      case "new":
         txt = "Story";
         break;
       case "active":

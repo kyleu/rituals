@@ -41,7 +41,7 @@ namespace vote {
     const activeVote = votes.filter(v => v.userID === system.cache.getProfile().userID).pop();
 
     switch (s.status) {
-      case "pending":
+      case "new":
         const same = system.cache.getProfile().userID === s.userID;
         dom.setDisplay("#story-edit-section", same);
         dom.setDisplay("#story-view-section", !same);

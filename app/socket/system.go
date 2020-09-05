@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnservice/user"
 
 	"github.com/kyleu/npn/npnconnection"
 
@@ -14,7 +15,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSystemMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onSystemMessage(s *npnconnection.Service, us *user.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	userID := conn.Profile.UserID
 	if conn.Profile.UserID != userID {
 		return errors.New("received name change for wrong user [" + userID.String() + "]")
@@ -40,7 +41,7 @@ func onSystemMessage(s *npnconnection.Service, conn *npnconnection.Connection, c
 	case ClientCmdUpdateProfile:
 		snp := &saveProfileParams{}
 		_ = npncore.FromJSON(param, snp)
-		err = saveProfile(s, conn, userID, snp)
+		err = saveProfile(s, conn, us, userID, snp)
 	case ClientCmdGetActions:
 		err = sendActions(s, conn)
 	case ClientCmdGetTeams:

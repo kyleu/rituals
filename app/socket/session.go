@@ -42,15 +42,15 @@ func sendInitial(s *npnconnection.Service, ch npnconnection.Channel, conn *npnco
 	return errors.Wrap(err, "error writing online update")
 }
 
-func getPerms(s *npnconnection.Service, auths auth.Records, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel) (permission.Permissions, permission.Errors) {
-	return check(s, userID, auths, teamID, sprintID, ch.Svc, ch.ID)
+func getPerms(s *npnconnection.Service, a *auth.Service, auths auth.Records, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel) (permission.Permissions, permission.Errors) {
+	return check(s, a, userID, auths, teamID, sprintID, ch.Svc, ch.ID)
 }
 
-func getSessionResult(s *npnconnection.Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel, conn *npnconnection.Connection) SessionResult {
+func getSessionResult(s *npnconnection.Service, a *auth.Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel, conn *npnconnection.Connection) SessionResult {
 	userID := conn.Profile.UserID
-	auths, displays := s.Auths.GetDisplayByUserID(userID, nil)
+	auths, displays := a.GetDisplayByUserID(userID, nil)
 
-	perms, permErrors := getPerms(s, auths, conn.Profile.UserID, teamID, sprintID, ch)
+	perms, permErrors := getPerms(s, a, auths, conn.Profile.UserID, teamID, sprintID, ch)
 	if len(permErrors) > 0 {
 		return SessionResult{Error: sendPermErrors(s, conn.ID, ch.Svc, permErrors)}
 	}

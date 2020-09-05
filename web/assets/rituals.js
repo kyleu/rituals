@@ -2222,7 +2222,7 @@ var story;
         });
         let txt = "";
         switch (status) {
-            case "pending":
+            case "new":
                 txt = "Story";
                 break;
             case "active":
@@ -2377,7 +2377,7 @@ var story;
     story_2.renderStories = renderStories;
     function renderStatus(status) {
         switch (status) {
-            case "pending":
+            case "new":
                 return JSX("span", null, status);
             case "active":
                 return JSX("span", null, status);
@@ -2759,7 +2759,7 @@ var vote;
         const votes = estimate.cache.activeVotes();
         const activeVote = votes.filter(v => v.userID === system.cache.getProfile().userID).pop();
         switch (s.status) {
-            case "pending":
+            case "new":
                 const same = system.cache.getProfile().userID === s.userID;
                 dom.setDisplay("#story-edit-section", same);
                 dom.setDisplay("#story-view-section", !same);

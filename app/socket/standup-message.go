@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
 
@@ -30,7 +31,7 @@ type editReportParams struct {
 	Content string    `json:"content"`
 }
 
-func onStandupMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onStandupMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := standups(s)
 	var err error
 	userID := conn.Profile.UserID
@@ -43,7 +44,7 @@ func onStandupMessage(s *npnconnection.Service, conn *npnconnection.Connection, 
 	case ClientCmdUpdateSession:
 		sss := standupSessionSaveParams{}
 		_ = npncore.FromJSON(param, &sss)
-		err = onStandupSessionSave(s, *conn.Channel, userID, sss)
+		err = onStandupSessionSave(s, a, *conn.Channel, userID, sss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
 		_ = npncore.FromJSON(param, &u)

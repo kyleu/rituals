@@ -34,7 +34,7 @@ namespace story {
 
   export function renderStatus(status: string) {
     switch (status) {
-      case "pending":
+      case "new":
         return <span>{status}</span>;
       case "active":
         return <span>{status}</span>;

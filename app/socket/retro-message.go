@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/json"
+	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
 
@@ -31,7 +32,7 @@ type editFeedbackParams struct {
 	Content  string    `json:"content"`
 }
 
-func onRetroMessage(s *npnconnection.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onRetroMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := retros(s)
 	var err error
 	userID := conn.Profile.UserID
@@ -44,7 +45,7 @@ func onRetroMessage(s *npnconnection.Service, conn *npnconnection.Connection, cm
 	case ClientCmdUpdateSession:
 		rss := retroSessionSaveParams{}
 		_ = npncore.FromJSON(param, &rss)
-		err = onRetroSessionSave(s, *conn.Channel, userID, rss)
+		err = onRetroSessionSave(s, a, *conn.Channel, userID, rss)
 	case ClientCmdUpdateMember:
 		u := updateMemberParams{}
 		_ = npncore.FromJSON(param, &u)

@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
 
@@ -12,7 +13,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onStandupSessionSave(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param standupSessionSaveParams) error {
+func onStandupSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param standupSessionSaveParams) error {
 	dataSvc := standups(s)
 	title := util.ServiceTitle(util.SvcStandup, param.Title)
 
@@ -24,7 +25,7 @@ func onStandupSessionSave(s *npnconnection.Service, ch npnconnection.Channel, us
 		return errors.New("no standup available with id [" + ch.ID.String() + "]")
 	}
 
-	sr := checkPerms(s, userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
+	sr := checkPerms(s, a, userID, curr.TeamID, curr.SprintID, ch.Svc, ch.ID)
 	if sr != nil {
 		return sr
 	}

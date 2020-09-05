@@ -52,10 +52,10 @@ func (s *Service) GetStoryEstimateID(storyID uuid.UUID) (*uuid.UUID, error) {
 func (s *Service) NewStory(estimateID uuid.UUID, title string, userID uuid.UUID) (*Story, error) {
 	id := npncore.UUID()
 
-	q := `insert into story (id, estimate_id, idx, user_id, title, final_vote) values (
-    $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5, ''
+	q := `insert into story (id, estimate_id, idx, user_id, title, status, final_vote) values (
+    $1, $2, coalesce((select max(idx) + 1 from story p2 where p2.estimate_id = $3), 0), $4, $5, $6, ''
 	)`
-	err := s.db.Insert(q, nil, id, estimateID, estimateID, userID, title)
+	err := s.db.Insert(q, nil, id, estimateID, estimateID, userID, title, session.StatusNew.Key)
 	if err != nil {
 		return nil, err
 	}

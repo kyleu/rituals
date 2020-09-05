@@ -36,10 +36,10 @@ func onAddComment(s *npnconnection.Service, ch npnconnection.Channel, userID uui
 	dataSvc := dataFor(s, ch.Svc)
 	c, err := dataSvc.Comments.Add(ch.Svc, ch.ID, param.TargetType, param.TargetID, param.Content, userID)
 	if err != nil {
-		return errors.Wrap(err, "cannot save new story")
+		return errors.Wrap(err, "cannot save new comment")
 	}
 	err = sendCommentUpdate(s, ch, c)
-	return errors.Wrap(err, "error sending story update")
+	return errors.Wrap(err, "error sending comment update")
 }
 
 func onUpdateComment(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param updateCommentParams) error {

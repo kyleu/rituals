@@ -13,10 +13,6 @@ type updateMemberParams struct {
 	Role string    `json:"role"`
 }
 
-func UpdateMember(s *npnconnection.Service, id uuid.UUID, name string, picture string) error {
-	return s.UpdateMember(id, name, picture)
-}
-
 func sendOnlineUpdate(s *npnconnection.Service, ch npnconnection.Channel, connID uuid.UUID, userID uuid.UUID, connected bool) error {
 	p := npnconnection.OnlineUpdate{UserID: userID, Connected: connected}
 	onlineMsg := npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdOnlineUpdate, p)

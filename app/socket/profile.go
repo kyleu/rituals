@@ -4,6 +4,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/npn/npnconnection"
+	"github.com/kyleu/npn/npnservice/user"
 )
 
 type saveProfileParams struct {
@@ -12,12 +13,12 @@ type saveProfileParams struct {
 	Picture string `json:"picture"`
 }
 
-func saveProfile(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID, p *saveProfileParams) error {
+func saveProfile(s *npnconnection.Service, conn *npnconnection.Connection, u *user.Service, userID uuid.UUID, p *saveProfileParams) error {
 	if len(p.Name) == 0 {
 		p.Name = "Unnamed Member"
 	}
 	if p.Choice == "global" {
-		err := UpdateMember(s, userID, p.Name, p.Picture)
+		err := u.UpdateMember(userID, p.Name, p.Picture)
 		if err != nil {
 			return err
 		}
