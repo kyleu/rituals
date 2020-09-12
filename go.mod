@@ -38,24 +38,24 @@ require (
 	logur.dev/logur v0.16.2
 )
 
-replace github.com/kyleu/npn/npnasset => ../npn/npnasset
+replace github.com/kyleu/npn/npnasset => ./npn/npnasset
 
-replace github.com/kyleu/npn/npnconnection => ../npn/npnconnection
+replace github.com/kyleu/npn/npnconnection => ./npn/npnconnection
 
-replace github.com/kyleu/npn/npncontroller => ../npn/npncontroller
+replace github.com/kyleu/npn/npncontroller => ./npn/npncontroller
 
-replace github.com/kyleu/npn/npncore => ../npn/npncore
+replace github.com/kyleu/npn/npncore => ./npn/npncore
 
-replace github.com/kyleu/npn/npndatabase => ../npn/npndatabase
+replace github.com/kyleu/npn/npndatabase => ./npn/npndatabase
 
-replace github.com/kyleu/npn/npnexport => ../npn/npnexport
+replace github.com/kyleu/npn/npnexport => ./npn/npnexport
 
-replace github.com/kyleu/npn/npngraphql => ../npn/npngraphql
+replace github.com/kyleu/npn/npngraphql => ./npn/npngraphql
 
-replace github.com/kyleu/npn/npnservice => ../npn/npnservice
+replace github.com/kyleu/npn/npnservice => ./npn/npnservice
 
-replace github.com/kyleu/npn/npntemplate => ../npn/npntemplate
+replace github.com/kyleu/npn/npntemplate => ./npn/npntemplate
 
-replace github.com/kyleu/npn/npnuser => ../npn/npnuser
+replace github.com/kyleu/npn/npnuser => ./npn/npnuser
 
-replace github.com/kyleu/npn/npnweb => ../npn/npnweb
+replace github.com/kyleu/npn/npnweb => ./npn/npnweb
