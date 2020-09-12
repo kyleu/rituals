@@ -1,0 +1,3 @@
+[submodule "npn"]
+	path = npn
+	url = git@github.com:kyleu/npn.git
