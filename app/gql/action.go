@@ -19,11 +19,11 @@ var (
 func initAction() {
 	actionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
 		id := npncore.MapGetUUID(p.Args, npncore.KeyID, ctx.Logger)
-		return app.Action(ctx.App).GetByID(*id), nil
+		return app.Svc(ctx.App).Action.GetByID(*id), nil
 	}
 
 	actionsResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Action(ctx.App).List(npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, params, ctx.Logger)), nil
+		return app.Svc(ctx.App).Action.List(npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, params, ctx.Logger)), nil
 	}
 
 	actionUserResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {

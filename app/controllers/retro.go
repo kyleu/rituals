@@ -23,9 +23,9 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		params := npnweb.ParamSetFromRequest(r)
 
-		sessions := app.Retro(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
-		teams := app.Team(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		sprints := app.Sprint(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		sessions := app.Svc(ctx.App).Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		teams := app.Svc(ctx.App).Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := app.Svc(ctx.App).Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		auths := ctx.App.Auth().GetByUserID(ctx.Profile.UserID, params.Get(npncore.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcRetro.PluralTitle
@@ -46,21 +46,21 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcRetro, r.Form, ctx.App.User())
 
-		sess, err := app.Retro(ctx.App).New(sf.Title, ctx.Profile.UserID, sf.MemberName, categories, sf.TeamID, sf.SprintID)
+		sess, err := app.Svc(ctx.App).Retro.New(sf.Title, ctx.Profile.UserID, sf.MemberName, categories, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return npncontroller.EResp(err, "error creating retro session")
 		}
 
-		_, err = app.Retro(ctx.App).Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
+		_, err = app.Svc(ctx.App).Retro.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return npncontroller.EResp(err, "error setting permissions for new session")
 		}
 
-		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcTeam.Key, sf.TeamID)
+		err = socket.SendContentUpdate(app.Svc(ctx.App).Socket, util.SvcTeam.Key, sf.TeamID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
-		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcSprint.Key, sf.SprintID)
+		err = socket.SendContentUpdate(app.Svc(ctx.App).Socket, util.SvcSprint.Key, sf.SprintID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
@@ -72,7 +72,7 @@ func RetroNew(w http.ResponseWriter, r *http.Request) {
 func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		key := mux.Vars(r)[npncore.KeyKey]
-		sess := app.Retro(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Retro.GetBySlug(key)
 		if sess == nil {
 			msg := "can't load retro [" + key + "]"
 			return npncontroller.FlashAndRedir(false, msg, util.SvcRetro.Key+".list", w, r, ctx)
@@ -82,7 +82,7 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := &PermissionParams{Svc: util.SvcRetro, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := CheckPerms(ctx, app.Retro(ctx.App).Data.Permissions, params)
+		auths, permErrors, bc := CheckPerms(ctx, app.Svc(ctx.App).Retro.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
@@ -97,7 +97,7 @@ func RetroWorkspace(w http.ResponseWriter, r *http.Request) {
 
 func RetroExport(w http.ResponseWriter, r *http.Request) {
 	f := func(key string, ctx *npnweb.RequestContext) ExportParams {
-		sess := app.Retro(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Retro.GetBySlug(key)
 		if sess == nil {
 			return ExportParams{}
 		}
@@ -106,7 +106,7 @@ func RetroExport(w http.ResponseWriter, r *http.Request) {
 			Slug:    sess.Slug,
 			Title:   sess.Title,
 			Path:    ctx.Route(util.SvcRetro.Key, npncore.KeyKey, sess.Slug),
-			PermSvc: app.Retro(ctx.App).Data.Permissions,
+			PermSvc: app.Svc(ctx.App).Retro.Data.Permissions,
 		}
 	}
 	ExportAct(util.SvcRetro, f, w, r)

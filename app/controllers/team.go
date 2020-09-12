@@ -18,7 +18,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		params := npnweb.ParamSetFromRequest(r)
 
-		sessions := app.Team(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sessions := app.Svc(ctx.App).Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		auths := ctx.App.Auth().GetByUserID(ctx.Profile.UserID, params.Get(npncore.KeyAuth, ctx.Logger))
 
 		ctx.Title = npncore.PluralTitle(util.SvcTeam.Key)
@@ -33,12 +33,12 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcTeam, r.Form, ctx.App.User())
 
-		sess, err := app.Team(ctx.App).New(sf.Title, ctx.Profile.UserID, sf.MemberName)
+		sess, err := app.Svc(ctx.App).Team.New(sf.Title, ctx.Profile.UserID, sf.MemberName)
 		if err != nil {
 			return npncontroller.EResp(err, "error creating team session")
 		}
 
-		_, err = app.Team(ctx.App).Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
+		_, err = app.Svc(ctx.App).Team.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return npncontroller.EResp(err, "error setting permissions for new session")
 		}
@@ -50,7 +50,7 @@ func TeamNew(w http.ResponseWriter, r *http.Request) {
 func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		key := mux.Vars(r)[npncore.KeyKey]
-		sess := app.Team(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Team.GetBySlug(key)
 		if sess == nil {
 			msg := "can't load team [" + key + "]"
 			return npncontroller.FlashAndRedir(false, msg, util.SvcTeam.Key+".list", w, r, ctx)
@@ -60,7 +60,7 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := &PermissionParams{Svc: util.SvcTeam, ModelID: sess.ID, Slug: key, Title: sess.Title}
-		auths, permErrors, bc := CheckPerms(ctx, app.Team(ctx.App).Data.Permissions, params)
+		auths, permErrors, bc := CheckPerms(ctx, app.Svc(ctx.App).Team.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
@@ -76,7 +76,7 @@ func TeamWorkspace(w http.ResponseWriter, r *http.Request) {
 
 func TeamExport(w http.ResponseWriter, r *http.Request) {
 	f := func(key string, ctx *npnweb.RequestContext) ExportParams {
-		sess := app.Team(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Team.GetBySlug(key)
 		if sess == nil {
 			return ExportParams{}
 		}
@@ -85,7 +85,7 @@ func TeamExport(w http.ResponseWriter, r *http.Request) {
 			Slug:    sess.Slug,
 			Title:   sess.Title,
 			Path:    ctx.Route(util.SvcTeam.Key, npncore.KeyKey, sess.Slug),
-			PermSvc: app.Team(ctx.App).Data.Permissions,
+			PermSvc: app.Svc(ctx.App).Team.Data.Permissions,
 		}
 	}
 	ExportAct(util.SvcTeam, f, w, r)

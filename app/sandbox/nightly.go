@@ -16,7 +16,7 @@ var Nightly = Sandbox{
 	Title:       "Nightly",
 	Description: "View the nightly email report, optionally sending it",
 	Resolve: func(ctx *npnweb.RequestContext) (string, interface{}, error) {
-		es := email.NewService(app.Database(ctx.App), ctx.Logger)
+		es := email.NewService(app.Svc(ctx.App).Database, ctx.Logger)
 		now := time.Now()
 		ymd := npncore.ToYMD(&now)
 		html, rsp, err := es.GetNightlyEmail(ymd, &transcript.Context{

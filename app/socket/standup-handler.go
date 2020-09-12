@@ -14,7 +14,7 @@ import (
 )
 
 func onStandupSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param standupSessionSaveParams) error {
-	dataSvc := standups(s)
+	dataSvc := ctx(s).standups
 	title := util.ServiceTitle(util.SvcStandup, param.Title)
 
 	sprintID := npncore.GetUUIDFromString(param.SprintID)
@@ -54,7 +54,7 @@ func onStandupSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconne
 	}
 
 	if teamChanged {
-		tm := teams(s).GetByIDPointer(teamID)
+		tm := ctx(s).teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated retro session")
@@ -62,7 +62,7 @@ func onStandupSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconne
 	}
 
 	if sprintChanged {
-		spr := sprints(s).GetByIDPointer(sprintID)
+		spr := ctx(s).sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.Wrap(err, "error sending sprint for updated standup session")
@@ -78,7 +78,7 @@ func onStandupSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconne
 }
 
 func sendStandupSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
-	sess := standups(s).GetByID(ch.ID)
+	sess := ctx(s).standups.GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load standup session [" + ch.ID.String() + "]")
 	}

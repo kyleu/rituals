@@ -85,42 +85,6 @@ func (c *Service) Auth() *auth.Service {
 	return c.auth
 }
 
-func Comment(a npnweb.AppInfo) *comment.Service {
-	return a.(*Service).Comment
-}
-
-func Action(a npnweb.AppInfo) *action.Service {
-	return a.(*Service).Action
-}
-
-func Team(a npnweb.AppInfo) *team.Service {
-	return a.(*Service).Team
-}
-
-func Sprint(a npnweb.AppInfo) *sprint.Service {
-	return a.(*Service).Sprint
-}
-
-func Estimate(a npnweb.AppInfo) *estimate.Service {
-	return a.(*Service).Estimate
-}
-
-func Standup(a npnweb.AppInfo) *standup.Service {
-	return a.(*Service).Standup
-}
-
-func Retro(a npnweb.AppInfo) *retro.Service {
-	return a.(*Service).Retro
-}
-
-func Socket(a npnweb.AppInfo) *npnconnection.Service {
-	return a.(*Service).Socket
-}
-
-func Database(a npnweb.AppInfo) *npndatabase.Service {
-	return a.(*Service).Database
-}
-
 func (c *Service) Version() string {
 	return c.version
 }
@@ -135,4 +99,8 @@ func (c *Service) Logger() logur.Logger {
 
 func (c *Service) Valid() bool {
 	return true
+}
+
+func Svc(a npnweb.AppInfo) *Service {
+	return a.(*Service)
 }

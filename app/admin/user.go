@@ -41,12 +41,12 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		params := npnweb.ParamSetFromRequest(r)
 
 		auths := ctx.App.Auth().GetByUserID(*userID, params.Get(npncore.KeyAuth, ctx.Logger))
-		teams := app.Team(ctx.App).GetByMember(*userID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		sprints := app.Sprint(ctx.App).GetByMember(*userID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		estimates := app.Estimate(ctx.App).GetByMember(*userID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		standups := app.Standup(ctx.App).GetByMember(*userID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		retros := app.Retro(ctx.App).GetByMember(*userID, params.Get(util.SvcRetro.Key, ctx.Logger))
-		actions := app.Action(ctx.App).GetByUser(*userID, params.Get(npncore.KeyAction, ctx.Logger))
+		teams := app.Svc(ctx.App).Team.GetByMember(*userID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := app.Svc(ctx.App).Sprint.GetByMember(*userID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		estimates := app.Svc(ctx.App).Estimate.GetByMember(*userID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := app.Svc(ctx.App).Standup.GetByMember(*userID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := app.Svc(ctx.App).Retro.GetByMember(*userID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		actions := app.Svc(ctx.App).Action.GetByUser(*userID, params.Get(npncore.KeyAction, ctx.Logger))
 
 		ctx.Title = u.Name
 		bc := npncontroller.AdminBC(ctx, npncore.KeyUser, npncore.Plural(npncore.KeyUser))

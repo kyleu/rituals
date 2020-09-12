@@ -59,12 +59,12 @@ func getSessionResult(s *npnconnection.Service, a *auth.Service, teamID *uuid.UU
 	entry := dataSvc.Members.Register(ch.ID, userID, "", member.RoleMember)
 	var sprintEntry *member.Entry
 	if sprintID != nil {
-		sprintEntry = sprints(s).Data.Members.RegisterRef(sprintID, userID, "", member.RoleMember)
+		sprintEntry = ctx(s).sprints.Data.Members.RegisterRef(sprintID, userID, "", member.RoleMember)
 	}
 
 	conn.Svc = ch.Svc
 	conn.ModelID = &ch.ID
-	actions(s).Post(ch.Svc, ch.ID, userID, action.ActConnect, nil)
+	ctx(s).actions.Post(ch.Svc, ch.ID, userID, action.ActConnect, nil)
 
 	return SessionResult{
 		Auth:        displays,

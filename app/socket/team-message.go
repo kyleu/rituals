@@ -20,7 +20,7 @@ type teamSessionSaveParams struct {
 }
 
 func onTeamMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
-	dataSvc := teams(s)
+	dataSvc := ctx(s).teams
 	var err error
 	userID := conn.Profile.UserID
 	switch cmd {
@@ -47,6 +47,6 @@ func onTeamMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnectio
 }
 
 func sendTeams(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID) error {
-	teams := teams(s).GetByMember(userID, nil)
+	teams := ctx(s).teams.GetByMember(userID, nil)
 	return s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdTeams, teams))
 }

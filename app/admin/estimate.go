@@ -22,7 +22,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
 
 		params := npnweb.ParamSetFromRequest(r)
-		estimates := app.Estimate(ctx.App).List(params.Get(util.SvcEstimate.Key, ctx.Logger))
+		estimates := app.Svc(ctx.App).Estimate.List(params.Get(util.SvcEstimate.Key, ctx.Logger))
 		return npncontroller.T(admintemplates.EstimateList(estimates, params, ctx, w))
 	})
 }
@@ -33,7 +33,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		sess := app.Estimate(ctx.App).GetByID(*estimateID)
+		sess := app.Svc(ctx.App).Estimate.GetByID(*estimateID)
 		if sess == nil {
 			msg := "can't load estimate [" + estimateID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(util.SvcEstimate.Key), w, r, ctx)
@@ -41,9 +41,9 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := npnweb.ParamSetFromRequest(r)
 
-		stories := app.Estimate(ctx.App).GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
+		stories := app.Svc(ctx.App).Estimate.GetStories(*estimateID, params.Get(util.KeyStory, ctx.Logger))
 
-		data := app.Estimate(ctx.App).Data.GetData(*estimateID, params, ctx.Logger)
+		data := app.Svc(ctx.App).Estimate.Data.GetData(*estimateID, params, ctx.Logger)
 
 		ctx.Title = sess.Title
 		bc := npncontroller.AdminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
@@ -60,15 +60,15 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		story, err := app.Estimate(ctx.App).GetStoryByID(*storyID)
+		story, err := app.Svc(ctx.App).Estimate.GetStoryByID(*storyID)
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		estimateID, err := app.Estimate(ctx.App).GetStoryEstimateID(*storyID)
+		estimateID, err := app.Svc(ctx.App).Estimate.GetStoryEstimateID(*storyID)
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		sess := app.Estimate(ctx.App).GetByID(*estimateID)
+		sess := app.Svc(ctx.App).Estimate.GetByID(*estimateID)
 		if sess == nil {
 			msg := "can't load estimate [" + estimateID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(util.SvcEstimate.Key), w, r, ctx)
@@ -76,7 +76,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := npnweb.ParamSetFromRequest(r)
 
-		votes := app.Estimate(ctx.App).GetStoryVotes(*storyID, params.Get(util.KeyVote, ctx.Logger))
+		votes := app.Svc(ctx.App).Estimate.GetStoryVotes(*storyID, params.Get(util.KeyVote, ctx.Logger))
 		ctx.Title = fmt.Sprint(sess.Slug, ":", story.Idx)
 		bc := npncontroller.AdminBC(ctx, util.SvcEstimate.Key, util.SvcEstimate.Plural)
 		el := npnweb.AdminLink(util.SvcEstimate.Key, npncore.KeyDetail)

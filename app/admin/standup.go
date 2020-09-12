@@ -22,7 +22,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)
 
 		params := npnweb.ParamSetFromRequest(r)
-		standups := app.Standup(ctx.App).List(params.Get(util.SvcStandup.Key, ctx.Logger))
+		standups := app.Svc(ctx.App).Standup.List(params.Get(util.SvcStandup.Key, ctx.Logger))
 		return npncontroller.T(admintemplates.StandupList(standups, params, ctx, w))
 	})
 }
@@ -33,7 +33,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		sess := app.Standup(ctx.App).GetByID(*standupID)
+		sess := app.Svc(ctx.App).Standup.GetByID(*standupID)
 		if sess == nil {
 			msg := "can't load standup [" + standupID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(util.SvcStandup.Key), w, r, ctx)
@@ -41,9 +41,9 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := npnweb.ParamSetFromRequest(r)
 
-		reports := app.Standup(ctx.App).GetReports(*standupID, params.Get(npncore.KeyReport, ctx.Logger))
+		reports := app.Svc(ctx.App).Standup.GetReports(*standupID, params.Get(npncore.KeyReport, ctx.Logger))
 
-		data := app.Standup(ctx.App).Data.GetData(*standupID, params, ctx.Logger)
+		data := app.Svc(ctx.App).Standup.Data.GetData(*standupID, params, ctx.Logger)
 
 		ctx.Title = sess.Title
 		bc := npncontroller.AdminBC(ctx, util.SvcStandup.Key, util.SvcStandup.Plural)

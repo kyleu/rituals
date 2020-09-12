@@ -59,57 +59,25 @@ func NewService(
 	return npnconnection.NewService(logger, handler, ctx)
 }
 
-func comments(s *npnconnection.Service) *comment.Service {
-	return s.Context.(*services).comments
-}
-
-func actions(s *npnconnection.Service) *action.Service {
-	return s.Context.(*services).actions
-}
-
-func teams(s *npnconnection.Service) *team.Service {
-	return s.Context.(*services).teams
-}
-
-func sprints(s *npnconnection.Service) *sprint.Service {
-	return s.Context.(*services).sprints
-}
-
-func estimates(s *npnconnection.Service) *estimate.Service {
-	return s.Context.(*services).estimates
-}
-
-func standups(s *npnconnection.Service) *standup.Service {
-	return s.Context.(*services).standups
-}
-
-func retros(s *npnconnection.Service) *retro.Service {
-	return s.Context.(*services).retros
-}
-
-func auths(s *npnconnection.Service) *auth.Service {
-	return s.Context.(*services).auths
-}
-
-func users(s *npnconnection.Service) *user.Service {
-	return s.Context.(*services).users
+func ctx(s *npnconnection.Service) *services {
+	return s.Context.(*services)
 }
 
 func handler(s *npnconnection.Service, c *npnconnection.Connection, svc string, cmd string, param json.RawMessage) error {
 	var err error
 	switch svc {
 	case util.SvcSystem.Key:
-		err = onSystemMessage(s, users(s), c, cmd, param)
+		err = onSystemMessage(s, ctx(s).users, c, cmd, param)
 	case util.SvcTeam.Key:
-		err = onTeamMessage(s, auths(s), c, cmd, param)
+		err = onTeamMessage(s, ctx(s).auths, c, cmd, param)
 	case util.SvcSprint.Key:
-		err = onSprintMessage(s, auths(s), c, cmd, param)
+		err = onSprintMessage(s, ctx(s).auths, c, cmd, param)
 	case util.SvcEstimate.Key:
-		err = onEstimateMessage(s, auths(s), c, cmd, param)
+		err = onEstimateMessage(s, ctx(s).auths, c, cmd, param)
 	case util.SvcStandup.Key:
-		err = onStandupMessage(s, auths(s), c, cmd, param)
+		err = onStandupMessage(s, ctx(s).auths, c, cmd, param)
 	case util.SvcRetro.Key:
-		err = onRetroMessage(s, auths(s), c, cmd, param)
+		err = onRetroMessage(s, ctx(s).auths, c, cmd, param)
 	default:
 		err = errors.New(npncore.IDErrorString(npncore.KeyService, svc))
 	}

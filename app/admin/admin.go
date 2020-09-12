@@ -24,7 +24,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		params := npnweb.ParamSetFromRequest(r)
 		ctx.Title = "Admin"
 		ctx.Breadcrumbs = npnweb.BreadcrumbsSimple("", npncore.KeyAdmin)
-		countMap, recentMap, err := SectionCounts(homeSections, npnweb.ExtractRoutes(ctx.Routes), app.Database(ctx.App), app.Socket(ctx.App))
+		countMap, recentMap, err := SectionCounts(homeSections, npnweb.ExtractRoutes(ctx.Routes), app.Svc(ctx.App).Database, app.Svc(ctx.App).Socket)
 		if err != nil {
 			return npncontroller.EResp(err, "error getting section counts")
 		}

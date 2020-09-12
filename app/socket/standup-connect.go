@@ -39,7 +39,7 @@ func onStandupConnect(s *npnconnection.Service, conn *npnconnection.Connection, 
 }
 
 func joinStandupSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
-	dataSvc := standups(s)
+	dataSvc := ctx(s).standups
 	if ch.Svc != util.SvcStandup.Key {
 		return errors.New("standup cannot handle [" + ch.Svc + "] message")
 	}
@@ -48,7 +48,7 @@ func joinStandupSession(s *npnconnection.Service, conn *npnconnection.Connection
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, auths(s), sess.TeamID, sess.SprintID, ch, conn)
+	res := getSessionResult(s, ctx(s).auths, sess.TeamID, sess.SprintID, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}

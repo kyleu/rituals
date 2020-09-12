@@ -30,22 +30,23 @@ var Retro = Transcript{
 	Title:       util.SvcRetro.Title,
 	Description: util.SvcRetro.Description,
 	Resolve: func(ai npnweb.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		svc := app.Svc(ai)
 		if len(slug) == 0 {
-			return app.Retro(ai).List(nil), nil
+			return svc.Retro.List(nil), nil
 		}
-		sess := app.Retro(ai).GetBySlug(slug)
+		sess := svc.Retro.GetBySlug(slug)
 		if sess == nil {
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
-		dataSvc := app.Retro(ai).Data
+		dataSvc := svc.Retro.Data
 		return RetroResponse{
 			Svc:         util.SvcRetro,
 			Session:     sess,
-			Team:        app.Team(ai).GetByIDPointer(sess.TeamID),
-			Sprint:      app.Sprint(ai).GetByIDPointer(sess.SprintID),
+			Team:        svc.Team.GetByIDPointer(sess.TeamID),
+			Sprint:      svc.Sprint.GetByIDPointer(sess.SprintID),
 			Comments:    dataSvc.GetComments(sess.ID, nil),
 			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
-			Feedback:    app.Retro(ai).GetFeedback(sess.ID, nil),
+			Feedback:    svc.Retro.GetFeedback(sess.ID, nil),
 			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},

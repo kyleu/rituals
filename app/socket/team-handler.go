@@ -13,7 +13,7 @@ import (
 )
 
 func onTeamSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param teamSessionSaveParams) error {
-	dataSvc := teams(s)
+	dataSvc := ctx(s).teams
 	title := util.ServiceTitle(util.SvcTeam, param.Title)
 
 	curr := dataSvc.GetByID(ch.ID)
@@ -71,7 +71,7 @@ func sendTeamUpdate(s *npnconnection.Service, ch npnconnection.Channel, curr *uu
 }
 
 func sendTeamSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
-	sess := teams(s).GetByID(ch.ID)
+	sess := ctx(s).teams.GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load team session [" + ch.ID.String() + "]")
 	}
@@ -83,5 +83,5 @@ func getTeamOpt(s *npnconnection.Service, teamID *uuid.UUID) *team.Session {
 	if teamID == nil {
 		return nil
 	}
-	return teams(s).GetByID(*teamID)
+	return ctx(s).teams.GetByID(*teamID)
 }

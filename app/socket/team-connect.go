@@ -42,7 +42,7 @@ func onTeamConnect(s *npnconnection.Service, conn *npnconnection.Connection, tea
 }
 
 func joinTeamSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
-	dataSvc := teams(s)
+	dataSvc := ctx(s).teams
 	if ch.Svc != util.SvcTeam.Key {
 		return errors.New("team cannot handle [" + ch.Svc + "] message")
 	}
@@ -51,7 +51,7 @@ func joinTeamSession(s *npnconnection.Service, conn *npnconnection.Connection, c
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, auths(s), nil, nil, ch, conn)
+	res := getSessionResult(s, ctx(s).auths, nil, nil, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}
@@ -62,10 +62,10 @@ func joinTeamSession(s *npnconnection.Service, conn *npnconnection.Connection, c
 		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Sprints:     sprints(s).GetByTeamID(ch.ID, nil),
-		Estimates:   estimates(s).GetByTeamID(ch.ID, nil),
-		Standups:    standups(s).GetByTeamID(ch.ID, nil),
-		Retros:      retros(s).GetByTeamID(ch.ID, nil),
+		Sprints:     ctx(s).sprints.GetByTeamID(ch.ID, nil),
+		Estimates:   ctx(s).estimates.GetByTeamID(ch.ID, nil),
+		Standups:    ctx(s).standups.GetByTeamID(ch.ID, nil),
+		Retros:      ctx(s).retros.GetByTeamID(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}

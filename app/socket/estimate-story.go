@@ -30,7 +30,7 @@ func onAddStory(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.
 	}
 	s.Logger.Debug(fmt.Sprintf("adding story [%s]", param.Title))
 
-	story, err := estimates(s).NewStory(ch.ID, param.Title, userID)
+	story, err := ctx(s).estimates.NewStory(ch.ID, param.Title, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new story")
 	}
@@ -43,7 +43,7 @@ func onUpdateStory(s *npnconnection.Service, ch npnconnection.Channel, userID uu
 	if len(param.Title) == 0 {
 		param.Title = "Untitled " + npncore.Title(util.KeyStory)
 	}
-	st, err := estimates(s).UpdateStory(param.StoryID, param.Title, userID)
+	st, err := ctx(s).estimates.UpdateStory(param.StoryID, param.Title, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update story")
 	}
@@ -53,7 +53,7 @@ func onUpdateStory(s *npnconnection.Service, ch npnconnection.Channel, userID uu
 
 func onRemoveStory(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, storyID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", storyID))
-	err := estimates(s).RemoveStory(storyID, userID)
+	err := ctx(s).estimates.RemoveStory(storyID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove story")
 	}
@@ -63,7 +63,7 @@ func onRemoveStory(s *npnconnection.Service, ch npnconnection.Channel, userID uu
 
 func onSetStoryStatus(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, params setStoryStatusParams) error {
 	status := session.StatusFromString(params.Status)
-	changed, finalVote, err := estimates(s).SetStoryStatus(params.StoryID, status, userID)
+	changed, finalVote, err := ctx(s).estimates.SetStoryStatus(params.StoryID, status, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update status of story ["+params.StoryID.String()+"]")
 	}
@@ -78,7 +78,7 @@ func onSetStoryStatus(s *npnconnection.Service, ch npnconnection.Channel, userID
 }
 
 func onSubmitVote(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param submitVoteParams) error {
-	vote, err := estimates(s).UpdateVote(param.StoryID, userID, param.Choice)
+	vote, err := ctx(s).estimates.UpdateVote(param.StoryID, userID, param.Choice)
 	if err != nil {
 		return errors.Wrap(err, "cannot update vote")
 	}

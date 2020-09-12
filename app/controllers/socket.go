@@ -20,13 +20,13 @@ func Socket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	connID, err := app.Socket(ctx.App).Register(ctx.Profile.ToProfile(), c)
+	connID, err := app.Svc(ctx.App).Socket.Register(ctx.Profile.ToProfile(), c)
 	if err != nil {
 		ctx.Logger.Warn("unable to register websocket connection")
 		return
 	}
 
-	err = app.Socket(ctx.App).ReadLoop(connID)
+	err = app.Svc(ctx.App).Socket.ReadLoop(connID)
 	if err != nil {
 		ctx.Logger.Error(fmt.Sprintf("error processing socket read loop: %+v", err))
 		return

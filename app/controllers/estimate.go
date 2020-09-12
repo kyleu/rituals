@@ -22,9 +22,9 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		params := npnweb.ParamSetFromRequest(r)
 
-		sessions := app.Estimate(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		teams := app.Team(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		sprints := app.Sprint(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		sessions := app.Svc(ctx.App).Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		teams := app.Svc(ctx.App).Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := app.Svc(ctx.App).Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
 		auths := ctx.App.Auth().GetByUserID(ctx.Profile.UserID, params.Get(npncore.KeyAuth, ctx.Logger))
 
 		ctx.Title = util.SvcEstimate.PluralTitle
@@ -45,21 +45,21 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcEstimate, r.Form, ctx.App.User())
 
-		sess, err := app.Estimate(ctx.App).New(sf.Title, ctx.Profile.UserID, sf.MemberName, choices, sf.TeamID, sf.SprintID)
+		sess, err := app.Svc(ctx.App).Estimate.New(sf.Title, ctx.Profile.UserID, sf.MemberName, choices, sf.TeamID, sf.SprintID)
 		if err != nil {
 			return npncontroller.EResp(err, "error creating estimate session")
 		}
 
-		_, err = app.Estimate(ctx.App).Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
+		_, err = app.Svc(ctx.App).Estimate.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return npncontroller.EResp(err, "error setting permissions for new session")
 		}
 
-		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcTeam.Key, sf.TeamID)
+		err = socket.SendContentUpdate(app.Svc(ctx.App).Socket, util.SvcTeam.Key, sf.TeamID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
-		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcSprint.Key, sf.SprintID)
+		err = socket.SendContentUpdate(app.Svc(ctx.App).Socket, util.SvcSprint.Key, sf.SprintID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
@@ -71,7 +71,7 @@ func EstimateNew(w http.ResponseWriter, r *http.Request) {
 func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		key := mux.Vars(r)[npncore.KeyKey]
-		sess := app.Estimate(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Estimate.GetBySlug(key)
 		if sess == nil {
 			msg := "can't load estimate [" + key + "]"
 			return npncontroller.FlashAndRedir(false, msg, util.SvcEstimate.Key+".list", w, r, ctx)
@@ -81,7 +81,7 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := &PermissionParams{Svc: util.SvcEstimate, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID, SprintID: sess.SprintID}
-		auths, permErrors, bc := CheckPerms(ctx, app.Estimate(ctx.App).Data.Permissions, params)
+		auths, permErrors, bc := CheckPerms(ctx, app.Svc(ctx.App).Estimate.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
@@ -96,7 +96,7 @@ func EstimateWorkspace(w http.ResponseWriter, r *http.Request) {
 
 func EstimateExport(w http.ResponseWriter, r *http.Request) {
 	f := func(key string, ctx *npnweb.RequestContext) ExportParams {
-		sess := app.Estimate(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Estimate.GetBySlug(key)
 		if sess == nil {
 			return ExportParams{}
 		}
@@ -105,7 +105,7 @@ func EstimateExport(w http.ResponseWriter, r *http.Request) {
 			Slug:    sess.Slug,
 			Title:   sess.Title,
 			Path:    ctx.Route(util.SvcEstimate.Key, npncore.KeyKey, sess.Slug),
-			PermSvc: app.Estimate(ctx.App).Data.Permissions,
+			PermSvc: app.Svc(ctx.App).Estimate.Data.Permissions,
 		}
 	}
 	ExportAct(util.SvcEstimate, f, w, r)

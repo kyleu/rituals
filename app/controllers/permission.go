@@ -32,13 +32,13 @@ func CheckPerms(ctx *npnweb.RequestContext, permSvc *permission.Service, p *Perm
 
 	var tp *permission.Params
 	if p.TeamID != nil {
-		tm := app.Team(ctx.App).GetByID(*p.TeamID)
+		tm := app.Svc(ctx.App).Team.GetByID(*p.TeamID)
 		tp = &permission.Params{ID: tm.ID, Slug: tm.Slug, Title: tm.Title, Current: currTeams}
 	}
 
 	var sp *permission.Params
 	if p.SprintID != nil {
-		spr := app.Sprint(ctx.App).GetByID(*p.SprintID)
+		spr := app.Svc(ctx.App).Sprint.GetByID(*p.SprintID)
 		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
 	}
 
@@ -68,12 +68,12 @@ func authsTeamsAndSprints(ctx *npnweb.RequestContext, tm *uuid.UUID, spr *uuid.U
 
 	var currTeams []uuid.UUID
 	if tm != nil {
-		currTeams = app.Team(ctx.App).GetIdsByMember(ctx.Profile.UserID)
+		currTeams = app.Svc(ctx.App).Team.GetIdsByMember(ctx.Profile.UserID)
 	}
 
 	var currSprints []uuid.UUID
 	if spr != nil {
-		currSprints = app.Sprint(ctx.App).GetIdsByMember(ctx.Profile.UserID)
+		currSprints = app.Svc(ctx.App).Sprint.GetIdsByMember(ctx.Profile.UserID)
 	}
 
 	return auths, currTeams, currSprints

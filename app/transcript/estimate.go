@@ -31,23 +31,24 @@ var Estimate = Transcript{
 	Title:       util.SvcEstimate.Title,
 	Description: util.SvcEstimate.Description,
 	Resolve: func(ai npnweb.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		svc := app.Svc(ai)
 		if len(slug) == 0 {
-			return app.Estimate(ai).List(nil), nil
+			return svc.Estimate.List(nil), nil
 		}
-		sess := app.Estimate(ai).GetBySlug(slug)
+		sess := svc.Estimate.GetBySlug(slug)
 		if sess == nil {
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
-		dataSvc := app.Estimate(ai).Data
+		dataSvc := svc.Estimate.Data
 		return EstimateResponse{
 			Svc:         util.SvcEstimate,
 			Session:     sess,
-			Team:        app.Team(ai).GetByIDPointer(sess.TeamID),
-			Sprint:      app.Sprint(ai).GetByIDPointer(sess.SprintID),
+			Team:        svc.Team.GetByIDPointer(sess.TeamID),
+			Sprint:      svc.Sprint.GetByIDPointer(sess.SprintID),
 			Comments:    dataSvc.GetComments(sess.ID, nil),
 			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
-			Stories:     app.Estimate(ai).GetStories(sess.ID, nil),
-			Votes:       app.Estimate(ai).GetEstimateVotes(sess.ID, nil),
+			Stories:     svc.Estimate.GetStories(sess.ID, nil),
+			Votes:       svc.Estimate.GetEstimateVotes(sess.ID, nil),
 			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},

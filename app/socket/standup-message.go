@@ -32,7 +32,7 @@ type editReportParams struct {
 }
 
 func onStandupMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
-	dataSvc := standups(s)
+	dataSvc := ctx(s).standups
 	var err error
 	userID := conn.Profile.UserID
 

@@ -54,16 +54,17 @@ var Email = Transcript{
 		if err != nil {
 			return nil, err
 		}
+		svc := app.Svc(ai)
 		return EmailResponse{
 			Date:      d,
 			Users:     ai.User().GetByCreated(d, nil),
 			Auths:     ai.Auth().GetByCreated(d, nil),
-			Teams:     app.Team(ai).GetByCreated(d, nil),
-			Sprints:   app.Sprint(ai).GetByCreated(d, nil),
-			Estimates: app.Estimate(ai).GetByCreated(d, nil),
-			Standups:  app.Standup(ai).GetByCreated(d, nil),
-			Retros:    app.Retro(ai).GetByCreated(d, nil),
-			Comments:  app.Comment(ai).GetByCreated(d, nil),
+			Teams:     svc.Team.GetByCreated(d, nil),
+			Sprints:   svc.Sprint.GetByCreated(d, nil),
+			Estimates: svc.Estimate.GetByCreated(d, nil),
+			Standups:  svc.Standup.GetByCreated(d, nil),
+			Retros:    svc.Retro.GetByCreated(d, nil),
+			Comments:  svc.Comment.GetByCreated(d, nil),
 		}, nil
 	},
 }

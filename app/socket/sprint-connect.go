@@ -42,7 +42,7 @@ func onSprintConnect(s *npnconnection.Service, conn *npnconnection.Connection, s
 }
 
 func joinSprintSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
-	dataSvc := sprints(s)
+	dataSvc := ctx(s).sprints
 
 	if ch.Svc != util.SvcSprint.Key {
 		return errors.New("sprint cannot handle [" + ch.Svc + "] message")
@@ -52,7 +52,7 @@ func joinSprintSession(s *npnconnection.Service, conn *npnconnection.Connection,
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, auths(s), sess.TeamID, nil, ch, conn)
+	res := getSessionResult(s, ctx(s).auths, sess.TeamID, nil, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}
@@ -64,9 +64,9 @@ func joinSprintSession(s *npnconnection.Service, conn *npnconnection.Connection,
 		Team:        getTeamOpt(s, sess.TeamID),
 		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),
 		Online:      s.GetOnline(ch),
-		Estimates:   estimates(s).GetBySprintID(ch.ID, nil),
-		Standups:    standups(s).GetBySprintID(ch.ID, nil),
-		Retros:      retros(s).GetBySprintID(ch.ID, nil),
+		Estimates:   ctx(s).estimates.GetBySprintID(ch.ID, nil),
+		Standups:    ctx(s).standups.GetBySprintID(ch.ID, nil),
+		Retros:      ctx(s).retros.GetBySprintID(ch.ID, nil),
 		Auths:       res.Auth,
 		Permissions: res.Perms,
 	}

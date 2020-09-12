@@ -60,7 +60,7 @@ func onUpdateComment(s *npnconnection.Service, ch npnconnection.Channel, userID 
 
 func onRemoveComment(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, commentID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", commentID))
-	err := comments(s).RemoveComment(commentID, userID)
+	err := ctx(s).comments.RemoveComment(commentID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove comment")
 	}

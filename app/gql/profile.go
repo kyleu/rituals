@@ -26,23 +26,23 @@ func initProfile() {
 	}
 
 	profileTeamResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Team(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Team.GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcTeam.Key, p, ctx.Logger)), nil
 	}
 
 	profileSprintResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Sprint(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Sprint.GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcSprint.Key, p, ctx.Logger)), nil
 	}
 
 	profileEstimateResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcEstimate.Key, p, ctx.Logger)), nil
 	}
 
 	profileStandupResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Standup(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Standup.GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcStandup.Key, p, ctx.Logger)), nil
 	}
 
 	profileRetroResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Retro(ctx.App).GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Retro.GetByMember(p.Source.(npnuser.Profile).UserID, npngraphql.ParamSetFromGraphQLParams(util.SvcRetro.Key, p, ctx.Logger)), nil
 	}
 
 	profileType = graphql.NewObject(

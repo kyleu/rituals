@@ -30,22 +30,23 @@ var Standup = Transcript{
 	Title:       util.SvcStandup.Title,
 	Description: util.SvcStandup.Description,
 	Resolve: func(ai npnweb.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		svc := app.Svc(ai)
 		if len(slug) == 0 {
-			return app.Standup(ai).List(nil), nil
+			return svc.Standup.List(nil), nil
 		}
-		sess := app.Standup(ai).GetBySlug(slug)
-		dataSvc := app.Standup(ai).Data
+		sess := svc.Standup.GetBySlug(slug)
+		dataSvc := svc.Standup.Data
 		if sess == nil {
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
 		return StandupResponse{
 			Svc:         util.SvcStandup,
 			Session:     sess,
-			Team:        app.Team(ai).GetByIDPointer(sess.TeamID),
-			Sprint:      app.Sprint(ai).GetByIDPointer(sess.SprintID),
+			Team:        svc.Team.GetByIDPointer(sess.TeamID),
+			Sprint:      svc.Sprint.GetByIDPointer(sess.SprintID),
 			Comments:    dataSvc.GetComments(sess.ID, nil),
 			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
-			Reports:     app.Standup(ai).GetReports(sess.ID, nil),
+			Reports:     svc.Standup.GetReports(sess.ID, nil),
 			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},

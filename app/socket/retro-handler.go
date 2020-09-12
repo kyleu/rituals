@@ -16,7 +16,7 @@ import (
 )
 
 func onRetroSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param retroSessionSaveParams) error {
-	dataSvc := retros(s)
+	dataSvc := ctx(s).retros
 	title := util.ServiceTitle(util.SvcRetro, param.Title)
 
 	categories := npndatabase.StringToArray(param.Categories)
@@ -61,7 +61,7 @@ func onRetroSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnect
 	}
 
 	if teamChanged {
-		tm := teams(s).GetByIDPointer(teamID)
+		tm := ctx(s).teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated retro session")
@@ -69,7 +69,7 @@ func onRetroSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnect
 	}
 
 	if sprintChanged {
-		spr := sprints(s).GetByIDPointer(sprintID)
+		spr := ctx(s).sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.Wrap(err, "error sending sprint for updated retro session")
@@ -85,7 +85,7 @@ func onRetroSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnect
 }
 
 func sendRetroSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
-	sess := retros(s).GetByID(ch.ID)
+	sess := ctx(s).retros.GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load retro session [" + ch.ID.String() + "]")
 	}

@@ -33,23 +33,24 @@ var Sprint = Transcript{
 	Title:       util.SvcSprint.Title,
 	Description: util.SvcSprint.Description,
 	Resolve: func(ai npnweb.AppInfo, userID uuid.UUID, slug string) (interface{}, error) {
+		svc := app.Svc(ai)
 		if len(slug) == 0 {
-			return app.Sprint(ai).List(nil), nil
+			return svc.Sprint.List(nil), nil
 		}
-		sess := app.Sprint(ai).GetBySlug(slug)
-		dataSvc := app.Sprint(ai).Data
+		sess := svc.Sprint.GetBySlug(slug)
+		dataSvc := svc.Sprint.Data
 		if sess == nil {
 			return nil, errors.New("no session available matching [" + slug + "]")
 		}
 		return SprintResponse{
 			Svc:         util.SvcSprint,
 			Session:     sess,
-			Team:        app.Team(ai).GetByIDPointer(sess.TeamID),
+			Team:        svc.Team.GetByIDPointer(sess.TeamID),
 			Comments:    dataSvc.GetComments(sess.ID, nil),
 			Members:     dataSvc.Members.GetByModelID(sess.ID, nil),
-			Estimates:   app.Estimate(ai).GetBySprintID(sess.ID, nil),
-			Standups:    app.Standup(ai).GetBySprintID(sess.ID, nil),
-			Retros:      app.Retro(ai).GetBySprintID(sess.ID, nil),
+			Estimates:   svc.Estimate.GetBySprintID(sess.ID, nil),
+			Standups:    svc.Standup.GetBySprintID(sess.ID, nil),
+			Retros:      svc.Retro.GetBySprintID(sess.ID, nil),
 			Permissions: dataSvc.Permissions.GetByModelID(sess.ID, nil),
 		}, nil
 	},

@@ -39,7 +39,7 @@ func onRetroConnect(s *npnconnection.Service, conn *npnconnection.Connection, re
 }
 
 func joinRetroSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
-	dataSvc := retros(s)
+	dataSvc := ctx(s).retros
 	if ch.Svc != util.SvcRetro.Key {
 		return errors.New("retro cannot handle [" + ch.Svc + "] message")
 	}
@@ -48,7 +48,7 @@ func joinRetroSession(s *npnconnection.Service, conn *npnconnection.Connection, 
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, auths(s), sess.TeamID, sess.SprintID, ch, conn)
+	res := getSessionResult(s, ctx(s).auths, sess.TeamID, sess.SprintID, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}

@@ -67,7 +67,7 @@ func adminRoutes(ai npnweb.AppInfo, r *mux.Router) *mux.Router {
 	r.PathPrefix(routes.Adm("src/")).Methods(http.MethodGet).Handler(routes.AddContext(r, ai, http.StripPrefix(routes.Adm("src/"), http.HandlerFunc(admin.Source)))).Name(npnweb.AdminLink("source"))
 
 	// GraphQL
-	npncontroller.RoutesSocketAdmin(ai, app.Socket(ai), r)
+	npncontroller.RoutesSocketAdmin(ai, app.Svc(ai).Socket, r)
 	npngraphql.RoutesGraphQLAdmin(ai, r)
 
 	return r

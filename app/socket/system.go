@@ -60,7 +60,7 @@ func sendActions(s *npnconnection.Service, conn *npnconnection.Connection) error
 	if conn.ModelID == nil {
 		return errors.New("no active model for connection [" + conn.ID.String() + "]")
 	}
-	actions := actions(s).GetBySvcModel(conn.Svc, *conn.ModelID, nil)
+	actions := ctx(s).actions.GetBySvcModel(conn.Svc, *conn.ModelID, nil)
 	return s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdActions, actions))
 }
 
@@ -71,15 +71,15 @@ func setActive(s *npnconnection.Service, conn *npnconnection.Connection, status 
 func dataFor(s *npnconnection.Service, svc string) *session.DataServices {
 	switch svc {
 	case util.SvcTeam.Key:
-		return teams(s).Data
+		return ctx(s).teams.Data
 	case util.SvcSprint.Key:
-		return sprints(s).Data
+		return ctx(s).sprints.Data
 	case util.SvcEstimate.Key:
-		return estimates(s).Data
+		return ctx(s).estimates.Data
 	case util.SvcStandup.Key:
-		return standups(s).Data
+		return ctx(s).standups.Data
 	case util.SvcRetro.Key:
-		return retros(s).Data
+		return ctx(s).retros.Data
 	default:
 		return nil
 	}

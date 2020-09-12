@@ -21,7 +21,7 @@ func EmailList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyEmail, npncore.Plural(npncore.KeyEmail))
 
 		params := npnweb.ParamSetFromRequest(r)
-		emailSvc := email.NewService(app.Database(ctx.App), ctx.Logger)
+		emailSvc := email.NewService(app.Svc(ctx.App).Database, ctx.Logger)
 		emails := emailSvc.List(params.Get(npncore.KeyEmail, ctx.Logger))
 		return npncontroller.T(admintemplates.EmailList(emails, params, ctx, w))
 	})
@@ -33,7 +33,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 		if !ok {
 			return npncontroller.EResp(errors.New("invalid email id"))
 		}
-		emailSvc := email.NewService(app.Database(ctx.App), ctx.Logger)
+		emailSvc := email.NewService(app.Svc(ctx.App).Database, ctx.Logger)
 		e := emailSvc.GetByID(emailID)
 		if e == nil {
 			msg := "can't load email [" + emailID + "]"

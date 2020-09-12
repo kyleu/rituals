@@ -40,7 +40,7 @@ func onEstimateConnect(s *npnconnection.Service, conn *npnconnection.Connection,
 }
 
 func joinEstimateSession(s *npnconnection.Service, conn *npnconnection.Connection, ch npnconnection.Channel) error {
-	dataSvc := estimates(s)
+	dataSvc := ctx(s).estimates
 	if ch.Svc != util.SvcEstimate.Key {
 		return errors.New("estimate cannot handle [" + ch.Svc + "] message")
 	}
@@ -49,7 +49,7 @@ func joinEstimateSession(s *npnconnection.Service, conn *npnconnection.Connectio
 	if sess == nil {
 		return errorNoSession(s, ch.Svc, conn.ID, ch.ID)
 	}
-	res := getSessionResult(s, auths(s), sess.TeamID, sess.SprintID, ch, conn)
+	res := getSessionResult(s, ctx(s).auths, sess.TeamID, sess.SprintID, ch, conn)
 	if res.Error != nil {
 		return res.Error
 	}

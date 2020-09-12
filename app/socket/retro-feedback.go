@@ -14,7 +14,7 @@ import (
 func onAddFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param addFeedbackParams) error {
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("adding [%s] feedback for [%s]", param.Category, userID))
-	fb, err := retros(s).NewFeedback(ch.ID, param.Category, content, userID)
+	fb, err := ctx(s).retros.NewFeedback(ch.ID, param.Category, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new feedback")
 	}
@@ -25,7 +25,7 @@ func onAddFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uu
 func onEditFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, param editFeedbackParams) error {
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("updating [%s] feedback for [%s]", param.Category, userID))
-	feedback, err := retros(s).UpdateFeedback(param.ID, param.Category, content, userID)
+	feedback, err := ctx(s).retros.UpdateFeedback(param.ID, param.Category, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update feedback")
 	}
@@ -35,7 +35,7 @@ func onEditFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID u
 
 func onRemoveFeedback(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, feedbackID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", feedbackID))
-	err := retros(s).RemoveFeedback(feedbackID, userID)
+	err := ctx(s).retros.RemoveFeedback(feedbackID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove feedback")
 	}

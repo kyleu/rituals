@@ -19,7 +19,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = util.SvcRetro.Title + " List"
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)
 		params := npnweb.ParamSetFromRequest(r)
-		retros := app.Retro(ctx.App).List(params.Get(util.SvcRetro.Key, ctx.Logger))
+		retros := app.Svc(ctx.App).Retro.List(params.Get(util.SvcRetro.Key, ctx.Logger))
 		return npncontroller.T(admintemplates.RetroList(retros, params, ctx, w))
 	})
 }
@@ -30,7 +30,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		sess := app.Retro(ctx.App).GetByID(*retroID)
+		sess := app.Svc(ctx.App).Retro.GetByID(*retroID)
 		if sess == nil {
 			msg := "can't load retro [" + retroID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(util.SvcRetro.Key), w, r, ctx)
@@ -38,9 +38,9 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := npnweb.ParamSetFromRequest(r)
 
-		feedbacks := app.Retro(ctx.App).GetFeedback(sess.ID, params.Get(util.KeyFeedback, ctx.Logger))
+		feedbacks := app.Svc(ctx.App).Retro.GetFeedback(sess.ID, params.Get(util.KeyFeedback, ctx.Logger))
 
-		data := app.Retro(ctx.App).Data.GetData(*retroID, params, ctx.Logger)
+		data := app.Svc(ctx.App).Retro.Data.GetData(*retroID, params, ctx.Logger)
 
 		ctx.Title = sess.Title
 		bc := npncontroller.AdminBC(ctx, util.SvcRetro.Key, util.SvcRetro.Plural)

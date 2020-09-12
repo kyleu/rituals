@@ -16,7 +16,7 @@ import (
 )
 
 func onEstimateSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param estimateSessionSaveParams) error {
-	dataSvc := estimates(s)
+	dataSvc := ctx(s).estimates
 	title := util.ServiceTitle(util.SvcEstimate, param.Title)
 
 	choices := npndatabase.StringToArray(param.Choices)
@@ -61,7 +61,7 @@ func onEstimateSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconn
 	}
 
 	if teamChanged {
-		tm := teams(s).GetByIDPointer(teamID)
+		tm := ctx(s).teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated estimate session")
@@ -69,7 +69,7 @@ func onEstimateSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconn
 	}
 
 	if sprintChanged {
-		spr := sprints(s).GetByIDPointer(sprintID)
+		spr := ctx(s).sprints.GetByIDPointer(sprintID)
 		err = sendSprintUpdate(s, ch, curr.SprintID, spr)
 		if err != nil {
 			return errors.Wrap(err, "error sending sprint for updated estimate session")
@@ -85,7 +85,7 @@ func onEstimateSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconn
 }
 
 func sendEstimateSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
-	est := estimates(s).GetByID(ch.ID)
+	est := ctx(s).estimates.GetByID(ch.ID)
 	if est == nil {
 		return errors.New("cannot load estimate session [" + ch.ID.String() + "]")
 	}

@@ -21,7 +21,7 @@ func CommentList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyComment, npncore.Plural(npncore.KeyComment))
 
 		params := npnweb.ParamSetFromRequest(r)
-		comments := app.Comment(ctx.App).List(params.Get(npncore.KeyComment, ctx.Logger))
+		comments := app.Svc(ctx.App).Comment.List(params.Get(npncore.KeyComment, ctx.Logger))
 		return npncontroller.T(admintemplates.CommentList(comments, params, ctx, w))
 	})
 }
@@ -32,7 +32,7 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err, "invalid comment id")
 		}
-		e := app.Comment(ctx.App).GetByID(*commentID)
+		e := app.Svc(ctx.App).Comment.GetByID(*commentID)
 		if e == nil {
 			msg := "can't load comment [" + commentID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(npncore.KeyComment), w, r, ctx)

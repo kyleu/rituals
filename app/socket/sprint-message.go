@@ -23,7 +23,7 @@ type sprintSessionSaveParams struct {
 }
 
 func onSprintMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
-	dataSvc := sprints(s)
+	dataSvc := ctx(s).sprints
 	var err error
 	userID := conn.Profile.UserID
 
@@ -51,6 +51,6 @@ func onSprintMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnect
 }
 
 func sendSprints(s *npnconnection.Service, conn *npnconnection.Connection, userID uuid.UUID) error {
-	sprints := sprints(s).GetByMember(userID, nil)
+	sprints := ctx(s).sprints.GetByMember(userID, nil)
 	return s.WriteMessage(conn.ID, npnconnection.NewMessage(util.SvcSystem.Key, ServerCmdSprints, sprints))
 }

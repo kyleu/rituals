@@ -20,8 +20,8 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		params := npnweb.ParamSetFromRequest(r)
 
-		sessions := app.Sprint(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		teams := app.Team(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sessions := app.Svc(ctx.App).Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		teams := app.Svc(ctx.App).Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
 		auths := ctx.App.Auth().GetByUserID(ctx.Profile.UserID, params.Get(npncore.KeyAuth, ctx.Logger))
 
 		ctx.Title = npncore.PluralTitle(util.SvcSprint.Key)
@@ -45,17 +45,17 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 
 		sf := parseSessionForm(ctx.Profile.UserID, util.SvcSprint, r.Form, ctx.App.User())
 
-		sess, err := app.Sprint(ctx.App).New(sf.Title, ctx.Profile.UserID, sf.MemberName, startDate, endDate, sf.TeamID)
+		sess, err := app.Svc(ctx.App).Sprint.New(sf.Title, ctx.Profile.UserID, sf.MemberName, startDate, endDate, sf.TeamID)
 		if err != nil {
 			return npncontroller.EResp(err, "error creating sprint session")
 		}
 
-		_, err = app.Sprint(ctx.App).Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
+		_, err = app.Svc(ctx.App).Sprint.Data.Permissions.SetAll(sess.ID, sf.Perms, ctx.Profile.UserID)
 		if err != nil {
 			return npncontroller.EResp(err, "error setting permissions for new session")
 		}
 
-		err = socket.SendContentUpdate(app.Socket(ctx.App), util.SvcTeam.Key, sf.TeamID)
+		err = socket.SendContentUpdate(app.Svc(ctx.App).Socket, util.SvcTeam.Key, sf.TeamID)
 		if err != nil {
 			return npncontroller.EResp(err, "cannot send content update")
 		}
@@ -66,7 +66,7 @@ func SprintNew(w http.ResponseWriter, r *http.Request) {
 func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		key := mux.Vars(r)[npncore.KeyKey]
-		sess := app.Sprint(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Sprint.GetBySlug(key)
 		if sess == nil {
 			msg := "can't load sprint [" + key + "]"
 			return npncontroller.FlashAndRedir(false, msg, util.SvcSprint.Key+".list", w, r, ctx)
@@ -76,7 +76,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 		}
 
 		params := &PermissionParams{Svc: util.SvcSprint, ModelID: sess.ID, Slug: key, Title: sess.Title, TeamID: sess.TeamID}
-		auths, permErrors, bc := CheckPerms(ctx, app.Sprint(ctx.App).Data.Permissions, params)
+		auths, permErrors, bc := CheckPerms(ctx, app.Svc(ctx.App).Sprint.Data.Permissions, params)
 
 		ctx.Breadcrumbs = bc
 
@@ -91,7 +91,7 @@ func SprintWorkspace(w http.ResponseWriter, r *http.Request) {
 
 func SprintExport(w http.ResponseWriter, r *http.Request) {
 	f := func(key string, ctx *npnweb.RequestContext) ExportParams {
-		sess := app.Sprint(ctx.App).GetBySlug(key)
+		sess := app.Svc(ctx.App).Sprint.GetBySlug(key)
 		if sess == nil {
 			return ExportParams{}
 		}
@@ -100,7 +100,7 @@ func SprintExport(w http.ResponseWriter, r *http.Request) {
 			Slug:    sess.Slug,
 			Title:   sess.Title,
 			Path:    ctx.Route(util.SvcSprint.Key, npncore.KeyKey, sess.Slug),
-			PermSvc: app.Sprint(ctx.App).Data.Permissions,
+			PermSvc: app.Svc(ctx.App).Sprint.Data.Permissions,
 		}
 	}
 	ExportAct(util.SvcSprint, f, w, r)

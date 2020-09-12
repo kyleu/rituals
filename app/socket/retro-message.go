@@ -33,7 +33,7 @@ type editFeedbackParams struct {
 }
 
 func onRetroMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
-	dataSvc := retros(s)
+	dataSvc := ctx(s).retros
 	var err error
 	userID := conn.Profile.UserID
 

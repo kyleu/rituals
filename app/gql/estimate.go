@@ -35,38 +35,38 @@ func initEstimate() {
 	})
 
 	estimateResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).GetBySlug(npncore.MapGetString(p.Args, npncore.KeyKey, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.GetBySlug(npncore.MapGetString(p.Args, npncore.KeyKey, ctx.Logger)), nil
 	}
 
 	estimatesResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).List(npngraphql.ParamSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.List(npngraphql.ParamSetFromGraphQLParams(svc.Key, params, ctx.Logger)), nil
 	}
 
 	estimateActionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Action(ctx.App).GetBySvcModel(svc.Key, p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Action.GetBySvcModel(svc.Key, p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyAction, p, ctx.Logger)), nil
 	}
 
 	estimatePermissionResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).Data.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.Data.Permissions.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyPermission, p, ctx.Logger)), nil
 	}
 
 	estimateMemberResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).Data.Members.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.Data.Members.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyMember, p, ctx.Logger)), nil
 	}
 
 	estimateCommentResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).Data.GetComments(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.Data.GetComments(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyComment, p, ctx.Logger)), nil
 	}
 
 	estimateHistoryResolver := func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		ret := app.Estimate(ctx.App).Data.History.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
+		ret := app.Svc(ctx.App).Estimate.Data.History.GetByModelID(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(npncore.KeyHistory, p, ctx.Logger))
 		return ret, nil
 	}
 
 	estimateTeamResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
 		sess := p.Source.(*estimate.Session)
 		if sess.TeamID != nil {
-			return app.Team(ctx.App).GetByID(*sess.TeamID), nil
+			return app.Svc(ctx.App).Team.GetByID(*sess.TeamID), nil
 		}
 		return nil, nil
 	}
@@ -74,7 +74,7 @@ func initEstimate() {
 	estimateSprintResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
 		sess := p.Source.(*estimate.Session)
 		if sess.SprintID != nil {
-			return app.Sprint(ctx.App).GetByID(*sess.SprintID), nil
+			return app.Svc(ctx.App).Sprint.GetByID(*sess.SprintID), nil
 		}
 		return nil, nil
 	}

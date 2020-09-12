@@ -22,7 +22,7 @@ func onAddReport(s *npnconnection.Service, ch npnconnection.Channel, userID uuid
 	}
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("adding [%s] report for [%s]", npncore.ToYMD(d), userID))
-	report, err := standups(s).NewReport(ch.ID, *d, content, userID)
+	report, err := ctx(s).standups.NewReport(ch.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot save new report")
 	}
@@ -37,7 +37,7 @@ func onEditReport(s *npnconnection.Service, ch npnconnection.Channel, userID uui
 	}
 	content := getContent(param.Content)
 	s.Logger.Debug(fmt.Sprintf("updating [%s] report for [%s]", npncore.ToYMD(d), userID))
-	report, err := standups(s).UpdateReport(param.ID, *d, content, userID)
+	report, err := ctx(s).standups.UpdateReport(param.ID, *d, content, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot update report")
 	}
@@ -47,7 +47,7 @@ func onEditReport(s *npnconnection.Service, ch npnconnection.Channel, userID uui
 
 func onRemoveReport(s *npnconnection.Service, ch npnconnection.Channel, userID uuid.UUID, reportID uuid.UUID) error {
 	s.Logger.Debug(fmt.Sprintf("removing report [%s]", reportID))
-	err := standups(s).RemoveReport(reportID, userID)
+	err := ctx(s).standups.RemoveReport(reportID, userID)
 	if err != nil {
 		return errors.Wrap(err, "cannot remove report")
 	}

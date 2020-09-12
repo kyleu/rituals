@@ -16,7 +16,7 @@ import (
 )
 
 func onSprintSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param sprintSessionSaveParams) error {
-	dataSvc := sprints(s)
+	dataSvc := ctx(s).sprints
 	title := util.ServiceTitle(util.SvcSprint, param.Title)
 
 	teamID := npncore.GetUUIDFromString(param.TeamID)
@@ -69,7 +69,7 @@ func onSprintSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnec
 	}
 
 	if teamChanged {
-		tm := teams(s).GetByIDPointer(teamID)
+		tm := ctx(s).teams.GetByIDPointer(teamID)
 		err = sendTeamUpdate(s, ch, curr.TeamID, tm)
 		if err != nil {
 			return errors.Wrap(err, "error sending team for updated sprint session")
@@ -100,7 +100,7 @@ func sendSprintUpdate(s *npnconnection.Service, ch npnconnection.Channel, curr *
 }
 
 func sendSprintSessionUpdate(s *npnconnection.Service, ch npnconnection.Channel) error {
-	sess := sprints(s).GetByID(ch.ID)
+	sess := ctx(s).sprints.GetByID(ch.ID)
 	if sess == nil {
 		return errors.New("cannot load sprint session [" + ch.ID.String() + "]")
 	}
@@ -112,5 +112,5 @@ func getSprintOpt(s *npnconnection.Service, sprintID *uuid.UUID) *sprint.Session
 	if sprintID == nil {
 		return nil
 	}
-	return sprints(s).GetByID(*sprintID)
+	return ctx(s).sprints.GetByID(*sprintID)
 }

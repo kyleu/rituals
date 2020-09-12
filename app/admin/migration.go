@@ -23,7 +23,7 @@ func MigrationList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyMigration, npncore.Plural(npncore.KeyMigration))
 
 		params := npnweb.ParamSetFromRequest(r)
-		migrations := app.Database(ctx.App).ListMigrations(params.Get(npncore.KeyMigration, ctx.Logger))
+		migrations := app.Svc(ctx.App).Database.ListMigrations(params.Get(npncore.KeyMigration, ctx.Logger))
 		return npncontroller.T(admintemplates.MigrationList(migrations, params, ctx, w))
 	})
 }
@@ -35,7 +35,7 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 			return npncontroller.EResp(errors.New("invalid migration id"))
 		}
 		migrationIdx, _ := strconv.ParseInt(migrationIdxStr, 10, 64)
-		e := app.Database(ctx.App).GetMigrationByIdx(int(migrationIdx))
+		e := app.Svc(ctx.App).Database.GetMigrationByIdx(int(migrationIdx))
 		if e == nil {
 			msg := "can't load migration [" + migrationIdxStr + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(npncore.KeyMigration), w, r, ctx)

@@ -20,7 +20,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, util.SvcSprint.Key, util.SvcSprint.Plural)
 
 		params := npnweb.ParamSetFromRequest(r)
-		sprints := app.Sprint(ctx.App).List(params.Get(util.SvcSprint.Key, ctx.Logger))
+		sprints := app.Svc(ctx.App).Sprint.List(params.Get(util.SvcSprint.Key, ctx.Logger))
 		return npncontroller.T(admintemplates.SprintList(sprints, params, ctx, w))
 	})
 }
@@ -31,7 +31,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		sess := app.Sprint(ctx.App).GetByID(*sprintID)
+		sess := app.Svc(ctx.App).Sprint.GetByID(*sprintID)
 		if sess == nil {
 			msg := "can't load sprint [" + sprintID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(util.SvcSprint.Key), w, r, ctx)
@@ -39,11 +39,11 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 
 		params := npnweb.ParamSetFromRequest(r)
 
-		estimates := app.Estimate(ctx.App).GetBySprintID(*sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		standups := app.Standup(ctx.App).GetBySprintID(*sprintID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		retros := app.Retro(ctx.App).GetBySprintID(*sprintID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		estimates := app.Svc(ctx.App).Estimate.GetBySprintID(*sprintID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := app.Svc(ctx.App).Standup.GetBySprintID(*sprintID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := app.Svc(ctx.App).Retro.GetBySprintID(*sprintID, params.Get(util.SvcRetro.Key, ctx.Logger))
 
-		data := app.Sprint(ctx.App).Data.GetData(*sprintID, params, ctx.Logger)
+		data := app.Svc(ctx.App).Sprint.Data.GetData(*sprintID, params, ctx.Logger)
 
 		ctx.Title = sess.Title
 		bc := npncontroller.AdminBC(ctx, util.SvcSprint.Key, util.SvcSprint.Plural)

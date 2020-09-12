@@ -16,11 +16,11 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	npncontroller.Act(w, r, func(ctx *npnweb.RequestContext) (string, error) {
 		params := npnweb.ParamSetFromRequest(r)
 
-		teams := app.Team(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
-		sprints := app.Sprint(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
-		estimates := app.Estimate(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
-		standups := app.Standup(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
-		retros := app.Retro(ctx.App).GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
+		teams := app.Svc(ctx.App).Team.GetByMember(ctx.Profile.UserID, params.Get(util.SvcTeam.Key, ctx.Logger))
+		sprints := app.Svc(ctx.App).Sprint.GetByMember(ctx.Profile.UserID, params.Get(util.SvcSprint.Key, ctx.Logger))
+		estimates := app.Svc(ctx.App).Estimate.GetByMember(ctx.Profile.UserID, params.Get(util.SvcEstimate.Key, ctx.Logger))
+		standups := app.Svc(ctx.App).Standup.GetByMember(ctx.Profile.UserID, params.Get(util.SvcStandup.Key, ctx.Logger))
+		retros := app.Svc(ctx.App).Retro.GetByMember(ctx.Profile.UserID, params.Get(util.SvcRetro.Key, ctx.Logger))
 
 		ctx.Title = npncore.AppName
 		return npncontroller.T(templates.Index(ctx, teams, sprints, estimates, standups, retros, w))

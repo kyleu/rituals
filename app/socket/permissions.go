@@ -47,23 +47,23 @@ func sendPermissionsUpdate(s *npnconnection.Service, ch npnconnection.Channel, p
 func check(s *npnconnection.Service, a *auth.Service, userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID, svc string, modelID uuid.UUID) (permission.Permissions, permission.Errors) {
 	var currTeams []uuid.UUID
 	if teamID != nil {
-		currTeams = teams(s).GetIdsByMember(userID)
+		currTeams = ctx(s).teams.GetIdsByMember(userID)
 	}
 
 	var currSprints []uuid.UUID
 	if sprintID != nil {
-		currSprints = sprints(s).GetIdsByMember(userID)
+		currSprints = ctx(s).sprints.GetIdsByMember(userID)
 	}
 
 	var tp *permission.Params
 	if teamID != nil {
-		tm := teams(s).GetByID(*teamID)
+		tm := ctx(s).teams.GetByID(*teamID)
 		tp = &permission.Params{ID: tm.ID, Slug: tm.Slug, Title: tm.Title, Current: currTeams}
 	}
 
 	var sp *permission.Params
 	if sprintID != nil {
-		spr := sprints(s).GetByID(*sprintID)
+		spr := ctx(s).sprints.GetByID(*sprintID)
 		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
 	}
 

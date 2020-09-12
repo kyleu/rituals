@@ -19,11 +19,11 @@ var (
 func initStory() {
 	storyResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
 		id := npncore.MapGetUUID(p.Args, npncore.KeyID, ctx.Logger)
-		return app.Estimate(ctx.App).GetStoryByID(*id)
+		return app.Svc(ctx.App).Estimate.GetStoryByID(*id)
 	}
 
 	storiesResolver = func(p graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
-		return app.Estimate(ctx.App).GetStories(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(util.KeyStory, p, ctx.Logger)), nil
+		return app.Svc(ctx.App).Estimate.GetStories(p.Source.(*estimate.Session).ID, npngraphql.ParamSetFromGraphQLParams(util.KeyStory, p, ctx.Logger)), nil
 	}
 
 	storyType = graphql.NewObject(

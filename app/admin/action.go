@@ -18,7 +18,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 		ctx.Title = "Action List"
 		ctx.Breadcrumbs = npncontroller.AdminBC(ctx, npncore.KeyAction, npncore.Plural(npncore.KeyAction))
 		params := npnweb.ParamSetFromRequest(r)
-		actions := app.Action(ctx.App).List(params.Get(npncore.KeyAction, ctx.Logger))
+		actions := app.Svc(ctx.App).Action.List(params.Get(npncore.KeyAction, ctx.Logger))
 		return npncontroller.T(admintemplates.ActionList(actions, params, ctx, w))
 	})
 }
@@ -29,7 +29,7 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		a := app.Action(ctx.App).GetByID(*actionID)
+		a := app.Svc(ctx.App).Action.GetByID(*actionID)
 		if a == nil {
 			msg := "can't load action [" + actionID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(npncore.KeyAction), w, r, ctx)
