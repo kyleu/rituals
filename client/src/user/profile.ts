@@ -6,6 +6,7 @@ namespace profile {
     readonly theme: string;
     readonly navColor: string;
     readonly linkColor: string;
+    readonly picture: string;
     readonly locale: string;
   }
 
