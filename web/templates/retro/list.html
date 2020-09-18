@@ -4,7 +4,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card uk-card-body uk-margin-top">
+    <div class="uk-card uk-card-body uk-card-default uk-margin-top">
       <h3 class="uk-card-title"><span class="h3-icon" data-uk-icon="icon: <%= util.SvcRetro.Icon %>"></span> <%= util.SvcRetro.PluralTitle %></h3>
       <p><%= util.SvcRetro.Description %></p>
       <% if len(sessions) > 0 { %>
@@ -12,7 +12,7 @@
       <% } %>
     </div>
 
-    <div class="uk-card uk-card-body uk-margin-top">
+    <div class="uk-card uk-card-body uk-card-default uk-margin-top">
       <h3 class="uk-card-title">New <%= util.SvcRetro.Title %></h3>
       <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcRetro.Key + `.new`) %>" method="post">
         <% RetroForm("", retro.DefaultCategories, teams, sprints, auths, true, ctx, _buffer) %>

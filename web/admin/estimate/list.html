@@ -4,7 +4,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card uk-card-body">
+    <div class="uk-card uk-card-body uk-card-default">
       <h3 class="uk-card-title"><%= util.SvcEstimate.PluralTitle %></h3>
       <% EstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
     </div>

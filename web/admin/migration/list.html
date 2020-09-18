@@ -4,7 +4,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card uk-card-body">
+    <div class="uk-card uk-card-body uk-card-default">
       <h3 class="uk-card-title"><%= npncore.PluralTitle(npncore.KeyMigration) %></h3>
       <% MigrationTable(migrations, params.Get(npncore.KeyMigration, ctx.Logger), ctx, _buffer) %>
     </div>

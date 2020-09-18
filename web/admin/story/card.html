@@ -1,5 +1,5 @@
 <%: func StoryCard(stories estimate.Stories, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-margin-top">
+<div class="uk-card uk-card-body uk-card-default uk-margin-top">
   <h3 class="uk-card-title">Stories</h3>
   <% if len(stories) == 0 { %>
     <p>No stories available</p>

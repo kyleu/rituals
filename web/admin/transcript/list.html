@@ -7,7 +7,7 @@
     <div class="uk-grid-small uk-child-width-1-1" data-uk-grid>
       <% for _, t := range transcripts { %>
         <div>
-          <div class="uk-card uk-card-body">
+          <div class="uk-card uk-card-body uk-card-default">
             <form action="<%= ctx.Route(npnweb.AdminLink(npncore.KeyTranscript, `run`), npncore.KeyKey, t.Key) %>">
             <div class="right">
               <div class="right uk-margin-small-left"><button class="uk-button uk-button-default" type="submit">Go</button></div>

@@ -4,7 +4,7 @@
 <%@ body { %>
 <div class="uk-section uk-section-small">
   <div class="uk-container">
-    <div class="uk-card uk-card-body">
+    <div class="uk-card uk-card-body uk-card-default">
       <h3 class="uk-card-title"><%= npncore.PluralTitle(npncore.KeyEmail) %></h3>
       <% EmailTable(emails, params.Get(npncore.KeyEmail, ctx.Logger), ctx, _buffer) %>
     </div>

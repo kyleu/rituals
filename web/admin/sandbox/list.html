@@ -7,7 +7,7 @@
     <div class="uk-grid-small uk-grid-match uk-child-width-expand@s" data-uk-grid>
       <% for _, s := range sandboxes { %>
         <div>
-          <div class="uk-card uk-card-body">
+          <div class="uk-card uk-card-body uk-card-default">
             <h3 class="uk-card-title"><a class="theme" href="<%= ctx.Route(npnweb.AdminLink(npncore.KeySandbox, `run`), npncore.KeyKey, s.Key) %>"><%= s.Title %></a></h3>
             <p><%= s.Description %></p>
           </div>

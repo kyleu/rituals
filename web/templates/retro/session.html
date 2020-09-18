@@ -1,5 +1,5 @@
 <%: func RetroSession(model *retro.Session, auths auth.Records, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-transition-toggle">
+<div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
   <h3 class="uk-card-title">
     <% SessionIcon(util.SvcRetro, model.ID, model.Slug, ctx, buffer) %>
     <span class="model-icon h3-icon" onclick="modal.open('<%= npncore.KeySession %>');" data-uk-icon="icon: <%= util.SvcRetro.Icon %>;"></span>

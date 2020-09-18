@@ -6,7 +6,7 @@
   <div class="uk-container">
     <div class="uk-grid-medium uk-grid-match uk-margin-medium" data-uk-grid>
       <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-body">
+        <div class="uk-card uk-card-body uk-card-default">
           <h3 class="uk-card-title">
             <span class="right">
               <a class="theme uk-icon-button uk-margin-left" data-uk-icon="question" href="<%= ctx.Route(`about`) %>" title="about <%= npncore.AppName %>"></a>
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-body uk-transition-toggle">
+        <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcTeam, ctx, _buffer) %>
           <% if len(teams) > 0 { %>
           <ul class="uk-list uk-list-divider uk-margin-top">
@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-body uk-transition-toggle">
+        <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcSprint, ctx, _buffer) %>
           <% if len(sprints) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-body uk-transition-toggle">
+        <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcEstimate, ctx, _buffer) %>
           <% if len(estimates) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
@@ -64,7 +64,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-body uk-transition-toggle">
+        <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcStandup, ctx, _buffer) %>
           <% if len(standups) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="uk-width-1-2@s">
-        <div class="uk-card uk-card-body uk-transition-toggle">
+        <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcRetro, ctx, _buffer) %>
           <% if len(retros) > 0 { %>
             <ul class="uk-list uk-list-divider uk-margin-top">

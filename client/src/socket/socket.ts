@@ -5,8 +5,10 @@ namespace socket {
     readonly param: any;
   }
 
-  let socket: WebSocket;
+  let sock: WebSocket;
+  let connected = false;
   let appUnloading = false;
+  let pendingMessages: Message[] = [];
 
   function socketUrl() {
     const l = document.location;
@@ -26,27 +28,35 @@ namespace socket {
     system.cache.currentID = id;
     system.cache.connectTime = Date.now();
 
-    socket = new WebSocket(socketUrl());
-    socket.onopen = () => {
-      send({ svc: svc.key, cmd: command.client.connect, param: id });
-    };
-    socket.onmessage = (event) => {
+    sock = new WebSocket(socketUrl());
+    sock.onopen = () => onSocketOpen;
+    sock.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       onSocketMessage(msg);
     };
-    socket.onerror = (event) => {
+    sock.onerror = (event) => {
       // rituals.onError(services.system, event.type);
     };
-    socket.onclose = () => {
-      onSocketClose();
-    };
+    sock.onclose = onSocketClose;
   }
 
   export function send(msg: Message) {
-    if (debug) {
-      console.debug("out", msg);
+    if (connected) {
+      if (debug) {
+        console.debug("out", msg);
+      }
+      const m = JSON.stringify(msg, null, 2);
+      sock.send(m);
+    } else {
+      pendingMessages.push(msg);
     }
-    socket.send(JSON.stringify(msg));
+  }
+
+  function onSocketOpen(svc: string, id: string) {
+    connected = true;
+    pendingMessages.forEach(send);
+    pendingMessages = [];
+    send({ svc: system.cache.currentService!.key, cmd: command.client.connect, param: system.cache.currentID });
   }
 
   export function onSocketMessage(msg: Message) {
