@@ -31,7 +31,7 @@ type DataServices struct {
 	Actions     *action.Service
 }
 
-func NewDataServices(svc util.Service, actions *action.Service, users *user.Service, comments *comment.Service, db *npndatabase.Service, logger logur.Logger) *DataServices {
+func NewDataServices(svc util.Service, actions *action.Service, users user.Service, comments *comment.Service, db *npndatabase.Service, logger logur.Logger) *DataServices {
 	return &DataServices{
 		Svc:         svc,
 		Members:     member.NewService(actions, users, db, logger, svc),

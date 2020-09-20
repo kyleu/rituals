@@ -2,8 +2,6 @@
 <div>
   <h3><%= r.Subject() %></h3>
   <p><%= r.Opener() %></p>
-  <% PrintEmailUserList(r.Users, tx, buffer) %>
-  <% PrintEmailAuthList(r.Auths, tx, buffer) %>
   <% PrintEmailTeamList(r.Teams, tx, buffer) %>
   <% PrintEmailSprintList(r.Sprints, tx, buffer) %>
   <% PrintEmailEstimateList(r.Estimates, tx, buffer) %>

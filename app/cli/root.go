@@ -47,7 +47,11 @@ func Configure(version string, commitHash string) cobra.Command {
 			if err != nil {
 				return errors.WithMessage(err, "unable to construct routes")
 			}
-			return npnweb.MakeServer(info, r, addr, port)
+			actualPort, err := npnweb.MakeServer(info, r, addr, port)
+			if actualPort > 0 {
+				port = actualPort
+			}
+			return err
 		},
 	}
 

@@ -29,7 +29,7 @@ type Service struct {
 	svc    util.Service
 }
 
-func NewService(actions *action.Service, users *user.Service, comments *comment.Service, db *npndatabase.Service, logger logur.Logger) *Service {
+func NewService(actions *action.Service, users user.Service, comments *comment.Service, db *npndatabase.Service, logger logur.Logger) *Service {
 	svc := util.SvcStandup
 	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: svc.Key})
 

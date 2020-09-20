@@ -10,6 +10,6 @@ cd $project_dir/client
 
 tsc --project tsconfig.json
 
-cd $project_dir/web/assets
+cd $project_dir/web/assets/vendor
 
 closure-compiler --create_source_map rituals.min.js.map rituals.js > rituals.min.js

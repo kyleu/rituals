@@ -15,7 +15,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSystemMessage(s *npnconnection.Service, us *user.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onSystemMessage(s *npnconnection.Service, us user.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	userID := conn.Profile.UserID
 	if conn.Profile.UserID != userID {
 		return errors.New("received name change for wrong user [" + userID.String() + "]")

@@ -8,5 +8,5 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 project_dir=${dir}/..
 cd $project_dir
 
-sass --no-source-map web/stylesheets/style.scss web/assets/rituals.css
-sass --style=compressed --no-source-map web/stylesheets/style.scss web/assets/rituals.min.css
+sass --no-source-map web/stylesheets/style.scss web/assets/vendor/rituals.css
+sass --style=compressed --no-source-map web/stylesheets/style.scss web/assets/vendor/rituals.min.css

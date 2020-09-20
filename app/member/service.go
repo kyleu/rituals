@@ -21,7 +21,7 @@ import (
 
 type Service struct {
 	actions   *action.Service
-	users     *user.Service
+	users     user.Service
 	db        *npndatabase.Service
 	logger    logur.Logger
 	svc       util.Service
@@ -29,7 +29,7 @@ type Service struct {
 	colName   string
 }
 
-func NewService(actions *action.Service, users *user.Service, db *npndatabase.Service, logger logur.Logger, svc util.Service) *Service {
+func NewService(actions *action.Service, users user.Service, db *npndatabase.Service, logger logur.Logger, svc util.Service) *Service {
 	return &Service{
 		actions:   actions,
 		users:     users,

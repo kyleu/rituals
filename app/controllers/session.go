@@ -23,7 +23,7 @@ type formResult struct {
 	Perms      permission.Permissions
 }
 
-func parseSessionForm(userID uuid.UUID, svc util.Service, form url.Values, userSvc *user.Service) *formResult {
+func parseSessionForm(userID uuid.UUID, svc util.Service, form url.Values, userSvc user.Service) *formResult {
 	u := userSvc.GetByID(userID, true)
 	title := util.ServiceTitle(svc, form.Get(npncore.KeyTitle))
 	memberName := form.Get("member-name")

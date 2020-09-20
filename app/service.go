@@ -21,7 +21,7 @@ import (
 type Service struct {
 	debug    bool
 	files    *npncore.FileLoader
-	user     *user.Service
+	user     user.Service
 	auth     *auth.Service
 	Comment  *comment.Service
 	Action   *action.Service
@@ -41,7 +41,7 @@ func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir str
 	files := npncore.NewFileLoader("./."+npncore.AppName, logger)
 	actionService := action.NewService(db, logger)
 	commentService := comment.NewService(actionService, db, logger)
-	userSvc := user.NewService(files, db, logger)
+	userSvc := user.NewServiceDatabase(db, logger)
 	authSvc := auth.NewService(authEnabled, redir, db, logger, userSvc)
 	teamSvc := team.NewService(actionService, userSvc, commentService, db, logger)
 	sprintSvc := sprint.NewService(actionService, userSvc, commentService, db, logger)
@@ -77,7 +77,7 @@ func (c *Service) Files() *npncore.FileLoader {
 	return c.files
 }
 
-func (c *Service) User() *user.Service {
+func (c *Service) User() user.Service {
 	return c.user
 }
 

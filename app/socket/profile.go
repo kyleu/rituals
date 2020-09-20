@@ -13,7 +13,7 @@ type saveProfileParams struct {
 	Picture string `json:"picture"`
 }
 
-func saveProfile(s *npnconnection.Service, conn *npnconnection.Connection, u *user.Service, userID uuid.UUID, p *saveProfileParams) error {
+func saveProfile(s *npnconnection.Service, conn *npnconnection.Connection, u user.Service, userID uuid.UUID, p *saveProfileParams) error {
 	if len(p.Name) == 0 {
 		p.Name = "Unnamed Member"
 	}

@@ -510,7 +510,6 @@ var style;
 (function (style) {
     function setTheme(theme) {
         wireEmoji(theme);
-        const card = dom.els(".uk-card");
         switch (theme) {
             case "auto":
                 let t = "light";
@@ -527,20 +526,12 @@ var style;
                 document.body.classList.remove("uk-light");
                 document.documentElement.classList.add("uk-dark");
                 document.body.classList.add("uk-dark");
-                card.forEach(x => {
-                    x.classList.add("uk-card-default");
-                    x.classList.remove("uk-card-secondary");
-                });
                 break;
             case "dark":
                 document.documentElement.classList.add("uk-light");
                 document.body.classList.add("uk-light");
                 document.documentElement.classList.remove("uk-dark");
                 document.body.classList.remove("uk-dark");
-                card.forEach(x => {
-                    x.classList.remove("uk-card-default");
-                    x.classList.add("uk-card-secondary");
-                });
                 break;
             default:
                 console.warn("invalid theme");
@@ -548,9 +539,11 @@ var style;
         }
     }
     style.setTheme = setTheme;
+    style.linkColor = "";
     function themeLinks(color) {
+        style.linkColor = `${color}-fg`;
         dom.els(".theme").forEach(el => {
-            el.classList.add(`${color}-fg`);
+            el.classList.add(style.linkColor);
         });
     }
     style.themeLinks = themeLinks;
@@ -1895,9 +1888,11 @@ var session;
     session_1.onModalOpen = onModalOpen;
 })(session || (session = {}));
 var socket;
-(function (socket_1) {
-    let socket;
+(function (socket) {
+    let sock;
+    let connected = false;
     let appUnloading = false;
+    let pendingMessages = [];
     function socketUrl() {
         const l = document.location;
         let protocol = "ws";
@@ -1909,34 +1904,42 @@ var socket;
     function setAppUnloading() {
         appUnloading = true;
     }
-    socket_1.setAppUnloading = setAppUnloading;
+    socket.setAppUnloading = setAppUnloading;
     function socketConnect(svc, id) {
         system.cache.currentService = svc;
         system.cache.currentID = id;
         system.cache.connectTime = Date.now();
-        socket = new WebSocket(socketUrl());
-        socket.onopen = () => {
-            send({ svc: svc.key, cmd: command.client.connect, param: id });
-        };
-        socket.onmessage = (event) => {
+        sock = new WebSocket(socketUrl());
+        sock.onopen = () => onSocketOpen;
+        sock.onmessage = (event) => {
             const msg = JSON.parse(event.data);
             onSocketMessage(msg);
         };
-        socket.onerror = (event) => {
+        sock.onerror = (event) => {
             // rituals.onError(services.system, event.type);
         };
-        socket.onclose = () => {
-            onSocketClose();
-        };
+        sock.onclose = onSocketClose;
     }
-    socket_1.socketConnect = socketConnect;
+    socket.socketConnect = socketConnect;
     function send(msg) {
-        if (debug) {
-            console.debug("out", msg);
+        if (connected) {
+            if (debug) {
+                console.debug("out", msg);
+            }
+            const m = JSON.stringify(msg, null, 2);
+            sock.send(m);
         }
-        socket.send(JSON.stringify(msg));
+        else {
+            pendingMessages.push(msg);
+        }
     }
-    socket_1.send = send;
+    socket.send = send;
+    function onSocketOpen(svc, id) {
+        connected = true;
+        pendingMessages.forEach(send);
+        pendingMessages = [];
+        send({ svc: system.cache.currentService.key, cmd: command.client.connect, param: system.cache.currentID });
+    }
     function onSocketMessage(msg) {
         if (debug) {
             console.debug("in", msg);
@@ -1964,7 +1967,7 @@ var socket;
                 console.warn(`unhandled message for service [${msg.svc}]`);
         }
     }
-    socket_1.onSocketMessage = onSocketMessage;
+    socket.onSocketMessage = onSocketMessage;
     function onSocketClose() {
         function disconnect(seconds) {
             if (debug) {

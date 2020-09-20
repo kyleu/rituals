@@ -8,9 +8,6 @@ import (
 	"github.com/kyleu/npn/npnweb"
 	"github.com/kyleu/rituals.dev/app"
 
-	"github.com/kyleu/npn/npnservice/auth"
-	"github.com/kyleu/npn/npnservice/user"
-
 	"github.com/gofrs/uuid"
 	"github.com/kyleu/rituals.dev/app/comment"
 	"github.com/kyleu/rituals.dev/app/estimate"
@@ -22,8 +19,6 @@ import (
 
 type EmailResponse struct {
 	Date      *time.Time
-	Users     user.SystemUsers  `json:"users"`
-	Auths     auth.Records      `json:"records"`
 	Teams     team.Sessions     `json:"teams"`
 	Sprints   sprint.Sessions   `json:"sprints"`
 	Estimates estimate.Sessions `json:"estimates"`
@@ -37,8 +32,8 @@ func (er *EmailResponse) Subject() string {
 }
 
 func (er *EmailResponse) Opener() string {
-	msg := "Today there were %v users, %v auths, %v teams, %v sprints, %v estimates, %v standups, %v retros, and %v comments"
-	return fmt.Sprintf(msg, len(er.Users), len(er.Auths), len(er.Teams), len(er.Sprints), len(er.Estimates), len(er.Standups), len(er.Retros), len(er.Comments))
+	msg := "Today there were %v teams, %v sprints, %v estimates, %v standups, %v retros, and %v comments"
+	return fmt.Sprintf(msg, len(er.Teams), len(er.Sprints), len(er.Estimates), len(er.Standups), len(er.Retros), len(er.Comments))
 }
 
 var Email = Transcript{
@@ -57,8 +52,6 @@ var Email = Transcript{
 		svc := app.Svc(ai)
 		return EmailResponse{
 			Date:      d,
-			Users:     ai.User().GetByCreated(d, nil),
-			Auths:     ai.Auth().GetByCreated(d, nil),
 			Teams:     svc.Team.GetByCreated(d, nil),
 			Sprints:   svc.Sprint.GetByCreated(d, nil),
 			Estimates: svc.Estimate.GetByCreated(d, nil),

@@ -34,12 +34,12 @@ type services struct {
 	estimates *estimate.Service
 	standups  *standup.Service
 	retros    *retro.Service
-	users     *user.Service
+	users     user.Service
 	auths     *auth.Service
 }
 
 func NewService(
-		logger logur.Logger, actions *action.Service, users *user.Service, comments *comment.Service,
+		logger logur.Logger, actions *action.Service, users user.Service, comments *comment.Service,
 		auths *auth.Service, teams *team.Service, sprints *sprint.Service,
 		estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *npnconnection.Service {
 	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: npncore.KeySocket})
@@ -56,7 +56,7 @@ func NewService(
 		users:     users,
 	}
 
-	return npnconnection.NewService(logger, handler, ctx)
+	return npnconnection.NewService(logger, nil, handler, nil, ctx)
 }
 
 func ctx(s *npnconnection.Service) *services {
