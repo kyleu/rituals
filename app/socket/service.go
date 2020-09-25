@@ -35,12 +35,12 @@ type services struct {
 	standups  *standup.Service
 	retros    *retro.Service
 	users     user.Service
-	auths     *auth.Service
+	auths     auth.Service
 }
 
 func NewService(
 		logger logur.Logger, actions *action.Service, users user.Service, comments *comment.Service,
-		auths *auth.Service, teams *team.Service, sprints *sprint.Service,
+		auths auth.Service, teams *team.Service, sprints *sprint.Service,
 		estimates *estimate.Service, standups *standup.Service, retros *retro.Service) *npnconnection.Service {
 	logger = logur.WithFields(logger, map[string]interface{}{npncore.KeyService: npncore.KeySocket})
 

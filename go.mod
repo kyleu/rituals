@@ -22,6 +22,7 @@ require (
 	github.com/kyleu/npn/npnexport v1.0.0
 	github.com/kyleu/npn/npngraphql v1.0.0
 	github.com/kyleu/npn/npnservice v1.0.0
+	github.com/kyleu/npn/npnservice-db v1.0.0
 	github.com/kyleu/npn/npntemplate v1.0.0
 	github.com/kyleu/npn/npnuser v1.0.0
 	github.com/kyleu/npn/npnweb v1.0.0
@@ -53,6 +54,8 @@ replace github.com/kyleu/npn/npnexport => ./npn/npnexport
 replace github.com/kyleu/npn/npngraphql => ./npn/npngraphql
 
 replace github.com/kyleu/npn/npnservice => ./npn/npnservice
+
+replace github.com/kyleu/npn/npnservice-db => ./npn/npnservice-db
 
 replace github.com/kyleu/npn/npntemplate => ./npn/npntemplate
 

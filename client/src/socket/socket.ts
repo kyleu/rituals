@@ -29,7 +29,7 @@ namespace socket {
     system.cache.connectTime = Date.now();
 
     sock = new WebSocket(socketUrl());
-    sock.onopen = () => onSocketOpen;
+    sock.onopen = () => onSocketOpen(svc, id);
     sock.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       onSocketMessage(msg);
@@ -52,11 +52,14 @@ namespace socket {
     }
   }
 
-  function onSocketOpen(svc: string, id: string) {
+  function onSocketOpen(svc: services.Service | undefined, id: string) {
     connected = true;
     pendingMessages.forEach(send);
     pendingMessages = [];
-    send({ svc: system.cache.currentService!.key, cmd: command.client.connect, param: system.cache.currentID });
+    if (!svc) {
+      svc = system.cache.currentService!;
+    }
+    send({ svc: svc.key, cmd: command.client.connect, param: system.cache.currentID });
   }
 
   export function onSocketMessage(msg: Message) {

@@ -12,7 +12,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onTeamSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param teamSessionSaveParams) error {
+func onTeamSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnection.Channel, userID uuid.UUID, param teamSessionSaveParams) error {
 	dataSvc := ctx(s).teams
 	title := util.ServiceTitle(util.SvcTeam, param.Title)
 

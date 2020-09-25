@@ -15,7 +15,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onEstimateSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param estimateSessionSaveParams) error {
+func onEstimateSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnection.Channel, userID uuid.UUID, param estimateSessionSaveParams) error {
 	dataSvc := ctx(s).estimates
 	title := util.ServiceTitle(util.SvcEstimate, param.Title)
 

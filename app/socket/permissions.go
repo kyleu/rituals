@@ -44,7 +44,7 @@ func sendPermissionsUpdate(s *npnconnection.Service, ch npnconnection.Channel, p
 	return err
 }
 
-func check(s *npnconnection.Service, a *auth.Service, userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID, svc string, modelID uuid.UUID) (permission.Permissions, permission.Errors) {
+func check(s *npnconnection.Service, a auth.Service, userID uuid.UUID, auths auth.Records, teamID *uuid.UUID, sprintID *uuid.UUID, svc string, modelID uuid.UUID) (permission.Permissions, permission.Errors) {
 	var currTeams []uuid.UUID
 	if teamID != nil {
 		currTeams = ctx(s).teams.GetIdsByMember(userID)
@@ -67,11 +67,11 @@ func check(s *npnconnection.Service, a *auth.Service, userID uuid.UUID, auths au
 		sp = &permission.Params{ID: spr.ID, Slug: spr.Slug, Title: spr.Title, Current: currSprints}
 	}
 
-	perms, e := dataFor(s, svc).Permissions.Check(a.Enabled, svc, modelID, auths, tp, sp)
+	perms, e := dataFor(s, svc).Permissions.Check(a.Enabled(), svc, modelID, auths, tp, sp)
 	return perms, e
 }
 
-func checkPerms(s *npnconnection.Service, a *auth.Service, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, svc string, modelID uuid.UUID) error {
+func checkPerms(s *npnconnection.Service, a auth.Service, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, svc string, modelID uuid.UUID) error {
 	auths := a.GetByUserID(userID, nil)
 	_, permErrors := check(s, a, userID, auths, teamID, sprintID, svc, modelID)
 	if len(permErrors) > 0 {

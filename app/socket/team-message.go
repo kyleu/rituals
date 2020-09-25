@@ -19,7 +19,7 @@ type teamSessionSaveParams struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onTeamMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onTeamMessage(s *npnconnection.Service, a auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := ctx(s).teams
 	var err error
 	userID := conn.Profile.UserID

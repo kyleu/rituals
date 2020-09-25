@@ -23,8 +23,8 @@
           </label>
         </li>
       <% } %>
-      <% if ctx.App.Auth().Enabled { %>
-        <% for _, p := range ctx.App.Auth().EnabledProviders { %>
+      <% if ctx.App.Auth().Enabled() { %>
+        <% for _, p := range ctx.App.Auth().EnabledProviders() { %>
           <%
             pcls := "uk-checkbox uk-margin-small-right"
             poc := "permission.onChanged('provider', '" +  p.Key + "', this.checked)"

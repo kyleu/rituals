@@ -31,7 +31,7 @@ type editReportParams struct {
 	Content string    `json:"content"`
 }
 
-func onStandupMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onStandupMessage(s *npnconnection.Service, a auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := ctx(s).standups
 	var err error
 	userID := conn.Profile.UserID

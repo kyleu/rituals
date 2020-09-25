@@ -40,7 +40,7 @@ type submitVoteParams struct {
 	Choice  string    `json:"choice"`
 }
 
-func onEstimateMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onEstimateMessage(s *npnconnection.Service, a auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := ctx(s).estimates
 	var err error
 	userID := conn.Profile.UserID

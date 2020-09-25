@@ -15,7 +15,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onSprintSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param sprintSessionSaveParams) error {
+func onSprintSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnection.Channel, userID uuid.UUID, param sprintSessionSaveParams) error {
 	dataSvc := ctx(s).sprints
 	title := util.ServiceTitle(util.SvcSprint, param.Title)
 

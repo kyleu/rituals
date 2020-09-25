@@ -1910,7 +1910,7 @@ var socket;
         system.cache.currentID = id;
         system.cache.connectTime = Date.now();
         sock = new WebSocket(socketUrl());
-        sock.onopen = () => onSocketOpen;
+        sock.onopen = () => onSocketOpen(svc, id);
         sock.onmessage = (event) => {
             const msg = JSON.parse(event.data);
             onSocketMessage(msg);
@@ -1938,7 +1938,10 @@ var socket;
         connected = true;
         pendingMessages.forEach(send);
         pendingMessages = [];
-        send({ svc: system.cache.currentService.key, cmd: command.client.connect, param: system.cache.currentID });
+        if (!svc) {
+            svc = system.cache.currentService;
+        }
+        send({ svc: svc.key, cmd: command.client.connect, param: system.cache.currentID });
     }
     function onSocketMessage(msg) {
         if (debug) {

@@ -22,7 +22,7 @@ type sprintSessionSaveParams struct {
 	Permissions permission.Permissions `json:"permissions"`
 }
 
-func onSprintMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onSprintMessage(s *npnconnection.Service, a auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := ctx(s).sprints
 	var err error
 	userID := conn.Profile.UserID

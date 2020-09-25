@@ -13,7 +13,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onStandupSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param standupSessionSaveParams) error {
+func onStandupSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnection.Channel, userID uuid.UUID, param standupSessionSaveParams) error {
 	dataSvc := ctx(s).standups
 	title := util.ServiceTitle(util.SvcStandup, param.Title)
 

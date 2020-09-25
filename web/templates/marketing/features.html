@@ -7,7 +7,7 @@
     <div class="uk-card uk-card-body uk-card-default">
       <h3 class="uk-card-title">Features</h3>
     </div>
-    <% if ctx.App.Auth().Enabled { %>
+    <% if ctx.App.Auth().Enabled() { %>
       <% FeatureSignin(ctx, _buffer) %>
     <% } %>
     <% FeatureTeam(_buffer) %>

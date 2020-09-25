@@ -15,7 +15,7 @@ import (
 	"github.com/kyleu/rituals.dev/app/util"
 )
 
-func onRetroSessionSave(s *npnconnection.Service, a *auth.Service, ch npnconnection.Channel, userID uuid.UUID, param retroSessionSaveParams) error {
+func onRetroSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnection.Channel, userID uuid.UUID, param retroSessionSaveParams) error {
 	dataSvc := ctx(s).retros
 	title := util.ServiceTitle(util.SvcRetro, param.Title)
 

@@ -32,7 +32,7 @@ type editFeedbackParams struct {
 	Content  string    `json:"content"`
 }
 
-func onRetroMessage(s *npnconnection.Service, a *auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
+func onRetroMessage(s *npnconnection.Service, a auth.Service, conn *npnconnection.Connection, cmd string, param json.RawMessage) error {
 	dataSvc := ctx(s).retros
 	var err error
 	userID := conn.Profile.UserID

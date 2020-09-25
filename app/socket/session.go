@@ -42,11 +42,11 @@ func sendInitial(s *npnconnection.Service, ch npnconnection.Channel, conn *npnco
 	return errors.Wrap(err, "error writing online update")
 }
 
-func getPerms(s *npnconnection.Service, a *auth.Service, auths auth.Records, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel) (permission.Permissions, permission.Errors) {
+func getPerms(s *npnconnection.Service, a auth.Service, auths auth.Records, userID uuid.UUID, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel) (permission.Permissions, permission.Errors) {
 	return check(s, a, userID, auths, teamID, sprintID, ch.Svc, ch.ID)
 }
 
-func getSessionResult(s *npnconnection.Service, a *auth.Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel, conn *npnconnection.Connection) SessionResult {
+func getSessionResult(s *npnconnection.Service, a auth.Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel, conn *npnconnection.Connection) SessionResult {
 	userID := conn.Profile.UserID
 	auths, displays := a.GetDisplayByUserID(userID, nil)
 

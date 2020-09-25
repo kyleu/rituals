@@ -4,6 +4,8 @@ import (
 	"github.com/kyleu/npn/npnconnection"
 	"github.com/kyleu/npn/npncore"
 	"github.com/kyleu/npn/npndatabase"
+	"github.com/kyleu/npn/npnservice-db/authdb"
+	"github.com/kyleu/npn/npnservice-db/userdb"
 	"github.com/kyleu/npn/npnservice/auth"
 	"github.com/kyleu/npn/npnservice/user"
 	"github.com/kyleu/npn/npnweb"
@@ -22,7 +24,7 @@ type Service struct {
 	debug    bool
 	files    *npncore.FileLoader
 	user     user.Service
-	auth     *auth.Service
+	auth     auth.Service
 	Comment  *comment.Service
 	Action   *action.Service
 	Team     *team.Service
@@ -41,8 +43,8 @@ func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir str
 	files := npncore.NewFileLoader("./."+npncore.AppName, logger)
 	actionService := action.NewService(db, logger)
 	commentService := comment.NewService(actionService, db, logger)
-	userSvc := user.NewServiceDatabase(db, logger)
-	authSvc := auth.NewService(authEnabled, redir, db, logger, userSvc)
+	userSvc := userdb.NewServiceDatabase(db, logger)
+	authSvc := authdb.NewServiceDatabase(authEnabled, redir, db, logger, userSvc)
 	teamSvc := team.NewService(actionService, userSvc, commentService, db, logger)
 	sprintSvc := sprint.NewService(actionService, userSvc, commentService, db, logger)
 	estimateSvc := estimate.NewService(actionService, userSvc, commentService, db, logger)
@@ -81,7 +83,7 @@ func (c *Service) User() user.Service {
 	return c.user
 }
 
-func (c *Service) Auth() *auth.Service {
+func (c *Service) Auth() auth.Service {
 	return c.auth
 }
 
