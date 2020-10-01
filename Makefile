@@ -40,21 +40,6 @@ endif
 compile-templates:
 	bin/templates.sh
 
-.PHONY: compile-templates-force
-compile-templates-force:
-	echo "updating [query/sql] templates"
-	rm -rf gen/query
-	hero -extensions .sql -source "query/sql" -pkgname query -dest gen/query
-	echo "updating [web/transcript] templates"
-	rm -rf gen/transcripttemplates
-	hero -extensions .html -source "web/transcript" -pkgname transcripttemplates -dest gen/transcripttemplates
-	echo "updating [web/templates] templates"
-	rm -rf gen/templates
-	hero -extensions .html -source "web/templates" -pkgname templates -dest gen/templates
-	echo "updating [web/admin] templates"
-	rm -rf gen/admintemplates
-	hero -extensions .html -source "web/admin" -pkgname admintemplates -dest gen/admintemplates
-
 .PHONY: build
 build: goversion compile-templates ## Build all binaries
 ifeq (${VERBOSE}, 1)
@@ -62,19 +47,11 @@ ifeq (${VERBOSE}, 1)
 endif
 
 	@mkdir -p ${BUILD_DIR}
-	go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./cmd/...
+	GOPRIVATE="github.com/kyleu" go build ${GOARGS} -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./cmd/...
 
 .PHONY: build-release
-build-release: goversion compile-templates ## Build all binaries without debug information
+build-release: goversion clean compile-templates ## Build all binaries without debug information
 	@go-embed -input npn/npnasset/vendor -output npn/npnasset/assets/assets.go
-	@go-embed -input web/assets -output app/assets/assets.go
-	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
-	@git checkout npn/npnasset/assets/assets.go
-	@git checkout app/web/assets/assets.go
-
-.PHONY: build-release-force
-build-release-force: goversion compile-templates-force ## Build all binaries without debug information
-	@go-embed -input npn/npnasset/vendor -output npnasset/assets/assets.go
 	@go-embed -input web/assets -output app/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
 	@git checkout npn/npnasset/assets/assets.go

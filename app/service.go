@@ -22,7 +22,7 @@ import (
 
 type Service struct {
 	debug    bool
-	files    *npncore.FileLoader
+	files    npncore.FileLoader
 	user     user.Service
 	auth     auth.Service
 	Comment  *comment.Service
@@ -40,7 +40,7 @@ type Service struct {
 }
 
 func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir string, version string, commitHash string, logger logur.Logger) *Service {
-	files := npncore.NewFileLoader("./."+npncore.AppName, logger)
+	files := npncore.NewFileSystem("./."+npncore.AppName, logger)
 	actionService := action.NewService(db, logger)
 	commentService := comment.NewService(actionService, db, logger)
 	userSvc := userdb.NewServiceDatabase(db, logger)
@@ -75,7 +75,7 @@ func (c *Service) Debug() bool {
 	return c.debug
 }
 
-func (c *Service) Files() *npncore.FileLoader {
+func (c *Service) Files() npncore.FileLoader {
 	return c.files
 }
 

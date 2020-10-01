@@ -59,7 +59,7 @@ func Configure(version string, commitHash string) cobra.Command {
 
 	flags := rootCmd.PersistentFlags()
 	flags.StringVarP(&redir, "redir", "r", "http://localhost:6660", "redirect url for signin, defaults to localhost")
-	flags.StringVarP(&addr, "address", "a", "0.0.0.0", "interface address to listen on")
+	flags.StringVarP(&addr, "address", "a", "127.0.0.1", "interface address to listen on")
 	flags.Uint16VarP(&port, "port", "p", 6660, "port for http server to listen on")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	flags.BoolVar(&authEnabled, "auth", true, "enable authentication")

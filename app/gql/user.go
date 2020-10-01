@@ -25,7 +25,7 @@ func initUser() {
 
 	usersResolver = func(params graphql.ResolveParams, ctx *npnweb.RequestContext) (interface{}, error) {
 		curr := ctx.App.User().List(npngraphql.ParamSetFromGraphQLParams(npncore.KeyUser, params, ctx.Logger))
-		ret := make([]npnuser.Profile, 0, len(curr))
+		ret := make([]*npnuser.Profile, 0, len(curr))
 		for _, u := range curr {
 			ret = append(ret, u.ToProfile().ToProfile())
 		}

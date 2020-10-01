@@ -14,18 +14,18 @@ require (
 	github.com/jackc/pgx v3.6.2+incompatible // indirect
 	github.com/johnfercher/maroto v0.27.0
 	github.com/jonboulle/clockwork v0.2.0 // indirect
-	github.com/kyleu/npn/npnasset v1.0.0
-	github.com/kyleu/npn/npnconnection v1.0.0
-	github.com/kyleu/npn/npncontroller v1.0.0
-	github.com/kyleu/npn/npncore v1.0.0
-	github.com/kyleu/npn/npndatabase v1.0.0
-	github.com/kyleu/npn/npnexport v1.0.0
-	github.com/kyleu/npn/npngraphql v1.0.0
-	github.com/kyleu/npn/npnservice v1.0.0
-	github.com/kyleu/npn/npnservice-db v1.0.0
-	github.com/kyleu/npn/npntemplate v1.0.0
-	github.com/kyleu/npn/npnuser v1.0.0
-	github.com/kyleu/npn/npnweb v1.0.0
+	github.com/kyleu/npn/npnasset v0.0.11
+	github.com/kyleu/npn/npnconnection v0.0.11
+	github.com/kyleu/npn/npncontroller v0.0.11
+	github.com/kyleu/npn/npncore v0.0.11
+	github.com/kyleu/npn/npndatabase v0.0.11
+	github.com/kyleu/npn/npnexport v0.0.11
+	github.com/kyleu/npn/npngraphql v0.0.11
+	github.com/kyleu/npn/npnservice v0.0.11
+	github.com/kyleu/npn/npnservice-db v0.0.11
+	github.com/kyleu/npn/npntemplate v0.0.11
+	github.com/kyleu/npn/npnuser v0.0.11
+	github.com/kyleu/npn/npnweb v0.0.11
 	github.com/mattn/go-runewidth v0.0.8 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.2
 	github.com/prometheus/client_golang v1.7.1 // indirect
@@ -38,27 +38,3 @@ require (
 	golang.org/x/mobile v0.0.0-20200212152714-2b26a4705d24 // indirect
 	logur.dev/logur v0.16.2
 )
-
-replace github.com/kyleu/npn/npnasset => ./npn/npnasset
-
-replace github.com/kyleu/npn/npnconnection => ./npn/npnconnection
-
-replace github.com/kyleu/npn/npncontroller => ./npn/npncontroller
-
-replace github.com/kyleu/npn/npncore => ./npn/npncore
-
-replace github.com/kyleu/npn/npndatabase => ./npn/npndatabase
-
-replace github.com/kyleu/npn/npnexport => ./npn/npnexport
-
-replace github.com/kyleu/npn/npngraphql => ./npn/npngraphql
-
-replace github.com/kyleu/npn/npnservice => ./npn/npnservice
-
-replace github.com/kyleu/npn/npnservice-db => ./npn/npnservice-db
-
-replace github.com/kyleu/npn/npntemplate => ./npn/npntemplate
-
-replace github.com/kyleu/npn/npnuser => ./npn/npnuser
-
-replace github.com/kyleu/npn/npnweb => ./npn/npnweb

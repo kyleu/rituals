@@ -58,7 +58,7 @@ func joinSprintSession(s *npnconnection.Service, conn *npnconnection.Connection,
 	}
 
 	sj := SprintSessionJoined{
-		Profile:     &conn.Profile,
+		Profile:     conn.Profile,
 		Session:     sess,
 		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),

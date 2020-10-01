@@ -57,7 +57,7 @@ func joinTeamSession(s *npnconnection.Service, conn *npnconnection.Connection, c
 	}
 
 	sj := TeamSessionJoined{
-		Profile:     &conn.Profile,
+		Profile:     conn.Profile,
 		Session:     sess,
 		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Members:     dataSvc.Data.Members.GetByModelID(ch.ID, nil),

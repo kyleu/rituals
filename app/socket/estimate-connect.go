@@ -55,7 +55,7 @@ func joinEstimateSession(s *npnconnection.Service, conn *npnconnection.Connectio
 	}
 
 	sj := EstimateSessionJoined{
-		Profile:     &conn.Profile,
+		Profile:     conn.Profile,
 		Session:     sess,
 		Comments:    dataSvc.Data.GetComments(ch.ID, nil),
 		Team:        getTeamOpt(s, sess.TeamID),
