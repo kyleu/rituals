@@ -17,7 +17,7 @@ func (s *Service) sendSMTP(to []string, subject string, htmlBody string) error {
 	ret = append(ret, "From: "+cfg.From)
 	ret = append(ret, "Subject: "+subject)
 	ret = append(ret, "MIME-version: 1.0;")
-	ret = append(ret, "Content-Type: text/html; charset=\"UTF-8\";")
+	ret = append(ret, `Content-Type: text/html; charset="UTF-8";`)
 	ret = append(ret, "")
 	ret = append(ret, htmlBody)
 	msg := strings.Join(ret, "\n")

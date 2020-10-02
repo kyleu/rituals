@@ -32,7 +32,7 @@ func (er *EmailResponse) Subject() string {
 }
 
 func (er *EmailResponse) Opener() string {
-	msg := "Today there were %v teams, %v sprints, %v estimates, %v standups, %v retros, and %v comments"
+	const msg = "Today there were %v teams, %v sprints, %v estimates, %v standups, %v retros, and %v comments"
 	return fmt.Sprintf(msg, len(er.Teams), len(er.Sprints), len(er.Estimates), len(er.Standups), len(er.Retros), len(er.Comments))
 }
 

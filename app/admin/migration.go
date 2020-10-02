@@ -46,7 +46,7 @@ func MigrationDetail(w http.ResponseWriter, r *http.Request) {
 		title := fmt.Sprintf("Migration %v: %v", e.Idx, e.Title)
 		ctx.Title = title
 		bc := npncontroller.AdminBC(ctx, npncore.KeyMigration, npncore.Plural(npncore.KeyMigration))
-		idxStr := fmt.Sprintf("%v", e.Idx)
+		idxStr := fmt.Sprint(e.Idx)
 		bc = append(bc, npnweb.BreadcrumbSelf(idxStr))
 		ctx.Breadcrumbs = bc
 

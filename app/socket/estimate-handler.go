@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
@@ -40,7 +41,7 @@ func onEstimateSessionSave(s *npnconnection.Service, a auth.Service, ch npnconne
 	teamChanged := npnconnection.DifferentPointerValues(curr.TeamID, teamID)
 	sprintChanged := npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
-	msg := "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
+	const msg = "saving estimate session [%s] with choices [%s], team [%s] and sprint [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, npncore.OxfordComma(choices, "and"), teamID, sprintID))
 
 	err := dataSvc.UpdateSession(ch.ID, title, choices, teamID, sprintID, userID)

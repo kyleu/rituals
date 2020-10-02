@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
@@ -40,7 +41,7 @@ func onRetroSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnecti
 	teamChanged := npnconnection.DifferentPointerValues(curr.TeamID, teamID)
 	sprintChanged := npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
-	msg := "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
+	const msg = "saving retro session [%s] with categories [%s], sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, npncore.OxfordComma(categories, "and"), sprintID, teamID))
 
 	err := dataSvc.UpdateSession(ch.ID, title, categories, teamID, sprintID, userID)

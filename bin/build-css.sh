@@ -5,8 +5,7 @@
 
 set -e
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-project_dir=${dir}/..
-cd $project_dir
+cd $dir/..
 
 sass --no-source-map web/stylesheets/style.scss web/assets/vendor/rituals.css
 sass --style=compressed --no-source-map web/stylesheets/style.scss web/assets/vendor/rituals.min.css

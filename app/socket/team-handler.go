@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
@@ -26,7 +27,7 @@ func onTeamSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnectio
 		return sr
 	}
 
-	msg := "saving team session [%s]"
+	const msg = "saving team session [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title))
 
 	err := dataSvc.UpdateSession(ch.ID, title, userID)

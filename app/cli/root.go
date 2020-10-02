@@ -1,9 +1,10 @@
 package cli
 
 import (
-	"github.com/kyleu/npn/npnasset"
 	"os"
 	"strings"
+
+	"github.com/kyleu/npn/npnasset"
 
 	"github.com/kyleu/rituals.dev/app/gql"
 	"github.com/kyleu/rituals.dev/gen/query"
@@ -71,7 +72,7 @@ func Configure(version string, commitHash string) cobra.Command {
 func InitApp(version string, commitHash string) (npnweb.AppInfo, error) {
 	_ = os.Setenv("TZ", "UTC")
 
-	npnweb.IconContent = "<span data-uk-icon=\"icon: git-fork; ratio: 1.6\"></span>"
+	npnweb.IconContent = `<span data-uk-icon="icon: git-fork; ratio: 1.6"></span>`
 
 	logger := npncore.InitLogging(verbose)
 	logger = log.WithFields(logger, map[string]interface{}{"debug": verbose, "version": version, "commit": commitHash})

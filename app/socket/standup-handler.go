@@ -2,6 +2,7 @@ package socket
 
 import (
 	"fmt"
+
 	"github.com/kyleu/npn/npnservice/auth"
 
 	"github.com/kyleu/npn/npnconnection"
@@ -33,7 +34,7 @@ func onStandupSessionSave(s *npnconnection.Service, a auth.Service, ch npnconnec
 	teamChanged := npnconnection.DifferentPointerValues(curr.TeamID, teamID)
 	sprintChanged := npnconnection.DifferentPointerValues(curr.SprintID, sprintID)
 
-	msg := "saving standup session [%s] with sprint [%s] and team [%s]"
+	const msg = "saving standup session [%s] with sprint [%s] and team [%s]"
 	s.Logger.Debug(fmt.Sprintf(msg, title, sprintID, teamID))
 
 	err := dataSvc.UpdateSession(ch.ID, title, teamID, sprintID, userID)

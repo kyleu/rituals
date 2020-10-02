@@ -10,7 +10,7 @@ import (
 var policy = bluemonday.UGCPolicy()
 
 func ToHTML(s string) string {
-	html := string(blackfriday.Run([]byte(s)))
+	html := string(blackfriday.MarkdownCommon([]byte(s)))
 	ret := policy.Sanitize(html)
 	ret = strings.TrimSuffix(ret, "\n")
 

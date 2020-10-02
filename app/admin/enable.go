@@ -22,7 +22,7 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 		if !ok || len(v) == 0 {
 			ctx.Logger.Warn("### admin enable request")
 			ctx.Logger.Warn("### to enable admin access for this user")
-			ctx.Logger.Warn("### add \"?code=" + code + "\" to your url")
+			ctx.Logger.Warn(`### add "?code=` + code + `" to your url`)
 			return npncontroller.T(npntemplate.StaticMessage("To become an admin, follow the instructions in your server logs", ctx, w))
 		}
 		if v[0] != code {
@@ -39,7 +39,7 @@ func Enable(w http.ResponseWriter, r *http.Request) {
 			return npncontroller.EResp(err)
 		}
 
-		msg := "you're a wizard, Harry!"
+		const msg = "you're a wizard, Harry!"
 		return npncontroller.FlashAndRedir(true, msg, npncore.KeyAdmin, w, r, ctx)
 	})
 }
