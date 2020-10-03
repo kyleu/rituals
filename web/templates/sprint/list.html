@@ -12,11 +12,11 @@
       <% } %>
     </div>
 
-    <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+    <div class="uk-card uk-card-body uk-card-default mt">
       <h3 class="uk-card-title">New Sprint</h3>
       <form class="uk-form-stacked" action="<%= ctx.Route(util.SvcSprint.Key + `.new`) %>" method="post">
         <% SprintForm("", nil, nil, teams, auths, true, ctx, _buffer) %>
-        <div class="uk-margin-top">
+        <div class="mt">
           <button class="uk-button uk-button-default" type="submit">Start</button>
         </div>
       </form>

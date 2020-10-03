@@ -25,7 +25,7 @@
         <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcTeam, ctx, _buffer) %>
           <% if len(teams) > 0 { %>
-          <ul class="uk-list uk-list-divider uk-margin-top">
+          <ul class="uk-list uk-list-divider mt">
             <% for _, t := range teams { %>
             <li>
               <a class="theme" href="<%= ctx.Route(util.SvcTeam.Key, npncore.KeyKey, t.Slug) %>"><%= t.Title %></a>
@@ -39,7 +39,7 @@
         <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcSprint, ctx, _buffer) %>
           <% if len(sprints) > 0 { %>
-            <ul class="uk-list uk-list-divider uk-margin-top">
+            <ul class="uk-list uk-list-divider mt">
               <% for _, s := range sprints { %>
                 <li>
                   <a class="theme" href="<%= ctx.Route(util.SvcSprint.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
@@ -53,7 +53,7 @@
         <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcEstimate, ctx, _buffer) %>
           <% if len(estimates) > 0 { %>
-            <ul class="uk-list uk-list-divider uk-margin-top">
+            <ul class="uk-list uk-list-divider mt">
               <% for _, s := range estimates { %>
                 <li>
                   <a class="theme" href="<%= ctx.Route(util.SvcEstimate.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
@@ -67,7 +67,7 @@
         <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcStandup, ctx, _buffer) %>
           <% if len(standups) > 0 { %>
-            <ul class="uk-list uk-list-divider uk-margin-top">
+            <ul class="uk-list uk-list-divider mt">
               <% for _, s := range standups { %>
                 <li>
                   <a class="theme" href="<%= ctx.Route(util.SvcStandup.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>
@@ -81,7 +81,7 @@
         <div class="uk-card uk-card-body uk-card-default uk-transition-toggle">
           <% IndexPanel(util.SvcRetro, ctx, _buffer) %>
           <% if len(retros) > 0 { %>
-            <ul class="uk-list uk-list-divider uk-margin-top">
+            <ul class="uk-list uk-list-divider mt">
               <% for _, s := range retros { %>
                 <li>
                   <a class="theme" href="<%= ctx.Route(util.SvcRetro.Key, npncore.KeyKey, s.Slug) %>"><%= s.Title %></a>

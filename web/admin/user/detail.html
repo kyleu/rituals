@@ -54,43 +54,43 @@
     </div>
 
     <% if len(auths) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title">Auth Records</h3>
         <% AuthTable(auths, params.Get(npncore.KeyAuth, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(teams) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title">Teams</h3>
         <% TeamTable(teams, params.Get(util.SvcTeam.Key, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(sprints) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title">Sprints</h3>
         <% SprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(estimates) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title"><%= util.SvcEstimate.PluralTitle %></h3>
         <% EstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(standups) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title"><%= util.SvcStandup.PluralTitle %></h3>
         <% StandupTable(standups, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(retros) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title"><%= util.SvcRetro.PluralTitle %></h3>
         <% RetroTable(retros, params.Get(util.SvcRetro.Key, ctx.Logger), ctx, _buffer) %>
       </div>
     <% } %>
     <% if len(actions) > 0 { %>
-      <div class="uk-card uk-card-body uk-card-default uk-margin-top">
+      <div class="uk-card uk-card-body uk-card-default mt">
         <h3 class="uk-card-title">Actions</h3>
         <% ActionTable(actions, params.Get(npncore.KeyAction, ctx.Logger), ctx, _buffer) %>
       </div>

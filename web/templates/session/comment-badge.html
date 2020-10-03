@@ -12,7 +12,7 @@
       <div class="uk-card-footer">
         <form onsubmit="comment.add('<%= t %>');return false;">
           <% npntemplate.Textarea(npnweb.InputParams{ID: "comment-add-content-" + t, Placeholder: "Markdown and HTML supported"}, buffer) %>
-          <div class="uk-text-right"><button class="uk-button uk-button-default uk-margin-top" type="submit">Add Comment</button></div>
+          <div class="uk-text-right"><button class="uk-button uk-button-default mt" type="submit">Add Comment</button></div>
         </form>
       </div>
     </div>
