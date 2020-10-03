@@ -53,7 +53,7 @@ namespace system {
   export function onSystemMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.system, param as string);
+        rituals.onError(services.system.key, param as string);
         break;
       case command.server.actions:
         action.viewActions(param as readonly action.Action[]);

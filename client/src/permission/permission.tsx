@@ -22,14 +22,14 @@ namespace permission {
     );
   }
 
-  function renderMessage(p: collection.Group<string, permission.Permission>) {
+  function renderMessage(p: group.Group<string, permission.Permission>) {
     switch (p.key) {
       case services.team.key:
         return <li>Must be a member of this session's team</li>;
       case services.sprint.key:
         return <li>Must be a member of this session's sprint</li>;
       default:
-        let col = collection.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
+        let col = group.flatten(p.members.map(x => x.k.split(",").map(y => y.trim()).filter(z => z.length > 0)));
         if (col.length === 0) {
           return <li>Must sign in with {p.key}</li>;
         }
@@ -37,7 +37,7 @@ namespace permission {
     }
   }
 
-  export function renderView(perms: collection.Group<string, Permission>[]) {
+  export function renderView(perms: group.Group<string, Permission>[]) {
     if (perms.length === 0) {
       return <div>public</div>;
     }

@@ -21,7 +21,7 @@ namespace sprint {
   export function onSprintMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.sprint, param as string);
+        rituals.onError(services.sprint.key, param as string);
         break;
       case command.server.sessionJoined:
         const sj = param as SessionJoined;
@@ -47,7 +47,7 @@ namespace sprint {
         system.setPermissions(param as permission.Permission[]);
         break;
       case command.server.contentUpdate:
-        socket.socketConnect(system.cache.currentService!, system.cache.currentID);
+        socket.socketConnect(system.cache.currentService!.key, system.cache.currentID);
         break;
       default:
         console.warn(`unhandled command [${cmd}] for sprint`);

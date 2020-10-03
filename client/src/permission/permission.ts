@@ -5,7 +5,7 @@ namespace permission {
     readonly access: string;
   }
 
-  export let permissions: collection.Group<string, Permission>[] = [];
+  export let permissions: group.Group<string, Permission>[] = [];
 
   export interface Email {
     readonly matched: boolean;
@@ -13,7 +13,7 @@ namespace permission {
   }
 
   export function applyPermissions(perms: permission.Permission[] | null) {
-    const cached = collection.groupBy(perms, x => x.k).groups;
+    const cached = group.groupBy(perms, x => x.k).groups;
     permissions = cached;
   }
 
@@ -29,14 +29,14 @@ namespace permission {
   export function setModelPerms(key: string) {
     const el = dom.opt<HTMLSelectElement>(`#model-${key}-select select`);
     if (el) {
-      const perms = collection.findGroup(permissions, key);
+      const perms = group.findGroup(permissions, key);
       const section = dom.opt(`#perm-${key}-section`);
       if (section) {
         const checkbox = dom.req<HTMLInputElement>(`#perm-${key}-checkbox`);
         checkbox.checked = perms.length > 0;
         dom.setDisplay(section, el.value.length !== 0);
       }
-      collection.findGroup(permissions, key);
+      group.findGroup(permissions, key);
     }
   }
 

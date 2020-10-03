@@ -1,6 +1,6 @@
 namespace permission {
   export function setProviderPerms(p: auth.Provider) {
-    const perms = collection.findGroup(permissions, p.key);
+    const perms = group.findGroup(permissions, p.key);
     const auths = auth.active().filter(a => a.provider === p.key);
 
     const section = dom.opt(`#perm-${p.key}-section`);
@@ -9,7 +9,7 @@ namespace permission {
       checkbox.checked = perms.length > 0;
 
       const emailContainer = dom.req(`#perm-${p.key}-email-container`);
-      const emails = collection.flatten(perms.map(x => x.v.split(",").filter(y => y.length > 0))).map(z => ({ matched: true, domain: z }));
+      const emails = group.flatten(perms.map(x => x.v.split(",").filter(y => y.length > 0))).map(z => ({ matched: true, domain: z }));
 
       const additional = auths.filter(a => emails.filter(e => a.email.endsWith(e.domain)).length === 0).map(m => (
         { matched: false, domain: getDomain(m.email) }

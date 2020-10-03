@@ -19,7 +19,7 @@ namespace team {
   export function onTeamMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.team, param as string);
+        rituals.onError(services.team.key, param as string);
         break;
       case command.server.sessionJoined:
         const sj = param as SessionJoined;
@@ -38,7 +38,7 @@ namespace team {
         system.setPermissions(param as permission.Permission[]);
         break;
       case command.server.contentUpdate:
-        socket.socketConnect(system.cache.currentService!, system.cache.currentID);
+        socket.socketConnect(system.cache.currentService!.key, system.cache.currentID);
         break;
       default:
         console.warn(`unhandled command [${cmd}] for team`);

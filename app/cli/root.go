@@ -35,7 +35,7 @@ var wipeDatabase bool
 func Configure(version string, commitHash string) cobra.Command {
 	npncore.AppKey = "rituals"
 	npncore.AppName = "rituals.dev"
-	npnasset.AssetBase = "npn/" + npnasset.AssetBase
+	npnasset.AssetBase = "../npn/" + npnasset.AssetBase
 
 	rootCmd := cobra.Command{
 		Use:   npncore.AppName,

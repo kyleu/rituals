@@ -17,6 +17,7 @@
     "target": "ES6"
   },
   "include": [
+    "../../npn/npnasset/typescript/src/**/*",
     "src/**/*"
   ],
   "exclude": [

@@ -23,7 +23,7 @@ namespace standup {
   export function onStandupMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.standup, param as string);
+        rituals.onError(services.standup.key, param as string);
         break;
       case command.server.sessionJoined:
         const sj = param as SessionJoined;

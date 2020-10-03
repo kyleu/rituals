@@ -39,7 +39,7 @@ namespace estimate {
   export function onEstimateMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.estimate, param as string);
+        rituals.onError(services.estimate.key, param as string);
         break;
       case command.server.sessionJoined:
         const sj = param as SessionJoined;

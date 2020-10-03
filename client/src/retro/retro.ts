@@ -24,7 +24,7 @@ namespace retro {
   export function onRetroMessage(cmd: string, param: any) {
     switch (cmd) {
       case command.server.error:
-        rituals.onError(services.retro, param as string);
+        rituals.onError(services.retro.key, param as string);
         break;
       case command.server.sessionJoined:
         const sj = param as SessionJoined;
