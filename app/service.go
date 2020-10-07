@@ -34,12 +34,10 @@ type Service struct {
 	Retro    *retro.Service
 	Socket   *npnconnection.Service
 	Database *npndatabase.Service
-	version  string
-	commit   string
 	logger   logur.Logger
 }
 
-func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir string, version string, commitHash string, logger logur.Logger) *Service {
+func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir string, logger logur.Logger) *Service {
 	files := npncore.NewFileSystem("./."+npncore.AppName, logger)
 	actionService := action.NewService(db, logger)
 	commentService := comment.NewService(actionService, db, logger)
@@ -54,8 +52,6 @@ func NewService(debug bool, db *npndatabase.Service, authEnabled bool, redir str
 	return &Service{
 		debug:    debug,
 		files:    files,
-		version:  version,
-		commit:   commitHash,
 		logger:   logger,
 		user:     userSvc,
 		auth:     authSvc,
@@ -85,14 +81,6 @@ func (c *Service) User() user.Service {
 
 func (c *Service) Auth() auth.Service {
 	return c.auth
-}
-
-func (c *Service) Version() string {
-	return c.version
-}
-
-func (c *Service) Commit() string {
-	return c.commit
 }
 
 func (c *Service) Logger() logur.Logger {

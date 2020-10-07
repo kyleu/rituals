@@ -32,7 +32,7 @@ var authEnabled bool
 var wipeDatabase bool
 
 // Configure configures a root command.
-func Configure(version string, commitHash string) cobra.Command {
+func Configure() cobra.Command {
 	npncore.AppKey = "rituals"
 	npncore.AppName = "rituals.dev"
 	npnasset.AssetBase = "../npn/" + npnasset.AssetBase
@@ -41,7 +41,7 @@ func Configure(version string, commitHash string) cobra.Command {
 		Use:   npncore.AppName,
 		Short: "Command line interface for " + npncore.AppName,
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			info, err := InitApp(version, commitHash)
+			info, err := InitApp()
 			if err != nil {
 				return errors.Wrap(err, "error initializing application")
 			}
@@ -69,18 +69,18 @@ func Configure(version string, commitHash string) cobra.Command {
 	return rootCmd
 }
 
-func InitApp(version string, commitHash string) (npnweb.AppInfo, error) {
+func InitApp() (npnweb.AppInfo, error) {
 	_ = os.Setenv("TZ", "UTC")
 
 	npnweb.IconContent = `<span data-uk-icon="icon: git-fork; ratio: 1.6"></span>`
 
 	logger := npncore.InitLogging(verbose)
-	logger = log.WithFields(logger, map[string]interface{}{"debug": verbose, "version": version, "commit": commitHash})
+	logger = log.WithFields(logger, map[string]interface{}{"debug": verbose})
 
 	errorHandler := logur.New(logger)
 	defer emperror.HandleRecover(errorHandler)
 
-	ai, err := initAppInfo(logger, version, commitHash)
+	ai, err := initAppInfo(logger)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func InitApp(version string, commitHash string) (npnweb.AppInfo, error) {
 	return ai, nil
 }
 
-func initAppInfo(logger log.Logger, version string, commitHash string) (npnweb.AppInfo, error) {
+func initAppInfo(logger log.Logger) (npnweb.AppInfo, error) {
 	npndatabase.InitialSchemaMigrations = npndatabase.MigrationFiles{
 		{Title: "reset", F: func(sb *strings.Builder) { query.ResetDatabase(sb) }},
 		{Title: "create-types", F: func(sb *strings.Builder) { query.CreateTypes(sb) }},
@@ -113,5 +113,5 @@ func initAppInfo(logger log.Logger, version string, commitHash string) (npnweb.A
 		return nil, errors.Wrap(err, "error opening database pool")
 	}
 
-	return app.NewService(verbose, db, authEnabled, redir, version, commitHash, logger), nil
+	return app.NewService(verbose, db, authEnabled, redir, logger), nil
 }

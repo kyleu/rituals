@@ -9,7 +9,6 @@ ifdef SOURCE_DATE_EPOCH
 else
     BUILD_DATE ?= $(shell date "$(DATE_FMT)")
 endif
-LDFLAGS += -X main.version=${VERSION} -X main.commitHash=${COMMIT_HASH} -X main.buildDate=${BUILD_DATE}
 export CGO_ENABLED ?= 0
 ifeq (${VERBOSE}, 1)
 ifeq ($(filter -v,${GOARGS}),)
@@ -51,10 +50,10 @@ endif
 
 .PHONY: build-release
 build-release: goversion clean compile-templates ## Build all binaries without debug information
-	@go-embed -input npn/npnasset/vendor -output npn/npnasset/assets/assets.go
+	# @go-embed -input ../npn/npnasset/vendor -output ../npn/npnasset/assets/assets.go
 	@go-embed -input web/assets -output app/assets/assets.go
 	@env GOOS=${GOOS} GOARCH=${GOARCH} ${MAKE} LDFLAGS="-w ${LDFLAGS}" GOARGS="${GOARGS} -trimpath" BUILD_DIR="${BUILD_DIR}/release" build
-	@git checkout npn/npnasset/assets/assets.go
+	# @git checkout ../npn/npnasset/assets/assets.go
 	@git checkout app/web/assets/assets.go
 
 .PHONY: build-debug
