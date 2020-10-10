@@ -5,8 +5,8 @@
 
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
-DIR="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
-cd "$DIR"
+dir="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
+cd "$dir"
 
 function tmpl {
   fsrc="tmp/$1.hashcode"
@@ -25,8 +25,6 @@ function tmpl {
     mv "$ftgt" "$fsrc"
     rm -rf gen/$1
     hero -extensions .html,.sql -source "$2" -pkgname $1 -dest gen/$1
-    echo "cleaning [$2] templates"
-    find "gen/$1" -type f -name "*.go" -print0 | xargs -0 sed -i "" "/\/\/ source:/d"
   fi
 }
 

@@ -29,7 +29,7 @@ ARG BUILD_TARGET
 COPY go.* /rituals/
 RUN go mod download
 
-RUN set -xe && bash -c 'make build-release-force'
+RUN set -xe && bash -c 'make build-release'
 
 RUN mv build/release /build
 

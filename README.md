@@ -14,8 +14,6 @@ https://github.com/KyleU/rituals.dev
 
 ## Building
 
-The UI relies on UIkit, run `git submodule init` and `git submodule update` to pull it
-
 For CI servers and go-only changes, simply `make build`. For full stack development, you'll need some tools installed
 
 - Run `bin/bootstrap.sh` to install required Go utilities
