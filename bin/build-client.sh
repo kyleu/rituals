@@ -7,8 +7,10 @@ set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/../client
 
+echo "Building TypeScript..."
 tsc --project tsconfig.json
 
 cd ../web/assets/vendor
 
+echo "Optimizing TypeScript..."
 closure-compiler --create_source_map rituals.min.js.map rituals.js > rituals.min.js

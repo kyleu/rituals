@@ -7,10 +7,10 @@ set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
-docker build -m 4g -t fevo-tech/rituals.dev .
+docker build -m 4g -t kyleu/rituals .
 
 mkdir -p build/docker
-docker save -o build/docker/docker.tar fevo-tech/rituals.dev
+docker save -o build/docker/rituals.docker.tar kyleu/rituals
 cd build/docker/
-rm -f docker.tar.gz
-gzip docker.tar
+rm -f rituals.docker.tar.gz
+gzip rituals.docker.tar

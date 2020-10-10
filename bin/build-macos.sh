@@ -1,12 +1,22 @@
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
-dir="$( cd -P "$( dirname "$SOURCE" )/.." && pwd )"
-cd "$dir"
+#!/bin/bash
 
-arch=amd64
-os=darwin
+## Builds the project as a macOS server and builds the native app in `projects/macos`
 
-echo "Building [$os $arch]..."
-env GOOS=$os GOARCH=$arch make build-release
-mkdir -p ./build/$os/$arch
-mv ./build/release/rituals ./build/$os/$arch/rituals
+set -euo pipefail
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $dir/..
+
+echo "Building [macos] app..."
+
+mkdir -p build/darwin/
+
+bin/build.sh darwin amd64
+cp build/darwin/amd64/rituals projects/macos/rituals/rituals/rituals-server
+
+cd projects/macos/rituals
+
+xcodebuild -project rituals.xcodeproj
+
+cd build/Release/
+
+cp -R rituals.app ../../../../../build/darwin
