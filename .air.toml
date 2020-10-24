@@ -15,12 +15,3 @@ log = "air_errors.log"
 
 [log]
 time = true
-
-[color]
-main = "magenta"
-watcher = "cyan"
-build = "yellow"
-runner = "green"
-
-[misc]
-clean_on_exit = false

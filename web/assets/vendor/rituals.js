@@ -882,6 +882,13 @@ var group;
         return sort(update(a, v, matchFn), matchFn);
     }
     group_1.updateAndSort = updateAndSort;
+    function remove(a, key, matchFn) {
+        if (!a) {
+            return [];
+        }
+        return a.filter(x => matchFn(x) != key);
+    }
+    group_1.remove = remove;
 })(group || (group = {}));
 var json;
 (function (json) {
@@ -982,41 +989,39 @@ var map;
             return this.storage[key] = v;
         }
         ;
+        del(key) {
+            delete this.storage[key];
+        }
+        ;
     }
     map.Map = Map;
 })(map || (map = {}));
 var nav;
 (function (nav) {
     nav.enabled = true;
-    let handler = (p) => {
-        console.warn("default nav handler called: " + p);
+    let handler = (p, hash) => {
+        console.warn("default nav handler called: " + p + ((hash.length > 0) ? ("#" + hash) : ""));
     };
     function init(f) {
         handler = f;
         window.onpopstate = (event) => {
             if (event.state) {
                 let s = event.state;
-                handler(s);
+                let [path, hash] = extractHash(s);
+                handler(path, hash);
             }
             else {
-                handler("");
+                handler("", "");
             }
         };
-        let path = location.pathname;
+        let path = location.pathname + ((location.hash.length > 0) ? (location.hash) : "");
         navigate(path);
     }
     nav.init = init;
-    function pop() {
-        let p = location.pathname.substr(0, location.pathname.lastIndexOf("/"));
-        if (p === '/c') {
-            p = "";
-        }
-        navigate(p);
-    }
-    nav.pop = pop;
-    function navigate(path) {
+    function navigate(s) {
+        let [path, hash] = extractHash(s);
         if (!nav.enabled) {
-            handler(path);
+            handler(path, hash);
             return "";
         }
         if (str.startsWith(path, "text/html;")) {
@@ -1033,9 +1038,33 @@ var nav;
             let final = path;
             history.pushState(final, "", "/" + final);
         }
-        handler(path);
+        handler(path, hash);
     }
     nav.navigate = navigate;
+    function pop() {
+        let p = location.pathname.substr(0, location.pathname.lastIndexOf("/"));
+        if (p === '/c') {
+            p = "";
+        }
+        navigate(p);
+    }
+    nav.pop = pop;
+    function hashLink(k, title, active) {
+        if (active.indexOf("#") === 0) {
+            active = active.substr(1);
+        }
+        let cls = "";
+        if (active === k) {
+            cls += "uk-active";
+        }
+        const ret = JSX("li", { class: cls },
+            JSX("a", { href: "#" + k }, title));
+        ret.onclick = () => {
+            history.replaceState(history.state, "", `#${k}`);
+        };
+        return ret;
+    }
+    nav.hashLink = hashLink;
     function link(o) {
         let href = o.path;
         if (!str.startsWith(href, "/")) {
@@ -1062,11 +1091,25 @@ var nav;
         if (!o.isButton) {
             o.cls = style.linkColor + o.cls;
         }
-        return JSX("a", { class: o.cls, href: href, onclick: o.onclk + "nav.navigate('" + o.path + "', '" + o.title + "');return false;" },
+        let p = o.path;
+        if (o.hash && o.hash.length > 0) {
+            p += "#" + o.hash;
+        }
+        return JSX("a", { class: o.cls, href: href, onclick: o.onclk + "nav.navigate('" + p + "', '" + o.title + "');return false;" },
             i,
             o.title);
     }
     nav.link = link;
+    function extractHash(s) {
+        let path = s;
+        let hash = "";
+        const hashIdx = path.indexOf("#");
+        if (hashIdx > -1) {
+            hash = path.substr(hashIdx + 1);
+            path = path.substr(0, hashIdx);
+        }
+        return [path, hash];
+    }
 })(nav || (nav = {}));
 var notify;
 (function (notify_1) {

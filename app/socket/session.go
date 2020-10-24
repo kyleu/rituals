@@ -48,7 +48,7 @@ func getPerms(s *npnconnection.Service, a auth.Service, auths auth.Records, user
 
 func getSessionResult(s *npnconnection.Service, a auth.Service, teamID *uuid.UUID, sprintID *uuid.UUID, ch npnconnection.Channel, conn *npnconnection.Connection) SessionResult {
 	userID := conn.Profile.UserID
-	auths, displays := a.GetDisplayByUserID(userID, nil)
+	auths, displays := auth.GetDisplayByUserID(a, userID, nil)
 
 	perms, permErrors := getPerms(s, a, auths, conn.Profile.UserID, teamID, sprintID, ch)
 	if len(permErrors) > 0 {

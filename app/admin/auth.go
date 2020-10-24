@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/gofrs/uuid"
 	"net/http"
 
 	"github.com/kyleu/npn/npncontroller"
@@ -28,7 +29,8 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return npncontroller.EResp(err)
 		}
-		record := ctx.App.Auth().GetByID(*authID)
+		userID := uuid.UUID{} // TODO
+		record := ctx.App.Auth().GetByID(userID, *authID)
 		if record == nil {
 			msg := "can't load auth [" + authID.String() + "]"
 			return npncontroller.FlashAndRedir(false, msg, npnweb.AdminLink(npncore.KeyAuth), w, r, ctx)

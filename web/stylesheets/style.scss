@@ -55,10 +55,13 @@
   }
 }
 
+#public-link-container, #private-link-container {
+  display: none;
+}
+
 @import "form.scss";
 @import "tags.scss";
 @import "profile.scss";
-@import "permission.scss";
 @import "members.scss";
 @import "session.scss";
 @import "team.scss";
