@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"github.com/kyleu/npn/npnasset"
 	"os"
 	"strings"
 
@@ -22,7 +21,8 @@ import (
 func init() {
 	npncore.AppKey = "rituals"
 	npncore.AppName = "rituals.dev"
-	npnasset.AssetBase = "../npn/" + npnasset.AssetBase
+	npncore.IncludedScripts = []string{"/assets/vendor/uikit/uikit.min.js", "/assets/vendor/uikit/uikit-icons.min.js"}
+	npncore.IncludedStylesheets = []string{"/assets/vendor/uikit/uikit.min.css"}
 }
 
 func InitApp() (npnweb.AppInfo, error) {

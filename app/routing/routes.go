@@ -3,8 +3,6 @@ package routing
 import (
 	"net/http"
 
-	"github.com/kyleu/npn/npnasset"
-
 	"github.com/kyleu/npn/npncontroller"
 	"github.com/kyleu/npn/npncontroller/routes"
 	"github.com/kyleu/npn/npncore"
@@ -80,7 +78,6 @@ func BuildRouter(ai npnweb.AppInfo) (*mux.Router, error) {
 	r.Path(routes.Path("favicon.ico")).Methods(http.MethodGet).Handler(routes.AddContext(r, ai, http.HandlerFunc(controllers.Favicon))).Name(routes.Name("favicon"))
 	r.Path(routes.Path("robots.txt")).Methods(http.MethodGet).Handler(routes.AddContext(r, ai, http.HandlerFunc(controllers.RobotsTxt))).Name(routes.Name("robots"))
 	r.Path(routes.Path("qr")).Methods(http.MethodGet).Handler(routes.AddContext(r, ai, http.HandlerFunc(controllers.QRCode))).Name(routes.Name("qr"))
-	r.PathPrefix(routes.Path("vendor")).Methods(http.MethodGet).Handler(routes.AddContext(r, ai, http.HandlerFunc(npnasset.VendorAsset))).Name(routes.Name("vendor"))
 	r.PathPrefix(routes.Path("assets")).Methods(http.MethodGet).Handler(routes.AddContext(r, ai, http.HandlerFunc(controllers.Static))).Name(routes.Name("assets"))
 
 	npncontroller.RoutesProfile(ai, r)

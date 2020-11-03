@@ -7,5 +7,4 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
 echo "Resetting assets..."
-git checkout ../npn/npnasset/assets/assets.go
 git checkout app/assets/assets.go
