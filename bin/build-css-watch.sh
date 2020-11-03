@@ -9,4 +9,4 @@ cd $dir/..
 
 bin/build-css.sh
 echo "Watching sass compilation for [web/stylesheets/style.scss]..."
-sass --load-path=../npn/npnasset/stylesheets --watch --no-source-map web/stylesheets/style.scss web/assets/vendor/rituals.css
+sass --watch --no-source-map web/stylesheets/style.scss web/assets/vendor/rituals.css
