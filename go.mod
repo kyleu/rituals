@@ -12,17 +12,17 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/graphql-go/graphql v0.7.9
 	github.com/johnfercher/maroto v0.27.0
-	github.com/kyleu/npn/npnconnection v0.0.22
-	github.com/kyleu/npn/npncontroller v0.0.22
-	github.com/kyleu/npn/npncore v0.0.22
-	github.com/kyleu/npn/npndatabase v0.0.22
-	github.com/kyleu/npn/npnexport v0.0.22
-	github.com/kyleu/npn/npngraphql v0.0.22
-	github.com/kyleu/npn/npnservice v0.0.22
-	github.com/kyleu/npn/npnservice-db v0.0.22
-	github.com/kyleu/npn/npntemplate v0.0.22
-	github.com/kyleu/npn/npnuser v0.0.22
-	github.com/kyleu/npn/npnweb v0.0.22
+	github.com/kyleu/npn/npnconnection v0.0.1
+	github.com/kyleu/npn/npncontroller v0.0.1
+	github.com/kyleu/npn/npncore v0.0.1
+	github.com/kyleu/npn/npndatabase v0.0.1
+	github.com/kyleu/npn/npnexport v0.0.1
+	github.com/kyleu/npn/npngraphql v0.0.1
+	github.com/kyleu/npn/npnservice v0.0.1
+	github.com/kyleu/npn/npnservice-db v0.0.1
+	github.com/kyleu/npn/npntemplate v0.0.1
+	github.com/kyleu/npn/npnuser v0.0.1
+	github.com/kyleu/npn/npnweb v0.0.1
 	github.com/microcosm-cc/bluemonday v1.0.4
 	github.com/russross/blackfriday v1.5.2
 	github.com/sagikazarmark/ocmux v0.2.0
