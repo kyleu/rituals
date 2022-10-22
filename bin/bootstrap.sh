@@ -1,14 +1,13 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Downloads and installs the Go libraries and tools needed in other scripts
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/..
+cd $dir
 
-go get -u github.com/cosmtrek/air
-go get -u github.com/pyros2097/go-embed
-go get -u github.com/shiyanhui/hero/hero
-go get -u golang.org/x/tools/cmd/goimports
-go get -u golang.org/x/mobile/cmd/gomobile
-go mod download
+go install github.com/cosmtrek/air@latest
+go install github.com/valyala/quicktemplate/qtc@latest
+go install gotest.tools/gotestsum@latest
+go install mvdan.cc/gofumpt@latest

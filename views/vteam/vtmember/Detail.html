@@ -1,0 +1,69 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/team/tmember"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *tmember.TeamMember
+  Teams team.Teams
+  Users user.Users
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-teamMember"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/team/tmember"><em>Member</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.TeamID) %}{% if x := p.Teams.Get(p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRefIcon("users", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.Users.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="User" href="{%s `/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>{%s p.Model.Name %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="URL in string form">Picture</th>
+          <td><a href="{%s p.Model.Picture %}" target="_blank">{%s p.Model.Picture %}</a></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Role</th>
+          <td>{%s p.Model.Role %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= components.JSONModal("teamMember", "Member JSON", p.Model, 1) %}
+{% endfunc %}

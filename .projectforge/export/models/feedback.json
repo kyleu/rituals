@@ -1,0 +1,100 @@
+{
+  "name": "feedback",
+  "title": "Feedback",
+  "package": "feedback",
+  "description": "TODO",
+  "icon": "star",
+  "group": [
+    "retro"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "retro_id",
+      "type": "uuid"
+    },
+    {
+      "name": "idx",
+      "type": "int"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "category",
+      "type": "string"
+    },
+    {
+      "name": "content",
+      "type": "string"
+    },
+    {
+      "name": "html",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "feedback_retro_fk",
+      "src": [
+        "retro_id"
+      ],
+      "table": "retro",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "feedback_user_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "51000000-0000-0000-0000-000000000000",
+      "50000000-0000-0000-0000-000000000000",
+      0,
+      "90000000-0000-0000-0000-000000000000",
+      "Category",
+      "Content",
+      "HTML",
+      "now()",
+      null
+    ]
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "name": "sprint_permission",
+  "title": "Permission",
+  "package": "spermission",
+  "description": "TODO",
+  "icon": "users",
+  "group": [
+    "sprint"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "sprint_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "k",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "v",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "access",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "sprint_permission_sprint_fk",
+      "src": [
+        "sprint_id"
+      ],
+      "table": "sprint",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "20000000-0000-0000-0000-000000000000",
+      "key",
+      "value",
+      "access",
+      "now()"
+    ]
+  ]
+}

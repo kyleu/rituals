@@ -1,0 +1,41 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/sprint/shistory"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models shistory.SprintHistories, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("shistory", nil, ps.Logger).Sanitize("shistory") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("shistory", "slug", "Slug", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("shistory", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("shistory", "sprint_name", "Sprint Name", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("shistory", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td><a href="/sprint/shistory/{%u model.Slug %}">{%s model.Slug %}</a></td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+        </td>
+        <td>{%s model.SprintName %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="4">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

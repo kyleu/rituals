@@ -1,0 +1,56 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate"
+  "github.com/kyleu/rituals/app/estimate/epermission"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *epermission.EstimatePermission
+  Estimates estimate.Estimates
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-estimatePermission"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/estimate/epermission"><em>Permission</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.EstimateID) %}{% if x := p.Estimates.Get(p.Model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="Estimate" href="{%s `/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">K</th>
+          <td>{%s p.Model.K %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">V</th>
+          <td>{%s p.Model.V %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Access</th>
+          <td>{%s p.Model.Access %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= components.JSONModal("estimatePermission", "Permission JSON", p.Model, 1) %}
+{% endfunc %}

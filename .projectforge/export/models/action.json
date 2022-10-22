@@ -1,0 +1,81 @@
+{
+  "name": "action",
+  "package": "action",
+  "description": "TODO",
+  "icon": "star",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "svc",
+      "type": {
+        "k": "enum",
+        "t": {
+          "ref": "model_service"
+        }
+      }
+    },
+    {
+      "name": "model_id",
+      "type": "uuid"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "act",
+      "type": "string"
+    },
+    {
+      "name": "content",
+      "type": "string"
+    },
+    {
+      "name": "note",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "comment_user_id_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "12000000-0000-0000-0000-000000000000",
+      "sprint",
+      "20000000-0000-0000-0000-000000000000",
+      "90000000-0000-0000-0000-000000000000",
+      "create-stuff",
+      "{}",
+      "A note!",
+      "now()"
+    ]
+  ]
+}

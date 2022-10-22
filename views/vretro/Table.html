@@ -1,0 +1,61 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/retro"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models retro.Retros, users user.Users, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("retro", nil, ps.Logger).Sanitize("retro") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("retro", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "slug", "Slug", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "title", "Title", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "categories", "Categories", "Comma-separated list of values", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td><a href="/retro/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td>{%s model.Slug %}</td>
+        <td><strong>{%s model.Title %}</strong></td>
+        <td>{%v model.Status %}</td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
+          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("users", ps) %}</a>
+        </td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprints.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
+          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+        </td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+          <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        </td>
+        <td>{%= components.DisplayStringArray(model.Categories) %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="10">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

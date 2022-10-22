@@ -1,0 +1,132 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate"
+  "github.com/kyleu/rituals/app/estimate/ehistory"
+  "github.com/kyleu/rituals/app/estimate/emember"
+  "github.com/kyleu/rituals/app/estimate/epermission"
+  "github.com/kyleu/rituals/app/estimate/story"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vestimate/vehistory"
+  "github.com/kyleu/rituals/views/vestimate/vemember"
+  "github.com/kyleu/rituals/views/vestimate/vepermission"
+  "github.com/kyleu/rituals/views/vestimate/vstory"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *estimate.Estimate
+  Users user.Users
+  Teams team.Teams
+  Sprints sprint.Sprints
+  Params filter.ParamSet
+  EstimateHistoriesByEstimateID ehistory.EstimateHistories
+  EstimateMembersByEstimateID emember.EstimateMembers
+  EstimatePermissionsByEstimateID epermission.EstimatePermissions
+  StoriesByEstimateID story.Stories
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-estimate"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/estimate"><em>Estimate</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>{%s p.Model.Slug %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Title</th>
+          <td><strong>{%s p.Model.Title %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>{%v p.Model.Status %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(p.Model.TeamID) %}{% if p.Model.TeamID != nil %}{% if x := p.Teams.Get(*p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
+            <a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRefIcon("users", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(p.Model.SprintID) %}{% if p.Model.SprintID != nil %}{% if x := p.Sprints.Get(*p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
+            <a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Comma-separated list of values">Choices</th>
+          <td>{%= components.DisplayStringArray(p.Model.Choices) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- if len(p.EstimateHistoriesByEstimateID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`clock`, ps) %} Related histories by [estimate id]</h3>
+    <div class="overflow clear">
+      {%= vehistory.Table(p.EstimateHistoriesByEstimateID, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.EstimateMembersByEstimateID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [estimate id]</h3>
+    <div class="overflow clear">
+      {%= vemember.Table(p.EstimateMembersByEstimateID, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.EstimatePermissionsByEstimateID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related permissions by [estimate id]</h3>
+    <div class="overflow clear">
+      {%= vepermission.Table(p.EstimatePermissionsByEstimateID, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.StoriesByEstimateID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related stories by [estimate id]</h3>
+    <div class="overflow clear">
+      {%= vstory.Table(p.StoriesByEstimateID, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%= components.JSONModal("estimate", "Estimate JSON", p.Model, 1) %}
+{% endfunc %}

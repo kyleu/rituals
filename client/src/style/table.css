@@ -1,0 +1,81 @@
+/* Content managed by Project Forge, see [projectforge.md] for details. */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+table tr {
+  margin: 0;
+  padding: 0;
+}
+
+table th label {
+  display: block;
+}
+
+table td, table th {
+  padding: var(--padding-small);
+  border-bottom: var(--border);
+  margin: 0;
+  min-width: 1px;
+}
+
+table tbody tr:last-child td, table tbody tr:last-child th {
+  border-bottom: none;
+}
+
+table thead th {
+  margin: 0;
+  text-align: left;
+  font-weight: bold;
+}
+
+table.expanded {
+  width: 100%;
+}
+
+table .shrink {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.min-200 > tr > th, .min-200 > thead > tr > th, .min-200 > tbody > tr > th, .min-200 > tr > td, .min-200 > thead > tr > td, .min-200 > tbody > tr > td {
+  min-width: 200px;
+}
+
+table .resize {
+  padding: var(--padding-small);
+  resize: horizontal;
+  overflow: hidden;
+  width: 100%;
+}
+
+table .noresize {
+  padding: var(--padding-small);
+}
+
+table.full-width {
+  width: 100%;
+}
+
+@supports (-moz-appearance:none) {
+  table .resize {
+    min-width: 100%;
+  }
+}
+
+table .tfill {
+  width: 99%;
+  border-bottom: none;
+}
+
+table.centered th, table.centered td {
+  text-align: center;
+}
+
+table.centered th.left-align, table.centered td.left-align {
+  text-align: left;
+}

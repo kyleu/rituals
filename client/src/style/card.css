@@ -1,0 +1,15 @@
+/* Content managed by Project Forge, see [projectforge.md] for details. */
+.card {
+  border: var(--border);
+  padding: var(--padding);
+  margin: var(--padding);
+}
+
+.card table {
+  width: 100%;
+}
+
+.card-sticky {
+  position: sticky;
+  left: var(--padding);
+}

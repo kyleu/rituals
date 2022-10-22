@@ -1,6 +1,7 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
-## Builds all the templates using hero, skipping if unchanged
+## Builds all the templates using quicktemplate, skipping if unchanged
 
 set -euo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -9,38 +10,38 @@ cd $dir/..
 FORCE="${1:-}"
 
 function tmpl {
-  echo "updating [$2] templates"
+  echo "updating [$1] templates"
   if test -f "$ftgt"; then
     mv "$ftgt" "$fsrc"
   fi
-  rm -rf $3
-  hero -extensions .html,.sql -source "$2" -pkgname $1 -dest $3
+  qtc -ext $2 -dir "$1" 2> >(grep -v Compiling)
 }
 
 function check {
-  fsrc="tmp/$1.hashcode"
-  ftgt="tmp/$1.hashcode.tmp"
+  if [[ -d "$1" ]]; then
+    fsrc="tmp/$1.hashcode"
+    ftgt="tmp/$1.hashcode.tmp"
 
-  if [ ! -d "$3" ]; then
-    rm -f "$fsrc"
-  fi
+    mkdir -p tmp/
 
-  mkdir -p tmp/
-
-  find "$2" -type f -exec md5sum {} \; | md5sum > "$ftgt"
-
-  if cmp -s "$fsrc" "$ftgt"; then
-    if [ "$FORCE" = "force" ]; then
-      tmpl $1 $2 $3
-    else
-      rm "$ftgt"
+    m="md5sum"
+    if ! [ -x "$(command -v $m)" ]; then
+      m="md5"
     fi
-  else
-    tmpl $1 $2 $3
+
+    find "$1" -type f | grep "\.$2$" | xargs $m > "$ftgt"
+
+    if cmp -s "$fsrc" "$ftgt"; then
+      if [ "$FORCE" = "force" ]; then
+        tmpl $1 $2
+      else
+        rm "$ftgt"
+      fi
+    else
+      tmpl $1 $2
+    fi
   fi
 }
 
-check "query" "query/sql" "gen/query"
-check "transcripttemplates" "web/transcript" "gen/transcripttemplates"
-check "templates" "web/templates" "gen/templates"
-check "admintemplates" "web/admin" "gen/admintemplates"
+check "queries" "sql"
+check "views" "html"

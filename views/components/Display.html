@@ -1,0 +1,99 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "fmt"
+  "time"
+
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/util"
+) %}
+
+{% func DisplayTimestamp(value *time.Time) %}{% stripspace %}
+  {%s util.TimeToFull(value) %}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayUUID(value *uuid.UUID) %}{% stripspace %}
+  {%- if value != nil -%}
+  {%s value.String() %}
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayStringArray(value []string) %}{% stripspace %}
+  {% if len(value) == 0 %}
+  <em>empty</em>
+  {% endif %}
+  {% code
+    max := 3
+    var extra int
+    if len(value) > max {
+      extra = len(value) - max
+      value = value[:max]
+    }
+  %}
+  {%- for idx, v := range value -%}
+  {% if idx > 0 %},{% space %}{% endif %}
+  {%s v %}
+  {% endfor %}
+  {% if extra > 0 %}, <em>and{% space %}{%d extra %}{% space %}more...</em>{% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayDiffs(value util.Diffs) %}{% stripspace %}
+  {%- if len(value) == 0 -%}
+  <em>no changes</em>
+  {%- else -%}
+  <table>
+    <tbody>
+      {%- for _, d := range value -%}
+      <tr>
+        <td><code>{%s d.Path %}</code></td>
+        <td><code class="error">{%s d.Old %}</code></td>
+        <td>→</td>
+        <td><code class="success">{%s d.New %}</code></td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}
+
+{% func DisplayMaps(maps []util.ValueMap, params *filter.Params, preserveWhitespace bool, ps *cutil.PageState) %}{% stripspace %}
+  {%- if len(maps) == 0 -%}
+  <em>no results</em>
+  {%- else -%}
+  <table>
+    <thead>
+    <tr>
+      {%- for _, k := range maps[0].Keys() -%}
+      {%= TableHeader("map", k, k, params, "", ps.URI, "", true, "", false, ps) %}
+      {%- endfor -%}
+    </tr>
+    </thead>
+    <tbody>
+      {%- for _, m := range maps -%}
+      <tr>
+        {%- for _, k := range m.Keys() -%}
+        {%- code
+          res := ""
+          switch t := m[k].(type) {
+          case string:
+            res = t
+          case []byte:
+            res = string(t)
+          default:
+            res = fmt.Sprint(m[k])
+          }
+        -%}
+        {%- if preserveWhitespace -%}
+        <td style="white-space: pre;">{%s res %}</td>
+        {%- else -%}
+        <td>{%s res %}</td>
+        {%- endif -%}
+        {%- endfor -%}
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+  {%- endif -%}
+{% endstripspace %}{% endfunc %}

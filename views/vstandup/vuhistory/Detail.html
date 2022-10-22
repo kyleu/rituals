@@ -1,0 +1,52 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/standup"
+  "github.com/kyleu/rituals/app/standup/uhistory"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *uhistory.StandupHistory
+  Standups standup.Standups
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-standupHistory"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`clock`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/standup/uhistory"><em>History</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>{%s p.Model.Slug %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.StandupID) %}{% if x := p.Standups.Get(p.Model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="Standup" href="{%s `/standup`+`/`+p.Model.StandupID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Standup Name</th>
+          <td>{%s p.Model.StandupName %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= components.JSONModal("standupHistory", "History JSON", p.Model, 1) %}
+{% endfunc %}

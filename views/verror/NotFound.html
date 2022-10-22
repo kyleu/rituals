@@ -1,0 +1,20 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type NotFound struct {
+  layout.Basic
+  Path string
+} %}
+
+{% func (p *NotFound) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>404</h3>
+    <em>Page not found</em>
+    <p>We can't find anything at <code>{%s p.Path %}</code></p>
+    <p>Sorry about that, maybe try the <a href="/">home page</a>?</p>
+  </div>
+{% endfunc %}

@@ -1,0 +1,81 @@
+{
+  "name": "vote",
+  "title": "Vote",
+  "package": "vote",
+  "description": "TODO",
+  "icon": "star",
+  "group": [
+    "estimate",
+    "story"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "story_id",
+      "type": "uuid",
+      "pk": true
+    },
+    {
+      "name": "user_id",
+      "type": "uuid",
+      "pk": true
+    },
+    {
+      "name": "choice",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "vote_story_fk",
+      "src": [
+        "story_id"
+      ],
+      "table": "story",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "vote_user_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "31000000-0000-0000-0000-000000000000",
+      "90000000-0000-0000-0000-000000000000",
+      "100",
+      "now()",
+      null
+    ]
+  ]
+}

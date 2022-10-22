@@ -1,0 +1,118 @@
+{
+  "name": "standup",
+  "package": "standup",
+  "description": "TODO",
+  "icon": "star",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "slug",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "status",
+      "type": {
+        "k": "enum",
+        "t": {
+          "ref": "session_status"
+        }
+      }
+    },
+    {
+      "name": "team_id",
+      "type": "uuid",
+      "nullable": true
+    },
+    {
+      "name": "sprint_id",
+      "type": "uuid",
+      "nullable": true
+    },
+    {
+      "name": "owner",
+      "type": "uuid"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "standup_owner_fk",
+      "src": [
+        "owner"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "standup_team_fk",
+      "src": [
+        "team_id"
+      ],
+      "table": "team",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "standup_sprint_fk",
+      "src": [
+        "sprint_id"
+      ],
+      "table": "sprint",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "40000000-0000-0000-0000-000000000000",
+      "standup-a",
+      "Standup A",
+      "new",
+      "10000000-0000-0000-0000-000000000000",
+      "20000000-0000-0000-0000-000000000000",
+      "90000000-0000-0000-0000-000000000000",
+      "now()",
+      null
+    ]
+  ]
+}

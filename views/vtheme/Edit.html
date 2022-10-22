@@ -1,0 +1,34 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/theme"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Edit struct {
+  layout.Basic
+  Theme *theme.Theme
+} %}
+
+{% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  <form action="" method="post">
+    <div class="card">
+      <div class="right"><a href="#modal-theme"><button type="button">JSON</button></a></div>
+      <h3>{% if p.Theme.Key == theme.KeyNew %}New Theme{% else %}Theme Edit{% endif %}</h3>
+      <table class="mt expanded">
+        <tbody>
+          {%= components.TableInput("key", "Key", p.Theme.Key, 5) %}
+        </tbody>
+      </table>
+    </div>
+    {%= Editor(util.AppName, p.Theme, as, ps) %}
+    <div class="card">
+      <button type="submit">Save All Changes</button>
+      <a href="/theme/{%u p.Theme.Key %}"><button type="button">Reset</button></a>
+    </div>
+  </form>
+  {%= components.JSONModal("theme", "Theme JSON", p.Theme, 1) %}
+{% endfunc %}

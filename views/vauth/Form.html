@@ -1,0 +1,34 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/lib/auth"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
+) %}
+
+{% func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) %}
+  {%- if len(prvs) > 0 -%}
+  <div class="card">
+    <h3>Sign in to {%s util.AppName %}</h3>
+    <ul class="mt">
+      {%- for _, prv := range prvs -%}
+      <li>
+        {%- if referrer == "" -%}
+        <a href="/auth/{%u prv.ID %}">{%s prv.Title %}</a>
+        {%- else -%}
+        <a href="/auth/{%u prv.ID %}?refer={%u referrer %}">{%s prv.Title %}</a>
+        {%- endif -%}
+        {%- code as := ps.Accounts.GetByProvider(prv.ID) -%}
+        {%- if len(as) > 0 -%}
+        <ul>
+        {%- for _, a := range as -%}
+          <li>{%s a.Email %} (<a href="/auth/logout/{%u a.Provider %}?email={%u a.Email %}">sign out</a>)</li>
+        {%- endfor -%}
+        </ul>
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {%- endif -%}
+{% endfunc %}

@@ -1,0 +1,64 @@
+{
+  "name": "user",
+  "package": "user",
+  "description": "TODO",
+  "icon": "profile",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "role",
+      "type": "string"
+    },
+    {
+      "name": "picture",
+      "type": "string",
+      "format": "url"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "90000000-0000-0000-0000-000000000000",
+      "Kyle",
+      "admin",
+      "https://google.com",
+      "now()",
+      null
+    ]
+  ]
+}

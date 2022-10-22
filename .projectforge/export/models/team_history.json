@@ -1,0 +1,62 @@
+{
+  "name": "team_history",
+  "title": "History",
+  "package": "thistory",
+  "description": "TODO",
+  "icon": "clock",
+  "group": [
+    "team"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "slug",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "team_id",
+      "type": "uuid",
+      "search": true
+    },
+    {
+      "name": "team_name",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "team_history_team_fk",
+      "src": [
+        "team_id"
+      ],
+      "table": "team",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "old-name",
+      "10000000-0000-0000-0000-000000000000",
+      "Old Name",
+      "now()"
+    ]
+  ]
+}

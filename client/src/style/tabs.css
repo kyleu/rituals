@@ -1,0 +1,42 @@
+/* Content managed by Project Forge, see [projectforge.md] for details. */
+.tabs {
+  margin-top: var(--padding);
+  margin-bottom: var(--padding);
+  display: flex;
+  flex-wrap: wrap;
+  background-color: var(--color-background-muted);
+  border: var(--border);
+  padding: 0;
+}
+
+.tabs.padded {
+  margin-left: var(--padding);
+  margin-right: var(--padding);
+}
+
+.tabs .input {
+  position: absolute;
+  opacity: 0;
+}
+
+.tabs .label {
+  width: auto;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.tabs .input:checked + .label {
+  background-color: var(--color-background);
+}
+
+.tabs .panel {
+  padding: var(--padding);
+  background-color: var(--color-background);
+  width: 100%;
+  display: none;
+  order: 99;
+}
+
+.tabs .input:checked + .label + .panel {
+  display: block;
+}

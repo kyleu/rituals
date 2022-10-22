@@ -1,0 +1,101 @@
+{
+  "name": "sprint_member",
+  "title": "Member",
+  "package": "smember",
+  "description": "TODO",
+  "icon": "users",
+  "group": [
+    "sprint"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "sprint_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "user_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "picture",
+      "type": "string",
+      "search": true,
+      "format": "url"
+    },
+    {
+      "name": "role",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "sprint_member_sprint_fk",
+      "src": [
+        "sprint_id"
+      ],
+      "table": "sprint",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "sprint_member_user_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "20000000-0000-0000-0000-000000000000",
+      "90000000-0000-0000-0000-000000000000",
+      "Member",
+      "https://google.com",
+      "owner",
+      "now()",
+      null
+    ]
+  ]
+}

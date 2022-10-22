@@ -1,0 +1,84 @@
+// Content managed by Project Forge, see [projectforge.md] for details.
+package cutil
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/alecthomas/chroma"
+	"github.com/alecthomas/chroma/formatters/html"
+	"github.com/alecthomas/chroma/lexers"
+	"github.com/alecthomas/chroma/styles"
+	"github.com/pkg/errors"
+
+	"github.com/kyleu/rituals/app/util"
+)
+
+var (
+	lineNums   *html.Formatter
+	noLineNums *html.Formatter
+)
+
+func FormatJSON(v any) (string, error) {
+	return FormatLang(util.ToJSON(v), "json")
+}
+
+func FormatLang(content string, lang string) (string, error) {
+	l := lexers.Get(lang)
+	return FormatString(content, l)
+}
+
+func FormatLangIgnoreErrors(content string, lang string) string {
+	ret, err := FormatLang(content, lang)
+	if err != nil {
+		return fmt.Sprintf("encoding error: %s\n%s", err.Error(), content)
+	}
+	return ret
+}
+
+func FormatFilename(content string, filename string) (string, error) {
+	l := lexers.Match(filename)
+	if l == nil {
+		l = lexers.Fallback
+	}
+	return FormatString(content, l)
+}
+
+func FormatString(content string, l chroma.Lexer) (string, error) {
+	if l == nil {
+		return "", errors.New("no lexer available for this content")
+	}
+	s := styles.MonokaiLight
+	var f *html.Formatter
+	if strings.Contains(content, "\n") {
+		if lineNums == nil {
+			lineNums = html.New(html.WithClasses(true), html.WithLineNumbers(true), html.LineNumbersInTable(true))
+		}
+		f = lineNums
+	} else {
+		if noLineNums == nil {
+			noLineNums = html.New(html.WithClasses(true))
+		}
+		f = noLineNums
+	}
+	i, err := l.Tokenise(nil, content)
+	if err != nil {
+		return "", errors.Wrap(err, "can't tokenize")
+	}
+	x := &strings.Builder{}
+	err = f.Format(x, s, i)
+	if err != nil {
+		return "", errors.Wrap(err, "can't format")
+	}
+
+	ret := x.String()
+	ret = strings.ReplaceAll(ret, "\n</span>", "<br /></span>")
+	ret = strings.ReplaceAll(ret, "</span>\n", "</span><br />")
+	ret = strings.ReplaceAll(ret, "\n<span", "<br /><span")
+	ret = strings.ReplaceAll(ret, ">\n", ">")
+	if l.Config().Name == "SQL" {
+		ret = strings.ReplaceAll(ret, `<span class="err">$</span>`, `<span class="mi">$</span>`)
+	}
+	ret = strings.Replace(ret, `<td class="lntd"><pre tabindex="0" class="chroma"><span class="lnt">1<br /></span></pre></td>`, "", 1)
+	return ret, nil
+}

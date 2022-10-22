@@ -1,0 +1,26 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/user"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Unauthorized struct {
+  layout.Basic
+  Path string
+  Message string
+  Accounts user.Accounts
+} %}
+
+{% func (p *Unauthorized) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Unauthorized</h3>
+    <em>{%s p.Message %}</em>
+    <p>You're not authorized to view <code>{%s p.Path %}</code></p>
+    {%- if len(p.Accounts) == 0 -%}
+    <p>Sorry about that, maybe try <a href="{%s as.Auth.LoginURL() %}">logging in</a>?</p>
+    {%- endif -%}
+  </div>
+{% endfunc %}
+

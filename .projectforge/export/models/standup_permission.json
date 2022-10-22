@@ -1,0 +1,70 @@
+{
+  "name": "standup_permission",
+  "title": "Permission",
+  "package": "upermission",
+  "description": "TODO",
+  "icon": "users",
+  "group": [
+    "standup"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "standup_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "k",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "v",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "access",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "standup_permission_standup_fk",
+      "src": [
+        "standup_id"
+      ],
+      "table": "standup",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "40000000-0000-0000-0000-000000000000",
+      "key",
+      "value",
+      "access",
+      "now()"
+    ]
+  ]
+}

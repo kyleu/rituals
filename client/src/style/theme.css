@@ -1,0 +1,91 @@
+/* Content managed by Project Forge, see [projectforge.md] for details. */
+.theme-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.theme-container .theme-item {
+  margin: 0 var(--padding);
+}
+
+.mockup {
+  text-align: left;
+  margin: auto;
+  width: 166px;
+  height: 126px;
+  font-size: 80%;
+}
+
+.mockup .mock-link:hover {
+  text-decoration: underline;
+}
+
+.mockup .mock-nav {
+  height: 18px;
+}
+
+.mockup .mock-nav .icon {
+  margin-left: 2px;
+}
+
+.mockup .mock-muted {
+  margin: 2px 6px;
+  padding: 2px;
+}
+
+.mockup .mock-menu {
+  float: left;
+  width: 30px;
+  height: 102px;
+}
+.mockup .mock-menu .mock-link, .mockup .mock-menu .mock-link-selected {
+  padding-left: 4px;
+}
+
+.mockup .mock-main {
+  padding: 4px 4px 4px 30px;
+  height: 102px;
+}
+.mockup .mock-main ul {
+  margin-top: var(--padding-small);
+}
+
+.mockup .mock-list {
+  margin-left: 2px;
+  padding-left: 4px;
+}
+
+.icon-container {
+  margin: var(--padding);
+  width: 80px;
+  text-align: center;
+}
+.icon-container svg {
+  width: 64px;
+  height: 64px
+}
+
+.choice label {
+  display: block;
+  float: left;
+  margin-right: var(--padding);
+}
+
+.choice input {
+  display: none;
+}
+
+.choice .title {
+  text-align: center;
+  cursor: pointer;
+}
+
+.choice input ~ * {
+  border: 3px solid transparent;
+}
+.choice input:checked ~ * {
+  border: 3px solid var(--color-background-muted);
+}
+.choice input:checked ~ .title {
+  background-color: var(--color-background-muted);
+}

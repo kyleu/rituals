@@ -1,0 +1,37 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "strings"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/lib/database/migrate"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Migrations struct {
+  layout.Basic
+  Available migrate.MigrationFiles
+  Applied migrate.Migrations
+} %}
+
+{% func (p *Migrations) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Database Migrations</h3>
+  </div>
+  {%- for idx, mf := range p.Available -%}
+  <div class="card">
+    <div class="right">
+      {%- code curr := p.Applied.GetByIndex(idx+1) -%}
+      {%- if curr == nil -%}
+      <em>Not Applied</em>
+      {%- else -%}
+      Applied {%= components.DisplayTimestamp(&curr.Created) %}
+      {%- endif -%}
+    </div>
+    <h3>{%s mf.Title %}</h3>
+    {%s= cutil.FormatLangIgnoreErrors(strings.TrimSpace(mf.Content), "sql") %}
+  </div>
+ {%- endfor -%}
+{% endfunc %}
+

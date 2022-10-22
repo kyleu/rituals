@@ -1,0 +1,70 @@
+{
+  "name": "retro_permission",
+  "title": "Permission",
+  "package": "rpermission",
+  "description": "TODO",
+  "icon": "users",
+  "group": [
+    "retro"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "retro_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "k",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "v",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "access",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "retro_permission_retro_fk",
+      "src": [
+        "retro_id"
+      ],
+      "table": "retro",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "50000000-0000-0000-0000-000000000000",
+      "key",
+      "value",
+      "access",
+      "now()"
+    ]
+  ]
+}

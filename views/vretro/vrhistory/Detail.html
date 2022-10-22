@@ -1,0 +1,52 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/retro"
+  "github.com/kyleu/rituals/app/retro/rhistory"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *rhistory.RetroHistory
+  Retros retro.Retros
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-retroHistory"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`clock`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/retro/rhistory"><em>History</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>{%s p.Model.Slug %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.RetroID) %}{% if x := p.Retros.Get(p.Model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="Retro" href="{%s `/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Retro Name</th>
+          <td>{%s p.Model.RetroName %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= components.JSONModal("retroHistory", "History JSON", p.Model, 1) %}
+{% endfunc %}

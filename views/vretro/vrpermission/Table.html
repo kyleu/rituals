@@ -1,0 +1,43 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/retro"
+  "github.com/kyleu/rituals/app/retro/rpermission"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models rpermission.RetroPermissions, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("rpermission", "retro_id", "Retro ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("rpermission", "k", "K", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("rpermission", "v", "V", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("rpermission", "access", "Access", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("rpermission", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td>
+          <div class="icon"><a href="/retro/rpermission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retros.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <a title="Retro" href="{%s `/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+        </td>
+        <td><a href="/retro/rpermission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
+        <td><a href="/retro/rpermission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
+        <td>{%s model.Access %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="5">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

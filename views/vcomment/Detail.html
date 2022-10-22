@@ -1,0 +1,72 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/comment"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *comment.Comment
+  Users user.Users
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-comment"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/comment"><em>Comment</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [team, sprint, estimate, standup, retro, story, feedback, report]">Svc</th>
+          <td>{%v p.Model.Svc %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Model ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.ModelID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Target Type</th>
+          <td>{%s p.Model.TargetType %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Target ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.TargetID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.Users.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="User" href="{%s `/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Content</th>
+          <td>{%s p.Model.Content %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">HTML</th>
+          <td>{%s p.Model.HTML %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= components.JSONModal("comment", "Comment JSON", p.Model, 1) %}
+{% endfunc %}

@@ -1,9 +1,0 @@
-<%: func SprintCard(sprints sprint.Sessions, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Sprints</h3>
-  <% if len(sprints) == 0 { %>
-    <p>No sprints available</p>
-  <% } else { %>
-    <% SprintTable(sprints, params.Get(util.SvcSprint.Key, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

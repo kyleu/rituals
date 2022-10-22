@@ -1,0 +1,29 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/theme"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type List struct {
+  layout.Basic
+  Themes theme.Themes
+} %}
+
+{% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right"><a href="/theme/new" title="add new theme">{%= components.SVGRefIcon(`plus`, ps) %}</a></div>
+    <h3>Themes</h3>
+    <div class="theme-container mt">
+      {%- for _, t := range p.Themes -%}
+      <div class="theme-item">
+        <a href="/theme/{%u t.Key %}">
+          {%= MockupTheme(t, true, 5, ps) %}
+        </a>
+      </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{% endfunc %}

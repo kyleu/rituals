@@ -1,0 +1,65 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/user"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vauth"
+) %}
+
+{% code type Settings struct {
+  layout.Basic
+  Perms user.Permissions
+} %}
+
+{% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if util.AppSource != "" -%}
+    <div class="right"><a href="{%s util.AppSource %}"><button>Github</button></a></div>
+    {%- endif -%}
+    <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGRefIcon(`cog`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
+    {%- if util.AppLegal != "" -%}
+    <div class="mt">{%s= util.AppLegal %}</div>
+    {%- endif -%}
+    {%- if util.AppURL != "" -%}
+    <p><a href="{%s= util.AppURL %}">{%s= util.AppURL %}</a></p>
+    {%- endif -%}
+  </div>
+
+  <div class="flex-wrap" style="align-items: stretch;">
+    <div class="card" style="flex-grow: 1;">
+      <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
+      <ul class="mt">
+        <li><a href="/admin/modules">View Go modules</a></li>
+        <li><a href="/admin/gc">Collect garbage</a></li>
+        <li><a href="/admin/migrations">View database migrations</a></li>
+        <li><a href="/theme">Edit Themes</a></li>
+      </ul>
+    </div>
+    <div class="card" style="flex-grow: 1;">
+      <h3>{%= components.SVGRefIcon(`bolt`, ps) %}HTTP Methods</h3>
+      <ul class="mt">
+        <li><a href="/admin/sitemap">Sitemap</a></li>
+        <li><a href="/admin/routes">View HTTP routes</a></li>
+        <li><a href="/admin/session">Parse and display session</a></li>
+        <li><a href="/admin/request">Debug HTTP request</a></li>
+        <li><a href="/admin/sockets">Active WebSockets</a></li>
+      </ul>
+    </div>
+    <div class="card" style="flex-grow: 1;">
+      <h3>{%= components.SVGRefIcon(`cog`, ps) %}App Profiling</h3>
+      <ul class="mt">
+        <li><a href="/admin/cpu/start">Start CPU profile</a></li>
+        <li><a href="/admin/cpu/stop">Stop CPU profile</a></li>
+        <li><a href="/admin/heap">Write memory dump</a></li>
+        <li><a href="/admin/memusage">Memory Usage</a></li>
+      </ul>
+    </div>
+  </div>
+
+  {%= vauth.Authentication(as, ps) %}
+
+  {%= vauth.Permissions(p.Perms, as) %}
+{% endfunc %}

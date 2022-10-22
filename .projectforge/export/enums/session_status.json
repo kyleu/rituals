@@ -1,0 +1,12 @@
+{
+  "name": "session_status",
+  "package": "enum",
+  "description": "The available statuses available for sessions",
+  "icon": "star",
+  "values": [
+    "new",
+    "active",
+    "complete",
+    "deleted"
+  ]
+}

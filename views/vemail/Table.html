@@ -1,0 +1,51 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/email"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("email", nil, ps.Logger).Sanitize("email") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("email", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "recipients", "Recipients", "Comma-separated list of values", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "subject", "Subject", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "data", "Data", "JSON object", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "plain", "Plain", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "html", "HTML", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "status", "Status", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("email", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td><a href="/email/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td>{%= components.DisplayStringArray(model.Recipients) %}</td>
+        <td>{%s model.Subject %}</td>
+        <td>{%= components.JSON(model.Data) %}</td>
+        <td>{%s model.Plain %}</td>
+        <td>{%s model.HTML %}</td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        </td>
+        <td>{%s model.Status %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="9">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

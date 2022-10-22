@@ -1,10 +1,9 @@
+# $PF_IGNORE$
+/.env
 /.vscode
 /.idea
 /.scannerwork
 /build
-/out
-/project
 /tmp
-/vendor
-/gen
-node_modules
+
+/client/node_modules

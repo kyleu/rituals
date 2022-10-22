@@ -1,9 +1,0 @@
-<%: func MemberCard(members member.Entries, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Members</h3>
-  <% if len(members) == 0 { %>
-    <p>No members available</p>
-  <% } else { %>
-    <% MemberTable(members, params.Get(npncore.KeyMember, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

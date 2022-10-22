@@ -1,0 +1,41 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/team/thistory"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models thistory.TeamHistories, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("thistory", nil, ps.Logger).Sanitize("thistory") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("thistory", "slug", "Slug", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("thistory", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("thistory", "team_name", "Team Name", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("thistory", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td><a href="/team/thistory/{%u model.Slug %}">{%s model.Slug %}</a></td>
+        <td>
+          <div class="icon">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("users", ps) %}</a>
+        </td>
+        <td>{%s model.TeamName %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="4">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

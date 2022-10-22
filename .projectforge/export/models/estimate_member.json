@@ -1,0 +1,101 @@
+{
+  "name": "estimate_member",
+  "title": "Member",
+  "package": "emember",
+  "description": "TODO",
+  "icon": "users",
+  "group": [
+    "estimate"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "estimate_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "user_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "picture",
+      "type": "string",
+      "search": true,
+      "format": "url"
+    },
+    {
+      "name": "role",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "estimate_member_estimate_fk",
+      "src": [
+        "estimate_id"
+      ],
+      "table": "estimate",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "estimate_member_user_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "30000000-0000-0000-0000-000000000000",
+      "90000000-0000-0000-0000-000000000000",
+      "Member",
+      "https://google.com",
+      "owner",
+      "now()",
+      null
+    ]
+  ]
+}

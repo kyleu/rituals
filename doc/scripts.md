@@ -1,23 +1,22 @@
+<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Scripts
 
-There are scripts in the `./bin` directory to help you build, run, test, and publish rituals.dev
-
-They're designed for macOS, but should work on Linux or Windows (via WSL).
+There's a variety of shell scripts available in `./bin`. Here's a few of them:
 
 - `bootstrap.sh`: Downloads and installs the Go libraries and tools needed in other scripts
-- `build-client.sh`: Uses `scss` to compile the TypeScript files in `./client`
-- `build-client-watch.sh`: Builds the TypeScript resources using `build-client`, then watches for changes in `./client`
-- `build-css.sh`: Uses `scss` to compile the stylesheets in `./web/stylesheets`
-- `build-css-watch.sh`: Builds the css resources using `build-css`, then watches for changes in `./web/stylesheets`
-- `build-docker.sh`: Makes a release build, builds a docker image, then exports and zips the output
-- `build-linux.sh`: Makes a release build for 64-bit Linux
-- `build-windows.bat`: Makes a release build, builds a docker image, then exports and zips the output
-- `check.sh`: Runs code statistics, checks for outdated dependencies, then runs various linters
-- `dev.sh`: Watches the project directories, and runs the main application, restarting when changes are detected
-- `doc.sh`: Runs godoc for all projects, linking between projects and using custom logos and styling
-- `format.sh`: Runs `gofmt` on all projects
-- `package.sh`: Runs the code formatter, checks all the projects, then builds binaries for Linux, macOS, and Windows
-- `run-docker.sh`: Runs the Docker image produced by `build-docker`, exposing an HTTP port
-- `run-release.sh`: Builds the project in release mode and runs it
-- `templates.sh`: Builds hero templates, writing output to `./gen`
-- `workspace.sh`: Opens all build in separate panes (iTerm2 only)
+- `build/build.sh`: Builds the app (or just use make build)
+- `build/client.sh`: Uses `esbuild` to compile the scripts in `client`
+- `build/client-watch.sh`: Builds the TypeScript resources, then watches for changes via `watchexec`
+- `build/release.sh`: Runs `goreleaser`
+- `build/release-test.sh`: Runs `goreleaser` in test mode
+- `check.sh`: Runs code statistics, checks for outdated dependencies, then runs linters
+- `dev.sh`: Starts the app, reloading on changes
+- `format.sh`: Formatting code from all projects
+- `tag.sh`: Tags the git repo using the first argument or the incremented minor version
+- `templates.sh`: Builds all the templates using quicktemplate, skipping if unchanged
+- `test.sh`: Runs all the tests
+- `util/view-binary-size.sh`: Visualizes space usage for the release binary
+- `util/view-cpu-profile.sh`: Starts a `pprof` server using the (previously-recorded) CPU profile at `./tmp/cpu.pprof`
+- `util/view-go-deps.sh`: Uses `gomod` to visualize the module graph
+- `util/view-mem-profile.sh`: Starts a `pprof` server using the (previously-recorded) heap dump at `./tmp/mem.pprof`
+- `workspace.sh`: Loads `dev.sh` and `client-watch.sh` in a split window. Requires iTerm

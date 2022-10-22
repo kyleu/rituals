@@ -1,4 +1,5 @@
 #!/bin/bash
+# Content managed by Project Forge, see [projectforge.md] for details.
 
 ## Formatting code from all projects
 
@@ -7,6 +8,4 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir/..
 
 echo "=== formatting ==="
-gofmt -w .
-echo "=== organizing imports ==="
-goimports -w .
+gofumpt -w $(find . -type f -name "*.go" | grep -v .html.go | grep -v .sql.go)

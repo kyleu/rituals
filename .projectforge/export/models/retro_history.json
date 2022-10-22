@@ -1,0 +1,62 @@
+{
+  "name": "retro_history",
+  "title": "History",
+  "package": "rhistory",
+  "description": "TODO",
+  "icon": "clock",
+  "group": [
+    "retro"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "slug",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "retro_id",
+      "type": "uuid",
+      "search": true
+    },
+    {
+      "name": "retro_name",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "retro_history_retro_fk",
+      "src": [
+        "retro_id"
+      ],
+      "table": "retro",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "old-name",
+      "50000000-0000-0000-0000-000000000000",
+      "Old Name",
+      "now()"
+    ]
+  ]
+}

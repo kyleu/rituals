@@ -1,0 +1,51 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate"
+  "github.com/kyleu/rituals/app/estimate/emember"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models emember.EstimateMembers, estimates estimate.Estimates, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("emember", nil, ps.Logger).Sanitize("emember") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("emember", "estimate_id", "Estimate ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "name", "Name", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "role", "Role", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td>
+          <div class="icon"><a href="/estimate/emember/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+        </td>
+        <td>
+          <div class="icon"><a href="/estimate/emember/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        </td>
+        <td><strong>{%s model.Name %}</strong></td>
+        <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>
+        <td>{%s model.Role %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

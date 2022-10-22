@@ -1,0 +1,25 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
+) %}
+
+{% func Head(as *app.State, ps *cutil.PageState) %}
+  {%- code thm := as.Themes.Get(ps.Profile.Theme, ps.Logger) -%}
+  <meta charset="UTF-8">
+  <title>{%s ps.TitleString() %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  {% if ps.Description != "" %}<meta property="description" content="{%s ps.Description %}">
+  {% endif %}<meta property="og:title" content="{%s ps.TitleString() %}">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/{%u util.AppKey %}.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="{%s thm.Light.NavBackground %}" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="{%s thm.Dark.NavBackground %}" media="(prefers-color-scheme: dark)">{%s= ps.HeaderContent %}
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <style>
+    {%s= thm.CSS(2) %}  </style>
+  <link rel="stylesheet" media="screen" href="/assets/client.css">
+  <script type="text/javascript" src="/assets/client.js"></script>
+{% endfunc %}

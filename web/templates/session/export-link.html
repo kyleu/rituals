@@ -1,3 +1,0 @@
-<%: func ExportLink(svc util.Service, slug string, fmt transcript.Format, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<li><a class="theme" href="<%= ctx.Route(svc.Key + `.export`, `key`, slug, `fmt`, fmt.Key) %>" onclick="UIkit.drop('#export-drop').hide();"><span class="uk-margin-small-right" data-uk-icon="<%= fmt.Icon %>"></span> <%= fmt.Title %></a></li>
-

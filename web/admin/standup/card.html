@@ -1,9 +1,0 @@
-<%: func StandupCard(standups standup.Sessions, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Standups</h3>
-  <% if len(standups) == 0 { %>
-    <p>No standups available</p>
-  <% } else { %>
-    <% StandupTable(standups, params.Get(util.SvcStandup.Key, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

@@ -1,0 +1,16 @@
+{
+  "name": "model_service",
+  "package": "enum",
+  "description": "The services available in the system",
+  "icon": "star",
+  "values": [
+    "team",
+    "sprint",
+    "estimate",
+    "standup",
+    "retro",
+    "story",
+    "feedback",
+    "report"
+  ]
+}

@@ -1,0 +1,25 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/vutil"
+) %}
+
+{% func IconPicker(selected string, name string, ps *cutil.PageState, indent int) %}{% stripspace %}
+  {%= vutil.Indent(true, indent) %}
+  <div class="choice">
+    {% for _, k := range util.SVGIconKeys %}
+      {%= vutil.Indent(true, indent + 1) %}
+      <label title="{%s k %}">
+        {% if k == selected %}
+          <input type="radio" name="{%s name %}" value="{%s k %}" checked="checked" />
+        {% else %}
+          <input type="radio" name="{%s name %}" value="{%s k %}" />
+        {% endif %}
+        {% space %}
+        {%= SVGRef(k, 48, 48, "", ps) %}
+      </label>
+    {% endfor %}
+  {%= vutil.Indent(true, indent) %}
+  </div>
+{% endstripspace %}{% endfunc %}

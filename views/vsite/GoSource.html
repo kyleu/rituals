@@ -1,0 +1,20 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type GoSource struct { layout.Basic } %}
+
+{% func (p *GoSource) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %} {%s util.AppName %}</h3>
+    <pre>go install github.com/kyleu/rituals@latest</pre>
+    <p>
+      <a href="https://github.com/kyleu/rituals"><button>Source Code</button></a>
+    </p>
+  </div>
+{% endfunc %}

@@ -1,9 +1,0 @@
-<%: func EstimateCard(estimates estimate.Sessions, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Estimates</h3>
-  <% if len(estimates) == 0 { %>
-    <p>No estimates available</p>
-  <% } else { %>
-    <% EstimateTable(estimates, params.Get(util.SvcEstimate.Key, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

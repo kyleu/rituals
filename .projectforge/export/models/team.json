@@ -1,0 +1,86 @@
+{
+  "name": "team",
+  "package": "team",
+  "description": "TODO",
+  "icon": "users",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "slug",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "status",
+      "type": {
+        "k": "enum",
+        "t": {
+          "ref": "session_status"
+        }
+      }
+    },
+    {
+      "name": "owner",
+      "type": "uuid"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "team_owner_fk",
+      "src": [
+        "owner"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "10000000-0000-0000-0000-000000000000",
+      "team-a",
+      "Team A",
+      "new",
+      "90000000-0000-0000-0000-000000000000",
+      "now()",
+      null
+    ]
+  ]
+}

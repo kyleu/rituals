@@ -1,0 +1,60 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "fmt"
+
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/theme"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/vutil"
+) %}
+
+{% func MockupTheme(t *theme.Theme, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+  <div class="title small-text">{%s t.Key %}</div>
+  {%= MockupColors(util.AppName, "light", t.Light, pointer, indent, ps) %}
+  {%= MockupColors(util.AppName, "dark", t.Dark, pointer, indent, ps) %}
+{% endstripspace %}{% endfunc %}
+
+{% func MockupColors(navTitle string, mode string, c *theme.Colors, pointer bool, indent int, ps *cutil.PageState) %}{% stripspace %}
+  {% code
+    navStyle := fmt.Sprintf("color: %s; background-color: %s;", c.NavForeground, c.NavBackground)
+
+    menuStyle := fmt.Sprintf("color: %s; background-color: %s;", c.MenuForeground, c.MenuBackground)
+    menuLinkStyle := fmt.Sprintf("color: %s;", c.MenuForeground)
+    menuLinkSelectedStyle := fmt.Sprintf("color: %s; background-color: %s;", c.MenuSelectedForeground, c.MenuSelectedBackground)
+
+    mainStyle := fmt.Sprintf("color: %s; background-color: %s;", c.Foreground, c.Background)
+    mutedStyle := fmt.Sprintf("color: %s; background-color: %s;", c.ForegroundMuted, c.BackgroundMuted)
+    linkStyle := fmt.Sprintf("color: %s;", c.LinkForeground)
+    linkVisitedStyle := fmt.Sprintf("color: %s;", c.LinkVisitedForeground)
+
+    cls := "mockup"
+    if mode != "" {
+      cls += " only-" + mode
+    }
+    if pointer {
+      cls += " pointer"
+    }
+  %}
+  {%= vutil.Indent(true, indent) %}
+  <div class="{%s cls %}">
+    <div class="mock-nav" style="{%s navStyle %}">{%= components.SVGRef(`app`, 12, 12, `icon`, ps) %}{%s navTitle %}</div>
+    <div class="mock-menu" style="{%s menuStyle %}">
+      <div class="mock-link" style="{%s menuLinkStyle %}">A</div>
+      <div class="mock-link-selected" style="{%s menuLinkSelectedStyle %}">B</div>
+      <div class="mock-link" style="{%s menuLinkStyle %}">C</div>
+      <div class="mock-link" style="{%s menuLinkStyle %}">D</div>
+    </div>
+    <div class="mock-main" style="{%s mainStyle %}">
+      <div class="mock-muted" style="{%s mutedStyle %}">Welcome!</div>
+      <div>
+        <div class="mock-list">Here's some links:</div>
+        <ul>
+          <li class="mock-link" style="{%s linkStyle %}">New</li>
+          <li class="mock-link" style="{%s linkStyle %}">Also New</li>
+          <li class="mock-link-visited" style="{%s linkVisitedStyle %}">Visited</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endstripspace %}{% endfunc %}

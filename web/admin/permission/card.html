@@ -1,9 +1,0 @@
-<%: func PermissionCard(perms permission.Permissions, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Permissions</h3>
-  <% if len(perms) == 0 { %>
-    <p>No permissions available</p>
-  <% } else { %>
-    <% PermissionTable(perms, params.Get(npncore.KeyPermission, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

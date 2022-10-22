@@ -1,0 +1,62 @@
+{
+  "name": "sprint_history",
+  "title": "History",
+  "package": "shistory",
+  "description": "TODO",
+  "icon": "clock",
+  "group": [
+    "sprint"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "slug",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "sprint_id",
+      "type": "uuid",
+      "search": true
+    },
+    {
+      "name": "sprint_name",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "sprint_history_sprint_fk",
+      "src": [
+        "sprint_id"
+      ],
+      "table": "sprint",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "old-name",
+      "20000000-0000-0000-0000-000000000000",
+      "Old Name",
+      "now()"
+    ]
+  ]
+}

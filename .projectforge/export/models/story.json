@@ -1,0 +1,109 @@
+{
+  "name": "story",
+  "title": "Story",
+  "package": "story",
+  "description": "TODO",
+  "icon": "star",
+  "group": [
+    "estimate"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "estimate_id",
+      "type": "uuid"
+    },
+    {
+      "name": "idx",
+      "type": "int"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "status",
+      "type": {
+        "k": "enum",
+        "t": {
+          "ref": "session_status"
+        }
+      }
+    },
+    {
+      "name": "final_vote",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "story_estimate_fk",
+      "src": [
+        "estimate_id"
+      ],
+      "table": "estimate",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "story_user_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "31000000-0000-0000-0000-000000000000",
+      "30000000-0000-0000-0000-000000000000",
+      0,
+      "90000000-0000-0000-0000-000000000000",
+      "Old Name",
+      "new",
+      "100",
+      "now()",
+      null
+    ]
+  ]
+}

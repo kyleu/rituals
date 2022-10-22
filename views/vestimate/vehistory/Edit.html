@@ -1,0 +1,37 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate/ehistory"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Edit struct {
+  layout.Basic
+  Model *ehistory.EstimateHistory
+  IsNew bool
+} %}
+
+{% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.IsNew -%}
+    <div class="right"><a href="/estimate/ehistory/random"><button>Random</button></a></div>
+    <h3>{%= components.SVGRefIcon(`clock`, ps) %} New History</h3>
+    <form action="/estimate/ehistory/new" class="mt" method="post">
+    {%- else -%}
+    <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete history [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
+    <h3>{%= components.SVGRefIcon(`clock`, ps) %} Edit History [{%s p.Model.String() %}]</h3>
+    {%- endif -%}
+    <form action="" method="post">
+      <table class="mt expanded">
+        <tbody>
+          {% if p.IsNew %}{%= components.TableInput("slug", "Slug", p.Model.Slug, 5, "String text") %}{% endif %}
+          {%= components.TableInputUUID("estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
+          {%= components.TableInput("estimateName", "Estimate Name", p.Model.EstimateName, 5, "String text") %}
+          <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}

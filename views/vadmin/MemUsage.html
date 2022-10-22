@@ -1,0 +1,21 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "runtime"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type MemUsage struct {
+  layout.Basic
+  Mem *runtime.MemStats
+} %}
+
+{% func (p *MemUsage) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Memory Usage</h3>
+    {%s= components.JSON(p.Mem) %}
+  </div>
+{% endfunc %}

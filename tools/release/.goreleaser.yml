@@ -1,0 +1,252 @@
+# Content managed by Project Forge, see [projectforge.md] for details.
+# http://goreleaser.com
+project_name: rituals
+
+archives:
+  - format: zip
+    wrap_in_directory: "false"
+    replacements: &replacements
+      darwin: "macos"
+      386: "i386"
+      amd64: "x86_64"
+    files:
+      - none*
+
+brews:
+  -
+    tap:
+      owner: "kyleu"
+      name: "homebrew-kyleu"
+    commit_author:
+      name: "Kyle U"
+      email: "kyle@kyleu.com"
+    folder: Formula
+    homepage: "https://rituals.dev"
+    description: "TODO"
+    license: "MIT"
+    skip_upload: "false"
+    install: "bin.install \"rituals\""
+
+changelog:
+  skip: true
+
+checksum:
+  name_template: "checksums.txt"
+  extra_files:
+    # $PF_SECTION_START(checksums)$
+    # $PF_SECTION_END(checksums)$
+
+dockers:
+  -
+    image_templates:
+      - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}"
+      - "ghcr.io/kyleu/rituals:latest"
+    dockerfile: ./tools/release/Dockerfile
+  -
+    image_templates:
+      - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}-debug"
+      - "ghcr.io/kyleu/rituals:latest-debug"
+    dockerfile: ./tools/release/debug.Dockerfile
+
+dist: "build/dist"
+
+nfpms:
+  -
+    vendor: "Kyle U"
+    homepage: "https://rituals.dev}"
+    maintainer: "Kyle U <kyle@kyleu.com>"
+    description: "TODO"
+    license: "MIT"
+    replacements: *replacements
+    formats:
+      - apk
+      - deb
+      - rpm
+
+release:
+  draft: false
+  header: |
+    ## {{ .Version }} ({{ .Date }})
+    See https://rituals.dev for download links and documentation
+    ## Main downloads
+    - [Linux Intel 64 bit](https://github.com/kyleu/rituals/releases/download/{{ .Tag }}/rituals_{{ .Version }}_linux_x86_64.zip)
+    - [MacOS Universal](https://github.com/kyleu/rituals/releases/download/{{ .Tag }}/rituals_{{ .Version }}_macos_all.zip)
+    - [Windows Intel 64 bit](https://github.com/kyleu/rituals/releases/download/{{ .Tag }}/rituals_{{ .Version }}_windows_x86_64.zip)
+
+  extra_files:
+    # $PF_SECTION_START(releasefiles)$
+    # $PF_SECTION_END(releasefiles)$
+
+snapcrafts:
+  -
+    publish: false
+    replacements: *replacements
+    summary: "TODO"
+    description: "TODO"
+    grade: stable
+    confinement: strict
+    license: "MIT"
+
+snapshot:
+  name_template: "{{ .Tag }}"
+
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}_{{ .Version }}_source"
+  format: "zip"
+
+universal_binaries:
+- id: "darwin"
+  replace: false
+  name_template: '{{ .ProjectName }}'
+
+builds:
+  - id: "darwin"
+    goos:
+      - darwin
+    goarch:
+      - "amd64"
+      - "arm64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "linux"
+    goos:
+      - "linux"
+    goarch:
+      - "386"
+      - "amd64"
+      - "arm64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "linux-arm"
+    goos:
+      - "linux"
+    goarch:
+      - "arm"
+    goarm:
+      - "5"
+      - "6"
+      - "7"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "linux-mips"
+    goos:
+      - "linux"
+    goarch:
+      - "mips"
+      - "mipsle"
+      - "mips64"
+      - "mips64le"
+    gomips:
+      - "hardfloat"
+      - "softfloat"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "linux-odd"
+    goos:
+      - "linux"
+    goarch:
+      - "ppc64"
+      - "ppc64le"
+      - "riscv64"
+      - "s390x"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "windows"
+    goos:
+      - "windows"
+    goarch:
+      - "amd64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    hooks:
+      # This build uses only one architecture, and is a good place to put one-time use scripts
+      post:
+        # $PF_SECTION_START(extrascripts)$
+        # $PF_SECTION_END(extrascripts)$
+
+  - id: "windows_i386"
+    goos:
+      - "windows"
+    goarch:
+      - "386"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "windows-arm"
+    goos:
+      - "windows"
+    goarch:
+      - "arm"
+      - "arm64"
+    goarm:
+      - "5"
+      - "6"
+      - "7"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "js"
+    goos:
+      - "js"
+    goarch:
+      - "wasm"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "dragonfly"
+    goos:
+      - "dragonfly"
+    goarch:
+      - "amd64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "illumos"
+    goos:
+      - "illumos"
+    goarch:
+      - "amd64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "freebsd"
+    goos:
+      - "freebsd"
+    goarch:
+      - "386"
+      - "amd64"
+      - "arm"
+      - "arm64"
+    goarm:
+      - "5"
+      - "6"
+      - "7"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "netbsd"
+    goos:
+      - "netbsd"
+    goarch:
+      - "386"
+      - "amd64"
+      - "arm"
+      - "arm64"
+    goarm:
+      - "7"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "openbsd"
+    goos:
+      - "openbsd"
+    goarch:
+      - "386"
+      - "amd64"
+      - "arm"
+      - "arm64"
+    goarm:
+      - "5"
+      - "6"
+      - "7"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "solaris"
+    goos:
+      - "solaris"
+    goarch:
+      - "amd64"
+    mod_timestamp: "{{ .CommitTimestamp }}"

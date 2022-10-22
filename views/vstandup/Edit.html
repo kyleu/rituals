@@ -1,0 +1,41 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/standup"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Edit struct {
+  layout.Basic
+  Model *standup.Standup
+  IsNew bool
+} %}
+
+{% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.IsNew -%}
+    <div class="right"><a href="/standup/random"><button>Random</button></a></div>
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} New Standup</h3>
+    <form action="/standup/new" class="mt" method="post">
+    {%- else -%}
+    <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete standup [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Edit Standup [{%s p.Model.String() %}]</h3>
+    {%- endif -%}
+    <form action="" method="post">
+      <table class="mt expanded">
+        <tbody>
+          {% if p.IsNew %}{%= components.TableInputUUID("id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {%= components.TableInput("slug", "Slug", p.Model.Slug, 5, "String text") %}
+          {%= components.TableInput("title", "Title", p.Model.Title, 5, "String text") %}
+          {%= components.TableInput("status", "Status", string(p.Model.Status), 5, "Available options: [new, active, complete, deleted]") %}
+          {%= components.TableInputUUID("teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
+          {%= components.TableInputUUID("sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
+          {%= components.TableInputUUID("owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
+          <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}

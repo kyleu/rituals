@@ -1,9 +1,0 @@
-<%: func CommentCard(comments comment.Comments, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Comments</h3>
-  <% if len(comments) == 0 { %>
-    <p>No comments available</p>
-  <% } else { %>
-    <% CommentTable(comments, params.Get(npncore.KeyComment, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

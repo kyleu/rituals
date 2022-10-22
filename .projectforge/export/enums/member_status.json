@@ -1,0 +1,11 @@
+{
+  "name": "member_status",
+  "package": "enum",
+  "description": "The available statuses for members",
+  "icon": "star",
+  "values": [
+    "owner",
+    "member",
+    "observer"
+  ]
+}

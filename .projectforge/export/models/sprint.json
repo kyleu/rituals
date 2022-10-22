@@ -1,0 +1,102 @@
+{
+  "name": "sprint",
+  "package": "sprint",
+  "description": "TODO",
+  "icon": "star",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "slug",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "status",
+      "type": {
+        "k": "enum",
+        "t": {
+          "ref": "session_status"
+        }
+      }
+    },
+    {
+      "name": "team_id",
+      "type": "uuid",
+      "nullable": true
+    },
+    {
+      "name": "owner",
+      "type": "uuid"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "sprint_owner_fk",
+      "src": [
+        "owner"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "sprint_team_fk",
+      "src": [
+        "team_id"
+      ],
+      "table": "team",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "20000000-0000-0000-0000-000000000000",
+      "team-a",
+      "Team A",
+      "new",
+      "10000000-0000-0000-0000-000000000000",
+      "90000000-0000-0000-0000-000000000000",
+      "now()",
+      null
+    ]
+  ]
+}

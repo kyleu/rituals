@@ -1,0 +1,8 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Int(x any, k string) %}{% stripspace %}
+  {%= components.FormInputNumber(k, "", x) %}
+{% endstripspace %}{% endfunc %}

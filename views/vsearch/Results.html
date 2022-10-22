@@ -1,0 +1,44 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/lib/search"
+  "github.com/kyleu/rituals/app/lib/search/result"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Results struct {
+  layout.Basic
+  Params *search.Params
+  Results result.Results
+  Errors []error
+} %}
+
+{% func (p *Results) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{% if p.Params.Q == "" %}Search{% else %}[{%s p.Params.Q %}] search results{% endif %}</h3>
+    <form class="mt expanded" action="{%s ps.SearchPath %}">
+      <input name="q" value="{%s p.Params.Q %}" />
+      <div class="mt"><button type="submit">Search Again</button></div>
+    </form>
+  </div>
+  {%- if p.Params.Q != "" && len(p.Results) == 0 -%}
+  <div class="card">
+    <h3>No results</h3>
+  </div>
+  {%- endif -%}
+  {%- for _, res := range p.Results -%}
+  {%= Result(res, p.Params, as, ps) %}
+  {%- endfor -%}
+  {% if len(p.Errors) > 0 %}
+  <div class="card">
+    <h3>{%s util.StringPluralMaybe("Error", len(p.Errors)) %}</h3>
+    <ul class="mt">
+      {%- for _, e := range p.Errors -%}
+      <li>{%s e.Error() %}</li>
+      {%- endfor -%}
+    </ul>
+  </div>
+  {% endif %}
+{% endfunc %}

@@ -1,0 +1,62 @@
+{
+  "name": "standup_history",
+  "title": "History",
+  "package": "uhistory",
+  "description": "TODO",
+  "icon": "clock",
+  "group": [
+    "standup"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "slug",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "standup_id",
+      "type": "uuid",
+      "search": true
+    },
+    {
+      "name": "standup_name",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "standup_history_standup_fk",
+      "src": [
+        "standup_id"
+      ],
+      "table": "standup",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "old-name",
+      "40000000-0000-0000-0000-000000000000",
+      "Old Name",
+      "now()"
+    ]
+  ]
+}

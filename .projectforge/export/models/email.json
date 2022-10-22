@@ -1,0 +1,91 @@
+{
+  "name": "email",
+  "package": "email",
+  "description": "TODO",
+  "icon": "star",
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "recipients",
+      "type": {
+        "k": "list",
+        "t": {
+          "v": "string"
+        }
+      },
+      "search": true
+    },
+    {
+      "name": "subject",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "data",
+      "type": "valuemap",
+      "search": true
+    },
+    {
+      "name": "plain",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "html",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "email_user_id_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "12000000-0000-0000-0000-000000000000",
+      "[\"a\",\"b\",\"c\"]",
+      "An Email!",
+      "{\"x\": 1}",
+      "Hello!",
+      "<h1>Hello!</h1>",
+      "90000000-0000-0000-0000-000000000000",
+      "sent",
+      "now()"
+    ]
+  ]
+}

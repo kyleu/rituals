@@ -1,0 +1,62 @@
+{
+  "name": "estimate_history",
+  "title": "History",
+  "package": "ehistory",
+  "description": "TODO",
+  "icon": "clock",
+  "group": [
+    "estimate"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "slug",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "estimate_id",
+      "type": "uuid",
+      "search": true
+    },
+    {
+      "name": "estimate_name",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "estimate_history_estimate_fk",
+      "src": [
+        "estimate_id"
+      ],
+      "table": "estimate",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "old-name",
+      "30000000-0000-0000-0000-000000000000",
+      "Old Name",
+      "now()"
+    ]
+  ]
+}

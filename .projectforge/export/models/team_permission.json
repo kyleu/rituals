@@ -1,0 +1,70 @@
+{
+  "name": "team_permission",
+  "title": "Permission",
+  "package": "tpermission",
+  "description": "TODO",
+  "icon": "users",
+  "group": [
+    "team"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "team_id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "k",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "v",
+      "type": "string",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "access",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "team_permission_team_fk",
+      "src": [
+        "team_id"
+      ],
+      "table": "team",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "10000000-0000-0000-0000-000000000000",
+      "key",
+      "value",
+      "access",
+      "now()"
+    ]
+  ]
+}

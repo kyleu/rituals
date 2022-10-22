@@ -1,0 +1,143 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/retro"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/standup"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/team/thistory"
+  "github.com/kyleu/rituals/app/team/tmember"
+  "github.com/kyleu/rituals/app/team/tpermission"
+  "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vestimate"
+  "github.com/kyleu/rituals/views/vretro"
+  "github.com/kyleu/rituals/views/vsprint"
+  "github.com/kyleu/rituals/views/vstandup"
+  "github.com/kyleu/rituals/views/vteam/vthistory"
+  "github.com/kyleu/rituals/views/vteam/vtmember"
+  "github.com/kyleu/rituals/views/vteam/vtpermission"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *team.Team
+  Users user.Users
+  Params filter.ParamSet
+  EstimatesByTeamID estimate.Estimates
+  RetrosByTeamID retro.Retros
+  SprintsByTeamID sprint.Sprints
+  StandupsByTeamID standup.Standups
+  TeamHistoriesByTeamID thistory.TeamHistories
+  TeamMembersByTeamID tmember.TeamMembers
+  TeamPermissionsByTeamID tpermission.TeamPermissions
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-team"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/team"><em>Team</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>{%s p.Model.Slug %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Title</th>
+          <td><strong>{%s p.Model.Title %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>{%v p.Model.Status %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
+          <td>
+            <div class="icon">{%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
+            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- if len(p.EstimatesByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related estimates by [team id]</h3>
+    <div class="overflow clear">
+      {%= vestimate.Table(p.EstimatesByTeamID, nil, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.RetrosByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related retros by [team id]</h3>
+    <div class="overflow clear">
+      {%= vretro.Table(p.RetrosByTeamID, nil, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.SprintsByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related sprints by [team id]</h3>
+    <div class="overflow clear">
+      {%= vsprint.Table(p.SprintsByTeamID, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.StandupsByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related standups by [team id]</h3>
+    <div class="overflow clear">
+      {%= vstandup.Table(p.StandupsByTeamID, nil, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.TeamHistoriesByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`clock`, ps) %} Related histories by [team id]</h3>
+    <div class="overflow clear">
+      {%= vthistory.Table(p.TeamHistoriesByTeamID, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.TeamMembersByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [team id]</h3>
+    <div class="overflow clear">
+      {%= vtmember.Table(p.TeamMembersByTeamID, nil, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- if len(p.TeamPermissionsByTeamID) > 0 -%}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related permissions by [team id]</h3>
+    <div class="overflow clear">
+      {%= vtpermission.Table(p.TeamPermissionsByTeamID, nil, p.Params, as, ps) %}
+    </div>
+  </div>
+  {%- endif -%}
+  {%= components.JSONModal("team", "Team JSON", p.Model, 1) %}
+{% endfunc %}

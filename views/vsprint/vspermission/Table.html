@@ -1,0 +1,43 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/sprint/spermission"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Table(models spermission.SprintPermissions, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+  {%- code prms := params.Get("spermission", nil, ps.Logger).Sanitize("spermission") -%}
+  <table class="mt">
+    <thead>
+      <tr>
+        {%= components.TableHeaderSimple("spermission", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("spermission", "k", "K", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("spermission", "v", "V", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("spermission", "access", "Access", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("spermission", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for _, model := range models -%}
+      <tr>
+        <td>
+          <div class="icon"><a href="/sprint/spermission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+        </td>
+        <td><a href="/sprint/spermission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
+        <td><a href="/sprint/spermission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
+        <td>{%s model.Access %}</td>
+        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+      </tr>
+      {%- endfor -%}
+      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+      <tr>
+        <td colspan="5">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+      </tr>
+      {%- endif -%}
+    </tbody>
+  </table>
+{% endfunc %}

@@ -1,9 +1,0 @@
-<%: func FeedbackCard(feedbacks retro.Feedbacks, params npncore.ParamSet, ctx *npnweb.RequestContext, buffer *bytes.Buffer) %>
-<div class="uk-card uk-card-body uk-card-default mt">
-  <h3 class="uk-card-title">Feedback</h3>
-  <% if len(feedbacks) == 0 { %>
-    <p>No feedback available</p>
-  <% } else { %>
-    <% FeedbackTable(feedbacks, params.Get(util.KeyFeedback, ctx.Logger), ctx, buffer) %>
-  <% } %>
-</div>

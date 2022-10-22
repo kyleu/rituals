@@ -1,0 +1,38 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/standup/upermission"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Edit struct {
+  layout.Basic
+  Model *upermission.StandupPermission
+  IsNew bool
+} %}
+
+{% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.IsNew -%}
+    <div class="right"><a href="/standup/upermission/random"><button>Random</button></a></div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} New Permission</h3>
+    <form action="/standup/upermission/new" class="mt" method="post">
+    {%- else -%}
+    <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete permission [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
+    <h3>{%= components.SVGRefIcon(`users`, ps) %} Edit Permission [{%s p.Model.String() %}]</h3>
+    {%- endif -%}
+    <form action="" method="post">
+      <table class="mt expanded">
+        <tbody>
+          {% if p.IsNew %}{%= components.TableInputUUID("standupID", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {% if p.IsNew %}{%= components.TableInput("k", "K", p.Model.K, 5, "String text") %}{% endif %}
+          {% if p.IsNew %}{%= components.TableInput("v", "V", p.Model.V, 5, "String text") %}{% endif %}
+          {%= components.TableInput("access", "Access", p.Model.Access, 5, "String text") %}
+          <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}

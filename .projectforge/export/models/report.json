@@ -1,0 +1,97 @@
+{
+  "name": "report",
+  "title": "Report",
+  "package": "report",
+  "description": "TODO",
+  "icon": "clock",
+  "group": [
+    "standup"
+  ],
+  "ordering": [
+    {
+      "column": "created",
+      "asc": false
+    }
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "standup_id",
+      "type": "uuid"
+    },
+    {
+      "name": "d",
+      "type": "timestamp"
+    },
+    {
+      "name": "user_id",
+      "type": "uuid"
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "html",
+      "type": "string",
+      "search": true
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "now()",
+      "tags": [
+        "created"
+      ]
+    },
+    {
+      "name": "updated",
+      "type": "timestamp",
+      "nullable": true,
+      "sqlDefault": "now()",
+      "tags": [
+        "updated"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "report_standup_fk",
+      "src": [
+        "standup_id"
+      ],
+      "table": "standup",
+      "tgt": [
+        "id"
+      ]
+    },
+    {
+      "name": "report_user_fk",
+      "src": [
+        "user_id"
+      ],
+      "table": "user",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "41000000-0000-0000-0000-000000000000",
+      "40000000-0000-0000-0000-000000000000",
+      "2022-10-31",
+      "90000000-0000-0000-0000-000000000000",
+      "A Report!",
+      "<h1>A Report!</h1>",
+      "now()",
+      null
+    ]
+  ]
+}
