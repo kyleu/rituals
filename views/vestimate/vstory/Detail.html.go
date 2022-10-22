@@ -62,7 +62,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vestimate/vstory/Detail.html:30
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGRefIcon(qw422016, `book-reader`, ps)
 //line views/vestimate/vstory/Detail.html:30
 	qw422016.N().S(` `)
 //line views/vestimate/vstory/Detail.html:30
@@ -104,7 +104,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:42
 	qw422016.N().S(`">`)
 //line views/vestimate/vstory/Detail.html:42
-	components.StreamSVGRefIcon(qw422016, "star", ps)
+	components.StreamSVGRefIcon(qw422016, "ruler-horizontal", ps)
 //line views/vestimate/vstory/Detail.html:42
 	qw422016.N().S(`</a>
           </td>
@@ -196,7 +196,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vestimate/vstory/Detail.html:83
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `vote-yea`, ps)
 //line views/vestimate/vstory/Detail.html:83
 		qw422016.N().S(` Related votes by [story id]</h3>
     <div class="overflow clear">

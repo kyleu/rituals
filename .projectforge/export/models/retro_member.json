@@ -1,19 +1,19 @@
 {
   "name": "retro_member",
-  "title": "Member",
   "package": "rmember",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/retro/member",
   "group": [
     "retro"
   ],
+  "description": "TODO",
+  "icon": "users",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Member",
+  "route": "admin/db/retro/member",
   "columns": [
     {
       "name": "retro_id",

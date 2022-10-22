@@ -14,6 +14,9 @@ func initApp(_ *app.State, _ util.Logger) {
 		user.Perm("/admin", "github:kyleu.com", true),
 		user.Perm("/admin", "github:rituals.dev", true),
 		user.Perm("/admin", "*", false),
+		user.Perm("/graphql", "github:kyleu.com", true),
+		user.Perm("/graphql", "github:rituals.dev", true),
+		user.Perm("/graphql", "*", false),
 		user.Perm("/", "*", true),
 	)
 }

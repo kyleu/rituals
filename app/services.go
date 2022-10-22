@@ -3,6 +3,8 @@ package app
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/gql"
+	"github.com/kyleu/rituals/app/workspace"
 
 	"github.com/pkg/errors"
 
@@ -41,6 +43,7 @@ import (
 )
 
 type Services struct {
+	Workspace          *workspace.Service
 	User               *user.Service
 	Team               *team.Service
 	TeamMember         *tmember.Service
@@ -69,6 +72,7 @@ type Services struct {
 	Action             *action.Service
 	Comment            *comment.Service
 	Email              *email.Service
+	GQL                *gql.Schema
 	Socket             *websocket.Service
 }
 
@@ -78,36 +82,53 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run database migrations")
 	}
+	us := user.NewService(st.DB)
+
+	t := team.NewService(st.DB)
+	tm := tmember.NewService(st.DB)
+	th := thistory.NewService(st.DB)
+	tp := tpermission.NewService(st.DB)
+
+	s := sprint.NewService(st.DB)
+	sm := smember.NewService(st.DB)
+	sh := shistory.NewService(st.DB)
+	sp := spermission.NewService(st.DB)
+
+	e := estimate.NewService(st.DB)
+	em := emember.NewService(st.DB)
+	eh := ehistory.NewService(st.DB)
+	ep := epermission.NewService(st.DB)
+	sy := story.NewService(st.DB)
+	v := vote.NewService(st.DB)
+
+	u := standup.NewService(st.DB)
+	um := umember.NewService(st.DB)
+	uh := uhistory.NewService(st.DB)
+	up := upermission.NewService(st.DB)
+	rp := report.NewService(st.DB)
+
+	r := retro.NewService(st.DB)
+	rm := rmember.NewService(st.DB)
+	rh := rhistory.NewService(st.DB)
+	rpm := rpermission.NewService(st.DB)
+	f := feedback.NewService(st.DB)
+
+	a := action.NewService(st.DB)
+	c := comment.NewService(st.DB)
+	el := email.NewService(st.DB)
+
+	g := gql.NewSchema(st.GraphQL)
+	ws := websocket.NewService(logger, nil, nil, nil, nil)
+
 	return &Services{
-		User:               user.NewService(st.DB),
-		Team:               team.NewService(st.DB),
-		TeamMember:         tmember.NewService(st.DB),
-		TeamHistory:        thistory.NewService(st.DB),
-		TeamPermission:     tpermission.NewService(st.DB),
-		Sprint:             sprint.NewService(st.DB),
-		SprintMember:       smember.NewService(st.DB),
-		SprintHistory:      shistory.NewService(st.DB),
-		SprintPermission:   spermission.NewService(st.DB),
-		Estimate:           estimate.NewService(st.DB),
-		EstimateMember:     emember.NewService(st.DB),
-		EstimateHistory:    ehistory.NewService(st.DB),
-		EstimatePermission: epermission.NewService(st.DB),
-		Story:              story.NewService(st.DB),
-		Vote:               vote.NewService(st.DB),
-		Standup:            standup.NewService(st.DB),
-		StandupMember:      umember.NewService(st.DB),
-		StandupHistory:     uhistory.NewService(st.DB),
-		StandupPermission:  upermission.NewService(st.DB),
-		Report:             report.NewService(st.DB),
-		Retro:              retro.NewService(st.DB),
-		RetroMember:        rmember.NewService(st.DB),
-		RetroHistory:       rhistory.NewService(st.DB),
-		RetroPermission:    rpermission.NewService(st.DB),
-		Feedback:           feedback.NewService(st.DB),
-		Action:             action.NewService(st.DB),
-		Comment:            comment.NewService(st.DB),
-		Email:              email.NewService(st.DB),
-		Socket:             websocket.NewService(logger, nil, nil, nil, nil),
+		Workspace: workspace.NewService(t, s, e, u, r),
+
+		User: us, Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
+		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,
+		Estimate: e, EstimateMember: em, EstimateHistory: eh, EstimatePermission: ep, Story: sy, Vote: v,
+		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rp,
+		Retro: r, RetroMember: rm, RetroHistory: rh, RetroPermission: rpm, Feedback: f,
+		Action: a, Comment: c, Email: el, GQL: g, Socket: ws,
 	}, nil
 }
 

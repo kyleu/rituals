@@ -2,14 +2,14 @@
   "name": "comment",
   "package": "comment",
   "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/comment",
+  "icon": "comments",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "route": "admin/db/comment",
   "columns": [
     {
       "name": "id",

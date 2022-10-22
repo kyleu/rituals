@@ -100,7 +100,7 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 //line views/vestimate/vehistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vestimate/vehistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "star", ps)
+		components.StreamSVGRefIcon(qw422016, "ruler-horizontal", ps)
 //line views/vestimate/vehistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

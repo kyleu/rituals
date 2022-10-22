@@ -106,7 +106,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.ActionsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related actions by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`gamepad`, ps) %} Related actions by [user id]</h3>
     <div class="overflow clear">
       {%= vaction.Table(p.ActionsByUserID, nil, p.Params, as, ps) %}
     </div>
@@ -114,7 +114,7 @@
   {%- endif -%}
   {%- if len(p.CommentsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related comments by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`comments`, ps) %} Related comments by [user id]</h3>
     <div class="overflow clear">
       {%= vcomment.Table(p.CommentsByUserID, nil, p.Params, as, ps) %}
     </div>
@@ -122,7 +122,7 @@
   {%- endif -%}
   {%- if len(p.EmailsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related emails by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`envelope`, ps) %} Related emails by [user id]</h3>
     <div class="overflow clear">
       {%= vemail.Table(p.EmailsByUserID, nil, p.Params, as, ps) %}
     </div>
@@ -130,7 +130,7 @@
   {%- endif -%}
   {%- if len(p.EstimatesByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related estimates by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} Related estimates by [owner]</h3>
     <div class="overflow clear">
       {%= vestimate.Table(p.EstimatesByOwner, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -146,7 +146,7 @@
   {%- endif -%}
   {%- if len(p.FeedbacksByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related feedbacks by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`comment`, ps) %} Related feedbacks by [user id]</h3>
     <div class="overflow clear">
       {%= vfeedback.Table(p.FeedbacksByUserID, nil, nil, p.Params, as, ps) %}
     </div>
@@ -154,7 +154,7 @@
   {%- endif -%}
   {%- if len(p.ReportsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`clock`, ps) %} Related reports by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`file-alt`, ps) %} Related reports by [user id]</h3>
     <div class="overflow clear">
       {%= vreport.Table(p.ReportsByUserID, nil, nil, p.Params, as, ps) %}
     </div>
@@ -162,7 +162,7 @@
   {%- endif -%}
   {%- if len(p.RetrosByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related retros by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`glasses`, ps) %} Related retros by [owner]</h3>
     <div class="overflow clear">
       {%= vretro.Table(p.RetrosByOwner, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -178,7 +178,7 @@
   {%- endif -%}
   {%- if len(p.SprintsByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related sprints by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`running`, ps) %} Related sprints by [owner]</h3>
     <div class="overflow clear">
       {%= vsprint.Table(p.SprintsByOwner, nil, nil, p.Params, as, ps) %}
     </div>
@@ -194,7 +194,7 @@
   {%- endif -%}
   {%- if len(p.StandupsByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related standups by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`shoe-prints`, ps) %} Related standups by [owner]</h3>
     <div class="overflow clear">
       {%= vstandup.Table(p.StandupsByOwner, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -210,7 +210,7 @@
   {%- endif -%}
   {%- if len(p.StoriesByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related stories by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`book-reader`, ps) %} Related stories by [user id]</h3>
     <div class="overflow clear">
       {%= vstory.Table(p.StoriesByUserID, nil, nil, p.Params, as, ps) %}
     </div>
@@ -234,7 +234,7 @@
   {%- endif -%}
   {%- if len(p.VotesByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related votes by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`vote-yea`, ps) %} Related votes by [user id]</h3>
     <div class="overflow clear">
       {%= vvote.Table(p.VotesByUserID, nil, nil, p.Params, as, ps) %}
     </div>

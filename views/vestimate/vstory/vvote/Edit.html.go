@@ -47,7 +47,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/estimate/story/vote/random"><button>Random</button></a></div>
     <h3>`)
 //line views/vestimate/vstory/vvote/Edit.html:20
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `vote-yea`, ps)
 //line views/vestimate/vstory/vvote/Edit.html:20
 		qw422016.N().S(` New Vote</h3>
     <form action="/admin/db/estimate/story/vote/new" class="mt" method="post">
@@ -66,7 +66,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
 //line views/vestimate/vstory/vvote/Edit.html:24
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `vote-yea`, ps)
 //line views/vestimate/vstory/vvote/Edit.html:24
 		qw422016.N().S(` Edit Vote [`)
 //line views/vestimate/vstory/vvote/Edit.html:24

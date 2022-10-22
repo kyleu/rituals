@@ -47,7 +47,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/retro/permission/random"><button>Random</button></a></div>
     <h3>`)
 //line views/vretro/vrpermission/Edit.html:20
-		components.StreamSVGRefIcon(qw422016, `users`, ps)
+		components.StreamSVGRefIcon(qw422016, `lock`, ps)
 //line views/vretro/vrpermission/Edit.html:20
 		qw422016.N().S(` New Permission</h3>
     <form action="/admin/db/retro/permission/new" class="mt" method="post">
@@ -66,7 +66,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
 //line views/vretro/vrpermission/Edit.html:24
-		components.StreamSVGRefIcon(qw422016, `users`, ps)
+		components.StreamSVGRefIcon(qw422016, `lock`, ps)
 //line views/vretro/vrpermission/Edit.html:24
 		qw422016.N().S(` Edit Permission [`)
 //line views/vretro/vrpermission/Edit.html:24

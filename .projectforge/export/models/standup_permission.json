@@ -1,19 +1,19 @@
 {
   "name": "standup_permission",
-  "title": "Permission",
   "package": "upermission",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/standup/permission",
   "group": [
     "standup"
   ],
+  "description": "TODO",
+  "icon": "lock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Permission",
+  "route": "admin/db/standup/permission",
   "columns": [
     {
       "name": "standup_id",

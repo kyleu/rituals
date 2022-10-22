@@ -176,7 +176,7 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, users user.
 //line views/vstandup/Table.html:42
 		qw422016.N().S(`">`)
 //line views/vstandup/Table.html:42
-		components.StreamSVGRefIcon(qw422016, "star", ps)
+		components.StreamSVGRefIcon(qw422016, "running", ps)
 //line views/vstandup/Table.html:42
 		qw422016.N().S(`</a>
         </td>

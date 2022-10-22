@@ -73,7 +73,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vestimate/Detail.html:41
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGRefIcon(qw422016, `ruler-horizontal`, ps)
 //line views/vestimate/Detail.html:41
 	qw422016.N().S(` `)
 //line views/vestimate/Detail.html:41
@@ -176,7 +176,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:72
 	qw422016.N().S(`">`)
 //line views/vestimate/Detail.html:72
-	components.StreamSVGRefIcon(qw422016, "star", ps)
+	components.StreamSVGRefIcon(qw422016, "running", ps)
 //line views/vestimate/Detail.html:72
 	qw422016.N().S(`</a>
           </td>
@@ -284,7 +284,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vestimate/Detail.html:117
-		components.StreamSVGRefIcon(qw422016, `users`, ps)
+		components.StreamSVGRefIcon(qw422016, `lock`, ps)
 //line views/vestimate/Detail.html:117
 		qw422016.N().S(` Related permissions by [estimate id]</h3>
     <div class="overflow clear">
@@ -304,7 +304,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vestimate/Detail.html:125
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `book-reader`, ps)
 //line views/vestimate/Detail.html:125
 		qw422016.N().S(` Related stories by [estimate id]</h3>
     <div class="overflow clear">

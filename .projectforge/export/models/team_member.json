@@ -1,19 +1,19 @@
 {
   "name": "team_member",
-  "title": "Member",
   "package": "tmember",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/team/member",
   "group": [
     "team"
   ],
+  "description": "TODO",
+  "icon": "users",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Member",
+  "route": "admin/db/team/member",
   "columns": [
     {
       "name": "team_id",

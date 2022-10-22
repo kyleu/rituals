@@ -57,7 +57,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vretro/vfeedback/Detail.html:25
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGRefIcon(qw422016, `comment`, ps)
 //line views/vretro/vfeedback/Detail.html:25
 	qw422016.N().S(` `)
 //line views/vretro/vfeedback/Detail.html:25
@@ -99,7 +99,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:37
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:37
-	components.StreamSVGRefIcon(qw422016, "star", ps)
+	components.StreamSVGRefIcon(qw422016, "glasses", ps)
 //line views/vretro/vfeedback/Detail.html:37
 	qw422016.N().S(`</a>
           </td>

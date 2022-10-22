@@ -1,19 +1,19 @@
 {
   "name": "sprint_member",
-  "title": "Member",
   "package": "smember",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/sprint/member",
   "group": [
     "sprint"
   ],
+  "description": "TODO",
+  "icon": "users",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Member",
+  "route": "admin/db/sprint/member",
   "columns": [
     {
       "name": "sprint_id",

@@ -17,11 +17,11 @@
   <div class="card">
     {%- if p.IsNew -%}
     <div class="right"><a href="/admin/db/standup/report/random"><button>Random</button></a></div>
-    <h3>{%= components.SVGRefIcon(`clock`, ps) %} New Report</h3>
+    <h3>{%= components.SVGRefIcon(`file-alt`, ps) %} New Report</h3>
     <form action="/admin/db/standup/report/new" class="mt" method="post">
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete report [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
-    <h3>{%= components.SVGRefIcon(`clock`, ps) %} Edit Report [{%s p.Model.String() %}]</h3>
+    <h3>{%= components.SVGRefIcon(`file-alt`, ps) %} Edit Report [{%s p.Model.String() %}]</h3>
     {%- endif -%}
     <form action="" method="post">
       <table class="mt expanded">

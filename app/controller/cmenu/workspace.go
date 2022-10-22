@@ -55,7 +55,7 @@ func workspaceMenu(ctx context.Context, as *app.State, logger util.Logger) (menu
 }
 
 func teamMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_team", Title: "Teams", Description: "TODO", Icon: "star", Route: "/team"}
+	ret := &menu.Item{Key: "ws_team", Title: "Teams", Description: "TODO", Icon: "users", Route: "/team"}
 	if user == nil {
 		return ret, nil
 	}
@@ -64,7 +64,7 @@ func teamMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.L
 		return nil, err
 	}
 	for _, x := range t {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/team/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "users", Route: "/team/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(t))
@@ -72,7 +72,7 @@ func teamMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.L
 }
 
 func sprintMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_sprint", Title: "Sprints", Description: "TODO", Icon: "star", Route: "/sprint"}
+	ret := &menu.Item{Key: "ws_sprint", Title: "Sprints", Description: "TODO", Icon: "running", Route: "/sprint"}
 	if user == nil {
 		return ret, nil
 	}
@@ -81,7 +81,7 @@ func sprintMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util
 		return nil, err
 	}
 	for _, x := range s {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/sprint/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "running", Route: "/sprint/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(s))
@@ -89,7 +89,7 @@ func sprintMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util
 }
 
 func estimateMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_estimate", Title: "Estimates", Description: "TODO", Icon: "star", Route: "/estimate"}
+	ret := &menu.Item{Key: "ws_estimate", Title: "Estimates", Description: "TODO", Icon: "ruler-horizontal", Route: "/estimate"}
 	if user == nil {
 		return ret, nil
 	}
@@ -98,7 +98,7 @@ func estimateMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger ut
 		return nil, err
 	}
 	for _, x := range e {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/estimate/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "ruler-horizontal", Route: "/estimate/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(e))
@@ -106,7 +106,7 @@ func estimateMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger ut
 }
 
 func standupMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_standup", Title: "Standups", Description: "TODO", Icon: "star", Route: "/standup"}
+	ret := &menu.Item{Key: "ws_standup", Title: "Standups", Description: "TODO", Icon: "shoe-prints", Route: "/standup"}
 	if user == nil {
 		return ret, nil
 	}
@@ -115,7 +115,7 @@ func standupMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger uti
 		return nil, err
 	}
 	for _, x := range u {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/standup/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "shoe-prints", Route: "/standup/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(u))
@@ -123,7 +123,7 @@ func standupMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger uti
 }
 
 func retroMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_retro", Title: "Retros", Description: "TODO", Icon: "star", Route: "/retro"}
+	ret := &menu.Item{Key: "ws_retro", Title: "Retros", Description: "TODO", Icon: "glasses", Route: "/retro"}
 	if user == nil {
 		return ret, nil
 	}
@@ -132,7 +132,7 @@ func retroMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.
 		return nil, err
 	}
 	for _, x := range r {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/retro/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "glasses", Route: "/retro/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(r))

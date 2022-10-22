@@ -2,14 +2,14 @@
   "name": "standup",
   "package": "standup",
   "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/standup",
+  "icon": "shoe-prints",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "route": "admin/db/standup",
   "columns": [
     {
       "name": "id",
@@ -20,8 +20,8 @@
     {
       "name": "slug",
       "type": "string",
-      "indexed": true,
-      "search": true
+      "search": true,
+      "indexed": true
     },
     {
       "name": "title",

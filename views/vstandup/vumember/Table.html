@@ -28,7 +28,7 @@
       <tr>
         <td>
           <div class="icon"><a href="/admin/db/standup/member/{%= components.DisplayUUID(&model.StandupID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("shoe-prints", ps) %}</a>
         </td>
         <td>
           <div class="icon"><a href="/admin/db/standup/member/{%= components.DisplayUUID(&model.StandupID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>

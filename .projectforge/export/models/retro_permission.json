@@ -1,19 +1,19 @@
 {
   "name": "retro_permission",
-  "title": "Permission",
   "package": "rpermission",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/retro/permission",
   "group": [
     "retro"
   ],
+  "description": "TODO",
+  "icon": "lock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Permission",
+  "route": "admin/db/retro/permission",
   "columns": [
     {
       "name": "retro_id",

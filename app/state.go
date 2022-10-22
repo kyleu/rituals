@@ -9,6 +9,7 @@ import (
 	"github.com/kyleu/rituals/app/lib/auth"
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filesystem"
+	"github.com/kyleu/rituals/app/lib/graphql"
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/theme"
 	"github.com/kyleu/rituals/app/util"
@@ -35,6 +36,7 @@ type State struct {
 	Files     filesystem.FileLoader
 	Auth      *auth.Service
 	DB        *database.Service
+	GraphQL   *graphql.Service
 	Themes    *theme.Service
 	Services  *Services
 	Started   time.Time
@@ -50,12 +52,14 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
 	as := auth.NewService("", logger)
 	ts := theme.NewService(f)
+	gqls := graphql.NewService()
 
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
 		Auth:      as,
+		GraphQL:   gqls,
 		Themes:    ts,
 		Started:   time.Now(),
 	}, nil
@@ -64,6 +68,9 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 func (s State) Close(ctx context.Context, logger util.Logger) error {
 	if err := s.DB.Close(); err != nil {
 		logger.Errorf("error closing database: %+v", err)
+	}
+	if err := s.GraphQL.Close(); err != nil {
+		logger.Errorf("error closing GraphQL service: %+v", err)
 	}
 	return s.Services.Close(ctx, logger)
 }

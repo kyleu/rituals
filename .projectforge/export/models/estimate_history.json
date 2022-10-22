@@ -1,19 +1,19 @@
 {
   "name": "estimate_history",
-  "title": "History",
   "package": "ehistory",
-  "description": "TODO",
-  "icon": "clock",
-  "route": "admin/db/estimate/history",
   "group": [
     "estimate"
   ],
+  "description": "TODO",
+  "icon": "clock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "History",
+  "route": "admin/db/estimate/history",
   "columns": [
     {
       "name": "slug",

@@ -42,7 +42,7 @@
       <a href="#modal-sprint"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGRefIcon(`running`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/sprint"><em>Sprint</em></a></div>
     <table class="mt">
       <tbody>
@@ -91,7 +91,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.EstimatesBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related estimates by [sprint id]</h3>
+    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} Related estimates by [sprint id]</h3>
     <div class="overflow clear">
       {%= vestimate.Table(p.EstimatesBySprintID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -99,7 +99,7 @@
   {%- endif -%}
   {%- if len(p.RetrosBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related retros by [sprint id]</h3>
+    <h3>{%= components.SVGRefIcon(`glasses`, ps) %} Related retros by [sprint id]</h3>
     <div class="overflow clear">
       {%= vretro.Table(p.RetrosBySprintID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -123,7 +123,7 @@
   {%- endif -%}
   {%- if len(p.SprintPermissionsBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related permissions by [sprint id]</h3>
+    <h3>{%= components.SVGRefIcon(`lock`, ps) %} Related permissions by [sprint id]</h3>
     <div class="overflow clear">
       {%= vspermission.Table(p.SprintPermissionsBySprintID, nil, p.Params, as, ps) %}
     </div>
@@ -131,7 +131,7 @@
   {%- endif -%}
   {%- if len(p.StandupsBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related standups by [sprint id]</h3>
+    <h3>{%= components.SVGRefIcon(`shoe-prints`, ps) %} Related standups by [sprint id]</h3>
     <div class="overflow clear">
       {%= vstandup.Table(p.StandupsBySprintID, nil, nil, nil, p.Params, as, ps) %}
     </div>

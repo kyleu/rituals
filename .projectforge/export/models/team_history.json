@@ -1,19 +1,19 @@
 {
   "name": "team_history",
-  "title": "History",
   "package": "thistory",
-  "description": "TODO",
-  "icon": "clock",
-  "route": "admin/db/team/history",
   "group": [
     "team"
   ],
+  "description": "TODO",
+  "icon": "clock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "History",
+  "route": "admin/db/team/history",
   "columns": [
     {
       "name": "slug",

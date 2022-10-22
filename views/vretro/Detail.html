@@ -38,7 +38,7 @@
       <a href="#modal-retro"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGRefIcon(`glasses`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/retro"><em>Retro</em></a></div>
     <table class="mt">
       <tbody>
@@ -69,7 +69,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(p.Model.SprintID) %}{% if p.Model.SprintID != nil %}{% if x := p.Sprints.Get(*p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-            <a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+            <a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRefIcon("running", ps) %}</a>
           </td>
         </tr>
         <tr>
@@ -98,7 +98,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.FeedbacksByRetroID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related feedbacks by [retro id]</h3>
+    <h3>{%= components.SVGRefIcon(`comment`, ps) %} Related feedbacks by [retro id]</h3>
     <div class="overflow clear">
       {%= vfeedback.Table(p.FeedbacksByRetroID, nil, nil, p.Params, as, ps) %}
     </div>
@@ -122,7 +122,7 @@
   {%- endif -%}
   {%- if len(p.RetroPermissionsByRetroID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related permissions by [retro id]</h3>
+    <h3>{%= components.SVGRefIcon(`lock`, ps) %} Related permissions by [retro id]</h3>
     <div class="overflow clear">
       {%= vrpermission.Table(p.RetroPermissionsByRetroID, nil, p.Params, as, ps) %}
     </div>

@@ -108,7 +108,7 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 //line views/vstandup/vupermission/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "star", ps)
+		components.StreamSVGRefIcon(qw422016, "shoe-prints", ps)
 //line views/vstandup/vupermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>

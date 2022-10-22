@@ -73,7 +73,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vretro/Detail.html:41
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGRefIcon(qw422016, `glasses`, ps)
 //line views/vretro/Detail.html:41
 	qw422016.N().S(` `)
 //line views/vretro/Detail.html:41
@@ -176,7 +176,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:72
 	qw422016.N().S(`">`)
 //line views/vretro/Detail.html:72
-	components.StreamSVGRefIcon(qw422016, "star", ps)
+	components.StreamSVGRefIcon(qw422016, "running", ps)
 //line views/vretro/Detail.html:72
 	qw422016.N().S(`</a>
           </td>
@@ -244,7 +244,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vretro/Detail.html:101
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `comment`, ps)
 //line views/vretro/Detail.html:101
 		qw422016.N().S(` Related feedbacks by [retro id]</h3>
     <div class="overflow clear">
@@ -304,7 +304,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vretro/Detail.html:125
-		components.StreamSVGRefIcon(qw422016, `users`, ps)
+		components.StreamSVGRefIcon(qw422016, `lock`, ps)
 //line views/vretro/Detail.html:125
 		qw422016.N().S(` Related permissions by [retro id]</h3>
     <div class="overflow clear">

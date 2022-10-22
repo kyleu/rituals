@@ -1,19 +1,19 @@
 {
   "name": "feedback",
-  "title": "Feedback",
   "package": "feedback",
-  "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/retro/feedback",
   "group": [
     "retro"
   ],
+  "description": "TODO",
+  "icon": "comment",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Feedback",
+  "route": "admin/db/retro/feedback",
   "columns": [
     {
       "name": "id",

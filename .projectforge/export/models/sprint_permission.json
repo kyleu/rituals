@@ -1,19 +1,19 @@
 {
   "name": "sprint_permission",
-  "title": "Permission",
   "package": "spermission",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/sprint/permission",
   "group": [
     "sprint"
   ],
+  "description": "TODO",
+  "icon": "lock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Permission",
+  "route": "admin/db/sprint/permission",
   "columns": [
     {
       "name": "sprint_id",

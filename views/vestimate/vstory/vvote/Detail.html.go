@@ -57,7 +57,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vestimate/vstory/vvote/Detail.html:25
-	components.StreamSVGRefIcon(qw422016, `star`, ps)
+	components.StreamSVGRefIcon(qw422016, `vote-yea`, ps)
 //line views/vestimate/vstory/vvote/Detail.html:25
 	qw422016.N().S(` `)
 //line views/vestimate/vstory/vvote/Detail.html:25
@@ -91,7 +91,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/vvote/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Detail.html:33
-	components.StreamSVGRefIcon(qw422016, "star", ps)
+	components.StreamSVGRefIcon(qw422016, "book-reader", ps)
 //line views/vestimate/vstory/vvote/Detail.html:33
 	qw422016.N().S(`</a>
           </td>

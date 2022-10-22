@@ -22,7 +22,7 @@
       <a href="#modal-vote"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGRefIcon(`vote-yea`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/estimate/story/vote"><em>Vote</em></a></div>
     <table class="mt">
       <tbody>
@@ -30,7 +30,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Story ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(&p.Model.StoryID) %}{% if x := p.Stories.Get(p.Model.StoryID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="Story" href="{%s `/story`+`/`+p.Model.StoryID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
+            <a title="Story" href="{%s `/story`+`/`+p.Model.StoryID.String() %}">{%= components.SVGRefIcon("book-reader", ps) %}</a>
           </td>
         </tr>
         <tr>

@@ -17,11 +17,11 @@
   <div class="card">
     {%- if p.IsNew -%}
     <div class="right"><a href="/admin/db/team/permission/random"><button>Random</button></a></div>
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} New Permission</h3>
+    <h3>{%= components.SVGRefIcon(`lock`, ps) %} New Permission</h3>
     <form action="/admin/db/team/permission/new" class="mt" method="post">
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete permission [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Edit Permission [{%s p.Model.String() %}]</h3>
+    <h3>{%= components.SVGRefIcon(`lock`, ps) %} Edit Permission [{%s p.Model.String() %}]</h3>
     {%- endif -%}
     <form action="" method="post">
       <table class="mt expanded">

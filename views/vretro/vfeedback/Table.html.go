@@ -126,7 +126,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retros re
 //line views/vretro/vfeedback/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:34
-		components.StreamSVGRefIcon(qw422016, "star", ps)
+		components.StreamSVGRefIcon(qw422016, "glasses", ps)
 //line views/vretro/vfeedback/Table.html:34
 		qw422016.N().S(`</a>
         </td>

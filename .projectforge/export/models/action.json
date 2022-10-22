@@ -2,14 +2,14 @@
   "name": "action",
   "package": "action",
   "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/action",
+  "icon": "gamepad",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "route": "admin/db/action",
   "columns": [
     {
       "name": "id",

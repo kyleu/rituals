@@ -3,19 +3,18 @@ package routes
 
 import (
 	"github.com/fasthttp/router"
-
-	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cworkspace"
 )
 
 func workspaceRoutes(r *router.Router) {
-	r.GET("/team", controller.Home)
-	r.GET("/team/{slug}", controller.Home)
-	r.GET("/sprint", controller.Home)
-	r.GET("/sprint/{slug}", controller.Home)
-	r.GET("/estimate", controller.Home)
-	r.GET("/estimate/{slug}", controller.Home)
-	r.GET("/standup", controller.Home)
-	r.GET("/standup/{slug}", controller.Home)
-	r.GET("/retro", controller.Home)
-	r.GET("/retro/{slug}", controller.Home)
+	r.GET("/team", cworkspace.TeamList)
+	r.GET("/team/{slug}", cworkspace.TeamDetail)
+	r.GET("/sprint", cworkspace.SprintList)
+	r.GET("/sprint/{slug}", cworkspace.SprintDetail)
+	r.GET("/estimate", cworkspace.EstimateList)
+	r.GET("/estimate/{slug}", cworkspace.EstimateDetail)
+	r.GET("/standup", cworkspace.StandupList)
+	r.GET("/standup/{slug}", cworkspace.StandupDetail)
+	r.GET("/retro", cworkspace.RetroList)
+	r.GET("/retro/{slug}", cworkspace.RetroDetail)
 }

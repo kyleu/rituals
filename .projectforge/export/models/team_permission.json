@@ -1,19 +1,19 @@
 {
   "name": "team_permission",
-  "title": "Permission",
   "package": "tpermission",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/team/permission",
   "group": [
     "team"
   ],
+  "description": "TODO",
+  "icon": "lock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Permission",
+  "route": "admin/db/team/permission",
   "columns": [
     {
       "name": "team_id",

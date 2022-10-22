@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vteam/vtpermission/Detail.html:23
-	components.StreamSVGRefIcon(qw422016, `users`, ps)
+	components.StreamSVGRefIcon(qw422016, `lock`, ps)
 //line views/vteam/vtpermission/Detail.html:23
 	qw422016.N().S(` `)
 //line views/vteam/vtpermission/Detail.html:23

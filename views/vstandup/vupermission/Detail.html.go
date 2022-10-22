@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vstandup/vupermission/Detail.html:23
-	components.StreamSVGRefIcon(qw422016, `users`, ps)
+	components.StreamSVGRefIcon(qw422016, `lock`, ps)
 //line views/vstandup/vupermission/Detail.html:23
 	qw422016.N().S(` `)
 //line views/vstandup/vupermission/Detail.html:23
@@ -89,7 +89,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Detail.html:31
-	components.StreamSVGRefIcon(qw422016, "star", ps)
+	components.StreamSVGRefIcon(qw422016, "shoe-prints", ps)
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.N().S(`</a>
           </td>

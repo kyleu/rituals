@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/util"
@@ -75,6 +76,30 @@ func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, 
 	err := s.db.Select(ctx, &ret, q, tx, logger, owner)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get sprints by owner [%v]", owner)
+	}
+	return ret.ToSprints(), nil
+}
+
+func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, params *filter.Params, logger util.Logger) (Sprints, error) {
+	params = filters(params)
+	wc := "\"slug\" = $1"
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, slug)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get sprints by slug [%v]", slug)
+	}
+	return ret.ToSprints(), nil
+}
+
+func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.SessionStatus, params *filter.Params, logger util.Logger) (Sprints, error) {
+	params = filters(params)
+	wc := "\"status\" = $1"
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, status)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get sprints by status [%v]", status)
 	}
 	return ret.ToSprints(), nil
 }

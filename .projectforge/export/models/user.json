@@ -3,13 +3,13 @@
   "package": "user",
   "description": "TODO",
   "icon": "profile",
-  "route": "admin/db/user",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "route": "admin/db/user",
   "columns": [
     {
       "name": "id",

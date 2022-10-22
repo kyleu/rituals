@@ -48,7 +48,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/retro/random"><button>Random</button></a></div>
     <h3>`)
 //line views/vretro/Edit.html:21
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
 //line views/vretro/Edit.html:21
 		qw422016.N().S(` New Retro</h3>
     <form action="/admin/db/retro/new" class="mt" method="post">
@@ -67,7 +67,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
 //line views/vretro/Edit.html:25
-		components.StreamSVGRefIcon(qw422016, `star`, ps)
+		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
 //line views/vretro/Edit.html:25
 		qw422016.N().S(` Edit Retro [`)
 //line views/vretro/Edit.html:25

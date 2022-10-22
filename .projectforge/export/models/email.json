@@ -2,14 +2,14 @@
   "name": "email",
   "package": "email",
   "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/email",
+  "icon": "envelope",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "route": "admin/db/email",
   "columns": [
     {
       "name": "id",

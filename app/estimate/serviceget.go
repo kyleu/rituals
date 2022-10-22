@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/util"
@@ -79,6 +80,18 @@ func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, 
 	return ret.ToEstimates(), nil
 }
 
+func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, params *filter.Params, logger util.Logger) (Estimates, error) {
+	params = filters(params)
+	wc := "\"slug\" = $1"
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, slug)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get estimates by slug [%v]", slug)
+	}
+	return ret.ToEstimates(), nil
+}
+
 func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := "\"sprint_id\" = $1"
@@ -87,6 +100,18 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimates by sprintID [%v]", sprintID)
+	}
+	return ret.ToEstimates(), nil
+}
+
+func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.SessionStatus, params *filter.Params, logger util.Logger) (Estimates, error) {
+	params = filters(params)
+	wc := "\"status\" = $1"
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, status)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get estimates by status [%v]", status)
 	}
 	return ret.ToEstimates(), nil
 }

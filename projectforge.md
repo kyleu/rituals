@@ -11,6 +11,7 @@ The following modules were used to build this project:
 - [database](./doc/module/database.md)
 - [export](./doc/module/export.md)
 - [filesystem](./doc/module/filesystem.md)
+- [graphql](./doc/module/graphql.md)
 - [marketing](./doc/module/marketing.md)
 - [migration](./doc/module/migration.md)
 - [oauth](./doc/module/oauth.md)

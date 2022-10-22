@@ -1,19 +1,19 @@
 {
   "name": "standup_member",
-  "title": "Member",
   "package": "umember",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/standup/member",
   "group": [
     "standup"
   ],
+  "description": "TODO",
+  "icon": "users",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Member",
+  "route": "admin/db/standup/member",
   "columns": [
     {
       "name": "standup_id",

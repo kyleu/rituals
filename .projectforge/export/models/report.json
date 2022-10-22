@@ -1,19 +1,19 @@
 {
   "name": "report",
-  "title": "Report",
   "package": "report",
-  "description": "TODO",
-  "icon": "clock",
-  "route": "admin/db/standup/report",
   "group": [
     "standup"
   ],
+  "description": "TODO",
+  "icon": "file-alt",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Report",
+  "route": "admin/db/standup/report",
   "columns": [
     {
       "name": "id",

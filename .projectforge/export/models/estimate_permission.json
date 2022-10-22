@@ -1,19 +1,19 @@
 {
   "name": "estimate_permission",
-  "title": "Permission",
   "package": "epermission",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/estimate/permission",
   "group": [
     "estimate"
   ],
+  "description": "TODO",
+  "icon": "lock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Permission",
+  "route": "admin/db/estimate/permission",
   "columns": [
     {
       "name": "estimate_id",

@@ -1,19 +1,19 @@
 {
   "name": "retro_history",
-  "title": "History",
   "package": "rhistory",
-  "description": "TODO",
-  "icon": "clock",
-  "route": "admin/db/retro/history",
   "group": [
     "retro"
   ],
+  "description": "TODO",
+  "icon": "clock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "History",
+  "route": "admin/db/retro/history",
   "columns": [
     {
       "name": "slug",

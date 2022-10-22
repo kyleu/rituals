@@ -1,19 +1,19 @@
 {
   "name": "sprint_history",
-  "title": "History",
   "package": "shistory",
-  "description": "TODO",
-  "icon": "clock",
-  "route": "admin/db/sprint/history",
   "group": [
     "sprint"
   ],
+  "description": "TODO",
+  "icon": "clock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "History",
+  "route": "admin/db/sprint/history",
   "columns": [
     {
       "name": "slug",

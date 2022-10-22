@@ -1,19 +1,19 @@
 {
   "name": "estimate_member",
-  "title": "Member",
   "package": "emember",
-  "description": "TODO",
-  "icon": "users",
-  "route": "admin/db/estimate/member",
   "group": [
     "estimate"
   ],
+  "description": "TODO",
+  "icon": "users",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Member",
+  "route": "admin/db/estimate/member",
   "columns": [
     {
       "name": "estimate_id",

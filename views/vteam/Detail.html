@@ -85,7 +85,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.EstimatesByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related estimates by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} Related estimates by [team id]</h3>
     <div class="overflow clear">
       {%= vestimate.Table(p.EstimatesByTeamID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -93,7 +93,7 @@
   {%- endif -%}
   {%- if len(p.RetrosByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related retros by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`glasses`, ps) %} Related retros by [team id]</h3>
     <div class="overflow clear">
       {%= vretro.Table(p.RetrosByTeamID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -101,7 +101,7 @@
   {%- endif -%}
   {%- if len(p.SprintsByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related sprints by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`running`, ps) %} Related sprints by [team id]</h3>
     <div class="overflow clear">
       {%= vsprint.Table(p.SprintsByTeamID, nil, nil, p.Params, as, ps) %}
     </div>
@@ -109,7 +109,7 @@
   {%- endif -%}
   {%- if len(p.StandupsByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`star`, ps) %} Related standups by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`shoe-prints`, ps) %} Related standups by [team id]</h3>
     <div class="overflow clear">
       {%= vstandup.Table(p.StandupsByTeamID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -133,7 +133,7 @@
   {%- endif -%}
   {%- if len(p.TeamPermissionsByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related permissions by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`lock`, ps) %} Related permissions by [team id]</h3>
     <div class="overflow clear">
       {%= vtpermission.Table(p.TeamPermissionsByTeamID, nil, p.Params, as, ps) %}
     </div>

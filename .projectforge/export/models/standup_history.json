@@ -1,19 +1,19 @@
 {
   "name": "standup_history",
-  "title": "History",
   "package": "uhistory",
-  "description": "TODO",
-  "icon": "clock",
-  "route": "admin/db/standup/history",
   "group": [
     "standup"
   ],
+  "description": "TODO",
+  "icon": "clock",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "History",
+  "route": "admin/db/standup/history",
   "columns": [
     {
       "name": "slug",

@@ -108,7 +108,7 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 //line views/vestimate/vepermission/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vestimate/vepermission/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "star", ps)
+		components.StreamSVGRefIcon(qw422016, "ruler-horizontal", ps)
 //line views/vestimate/vepermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>

@@ -121,7 +121,7 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
 //line views/vstandup/vreport/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vstandup/vreport/Table.html:33
-		components.StreamSVGRefIcon(qw422016, "star", ps)
+		components.StreamSVGRefIcon(qw422016, "shoe-prints", ps)
 //line views/vstandup/vreport/Table.html:33
 		qw422016.N().S(`</a>
         </td>

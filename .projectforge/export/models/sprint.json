@@ -2,14 +2,14 @@
   "name": "sprint",
   "package": "sprint",
   "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/sprint",
+  "icon": "running",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "route": "admin/db/sprint",
   "columns": [
     {
       "name": "id",
@@ -20,8 +20,8 @@
     {
       "name": "slug",
       "type": "string",
-      "indexed": true,
-      "search": true
+      "search": true,
+      "indexed": true
     },
     {
       "name": "title",

@@ -1,20 +1,20 @@
 {
   "name": "vote",
-  "title": "Vote",
   "package": "vote",
-  "description": "TODO",
-  "icon": "star",
-  "route": "admin/db/estimate/story/vote",
   "group": [
     "estimate",
     "story"
   ],
+  "description": "TODO",
+  "icon": "vote-yea",
   "ordering": [
     {
       "column": "created",
       "asc": false
     }
   ],
+  "title": "Vote",
+  "route": "admin/db/estimate/story/vote",
   "columns": [
     {
       "name": "story_id",
