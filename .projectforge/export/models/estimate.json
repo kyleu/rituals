@@ -20,6 +20,7 @@
     {
       "name": "slug",
       "type": "string",
+      "indexed": true,
       "search": true
     },
     {
@@ -37,7 +38,8 @@
         "t": {
           "ref": "session_status"
         }
-      }
+      },
+      "indexed": true
     },
     {
       "name": "team_id",

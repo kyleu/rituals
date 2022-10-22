@@ -18,6 +18,10 @@ create table if not exists "sprint" (
   primary key ("id")
 );
 
+create index if not exists "sprint__slug_idx" on "sprint" ("slug");
+
+create index if not exists "sprint__status_idx" on "sprint" ("status");
+
 create index if not exists "sprint__owner_idx" on "sprint" ("owner");
 
 create index if not exists "sprint__team_id_idx" on "sprint" ("team_id");

@@ -2,6 +2,7 @@ package cmenu
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -66,6 +67,7 @@ func teamMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.L
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/team/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
+	ret.Badge = fmt.Sprint(len(t))
 	return ret, nil
 }
 
@@ -74,14 +76,15 @@ func sprintMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util
 	if user == nil {
 		return ret, nil
 	}
-	t, err := as.Services.Sprint.GetByOwner(ctx, nil, *user, nil, logger)
+	s, err := as.Services.Sprint.GetByOwner(ctx, nil, *user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
-	for _, x := range t {
+	for _, x := range s {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/sprint/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
+	ret.Badge = fmt.Sprint(len(s))
 	return ret, nil
 }
 
@@ -90,14 +93,15 @@ func estimateMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger ut
 	if user == nil {
 		return ret, nil
 	}
-	t, err := as.Services.Estimate.GetByOwner(ctx, nil, *user, nil, logger)
+	e, err := as.Services.Estimate.GetByOwner(ctx, nil, *user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
-	for _, x := range t {
+	for _, x := range e {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/estimate/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
+	ret.Badge = fmt.Sprint(len(e))
 	return ret, nil
 }
 
@@ -106,14 +110,15 @@ func standupMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger uti
 	if user == nil {
 		return ret, nil
 	}
-	t, err := as.Services.Standup.GetByOwner(ctx, nil, *user, nil, logger)
+	u, err := as.Services.Standup.GetByOwner(ctx, nil, *user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
-	for _, x := range t {
+	for _, x := range u {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/standup/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
+	ret.Badge = fmt.Sprint(len(u))
 	return ret, nil
 }
 
@@ -122,13 +127,14 @@ func retroMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.
 	if user == nil {
 		return ret, nil
 	}
-	t, err := as.Services.Retro.GetByOwner(ctx, nil, *user, nil, logger)
+	r, err := as.Services.Retro.GetByOwner(ctx, nil, *user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
-	for _, x := range t {
+	for _, x := range r {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "star", Route: "/retro/" + x.Slug}
 		ret.Children = append(ret.Children, kid)
 	}
+	ret.Badge = fmt.Sprint(len(r))
 	return ret, nil
 }

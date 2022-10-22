@@ -78,37 +78,41 @@ create table if not exists "retro" (
   primary key ("id")
 );
 
+create index if not exists "retro__slug_idx" on "retro" ("slug");
+
+create index if not exists "retro__status_idx" on "retro" ("status");
+
 create index if not exists "retro__owner_idx" on "retro" ("owner");
 
 create index if not exists "retro__team_id_idx" on "retro" ("team_id");
 
 create index if not exists "retro__sprint_id_idx" on "retro" ("sprint_id");
 -- `)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 }
 
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 func WriteRetroCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	StreamRetroCreate(qw422016)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 }
 
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 func RetroCreate() string {
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	WriteRetroCreate(qb422016)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	qs422016 := string(qb422016.B)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 	return qs422016
-//line queries/ddl/retro.sql:29
+//line queries/ddl/retro.sql:33
 }

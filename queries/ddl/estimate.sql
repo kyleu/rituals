@@ -21,6 +21,10 @@ create table if not exists "estimate" (
   primary key ("id")
 );
 
+create index if not exists "estimate__slug_idx" on "estimate" ("slug");
+
+create index if not exists "estimate__status_idx" on "estimate" ("status");
+
 create index if not exists "estimate__owner_idx" on "estimate" ("owner");
 
 create index if not exists "estimate__team_id_idx" on "estimate" ("team_id");

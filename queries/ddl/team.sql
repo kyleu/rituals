@@ -16,5 +16,9 @@ create table if not exists "team" (
   primary key ("id")
 );
 
+create index if not exists "team__slug_idx" on "team" ("slug");
+
+create index if not exists "team__status_idx" on "team" ("status");
+
 create index if not exists "team__owner_idx" on "team" ("owner");
 -- {% endfunc %}

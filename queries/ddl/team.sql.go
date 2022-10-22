@@ -73,33 +73,37 @@ create table if not exists "team" (
   primary key ("id")
 );
 
+create index if not exists "team__slug_idx" on "team" ("slug");
+
+create index if not exists "team__status_idx" on "team" ("status");
+
 create index if not exists "team__owner_idx" on "team" ("owner");
 -- `)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 }
 
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 func WriteTeamCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	StreamTeamCreate(qw422016)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 }
 
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 func TeamCreate() string {
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	WriteTeamCreate(qb422016)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	qs422016 := string(qb422016.B)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 	return qs422016
-//line queries/ddl/team.sql:20
+//line queries/ddl/team.sql:24
 }

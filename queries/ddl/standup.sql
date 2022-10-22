@@ -20,6 +20,10 @@ create table if not exists "standup" (
   primary key ("id")
 );
 
+create index if not exists "standup__slug_idx" on "standup" ("slug");
+
+create index if not exists "standup__status_idx" on "standup" ("status");
+
 create index if not exists "standup__owner_idx" on "standup" ("owner");
 
 create index if not exists "standup__team_id_idx" on "standup" ("team_id");

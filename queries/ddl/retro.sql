@@ -21,6 +21,10 @@ create table if not exists "retro" (
   primary key ("id")
 );
 
+create index if not exists "retro__slug_idx" on "retro" ("slug");
+
+create index if not exists "retro__status_idx" on "retro" ("status");
+
 create index if not exists "retro__owner_idx" on "retro" ("owner");
 
 create index if not exists "retro__team_id_idx" on "retro" ("team_id");

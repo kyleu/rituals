@@ -78,37 +78,41 @@ create table if not exists "estimate" (
   primary key ("id")
 );
 
+create index if not exists "estimate__slug_idx" on "estimate" ("slug");
+
+create index if not exists "estimate__status_idx" on "estimate" ("status");
+
 create index if not exists "estimate__owner_idx" on "estimate" ("owner");
 
 create index if not exists "estimate__team_id_idx" on "estimate" ("team_id");
 
 create index if not exists "estimate__sprint_id_idx" on "estimate" ("sprint_id");
 -- `)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 }
 
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 func WriteEstimateCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	StreamEstimateCreate(qw422016)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 }
 
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 func EstimateCreate() string {
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	WriteEstimateCreate(qb422016)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	qs422016 := string(qb422016.B)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 	return qs422016
-//line queries/ddl/estimate.sql:29
+//line queries/ddl/estimate.sql:33
 }
