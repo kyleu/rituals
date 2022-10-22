@@ -2,14 +2,16 @@ package cmenu
 
 import (
 	"context"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"golang.org/x/exp/maps"
+
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/lib/menu"
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
-	"golang.org/x/exp/maps"
 )
 
 var workspaceServices = []enum.ModelService{
