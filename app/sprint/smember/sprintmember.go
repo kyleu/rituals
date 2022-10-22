@@ -101,7 +101,7 @@ func (s *SprintMember) TitleString() string {
 }
 
 func (s *SprintMember) WebPath() string {
-	return "/sprint/smember" + "/" + s.SprintID.String() + "/" + s.UserID.String()
+	return "/admin/db/sprint/member" + "/" + s.SprintID.String() + "/" + s.UserID.String()
 }
 
 func (s *SprintMember) Diff(sx *SprintMember) util.Diffs {

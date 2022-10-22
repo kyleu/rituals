@@ -69,7 +69,7 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
 	for _, model := range models {
 //line views/vsprint/vshistory/Table.html:23
 		qw422016.N().S(`      <tr>
-        <td><a href="/sprint/shistory/`)
+        <td><a href="/admin/db/sprint/history/`)
 //line views/vsprint/vshistory/Table.html:25
 		qw422016.N().U(model.Slug)
 //line views/vsprint/vshistory/Table.html:25

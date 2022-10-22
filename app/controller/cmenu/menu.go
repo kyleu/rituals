@@ -18,6 +18,15 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State, lo
 
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$
+	ws, err := workspaceMenu(ctx, as, logger)
+	if err != nil {
+		return nil, err
+	}
+
+	ret = append(ret, ws...)
+	if isAdmin {
+		ret = append(ret, menu.Separator)
+	}
 	// $PF_SECTION_END(routes_start)$
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)

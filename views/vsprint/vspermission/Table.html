@@ -24,11 +24,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td>
-          <div class="icon"><a href="/sprint/spermission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <div class="icon"><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
           <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
         </td>
-        <td><a href="/sprint/spermission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
-        <td><a href="/sprint/spermission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
+        <td><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
+        <td><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
         <td>{%s model.Access %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
       </tr>

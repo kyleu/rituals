@@ -3,6 +3,7 @@
   "package": "retro",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/retro",
   "ordering": [
     {
       "column": "created",

@@ -4,6 +4,7 @@
   "package": "epermission",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/estimate/permission",
   "group": [
     "estimate"
   ],

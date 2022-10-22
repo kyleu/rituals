@@ -75,7 +75,7 @@ func (r *RetroHistory) TitleString() string {
 }
 
 func (r *RetroHistory) WebPath() string {
-	return "/retro/rhistory" + "/" + r.Slug
+	return "/admin/db/retro/history" + "/" + r.Slug
 }
 
 func (r *RetroHistory) Diff(rx *RetroHistory) util.Diffs {

@@ -16,9 +16,9 @@
 {% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     {%- if p.IsNew -%}
-    <div class="right"><a href="/estimate/ehistory/random"><button>Random</button></a></div>
+    <div class="right"><a href="/admin/db/estimate/history/random"><button>Random</button></a></div>
     <h3>{%= components.SVGRefIcon(`clock`, ps) %} New History</h3>
-    <form action="/estimate/ehistory/new" class="mt" method="post">
+    <form action="/admin/db/estimate/history/new" class="mt" method="post">
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete history [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
     <h3>{%= components.SVGRefIcon(`clock`, ps) %} Edit History [{%s p.Model.String() %}]</h3>

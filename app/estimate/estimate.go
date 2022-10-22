@@ -119,7 +119,7 @@ func (e *Estimate) TitleString() string {
 }
 
 func (e *Estimate) WebPath() string {
-	return "/estimate" + "/" + e.ID.String()
+	return "/admin/db/estimate" + "/" + e.ID.String()
 }
 
 func (e *Estimate) Diff(ex *Estimate) util.Diffs {

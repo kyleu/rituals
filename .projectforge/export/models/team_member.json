@@ -4,6 +4,7 @@
   "package": "tmember",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/team/member",
   "group": [
     "team"
   ],

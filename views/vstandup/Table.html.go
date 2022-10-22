@@ -96,7 +96,7 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, users user.
 	for _, model := range models {
 //line views/vstandup/Table.html:30
 		qw422016.N().S(`      <tr>
-        <td><a href="/standup/`)
+        <td><a href="/admin/db/standup/`)
 //line views/vstandup/Table.html:32
 		components.StreamDisplayUUID(qw422016, &model.ID)
 //line views/vstandup/Table.html:32

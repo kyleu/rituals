@@ -33,6 +33,7 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	generatedRoutes(r)
 
 	// $PF_SECTION_START(routes)$
+	workspaceRoutes(r)
 	// $PF_SECTION_END(routes)$
 
 	r.GET("/admin", clib.Admin)

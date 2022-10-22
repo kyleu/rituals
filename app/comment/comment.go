@@ -121,7 +121,7 @@ func (c *Comment) TitleString() string {
 }
 
 func (c *Comment) WebPath() string {
-	return "/comment" + "/" + c.ID.String()
+	return "/admin/db/comment" + "/" + c.ID.String()
 }
 
 func (c *Comment) Diff(cx *Comment) util.Diffs {

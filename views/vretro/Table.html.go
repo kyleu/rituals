@@ -101,7 +101,7 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, users user.User
 	for _, model := range models {
 //line views/vretro/Table.html:31
 		qw422016.N().S(`      <tr>
-        <td><a href="/retro/`)
+        <td><a href="/admin/db/retro/`)
 //line views/vretro/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.ID)
 //line views/vretro/Table.html:33

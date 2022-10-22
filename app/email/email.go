@@ -113,7 +113,7 @@ func (e *Email) TitleString() string {
 }
 
 func (e *Email) WebPath() string {
-	return "/email" + "/" + e.ID.String()
+	return "/admin/db/email" + "/" + e.ID.String()
 }
 
 func (e *Email) Diff(ex *Email) util.Diffs {

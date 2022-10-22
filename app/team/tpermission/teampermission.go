@@ -89,7 +89,7 @@ func (t *TeamPermission) TitleString() string {
 }
 
 func (t *TeamPermission) WebPath() string {
-	return "/team/tpermission" + "/" + t.TeamID.String() + "/" + t.K + "/" + t.V
+	return "/admin/db/team/permission" + "/" + t.TeamID.String() + "/" + t.K + "/" + t.V
 }
 
 func (t *TeamPermission) Diff(tx *TeamPermission) util.Diffs {

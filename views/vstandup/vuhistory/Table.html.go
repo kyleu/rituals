@@ -69,7 +69,7 @@ func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, st
 	for _, model := range models {
 //line views/vstandup/vuhistory/Table.html:23
 		qw422016.N().S(`      <tr>
-        <td><a href="/standup/uhistory/`)
+        <td><a href="/admin/db/standup/history/`)
 //line views/vstandup/vuhistory/Table.html:25
 		qw422016.N().U(model.Slug)
 //line views/vstandup/vuhistory/Table.html:25

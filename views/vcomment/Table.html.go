@@ -94,7 +94,7 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, users user.
 	for _, model := range models {
 //line views/vcomment/Table.html:28
 		qw422016.N().S(`      <tr>
-        <td><a href="/comment/`)
+        <td><a href="/admin/db/comment/`)
 //line views/vcomment/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.ID)
 //line views/vcomment/Table.html:30

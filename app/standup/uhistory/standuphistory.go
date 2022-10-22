@@ -75,7 +75,7 @@ func (s *StandupHistory) TitleString() string {
 }
 
 func (s *StandupHistory) WebPath() string {
-	return "/standup/uhistory" + "/" + s.Slug
+	return "/admin/db/standup/history" + "/" + s.Slug
 }
 
 func (s *StandupHistory) Diff(sx *StandupHistory) util.Diffs {

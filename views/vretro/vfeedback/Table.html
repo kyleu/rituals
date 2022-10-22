@@ -28,7 +28,7 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/retro/feedback/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td><a href="/admin/db/retro/feedback/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retros.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
           <a title="Retro" href="{%s `/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>

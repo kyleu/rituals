@@ -90,7 +90,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 	for _, model := range models {
 //line views/vsprint/Table.html:28
 		qw422016.N().S(`      <tr>
-        <td><a href="/sprint/`)
+        <td><a href="/admin/db/sprint/`)
 //line views/vsprint/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.ID)
 //line views/vsprint/Table.html:30

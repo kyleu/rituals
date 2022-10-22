@@ -27,7 +27,7 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/email/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td><a href="/admin/db/email/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>{%= components.DisplayStringArray(model.Recipients) %}</td>
         <td>{%s model.Subject %}</td>
         <td>{%= components.JSON(model.Data) %}</td>

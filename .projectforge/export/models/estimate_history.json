@@ -4,6 +4,7 @@
   "package": "ehistory",
   "description": "TODO",
   "icon": "clock",
+  "route": "admin/db/estimate/history",
   "group": [
     "estimate"
   ],

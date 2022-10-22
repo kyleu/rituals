@@ -3,6 +3,7 @@
   "package": "sprint",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/sprint",
   "ordering": [
     {
       "column": "created",
@@ -90,8 +91,8 @@
   "seedData": [
     [
       "20000000-0000-0000-0000-000000000000",
-      "team-a",
-      "Team A",
+      "sprint-a",
+      "Sprint A",
       "new",
       "10000000-0000-0000-0000-000000000000",
       "90000000-0000-0000-0000-000000000000",

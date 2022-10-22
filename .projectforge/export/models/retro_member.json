@@ -4,6 +4,7 @@
   "package": "rmember",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/retro/member",
   "group": [
     "retro"
   ],

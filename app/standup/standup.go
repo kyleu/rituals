@@ -112,7 +112,7 @@ func (s *Standup) TitleString() string {
 }
 
 func (s *Standup) WebPath() string {
-	return "/standup" + "/" + s.ID.String()
+	return "/admin/db/standup" + "/" + s.ID.String()
 }
 
 func (s *Standup) Diff(sx *Standup) util.Diffs {

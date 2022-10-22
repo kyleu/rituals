@@ -22,7 +22,7 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/standup/uhistory/{%u model.Slug %}">{%s model.Slug %}</a></td>
+        <td><a href="/admin/db/standup/history/{%u model.Slug %}">{%s model.Slug %}</a></td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
           <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>

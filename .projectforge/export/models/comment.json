@@ -3,6 +3,7 @@
   "package": "comment",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/comment",
   "ordering": [
     {
       "column": "created",

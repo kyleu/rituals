@@ -62,7 +62,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(p.Model.TitleString())
 //line views/vcomment/Detail.html:23
 	qw422016.N().S(`</h3>
-    <div><a href="/comment"><em>Comment</em></a></div>
+    <div><a href="/admin/db/comment"><em>Comment</em></a></div>
     <table class="mt">
       <tbody>
         <tr>

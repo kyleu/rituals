@@ -4,6 +4,7 @@
   "package": "rhistory",
   "description": "TODO",
   "icon": "clock",
+  "route": "admin/db/retro/history",
   "group": [
     "retro"
   ],

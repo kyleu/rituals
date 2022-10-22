@@ -41,7 +41,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vuser/List.html:17
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/user/new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/user/new"><button>New</button></a></div>
     <h3>`)
 //line views/vuser/List.html:20
 	components.StreamSVGRefIcon(qw422016, `profile`, ps)

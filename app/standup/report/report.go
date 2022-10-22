@@ -108,7 +108,7 @@ func (r *Report) TitleString() string {
 }
 
 func (r *Report) WebPath() string {
-	return "/standup/report" + "/" + r.ID.String()
+	return "/admin/db/standup/report" + "/" + r.ID.String()
 }
 
 func (r *Report) Diff(rx *Report) util.Diffs {

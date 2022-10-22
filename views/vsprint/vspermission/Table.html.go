@@ -75,7 +75,7 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:24
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/sprint/spermission/`)
+          <div class="icon"><a href="/admin/db/sprint/permission/`)
 //line views/vsprint/vspermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.SprintID)
 //line views/vsprint/vspermission/Table.html:27
@@ -112,7 +112,7 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>
-        <td><a href="/sprint/spermission/`)
+        <td><a href="/admin/db/sprint/permission/`)
 //line views/vsprint/vspermission/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.SprintID)
 //line views/vsprint/vspermission/Table.html:30
@@ -129,7 +129,7 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 		qw422016.E().S(model.K)
 //line views/vsprint/vspermission/Table.html:30
 		qw422016.N().S(`</a></td>
-        <td><a href="/sprint/spermission/`)
+        <td><a href="/admin/db/sprint/permission/`)
 //line views/vsprint/vspermission/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.SprintID)
 //line views/vsprint/vspermission/Table.html:31

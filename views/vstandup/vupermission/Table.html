@@ -24,11 +24,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td>
-          <div class="icon"><a href="/standup/upermission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <div class="icon"><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
           <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
         </td>
-        <td><a href="/standup/upermission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
-        <td><a href="/standup/upermission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
+        <td><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
+        <td><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
         <td>{%s model.Access %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
       </tr>

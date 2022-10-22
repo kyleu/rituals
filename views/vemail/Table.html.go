@@ -94,7 +94,7 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, users user.User
 	for _, model := range models {
 //line views/vemail/Table.html:28
 		qw422016.N().S(`      <tr>
-        <td><a href="/email/`)
+        <td><a href="/admin/db/email/`)
 //line views/vemail/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.ID)
 //line views/vemail/Table.html:30

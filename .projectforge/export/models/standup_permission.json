@@ -4,6 +4,7 @@
   "package": "upermission",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/standup/permission",
   "group": [
     "standup"
   ],

@@ -4,6 +4,7 @@
   "package": "rpermission",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/retro/permission",
   "group": [
     "retro"
   ],

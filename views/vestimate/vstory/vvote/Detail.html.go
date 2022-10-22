@@ -64,7 +64,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(p.Model.TitleString())
 //line views/vestimate/vstory/vvote/Detail.html:25
 	qw422016.N().S(`</h3>
-    <div><a href="/estimate/story/vote"><em>Vote</em></a></div>
+    <div><a href="/admin/db/estimate/story/vote"><em>Vote</em></a></div>
     <table class="mt">
       <tbody>
         <tr>

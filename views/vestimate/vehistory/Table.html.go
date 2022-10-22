@@ -69,7 +69,7 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 	for _, model := range models {
 //line views/vestimate/vehistory/Table.html:23
 		qw422016.N().S(`      <tr>
-        <td><a href="/estimate/ehistory/`)
+        <td><a href="/admin/db/estimate/history/`)
 //line views/vestimate/vehistory/Table.html:25
 		qw422016.N().U(model.Slug)
 //line views/vestimate/vehistory/Table.html:25

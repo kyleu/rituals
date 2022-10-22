@@ -4,6 +4,7 @@
   "package": "shistory",
   "description": "TODO",
   "icon": "clock",
+  "route": "admin/db/sprint/history",
   "group": [
     "sprint"
   ],

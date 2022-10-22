@@ -45,7 +45,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vsprint/List.html:21
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/sprint/new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/sprint/new"><button>New</button></a></div>
     <h3>`)
 //line views/vsprint/List.html:24
 	components.StreamSVGRefIcon(qw422016, `star`, ps)

@@ -86,7 +86,7 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 //line views/vstandup/vumember/Table.html:27
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/standup/umember/`)
+          <div class="icon"><a href="/admin/db/standup/member/`)
 //line views/vstandup/vumember/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vumember/Table.html:30
@@ -120,7 +120,7 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 		qw422016.N().S(`</a>
         </td>
         <td>
-          <div class="icon"><a href="/standup/umember/`)
+          <div class="icon"><a href="/admin/db/standup/member/`)
 //line views/vstandup/vumember/Table.html:34
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vumember/Table.html:34

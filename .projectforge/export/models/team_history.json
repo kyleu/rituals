@@ -4,6 +4,7 @@
   "package": "thistory",
   "description": "TODO",
   "icon": "clock",
+  "route": "admin/db/team/history",
   "group": [
     "team"
   ],

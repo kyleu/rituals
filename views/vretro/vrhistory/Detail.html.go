@@ -62,7 +62,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(p.Model.TitleString())
 //line views/vretro/vrhistory/Detail.html:23
 	qw422016.N().S(`</h3>
-    <div><a href="/retro/rhistory"><em>History</em></a></div>
+    <div><a href="/admin/db/retro/history"><em>History</em></a></div>
     <table class="mt">
       <tbody>
         <tr>

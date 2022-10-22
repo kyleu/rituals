@@ -75,7 +75,7 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 //line views/vestimate/vepermission/Table.html:24
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/estimate/epermission/`)
+          <div class="icon"><a href="/admin/db/estimate/permission/`)
 //line views/vestimate/vepermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vepermission/Table.html:27
@@ -112,7 +112,7 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 //line views/vestimate/vepermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>
-        <td><a href="/estimate/epermission/`)
+        <td><a href="/admin/db/estimate/permission/`)
 //line views/vestimate/vepermission/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vepermission/Table.html:30
@@ -129,7 +129,7 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 		qw422016.E().S(model.K)
 //line views/vestimate/vepermission/Table.html:30
 		qw422016.N().S(`</a></td>
-        <td><a href="/estimate/epermission/`)
+        <td><a href="/admin/db/estimate/permission/`)
 //line views/vestimate/vepermission/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vepermission/Table.html:31

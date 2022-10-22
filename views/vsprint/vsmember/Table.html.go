@@ -86,7 +86,7 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 //line views/vsprint/vsmember/Table.html:27
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/sprint/smember/`)
+          <div class="icon"><a href="/admin/db/sprint/member/`)
 //line views/vsprint/vsmember/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.SprintID)
 //line views/vsprint/vsmember/Table.html:30
@@ -120,7 +120,7 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 		qw422016.N().S(`</a>
         </td>
         <td>
-          <div class="icon"><a href="/sprint/smember/`)
+          <div class="icon"><a href="/admin/db/sprint/member/`)
 //line views/vsprint/vsmember/Table.html:34
 		components.StreamDisplayUUID(qw422016, &model.SprintID)
 //line views/vsprint/vsmember/Table.html:34

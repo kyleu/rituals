@@ -23,7 +23,7 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/user/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td><a href="/admin/db/user/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td><strong>{%s model.Name %}</strong></td>
         <td>{%s model.Role %}</td>
         <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>

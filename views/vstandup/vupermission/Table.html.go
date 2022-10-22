@@ -75,7 +75,7 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 //line views/vstandup/vupermission/Table.html:24
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/standup/upermission/`)
+          <div class="icon"><a href="/admin/db/standup/permission/`)
 //line views/vstandup/vupermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vupermission/Table.html:27
@@ -112,7 +112,7 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 //line views/vstandup/vupermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>
-        <td><a href="/standup/upermission/`)
+        <td><a href="/admin/db/standup/permission/`)
 //line views/vstandup/vupermission/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vupermission/Table.html:30
@@ -129,7 +129,7 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 		qw422016.E().S(model.K)
 //line views/vstandup/vupermission/Table.html:30
 		qw422016.N().S(`</a></td>
-        <td><a href="/standup/upermission/`)
+        <td><a href="/admin/db/standup/permission/`)
 //line views/vstandup/vupermission/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vupermission/Table.html:31

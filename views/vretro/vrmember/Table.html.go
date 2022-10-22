@@ -86,7 +86,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retros 
 //line views/vretro/vrmember/Table.html:27
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/retro/rmember/`)
+          <div class="icon"><a href="/admin/db/retro/member/`)
 //line views/vretro/vrmember/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrmember/Table.html:30
@@ -120,7 +120,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retros 
 		qw422016.N().S(`</a>
         </td>
         <td>
-          <div class="icon"><a href="/retro/rmember/`)
+          <div class="icon"><a href="/admin/db/retro/member/`)
 //line views/vretro/vrmember/Table.html:34
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrmember/Table.html:34

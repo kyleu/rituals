@@ -3,6 +3,7 @@
   "package": "team",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/team",
   "ordering": [
     {
       "column": "created",

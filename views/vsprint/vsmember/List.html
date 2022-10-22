@@ -20,7 +20,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/sprint/smember/new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/sprint/member/new"><button>New</button></a></div>
     <h3>{%= components.SVGRefIcon(`users`, ps) %}{%s ps.Title %}</h3>
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No members available</em></div>

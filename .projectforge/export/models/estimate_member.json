@@ -4,6 +4,7 @@
   "package": "emember",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/estimate/member",
   "group": [
     "estimate"
   ],

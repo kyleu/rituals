@@ -3,6 +3,7 @@
   "package": "estimate",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/estimate",
   "ordering": [
     {
       "column": "created",

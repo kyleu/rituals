@@ -87,7 +87,7 @@ func (v *Vote) TitleString() string {
 }
 
 func (v *Vote) WebPath() string {
-	return "/estimate/story/vote" + "/" + v.StoryID.String() + "/" + v.UserID.String()
+	return "/admin/db/estimate/story/vote" + "/" + v.StoryID.String() + "/" + v.UserID.String()
 }
 
 func (v *Vote) Diff(vx *Vote) util.Diffs {

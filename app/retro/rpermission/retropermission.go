@@ -89,7 +89,7 @@ func (r *RetroPermission) TitleString() string {
 }
 
 func (r *RetroPermission) WebPath() string {
-	return "/retro/rpermission" + "/" + r.RetroID.String() + "/" + r.K + "/" + r.V
+	return "/admin/db/retro/permission" + "/" + r.RetroID.String() + "/" + r.K + "/" + r.V
 }
 
 func (r *RetroPermission) Diff(rx *RetroPermission) util.Diffs {

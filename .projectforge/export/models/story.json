@@ -4,6 +4,7 @@
   "package": "story",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/estimate/story",
   "group": [
     "estimate"
   ],

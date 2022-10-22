@@ -4,6 +4,7 @@
   "package": "smember",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/sprint/member",
   "group": [
     "sprint"
   ],

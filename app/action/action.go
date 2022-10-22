@@ -111,7 +111,7 @@ func (a *Action) TitleString() string {
 }
 
 func (a *Action) WebPath() string {
-	return "/action" + "/" + a.ID.String()
+	return "/admin/db/action" + "/" + a.ID.String()
 }
 
 func (a *Action) Diff(ax *Action) util.Diffs {

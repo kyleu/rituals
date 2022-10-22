@@ -85,7 +85,7 @@ func (u *User) TitleString() string {
 }
 
 func (u *User) WebPath() string {
-	return "/user" + "/" + u.ID.String()
+	return "/admin/db/user" + "/" + u.ID.String()
 }
 
 func (u *User) Diff(ux *User) util.Diffs {

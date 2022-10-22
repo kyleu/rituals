@@ -24,11 +24,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td>
-          <div class="icon"><a href="/retro/rpermission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retros.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <div class="icon"><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retros.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
           <a title="Retro" href="{%s `/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRefIcon("star", ps) %}</a>
         </td>
-        <td><a href="/retro/rpermission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
-        <td><a href="/retro/rpermission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
+        <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
+        <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
         <td>{%s model.Access %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
       </tr>

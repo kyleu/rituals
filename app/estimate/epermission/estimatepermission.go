@@ -89,7 +89,7 @@ func (e *EstimatePermission) TitleString() string {
 }
 
 func (e *EstimatePermission) WebPath() string {
-	return "/estimate/epermission" + "/" + e.EstimateID.String() + "/" + e.K + "/" + e.V
+	return "/admin/db/estimate/permission" + "/" + e.EstimateID.String() + "/" + e.K + "/" + e.V
 }
 
 func (e *EstimatePermission) Diff(ex *EstimatePermission) util.Diffs {

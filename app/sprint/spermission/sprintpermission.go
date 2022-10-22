@@ -89,7 +89,7 @@ func (s *SprintPermission) TitleString() string {
 }
 
 func (s *SprintPermission) WebPath() string {
-	return "/sprint/spermission" + "/" + s.SprintID.String() + "/" + s.K + "/" + s.V
+	return "/admin/db/sprint/permission" + "/" + s.SprintID.String() + "/" + s.K + "/" + s.V
 }
 
 func (s *SprintPermission) Diff(sx *SprintPermission) util.Diffs {

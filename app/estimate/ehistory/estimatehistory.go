@@ -75,7 +75,7 @@ func (e *EstimateHistory) TitleString() string {
 }
 
 func (e *EstimateHistory) WebPath() string {
-	return "/estimate/ehistory" + "/" + e.Slug
+	return "/admin/db/estimate/history" + "/" + e.Slug
 }
 
 func (e *EstimateHistory) Diff(ex *EstimateHistory) util.Diffs {

@@ -4,6 +4,7 @@
   "package": "tpermission",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/team/permission",
   "group": [
     "team"
   ],

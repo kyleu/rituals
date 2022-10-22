@@ -75,7 +75,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 //line views/vteam/vtpermission/Table.html:24
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/team/tpermission/`)
+          <div class="icon"><a href="/admin/db/team/permission/`)
 //line views/vteam/vtpermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vtpermission/Table.html:27
@@ -112,7 +112,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 //line views/vteam/vtpermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>
-        <td><a href="/team/tpermission/`)
+        <td><a href="/admin/db/team/permission/`)
 //line views/vteam/vtpermission/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vtpermission/Table.html:30
@@ -129,7 +129,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 		qw422016.E().S(model.K)
 //line views/vteam/vtpermission/Table.html:30
 		qw422016.N().S(`</a></td>
-        <td><a href="/team/tpermission/`)
+        <td><a href="/admin/db/team/permission/`)
 //line views/vteam/vtpermission/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vtpermission/Table.html:31

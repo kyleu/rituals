@@ -75,7 +75,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 //line views/vretro/vrpermission/Table.html:24
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/retro/rpermission/`)
+          <div class="icon"><a href="/admin/db/retro/permission/`)
 //line views/vretro/vrpermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrpermission/Table.html:27
@@ -112,7 +112,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 //line views/vretro/vrpermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>
-        <td><a href="/retro/rpermission/`)
+        <td><a href="/admin/db/retro/permission/`)
 //line views/vretro/vrpermission/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrpermission/Table.html:30
@@ -129,7 +129,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 		qw422016.E().S(model.K)
 //line views/vretro/vrpermission/Table.html:30
 		qw422016.N().S(`</a></td>
-        <td><a href="/retro/rpermission/`)
+        <td><a href="/admin/db/retro/permission/`)
 //line views/vretro/vrpermission/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrpermission/Table.html:31

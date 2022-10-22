@@ -4,6 +4,7 @@
   "package": "umember",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/standup/member",
   "group": [
     "standup"
   ],

@@ -89,7 +89,7 @@ func (s *StandupPermission) TitleString() string {
 }
 
 func (s *StandupPermission) WebPath() string {
-	return "/standup/upermission" + "/" + s.StandupID.String() + "/" + s.K + "/" + s.V
+	return "/admin/db/standup/permission" + "/" + s.StandupID.String() + "/" + s.K + "/" + s.V
 }
 
 func (s *StandupPermission) Diff(sx *StandupPermission) util.Diffs {

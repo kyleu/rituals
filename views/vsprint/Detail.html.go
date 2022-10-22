@@ -84,7 +84,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(p.Model.TitleString())
 //line views/vsprint/Detail.html:45
 	qw422016.N().S(`</h3>
-    <div><a href="/sprint"><em>Sprint</em></a></div>
+    <div><a href="/admin/db/sprint"><em>Sprint</em></a></div>
     <table class="mt">
       <tbody>
         <tr>

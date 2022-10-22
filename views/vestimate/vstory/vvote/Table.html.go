@@ -76,7 +76,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 //line views/vestimate/vstory/vvote/Table.html:25
 		qw422016.N().S(`      <tr>
         <td>
-          <div class="icon"><a href="/estimate/story/vote/`)
+          <div class="icon"><a href="/admin/db/estimate/story/vote/`)
 //line views/vestimate/vstory/vvote/Table.html:28
 		components.StreamDisplayUUID(qw422016, &model.StoryID)
 //line views/vestimate/vstory/vvote/Table.html:28
@@ -110,7 +110,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 		qw422016.N().S(`</a>
         </td>
         <td>
-          <div class="icon"><a href="/estimate/story/vote/`)
+          <div class="icon"><a href="/admin/db/estimate/story/vote/`)
 //line views/vestimate/vstory/vvote/Table.html:32
 		components.StreamDisplayUUID(qw422016, &model.StoryID)
 //line views/vestimate/vstory/vvote/Table.html:32

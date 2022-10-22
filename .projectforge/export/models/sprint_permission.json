@@ -4,6 +4,7 @@
   "package": "spermission",
   "description": "TODO",
   "icon": "users",
+  "route": "admin/db/sprint/permission",
   "group": [
     "sprint"
   ],

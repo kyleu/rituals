@@ -3,6 +3,7 @@
   "package": "action",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/action",
   "ordering": [
     {
       "column": "created",

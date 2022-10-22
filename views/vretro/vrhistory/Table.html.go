@@ -69,7 +69,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 	for _, model := range models {
 //line views/vretro/vrhistory/Table.html:23
 		qw422016.N().S(`      <tr>
-        <td><a href="/retro/rhistory/`)
+        <td><a href="/admin/db/retro/history/`)
 //line views/vretro/vrhistory/Table.html:25
 		qw422016.N().U(model.Slug)
 //line views/vretro/vrhistory/Table.html:25

@@ -4,6 +4,7 @@
   "package": "uhistory",
   "description": "TODO",
   "icon": "clock",
+  "route": "admin/db/standup/history",
   "group": [
     "standup"
   ],

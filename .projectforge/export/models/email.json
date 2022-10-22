@@ -3,6 +3,7 @@
   "package": "email",
   "description": "TODO",
   "icon": "star",
+  "route": "admin/db/email",
   "ordering": [
     {
       "column": "created",

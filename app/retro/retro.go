@@ -119,7 +119,7 @@ func (r *Retro) TitleString() string {
 }
 
 func (r *Retro) WebPath() string {
-	return "/retro" + "/" + r.ID.String()
+	return "/admin/db/retro" + "/" + r.ID.String()
 }
 
 func (r *Retro) Diff(rx *Retro) util.Diffs {
