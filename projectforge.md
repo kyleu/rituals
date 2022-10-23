@@ -19,4 +19,5 @@ The following modules were used to build this project:
 - [sandbox](./doc/module/sandbox.md)
 - [search](./doc/module/search.md)
 - [upgrade](./doc/module/upgrade.md)
+- [user](./doc/module/user.md)
 - [websocket](./doc/module/websocket.md)

@@ -2,24 +2,29 @@
 package cutil
 
 import (
+	"context"
+	"time"
+
 	"github.com/valyala/fasthttp"
 
+	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/csession"
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/telemetry/httpmetrics"
 	"github.com/kyleu/rituals/app/lib/user"
+	usr "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
 var initialIcons = []string{"searchbox"}
 
-func LoadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
+func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
 	ctx, logger := httpmetrics.ExtractHeaders(rc, logger)
 	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
 	httpmetrics.InjectHTTP(rc, span)
 
-	session, flashes, prof, accts := loadSession(rc, logger)
+	session, flashes, prof, accts := loadSession(ctx, as, rc, logger)
 
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts)
@@ -31,7 +36,7 @@ func LoadPageState(rc *fasthttp.RequestCtx, key string, logger util.Logger) *Pag
 	}
 }
 
-func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
+func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
 	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
 	session := util.ValueMap{}
 	if len(sessionBytes) > 0 {
@@ -59,6 +64,22 @@ func loadSession(rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
+	if prof.ID == util.UUIDDefault {
+		prof.ID = util.UUID()
+		u := &usr.User{ID: prof.ID, Name: prof.Name, Created: time.Now()}
+		err = as.Services.User.Save(ctx, nil, logger, u)
+		if err != nil {
+			logger.Warnf("unable to save user [%s]", prof.ID.String())
+			return nil, nil, prof, nil
+		}
+		session["userID"] = prof
+		err = csession.SaveSession(rc, session, logger)
+		if err != nil {
+			logger.Warnf("unable to save session for user [%s]", prof.ID.String())
+			return nil, nil, prof, nil
+		}
+	}
+
 	var accts user.Accounts
 	authX, ok := session[csession.WebAuthKey]
 	if ok {
@@ -78,7 +99,11 @@ func loadProfile(session util.ValueMap) (*user.Profile, error) {
 	}
 	s, ok := x.(string)
 	if !ok {
-		return user.DefaultProfile.Clone(), nil
+		m, ok := x.(map[string]any)
+		if !ok {
+			return user.DefaultProfile.Clone(), nil
+		}
+		s = util.ToJSON(m)
 	}
 	p := &user.Profile{}
 	err := util.FromJSON([]byte(s), p)

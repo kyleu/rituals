@@ -21,7 +21,7 @@ func RetroList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Data = ts
-		return controller.Render(rc, as, &views.Debug{}, ps)
+		return controller.Render(rc, as, &views.Debug{}, ps, "retros")
 	})
 }
 
@@ -32,11 +32,11 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "must provide [slug] in path")
 		}
-		t, err := as.Services.Workspace.LoadRetro(ps.Context, slug, *owner, ps.Logger)
+		r, err := as.Services.Workspace.LoadRetro(ps.Context, slug, *owner, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		ps.Data = t
-		return controller.Render(rc, as, &views.Debug{}, ps)
+		ps.Data = r
+		return controller.Render(rc, as, &views.Debug{}, ps, "retros", r.Retro.ID.String())
 	})
 }

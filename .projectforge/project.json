@@ -18,6 +18,7 @@
     "sandbox",
     "search",
     "upgrade",
+    "user",
     "websocket"
   ],
   "tags": [

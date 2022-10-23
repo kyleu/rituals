@@ -105,12 +105,12 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	um := umember.NewService(st.DB)
 	uh := uhistory.NewService(st.DB)
 	up := upermission.NewService(st.DB)
-	rp := report.NewService(st.DB)
+	rpt := report.NewService(st.DB)
 
 	r := retro.NewService(st.DB)
 	rm := rmember.NewService(st.DB)
 	rh := rhistory.NewService(st.DB)
-	rpm := rpermission.NewService(st.DB)
+	rp := rpermission.NewService(st.DB)
 	f := feedback.NewService(st.DB)
 
 	a := action.NewService(st.DB)
@@ -121,13 +121,13 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	ws := websocket.NewService(logger, nil, nil, nil, nil)
 
 	return &Services{
-		Workspace: workspace.NewService(t, s, e, u, r),
+		Workspace: workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, u, uh, um, up, r, rh, rm, rp),
 
 		User: us, Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
 		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,
 		Estimate: e, EstimateMember: em, EstimateHistory: eh, EstimatePermission: ep, Story: sy, Vote: v,
-		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rp,
-		Retro: r, RetroMember: rm, RetroHistory: rh, RetroPermission: rpm, Feedback: f,
+		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rpt,
+		Retro: r, RetroMember: rm, RetroHistory: rh, RetroPermission: rp, Feedback: f,
 		Action: a, Comment: c, Email: el, GQL: g, Socket: ws,
 	}, nil
 }

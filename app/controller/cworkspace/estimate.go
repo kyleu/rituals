@@ -21,7 +21,7 @@ func EstimateList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Data = ts
-		return controller.Render(rc, as, &views.Debug{}, ps)
+		return controller.Render(rc, as, &views.Debug{}, ps, "estimates")
 	})
 }
 
@@ -32,11 +32,11 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "must provide [slug] in path")
 		}
-		t, err := as.Services.Workspace.LoadEstimate(ps.Context, slug, *owner, ps.Logger)
+		e, err := as.Services.Workspace.LoadEstimate(ps.Context, slug, *owner, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		ps.Data = t
-		return controller.Render(rc, as, &views.Debug{}, ps)
+		ps.Data = e
+		return controller.Render(rc, as, &views.Debug{}, ps, "estimates", e.Estimate.ID.String())
 	})
 }

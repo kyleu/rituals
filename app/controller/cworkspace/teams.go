@@ -21,7 +21,7 @@ func TeamList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Data = ts
-		return controller.Render(rc, as, &views.Debug{}, ps)
+		return controller.Render(rc, as, &views.Debug{}, ps, "teams")
 	})
 }
 
@@ -37,6 +37,6 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		ps.Data = t
-		return controller.Render(rc, as, &views.Debug{}, ps)
+		return controller.Render(rc, as, &views.Debug{}, ps, "teams", t.Team.ID.String())
 	})
 }

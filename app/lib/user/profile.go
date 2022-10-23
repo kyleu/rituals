@@ -3,12 +3,15 @@ package user
 
 import (
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type Profile struct {
-	Name  string `json:"name"`
-	Mode  string `json:"mode,omitempty"`
-	Theme string `json:"theme,omitempty"`
+	ID    uuid.UUID `json:"id"`
+	Name  string    `json:"name"`
+	Mode  string    `json:"mode,omitempty"`
+	Theme string    `json:"theme,omitempty"`
 }
 
 var DefaultProfile = &Profile{Name: "Guest"}

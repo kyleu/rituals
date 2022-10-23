@@ -3,6 +3,7 @@ package cmenu
 import (
 	"context"
 	"fmt"
+	"github.com/kyleu/rituals/app/lib/user"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -19,24 +20,24 @@ var workspaceServices = []enum.ModelService{
 	enum.ModelServiceTeam, enum.ModelServiceSprint, enum.ModelServiceEstimate, enum.ModelServiceStandup, enum.ModelServiceRetro,
 }
 
-func workspaceMenu(ctx context.Context, as *app.State, logger util.Logger) (menu.Items, error) {
+func workspaceMenu(ctx context.Context, as *app.State, profile *user.Profile, logger util.Logger) (menu.Items, error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "workspace.menu", logger)
 	defer span.Complete()
-	user := util.UUIDFromString("90000000-0000-0000-0000-000000000000")
+	u := profile.ID
 	items, errs := util.AsyncCollectMap(workspaceServices, func(item enum.ModelService) enum.ModelService {
 		return item
 	}, func(k enum.ModelService) (*menu.Item, error) {
 		switch k {
 		case enum.ModelServiceTeam:
-			return teamMenu(ctx, user, as, logger)
+			return teamMenu(ctx, u, as, logger)
 		case enum.ModelServiceSprint:
-			return sprintMenu(ctx, user, as, logger)
+			return sprintMenu(ctx, u, as, logger)
 		case enum.ModelServiceEstimate:
-			return estimateMenu(ctx, user, as, logger)
+			return estimateMenu(ctx, u, as, logger)
 		case enum.ModelServiceStandup:
-			return standupMenu(ctx, user, as, logger)
+			return standupMenu(ctx, u, as, logger)
 		case enum.ModelServiceRetro:
-			return retroMenu(ctx, user, as, logger)
+			return retroMenu(ctx, u, as, logger)
 		default:
 			return nil, errors.Errorf("invalid service [%s]", k)
 		}
@@ -54,12 +55,9 @@ func workspaceMenu(ctx context.Context, as *app.State, logger util.Logger) (menu
 	return ret, nil
 }
 
-func teamMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_team", Title: "Teams", Description: "TODO", Icon: "users", Route: "/team"}
-	if user == nil {
-		return ret, nil
-	}
-	t, err := as.Services.Team.GetByOwner(ctx, nil, *user, nil, logger)
+func teamMenu(ctx context.Context, user uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
+	ret := &menu.Item{Key: "teams", Title: "Teams", Description: "TODO", Icon: "users", Route: "/team"}
+	t, err := as.Services.Team.GetByOwner(ctx, nil, user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +69,9 @@ func teamMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.L
 	return ret, nil
 }
 
-func sprintMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_sprint", Title: "Sprints", Description: "TODO", Icon: "running", Route: "/sprint"}
-	if user == nil {
-		return ret, nil
-	}
-	s, err := as.Services.Sprint.GetByOwner(ctx, nil, *user, nil, logger)
+func sprintMenu(ctx context.Context, user uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
+	ret := &menu.Item{Key: "sprints", Title: "Sprints", Description: "TODO", Icon: "running", Route: "/sprint"}
+	s, err := as.Services.Sprint.GetByOwner(ctx, nil, user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -88,12 +83,9 @@ func sprintMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util
 	return ret, nil
 }
 
-func estimateMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_estimate", Title: "Estimates", Description: "TODO", Icon: "ruler-horizontal", Route: "/estimate"}
-	if user == nil {
-		return ret, nil
-	}
-	e, err := as.Services.Estimate.GetByOwner(ctx, nil, *user, nil, logger)
+func estimateMenu(ctx context.Context, user uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
+	ret := &menu.Item{Key: "estimates", Title: "Estimates", Description: "TODO", Icon: "ruler-horizontal", Route: "/estimate"}
+	e, err := as.Services.Estimate.GetByOwner(ctx, nil, user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -105,12 +97,9 @@ func estimateMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger ut
 	return ret, nil
 }
 
-func standupMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_standup", Title: "Standups", Description: "TODO", Icon: "shoe-prints", Route: "/standup"}
-	if user == nil {
-		return ret, nil
-	}
-	u, err := as.Services.Standup.GetByOwner(ctx, nil, *user, nil, logger)
+func standupMenu(ctx context.Context, user uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
+	ret := &menu.Item{Key: "standups", Title: "Standups", Description: "TODO", Icon: "shoe-prints", Route: "/standup"}
+	u, err := as.Services.Standup.GetByOwner(ctx, nil, user, nil, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -122,12 +111,9 @@ func standupMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger uti
 	return ret, nil
 }
 
-func retroMenu(ctx context.Context, user *uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
-	ret := &menu.Item{Key: "ws_retro", Title: "Retros", Description: "TODO", Icon: "glasses", Route: "/retro"}
-	if user == nil {
-		return ret, nil
-	}
-	r, err := as.Services.Retro.GetByOwner(ctx, nil, *user, nil, logger)
+func retroMenu(ctx context.Context, user uuid.UUID, as *app.State, logger util.Logger) (*menu.Item, error) {
+	ret := &menu.Item{Key: "retros", Title: "Retros", Description: "TODO", Icon: "glasses", Route: "/retro"}
+	r, err := as.Services.Retro.GetByOwner(ctx, nil, user, nil, logger)
 	if err != nil {
 		return nil, err
 	}

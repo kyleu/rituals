@@ -8,17 +8,18 @@ import (
 	"github.com/kyleu/rituals/app/lib/menu"
 	"github.com/kyleu/rituals/app/lib/sandbox"
 	"github.com/kyleu/rituals/app/lib/telemetry"
+	"github.com/kyleu/rituals/app/lib/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
-func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, as *app.State, logger util.Logger) (menu.Items, error) {
+func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, as *app.State, logger util.Logger) (menu.Items, error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", logger)
 	defer span.Complete()
 	_ = logger
 
 	var ret menu.Items
 	// $PF_SECTION_START(routes_start)$
-	ws, err := workspaceMenu(ctx, as, logger)
+	ws, err := workspaceMenu(ctx, as, profile, logger)
 	if err != nil {
 		return nil, err
 	}
