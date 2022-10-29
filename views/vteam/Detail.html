@@ -43,7 +43,7 @@
       <a href="#modal-team"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGRefIcon(`team`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/team"><em>Team</em></a></div>
     <table class="mt">
       <tbody>
@@ -85,7 +85,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.EstimatesByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} Related estimates by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Related estimates by [team id]</h3>
     <div class="overflow clear">
       {%= vestimate.Table(p.EstimatesByTeamID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -93,7 +93,7 @@
   {%- endif -%}
   {%- if len(p.RetrosByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`glasses`, ps) %} Related retros by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`retro`, ps) %} Related retros by [team id]</h3>
     <div class="overflow clear">
       {%= vretro.Table(p.RetrosByTeamID, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -101,7 +101,7 @@
   {%- endif -%}
   {%- if len(p.SprintsByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`running`, ps) %} Related sprints by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`sprint`, ps) %} Related sprints by [team id]</h3>
     <div class="overflow clear">
       {%= vsprint.Table(p.SprintsByTeamID, nil, nil, p.Params, as, ps) %}
     </div>
@@ -109,7 +109,7 @@
   {%- endif -%}
   {%- if len(p.StandupsByTeamID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`shoe-prints`, ps) %} Related standups by [team id]</h3>
+    <h3>{%= components.SVGRefIcon(`standup`, ps) %} Related standups by [team id]</h3>
     <div class="overflow clear">
       {%= vstandup.Table(p.StandupsByTeamID, nil, nil, nil, p.Params, as, ps) %}
     </div>

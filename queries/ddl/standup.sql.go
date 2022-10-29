@@ -74,6 +74,7 @@ create table if not exists "standup" (
   foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
   foreign key ("sprint_id") references "sprint" ("id"),
+  unique ("slug"),
   primary key ("id")
 );
 
@@ -87,31 +88,31 @@ create index if not exists "standup__team_id_idx" on "standup" ("team_id");
 
 create index if not exists "standup__sprint_id_idx" on "standup" ("sprint_id");
 -- `)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 }
 
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 func WriteStandupCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	StreamStandupCreate(qw422016)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 }
 
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 func StandupCreate() string {
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	WriteStandupCreate(qb422016)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	qs422016 := string(qb422016.B)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 	return qs422016
-//line queries/ddl/standup.sql:32
+//line queries/ddl/standup.sql:33
 }

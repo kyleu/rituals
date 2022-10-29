@@ -2,7 +2,7 @@
   "name": "standup",
   "package": "standup",
   "description": "TODO",
-  "icon": "shoe-prints",
+  "icon": "standup",
   "ordering": [
     {
       "column": "created",
@@ -21,7 +21,10 @@
       "name": "slug",
       "type": "string",
       "search": true,
-      "indexed": true
+      "indexed": true,
+      "tags": [
+        "unique"
+      ]
     },
     {
       "name": "title",

@@ -15,6 +15,7 @@ create table if not exists "sprint" (
   "updated" timestamp default now(),
   foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
+  unique ("slug"),
   primary key ("id")
 );
 

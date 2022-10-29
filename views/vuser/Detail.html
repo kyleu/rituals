@@ -84,10 +84,6 @@
           <td><strong>{%s p.Model.Name %}</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Role</th>
-          <td>{%s p.Model.Role %}</td>
-        </tr>
-        <tr>
           <th class="shrink" title="URL in string form">Picture</th>
           <td><a href="{%s p.Model.Picture %}" target="_blank">{%s p.Model.Picture %}</a></td>
         </tr>
@@ -130,7 +126,7 @@
   {%- endif -%}
   {%- if len(p.EstimatesByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} Related estimates by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Related estimates by [owner]</h3>
     <div class="overflow clear">
       {%= vestimate.Table(p.EstimatesByOwner, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -162,7 +158,7 @@
   {%- endif -%}
   {%- if len(p.RetrosByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`glasses`, ps) %} Related retros by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`retro`, ps) %} Related retros by [owner]</h3>
     <div class="overflow clear">
       {%= vretro.Table(p.RetrosByOwner, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -178,7 +174,7 @@
   {%- endif -%}
   {%- if len(p.SprintsByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`running`, ps) %} Related sprints by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`sprint`, ps) %} Related sprints by [owner]</h3>
     <div class="overflow clear">
       {%= vsprint.Table(p.SprintsByOwner, nil, nil, p.Params, as, ps) %}
     </div>
@@ -194,7 +190,7 @@
   {%- endif -%}
   {%- if len(p.StandupsByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`shoe-prints`, ps) %} Related standups by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`standup`, ps) %} Related standups by [owner]</h3>
     <div class="overflow clear">
       {%= vstandup.Table(p.StandupsByOwner, nil, nil, nil, p.Params, as, ps) %}
     </div>
@@ -218,7 +214,7 @@
   {%- endif -%}
   {%- if len(p.TeamsByOwner) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related teams by [owner]</h3>
+    <h3>{%= components.SVGRefIcon(`team`, ps) %} Related teams by [owner]</h3>
     <div class="overflow clear">
       {%= vteam.Table(p.TeamsByOwner, nil, p.Params, as, ps) %}
     </div>

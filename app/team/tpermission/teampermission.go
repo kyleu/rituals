@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -114,19 +113,4 @@ func (t *TeamPermission) Diff(tx *TeamPermission) util.Diffs {
 
 func (t *TeamPermission) ToData() []any {
 	return []any{t.TeamID, t.K, t.V, t.Access, t.Created}
-}
-
-type TeamPermissions []*TeamPermission
-
-func (t TeamPermissions) Get(teamID uuid.UUID, k string, v string) *TeamPermission {
-	for _, x := range t {
-		if x.TeamID == teamID && x.K == k && x.V == v {
-			return x
-		}
-	}
-	return nil
-}
-
-func (t TeamPermissions) Clone() TeamPermissions {
-	return slices.Clone(t)
 }

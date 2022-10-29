@@ -6,7 +6,19 @@ drop type if exists "member_status";
 -- {% endfunc %}
 
 -- {% func TypesCreate() %}
-create type "member_status" as enum ('owner', 'member', 'observer');
-create type "model_service" as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
-create type "session_status" as enum ('new', 'active', 'complete', 'deleted');
+do $$ begin
+  create type "member_status" as enum ('owner', 'member', 'observer');
+exception
+  when duplicate_object then null;
+end $$;
+do $$ begin
+  create type "model_service" as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
+exception
+  when duplicate_object then null;
+end $$;
+do $$ begin
+  create type "session_status" as enum ('new', 'active', 'complete', 'deleted');
+exception
+  when duplicate_object then null;
+end $$;
 -- {% endfunc %}

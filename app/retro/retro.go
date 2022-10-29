@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -154,19 +153,4 @@ func (r *Retro) Diff(rx *Retro) util.Diffs {
 
 func (r *Retro) ToData() []any {
 	return []any{r.ID, r.Slug, r.Title, r.Status, r.TeamID, r.SprintID, r.Owner, r.Categories, r.Created, r.Updated}
-}
-
-type Retros []*Retro
-
-func (r Retros) Get(id uuid.UUID) *Retro {
-	for _, x := range r {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (r Retros) Clone() Retros {
-	return slices.Clone(r)
 }

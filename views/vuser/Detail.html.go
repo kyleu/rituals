@@ -133,417 +133,409 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Role</th>
-          <td>`)
-//line views/vuser/Detail.html:88
-	qw422016.E().S(p.Model.Role)
-//line views/vuser/Detail.html:88
-	qw422016.N().S(`</td>
-        </tr>
-        <tr>
           <th class="shrink" title="URL in string form">Picture</th>
           <td><a href="`)
-//line views/vuser/Detail.html:92
+//line views/vuser/Detail.html:88
 	qw422016.E().S(p.Model.Picture)
-//line views/vuser/Detail.html:92
+//line views/vuser/Detail.html:88
 	qw422016.N().S(`" target="_blank">`)
-//line views/vuser/Detail.html:92
+//line views/vuser/Detail.html:88
 	qw422016.E().S(p.Model.Picture)
-//line views/vuser/Detail.html:92
+//line views/vuser/Detail.html:88
 	qw422016.N().S(`</a></td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vuser/Detail.html:96
+//line views/vuser/Detail.html:92
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vuser/Detail.html:96
+//line views/vuser/Detail.html:92
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vuser/Detail.html:100
+//line views/vuser/Detail.html:96
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vuser/Detail.html:100
+//line views/vuser/Detail.html:96
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vuser/Detail.html:107
+//line views/vuser/Detail.html:103
 	if len(p.ActionsByUserID) > 0 {
-//line views/vuser/Detail.html:107
+//line views/vuser/Detail.html:103
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:109
+//line views/vuser/Detail.html:105
 		components.StreamSVGRefIcon(qw422016, `gamepad`, ps)
-//line views/vuser/Detail.html:109
+//line views/vuser/Detail.html:105
 		qw422016.N().S(` Related actions by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:111
+//line views/vuser/Detail.html:107
 		vaction.StreamTable(qw422016, p.ActionsByUserID, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:111
+//line views/vuser/Detail.html:107
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:114
+//line views/vuser/Detail.html:110
 	}
-//line views/vuser/Detail.html:115
+//line views/vuser/Detail.html:111
 	if len(p.CommentsByUserID) > 0 {
-//line views/vuser/Detail.html:115
+//line views/vuser/Detail.html:111
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:117
+//line views/vuser/Detail.html:113
 		components.StreamSVGRefIcon(qw422016, `comments`, ps)
-//line views/vuser/Detail.html:117
+//line views/vuser/Detail.html:113
 		qw422016.N().S(` Related comments by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:119
+//line views/vuser/Detail.html:115
 		vcomment.StreamTable(qw422016, p.CommentsByUserID, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:119
+//line views/vuser/Detail.html:115
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:122
+//line views/vuser/Detail.html:118
 	}
-//line views/vuser/Detail.html:123
+//line views/vuser/Detail.html:119
 	if len(p.EmailsByUserID) > 0 {
-//line views/vuser/Detail.html:123
+//line views/vuser/Detail.html:119
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:125
+//line views/vuser/Detail.html:121
 		components.StreamSVGRefIcon(qw422016, `envelope`, ps)
-//line views/vuser/Detail.html:125
+//line views/vuser/Detail.html:121
 		qw422016.N().S(` Related emails by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:127
+//line views/vuser/Detail.html:123
 		vemail.StreamTable(qw422016, p.EmailsByUserID, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:127
+//line views/vuser/Detail.html:123
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:130
+//line views/vuser/Detail.html:126
 	}
-//line views/vuser/Detail.html:131
+//line views/vuser/Detail.html:127
 	if len(p.EstimatesByOwner) > 0 {
-//line views/vuser/Detail.html:131
+//line views/vuser/Detail.html:127
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:133
-		components.StreamSVGRefIcon(qw422016, `ruler-horizontal`, ps)
-//line views/vuser/Detail.html:133
+//line views/vuser/Detail.html:129
+		components.StreamSVGRefIcon(qw422016, `estimate`, ps)
+//line views/vuser/Detail.html:129
 		qw422016.N().S(` Related estimates by [owner]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:135
+//line views/vuser/Detail.html:131
 		vestimate.StreamTable(qw422016, p.EstimatesByOwner, nil, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:135
+//line views/vuser/Detail.html:131
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:138
+//line views/vuser/Detail.html:134
 	}
-//line views/vuser/Detail.html:139
+//line views/vuser/Detail.html:135
 	if len(p.EstimateMembersByUserID) > 0 {
-//line views/vuser/Detail.html:139
+//line views/vuser/Detail.html:135
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:141
+//line views/vuser/Detail.html:137
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vuser/Detail.html:141
+//line views/vuser/Detail.html:137
 		qw422016.N().S(` Related members by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:143
+//line views/vuser/Detail.html:139
 		vemember.StreamTable(qw422016, p.EstimateMembersByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:143
+//line views/vuser/Detail.html:139
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:146
+//line views/vuser/Detail.html:142
 	}
-//line views/vuser/Detail.html:147
+//line views/vuser/Detail.html:143
 	if len(p.FeedbacksByUserID) > 0 {
-//line views/vuser/Detail.html:147
+//line views/vuser/Detail.html:143
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:149
+//line views/vuser/Detail.html:145
 		components.StreamSVGRefIcon(qw422016, `comment`, ps)
-//line views/vuser/Detail.html:149
+//line views/vuser/Detail.html:145
 		qw422016.N().S(` Related feedbacks by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:151
+//line views/vuser/Detail.html:147
 		vfeedback.StreamTable(qw422016, p.FeedbacksByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:151
+//line views/vuser/Detail.html:147
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:154
+//line views/vuser/Detail.html:150
 	}
-//line views/vuser/Detail.html:155
+//line views/vuser/Detail.html:151
 	if len(p.ReportsByUserID) > 0 {
-//line views/vuser/Detail.html:155
+//line views/vuser/Detail.html:151
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:157
+//line views/vuser/Detail.html:153
 		components.StreamSVGRefIcon(qw422016, `file-alt`, ps)
-//line views/vuser/Detail.html:157
+//line views/vuser/Detail.html:153
 		qw422016.N().S(` Related reports by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:159
+//line views/vuser/Detail.html:155
 		vreport.StreamTable(qw422016, p.ReportsByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:159
+//line views/vuser/Detail.html:155
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:162
+//line views/vuser/Detail.html:158
 	}
-//line views/vuser/Detail.html:163
+//line views/vuser/Detail.html:159
 	if len(p.RetrosByOwner) > 0 {
-//line views/vuser/Detail.html:163
+//line views/vuser/Detail.html:159
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:165
-		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
-//line views/vuser/Detail.html:165
+//line views/vuser/Detail.html:161
+		components.StreamSVGRefIcon(qw422016, `retro`, ps)
+//line views/vuser/Detail.html:161
 		qw422016.N().S(` Related retros by [owner]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:167
+//line views/vuser/Detail.html:163
 		vretro.StreamTable(qw422016, p.RetrosByOwner, nil, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:167
+//line views/vuser/Detail.html:163
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:170
+//line views/vuser/Detail.html:166
 	}
-//line views/vuser/Detail.html:171
+//line views/vuser/Detail.html:167
 	if len(p.RetroMembersByUserID) > 0 {
-//line views/vuser/Detail.html:171
+//line views/vuser/Detail.html:167
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:173
+//line views/vuser/Detail.html:169
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vuser/Detail.html:173
+//line views/vuser/Detail.html:169
 		qw422016.N().S(` Related members by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:175
+//line views/vuser/Detail.html:171
 		vrmember.StreamTable(qw422016, p.RetroMembersByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:175
+//line views/vuser/Detail.html:171
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:178
+//line views/vuser/Detail.html:174
 	}
-//line views/vuser/Detail.html:179
+//line views/vuser/Detail.html:175
 	if len(p.SprintsByOwner) > 0 {
-//line views/vuser/Detail.html:179
+//line views/vuser/Detail.html:175
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:181
-		components.StreamSVGRefIcon(qw422016, `running`, ps)
-//line views/vuser/Detail.html:181
+//line views/vuser/Detail.html:177
+		components.StreamSVGRefIcon(qw422016, `sprint`, ps)
+//line views/vuser/Detail.html:177
 		qw422016.N().S(` Related sprints by [owner]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:183
+//line views/vuser/Detail.html:179
 		vsprint.StreamTable(qw422016, p.SprintsByOwner, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:183
+//line views/vuser/Detail.html:179
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:186
+//line views/vuser/Detail.html:182
 	}
-//line views/vuser/Detail.html:187
+//line views/vuser/Detail.html:183
 	if len(p.SprintMembersByUserID) > 0 {
-//line views/vuser/Detail.html:187
+//line views/vuser/Detail.html:183
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:189
+//line views/vuser/Detail.html:185
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vuser/Detail.html:189
+//line views/vuser/Detail.html:185
 		qw422016.N().S(` Related members by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:191
+//line views/vuser/Detail.html:187
 		vsmember.StreamTable(qw422016, p.SprintMembersByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:191
+//line views/vuser/Detail.html:187
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:194
+//line views/vuser/Detail.html:190
 	}
-//line views/vuser/Detail.html:195
+//line views/vuser/Detail.html:191
 	if len(p.StandupsByOwner) > 0 {
-//line views/vuser/Detail.html:195
+//line views/vuser/Detail.html:191
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:197
-		components.StreamSVGRefIcon(qw422016, `shoe-prints`, ps)
-//line views/vuser/Detail.html:197
+//line views/vuser/Detail.html:193
+		components.StreamSVGRefIcon(qw422016, `standup`, ps)
+//line views/vuser/Detail.html:193
 		qw422016.N().S(` Related standups by [owner]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:199
+//line views/vuser/Detail.html:195
 		vstandup.StreamTable(qw422016, p.StandupsByOwner, nil, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:199
+//line views/vuser/Detail.html:195
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:202
+//line views/vuser/Detail.html:198
 	}
-//line views/vuser/Detail.html:203
+//line views/vuser/Detail.html:199
 	if len(p.StandupMembersByUserID) > 0 {
-//line views/vuser/Detail.html:203
+//line views/vuser/Detail.html:199
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:205
+//line views/vuser/Detail.html:201
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vuser/Detail.html:205
+//line views/vuser/Detail.html:201
 		qw422016.N().S(` Related members by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:207
+//line views/vuser/Detail.html:203
 		vumember.StreamTable(qw422016, p.StandupMembersByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:207
+//line views/vuser/Detail.html:203
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:210
+//line views/vuser/Detail.html:206
 	}
-//line views/vuser/Detail.html:211
+//line views/vuser/Detail.html:207
 	if len(p.StoriesByUserID) > 0 {
-//line views/vuser/Detail.html:211
+//line views/vuser/Detail.html:207
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:213
+//line views/vuser/Detail.html:209
 		components.StreamSVGRefIcon(qw422016, `book-reader`, ps)
-//line views/vuser/Detail.html:213
+//line views/vuser/Detail.html:209
 		qw422016.N().S(` Related stories by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:215
+//line views/vuser/Detail.html:211
 		vstory.StreamTable(qw422016, p.StoriesByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:215
+//line views/vuser/Detail.html:211
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:218
+//line views/vuser/Detail.html:214
 	}
-//line views/vuser/Detail.html:219
+//line views/vuser/Detail.html:215
 	if len(p.TeamsByOwner) > 0 {
-//line views/vuser/Detail.html:219
+//line views/vuser/Detail.html:215
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:221
-		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vuser/Detail.html:221
+//line views/vuser/Detail.html:217
+		components.StreamSVGRefIcon(qw422016, `team`, ps)
+//line views/vuser/Detail.html:217
 		qw422016.N().S(` Related teams by [owner]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:223
+//line views/vuser/Detail.html:219
 		vteam.StreamTable(qw422016, p.TeamsByOwner, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:223
+//line views/vuser/Detail.html:219
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:226
+//line views/vuser/Detail.html:222
 	}
-//line views/vuser/Detail.html:227
+//line views/vuser/Detail.html:223
 	if len(p.TeamMembersByUserID) > 0 {
-//line views/vuser/Detail.html:227
+//line views/vuser/Detail.html:223
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:229
+//line views/vuser/Detail.html:225
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vuser/Detail.html:229
+//line views/vuser/Detail.html:225
 		qw422016.N().S(` Related members by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:231
+//line views/vuser/Detail.html:227
 		vtmember.StreamTable(qw422016, p.TeamMembersByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:231
+//line views/vuser/Detail.html:227
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:234
+//line views/vuser/Detail.html:230
 	}
-//line views/vuser/Detail.html:235
+//line views/vuser/Detail.html:231
 	if len(p.VotesByUserID) > 0 {
-//line views/vuser/Detail.html:235
+//line views/vuser/Detail.html:231
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vuser/Detail.html:237
+//line views/vuser/Detail.html:233
 		components.StreamSVGRefIcon(qw422016, `vote-yea`, ps)
-//line views/vuser/Detail.html:237
+//line views/vuser/Detail.html:233
 		qw422016.N().S(` Related votes by [user id]</h3>
     <div class="overflow clear">
       `)
-//line views/vuser/Detail.html:239
+//line views/vuser/Detail.html:235
 		vvote.StreamTable(qw422016, p.VotesByUserID, nil, nil, p.Params, as, ps)
-//line views/vuser/Detail.html:239
+//line views/vuser/Detail.html:235
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vuser/Detail.html:242
+//line views/vuser/Detail.html:238
 	}
-//line views/vuser/Detail.html:242
+//line views/vuser/Detail.html:238
 	qw422016.N().S(`  `)
-//line views/vuser/Detail.html:243
+//line views/vuser/Detail.html:239
 	components.StreamJSONModal(qw422016, "user", "User JSON", p.Model, 1)
-//line views/vuser/Detail.html:243
+//line views/vuser/Detail.html:239
 	qw422016.N().S(`
 `)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 }
 
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	p.StreamBody(qw422016, as, ps)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	qt422016.ReleaseWriter(qw422016)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 }
 
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	p.WriteBody(qb422016, as, ps)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	qs422016 := string(qb422016.B)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 	return qs422016
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:240
 }

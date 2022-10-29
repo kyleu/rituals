@@ -89,7 +89,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Detail.html:31
-	components.StreamSVGRefIcon(qw422016, "shoe-prints", ps)
+	components.StreamSVGRefIcon(qw422016, "standup", ps)
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.N().S(`</a>
           </td>

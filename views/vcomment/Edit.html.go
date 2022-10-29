@@ -91,7 +91,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:30
-	components.StreamTableInput(qw422016, "svc", "Svc", string(p.Model.Svc), 5, "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]")
+	components.StreamTableSelect(qw422016, "svc", "Svc", string(p.Model.Svc), []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, 5, "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]")
 //line views/vcomment/Edit.html:30
 	qw422016.N().S(`
           `)

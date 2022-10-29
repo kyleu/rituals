@@ -11,6 +11,7 @@
     "export",
     "filesystem",
     "graphql",
+    "jsx",
     "marketing",
     "migration",
     "oauth",

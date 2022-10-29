@@ -12,6 +12,7 @@ import (
 	"github.com/kyleu/rituals/app/controller/csession"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/theme"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vprofile"
 )
 
@@ -69,6 +70,11 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 		n.Theme = frm.GetStringOpt("theme")
 		if n.Theme == theme.ThemeDefault.Key {
 			n.Theme = ""
+		}
+		if ps.Profile.ID == util.UUIDDefault {
+			n.ID = util.UUID()
+		} else {
+			n.ID = ps.Profile.ID
 		}
 
 		err = csession.SaveProfile(n, rc, ps.Session, ps.Logger)

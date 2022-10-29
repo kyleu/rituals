@@ -24,9 +24,9 @@ func StreamUserSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_user.sql:1
 	qw422016.N().S(`
 insert into "user" (
-  "id", "name", "role", "picture", "created", "updated"
+  "id", "name", "picture", "created", "updated"
 ) values (
-  '90000000-0000-0000-0000-000000000000', 'Kyle', 'admin', 'https://google.com', now(), null
+  '90000000-0000-0000-0000-000000000000', 'Test User', 'https://electricfrankfurter.com/index.png', now(), null
 ) on conflict do nothing;
 -- `)
 //line queries/seeddata/seed_user.sql:7

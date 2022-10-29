@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -97,19 +96,4 @@ func (e *EstimateHistory) Diff(ex *EstimateHistory) util.Diffs {
 
 func (e *EstimateHistory) ToData() []any {
 	return []any{e.Slug, e.EstimateID, e.EstimateName, e.Created}
-}
-
-type EstimateHistories []*EstimateHistory
-
-func (e EstimateHistories) Get(slug string) *EstimateHistory {
-	for _, x := range e {
-		if x.Slug == slug {
-			return x
-		}
-	}
-	return nil
-}
-
-func (e EstimateHistories) Clone() EstimateHistories {
-	return slices.Clone(e)
 }

@@ -97,7 +97,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vehistory/Detail.html:35
 	qw422016.N().S(`">`)
 //line views/vestimate/vehistory/Detail.html:35
-	components.StreamSVGRefIcon(qw422016, "ruler-horizontal", ps)
+	components.StreamSVGRefIcon(qw422016, "estimate", ps)
 //line views/vestimate/vehistory/Detail.html:35
 	qw422016.N().S(`</a>
           </td>

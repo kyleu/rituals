@@ -30,7 +30,7 @@
         <td><a href="/admin/db/standup/report/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("shoe-prints", ps) %}</a>
+          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("standup", ps) %}</a>
         </td>
         <td>{%= components.DisplayTimestamp(&model.D) %}</td>
         <td>

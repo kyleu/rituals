@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -125,19 +124,4 @@ func (t *Team) Diff(tx *Team) util.Diffs {
 
 func (t *Team) ToData() []any {
 	return []any{t.ID, t.Slug, t.Title, t.Status, t.Owner, t.Created, t.Updated}
-}
-
-type Teams []*Team
-
-func (t Teams) Get(id uuid.UUID) *Team {
-	for _, x := range t {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (t Teams) Clone() Teams {
-	return slices.Clone(t)
 }

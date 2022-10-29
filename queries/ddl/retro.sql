@@ -18,6 +18,7 @@ create table if not exists "retro" (
   foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
   foreign key ("sprint_id") references "sprint" ("id"),
+  unique ("slug"),
   primary key ("id")
 );
 

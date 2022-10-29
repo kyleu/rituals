@@ -1,0 +1,55 @@
+{% import (
+  "fmt"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type EstimateList struct {
+  layout.Basic
+  Estimates estimate.Estimates
+  Sprints sprint.Sprints
+  Teams team.Teams
+} %}
+
+{% func (p *EstimateList) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`estimate`, ps) %}{%d len(p.Estimates) %} {%s util.StringPluralMaybe("Estimate", len(p.Estimates)) %}</h3>
+    <em>Planning poker for any stories you need to work on</em>
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, e := range p.Estimates -%}
+        <tr>
+          <td><a href="/estimate/{%s e.Slug %}">{%s e.TitleString() %}</a></td>
+          <td style="text-align: right;">{%= components.DisplayTimestamp(&e.Created) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`estimate`, ps) %}New Estimate</h3>
+    {%= EstimateForm(&estimate.Estimate{}, p.Teams, p.Sprints, as, ps) %}
+  </div>
+{% endfunc %}
+
+{% func EstimateForm(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, as *app.State, ps *cutil.PageState) %}
+  <form action="" method="post">
+    <table class="mt expanded">
+      <tbody>
+        {%= components.TableInput("title", "Team Title", e.Title, 5, "The name of your estimate") %}
+        {%= components.TableInput("owner", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called") %}
+        {%= components.TableSelect("team", "Team", fmt.Sprint(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this estimate") %}
+        {%= components.TableSelect("sprint", "Sprint", fmt.Sprint(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this estimate") %}
+        <tr><td colspan="2"><button type="submit">Add Estimate</button></td></tr>
+      </tbody>
+    </table>
+  </form>
+{% endfunc %}
+

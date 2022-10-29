@@ -10,68 +10,284 @@ package views
 import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/retro"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/standup"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/Home.html:10
+//line views/Home.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Home.html:10
+//line views/Home.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Home.html:10
+//line views/Home.html:15
 type Home struct {
 	layout.Basic
+	Teams     team.Teams
+	Sprints   sprint.Sprints
+	Estimates estimate.Estimates
+	Standups  standup.Standups
+	Retros    retro.Retros
 }
 
-//line views/Home.html:14
+//line views/Home.html:24
 func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:14
+//line views/Home.html:24
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/Home.html:16
+//line views/Home.html:26
 	components.StreamSVGRefIcon(qw422016, `app`, ps)
-//line views/Home.html:16
+//line views/Home.html:26
 	qw422016.E().S(util.AppName)
-//line views/Home.html:16
+//line views/Home.html:26
 	qw422016.N().S(`</h3>
+    <p>Work with your team to estimate work, track your progress, and gather feedback</p>
   </div>
+  <div class="card">
+    <h3><a href="/team">`)
+//line views/Home.html:30
+	components.StreamSVGRefIcon(qw422016, `team`, ps)
+//line views/Home.html:30
+	qw422016.N().S(`Teams</a></h3>
 `)
-//line views/Home.html:18
+//line views/Home.html:31
+	if len(p.Teams) == 0 {
+//line views/Home.html:31
+		qw422016.N().S(`    <em>no teams available</em>
+`)
+//line views/Home.html:33
+	} else {
+//line views/Home.html:33
+		qw422016.N().S(`    <table class="expanded">
+      <tbody>
+`)
+//line views/Home.html:36
+		for _, x := range p.Teams {
+//line views/Home.html:36
+			qw422016.N().S(`        <tr><td><a href="/team/`)
+//line views/Home.html:37
+			qw422016.E().S(x.Slug)
+//line views/Home.html:37
+			qw422016.N().S(`">`)
+//line views/Home.html:37
+			qw422016.E().S(x.TitleString())
+//line views/Home.html:37
+			qw422016.N().S(`</a></td></tr>
+`)
+//line views/Home.html:38
+		}
+//line views/Home.html:38
+		qw422016.N().S(`      </tbody>
+    </table>
+`)
+//line views/Home.html:41
+	}
+//line views/Home.html:41
+	qw422016.N().S(`  </div>
+  <div class="card">
+    <h3><a href="/sprint">`)
+//line views/Home.html:44
+	components.StreamSVGRefIcon(qw422016, `sprint`, ps)
+//line views/Home.html:44
+	qw422016.N().S(`Sprints</a></h3>
+`)
+//line views/Home.html:45
+	if len(p.Sprints) == 0 {
+//line views/Home.html:45
+		qw422016.N().S(`    <em>no sprints available</em>
+`)
+//line views/Home.html:47
+	} else {
+//line views/Home.html:47
+		qw422016.N().S(`    <table class="expanded">
+      <tbody>
+`)
+//line views/Home.html:50
+		for _, x := range p.Sprints {
+//line views/Home.html:50
+			qw422016.N().S(`        <tr><td><a href="/sprint/`)
+//line views/Home.html:51
+			qw422016.E().S(x.Slug)
+//line views/Home.html:51
+			qw422016.N().S(`">`)
+//line views/Home.html:51
+			qw422016.E().S(x.TitleString())
+//line views/Home.html:51
+			qw422016.N().S(`</a></td></tr>
+`)
+//line views/Home.html:52
+		}
+//line views/Home.html:52
+		qw422016.N().S(`      </tbody>
+    </table>
+`)
+//line views/Home.html:55
+	}
+//line views/Home.html:55
+	qw422016.N().S(`  </div>
+  <div class="card">
+    <h3><a href="/estimate">`)
+//line views/Home.html:58
+	components.StreamSVGRefIcon(qw422016, `estimate`, ps)
+//line views/Home.html:58
+	qw422016.N().S(`Estimates</a></h3>
+`)
+//line views/Home.html:59
+	if len(p.Estimates) == 0 {
+//line views/Home.html:59
+		qw422016.N().S(`    <em>no estimates available</em>
+`)
+//line views/Home.html:61
+	} else {
+//line views/Home.html:61
+		qw422016.N().S(`    <table class="expanded">
+      <tbody>
+`)
+//line views/Home.html:64
+		for _, x := range p.Estimates {
+//line views/Home.html:64
+			qw422016.N().S(`        <tr><td><a href="/estimate/`)
+//line views/Home.html:65
+			qw422016.E().S(x.Slug)
+//line views/Home.html:65
+			qw422016.N().S(`">`)
+//line views/Home.html:65
+			qw422016.E().S(x.TitleString())
+//line views/Home.html:65
+			qw422016.N().S(`</a></td></tr>
+`)
+//line views/Home.html:66
+		}
+//line views/Home.html:66
+		qw422016.N().S(`      </tbody>
+    </table>
+`)
+//line views/Home.html:69
+	}
+//line views/Home.html:69
+	qw422016.N().S(`  </div>
+  <div class="card">
+    <h3><a href="/standup">`)
+//line views/Home.html:72
+	components.StreamSVGRefIcon(qw422016, `standup`, ps)
+//line views/Home.html:72
+	qw422016.N().S(`Standups</a></h3>
+`)
+//line views/Home.html:73
+	if len(p.Standups) == 0 {
+//line views/Home.html:73
+		qw422016.N().S(`    <em>no standups available</em>
+`)
+//line views/Home.html:75
+	} else {
+//line views/Home.html:75
+		qw422016.N().S(`    <table class="expanded">
+      <tbody>
+`)
+//line views/Home.html:78
+		for _, x := range p.Standups {
+//line views/Home.html:78
+			qw422016.N().S(`        <tr><td><a href="/standup/`)
+//line views/Home.html:79
+			qw422016.E().S(x.Slug)
+//line views/Home.html:79
+			qw422016.N().S(`">`)
+//line views/Home.html:79
+			qw422016.E().S(x.TitleString())
+//line views/Home.html:79
+			qw422016.N().S(`</a></td></tr>
+`)
+//line views/Home.html:80
+		}
+//line views/Home.html:80
+		qw422016.N().S(`      </tbody>
+    </table>
+`)
+//line views/Home.html:83
+	}
+//line views/Home.html:83
+	qw422016.N().S(`  </div>
+  <div class="card">
+    <h3><a href="/retro">`)
+//line views/Home.html:86
+	components.StreamSVGRefIcon(qw422016, `retro`, ps)
+//line views/Home.html:86
+	qw422016.N().S(`Retros</a></h3>
+`)
+//line views/Home.html:87
+	if len(p.Retros) == 0 {
+//line views/Home.html:87
+		qw422016.N().S(`    <em>no retros available</em>
+`)
+//line views/Home.html:89
+	} else {
+//line views/Home.html:89
+		qw422016.N().S(`    <table class="expanded">
+      <tbody>
+`)
+//line views/Home.html:92
+		for _, x := range p.Retros {
+//line views/Home.html:92
+			qw422016.N().S(`        <tr><td><a href="/retro/`)
+//line views/Home.html:93
+			qw422016.E().S(x.Slug)
+//line views/Home.html:93
+			qw422016.N().S(`">`)
+//line views/Home.html:93
+			qw422016.E().S(x.TitleString())
+//line views/Home.html:93
+			qw422016.N().S(`</a></td></tr>
+`)
+//line views/Home.html:94
+		}
+//line views/Home.html:94
+		qw422016.N().S(`      </tbody>
+    </table>
+`)
+//line views/Home.html:97
+	}
+//line views/Home.html:97
+	qw422016.N().S(`  </div>
+`)
+//line views/Home.html:99
 }
 
-//line views/Home.html:18
+//line views/Home.html:99
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:18
+//line views/Home.html:99
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:18
+//line views/Home.html:99
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:18
+//line views/Home.html:99
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:18
+//line views/Home.html:99
 }
 
-//line views/Home.html:18
+//line views/Home.html:99
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:18
+//line views/Home.html:99
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:18
+//line views/Home.html:99
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:18
+//line views/Home.html:99
 	qs422016 := string(qb422016.B)
-//line views/Home.html:18
+//line views/Home.html:99
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:18
+//line views/Home.html:99
 	return qs422016
-//line views/Home.html:18
+//line views/Home.html:99
 }

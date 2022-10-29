@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -13,7 +12,6 @@ import (
 type User struct {
 	ID      uuid.UUID  `json:"id"`
 	Name    string     `json:"name"`
-	Role    string     `json:"role"`
 	Picture string     `json:"picture"`
 	Created time.Time  `json:"created"`
 	Updated *time.Time `json:"updated,omitempty"`
@@ -27,7 +25,6 @@ func Random() *User {
 	return &User{
 		ID:      util.UUID(),
 		Name:    util.RandomString(12),
-		Role:    util.RandomString(12),
 		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
 		Created: time.Now(),
 		Updated: util.NowPointer(),
@@ -52,10 +49,6 @@ func FromMap(m util.ValueMap, setPK bool) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Role, err = m.ParseString("role", true, true)
-	if err != nil {
-		return nil, err
-	}
 	ret.Picture, err = m.ParseString("picture", true, true)
 	if err != nil {
 		return nil, err
@@ -69,7 +62,6 @@ func (u *User) Clone() *User {
 	return &User{
 		ID:      u.ID,
 		Name:    u.Name,
-		Role:    u.Role,
 		Picture: u.Picture,
 		Created: u.Created,
 		Updated: u.Updated,
@@ -96,9 +88,6 @@ func (u *User) Diff(ux *User) util.Diffs {
 	if u.Name != ux.Name {
 		diffs = append(diffs, util.NewDiff("name", u.Name, ux.Name))
 	}
-	if u.Role != ux.Role {
-		diffs = append(diffs, util.NewDiff("role", u.Role, ux.Role))
-	}
 	if u.Picture != ux.Picture {
 		diffs = append(diffs, util.NewDiff("picture", u.Picture, ux.Picture))
 	}
@@ -109,20 +98,5 @@ func (u *User) Diff(ux *User) util.Diffs {
 }
 
 func (u *User) ToData() []any {
-	return []any{u.ID, u.Name, u.Role, u.Picture, u.Created, u.Updated}
-}
-
-type Users []*User
-
-func (u Users) Get(id uuid.UUID) *User {
-	for _, x := range u {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (u Users) Clone() Users {
-	return slices.Clone(u)
+	return []any{u.ID, u.Name, u.Picture, u.Created, u.Updated}
 }

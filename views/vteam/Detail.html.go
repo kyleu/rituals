@@ -78,7 +78,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vteam/Detail.html:46
-	components.StreamSVGRefIcon(qw422016, `users`, ps)
+	components.StreamSVGRefIcon(qw422016, `team`, ps)
 //line views/vteam/Detail.html:46
 	qw422016.N().S(` `)
 //line views/vteam/Detail.html:46
@@ -175,7 +175,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vteam/Detail.html:88
-		components.StreamSVGRefIcon(qw422016, `ruler-horizontal`, ps)
+		components.StreamSVGRefIcon(qw422016, `estimate`, ps)
 //line views/vteam/Detail.html:88
 		qw422016.N().S(` Related estimates by [team id]</h3>
     <div class="overflow clear">
@@ -195,7 +195,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vteam/Detail.html:96
-		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
+		components.StreamSVGRefIcon(qw422016, `retro`, ps)
 //line views/vteam/Detail.html:96
 		qw422016.N().S(` Related retros by [team id]</h3>
     <div class="overflow clear">
@@ -215,7 +215,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vteam/Detail.html:104
-		components.StreamSVGRefIcon(qw422016, `running`, ps)
+		components.StreamSVGRefIcon(qw422016, `sprint`, ps)
 //line views/vteam/Detail.html:104
 		qw422016.N().S(` Related sprints by [team id]</h3>
     <div class="overflow clear">
@@ -235,7 +235,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vteam/Detail.html:112
-		components.StreamSVGRefIcon(qw422016, `shoe-prints`, ps)
+		components.StreamSVGRefIcon(qw422016, `standup`, ps)
 //line views/vteam/Detail.html:112
 		qw422016.N().S(` Related standups by [team id]</h3>
     <div class="overflow clear">

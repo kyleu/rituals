@@ -151,7 +151,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:39
 		qw422016.N().S(`">`)
 //line views/vestimate/Table.html:39
-		components.StreamSVGRefIcon(qw422016, "users", ps)
+		components.StreamSVGRefIcon(qw422016, "team", ps)
 //line views/vestimate/Table.html:39
 		qw422016.N().S(`</a>
         </td>
@@ -181,7 +181,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:43
 		qw422016.N().S(`">`)
 //line views/vestimate/Table.html:43
-		components.StreamSVGRefIcon(qw422016, "running", ps)
+		components.StreamSVGRefIcon(qw422016, "sprint", ps)
 //line views/vestimate/Table.html:43
 		qw422016.N().S(`</a>
         </td>

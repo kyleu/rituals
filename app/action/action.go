@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -145,19 +144,4 @@ func (a *Action) Diff(ax *Action) util.Diffs {
 
 func (a *Action) ToData() []any {
 	return []any{a.ID, a.Svc, a.ModelID, a.UserID, a.Act, a.Content, a.Note, a.Created}
-}
-
-type Actions []*Action
-
-func (a Actions) Get(id uuid.UUID) *Action {
-	for _, x := range a {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (a Actions) Clone() Actions {
-	return slices.Clone(a)
 }

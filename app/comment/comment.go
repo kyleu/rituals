@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -158,19 +157,4 @@ func (c *Comment) Diff(cx *Comment) util.Diffs {
 
 func (c *Comment) ToData() []any {
 	return []any{c.ID, c.Svc, c.ModelID, c.TargetType, c.TargetID, c.UserID, c.Content, c.HTML, c.Created}
-}
-
-type Comments []*Comment
-
-func (c Comments) Get(id uuid.UUID) *Comment {
-	for _, x := range c {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (c Comments) Clone() Comments {
-	return slices.Clone(c)
 }

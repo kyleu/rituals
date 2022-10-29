@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -146,19 +145,4 @@ func (e *Email) Diff(ex *Email) util.Diffs {
 
 func (e *Email) ToData() []any {
 	return []any{e.ID, e.Recipients, e.Subject, e.Data, e.Plain, e.HTML, e.UserID, e.Status, e.Created}
-}
-
-type Emails []*Email
-
-func (e Emails) Get(id uuid.UUID) *Email {
-	for _, x := range e {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (e Emails) Clone() Emails {
-	return slices.Clone(e)
 }

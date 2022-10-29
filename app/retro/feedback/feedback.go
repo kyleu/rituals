@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -147,19 +146,4 @@ func (f *Feedback) Diff(fx *Feedback) util.Diffs {
 
 func (f *Feedback) ToData() []any {
 	return []any{f.ID, f.RetroID, f.Idx, f.UserID, f.Category, f.Content, f.HTML, f.Created, f.Updated}
-}
-
-type Feedbacks []*Feedback
-
-func (f Feedbacks) Get(id uuid.UUID) *Feedback {
-	for _, x := range f {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
-}
-
-func (f Feedbacks) Clone() Feedbacks {
-	return slices.Clone(f)
 }

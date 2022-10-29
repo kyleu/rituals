@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -129,19 +128,4 @@ func (e *EstimateMember) Diff(ex *EstimateMember) util.Diffs {
 
 func (e *EstimateMember) ToData() []any {
 	return []any{e.EstimateID, e.UserID, e.Name, e.Picture, e.Role, e.Created, e.Updated}
-}
-
-type EstimateMembers []*EstimateMember
-
-func (e EstimateMembers) Get(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {
-	for _, x := range e {
-		if x.EstimateID == estimateID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
-}
-
-func (e EstimateMembers) Clone() EstimateMembers {
-	return slices.Clone(e)
 }

@@ -96,13 +96,8 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vuser/Edit.html:31
-	components.StreamTableInput(qw422016, "role", "Role", p.Model.Role, 5, "String text")
-//line views/vuser/Edit.html:31
-	qw422016.N().S(`
-          `)
-//line views/vuser/Edit.html:32
 	components.StreamTableInput(qw422016, "picture", "Picture", p.Model.Picture, 5, "URL in string form")
-//line views/vuser/Edit.html:32
+//line views/vuser/Edit.html:31
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -110,31 +105,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 }
 
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	p.StreamBody(qw422016, as, ps)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 }
 
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	p.WriteBody(qb422016, as, ps)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	qs422016 := string(qb422016.B)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 	return qs422016
-//line views/vuser/Edit.html:38
+//line views/vuser/Edit.html:37
 }

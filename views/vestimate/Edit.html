@@ -18,11 +18,11 @@
   <div class="card">
     {%- if p.IsNew -%}
     <div class="right"><a href="/admin/db/estimate/random"><button>Random</button></a></div>
-    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} New Estimate</h3>
+    <h3>{%= components.SVGRefIcon(`estimate`, ps) %} New Estimate</h3>
     <form action="/admin/db/estimate/new" class="mt" method="post">
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete estimate [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
-    <h3>{%= components.SVGRefIcon(`ruler-horizontal`, ps) %} Edit Estimate [{%s p.Model.String() %}]</h3>
+    <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Edit Estimate [{%s p.Model.String() %}]</h3>
     {%- endif -%}
     <form action="" method="post">
       <table class="mt expanded">
@@ -30,7 +30,7 @@
           {% if p.IsNew %}{%= components.TableInputUUID("id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {%= components.TableInput("slug", "Slug", p.Model.Slug, 5, "String text") %}
           {%= components.TableInput("title", "Title", p.Model.Title, 5, "String text") %}
-          {%= components.TableInput("status", "Status", string(p.Model.Status), 5, "Available options: [new, active, complete, deleted]") %}
+          {%= components.TableSelect("status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]") %}
           {%= components.TableInputUUID("teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
           {%= components.TableInputUUID("sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
           {%= components.TableInputUUID("owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}

@@ -2,6 +2,11 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/retro"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/standup"
+	"github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
@@ -9,10 +14,86 @@
 
 {% code type Home struct {
   layout.Basic
+  Teams team.Teams
+  Sprints sprint.Sprints
+  Estimates estimate.Estimates
+  Standups standup.Standups
+  Retros retro.Retros
 } %}
 
 {% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <p>Work with your team to estimate work, track your progress, and gather feedback</p>
+  </div>
+  <div class="card">
+    <h3><a href="/team">{%= components.SVGRefIcon(`team`, ps) %}Teams</a></h3>
+    {%- if len(p.Teams) == 0 -%}
+    <em>no teams available</em>
+    {%- else -%}
+    <table class="expanded">
+      <tbody>
+        {%- for _, x := range p.Teams -%}
+        <tr><td><a href="/team/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+  <div class="card">
+    <h3><a href="/sprint">{%= components.SVGRefIcon(`sprint`, ps) %}Sprints</a></h3>
+    {%- if len(p.Sprints) == 0 -%}
+    <em>no sprints available</em>
+    {%- else -%}
+    <table class="expanded">
+      <tbody>
+        {%- for _, x := range p.Sprints -%}
+        <tr><td><a href="/sprint/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+  <div class="card">
+    <h3><a href="/estimate">{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</a></h3>
+    {%- if len(p.Estimates) == 0 -%}
+    <em>no estimates available</em>
+    {%- else -%}
+    <table class="expanded">
+      <tbody>
+        {%- for _, x := range p.Estimates -%}
+        <tr><td><a href="/estimate/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+  <div class="card">
+    <h3><a href="/standup">{%= components.SVGRefIcon(`standup`, ps) %}Standups</a></h3>
+    {%- if len(p.Standups) == 0 -%}
+    <em>no standups available</em>
+    {%- else -%}
+    <table class="expanded">
+      <tbody>
+        {%- for _, x := range p.Standups -%}
+        <tr><td><a href="/standup/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+  <div class="card">
+    <h3><a href="/retro">{%= components.SVGRefIcon(`retro`, ps) %}Retros</a></h3>
+    {%- if len(p.Retros) == 0 -%}
+    <em>no retros available</em>
+    {%- else -%}
+    <table class="expanded">
+      <tbody>
+        {%- for _, x := range p.Retros -%}
+        <tr><td><a href="/retro/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
   </div>
 {% endfunc %}

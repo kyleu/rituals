@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -114,19 +113,4 @@ func (s *StandupPermission) Diff(sx *StandupPermission) util.Diffs {
 
 func (s *StandupPermission) ToData() []any {
 	return []any{s.StandupID, s.K, s.V, s.Access, s.Created}
-}
-
-type StandupPermissions []*StandupPermission
-
-func (s StandupPermissions) Get(standupID uuid.UUID, k string, v string) *StandupPermission {
-	for _, x := range s {
-		if x.StandupID == standupID && x.K == k && x.V == v {
-			return x
-		}
-	}
-	return nil
-}
-
-func (s StandupPermissions) Clone() StandupPermissions {
-	return slices.Clone(s)
 }

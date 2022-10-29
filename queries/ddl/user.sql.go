@@ -64,38 +64,37 @@ func StreamUserCreate(qw422016 *qt422016.Writer) {
 create table if not exists "user" (
   "id" uuid not null,
   "name" text not null,
-  "role" text not null,
   "picture" text not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
   primary key ("id")
 );
 -- `)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 }
 
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 func WriteUserCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	StreamUserCreate(qw422016)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 }
 
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 func UserCreate() string {
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	WriteUserCreate(qb422016)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	qs422016 := string(qb422016.B)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 	return qs422016
-//line queries/ddl/user.sql:16
+//line queries/ddl/user.sql:15
 }

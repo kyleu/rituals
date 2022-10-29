@@ -72,6 +72,7 @@ create table if not exists "sprint" (
   "updated" timestamp default now(),
   foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
+  unique ("slug"),
   primary key ("id")
 );
 
@@ -83,31 +84,31 @@ create index if not exists "sprint__owner_idx" on "sprint" ("owner");
 
 create index if not exists "sprint__team_id_idx" on "sprint" ("team_id");
 -- `)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 }
 
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 func WriteSprintCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	StreamSprintCreate(qw422016)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 }
 
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 func SprintCreate() string {
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	WriteSprintCreate(qb422016)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	qs422016 := string(qb422016.B)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 	return qs422016
-//line queries/ddl/sprint.sql:28
+//line queries/ddl/sprint.sql:29
 }

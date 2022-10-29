@@ -32,7 +32,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(&p.Model.SprintID) %}{% if x := p.Sprints.Get(p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRefIcon("running", ps) %}</a>
+            <a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRefIcon("sprint", ps) %}</a>
           </td>
         </tr>
         <tr>

@@ -1,7 +1,7 @@
 {
   "name": "user",
   "package": "user",
-  "description": "TODO",
+  "description": "A user of the system",
   "icon": "profile",
   "ordering": [
     {
@@ -24,10 +24,6 @@
       "tags": [
         "title"
       ]
-    },
-    {
-      "name": "role",
-      "type": "string"
     },
     {
       "name": "picture",
@@ -55,9 +51,8 @@
   "seedData": [
     [
       "90000000-0000-0000-0000-000000000000",
-      "Kyle",
-      "admin",
-      "https://google.com",
+      "Test User",
+      "https://electricfrankfurter.com/index.png",
       "now()",
       null
     ]

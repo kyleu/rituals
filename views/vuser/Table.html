@@ -14,7 +14,6 @@
       <tr>
         {%= components.TableHeaderSimple("user", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("user", "name", "Name", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("user", "role", "Role", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("user", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("user", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("user", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
@@ -25,7 +24,6 @@
       <tr>
         <td><a href="/admin/db/user/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td><strong>{%s model.Name %}</strong></td>
-        <td>{%s model.Role %}</td>
         <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
@@ -33,7 +31,7 @@
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="6">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="5">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

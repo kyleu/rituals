@@ -25,7 +25,7 @@
       <tr>
         <td>
           <div class="icon"><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRefIcon("ruler-horizontal", ps) %}</a>
+          <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRefIcon("estimate", ps) %}</a>
         </td>
         <td><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
         <td><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>

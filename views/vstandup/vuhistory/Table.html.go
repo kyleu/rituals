@@ -100,7 +100,7 @@ func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, st
 //line views/vstandup/vuhistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vstandup/vuhistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "shoe-prints", ps)
+		components.StreamSVGRefIcon(qw422016, "standup", ps)
 //line views/vstandup/vuhistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

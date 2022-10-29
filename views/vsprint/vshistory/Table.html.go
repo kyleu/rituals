@@ -100,7 +100,7 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
 //line views/vsprint/vshistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vsprint/vshistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "running", ps)
+		components.StreamSVGRefIcon(qw422016, "sprint", ps)
 //line views/vsprint/vshistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

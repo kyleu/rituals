@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "moduleResolution": "Node",
+    "jsx": "react",
+    "jsxFactory": "JSX",
+    "module": "none",
     "noImplicitAny": true,
+    "outFile": "../tmp/rituals.js",
     "removeComments": false,
     "preserveConstEnums": true,
     "preserveWatchOutput": true,

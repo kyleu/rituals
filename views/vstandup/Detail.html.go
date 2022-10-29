@@ -73,7 +73,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vstandup/Detail.html:41
-	components.StreamSVGRefIcon(qw422016, `shoe-prints`, ps)
+	components.StreamSVGRefIcon(qw422016, `standup`, ps)
 //line views/vstandup/Detail.html:41
 	qw422016.N().S(` `)
 //line views/vstandup/Detail.html:41
@@ -143,7 +143,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:65
 	qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:65
-	components.StreamSVGRefIcon(qw422016, "users", ps)
+	components.StreamSVGRefIcon(qw422016, "team", ps)
 //line views/vstandup/Detail.html:65
 	qw422016.N().S(`</a>
           </td>
@@ -176,7 +176,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:72
 	qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:72
-	components.StreamSVGRefIcon(qw422016, "running", ps)
+	components.StreamSVGRefIcon(qw422016, "sprint", ps)
 //line views/vstandup/Detail.html:72
 	qw422016.N().S(`</a>
           </td>

@@ -13,6 +13,7 @@ create table if not exists "team" (
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
   foreign key ("owner") references "user" ("id"),
+  unique ("slug"),
   primary key ("id")
 );
 

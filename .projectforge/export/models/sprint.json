@@ -2,7 +2,7 @@
   "name": "sprint",
   "package": "sprint",
   "description": "TODO",
-  "icon": "running",
+  "icon": "sprint",
   "ordering": [
     {
       "column": "created",
@@ -21,7 +21,10 @@
       "name": "slug",
       "type": "string",
       "search": true,
-      "indexed": true
+      "indexed": true,
+      "tags": [
+        "unique"
+      ]
     },
     {
       "name": "title",

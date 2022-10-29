@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -114,19 +113,4 @@ func (r *RetroPermission) Diff(rx *RetroPermission) util.Diffs {
 
 func (r *RetroPermission) ToData() []any {
 	return []any{r.RetroID, r.K, r.V, r.Access, r.Created}
-}
-
-type RetroPermissions []*RetroPermission
-
-func (r RetroPermissions) Get(retroID uuid.UUID, k string, v string) *RetroPermission {
-	for _, x := range r {
-		if x.RetroID == retroID && x.K == k && x.V == v {
-			return x
-		}
-	}
-	return nil
-}
-
-func (r RetroPermissions) Clone() RetroPermissions {
-	return slices.Clone(r)
 }

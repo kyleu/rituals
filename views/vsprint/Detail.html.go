@@ -77,7 +77,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vsprint/Detail.html:45
-	components.StreamSVGRefIcon(qw422016, `running`, ps)
+	components.StreamSVGRefIcon(qw422016, `sprint`, ps)
 //line views/vsprint/Detail.html:45
 	qw422016.N().S(` `)
 //line views/vsprint/Detail.html:45
@@ -147,7 +147,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:69
 	qw422016.N().S(`">`)
 //line views/vsprint/Detail.html:69
-	components.StreamSVGRefIcon(qw422016, "users", ps)
+	components.StreamSVGRefIcon(qw422016, "team", ps)
 //line views/vsprint/Detail.html:69
 	qw422016.N().S(`</a>
           </td>
@@ -207,7 +207,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vsprint/Detail.html:94
-		components.StreamSVGRefIcon(qw422016, `ruler-horizontal`, ps)
+		components.StreamSVGRefIcon(qw422016, `estimate`, ps)
 //line views/vsprint/Detail.html:94
 		qw422016.N().S(` Related estimates by [sprint id]</h3>
     <div class="overflow clear">
@@ -227,7 +227,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vsprint/Detail.html:102
-		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
+		components.StreamSVGRefIcon(qw422016, `retro`, ps)
 //line views/vsprint/Detail.html:102
 		qw422016.N().S(` Related retros by [sprint id]</h3>
     <div class="overflow clear">
@@ -307,7 +307,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vsprint/Detail.html:134
-		components.StreamSVGRefIcon(qw422016, `shoe-prints`, ps)
+		components.StreamSVGRefIcon(qw422016, `standup`, ps)
 //line views/vsprint/Detail.html:134
 		qw422016.N().S(` Related standups by [sprint id]</h3>
     <div class="overflow clear">

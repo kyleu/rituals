@@ -28,7 +28,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(&p.Model.RetroID) %}{% if x := p.Retros.Get(p.Model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="Retro" href="{%s `/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRefIcon("glasses", ps) %}</a>
+            <a title="Retro" href="{%s `/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRefIcon("retro", ps) %}</a>
           </td>
         </tr>
         <tr>

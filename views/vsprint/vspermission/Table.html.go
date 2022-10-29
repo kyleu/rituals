@@ -108,7 +108,7 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "running", ps)
+		components.StreamSVGRefIcon(qw422016, "sprint", ps)
 //line views/vsprint/vspermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>

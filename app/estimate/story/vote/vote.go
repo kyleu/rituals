@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -109,19 +108,4 @@ func (v *Vote) Diff(vx *Vote) util.Diffs {
 
 func (v *Vote) ToData() []any {
 	return []any{v.StoryID, v.UserID, v.Choice, v.Created, v.Updated}
-}
-
-type Votes []*Vote
-
-func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
-	for _, x := range v {
-		if x.StoryID == storyID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
-}
-
-func (v Votes) Clone() Votes {
-	return slices.Clone(v)
 }

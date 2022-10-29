@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -114,19 +113,4 @@ func (e *EstimatePermission) Diff(ex *EstimatePermission) util.Diffs {
 
 func (e *EstimatePermission) ToData() []any {
 	return []any{e.EstimateID, e.K, e.V, e.Access, e.Created}
-}
-
-type EstimatePermissions []*EstimatePermission
-
-func (e EstimatePermissions) Get(estimateID uuid.UUID, k string, v string) *EstimatePermission {
-	for _, x := range e {
-		if x.EstimateID == estimateID && x.K == k && x.V == v {
-			return x
-		}
-	}
-	return nil
-}
-
-func (e EstimatePermissions) Clone() EstimatePermissions {
-	return slices.Clone(e)
 }

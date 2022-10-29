@@ -14,7 +14,7 @@ import (
 var (
 	table         = "user"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "name", "role", "picture", "created", "updated"}
+	columns       = []string{"id", "name", "picture", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -22,7 +22,6 @@ var (
 type dto struct {
 	ID      uuid.UUID  `db:"id"`
 	Name    string     `db:"name"`
-	Role    string     `db:"role"`
 	Picture string     `db:"picture"`
 	Created time.Time  `db:"created"`
 	Updated *time.Time `db:"updated"`
@@ -35,7 +34,6 @@ func (d *dto) ToUser() *User {
 	return &User{
 		ID:      d.ID,
 		Name:    d.Name,
-		Role:    d.Role,
 		Picture: d.Picture,
 		Created: d.Created,
 		Updated: d.Updated,

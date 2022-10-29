@@ -63,35 +63,47 @@ func TypesDrop() string {
 func StreamTypesCreate(qw422016 *qt422016.Writer) {
 //line queries/ddl/types.sql:8
 	qw422016.N().S(`
-create type "member_status" as enum ('owner', 'member', 'observer');
-create type "model_service" as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
-create type "session_status" as enum ('new', 'active', 'complete', 'deleted');
+do $$ begin
+  create type "member_status" as enum ('owner', 'member', 'observer');
+exception
+  when duplicate_object then null;
+end $$;
+do $$ begin
+  create type "model_service" as enum ('team', 'sprint', 'estimate', 'standup', 'retro', 'story', 'feedback', 'report');
+exception
+  when duplicate_object then null;
+end $$;
+do $$ begin
+  create type "session_status" as enum ('new', 'active', 'complete', 'deleted');
+exception
+  when duplicate_object then null;
+end $$;
 -- `)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 }
 
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 func WriteTypesCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	StreamTypesCreate(qw422016)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 }
 
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 func TypesCreate() string {
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	WriteTypesCreate(qb422016)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	qs422016 := string(qb422016.B)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 	return qs422016
-//line queries/ddl/types.sql:12
+//line queries/ddl/types.sql:24
 }

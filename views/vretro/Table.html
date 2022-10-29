@@ -36,11 +36,11 @@
         <td>{%v model.Status %}</td>
         <td>
           <div class="icon">{%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("users", ps) %}</a>
+          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
         </td>
         <td>
           <div class="icon">{%= components.DisplayUUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprints.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("running", ps) %}</a>
+          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("sprint", ps) %}</a>
         </td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>

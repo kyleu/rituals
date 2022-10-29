@@ -2,7 +2,7 @@
   "name": "retro",
   "package": "retro",
   "description": "TODO",
-  "icon": "glasses",
+  "icon": "retro",
   "ordering": [
     {
       "column": "created",
@@ -21,7 +21,10 @@
       "name": "slug",
       "type": "string",
       "search": true,
-      "indexed": true
+      "indexed": true,
+      "tags": [
+        "unique"
+      ]
     },
     {
       "name": "title",

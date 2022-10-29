@@ -48,7 +48,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/retro/random"><button>Random</button></a></div>
     <h3>`)
 //line views/vretro/Edit.html:21
-		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
+		components.StreamSVGRefIcon(qw422016, `retro`, ps)
 //line views/vretro/Edit.html:21
 		qw422016.N().S(` New Retro</h3>
     <form action="/admin/db/retro/new" class="mt" method="post">
@@ -67,7 +67,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
 //line views/vretro/Edit.html:25
-		components.StreamSVGRefIcon(qw422016, `glasses`, ps)
+		components.StreamSVGRefIcon(qw422016, `retro`, ps)
 //line views/vretro/Edit.html:25
 		qw422016.N().S(` Edit Retro [`)
 //line views/vretro/Edit.html:25
@@ -102,7 +102,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vretro/Edit.html:33
-	components.StreamTableInput(qw422016, "status", "Status", string(p.Model.Status), 5, "Available options: [new, active, complete, deleted]")
+	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
 //line views/vretro/Edit.html:33
 	qw422016.N().S(`
           `)

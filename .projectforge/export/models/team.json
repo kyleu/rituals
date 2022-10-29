@@ -2,7 +2,7 @@
   "name": "team",
   "package": "team",
   "description": "TODO",
-  "icon": "users",
+  "icon": "team",
   "ordering": [
     {
       "column": "created",
@@ -21,7 +21,10 @@
       "name": "slug",
       "type": "string",
       "search": true,
-      "indexed": true
+      "indexed": true,
+      "tags": [
+        "unique"
+      ]
     },
     {
       "name": "title",

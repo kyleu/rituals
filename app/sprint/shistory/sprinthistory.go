@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -97,19 +96,4 @@ func (s *SprintHistory) Diff(sx *SprintHistory) util.Diffs {
 
 func (s *SprintHistory) ToData() []any {
 	return []any{s.Slug, s.SprintID, s.SprintName, s.Created}
-}
-
-type SprintHistories []*SprintHistory
-
-func (s SprintHistories) Get(slug string) *SprintHistory {
-	for _, x := range s {
-		if x.Slug == slug {
-			return x
-		}
-	}
-	return nil
-}
-
-func (s SprintHistories) Clone() SprintHistories {
-	return slices.Clone(s)
 }

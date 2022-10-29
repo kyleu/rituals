@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -114,19 +113,4 @@ func (s *SprintPermission) Diff(sx *SprintPermission) util.Diffs {
 
 func (s *SprintPermission) ToData() []any {
 	return []any{s.SprintID, s.K, s.V, s.Access, s.Created}
-}
-
-type SprintPermissions []*SprintPermission
-
-func (s SprintPermissions) Get(sprintID uuid.UUID, k string, v string) *SprintPermission {
-	for _, x := range s {
-		if x.SprintID == sprintID && x.K == k && x.V == v {
-			return x
-		}
-	}
-	return nil
-}
-
-func (s SprintPermissions) Clone() SprintPermissions {
-	return slices.Clone(s)
 }
