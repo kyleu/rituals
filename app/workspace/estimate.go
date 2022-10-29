@@ -2,13 +2,15 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/estimate"
 	"github.com/kyleu/rituals/app/estimate/ehistory"
 	"github.com/kyleu/rituals/app/estimate/emember"
 	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 type FullEstimate struct {

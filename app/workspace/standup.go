@@ -2,13 +2,15 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/standup"
 	"github.com/kyleu/rituals/app/standup/uhistory"
 	"github.com/kyleu/rituals/app/standup/umember"
 	"github.com/kyleu/rituals/app/standup/upermission"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 type FullStandup struct {

@@ -2,13 +2,15 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/team/thistory"
 	"github.com/kyleu/rituals/app/team/tmember"
 	"github.com/kyleu/rituals/app/team/tpermission"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 type FullTeam struct {

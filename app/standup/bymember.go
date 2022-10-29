@@ -2,12 +2,14 @@ package standup
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, params *filter.Params, logger util.Logger) (Standups, error) {

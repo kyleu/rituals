@@ -5,8 +5,10 @@ import (
 	"strings"
 )
 
-var regexpNonAuthorizedChars = regexp.MustCompile("[^a-zA-Z0-9-_]")
-var regexpMultipleDashes = regexp.MustCompile("-+")
+var (
+	regexpNonAuthorizedChars = regexp.MustCompile("[^a-zA-Z0-9-_]")
+	regexpMultipleDashes     = regexp.MustCompile("-+")
+)
 
 func slugify(s string) (slug string) {
 	slug = strings.TrimSpace(s)

@@ -2,13 +2,15 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/retro/rhistory"
 	"github.com/kyleu/rituals/app/retro/rmember"
 	"github.com/kyleu/rituals/app/retro/rpermission"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 type FullRetro struct {

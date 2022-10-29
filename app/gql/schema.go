@@ -2,6 +2,7 @@ package gql
 
 import (
 	_ "embed"
+
 	"github.com/kyleu/rituals/app/util"
 )
 

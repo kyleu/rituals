@@ -2,13 +2,15 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/sprint/shistory"
 	"github.com/kyleu/rituals/app/sprint/smember"
 	"github.com/kyleu/rituals/app/sprint/spermission"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 type FullSprint struct {

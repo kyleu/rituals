@@ -2,18 +2,19 @@ package cworkspace
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/pkg/errors"
+	"github.com/valyala/fasthttp"
+
+	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views/vworkspace"
-	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
-	"time"
-
-	"github.com/kyleu/rituals/app"
-	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/views"
+	"github.com/kyleu/rituals/views/vworkspace"
 )
 
 func SprintList(rc *fasthttp.RequestCtx) {

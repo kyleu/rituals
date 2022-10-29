@@ -1,12 +1,14 @@
 package cworkspace
 
 import (
+	"strings"
+
 	"github.com/google/uuid"
-	"github.com/kyleu/rituals/app/controller/cutil"
-	"github.com/kyleu/rituals/app/util"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
-	"strings"
+
+	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type requestForm struct {
