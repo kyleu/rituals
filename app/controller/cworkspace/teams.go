@@ -13,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views"
 	"github.com/kyleu/rituals/views/vworkspace"
 )
 
@@ -56,6 +55,6 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = t.Team.TitleString()
 		ps.Data = t
-		return controller.Render(rc, as, &views.Debug{}, ps, "teams", t.Team.ID.String())
+		return controller.Render(rc, as, &vworkspace.TeamWorkspace{Team: t}, ps, "teams", t.Team.ID.String())
 	})
 }

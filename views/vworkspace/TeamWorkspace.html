@@ -1,0 +1,46 @@
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type TeamWorkspace struct {
+  layout.Basic
+  Team *workspace.FullTeam
+} %}
+
+{% func (p *TeamWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code w := p.Team -%}
+  {%- code t := w.Team -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary" class="card">
+      <div class="right"><a href="#modal-team"><button type="button">JSON</button></a></div>
+      <h3>{%= components.SVGRefIcon(`team`, ps) %}{%s t.TitleString() %}</h3>
+    </div>
+    <div id="panel-detail" class="card">
+      <h3>{%= components.SVGRefIcon(`sprint`, ps) %}Sprints</h3>
+      <h3>{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</h3>
+      <h3>{%= components.SVGRefIcon(`standup`, ps) %}Standups</h3>
+      <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
+    </div>
+    <div id="panel-self" class="card">
+      <h3>{%= components.SVGRefIcon(`profile`, ps) %}Self</h3>
+    </div>
+    <div id="panel-members" class="card">
+      <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+    </div>
+  </div>
+  {%= components.JSONModal("team", "Team JSON", w, 1) %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const team = {%s= util.ToJSONCompact(t) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace("team", team, members, permissions);
+    });
+  </script>
+{% endfunc %}
+

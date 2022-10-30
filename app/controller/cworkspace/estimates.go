@@ -13,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views"
 	"github.com/kyleu/rituals/views/vworkspace"
 )
 
@@ -59,6 +58,6 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = e.Estimate.TitleString()
 		ps.Data = e
-		return controller.Render(rc, as, &views.Debug{}, ps, "estimates", e.Estimate.ID.String())
+		return controller.Render(rc, as, &vworkspace.EstimateWorkspace{Estimate: e}, ps, "estimates", e.Estimate.ID.String())
 	})
 }

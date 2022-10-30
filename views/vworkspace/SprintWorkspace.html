@@ -1,0 +1,45 @@
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type SprintWorkspace struct {
+  layout.Basic
+  Sprint *workspace.FullSprint
+} %}
+
+{% func (p *SprintWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code w := p.Sprint -%}
+  {%- code t := w.Sprint -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary" class="card">
+      <div class="right"><a href="#modal-sprint"><button type="button">JSON</button></a></div>
+      <h3>{%= components.SVGRefIcon(`sprint`, ps) %}{%s t.TitleString() %}</h3>
+    </div>
+    <div id="panel-detail" class="card">
+      <h3>{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</h3>
+      <h3>{%= components.SVGRefIcon(`standup`, ps) %}Standups</h3>
+      <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
+    </div>
+    <div id="panel-self" class="card">
+      <h3>{%= components.SVGRefIcon(`profile`, ps) %}Self</h3>
+    </div>
+    <div id="panel-members" class="card">
+      <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+    </div>
+  </div>
+  {%= components.JSONModal("sprint", "Sprint JSON", w, 1) %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const sprint = {%s= util.ToJSONCompact(t) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace("sprint", sprint, members, permissions);
+    });
+  </script>
+{% endfunc %}
+

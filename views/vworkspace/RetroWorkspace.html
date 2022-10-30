@@ -1,0 +1,43 @@
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type RetroWorkspace struct {
+  layout.Basic
+  Retro *workspace.FullRetro
+} %}
+
+{% func (p *RetroWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code w := p.Retro -%}
+  {%- code t := w.Retro -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary" class="card">
+      <div class="right"><a href="#modal-retro"><button type="button">JSON</button></a></div>
+      <h3>{%= components.SVGRefIcon(`retro`, ps) %}{%s t.TitleString() %}</h3>
+    </div>
+    <div id="panel-detail" class="card">
+      <h3>{%= components.SVGRefIcon(`comment`, ps) %}Feedback</h3>
+    </div>
+    <div id="panel-self" class="card">
+      <h3>{%= components.SVGRefIcon(`profile`, ps) %}Self</h3>
+    </div>
+    <div id="panel-members" class="card">
+      <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+    </div>
+  </div>
+  {%= components.JSONModal("retro", "Retro JSON", w, 1) %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const retro = {%s= util.ToJSONCompact(t) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace("retro", retro, members, permissions);
+    });
+  </script>
+{% endfunc %}
+

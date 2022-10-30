@@ -1,7 +1,10 @@
 // $PF_IGNORE$
-import {test} from "./x";
-import {req} from "./dom";
+import {JSX} from "./jsx";
+
+export function initWorkspace(t: string) {
+  console.log("!!!!");
+}
 
 export function appInit(): void {
-  req("table").appendChild(test());
+  (window as any).rituals.initWorkspace = initWorkspace;
 }

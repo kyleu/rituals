@@ -13,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/standup"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views"
 	"github.com/kyleu/rituals/views/vworkspace"
 )
 
@@ -59,6 +58,6 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = u.Standup.TitleString()
 		ps.Data = u
-		return controller.Render(rc, as, &views.Debug{}, ps, "standups", u.Standup.ID.String())
+		return controller.Render(rc, as, &vworkspace.StandupWorkspace{Standup: u}, ps, "standups", u.Standup.ID.String())
 	})
 }

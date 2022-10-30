@@ -13,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views"
 	"github.com/kyleu/rituals/views/vworkspace"
 )
 
@@ -58,6 +57,6 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = s.Sprint.TitleString()
 		ps.Data = s
-		return controller.Render(rc, as, &views.Debug{}, ps, "sprints", s.Sprint.ID.String())
+		return controller.Render(rc, as, &vworkspace.SprintWorkspace{Sprint: s}, ps, "sprints", s.Sprint.ID.String())
 	})
 }

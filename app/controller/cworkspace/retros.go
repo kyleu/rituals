@@ -13,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views"
 	"github.com/kyleu/rituals/views/vworkspace"
 )
 
@@ -59,6 +58,6 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = r.Retro.TitleString()
 		ps.Data = r
-		return controller.Render(rc, as, &views.Debug{}, ps, "retros", r.Retro.ID.String())
+		return controller.Render(rc, as, &vworkspace.RetroWorkspace{Retro: r}, ps, "retros", r.Retro.ID.String())
 	})
 }
