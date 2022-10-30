@@ -44,37 +44,43 @@ import (
 )
 
 type Services struct {
-	Workspace          *workspace.Service
-	User               *user.Service
-	Team               *team.Service
-	TeamMember         *tmember.Service
-	TeamHistory        *thistory.Service
-	TeamPermission     *tpermission.Service
-	Sprint             *sprint.Service
-	SprintMember       *smember.Service
-	SprintHistory      *shistory.Service
-	SprintPermission   *spermission.Service
+	Team           *team.Service
+	TeamMember     *tmember.Service
+	TeamHistory    *thistory.Service
+	TeamPermission *tpermission.Service
+
+	Sprint           *sprint.Service
+	SprintMember     *smember.Service
+	SprintHistory    *shistory.Service
+	SprintPermission *spermission.Service
+
 	Estimate           *estimate.Service
 	EstimateMember     *emember.Service
 	EstimateHistory    *ehistory.Service
 	EstimatePermission *epermission.Service
 	Story              *story.Service
 	Vote               *vote.Service
-	Standup            *standup.Service
-	StandupMember      *umember.Service
-	StandupHistory     *uhistory.Service
-	StandupPermission  *upermission.Service
-	Report             *report.Service
-	Retro              *retro.Service
-	RetroMember        *rmember.Service
-	RetroHistory       *rhistory.Service
-	RetroPermission    *rpermission.Service
-	Feedback           *feedback.Service
-	Action             *action.Service
-	Comment            *comment.Service
-	Email              *email.Service
-	GQL                *gql.Schema
-	Socket             *websocket.Service
+
+	Standup           *standup.Service
+	StandupMember     *umember.Service
+	StandupHistory    *uhistory.Service
+	StandupPermission *upermission.Service
+	Report            *report.Service
+
+	Retro           *retro.Service
+	RetroMember     *rmember.Service
+	RetroHistory    *rhistory.Service
+	RetroPermission *rpermission.Service
+	Feedback        *feedback.Service
+
+	User    *user.Service
+	Action  *action.Service
+	Comment *comment.Service
+	Email   *email.Service
+
+	Workspace *workspace.Service
+	GQL       *gql.Schema
+	Socket    *websocket.Service
 }
 
 func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services, error) {
@@ -83,7 +89,6 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to run database migrations")
 	}
-	us := user.NewService(st.DB)
 
 	t := team.NewService(st.DB)
 	tm := tmember.NewService(st.DB)
@@ -114,22 +119,22 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	rp := rpermission.NewService(st.DB)
 	f := feedback.NewService(st.DB)
 
+	us := user.NewService(st.DB)
 	a := action.NewService(st.DB)
 	c := comment.NewService(st.DB)
 	el := email.NewService(st.DB)
 
 	g := gql.NewSchema(st.GraphQL)
-	ws := websocket.NewService(logger, nil, nil, nil, nil)
+	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, u, uh, um, up, r, rh, rm, rp)
+	ws := websocket.NewService(logger, w.SocketOpen, w.SocketHandler, w.SocketClose, nil)
 
 	return &Services{
-		Workspace: workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, u, uh, um, up, r, rh, rm, rp),
-
-		User: us, Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
+		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
 		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,
 		Estimate: e, EstimateMember: em, EstimateHistory: eh, EstimatePermission: ep, Story: sy, Vote: v,
 		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rpt,
 		Retro: r, RetroMember: rm, RetroHistory: rh, RetroPermission: rp, Feedback: f,
-		Action: a, Comment: c, Email: el, GQL: g, Socket: ws,
+		User: us, Action: a, Comment: c, Email: el, Workspace: w, GQL: g, Socket: ws,
 	}, nil
 }
 

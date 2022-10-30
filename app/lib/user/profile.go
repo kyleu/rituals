@@ -21,7 +21,7 @@ func (p *Profile) String() string {
 }
 
 func (p *Profile) Clone() *Profile {
-	return &Profile{Name: p.Name, Mode: p.Mode, Theme: p.Theme}
+	return &Profile{ID: p.ID, Name: p.Name, Mode: p.Mode, Theme: p.Theme}
 }
 
 func (p *Profile) ModeClass() string {

@@ -1,15 +1,26 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "esModuleInterop": true,
     "jsx": "react",
     "jsxFactory": "JSX",
+    "listFiles": false,
     "module": "none",
     "noImplicitAny": true,
-    "outFile": "../tmp/rituals.js",
+    "outFile": "../assets/rituals.js",
     "removeComments": false,
     "preserveConstEnums": true,
     "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
     "target": "ES6"
-  }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }
