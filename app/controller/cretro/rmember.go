@@ -18,8 +18,7 @@ import (
 
 func RetroMemberList(rc *fasthttp.RequestCtx) {
 	controller.Act("rmember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
+		prms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
 		ret, err := as.Services.RetroMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func RetroMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vrmember.List{Models: ret, Retros: retros, Users: users, Params: params}, ps, "retro", "rmember")
+		return controller.Render(rc, as, &vrmember.List{Models: ret, Retros: retros, Users: users, Params: ps.Params}, ps, "retro", "rmember")
 	})
 }
 

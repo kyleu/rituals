@@ -137,15 +137,23 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	}
 //line views/vstandup/Detail.html:64
 	qw422016.N().S(`</div>
-            <a title="Team" href="`)
+            `)
 //line views/vstandup/Detail.html:65
-	qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
+	if p.Model.TeamID != nil {
 //line views/vstandup/Detail.html:65
-	qw422016.N().S(`">`)
+		qw422016.N().S(`<a title="Team" href="`)
 //line views/vstandup/Detail.html:65
-	components.StreamSVGRefIcon(qw422016, "team", ps)
+		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
 //line views/vstandup/Detail.html:65
-	qw422016.N().S(`</a>
+		qw422016.N().S(`">`)
+//line views/vstandup/Detail.html:65
+		components.StreamSVGRefIcon(qw422016, "team", ps)
+//line views/vstandup/Detail.html:65
+		qw422016.N().S(`</a>`)
+//line views/vstandup/Detail.html:65
+	}
+//line views/vstandup/Detail.html:65
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
@@ -170,15 +178,23 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	}
 //line views/vstandup/Detail.html:71
 	qw422016.N().S(`</div>
-            <a title="Sprint" href="`)
+            `)
 //line views/vstandup/Detail.html:72
-	qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
+	if p.Model.SprintID != nil {
 //line views/vstandup/Detail.html:72
-	qw422016.N().S(`">`)
+		qw422016.N().S(`<a title="Sprint" href="`)
 //line views/vstandup/Detail.html:72
-	components.StreamSVGRefIcon(qw422016, "sprint", ps)
+		qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
 //line views/vstandup/Detail.html:72
-	qw422016.N().S(`</a>
+		qw422016.N().S(`">`)
+//line views/vstandup/Detail.html:72
+		components.StreamSVGRefIcon(qw422016, "sprint", ps)
+//line views/vstandup/Detail.html:72
+		qw422016.N().S(`</a>`)
+//line views/vstandup/Detail.html:72
+	}
+//line views/vstandup/Detail.html:72
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>

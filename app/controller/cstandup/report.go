@@ -18,8 +18,7 @@ import (
 
 func ReportList(rc *fasthttp.RequestCtx) {
 	controller.Act("report.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("report", nil, ps.Logger).Sanitize("report")
+		prms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
 		ret, err := as.Services.Report.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func ReportList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vreport.List{Models: ret, Standups: standups, Users: users, Params: params}, ps, "standup", "report")
+		return controller.Render(rc, as, &vreport.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}, ps, "standup", "report")
 	})
 }
 

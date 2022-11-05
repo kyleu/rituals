@@ -18,8 +18,7 @@ import (
 
 func StoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("story.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("story", nil, ps.Logger).Sanitize("story")
+		prms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
 		ret, err := as.Services.Story.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,27 +41,26 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vstory.List{Models: ret, Estimates: estimates, Users: users, Params: params}, ps, "estimate", "story")
+		return controller.Render(rc, as, &vstory.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params}, ps, "estimate", "story")
 	})
 }
 
 func StoryDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("story.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
 		ret, err := storyFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = ret.TitleString() + " (Story)"
 		ps.Data = ret
-		votePrms := params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		votePrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
 		votesByStoryID, err := as.Services.Vote.GetByStoryID(ps.Context, nil, ret.ID, votePrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
 		return controller.Render(rc, as, &vstory.Detail{
 			Model:          ret,
-			Params:         params,
+			Params:         ps.Params,
 			VotesByStoryID: votesByStoryID,
 		}, ps, "estimate", "story", ret.String())
 	})

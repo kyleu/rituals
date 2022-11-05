@@ -17,8 +17,7 @@ import (
 
 func ActionList(rc *fasthttp.RequestCtx) {
 	Act("action.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("action", nil, ps.Logger).Sanitize("action")
+		prms := ps.Params.Get("action", nil, ps.Logger).Sanitize("action")
 		ret, err := as.Services.Action.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func ActionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vaction.List{Models: ret, Users: users, Params: params}, ps, "action")
+		return Render(rc, as, &vaction.List{Models: ret, Users: users, Params: ps.Params}, ps, "action")
 	})
 }
 

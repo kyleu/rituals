@@ -66,7 +66,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(p.Model.TeamID) %}{% if p.Model.TeamID != nil %}{% if x := p.Teams.Get(*p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-            <a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
+            {% if p.Model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>{% endif %}
           </td>
         </tr>
         <tr>

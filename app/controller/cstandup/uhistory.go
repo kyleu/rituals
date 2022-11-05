@@ -17,8 +17,7 @@ import (
 
 func StandupHistoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("uhistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("uhistory", nil, ps.Logger).Sanitize("uhistory")
+		prms := ps.Params.Get("uhistory", nil, ps.Logger).Sanitize("uhistory")
 		ret, err := as.Services.StandupHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func StandupHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vuhistory.List{Models: ret, Standups: standups, Params: params}, ps, "standup", "uhistory")
+		return controller.Render(rc, as, &vuhistory.List{Models: ret, Standups: standups, Params: ps.Params}, ps, "standup", "uhistory")
 	})
 }
 

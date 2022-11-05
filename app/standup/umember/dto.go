@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -20,13 +21,13 @@ var (
 )
 
 type dto struct {
-	StandupID uuid.UUID  `db:"standup_id"`
-	UserID    uuid.UUID  `db:"user_id"`
-	Name      string     `db:"name"`
-	Picture   string     `db:"picture"`
-	Role      string     `db:"role"`
-	Created   time.Time  `db:"created"`
-	Updated   *time.Time `db:"updated"`
+	StandupID uuid.UUID         `db:"standup_id"`
+	UserID    uuid.UUID         `db:"user_id"`
+	Name      string            `db:"name"`
+	Picture   string            `db:"picture"`
+	Role      enum.MemberStatus `db:"role"`
+	Created   time.Time         `db:"created"`
+	Updated   *time.Time        `db:"updated"`
 }
 
 func (d *dto) ToStandupMember() *StandupMember {

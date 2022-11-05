@@ -15,19 +15,70 @@
 {% func (p *EstimateWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code w := p.Estimate -%}
   {%- code t := w.Estimate -%}
+  {%- code
+    self, others, err := w.Members.Split(ps.Profile.ID)
+    if err != nil {
+      panic(err)
+    }
+  -%}
   <div style="display: flex; flex-wrap: wrap;">
-    <div id="panel-summary" class="card">
-      <div class="right"><a href="#modal-estimate"><button type="button">JSON</button></a></div>
-      <h3>{%= components.SVGRefIcon(`estimate`, ps) %}{%s t.TitleString() %}</h3>
+    <div id="panel-summary">
+      <div class="card">
+        <div class="right"><a href="#modal-estimate"><button type="button">JSON</button></a></div>
+        <a href="#modal-estimate-config"><h3>{%= components.SVGRefIcon(`estimate`, ps) %}{%s t.TitleString() %}</h3></a>
+        {%= Banner(w.Team, w.Sprint, "estimate") %}
+        {%= EstimateWorkspaceModal(w) %}
+      </div>
     </div>
-    <div id="panel-detail" class="card">
-      <h3>{%= components.SVGRefIcon(`book-reader`, ps) %}Stories</h3>
+    <div id="panel-detail">
+      <div class="card">
+        <h3>{%= components.SVGRefIcon(`book-reader`, ps) %}Stories</h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, s := range w.Stories -%}
+            <tr>
+              <td><a href="#modal-story-{%s s.ID.String() %}">{%s s.TitleString() %}</a></td>
+              <td class="shrink">0</td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, s := range w.Stories -%}
+        <div id="modal-story-{%s s.ID.String() %}" class="modal" style="display: none;">
+          <a class="backdrop" href="#"></a>
+          <div class="modal-content">
+            <div class="modal-header">
+              <a href="#" class="modal-close">×</a>
+              <h2>{%s s.TitleString() %}</h2>
+            </div>
+            <div class="modal-body">
+              TODO
+            </div>
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
     </div>
-    <div id="panel-self" class="card">
-      <h3>{%= components.SVGRefIcon(`profile`, ps) %}Self</h3>
+    <div id="panel-self">
+      <div class="card">
+        <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
     </div>
-    <div id="panel-members" class="card">
-      <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+    <div id="panel-members">
+      <div class="card">
+        <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+        {%- endfor -%}
+      </div>
     </div>
   </div>
   {%= components.JSONModal("estimate", "Estimate JSON", w, 1) %}
@@ -41,3 +92,17 @@
   </script>
 {% endfunc %}
 
+{% func EstimateWorkspaceModal(w *workspace.FullEstimate) %}
+  <div id="modal-estimate-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s w.Estimate.TitleString() %}</h2>
+      </div>
+      <div class="modal-body">
+        TODO
+      </div>
+    </div>
+  </div>
+{% endfunc %}

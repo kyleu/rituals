@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -16,13 +17,13 @@ type PK struct {
 }
 
 type SprintMember struct {
-	SprintID uuid.UUID  `json:"sprintID"`
-	UserID   uuid.UUID  `json:"userID"`
-	Name     string     `json:"name"`
-	Picture  string     `json:"picture"`
-	Role     string     `json:"role"`
-	Created  time.Time  `json:"created"`
-	Updated  *time.Time `json:"updated,omitempty"`
+	SprintID uuid.UUID         `json:"sprintID"`
+	UserID   uuid.UUID         `json:"userID"`
+	Name     string            `json:"name"`
+	Picture  string            `json:"picture"`
+	Role     enum.MemberStatus `json:"role"`
+	Created  time.Time         `json:"created"`
+	Updated  *time.Time        `json:"updated,omitempty"`
 }
 
 func New(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
@@ -35,7 +36,7 @@ func Random() *SprintMember {
 		UserID:   util.UUID(),
 		Name:     util.RandomString(12),
 		Picture:  "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Role:     util.RandomString(12),
+		Role:     enum.MemberStatus(util.RandomString(12)),
 		Created:  time.Now(),
 		Updated:  util.NowPointer(),
 	}
@@ -70,10 +71,11 @@ func FromMap(m util.ValueMap, setPK bool) (*SprintMember, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Role, err = m.ParseString("role", true, true)
+	retRole, err := m.ParseString("role", true, true)
 	if err != nil {
 		return nil, err
 	}
+	ret.Role = enum.MemberStatus(retRole)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -118,7 +120,7 @@ func (s *SprintMember) Diff(sx *SprintMember) util.Diffs {
 		diffs = append(diffs, util.NewDiff("picture", s.Picture, sx.Picture))
 	}
 	if s.Role != sx.Role {
-		diffs = append(diffs, util.NewDiff("role", s.Role, sx.Role))
+		diffs = append(diffs, util.NewDiff("role", string(s.Role), string(sx.Role)))
 	}
 	if s.Created != sx.Created {
 		diffs = append(diffs, util.NewDiff("created", s.Created.String(), sx.Created.String()))

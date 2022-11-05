@@ -18,8 +18,7 @@ import (
 
 func EstimateMemberList(rc *fasthttp.RequestCtx) {
 	controller.Act("emember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("emember", nil, ps.Logger).Sanitize("emember")
+		prms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
 		ret, err := as.Services.EstimateMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func EstimateMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vemember.List{Models: ret, Estimates: estimates, Users: users, Params: params}, ps, "estimate", "emember")
+		return controller.Render(rc, as, &vemember.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params}, ps, "estimate", "emember")
 	})
 }
 

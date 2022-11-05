@@ -18,8 +18,7 @@ import (
 
 func FeedbackList(rc *fasthttp.RequestCtx) {
 	controller.Act("feedback.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+		prms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
 		ret, err := as.Services.Feedback.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func FeedbackList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vfeedback.List{Models: ret, Retros: retros, Users: users, Params: params}, ps, "retro", "feedback")
+		return controller.Render(rc, as, &vfeedback.List{Models: ret, Retros: retros, Users: users, Params: ps.Params}, ps, "retro", "feedback")
 	})
 }
 

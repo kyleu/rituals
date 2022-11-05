@@ -1,4 +1,6 @@
 {% import (
+	"github.com/google/uuid"
+
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/util"
@@ -6,6 +8,17 @@
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
 ) %}
+
+{% func SprintWorkspaceForm(svc string, teamID *uuid.UUID, sprintID uuid.UUID, placeholder string) %}{% stripspace %}
+  <form action="/{%s svc %}" method="post">
+    {% if teamID != nil %}
+      <input type="hidden" name="team" value="{%s teamID.String() %}" />
+    {% endif %}
+    <input type="hidden" name="sprint" value="{%s sprintID.String() %}" />
+    <input type="text" name="title" placeholder="{%s placeholder %}" />
+    <button type="submit">+</button>
+  </form>
+{% endstripspace %}{% endfunc %}
 
 {% code type SprintWorkspace struct {
   layout.Basic
@@ -15,21 +28,88 @@
 {% func (p *SprintWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code w := p.Sprint -%}
   {%- code t := w.Sprint -%}
+  {%- code
+    self, others, err := w.Members.Split(ps.Profile.ID)
+    if err != nil {
+      panic(err)
+    }
+  -%}
   <div style="display: flex; flex-wrap: wrap;">
-    <div id="panel-summary" class="card">
-      <div class="right"><a href="#modal-sprint"><button type="button">JSON</button></a></div>
-      <h3>{%= components.SVGRefIcon(`sprint`, ps) %}{%s t.TitleString() %}</h3>
+    <div id="panel-summary">
+      <div class="card">
+        <div class="right"><a href="#modal-sprint"><button type="button">JSON</button></a></div>
+        <a href="#modal-sprint-config"><h3>{%= components.SVGRefIcon(`sprint`, ps) %}{%s t.TitleString() %}</h3></a>
+        {%= Banner(w.Team, nil, "sprint") %}
+        {%= SprintWorkspaceModal(w) %}
+      </div>
     </div>
-    <div id="panel-detail" class="card">
-      <h3>{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</h3>
-      <h3>{%= components.SVGRefIcon(`standup`, ps) %}Standups</h3>
-      <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
+    <div id="panel-detail">
+      <div class="card">
+        <div class="right">{%= SprintWorkspaceForm("estimate", t.TeamID, t.ID, "New Estimate") %}</div>
+        <h3>{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</h3>
+        {%- if len(w.Estimates) > 0 -%}
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, x := range w.Estimates -%}
+            <tr>
+              <td><a href="/estimate/{%s x.Slug %}">{%s x.TitleString() %}</a></td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- endif -%}
+      </div>
+      <div class="card">
+        <div class="right">{%= SprintWorkspaceForm("standup", t.TeamID, t.ID, "New Standup") %}</div>
+        <h3>{%= components.SVGRefIcon(`standup`, ps) %}Standups</h3>
+        {%- if len(w.Standups) > 0 -%}
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, x := range w.Standups -%}
+            <tr>
+              <td><a href="/standup/{%s x.Slug %}">{%s x.TitleString() %}</a></td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- endif -%}
+      </div>
+      <div class="card">
+        <div class="right">{%= SprintWorkspaceForm("retro", t.TeamID, t.ID, "New Retro") %}</div>
+        <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
+        {%- if len(w.Retros) > 0 -%}
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, x := range w.Retros -%}
+            <tr>
+              <td><a href="/retro/{%s x.Slug %}">{%s x.TitleString() %}</a></td>
+            </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- endif -%}
+      </div>
     </div>
-    <div id="panel-self" class="card">
-      <h3>{%= components.SVGRefIcon(`profile`, ps) %}Self</h3>
+    <div id="panel-self">
+      <div class="card">
+        <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
     </div>
-    <div id="panel-members" class="card">
-      <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+    <div id="panel-members">
+      <div class="card">
+        <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+        {%- endfor -%}
+      </div>
     </div>
   </div>
   {%= components.JSONModal("sprint", "Sprint JSON", w, 1) %}
@@ -43,3 +123,17 @@
   </script>
 {% endfunc %}
 
+{% func SprintWorkspaceModal(w *workspace.FullSprint) %}
+  <div id="modal-sprint-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s w.Sprint.TitleString() %}</h2>
+      </div>
+      <div class="modal-body">
+        TODO
+      </div>
+    </div>
+  </div>
+{% endfunc %}

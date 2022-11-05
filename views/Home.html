@@ -27,6 +27,12 @@
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
   </div>
   <div class="card">
+    <div class="right">
+      <form action="/team" method="post">
+        <input type="text" name="title" placeholder="New Team" />
+        <button type="submit">+</button>
+      </form>
+    </div>
     <h3><a href="/team">{%= components.SVGRefIcon(`team`, ps) %}Teams</a></h3>
     {%- if len(p.Teams) == 0 -%}
     <em>no teams available</em>
@@ -41,6 +47,12 @@
     {%- endif -%}
   </div>
   <div class="card">
+    <div class="right">
+      <form action="/sprint" method="post">
+        <input type="text" name="title" placeholder="New Sprint" />
+        <button type="submit">+</button>
+      </form>
+    </div>
     <h3><a href="/sprint">{%= components.SVGRefIcon(`sprint`, ps) %}Sprints</a></h3>
     {%- if len(p.Sprints) == 0 -%}
     <em>no sprints available</em>
@@ -55,6 +67,12 @@
     {%- endif -%}
   </div>
   <div class="card">
+    <div class="right">
+      <form action="/estimate" method="post">
+        <input type="text" name="title" placeholder="New Estimate" />
+        <button type="submit">+</button>
+      </form>
+    </div>
     <h3><a href="/estimate">{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</a></h3>
     {%- if len(p.Estimates) == 0 -%}
     <em>no estimates available</em>
@@ -69,6 +87,12 @@
     {%- endif -%}
   </div>
   <div class="card">
+    <div class="right">
+      <form action="/standup" method="post">
+        <input type="text" name="title" placeholder="New Standup" />
+        <button type="submit">+</button>
+      </form>
+    </div>
     <h3><a href="/standup">{%= components.SVGRefIcon(`standup`, ps) %}Standups</a></h3>
     {%- if len(p.Standups) == 0 -%}
     <em>no standups available</em>
@@ -83,6 +107,12 @@
     {%- endif -%}
   </div>
   <div class="card">
+    <div class="right">
+      <form action="/retro" method="post">
+        <input type="text" name="title" placeholder="New Retro" />
+        <button type="submit">+</button>
+      </form>
+    </div>
     <h3><a href="/retro">{%= components.SVGRefIcon(`retro`, ps) %}Retros</a></h3>
     {%- if len(p.Retros) == 0 -%}
     <em>no retros available</em>

@@ -17,8 +17,7 @@ import (
 
 func RetroHistoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("rhistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
+		prms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
 		ret, err := as.Services.RetroHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func RetroHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vrhistory.List{Models: ret, Retros: retros, Params: params}, ps, "retro", "rhistory")
+		return controller.Render(rc, as, &vrhistory.List{Models: ret, Retros: retros, Params: ps.Params}, ps, "retro", "rhistory")
 	})
 }
 

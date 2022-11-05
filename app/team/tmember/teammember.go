@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -16,13 +17,13 @@ type PK struct {
 }
 
 type TeamMember struct {
-	TeamID  uuid.UUID  `json:"teamID"`
-	UserID  uuid.UUID  `json:"userID"`
-	Name    string     `json:"name"`
-	Picture string     `json:"picture"`
-	Role    string     `json:"role"`
-	Created time.Time  `json:"created"`
-	Updated *time.Time `json:"updated,omitempty"`
+	TeamID  uuid.UUID         `json:"teamID"`
+	UserID  uuid.UUID         `json:"userID"`
+	Name    string            `json:"name"`
+	Picture string            `json:"picture"`
+	Role    enum.MemberStatus `json:"role"`
+	Created time.Time         `json:"created"`
+	Updated *time.Time        `json:"updated,omitempty"`
 }
 
 func New(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
@@ -35,7 +36,7 @@ func Random() *TeamMember {
 		UserID:  util.UUID(),
 		Name:    util.RandomString(12),
 		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Role:    util.RandomString(12),
+		Role:    enum.MemberStatus(util.RandomString(12)),
 		Created: time.Now(),
 		Updated: util.NowPointer(),
 	}
@@ -70,10 +71,11 @@ func FromMap(m util.ValueMap, setPK bool) (*TeamMember, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Role, err = m.ParseString("role", true, true)
+	retRole, err := m.ParseString("role", true, true)
 	if err != nil {
 		return nil, err
 	}
+	ret.Role = enum.MemberStatus(retRole)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -118,7 +120,7 @@ func (t *TeamMember) Diff(tx *TeamMember) util.Diffs {
 		diffs = append(diffs, util.NewDiff("picture", t.Picture, tx.Picture))
 	}
 	if t.Role != tx.Role {
-		diffs = append(diffs, util.NewDiff("role", t.Role, tx.Role))
+		diffs = append(diffs, util.NewDiff("role", string(t.Role), string(tx.Role)))
 	}
 	if t.Created != tx.Created {
 		diffs = append(diffs, util.NewDiff("created", t.Created.String(), tx.Created.String()))

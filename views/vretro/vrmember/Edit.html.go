@@ -110,7 +110,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vretro/vrmember/Edit.html:33
-	components.StreamTableInput(qw422016, "role", "Role", p.Model.Role, 5, "String text")
+	components.StreamTableSelect(qw422016, "role", "Role", string(p.Model.Role), []string{"owner", "member", "observer"}, []string{"owner", "member", "observer"}, 5, "Available options: [owner, member, observer]")
 //line views/vretro/vrmember/Edit.html:33
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

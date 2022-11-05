@@ -12,14 +12,14 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, params *filter.Params, logger util.Logger) (Teams, error) {
+func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, u uuid.UUID, params *filter.Params, logger util.Logger) (Teams, error) {
 	params = filters(params)
 	wc := "\"owner\" = $1 or id in (select team_id from team_member where user_id = $1)"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, owner)
+	err := s.db.Select(ctx, &ret, q, tx, logger, u)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get teams by owner [%v]", owner)
+		return nil, errors.Wrapf(err, "unable to get teams for member [%v]", u)
 	}
 	return ret.ToTeams(), nil
 }

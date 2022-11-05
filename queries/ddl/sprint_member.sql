@@ -9,7 +9,7 @@ create table if not exists "sprint_member" (
   "user_id" uuid not null,
   "name" text not null,
   "picture" text not null,
-  "role" text not null,
+  "role" member_status not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
   foreign key ("sprint_id") references "sprint" ("id"),

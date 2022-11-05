@@ -17,8 +17,7 @@ import (
 
 func CommentList(rc *fasthttp.RequestCtx) {
 	Act("comment.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("comment", nil, ps.Logger).Sanitize("comment")
+		prms := ps.Params.Get("comment", nil, ps.Logger).Sanitize("comment")
 		ret, err := as.Services.Comment.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func CommentList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vcomment.List{Models: ret, Users: users, Params: params}, ps, "comment")
+		return Render(rc, as, &vcomment.List{Models: ret, Users: users, Params: ps.Params}, ps, "comment")
 	})
 }
 

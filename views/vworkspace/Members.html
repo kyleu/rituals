@@ -1,0 +1,29 @@
+{% import (
+  "time"
+
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app/enum"
+) %}
+
+{% func MemberRow(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) %}
+  <tr>
+    <td><a href="#modal-member-{%s userID.String() %}">{%s name %}</a></td>
+    <td class="shrink">{%s string(role) %}</td>
+  </tr>
+{% endfunc %}
+
+{% func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) %}
+  <div id="modal-member-{%s userID.String() %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s name %}</h2>
+      </div>
+      <div class="modal-body">
+        TODO
+      </div>
+    </div>
+  </div>
+{% endfunc %}

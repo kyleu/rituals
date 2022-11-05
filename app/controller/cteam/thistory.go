@@ -17,8 +17,7 @@ import (
 
 func TeamHistoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("thistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
+		prms := ps.Params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
 		ret, err := as.Services.TeamHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func TeamHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vthistory.List{Models: ret, Teams: teams, Params: params}, ps, "team", "thistory")
+		return controller.Render(rc, as, &vthistory.List{Models: ret, Teams: teams, Params: ps.Params}, ps, "team", "thistory")
 	})
 }
 

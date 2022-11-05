@@ -18,8 +18,7 @@ import (
 
 func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 	controller.Act("epermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
+		prms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
 		ret, err := as.Services.EstimatePermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -34,7 +33,7 @@ func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vepermission.List{Models: ret, Estimates: estimates, Params: params}, ps, "estimate", "epermission")
+		return controller.Render(rc, as, &vepermission.List{Models: ret, Estimates: estimates, Params: ps.Params}, ps, "estimate", "epermission")
 	})
 }
 

@@ -18,8 +18,7 @@ import (
 
 func SprintPermissionList(rc *fasthttp.RequestCtx) {
 	controller.Act("spermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
+		prms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
 		ret, err := as.Services.SprintPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -34,7 +33,7 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vspermission.List{Models: ret, Sprints: sprints, Params: params}, ps, "sprint", "spermission")
+		return controller.Render(rc, as, &vspermission.List{Models: ret, Sprints: sprints, Params: ps.Params}, ps, "sprint", "spermission")
 	})
 }
 

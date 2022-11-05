@@ -141,15 +141,23 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	}
 //line views/vsprint/Detail.html:68
 	qw422016.N().S(`</div>
-            <a title="Team" href="`)
+            `)
 //line views/vsprint/Detail.html:69
-	qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
+	if p.Model.TeamID != nil {
 //line views/vsprint/Detail.html:69
-	qw422016.N().S(`">`)
+		qw422016.N().S(`<a title="Team" href="`)
 //line views/vsprint/Detail.html:69
-	components.StreamSVGRefIcon(qw422016, "team", ps)
+		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
 //line views/vsprint/Detail.html:69
-	qw422016.N().S(`</a>
+		qw422016.N().S(`">`)
+//line views/vsprint/Detail.html:69
+		components.StreamSVGRefIcon(qw422016, "team", ps)
+//line views/vsprint/Detail.html:69
+		qw422016.N().S(`</a>`)
+//line views/vsprint/Detail.html:69
+	}
+//line views/vsprint/Detail.html:69
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>

@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -16,13 +17,13 @@ type PK struct {
 }
 
 type EstimateMember struct {
-	EstimateID uuid.UUID  `json:"estimateID"`
-	UserID     uuid.UUID  `json:"userID"`
-	Name       string     `json:"name"`
-	Picture    string     `json:"picture"`
-	Role       string     `json:"role"`
-	Created    time.Time  `json:"created"`
-	Updated    *time.Time `json:"updated,omitempty"`
+	EstimateID uuid.UUID         `json:"estimateID"`
+	UserID     uuid.UUID         `json:"userID"`
+	Name       string            `json:"name"`
+	Picture    string            `json:"picture"`
+	Role       enum.MemberStatus `json:"role"`
+	Created    time.Time         `json:"created"`
+	Updated    *time.Time        `json:"updated,omitempty"`
 }
 
 func New(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {
@@ -35,7 +36,7 @@ func Random() *EstimateMember {
 		UserID:     util.UUID(),
 		Name:       util.RandomString(12),
 		Picture:    "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Role:       util.RandomString(12),
+		Role:       enum.MemberStatus(util.RandomString(12)),
 		Created:    time.Now(),
 		Updated:    util.NowPointer(),
 	}
@@ -70,10 +71,11 @@ func FromMap(m util.ValueMap, setPK bool) (*EstimateMember, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Role, err = m.ParseString("role", true, true)
+	retRole, err := m.ParseString("role", true, true)
 	if err != nil {
 		return nil, err
 	}
+	ret.Role = enum.MemberStatus(retRole)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -118,7 +120,7 @@ func (e *EstimateMember) Diff(ex *EstimateMember) util.Diffs {
 		diffs = append(diffs, util.NewDiff("picture", e.Picture, ex.Picture))
 	}
 	if e.Role != ex.Role {
-		diffs = append(diffs, util.NewDiff("role", e.Role, ex.Role))
+		diffs = append(diffs, util.NewDiff("role", string(e.Role), string(ex.Role)))
 	}
 	if e.Created != ex.Created {
 		diffs = append(diffs, util.NewDiff("created", e.Created.String(), ex.Created.String()))

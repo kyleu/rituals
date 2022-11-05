@@ -33,7 +33,7 @@
         <td>{%v model.Status %}</td>
         <td>
           <div class="icon">{%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
+          {% if model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>{% endif %}
         </td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>

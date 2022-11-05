@@ -17,8 +17,7 @@ import (
 
 func EmailList(rc *fasthttp.RequestCtx) {
 	Act("email.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("email", nil, ps.Logger).Sanitize("email")
+		prms := ps.Params.Get("email", nil, ps.Logger).Sanitize("email")
 		ret, err := as.Services.Email.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func EmailList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vemail.List{Models: ret, Users: users, Params: params}, ps, "email")
+		return Render(rc, as, &vemail.List{Models: ret, Users: users, Params: ps.Params}, ps, "email")
 	})
 }
 

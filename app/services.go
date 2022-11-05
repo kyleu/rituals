@@ -111,7 +111,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	um := umember.NewService(st.DB)
 	uh := uhistory.NewService(st.DB)
 	up := upermission.NewService(st.DB)
-	rpt := report.NewService(st.DB)
+	rt := report.NewService(st.DB)
 
 	r := retro.NewService(st.DB)
 	rm := rmember.NewService(st.DB)
@@ -125,14 +125,14 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	el := email.NewService(st.DB)
 
 	g := gql.NewSchema(st.GraphQL)
-	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, u, uh, um, up, r, rh, rm, rp)
+	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f)
 	ws := websocket.NewService(logger, w.SocketOpen, w.SocketHandler, w.SocketClose, nil)
 
 	return &Services{
 		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
 		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,
 		Estimate: e, EstimateMember: em, EstimateHistory: eh, EstimatePermission: ep, Story: sy, Vote: v,
-		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rpt,
+		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rt,
 		Retro: r, RetroMember: rm, RetroHistory: rh, RetroPermission: rp, Feedback: f,
 		User: us, Action: a, Comment: c, Email: el, Workspace: w, GQL: g, Socket: ws,
 	}, nil

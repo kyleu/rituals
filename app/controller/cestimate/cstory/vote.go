@@ -18,8 +18,7 @@ import (
 
 func VoteList(rc *fasthttp.RequestCtx) {
 	controller.Act("vote.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		prms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
 		ret, err := as.Services.Vote.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vvote.List{Models: ret, Stories: stories, Users: users, Params: params}, ps, "estimate", "story", "vote")
+		return controller.Render(rc, as, &vvote.List{Models: ret, Stories: stories, Users: users, Params: ps.Params}, ps, "estimate", "story", "vote")
 	})
 }
 

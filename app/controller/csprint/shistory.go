@@ -17,8 +17,7 @@ import (
 
 func SprintHistoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("shistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
+		prms := ps.Params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
 		ret, err := as.Services.SprintHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func SprintHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vshistory.List{Models: ret, Sprints: sprints, Params: params}, ps, "sprint", "shistory")
+		return controller.Render(rc, as, &vshistory.List{Models: ret, Sprints: sprints, Params: ps.Params}, ps, "sprint", "shistory")
 	})
 }
 

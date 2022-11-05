@@ -1,0 +1,12 @@
+{% import (
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
+) %}
+
+{% func Banner(t *team.Team, s *sprint.Sprint, mdl string) %}{% stripspace %}
+<em>
+  {% if s != nil %}<a href="/sprint/{%s s.Slug %}">{%s s.TitleString() %}</a>{% space %}{% endif %}
+  {%s mdl %}
+  {% if t != nil %}{% space %}in <a href="/team/{%s t.Slug %}">{%s t.TitleString() %}</a>{% endif %}
+</em>
+{% endstripspace %}{% endfunc %}

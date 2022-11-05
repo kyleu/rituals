@@ -18,7 +18,7 @@
         {%= components.TableHeaderSimple("emember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("emember", "name", "Name", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("emember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("emember", "role", "Role", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("emember", "role", "Role", "Available options: [owner, member, observer]", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("emember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("emember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
       </tr>
@@ -36,7 +36,7 @@
         </td>
         <td><strong>{%s model.Name %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>
-        <td>{%s model.Role %}</td>
+        <td>{%v model.Role %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
       </tr>

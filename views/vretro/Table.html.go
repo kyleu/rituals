@@ -145,15 +145,23 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, users user.User
 		}
 //line views/vretro/Table.html:38
 		qw422016.N().S(`</div>
-          <a title="Team" href="`)
+          `)
 //line views/vretro/Table.html:39
-		qw422016.E().S(`/team` + `/` + model.TeamID.String())
+		if model.TeamID != nil {
 //line views/vretro/Table.html:39
-		qw422016.N().S(`">`)
+			qw422016.N().S(`<a title="Team" href="`)
 //line views/vretro/Table.html:39
-		components.StreamSVGRefIcon(qw422016, "team", ps)
+			qw422016.E().S(`/team` + `/` + model.TeamID.String())
 //line views/vretro/Table.html:39
-		qw422016.N().S(`</a>
+			qw422016.N().S(`">`)
+//line views/vretro/Table.html:39
+			components.StreamSVGRefIcon(qw422016, "team", ps)
+//line views/vretro/Table.html:39
+			qw422016.N().S(`</a>`)
+//line views/vretro/Table.html:39
+		}
+//line views/vretro/Table.html:39
+		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)
@@ -175,15 +183,23 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, users user.User
 		}
 //line views/vretro/Table.html:42
 		qw422016.N().S(`</div>
-          <a title="Sprint" href="`)
+          `)
 //line views/vretro/Table.html:43
-		qw422016.E().S(`/sprint` + `/` + model.SprintID.String())
+		if model.SprintID != nil {
 //line views/vretro/Table.html:43
-		qw422016.N().S(`">`)
+			qw422016.N().S(`<a title="Sprint" href="`)
 //line views/vretro/Table.html:43
-		components.StreamSVGRefIcon(qw422016, "sprint", ps)
+			qw422016.E().S(`/sprint` + `/` + model.SprintID.String())
 //line views/vretro/Table.html:43
-		qw422016.N().S(`</a>
+			qw422016.N().S(`">`)
+//line views/vretro/Table.html:43
+			components.StreamSVGRefIcon(qw422016, "sprint", ps)
+//line views/vretro/Table.html:43
+			qw422016.N().S(`</a>`)
+//line views/vretro/Table.html:43
+		}
+//line views/vretro/Table.html:43
+		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)

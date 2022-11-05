@@ -64,7 +64,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teams te
 	qw422016.N().S(`
         `)
 //line views/vteam/vtmember/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "tmember", "role", "Role", "String text", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "tmember", "role", "Role", "Available options: [owner, member, observer]", prms, ps.URI, ps)
 //line views/vteam/vtmember/Table.html:21
 	qw422016.N().S(`
         `)
@@ -169,7 +169,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teams te
 		qw422016.N().S(`</a></td>
         <td>`)
 //line views/vteam/vtmember/Table.html:39
-		qw422016.E().S(model.Role)
+		qw422016.E().V(model.Role)
 //line views/vteam/vtmember/Table.html:39
 		qw422016.N().S(`</td>
         <td>`)

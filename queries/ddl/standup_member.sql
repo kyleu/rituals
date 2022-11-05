@@ -9,7 +9,7 @@ create table if not exists "standup_member" (
   "user_id" uuid not null,
   "name" text not null,
   "picture" text not null,
-  "role" text not null,
+  "role" member_status not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
   foreign key ("standup_id") references "standup" ("id"),

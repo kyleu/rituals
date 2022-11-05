@@ -17,8 +17,7 @@ import (
 
 func RetroList(rc *fasthttp.RequestCtx) {
 	Act("retro.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("retro", nil, ps.Logger).Sanitize("retro")
+		prms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
 		ret, err := as.Services.Retro.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -49,42 +48,41 @@ func RetroList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vretro.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: params}, ps, "retro")
+		return Render(rc, as, &vretro.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: ps.Params}, ps, "retro")
 	})
 }
 
 func RetroDetail(rc *fasthttp.RequestCtx) {
 	Act("retro.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
 		ret, err := retroFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = ret.TitleString() + " (Retro)"
 		ps.Data = ret
-		feedbackPrms := params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+		feedbackPrms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
 		feedbacksByRetroID, err := as.Services.Feedback.GetByRetroID(ps.Context, nil, ret.ID, feedbackPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child feedbacks")
 		}
-		retroHistoryPrms := params.Get("retroHistory", nil, ps.Logger).Sanitize("retroHistory")
+		retroHistoryPrms := ps.Params.Get("retroHistory", nil, ps.Logger).Sanitize("retroHistory")
 		retroHistoriesByRetroID, err := as.Services.RetroHistory.GetByRetroID(ps.Context, nil, ret.ID, retroHistoryPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		retroMemberPrms := params.Get("retroMember", nil, ps.Logger).Sanitize("retroMember")
+		retroMemberPrms := ps.Params.Get("retroMember", nil, ps.Logger).Sanitize("retroMember")
 		retroMembersByRetroID, err := as.Services.RetroMember.GetByRetroID(ps.Context, nil, ret.ID, retroMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		retroPermissionPrms := params.Get("retroPermission", nil, ps.Logger).Sanitize("retroPermission")
+		retroPermissionPrms := ps.Params.Get("retroPermission", nil, ps.Logger).Sanitize("retroPermission")
 		retroPermissionsByRetroID, err := as.Services.RetroPermission.GetByRetroID(ps.Context, nil, ret.ID, retroPermissionPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vretro.Detail{
 			Model:                     ret,
-			Params:                    params,
+			Params:                    ps.Params,
 			FeedbacksByRetroID:        feedbacksByRetroID,
 			RetroHistoriesByRetroID:   retroHistoriesByRetroID,
 			RetroMembersByRetroID:     retroMembersByRetroID,

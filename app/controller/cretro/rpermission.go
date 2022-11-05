@@ -18,8 +18,7 @@ import (
 
 func RetroPermissionList(rc *fasthttp.RequestCtx) {
 	controller.Act("rpermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
+		prms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
 		ret, err := as.Services.RetroPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -34,7 +33,7 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vrpermission.List{Models: ret, Retros: retros, Params: params}, ps, "retro", "rpermission")
+		return controller.Render(rc, as, &vrpermission.List{Models: ret, Retros: retros, Params: ps.Params}, ps, "retro", "rpermission")
 	})
 }
 

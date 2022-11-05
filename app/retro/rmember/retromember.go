@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -16,13 +17,13 @@ type PK struct {
 }
 
 type RetroMember struct {
-	RetroID uuid.UUID  `json:"retroID"`
-	UserID  uuid.UUID  `json:"userID"`
-	Name    string     `json:"name"`
-	Picture string     `json:"picture"`
-	Role    string     `json:"role"`
-	Created time.Time  `json:"created"`
-	Updated *time.Time `json:"updated,omitempty"`
+	RetroID uuid.UUID         `json:"retroID"`
+	UserID  uuid.UUID         `json:"userID"`
+	Name    string            `json:"name"`
+	Picture string            `json:"picture"`
+	Role    enum.MemberStatus `json:"role"`
+	Created time.Time         `json:"created"`
+	Updated *time.Time        `json:"updated,omitempty"`
 }
 
 func New(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
@@ -35,7 +36,7 @@ func Random() *RetroMember {
 		UserID:  util.UUID(),
 		Name:    util.RandomString(12),
 		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Role:    util.RandomString(12),
+		Role:    enum.MemberStatus(util.RandomString(12)),
 		Created: time.Now(),
 		Updated: util.NowPointer(),
 	}
@@ -70,10 +71,11 @@ func FromMap(m util.ValueMap, setPK bool) (*RetroMember, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Role, err = m.ParseString("role", true, true)
+	retRole, err := m.ParseString("role", true, true)
 	if err != nil {
 		return nil, err
 	}
+	ret.Role = enum.MemberStatus(retRole)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -118,7 +120,7 @@ func (r *RetroMember) Diff(rx *RetroMember) util.Diffs {
 		diffs = append(diffs, util.NewDiff("picture", r.Picture, rx.Picture))
 	}
 	if r.Role != rx.Role {
-		diffs = append(diffs, util.NewDiff("role", r.Role, rx.Role))
+		diffs = append(diffs, util.NewDiff("role", string(r.Role), string(rx.Role)))
 	}
 	if r.Created != rx.Created {
 		diffs = append(diffs, util.NewDiff("created", r.Created.String(), rx.Created.String()))

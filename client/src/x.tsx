@@ -1,6 +1,5 @@
-import {JSX} from "./jsx";
+import * as JSX from "./jsx";
 
 export function test() {
-  // @ts-ignore
   return <div style="color: red;">Test!!!</div>;
 }

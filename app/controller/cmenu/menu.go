@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/kyleu/rituals/app"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/lib/menu"
 	"github.com/kyleu/rituals/app/lib/sandbox"
 	"github.com/kyleu/rituals/app/lib/telemetry"
@@ -12,7 +13,9 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, as *app.State, logger util.Logger) (menu.Items, any, error) {
+func MenuFor(
+	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger,
+) (menu.Items, any, error) {
 	ctx, span, logger := telemetry.StartSpan(ctx, "menu:generate", logger)
 	defer span.Complete()
 	_ = logger
@@ -20,7 +23,7 @@ func MenuFor(ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Pro
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(routes_start)$
-	ws, data, err := workspaceMenu(ctx, as, profile, logger)
+	ws, data, err := workspaceMenu(ctx, as, params, profile, logger)
 	if err != nil {
 		return nil, nil, err
 	}

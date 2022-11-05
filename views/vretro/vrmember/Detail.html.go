@@ -146,10 +146,10 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</a></td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Role</th>
+          <th class="shrink" title="Available options: [owner, member, observer]">Role</th>
           <td>`)
 //line views/vretro/vrmember/Detail.html:53
-	qw422016.E().S(p.Model.Role)
+	qw422016.E().V(p.Model.Role)
 //line views/vretro/vrmember/Detail.html:53
 	qw422016.N().S(`</td>
         </tr>

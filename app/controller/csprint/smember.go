@@ -18,8 +18,7 @@ import (
 
 func SprintMemberList(rc *fasthttp.RequestCtx) {
 	controller.Act("smember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("smember", nil, ps.Logger).Sanitize("smember")
+		prms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
 		ret, err := as.Services.SprintMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vsmember.List{Models: ret, Sprints: sprints, Users: users, Params: params}, ps, "sprint", "smember")
+		return controller.Render(rc, as, &vsmember.List{Models: ret, Sprints: sprints, Users: users, Params: ps.Params}, ps, "sprint", "smember")
 	})
 }
 

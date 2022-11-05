@@ -5,7 +5,10 @@ import (
 	"github.com/kyleu/rituals/app/estimate/ehistory"
 	"github.com/kyleu/rituals/app/estimate/emember"
 	"github.com/kyleu/rituals/app/estimate/epermission"
+	"github.com/kyleu/rituals/app/estimate/story"
+	"github.com/kyleu/rituals/app/estimate/story/vote"
 	"github.com/kyleu/rituals/app/retro"
+	"github.com/kyleu/rituals/app/retro/feedback"
 	"github.com/kyleu/rituals/app/retro/rhistory"
 	"github.com/kyleu/rituals/app/retro/rmember"
 	"github.com/kyleu/rituals/app/retro/rpermission"
@@ -14,6 +17,7 @@ import (
 	"github.com/kyleu/rituals/app/sprint/smember"
 	"github.com/kyleu/rituals/app/sprint/spermission"
 	"github.com/kyleu/rituals/app/standup"
+	"github.com/kyleu/rituals/app/standup/report"
 	"github.com/kyleu/rituals/app/standup/uhistory"
 	"github.com/kyleu/rituals/app/standup/umember"
 	"github.com/kyleu/rituals/app/standup/upermission"
@@ -38,30 +42,34 @@ type Service struct {
 	eh *ehistory.Service
 	em *emember.Service
 	ep *epermission.Service
+	st *story.Service
+	v  *vote.Service
 
 	u  *standup.Service
 	uh *uhistory.Service
 	um *umember.Service
 	up *upermission.Service
+	rt *report.Service
 
 	r  *retro.Service
 	rh *rhistory.Service
 	rm *rmember.Service
 	rp *rpermission.Service
+	f  *feedback.Service
 }
 
 func NewService(
 	t *team.Service, th *thistory.Service, tm *tmember.Service, tp *tpermission.Service,
 	s *sprint.Service, sh *shistory.Service, sm *smember.Service, sp *spermission.Service,
-	e *estimate.Service, eh *ehistory.Service, em *emember.Service, ep *epermission.Service,
-	u *standup.Service, uh *uhistory.Service, um *umember.Service, up *upermission.Service,
-	r *retro.Service, rh *rhistory.Service, rm *rmember.Service, rp *rpermission.Service,
+	e *estimate.Service, eh *ehistory.Service, em *emember.Service, ep *epermission.Service, st *story.Service, v *vote.Service,
+	u *standup.Service, uh *uhistory.Service, um *umember.Service, up *upermission.Service, rt *report.Service,
+	r *retro.Service, rh *rhistory.Service, rm *rmember.Service, rp *rpermission.Service, f *feedback.Service,
 ) *Service {
 	return &Service{
 		t: t, th: th, tm: tm, tp: tp,
 		s: s, sh: sh, sm: sm, sp: sp,
-		e: e, eh: eh, em: em, ep: ep,
-		u: u, uh: uh, um: um, up: up,
-		r: r, rh: rh, rm: rm, rp: rp,
+		e: e, eh: eh, em: em, ep: ep, st: st, v: v,
+		u: u, uh: uh, um: um, up: up, rt: rt,
+		r: r, rh: rh, rm: rm, rp: rp, f: f,
 	}
 }

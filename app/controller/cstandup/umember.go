@@ -18,8 +18,7 @@ import (
 
 func StandupMemberList(rc *fasthttp.RequestCtx) {
 	controller.Act("umember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("umember", nil, ps.Logger).Sanitize("umember")
+		prms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
 		ret, err := as.Services.StandupMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func StandupMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vumember.List{Models: ret, Standups: standups, Users: users, Params: params}, ps, "standup", "umember")
+		return controller.Render(rc, as, &vumember.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}, ps, "standup", "umember")
 	})
 }
 

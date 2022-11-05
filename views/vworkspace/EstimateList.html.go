@@ -141,7 +141,7 @@ func StreamEstimateForm(qw422016 *qt422016.Writer, e *estimate.Estimate, teams t
 	qw422016.N().S(`
         `)
 //line views/vworkspace/EstimateList.html:47
-	components.StreamTableInput(qw422016, "owner", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
+	components.StreamTableInput(qw422016, "name", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
 //line views/vworkspace/EstimateList.html:47
 	qw422016.N().S(`
         `)

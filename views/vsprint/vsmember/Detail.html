@@ -49,8 +49,8 @@
           <td><a href="{%s p.Model.Picture %}" target="_blank">{%s p.Model.Picture %}</a></td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Role</th>
-          <td>{%s p.Model.Role %}</td>
+          <th class="shrink" title="Available options: [owner, member, observer]">Role</th>
+          <td>{%v p.Model.Role %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>

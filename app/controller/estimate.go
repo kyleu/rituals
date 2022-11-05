@@ -17,8 +17,7 @@ import (
 
 func EstimateList(rc *fasthttp.RequestCtx) {
 	Act("estimate.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
+		prms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
 		ret, err := as.Services.Estimate.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -49,42 +48,41 @@ func EstimateList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vestimate.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: params}, ps, "estimate")
+		return Render(rc, as, &vestimate.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: ps.Params}, ps, "estimate")
 	})
 }
 
 func EstimateDetail(rc *fasthttp.RequestCtx) {
 	Act("estimate.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
 		ret, err := estimateFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = ret.TitleString() + " (Estimate)"
 		ps.Data = ret
-		estimateHistoryPrms := params.Get("estimateHistory", nil, ps.Logger).Sanitize("estimateHistory")
+		estimateHistoryPrms := ps.Params.Get("estimateHistory", nil, ps.Logger).Sanitize("estimateHistory")
 		estimateHistoriesByEstimateID, err := as.Services.EstimateHistory.GetByEstimateID(ps.Context, nil, ret.ID, estimateHistoryPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		estimateMemberPrms := params.Get("estimateMember", nil, ps.Logger).Sanitize("estimateMember")
+		estimateMemberPrms := ps.Params.Get("estimateMember", nil, ps.Logger).Sanitize("estimateMember")
 		estimateMembersByEstimateID, err := as.Services.EstimateMember.GetByEstimateID(ps.Context, nil, ret.ID, estimateMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		estimatePermissionPrms := params.Get("estimatePermission", nil, ps.Logger).Sanitize("estimatePermission")
+		estimatePermissionPrms := ps.Params.Get("estimatePermission", nil, ps.Logger).Sanitize("estimatePermission")
 		estimatePermissionsByEstimateID, err := as.Services.EstimatePermission.GetByEstimateID(ps.Context, nil, ret.ID, estimatePermissionPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		storyPrms := params.Get("story", nil, ps.Logger).Sanitize("story")
+		storyPrms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
 		storiesByEstimateID, err := as.Services.Story.GetByEstimateID(ps.Context, nil, ret.ID, storyPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
 		}
 		return Render(rc, as, &vestimate.Detail{
 			Model:                           ret,
-			Params:                          params,
+			Params:                          ps.Params,
 			EstimateHistoriesByEstimateID:   estimateHistoriesByEstimateID,
 			EstimateMembersByEstimateID:     estimateMembersByEstimateID,
 			EstimatePermissionsByEstimateID: estimatePermissionsByEstimateID,

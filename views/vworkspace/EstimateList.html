@@ -44,7 +44,7 @@
     <table class="mt expanded">
       <tbody>
         {%= components.TableInput("title", "Team Title", e.Title, 5, "The name of your estimate") %}
-        {%= components.TableInput("owner", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called") %}
+        {%= components.TableInput("name", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called") %}
         {%= components.TableSelect("team", "Team", fmt.Sprint(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this estimate") %}
         {%= components.TableSelect("sprint", "Sprint", fmt.Sprint(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this estimate") %}
         <tr><td colspan="2"><button type="submit">Add Estimate</button></td></tr>
@@ -52,4 +52,3 @@
     </table>
   </form>
 {% endfunc %}
-

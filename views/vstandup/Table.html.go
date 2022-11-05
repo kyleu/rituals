@@ -140,15 +140,23 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, users user.
 		}
 //line views/vstandup/Table.html:37
 		qw422016.N().S(`</div>
-          <a title="Team" href="`)
+          `)
 //line views/vstandup/Table.html:38
-		qw422016.E().S(`/team` + `/` + model.TeamID.String())
+		if model.TeamID != nil {
 //line views/vstandup/Table.html:38
-		qw422016.N().S(`">`)
+			qw422016.N().S(`<a title="Team" href="`)
 //line views/vstandup/Table.html:38
-		components.StreamSVGRefIcon(qw422016, "team", ps)
+			qw422016.E().S(`/team` + `/` + model.TeamID.String())
 //line views/vstandup/Table.html:38
-		qw422016.N().S(`</a>
+			qw422016.N().S(`">`)
+//line views/vstandup/Table.html:38
+			components.StreamSVGRefIcon(qw422016, "team", ps)
+//line views/vstandup/Table.html:38
+			qw422016.N().S(`</a>`)
+//line views/vstandup/Table.html:38
+		}
+//line views/vstandup/Table.html:38
+		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)
@@ -170,15 +178,23 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, users user.
 		}
 //line views/vstandup/Table.html:41
 		qw422016.N().S(`</div>
-          <a title="Sprint" href="`)
+          `)
 //line views/vstandup/Table.html:42
-		qw422016.E().S(`/sprint` + `/` + model.SprintID.String())
+		if model.SprintID != nil {
 //line views/vstandup/Table.html:42
-		qw422016.N().S(`">`)
+			qw422016.N().S(`<a title="Sprint" href="`)
 //line views/vstandup/Table.html:42
-		components.StreamSVGRefIcon(qw422016, "sprint", ps)
+			qw422016.E().S(`/sprint` + `/` + model.SprintID.String())
 //line views/vstandup/Table.html:42
-		qw422016.N().S(`</a>
+			qw422016.N().S(`">`)
+//line views/vstandup/Table.html:42
+			components.StreamSVGRefIcon(qw422016, "sprint", ps)
+//line views/vstandup/Table.html:42
+			qw422016.N().S(`</a>`)
+//line views/vstandup/Table.html:42
+		}
+//line views/vstandup/Table.html:42
+		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)

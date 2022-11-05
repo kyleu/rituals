@@ -17,8 +17,7 @@ import (
 
 func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("ehistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
+		prms := ps.Params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
 		ret, err := as.Services.EstimateHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -33,7 +32,7 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vehistory.List{Models: ret, Estimates: estimates, Params: params}, ps, "estimate", "ehistory")
+		return controller.Render(rc, as, &vehistory.List{Models: ret, Estimates: estimates, Params: ps.Params}, ps, "estimate", "ehistory")
 	})
 }
 

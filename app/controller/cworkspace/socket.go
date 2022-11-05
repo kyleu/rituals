@@ -2,11 +2,12 @@ package cworkspace
 
 import (
 	"fmt"
+
 	"github.com/fasthttp/websocket"
-	"github.com/kyleu/rituals/app"
-	"github.com/kyleu/rituals/app/controller"
 	"github.com/valyala/fasthttp"
 
+	"github.com/kyleu/rituals/app"
+	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 )
 

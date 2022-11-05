@@ -18,8 +18,7 @@ import (
 
 func TeamMemberList(rc *fasthttp.RequestCtx) {
 	controller.Act("tmember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
+		prms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
 		ret, err := as.Services.TeamMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -42,7 +41,7 @@ func TeamMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vtmember.List{Models: ret, Teams: teams, Users: users, Params: params}, ps, "team", "tmember")
+		return controller.Render(rc, as, &vtmember.List{Models: ret, Teams: teams, Users: users, Params: ps.Params}, ps, "team", "tmember")
 	})
 }
 

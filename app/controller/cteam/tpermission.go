@@ -18,8 +18,7 @@ import (
 
 func TeamPermissionList(rc *fasthttp.RequestCtx) {
 	controller.Act("tpermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
+		prms := ps.Params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
 		ret, err := as.Services.TeamPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -34,7 +33,7 @@ func TeamPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vtpermission.List{Models: ret, Teams: teams, Params: params}, ps, "team", "tpermission")
+		return controller.Render(rc, as, &vtpermission.List{Models: ret, Teams: teams, Params: ps.Params}, ps, "team", "tpermission")
 	})
 }
 

@@ -18,8 +18,7 @@ import (
 
 func StandupPermissionList(rc *fasthttp.RequestCtx) {
 	controller.Act("upermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		params := cutil.ParamSetFromRequest(rc)
-		prms := params.Get("upermission", nil, ps.Logger).Sanitize("upermission")
+		prms := ps.Params.Get("upermission", nil, ps.Logger).Sanitize("upermission")
 		ret, err := as.Services.StandupPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err
@@ -34,7 +33,7 @@ func StandupPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vupermission.List{Models: ret, Standups: standups, Params: params}, ps, "standup", "upermission")
+		return controller.Render(rc, as, &vupermission.List{Models: ret, Standups: standups, Params: ps.Params}, ps, "standup", "upermission")
 	})
 }
 
