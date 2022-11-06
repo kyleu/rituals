@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,7 +50,7 @@ func (s *Service) CreateEstimate(
 	return model, nil
 }
 
-func (s *Service) LoadEstimate(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, logger util.Logger) (*FullEstimate, error) {
+func (s *Service) LoadEstimate(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullEstimate, error) {
 	bySlug, err := s.e.GetBySlug(ctx, tx, slug, nil, logger)
 	if err != nil {
 		return nil, err
@@ -68,17 +69,17 @@ func (s *Service) LoadEstimate(ctx context.Context, slug string, user uuid.UUID,
 	e := bySlug[0]
 	ret := &FullEstimate{Estimate: e}
 
-	ret.Histories, err = s.eh.GetByEstimateID(ctx, tx, e.ID, nil, logger)
+	ret.Histories, err = s.eh.GetByEstimateID(ctx, tx, e.ID, params.Get("ehistory", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Members, err = s.em.GetByEstimateID(ctx, tx, e.ID, nil, logger)
+	ret.Members, err = s.em.GetByEstimateID(ctx, tx, e.ID, params.Get("emember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Permissions, err = s.ep.GetByEstimateID(ctx, tx, e.ID, nil, logger)
+	ret.Permissions, err = s.ep.GetByEstimateID(ctx, tx, e.ID, params.Get("epermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -96,17 +97,14 @@ func (s *Service) LoadEstimate(ctx context.Context, slug string, user uuid.UUID,
 		}
 	}
 
-	ret.Stories, err = s.st.GetByEstimateID(ctx, tx, e.ID, nil, logger)
+	ret.Stories, err = s.st.GetByEstimateID(ctx, tx, e.ID, params.Get("story", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, st := range ret.Stories {
-		curr, err := s.v.GetByStoryID(ctx, tx, st.ID, nil, logger)
-		if err != nil {
-			return nil, err
-		}
-		ret.Votes = append(ret.Votes, curr...)
+	ret.Votes, err = s.v.GetByStoryIDs(ctx, tx, params.Get("vote", nil, logger), logger, ret.Stories.IDStrings(false)...)
+	if err != nil {
+		return nil, err
 	}
 
 	return ret, nil

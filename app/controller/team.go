@@ -64,17 +64,17 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
-		teamHistoryPrms := ps.Params.Get("teamHistory", nil, ps.Logger).Sanitize("teamHistory")
+		teamHistoryPrms := ps.Params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
 		teamHistoriesByTeamID, err := as.Services.TeamHistory.GetByTeamID(ps.Context, nil, ret.ID, teamHistoryPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		teamMemberPrms := ps.Params.Get("teamMember", nil, ps.Logger).Sanitize("teamMember")
+		teamMemberPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
 		teamMembersByTeamID, err := as.Services.TeamMember.GetByTeamID(ps.Context, nil, ret.ID, teamMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		teamPermissionPrms := ps.Params.Get("teamPermission", nil, ps.Logger).Sanitize("teamPermission")
+		teamPermissionPrms := ps.Params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
 		teamPermissionsByTeamID, err := as.Services.TeamPermission.GetByTeamID(ps.Context, nil, ret.ID, teamPermissionPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")

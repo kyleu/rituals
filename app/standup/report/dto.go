@@ -14,7 +14,7 @@ import (
 var (
 	table         = "report"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "standup_id", "d", "user_id", "content", "html", "created", "updated"}
+	columns       = []string{"id", "standup_id", "day", "user_id", "content", "html", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -22,7 +22,7 @@ var (
 type dto struct {
 	ID        uuid.UUID  `db:"id"`
 	StandupID uuid.UUID  `db:"standup_id"`
-	D         time.Time  `db:"d"`
+	Day       time.Time  `db:"day"`
 	UserID    uuid.UUID  `db:"user_id"`
 	Content   string     `db:"content"`
 	HTML      string     `db:"html"`
@@ -37,7 +37,7 @@ func (d *dto) ToReport() *Report {
 	return &Report{
 		ID:        d.ID,
 		StandupID: d.StandupID,
-		D:         d.D,
+		Day:       d.Day,
 		UserID:    d.UserID,
 		Content:   d.Content,
 		HTML:      d.HTML,

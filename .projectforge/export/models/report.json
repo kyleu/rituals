@@ -26,8 +26,8 @@
       "type": "uuid"
     },
     {
-      "name": "d",
-      "type": "timestamp"
+      "name": "day",
+      "type": "date"
     },
     {
       "name": "user_id",

@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"time"
 
 	"github.com/google/uuid"
@@ -47,7 +48,7 @@ func (s *Service) CreateStandup(
 	return model, nil
 }
 
-func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, logger util.Logger) (*FullStandup, error) {
+func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullStandup, error) {
 	bySlug, err := s.u.GetBySlug(ctx, tx, slug, nil, logger)
 	if err != nil {
 		return nil, err
@@ -66,17 +67,17 @@ func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, 
 	u := bySlug[0]
 	ret := &FullStandup{Standup: u}
 
-	ret.Histories, err = s.uh.GetByStandupID(ctx, tx, u.ID, nil, logger)
+	ret.Histories, err = s.uh.GetByStandupID(ctx, tx, u.ID, params.Get("uhistory", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Members, err = s.um.GetByStandupID(ctx, tx, u.ID, nil, logger)
+	ret.Members, err = s.um.GetByStandupID(ctx, tx, u.ID, params.Get("umember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Permissions, err = s.up.GetByStandupID(ctx, tx, u.ID, nil, logger)
+	ret.Permissions, err = s.up.GetByStandupID(ctx, tx, u.ID, params.Get("upermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +95,7 @@ func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, 
 		}
 	}
 
-	ret.Reports, err = s.rt.GetByStandupID(ctx, tx, u.ID, nil, logger)
+	ret.Reports, err = s.rt.GetByStandupID(ctx, tx, u.ID, params.Get("report", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}

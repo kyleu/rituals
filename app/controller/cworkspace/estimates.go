@@ -45,7 +45,7 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "must provide [slug] in path")
 		}
-		e, err := as.Services.Workspace.LoadEstimate(ps.Context, slug, ps.Profile.ID, nil, ps.Logger)
+		e, err := as.Services.Workspace.LoadEstimate(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}

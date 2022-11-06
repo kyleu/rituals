@@ -118,17 +118,19 @@
         </div>
         <hr />
         <div>Choices</div>
-        <div class="story-choices">
+        <div class="story-votes">
           {%- code selfVote := w.Votes.Get(s.ID, ps.Profile.ID) -%}
           {%- for _, c := range w.Estimate.Choices -%}
-          <label class="choice">
-            {%- if selfVote != nil && selfVote.Choice == c -%}
-            <input type="radio" name="choice" value="{%s c %}" checked="checked" />
-            {%- else -%}
-            <input type="radio" name="choice" value="{%s c %}" />
-            {%- endif -%}
-            {%s c %}
-          </label>
+          <div class="vote">
+            <label>
+              {%- if selfVote != nil && selfVote.Choice == c -%}
+              <input type="radio" name="vote" value="{%s c %}" checked="checked" />
+              {%- else -%}
+              <input type="radio" name="vote" value="{%s c %}" />
+              {%- endif -%}
+              <div class="vote-choice">{%s c %}</div>
+            </label>
+          </div>
           {%- endfor -%}
         </div>
         <hr />

@@ -16,7 +16,7 @@
       <tr>
         {%= components.TableHeaderSimple("report", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "standup_id", "Standup ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("report", "d", "D", "Date and time, in almost any format", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("report", "day", "Day", "Calendar date", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "content", "Content", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "html", "HTML", "String text", prms, ps.URI, ps) %}
@@ -32,7 +32,7 @@
           <div class="icon">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
           <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("standup", ps) %}</a>
         </td>
-        <td>{%= components.DisplayTimestamp(&model.D) %}</td>
+        <td>{%= components.DisplayTimestampDay(&model.Day) %}</td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>

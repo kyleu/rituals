@@ -45,7 +45,7 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "must provide [slug] in path")
 		}
-		s, err := as.Services.Workspace.LoadSprint(ps.Context, slug, ps.Profile.ID, nil, ps.Logger)
+		s, err := as.Services.Workspace.LoadSprint(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}

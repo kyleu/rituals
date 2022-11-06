@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"time"
 
 	"github.com/google/uuid"
@@ -47,7 +48,7 @@ func (s *Service) CreateSprint(
 	return model, nil
 }
 
-func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, logger util.Logger) (*FullSprint, error) {
+func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullSprint, error) {
 	bySlug, err := s.s.GetBySlug(ctx, tx, slug, nil, logger)
 	if err != nil {
 		return nil, err
@@ -66,17 +67,17 @@ func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, t
 	spr := bySlug[0]
 	ret := &FullSprint{Sprint: spr}
 
-	ret.Histories, err = s.sh.GetBySprintID(ctx, tx, spr.ID, nil, logger)
+	ret.Histories, err = s.sh.GetBySprintID(ctx, tx, spr.ID, params.Get("shistory", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Members, err = s.sm.GetBySprintID(ctx, tx, spr.ID, nil, logger)
+	ret.Members, err = s.sm.GetBySprintID(ctx, tx, spr.ID, params.Get("smember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Permissions, err = s.sp.GetBySprintID(ctx, tx, spr.ID, nil, logger)
+	ret.Permissions, err = s.sp.GetBySprintID(ctx, tx, spr.ID, params.Get("spermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -88,15 +89,15 @@ func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, t
 		}
 	}
 
-	ret.Estimates, err = s.e.GetBySprintID(ctx, tx, &spr.ID, nil, logger)
+	ret.Estimates, err = s.e.GetBySprintID(ctx, tx, &spr.ID, params.Get("estimate", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Standups, err = s.u.GetBySprintID(ctx, tx, &spr.ID, nil, logger)
+	ret.Standups, err = s.u.GetBySprintID(ctx, tx, &spr.ID, params.Get("standup", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Retros, err = s.r.GetBySprintID(ctx, tx, &spr.ID, nil, logger)
+	ret.Retros, err = s.r.GetBySprintID(ctx, tx, &spr.ID, params.Get("retro", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}

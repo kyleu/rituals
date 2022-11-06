@@ -54,7 +54,7 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
 	qw422016.N().S(`
         `)
 //line views/vstandup/vreport/Table.html:19
-	components.StreamTableHeaderSimple(qw422016, "report", "d", "D", "Date and time, in almost any format", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "report", "day", "Day", "Calendar date", prms, ps.URI, ps)
 //line views/vstandup/vreport/Table.html:19
 	qw422016.N().S(`
         `)
@@ -127,7 +127,7 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
         </td>
         <td>`)
 //line views/vstandup/vreport/Table.html:35
-		components.StreamDisplayTimestamp(qw422016, &model.D)
+		components.StreamDisplayTimestampDay(qw422016, &model.Day)
 //line views/vstandup/vreport/Table.html:35
 		qw422016.N().S(`</td>
         <td>

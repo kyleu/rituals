@@ -96,7 +96,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vstandup/vreport/Edit.html:31
-	components.StreamTableInputTimestamp(qw422016, "d", "D", &p.Model.D, 5, "Date and time, in almost any format")
+	components.StreamTableInputTimestampDay(qw422016, "day", "Day", &p.Model.Day, 5, "Calendar date")
 //line views/vstandup/vreport/Edit.html:31
 	qw422016.N().S(`
           `)

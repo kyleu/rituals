@@ -7,7 +7,7 @@ drop table if exists "report";
 create table if not exists "report" (
   "id" uuid not null,
   "standup_id" uuid not null,
-  "d" timestamp not null,
+  "day" timestamp not null,
   "user_id" uuid not null,
   "content" text not null,
   "html" text not null,

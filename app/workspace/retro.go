@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"time"
 
 	"github.com/google/uuid"
@@ -47,7 +48,7 @@ func (s *Service) CreateRetro(
 	return model, nil
 }
 
-func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, logger util.Logger) (*FullRetro, error) {
+func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullRetro, error) {
 	bySlug, err := s.r.GetBySlug(ctx, tx, slug, nil, logger)
 	if err != nil {
 		return nil, err
@@ -66,17 +67,17 @@ func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx
 	r := bySlug[0]
 	ret := &FullRetro{Retro: r}
 
-	ret.Histories, err = s.rh.GetByRetroID(ctx, tx, r.ID, nil, logger)
+	ret.Histories, err = s.rh.GetByRetroID(ctx, tx, r.ID, params.Get("rhistory", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Members, err = s.rm.GetByRetroID(ctx, tx, r.ID, nil, logger)
+	ret.Members, err = s.rm.GetByRetroID(ctx, tx, r.ID, params.Get("rmember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Permissions, err = s.rp.GetByRetroID(ctx, tx, r.ID, nil, logger)
+	ret.Permissions, err = s.rp.GetByRetroID(ctx, tx, r.ID, params.Get("rpermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +95,7 @@ func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx
 		}
 	}
 
-	ret.Feedbacks, err = s.f.GetByRetroID(ctx, tx, r.ID, nil, logger)
+	ret.Feedbacks, err = s.f.GetByRetroID(ctx, tx, r.ID, params.Get("feedback", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}

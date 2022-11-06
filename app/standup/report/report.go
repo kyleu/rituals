@@ -12,7 +12,7 @@ import (
 type Report struct {
 	ID        uuid.UUID  `json:"id"`
 	StandupID uuid.UUID  `json:"standupID"`
-	D         time.Time  `json:"d"`
+	Day       time.Time  `json:"day"`
 	UserID    uuid.UUID  `json:"userID"`
 	Content   string     `json:"content"`
 	HTML      string     `json:"html"`
@@ -28,7 +28,7 @@ func Random() *Report {
 	return &Report{
 		ID:        util.UUID(),
 		StandupID: util.UUID(),
-		D:         time.Now(),
+		Day:       time.Now(),
 		UserID:    util.UUID(),
 		Content:   util.RandomString(12),
 		HTML:      util.RandomString(12),
@@ -58,12 +58,12 @@ func FromMap(m util.ValueMap, setPK bool) (*Report, error) {
 	if retStandupID != nil {
 		ret.StandupID = *retStandupID
 	}
-	retD, e := m.ParseTime("d", true, true)
+	retDay, e := m.ParseTime("day", true, true)
 	if e != nil {
 		return nil, e
 	}
-	if retD != nil {
-		ret.D = *retD
+	if retDay != nil {
+		ret.Day = *retDay
 	}
 	retUserID, e := m.ParseUUID("userID", true, true)
 	if e != nil {
@@ -89,7 +89,7 @@ func (r *Report) Clone() *Report {
 	return &Report{
 		ID:        r.ID,
 		StandupID: r.StandupID,
-		D:         r.D,
+		Day:       r.Day,
 		UserID:    r.UserID,
 		Content:   r.Content,
 		HTML:      r.HTML,
@@ -118,8 +118,8 @@ func (r *Report) Diff(rx *Report) util.Diffs {
 	if r.StandupID != rx.StandupID {
 		diffs = append(diffs, util.NewDiff("standupID", r.StandupID.String(), rx.StandupID.String()))
 	}
-	if r.D != rx.D {
-		diffs = append(diffs, util.NewDiff("d", r.D.String(), rx.D.String()))
+	if r.Day != rx.Day {
+		diffs = append(diffs, util.NewDiff("day", r.Day.String(), rx.Day.String()))
 	}
 	if r.UserID != rx.UserID {
 		diffs = append(diffs, util.NewDiff("userID", r.UserID.String(), rx.UserID.String()))
@@ -137,5 +137,5 @@ func (r *Report) Diff(rx *Report) util.Diffs {
 }
 
 func (r *Report) ToData() []any {
-	return []any{r.ID, r.StandupID, r.D, r.UserID, r.Content, r.HTML, r.Created, r.Updated}
+	return []any{r.ID, r.StandupID, r.Day, r.UserID, r.Content, r.HTML, r.Created, r.Updated}
 }

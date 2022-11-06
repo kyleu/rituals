@@ -45,7 +45,7 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "must provide [slug] in path")
 		}
-		r, err := as.Services.Workspace.LoadRetro(ps.Context, slug, ps.Profile.ID, nil, ps.Logger)
+		r, err := as.Services.Workspace.LoadRetro(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}

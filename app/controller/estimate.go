@@ -60,17 +60,17 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Estimate)"
 		ps.Data = ret
-		estimateHistoryPrms := ps.Params.Get("estimateHistory", nil, ps.Logger).Sanitize("estimateHistory")
+		estimateHistoryPrms := ps.Params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
 		estimateHistoriesByEstimateID, err := as.Services.EstimateHistory.GetByEstimateID(ps.Context, nil, ret.ID, estimateHistoryPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		estimateMemberPrms := ps.Params.Get("estimateMember", nil, ps.Logger).Sanitize("estimateMember")
+		estimateMemberPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
 		estimateMembersByEstimateID, err := as.Services.EstimateMember.GetByEstimateID(ps.Context, nil, ret.ID, estimateMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		estimatePermissionPrms := ps.Params.Get("estimatePermission", nil, ps.Logger).Sanitize("estimatePermission")
+		estimatePermissionPrms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
 		estimatePermissionsByEstimateID, err := as.Services.EstimatePermission.GetByEstimateID(ps.Context, nil, ret.ID, estimatePermissionPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")

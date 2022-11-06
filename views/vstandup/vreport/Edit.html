@@ -28,7 +28,7 @@
         <tbody>
           {% if p.IsNew %}{%= components.TableInputUUID("id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {%= components.TableInputUUID("standupID", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
-          {%= components.TableInputTimestamp("d", "D", &p.Model.D, 5, "Date and time, in almost any format") %}
+          {%= components.TableInputTimestampDay("day", "Day", &p.Model.Day, 5, "Calendar date") %}
           {%= components.TableInputUUID("userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
           {%= components.TableInput("content", "Content", p.Model.Content, 5, "String text") %}
           {%= components.TableInput("html", "HTML", p.Model.HTML, 5, "String text") %}

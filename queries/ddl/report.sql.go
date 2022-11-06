@@ -64,7 +64,7 @@ func StreamReportCreate(qw422016 *qt422016.Writer) {
 create table if not exists "report" (
   "id" uuid not null,
   "standup_id" uuid not null,
-  "d" timestamp not null,
+  "day" timestamp not null,
   "user_id" uuid not null,
   "content" text not null,
   "html" text not null,

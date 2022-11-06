@@ -62,17 +62,17 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child retros")
 		}
-		sprintHistoryPrms := ps.Params.Get("sprintHistory", nil, ps.Logger).Sanitize("sprintHistory")
+		sprintHistoryPrms := ps.Params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
 		sprintHistoriesBySprintID, err := as.Services.SprintHistory.GetBySprintID(ps.Context, nil, ret.ID, sprintHistoryPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		sprintMemberPrms := ps.Params.Get("sprintMember", nil, ps.Logger).Sanitize("sprintMember")
+		sprintMemberPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
 		sprintMembersBySprintID, err := as.Services.SprintMember.GetBySprintID(ps.Context, nil, ret.ID, sprintMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		sprintPermissionPrms := ps.Params.Get("sprintPermission", nil, ps.Logger).Sanitize("sprintPermission")
+		sprintPermissionPrms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
 		sprintPermissionsBySprintID, err := as.Services.SprintPermission.GetBySprintID(ps.Context, nil, ret.ID, sprintPermissionPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")

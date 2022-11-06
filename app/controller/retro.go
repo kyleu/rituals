@@ -65,17 +65,17 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child feedbacks")
 		}
-		retroHistoryPrms := ps.Params.Get("retroHistory", nil, ps.Logger).Sanitize("retroHistory")
+		retroHistoryPrms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
 		retroHistoriesByRetroID, err := as.Services.RetroHistory.GetByRetroID(ps.Context, nil, ret.ID, retroHistoryPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		retroMemberPrms := ps.Params.Get("retroMember", nil, ps.Logger).Sanitize("retroMember")
+		retroMemberPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
 		retroMembersByRetroID, err := as.Services.RetroMember.GetByRetroID(ps.Context, nil, ret.ID, retroMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		retroPermissionPrms := ps.Params.Get("retroPermission", nil, ps.Logger).Sanitize("retroPermission")
+		retroPermissionPrms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
 		retroPermissionsByRetroID, err := as.Services.RetroPermission.GetByRetroID(ps.Context, nil, ret.ID, retroPermissionPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")

@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"time"
 
 	"github.com/google/uuid"
@@ -47,7 +48,7 @@ func (s *Service) CreateTeam(
 	return model, nil
 }
 
-func (s *Service) LoadTeam(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, logger util.Logger) (*FullTeam, error) {
+func (s *Service) LoadTeam(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullTeam, error) {
 	bySlug, err := s.t.GetBySlug(ctx, tx, slug, nil, logger)
 	if err != nil {
 		return nil, err
@@ -66,34 +67,34 @@ func (s *Service) LoadTeam(ctx context.Context, slug string, user uuid.UUID, tx 
 	t := bySlug[0]
 	ret := &FullTeam{Team: t}
 
-	ret.Histories, err = s.th.GetByTeamID(ctx, tx, t.ID, nil, logger)
+	ret.Histories, err = s.th.GetByTeamID(ctx, tx, t.ID, params.Get("thistory", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Members, err = s.tm.GetByTeamID(ctx, tx, t.ID, nil, logger)
+	ret.Members, err = s.tm.GetByTeamID(ctx, tx, t.ID, params.Get("tmember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Permissions, err = s.tp.GetByTeamID(ctx, tx, t.ID, nil, logger)
+	ret.Permissions, err = s.tp.GetByTeamID(ctx, tx, t.ID, params.Get("tpermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
 
-	ret.Sprints, err = s.s.GetByTeamID(ctx, tx, &t.ID, nil, logger)
+	ret.Sprints, err = s.s.GetByTeamID(ctx, tx, &t.ID, params.Get("sprint", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Estimates, err = s.e.GetByTeamID(ctx, tx, &t.ID, nil, logger)
+	ret.Estimates, err = s.e.GetByTeamID(ctx, tx, &t.ID, params.Get("estimate", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Standups, err = s.u.GetByTeamID(ctx, tx, &t.ID, nil, logger)
+	ret.Standups, err = s.u.GetByTeamID(ctx, tx, &t.ID, params.Get("standup", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Retros, err = s.r.GetByTeamID(ctx, tx, &t.ID, nil, logger)
+	ret.Retros, err = s.r.GetByTeamID(ctx, tx, &t.ID, params.Get("retro", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}

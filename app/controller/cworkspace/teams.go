@@ -45,7 +45,7 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "must provide [slug] in path")
 		}
-		t, err := as.Services.Workspace.LoadTeam(ps.Context, slug, ps.Profile.ID, nil, ps.Logger)
+		t, err := as.Services.Workspace.LoadTeam(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}

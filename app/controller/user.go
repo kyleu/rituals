@@ -55,7 +55,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child estimates")
 		}
-		estimateMemberPrms := ps.Params.Get("estimateMember", nil, ps.Logger).Sanitize("estimateMember")
+		estimateMemberPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
 		estimateMembersByUserID, err := as.Services.EstimateMember.GetByUserID(ps.Context, nil, ret.ID, estimateMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
@@ -75,7 +75,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child retros")
 		}
-		retroMemberPrms := ps.Params.Get("retroMember", nil, ps.Logger).Sanitize("retroMember")
+		retroMemberPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
 		retroMembersByUserID, err := as.Services.RetroMember.GetByUserID(ps.Context, nil, ret.ID, retroMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
@@ -85,7 +85,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child sprints")
 		}
-		sprintMemberPrms := ps.Params.Get("sprintMember", nil, ps.Logger).Sanitize("sprintMember")
+		sprintMemberPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
 		sprintMembersByUserID, err := as.Services.SprintMember.GetByUserID(ps.Context, nil, ret.ID, sprintMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
@@ -95,7 +95,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
-		standupMemberPrms := ps.Params.Get("standupMember", nil, ps.Logger).Sanitize("standupMember")
+		standupMemberPrms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
 		standupMembersByUserID, err := as.Services.StandupMember.GetByUserID(ps.Context, nil, ret.ID, standupMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
@@ -110,7 +110,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child teams")
 		}
-		teamMemberPrms := ps.Params.Get("teamMember", nil, ps.Logger).Sanitize("teamMember")
+		teamMemberPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
 		teamMembersByUserID, err := as.Services.TeamMember.GetByUserID(ps.Context, nil, ret.ID, teamMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")

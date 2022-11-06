@@ -18,14 +18,13 @@
   text-align: center;
 }
 
-.story-choices {
+.story-votes {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.story-choices .choice {
-  border: var(--border);
+.story-votes .vote .vote-choice {
   margin: var(--padding);
   padding: var(--padding);
   min-height: 48px;
@@ -34,4 +33,15 @@
   display: flex;
   justify-content: center;
   border-radius: 50%;
+}
+
+.story-votes .vote input {
+  display: none;
+}
+
+.story-votes .vote input ~ * {
+  border: 3px solid var(--color-background-muted);
+}
+.story-votes .vote input:checked ~ * {
+  border: 3px solid var(--color-foreground-muted);
 }

@@ -105,10 +105,10 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           </td>
         </tr>
         <tr>
-          <th class="shrink" title="Date and time, in almost any format">D</th>
+          <th class="shrink" title="Calendar date">Day</th>
           <td>`)
 //line views/vstandup/vreport/Detail.html:42
-	components.StreamDisplayTimestamp(qw422016, &p.Model.D)
+	components.StreamDisplayTimestampDay(qw422016, &p.Model.Day)
 //line views/vstandup/vreport/Detail.html:42
 	qw422016.N().S(`</td>
         </tr>

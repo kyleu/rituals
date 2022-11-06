@@ -312,7 +312,7 @@ func StreamStoryWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEstim
 	qw422016.N().S(`        </div>
         <hr />
         <div>Choices</div>
-        <div class="story-choices">
+        <div class="story-votes">
 `)
 //line views/vworkspace/EstimateWorkspace.html:122
 	selfVote := w.Votes.Get(s.ID, ps.Profile.ID)
@@ -320,39 +320,41 @@ func StreamStoryWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEstim
 //line views/vworkspace/EstimateWorkspace.html:123
 	for _, c := range w.Estimate.Choices {
 //line views/vworkspace/EstimateWorkspace.html:123
-		qw422016.N().S(`          <label class="choice">
+		qw422016.N().S(`          <div class="vote">
+            <label>
 `)
-//line views/vworkspace/EstimateWorkspace.html:125
+//line views/vworkspace/EstimateWorkspace.html:126
 		if selfVote != nil && selfVote.Choice == c {
-//line views/vworkspace/EstimateWorkspace.html:125
-			qw422016.N().S(`            <input type="radio" name="choice" value="`)
 //line views/vworkspace/EstimateWorkspace.html:126
+			qw422016.N().S(`              <input type="radio" name="vote" value="`)
+//line views/vworkspace/EstimateWorkspace.html:127
 			qw422016.E().S(c)
-//line views/vworkspace/EstimateWorkspace.html:126
+//line views/vworkspace/EstimateWorkspace.html:127
 			qw422016.N().S(`" checked="checked" />
 `)
-//line views/vworkspace/EstimateWorkspace.html:127
+//line views/vworkspace/EstimateWorkspace.html:128
 		} else {
-//line views/vworkspace/EstimateWorkspace.html:127
-			qw422016.N().S(`            <input type="radio" name="choice" value="`)
 //line views/vworkspace/EstimateWorkspace.html:128
+			qw422016.N().S(`              <input type="radio" name="vote" value="`)
+//line views/vworkspace/EstimateWorkspace.html:129
 			qw422016.E().S(c)
-//line views/vworkspace/EstimateWorkspace.html:128
+//line views/vworkspace/EstimateWorkspace.html:129
 			qw422016.N().S(`" />
 `)
-//line views/vworkspace/EstimateWorkspace.html:129
+//line views/vworkspace/EstimateWorkspace.html:130
 		}
-//line views/vworkspace/EstimateWorkspace.html:129
-		qw422016.N().S(`            `)
 //line views/vworkspace/EstimateWorkspace.html:130
+		qw422016.N().S(`              <div class="vote-choice">`)
+//line views/vworkspace/EstimateWorkspace.html:131
 		qw422016.E().S(c)
-//line views/vworkspace/EstimateWorkspace.html:130
-		qw422016.N().S(`
-          </label>
+//line views/vworkspace/EstimateWorkspace.html:131
+		qw422016.N().S(`</div>
+            </label>
+          </div>
 `)
-//line views/vworkspace/EstimateWorkspace.html:132
+//line views/vworkspace/EstimateWorkspace.html:134
 	}
-//line views/vworkspace/EstimateWorkspace.html:132
+//line views/vworkspace/EstimateWorkspace.html:134
 	qw422016.N().S(`        </div>
         <hr />
         <div>Results</div>
@@ -360,38 +362,38 @@ func StreamStoryWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEstim
     </div>
   </div>
 `)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 }
 
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 func WriteStoryWorkspaceModal(qq422016 qtio422016.Writer, w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	StreamStoryWorkspaceModal(qw422016, w, s, ps)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 }
 
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 func StoryWorkspaceModal(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) string {
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	WriteStoryWorkspaceModal(qb422016, w, s, ps)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 	return qs422016
-//line views/vworkspace/EstimateWorkspace.html:139
+//line views/vworkspace/EstimateWorkspace.html:141
 }
 
-//line views/vworkspace/EstimateWorkspace.html:141
+//line views/vworkspace/EstimateWorkspace.html:143
 func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEstimate, teams team.Teams, sprints sprint.Sprints) {
-//line views/vworkspace/EstimateWorkspace.html:141
+//line views/vworkspace/EstimateWorkspace.html:143
 	qw422016.N().S(`
   <div id="modal-estimate-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -402,37 +404,37 @@ func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEs
       </div>
       <div class="modal-body">
         <form action="/team/`)
-//line views/vworkspace/EstimateWorkspace.html:150
+//line views/vworkspace/EstimateWorkspace.html:152
 	qw422016.E().S(w.Estimate.Slug)
-//line views/vworkspace/EstimateWorkspace.html:150
+//line views/vworkspace/EstimateWorkspace.html:152
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="action" value="edit" />
           <em>Name</em><br />
           `)
-//line views/vworkspace/EstimateWorkspace.html:153
+//line views/vworkspace/EstimateWorkspace.html:155
 	components.StreamFormInput(qw422016, "title", "input-title", w.Estimate.TitleString(), "The name of your estimate")
-//line views/vworkspace/EstimateWorkspace.html:153
+//line views/vworkspace/EstimateWorkspace.html:155
 	qw422016.N().S(`
           <hr />
           <em>Choices</em><br />
           `)
-//line views/vworkspace/EstimateWorkspace.html:156
+//line views/vworkspace/EstimateWorkspace.html:158
 	components.StreamFormInput(qw422016, "choices", "input-choices", strings.Join(w.Estimate.Choices, ", "), "The available options for stories in this estimate")
-//line views/vworkspace/EstimateWorkspace.html:156
+//line views/vworkspace/EstimateWorkspace.html:158
 	qw422016.N().S(`
           <hr />
           <em>Team</em><br />
           `)
-//line views/vworkspace/EstimateWorkspace.html:159
+//line views/vworkspace/EstimateWorkspace.html:161
 	components.StreamFormSelect(qw422016, "team", "input-team", util.UUIDString(w.Estimate.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5)
-//line views/vworkspace/EstimateWorkspace.html:159
+//line views/vworkspace/EstimateWorkspace.html:161
 	qw422016.N().S(`
           <hr />
           <em>Sprint</em><br />
           `)
-//line views/vworkspace/EstimateWorkspace.html:162
+//line views/vworkspace/EstimateWorkspace.html:164
 	components.StreamFormSelect(qw422016, "sprint", "input-sprint", util.UUIDString(w.Estimate.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5)
-//line views/vworkspace/EstimateWorkspace.html:162
+//line views/vworkspace/EstimateWorkspace.html:164
 	qw422016.N().S(`
           <hr />
           <em>Permissions</em>
@@ -445,31 +447,31 @@ func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEs
     </div>
   </div>
 `)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 }
 
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 func WriteEstimateWorkspaceModal(qq422016 qtio422016.Writer, w *workspace.FullEstimate, teams team.Teams, sprints sprint.Sprints) {
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	StreamEstimateWorkspaceModal(qw422016, w, teams, sprints)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 }
 
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 func EstimateWorkspaceModal(w *workspace.FullEstimate, teams team.Teams, sprints sprint.Sprints) string {
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	WriteEstimateWorkspaceModal(qb422016, w, teams, sprints)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 	return qs422016
-//line views/vworkspace/EstimateWorkspace.html:173
+//line views/vworkspace/EstimateWorkspace.html:175
 }
