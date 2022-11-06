@@ -9,17 +9,6 @@
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
-{% func SprintWorkspaceForm(svc string, teamID *uuid.UUID, sprintID uuid.UUID, placeholder string) %}{% stripspace %}
-  <form action="/{%s svc %}" method="post">
-    {% if teamID != nil %}
-      <input type="hidden" name="team" value="{%s teamID.String() %}" />
-    {% endif %}
-    <input type="hidden" name="sprint" value="{%s sprintID.String() %}" />
-    <input type="text" name="title" placeholder="{%s placeholder %}" />
-    <button type="submit">+</button>
-  </form>
-{% endstripspace %}{% endfunc %}
-
 {% code type SprintWorkspace struct {
   layout.Basic
   Sprint *workspace.FullSprint
@@ -92,13 +81,14 @@
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3>
+        <a href="#modal-self"><h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3></a>
         <em>{%s string(self.Role) %}</em>
       </div>
+      {%= SelfModal(self.Name, self.Picture, self.Role) %}
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
@@ -111,6 +101,7 @@
         {%- endfor -%}
       </div>
     </div>
+    {%= InviteModal() %}
   </div>
   {%= components.JSONModal("sprint", "Sprint JSON", w, 1) %}
   <script>
@@ -122,6 +113,17 @@
     });
   </script>
 {% endfunc %}
+
+{% func SprintWorkspaceForm(svc string, teamID *uuid.UUID, sprintID uuid.UUID, placeholder string) %}{% stripspace %}
+  <form action="/{%s svc %}" method="post">
+    {% if teamID != nil %}
+      <input type="hidden" name="team" value="{%s teamID.String() %}" />
+    {% endif %}
+    <input type="hidden" name="sprint" value="{%s sprintID.String() %}" />
+    <input type="text" name="title" class="combined" placeholder="{%s placeholder %}" />
+    <button type="submit" class="combined">+</button>
+  </form>
+{% endstripspace %}{% endfunc %}
 
 {% func SprintWorkspaceModal(w *workspace.FullSprint) %}
   <div id="modal-sprint-config" class="modal" style="display: none;">

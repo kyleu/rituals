@@ -6,88 +6,135 @@ package vworkspace
 
 //line views/vworkspace/TemplateUtils.html:1
 import (
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
 )
 
-//line views/vworkspace/TemplateUtils.html:6
+//line views/vworkspace/TemplateUtils.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/TemplateUtils.html:6
+//line views/vworkspace/TemplateUtils.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/TemplateUtils.html:6
+//line views/vworkspace/TemplateUtils.html:7
 func StreamBanner(qw422016 *qt422016.Writer, t *team.Team, s *sprint.Sprint, mdl string) {
-//line views/vworkspace/TemplateUtils.html:6
+//line views/vworkspace/TemplateUtils.html:7
 	qw422016.N().S(`<em>`)
-//line views/vworkspace/TemplateUtils.html:8
-	if s != nil {
-//line views/vworkspace/TemplateUtils.html:8
-		qw422016.N().S(`<a href="/sprint/`)
-//line views/vworkspace/TemplateUtils.html:8
-		qw422016.E().S(s.Slug)
-//line views/vworkspace/TemplateUtils.html:8
-		qw422016.N().S(`">`)
-//line views/vworkspace/TemplateUtils.html:8
-		qw422016.E().S(s.TitleString())
-//line views/vworkspace/TemplateUtils.html:8
-		qw422016.N().S(`</a>`)
-//line views/vworkspace/TemplateUtils.html:8
-		qw422016.N().S(` `)
-//line views/vworkspace/TemplateUtils.html:8
-	}
 //line views/vworkspace/TemplateUtils.html:9
-	qw422016.E().S(mdl)
-//line views/vworkspace/TemplateUtils.html:10
-	if t != nil {
-//line views/vworkspace/TemplateUtils.html:10
-		qw422016.N().S(` `)
-//line views/vworkspace/TemplateUtils.html:10
-		qw422016.N().S(`in <a href="/team/`)
-//line views/vworkspace/TemplateUtils.html:10
-		qw422016.E().S(t.Slug)
-//line views/vworkspace/TemplateUtils.html:10
+	if s != nil {
+//line views/vworkspace/TemplateUtils.html:9
+		qw422016.N().S(`<a href="/sprint/`)
+//line views/vworkspace/TemplateUtils.html:9
+		qw422016.E().S(s.Slug)
+//line views/vworkspace/TemplateUtils.html:9
 		qw422016.N().S(`">`)
-//line views/vworkspace/TemplateUtils.html:10
-		qw422016.E().S(t.TitleString())
-//line views/vworkspace/TemplateUtils.html:10
+//line views/vworkspace/TemplateUtils.html:9
+		qw422016.E().S(s.TitleString())
+//line views/vworkspace/TemplateUtils.html:9
 		qw422016.N().S(`</a>`)
-//line views/vworkspace/TemplateUtils.html:10
+//line views/vworkspace/TemplateUtils.html:9
+		qw422016.N().S(` `)
+//line views/vworkspace/TemplateUtils.html:9
 	}
 //line views/vworkspace/TemplateUtils.html:10
+	qw422016.E().S(mdl)
+//line views/vworkspace/TemplateUtils.html:11
+	if t != nil {
+//line views/vworkspace/TemplateUtils.html:11
+		qw422016.N().S(` `)
+//line views/vworkspace/TemplateUtils.html:11
+		qw422016.N().S(`in <a href="/team/`)
+//line views/vworkspace/TemplateUtils.html:11
+		qw422016.E().S(t.Slug)
+//line views/vworkspace/TemplateUtils.html:11
+		qw422016.N().S(`">`)
+//line views/vworkspace/TemplateUtils.html:11
+		qw422016.E().S(t.TitleString())
+//line views/vworkspace/TemplateUtils.html:11
+		qw422016.N().S(`</a>`)
+//line views/vworkspace/TemplateUtils.html:11
+	}
+//line views/vworkspace/TemplateUtils.html:11
 	qw422016.N().S(`</em>`)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 }
 
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 func WriteBanner(qq422016 qtio422016.Writer, t *team.Team, s *sprint.Sprint, mdl string) {
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	StreamBanner(qw422016, t, s, mdl)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 }
 
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 func Banner(t *team.Team, s *sprint.Sprint, mdl string) string {
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	WriteBanner(qb422016, t, s, mdl)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
 	return qs422016
-//line views/vworkspace/TemplateUtils.html:12
+//line views/vworkspace/TemplateUtils.html:13
+}
+
+//line views/vworkspace/TemplateUtils.html:15
+func StreamSelfModal(qw422016 *qt422016.Writer, name string, picture string, role enum.MemberStatus) {
+//line views/vworkspace/TemplateUtils.html:15
+	qw422016.N().S(`
+  <div id="modal-self" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Edit Self</h2>
+      </div>
+      <div class="modal-body">
+        TODO
+      </div>
+    </div>
+  </div>
+`)
+//line views/vworkspace/TemplateUtils.html:28
+}
+
+//line views/vworkspace/TemplateUtils.html:28
+func WriteSelfModal(qq422016 qtio422016.Writer, name string, picture string, role enum.MemberStatus) {
+//line views/vworkspace/TemplateUtils.html:28
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/TemplateUtils.html:28
+	StreamSelfModal(qw422016, name, picture, role)
+//line views/vworkspace/TemplateUtils.html:28
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/TemplateUtils.html:28
+}
+
+//line views/vworkspace/TemplateUtils.html:28
+func SelfModal(name string, picture string, role enum.MemberStatus) string {
+//line views/vworkspace/TemplateUtils.html:28
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/TemplateUtils.html:28
+	WriteSelfModal(qb422016, name, picture, role)
+//line views/vworkspace/TemplateUtils.html:28
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/TemplateUtils.html:28
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/TemplateUtils.html:28
+	return qs422016
+//line views/vworkspace/TemplateUtils.html:28
 }

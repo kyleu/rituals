@@ -137,118 +137,128 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3>`)
+        <a href="#modal-self"><h3>`)
 //line views/vworkspace/EstimateWorkspace.html:64
 	components.StreamSVGRefIcon(qw422016, `profile`, ps)
 //line views/vworkspace/EstimateWorkspace.html:64
 	qw422016.E().S(self.Name)
 //line views/vworkspace/EstimateWorkspace.html:64
-	qw422016.N().S(`</h3>
+	qw422016.N().S(`</h3></a>
         <em>`)
 //line views/vworkspace/EstimateWorkspace.html:65
 	qw422016.E().S(string(self.Role))
 //line views/vworkspace/EstimateWorkspace.html:65
 	qw422016.N().S(`</em>
       </div>
+      `)
+//line views/vworkspace/EstimateWorkspace.html:67
+	StreamSelfModal(qw422016, self.Name, self.Picture, self.Role)
+//line views/vworkspace/EstimateWorkspace.html:67
+	qw422016.N().S(`
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3>`)
-//line views/vworkspace/EstimateWorkspace.html:70
+        <a href="#modal-invite"><h3>`)
+//line views/vworkspace/EstimateWorkspace.html:71
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vworkspace/EstimateWorkspace.html:70
-	qw422016.N().S(`Members</h3>
+//line views/vworkspace/EstimateWorkspace.html:71
+	qw422016.N().S(`Members</h3></a>
         <table class="mt expanded">
           <tbody>
 `)
-//line views/vworkspace/EstimateWorkspace.html:73
+//line views/vworkspace/EstimateWorkspace.html:74
 	for _, m := range others {
-//line views/vworkspace/EstimateWorkspace.html:73
+//line views/vworkspace/EstimateWorkspace.html:74
 		qw422016.N().S(`            `)
-//line views/vworkspace/EstimateWorkspace.html:74
+//line views/vworkspace/EstimateWorkspace.html:75
 		StreamMemberRow(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated)
-//line views/vworkspace/EstimateWorkspace.html:74
+//line views/vworkspace/EstimateWorkspace.html:75
 		qw422016.N().S(`
 `)
-//line views/vworkspace/EstimateWorkspace.html:75
+//line views/vworkspace/EstimateWorkspace.html:76
 	}
-//line views/vworkspace/EstimateWorkspace.html:75
+//line views/vworkspace/EstimateWorkspace.html:76
 	qw422016.N().S(`          </tbody>
         </table>
 `)
-//line views/vworkspace/EstimateWorkspace.html:78
+//line views/vworkspace/EstimateWorkspace.html:79
 	for _, m := range others {
-//line views/vworkspace/EstimateWorkspace.html:78
+//line views/vworkspace/EstimateWorkspace.html:79
 		qw422016.N().S(`        `)
-//line views/vworkspace/EstimateWorkspace.html:79
+//line views/vworkspace/EstimateWorkspace.html:80
 		StreamMemberModal(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated)
-//line views/vworkspace/EstimateWorkspace.html:79
+//line views/vworkspace/EstimateWorkspace.html:80
 		qw422016.N().S(`
 `)
-//line views/vworkspace/EstimateWorkspace.html:80
+//line views/vworkspace/EstimateWorkspace.html:81
 	}
-//line views/vworkspace/EstimateWorkspace.html:80
+//line views/vworkspace/EstimateWorkspace.html:81
 	qw422016.N().S(`      </div>
     </div>
+    `)
+//line views/vworkspace/EstimateWorkspace.html:84
+	StreamInviteModal(qw422016)
+//line views/vworkspace/EstimateWorkspace.html:84
+	qw422016.N().S(`
   </div>
   `)
-//line views/vworkspace/EstimateWorkspace.html:84
+//line views/vworkspace/EstimateWorkspace.html:86
 	components.StreamJSONModal(qw422016, "estimate", "Estimate JSON", w, 1)
-//line views/vworkspace/EstimateWorkspace.html:84
+//line views/vworkspace/EstimateWorkspace.html:86
 	qw422016.N().S(`
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const estimate = `)
-//line views/vworkspace/EstimateWorkspace.html:87
+//line views/vworkspace/EstimateWorkspace.html:89
 	qw422016.N().S(util.ToJSONCompact(t))
-//line views/vworkspace/EstimateWorkspace.html:87
+//line views/vworkspace/EstimateWorkspace.html:89
 	qw422016.N().S(`;
       const members = `)
-//line views/vworkspace/EstimateWorkspace.html:88
+//line views/vworkspace/EstimateWorkspace.html:90
 	qw422016.N().S(util.ToJSONCompact(w.Members))
-//line views/vworkspace/EstimateWorkspace.html:88
+//line views/vworkspace/EstimateWorkspace.html:90
 	qw422016.N().S(`;
       const permissions = `)
-//line views/vworkspace/EstimateWorkspace.html:89
+//line views/vworkspace/EstimateWorkspace.html:91
 	qw422016.N().S(util.ToJSONCompact(w.Permissions))
-//line views/vworkspace/EstimateWorkspace.html:89
+//line views/vworkspace/EstimateWorkspace.html:91
 	qw422016.N().S(`;
       rituals.initWorkspace("estimate", estimate, members, permissions);
     });
   </script>
 `)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 }
 
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 func (p *EstimateWorkspace) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 }
 
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 func (p *EstimateWorkspace) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 	return qs422016
-//line views/vworkspace/EstimateWorkspace.html:93
+//line views/vworkspace/EstimateWorkspace.html:95
 }
 
-//line views/vworkspace/EstimateWorkspace.html:95
+//line views/vworkspace/EstimateWorkspace.html:97
 func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEstimate) {
-//line views/vworkspace/EstimateWorkspace.html:95
+//line views/vworkspace/EstimateWorkspace.html:97
 	qw422016.N().S(`
   <div id="modal-estimate-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -256,9 +266,9 @@ func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEs
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vworkspace/EstimateWorkspace.html:101
+//line views/vworkspace/EstimateWorkspace.html:103
 	qw422016.E().S(w.Estimate.TitleString())
-//line views/vworkspace/EstimateWorkspace.html:101
+//line views/vworkspace/EstimateWorkspace.html:103
 	qw422016.N().S(`</h2>
       </div>
       <div class="modal-body">
@@ -267,31 +277,31 @@ func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullEs
     </div>
   </div>
 `)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 }
 
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 func WriteEstimateWorkspaceModal(qq422016 qtio422016.Writer, w *workspace.FullEstimate) {
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	StreamEstimateWorkspaceModal(qw422016, w)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 }
 
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 func EstimateWorkspaceModal(w *workspace.FullEstimate) string {
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	WriteEstimateWorkspaceModal(qb422016, w)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 	return qs422016
-//line views/vworkspace/EstimateWorkspace.html:108
+//line views/vworkspace/EstimateWorkspace.html:110
 }

@@ -29,8 +29,7 @@
   <div class="card">
     <div class="right">
       <form action="/team" method="post">
-        <input type="text" name="title" placeholder="New Team" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Team" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/team">{%= components.SVGRefIcon(`team`, ps) %}Teams</a></h3>
@@ -49,8 +48,7 @@
   <div class="card">
     <div class="right">
       <form action="/sprint" method="post">
-        <input type="text" name="title" placeholder="New Sprint" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Sprint" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/sprint">{%= components.SVGRefIcon(`sprint`, ps) %}Sprints</a></h3>
@@ -69,8 +67,7 @@
   <div class="card">
     <div class="right">
       <form action="/estimate" method="post">
-        <input type="text" name="title" placeholder="New Estimate" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Estimate" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/estimate">{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</a></h3>
@@ -89,8 +86,7 @@
   <div class="card">
     <div class="right">
       <form action="/standup" method="post">
-        <input type="text" name="title" placeholder="New Standup" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Standup" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/standup">{%= components.SVGRefIcon(`standup`, ps) %}Standups</a></h3>
@@ -109,8 +105,7 @@
   <div class="card">
     <div class="right">
       <form action="/retro" method="post">
-        <input type="text" name="title" placeholder="New Retro" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Retro" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/retro">{%= components.SVGRefIcon(`retro`, ps) %}Retros</a></h3>

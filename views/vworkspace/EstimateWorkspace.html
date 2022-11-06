@@ -61,13 +61,14 @@
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3>
+        <a href="#modal-self"><h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3></a>
         <em>{%s string(self.Role) %}</em>
       </div>
+      {%= SelfModal(self.Name, self.Picture, self.Role) %}
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
@@ -80,6 +81,7 @@
         {%- endfor -%}
       </div>
     </div>
+    {%= InviteModal() %}
   </div>
   {%= components.JSONModal("estimate", "Estimate JSON", w, 1) %}
   <script>

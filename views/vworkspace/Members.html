@@ -13,6 +13,21 @@
   </tr>
 {% endfunc %}
 
+{% func InviteModal() %}
+  <div id="modal-invite" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Invite Member</h2>
+      </div>
+      <div class="modal-body">
+        For now, just share the url of this page from your address bar
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
 {% func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) %}
   <div id="modal-member-{%s userID.String() %}" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>

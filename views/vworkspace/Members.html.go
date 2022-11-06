@@ -77,26 +77,18 @@ func MemberRow(userID uuid.UUID, name string, picture string, role enum.MemberSt
 }
 
 //line views/vworkspace/Members.html:16
-func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
+func StreamInviteModal(qw422016 *qt422016.Writer) {
 //line views/vworkspace/Members.html:16
 	qw422016.N().S(`
-  <div id="modal-member-`)
-//line views/vworkspace/Members.html:17
-	qw422016.E().S(userID.String())
-//line views/vworkspace/Members.html:17
-	qw422016.N().S(`" class="modal" style="display: none;">
+  <div id="modal-invite" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>`)
-//line views/vworkspace/Members.html:22
-	qw422016.E().S(name)
-//line views/vworkspace/Members.html:22
-	qw422016.N().S(`</h2>
+        <h2>Invite Member</h2>
       </div>
       <div class="modal-body">
-        TODO
+        For now, just share the url of this page from your address bar
       </div>
     </div>
   </div>
@@ -105,22 +97,22 @@ func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string,
 }
 
 //line views/vworkspace/Members.html:29
-func WriteMemberModal(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
+func WriteInviteModal(qq422016 qtio422016.Writer) {
 //line views/vworkspace/Members.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/Members.html:29
-	StreamMemberModal(qw422016, userID, name, picture, role, updated)
+	StreamInviteModal(qw422016)
 //line views/vworkspace/Members.html:29
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/Members.html:29
 }
 
 //line views/vworkspace/Members.html:29
-func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) string {
+func InviteModal() string {
 //line views/vworkspace/Members.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/Members.html:29
-	WriteMemberModal(qb422016, userID, name, picture, role, updated)
+	WriteInviteModal(qb422016)
 //line views/vworkspace/Members.html:29
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/Members.html:29
@@ -128,4 +120,58 @@ func MemberModal(userID uuid.UUID, name string, picture string, role enum.Member
 //line views/vworkspace/Members.html:29
 	return qs422016
 //line views/vworkspace/Members.html:29
+}
+
+//line views/vworkspace/Members.html:31
+func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
+//line views/vworkspace/Members.html:31
+	qw422016.N().S(`
+  <div id="modal-member-`)
+//line views/vworkspace/Members.html:32
+	qw422016.E().S(userID.String())
+//line views/vworkspace/Members.html:32
+	qw422016.N().S(`" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>`)
+//line views/vworkspace/Members.html:37
+	qw422016.E().S(name)
+//line views/vworkspace/Members.html:37
+	qw422016.N().S(`</h2>
+      </div>
+      <div class="modal-body">
+        TODO
+      </div>
+    </div>
+  </div>
+`)
+//line views/vworkspace/Members.html:44
+}
+
+//line views/vworkspace/Members.html:44
+func WriteMemberModal(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
+//line views/vworkspace/Members.html:44
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/Members.html:44
+	StreamMemberModal(qw422016, userID, name, picture, role, updated)
+//line views/vworkspace/Members.html:44
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/Members.html:44
+}
+
+//line views/vworkspace/Members.html:44
+func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) string {
+//line views/vworkspace/Members.html:44
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/Members.html:44
+	WriteMemberModal(qb422016, userID, name, picture, role, updated)
+//line views/vworkspace/Members.html:44
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/Members.html:44
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/Members.html:44
+	return qs422016
+//line views/vworkspace/Members.html:44
 }

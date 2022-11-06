@@ -7,14 +7,6 @@
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
-{% func TeamWorkspaceForm(svc string, teamID string, placeholder string) %}{% stripspace %}
-  <form action="/{%s svc %}" method="post">
-    <input type="hidden" name="team" value="{%s teamID %}" />
-    <input type="text" name="title" placeholder="{%s placeholder %}" />
-    <button type="submit">+</button>
-  </form>
-{% endstripspace %}{% endfunc %}
-
 {% code type TeamWorkspace struct {
   layout.Basic
   Team *workspace.FullTeam
@@ -102,13 +94,14 @@
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3>
+        <a href="#modal-self"><h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3></a>
         <em>{%s string(self.Role) %}</em>
       </div>
+      {%= SelfModal(self.Name, self.Picture, self.Role) %}
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3>
+        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
@@ -120,6 +113,7 @@
         {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
         {%- endfor -%}
       </div>
+      {%= InviteModal() %}
     </div>
   </div>
   {%= components.JSONModal("team", "Team JSON", w, 1) %}
@@ -132,6 +126,14 @@
     });
   </script>
 {% endfunc %}
+
+{% func TeamWorkspaceForm(svc string, teamID string, placeholder string) %}{% stripspace %}
+  <form action="/{%s svc %}" method="post">
+    <input type="hidden" name="team" value="{%s teamID %}" />
+    <input type="text" name="title" class="combined" placeholder="{%s placeholder %}" />
+    <button type="submit" class="combined">+</button>
+  </form>
+{% endstripspace %}{% endfunc %}
 
 {% func TeamWorkspaceModal(w *workspace.FullTeam) %}
   <div id="modal-team-config" class="modal" style="display: none;">

@@ -137,118 +137,128 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3>`)
+        <a href="#modal-self"><h3>`)
 //line views/vworkspace/RetroWorkspace.html:64
 	components.StreamSVGRefIcon(qw422016, `profile`, ps)
 //line views/vworkspace/RetroWorkspace.html:64
 	qw422016.E().S(self.Name)
 //line views/vworkspace/RetroWorkspace.html:64
-	qw422016.N().S(`</h3>
+	qw422016.N().S(`</h3></a>
         <em>`)
 //line views/vworkspace/RetroWorkspace.html:65
 	qw422016.E().S(string(self.Role))
 //line views/vworkspace/RetroWorkspace.html:65
 	qw422016.N().S(`</em>
       </div>
+      `)
+//line views/vworkspace/RetroWorkspace.html:67
+	StreamSelfModal(qw422016, self.Name, self.Picture, self.Role)
+//line views/vworkspace/RetroWorkspace.html:67
+	qw422016.N().S(`
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3>`)
-//line views/vworkspace/RetroWorkspace.html:70
+        <a href="#modal-invite"><h3>`)
+//line views/vworkspace/RetroWorkspace.html:71
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vworkspace/RetroWorkspace.html:70
-	qw422016.N().S(`Members</h3>
+//line views/vworkspace/RetroWorkspace.html:71
+	qw422016.N().S(`Members</h3></a>
         <table class="mt expanded">
           <tbody>
 `)
-//line views/vworkspace/RetroWorkspace.html:73
+//line views/vworkspace/RetroWorkspace.html:74
 	for _, m := range others {
-//line views/vworkspace/RetroWorkspace.html:73
+//line views/vworkspace/RetroWorkspace.html:74
 		qw422016.N().S(`            `)
-//line views/vworkspace/RetroWorkspace.html:74
+//line views/vworkspace/RetroWorkspace.html:75
 		StreamMemberRow(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated)
-//line views/vworkspace/RetroWorkspace.html:74
+//line views/vworkspace/RetroWorkspace.html:75
 		qw422016.N().S(`
 `)
-//line views/vworkspace/RetroWorkspace.html:75
+//line views/vworkspace/RetroWorkspace.html:76
 	}
-//line views/vworkspace/RetroWorkspace.html:75
+//line views/vworkspace/RetroWorkspace.html:76
 	qw422016.N().S(`          </tbody>
         </table>
 `)
-//line views/vworkspace/RetroWorkspace.html:78
+//line views/vworkspace/RetroWorkspace.html:79
 	for _, m := range others {
-//line views/vworkspace/RetroWorkspace.html:78
+//line views/vworkspace/RetroWorkspace.html:79
 		qw422016.N().S(`        `)
-//line views/vworkspace/RetroWorkspace.html:79
+//line views/vworkspace/RetroWorkspace.html:80
 		StreamMemberModal(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated)
-//line views/vworkspace/RetroWorkspace.html:79
+//line views/vworkspace/RetroWorkspace.html:80
 		qw422016.N().S(`
 `)
-//line views/vworkspace/RetroWorkspace.html:80
+//line views/vworkspace/RetroWorkspace.html:81
 	}
-//line views/vworkspace/RetroWorkspace.html:80
+//line views/vworkspace/RetroWorkspace.html:81
 	qw422016.N().S(`      </div>
+      `)
+//line views/vworkspace/RetroWorkspace.html:83
+	StreamInviteModal(qw422016)
+//line views/vworkspace/RetroWorkspace.html:83
+	qw422016.N().S(`
     </div>
   </div>
   `)
-//line views/vworkspace/RetroWorkspace.html:84
+//line views/vworkspace/RetroWorkspace.html:86
 	components.StreamJSONModal(qw422016, "retro", "Retro JSON", w, 1)
-//line views/vworkspace/RetroWorkspace.html:84
+//line views/vworkspace/RetroWorkspace.html:86
 	qw422016.N().S(`
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const retro = `)
-//line views/vworkspace/RetroWorkspace.html:87
+//line views/vworkspace/RetroWorkspace.html:89
 	qw422016.N().S(util.ToJSONCompact(t))
-//line views/vworkspace/RetroWorkspace.html:87
+//line views/vworkspace/RetroWorkspace.html:89
 	qw422016.N().S(`;
       const members = `)
-//line views/vworkspace/RetroWorkspace.html:88
+//line views/vworkspace/RetroWorkspace.html:90
 	qw422016.N().S(util.ToJSONCompact(w.Members))
-//line views/vworkspace/RetroWorkspace.html:88
+//line views/vworkspace/RetroWorkspace.html:90
 	qw422016.N().S(`;
       const permissions = `)
-//line views/vworkspace/RetroWorkspace.html:89
+//line views/vworkspace/RetroWorkspace.html:91
 	qw422016.N().S(util.ToJSONCompact(w.Permissions))
-//line views/vworkspace/RetroWorkspace.html:89
+//line views/vworkspace/RetroWorkspace.html:91
 	qw422016.N().S(`;
       rituals.initWorkspace("retro", retro, members, permissions);
     });
   </script>
 `)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 }
 
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 func (p *RetroWorkspace) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 }
 
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 func (p *RetroWorkspace) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 	return qs422016
-//line views/vworkspace/RetroWorkspace.html:93
+//line views/vworkspace/RetroWorkspace.html:95
 }
 
-//line views/vworkspace/RetroWorkspace.html:95
+//line views/vworkspace/RetroWorkspace.html:97
 func StreamRetroWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullRetro) {
-//line views/vworkspace/RetroWorkspace.html:95
+//line views/vworkspace/RetroWorkspace.html:97
 	qw422016.N().S(`
   <div id="modal-retro-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -256,9 +266,9 @@ func StreamRetroWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullRetro
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vworkspace/RetroWorkspace.html:101
+//line views/vworkspace/RetroWorkspace.html:103
 	qw422016.E().S(w.Retro.TitleString())
-//line views/vworkspace/RetroWorkspace.html:101
+//line views/vworkspace/RetroWorkspace.html:103
 	qw422016.N().S(`</h2>
       </div>
       <div class="modal-body">
@@ -267,31 +277,31 @@ func StreamRetroWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullRetro
     </div>
   </div>
 `)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 }
 
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 func WriteRetroWorkspaceModal(qq422016 qtio422016.Writer, w *workspace.FullRetro) {
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	StreamRetroWorkspaceModal(qw422016, w)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 }
 
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 func RetroWorkspaceModal(w *workspace.FullRetro) string {
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	WriteRetroWorkspaceModal(qb422016, w)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 	return qs422016
-//line views/vworkspace/RetroWorkspace.html:108
+//line views/vworkspace/RetroWorkspace.html:110
 }

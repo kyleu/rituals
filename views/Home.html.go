@@ -60,264 +60,259 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <div class="right">
       <form action="/team" method="post">
-        <input type="text" name="title" placeholder="New Team" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Team" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/team">`)
-//line views/Home.html:36
+//line views/Home.html:35
 	components.StreamSVGRefIcon(qw422016, `team`, ps)
-//line views/Home.html:36
+//line views/Home.html:35
 	qw422016.N().S(`Teams</a></h3>
 `)
-//line views/Home.html:37
+//line views/Home.html:36
 	if len(p.Teams) == 0 {
-//line views/Home.html:37
+//line views/Home.html:36
 		qw422016.N().S(`    <em>no teams available</em>
 `)
-//line views/Home.html:39
+//line views/Home.html:38
 	} else {
-//line views/Home.html:39
+//line views/Home.html:38
 		qw422016.N().S(`    <table class="expanded">
       <tbody>
 `)
-//line views/Home.html:42
+//line views/Home.html:41
 		for _, x := range p.Teams {
-//line views/Home.html:42
+//line views/Home.html:41
 			qw422016.N().S(`        <tr><td><a href="/team/`)
-//line views/Home.html:43
+//line views/Home.html:42
 			qw422016.E().S(x.Slug)
-//line views/Home.html:43
+//line views/Home.html:42
 			qw422016.N().S(`">`)
-//line views/Home.html:43
+//line views/Home.html:42
 			qw422016.E().S(x.TitleString())
-//line views/Home.html:43
+//line views/Home.html:42
 			qw422016.N().S(`</a></td></tr>
 `)
-//line views/Home.html:44
+//line views/Home.html:43
 		}
-//line views/Home.html:44
+//line views/Home.html:43
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/Home.html:47
+//line views/Home.html:46
 	}
-//line views/Home.html:47
+//line views/Home.html:46
 	qw422016.N().S(`  </div>
   <div class="card">
     <div class="right">
       <form action="/sprint" method="post">
-        <input type="text" name="title" placeholder="New Sprint" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Sprint" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/sprint">`)
-//line views/Home.html:56
+//line views/Home.html:54
 	components.StreamSVGRefIcon(qw422016, `sprint`, ps)
-//line views/Home.html:56
+//line views/Home.html:54
 	qw422016.N().S(`Sprints</a></h3>
 `)
-//line views/Home.html:57
+//line views/Home.html:55
 	if len(p.Sprints) == 0 {
-//line views/Home.html:57
+//line views/Home.html:55
 		qw422016.N().S(`    <em>no sprints available</em>
 `)
-//line views/Home.html:59
+//line views/Home.html:57
 	} else {
-//line views/Home.html:59
+//line views/Home.html:57
 		qw422016.N().S(`    <table class="expanded">
       <tbody>
 `)
-//line views/Home.html:62
+//line views/Home.html:60
 		for _, x := range p.Sprints {
-//line views/Home.html:62
+//line views/Home.html:60
 			qw422016.N().S(`        <tr><td><a href="/sprint/`)
-//line views/Home.html:63
+//line views/Home.html:61
 			qw422016.E().S(x.Slug)
-//line views/Home.html:63
+//line views/Home.html:61
 			qw422016.N().S(`">`)
-//line views/Home.html:63
+//line views/Home.html:61
 			qw422016.E().S(x.TitleString())
-//line views/Home.html:63
+//line views/Home.html:61
 			qw422016.N().S(`</a></td></tr>
 `)
-//line views/Home.html:64
+//line views/Home.html:62
 		}
-//line views/Home.html:64
+//line views/Home.html:62
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/Home.html:67
+//line views/Home.html:65
 	}
-//line views/Home.html:67
+//line views/Home.html:65
 	qw422016.N().S(`  </div>
   <div class="card">
     <div class="right">
       <form action="/estimate" method="post">
-        <input type="text" name="title" placeholder="New Estimate" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Estimate" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/estimate">`)
-//line views/Home.html:76
+//line views/Home.html:73
 	components.StreamSVGRefIcon(qw422016, `estimate`, ps)
-//line views/Home.html:76
+//line views/Home.html:73
 	qw422016.N().S(`Estimates</a></h3>
 `)
-//line views/Home.html:77
+//line views/Home.html:74
 	if len(p.Estimates) == 0 {
-//line views/Home.html:77
+//line views/Home.html:74
 		qw422016.N().S(`    <em>no estimates available</em>
 `)
-//line views/Home.html:79
+//line views/Home.html:76
 	} else {
-//line views/Home.html:79
+//line views/Home.html:76
 		qw422016.N().S(`    <table class="expanded">
       <tbody>
 `)
-//line views/Home.html:82
+//line views/Home.html:79
 		for _, x := range p.Estimates {
-//line views/Home.html:82
+//line views/Home.html:79
 			qw422016.N().S(`        <tr><td><a href="/estimate/`)
-//line views/Home.html:83
+//line views/Home.html:80
 			qw422016.E().S(x.Slug)
-//line views/Home.html:83
+//line views/Home.html:80
 			qw422016.N().S(`">`)
-//line views/Home.html:83
+//line views/Home.html:80
 			qw422016.E().S(x.TitleString())
-//line views/Home.html:83
+//line views/Home.html:80
 			qw422016.N().S(`</a></td></tr>
 `)
-//line views/Home.html:84
+//line views/Home.html:81
 		}
-//line views/Home.html:84
+//line views/Home.html:81
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/Home.html:87
+//line views/Home.html:84
 	}
-//line views/Home.html:87
+//line views/Home.html:84
 	qw422016.N().S(`  </div>
   <div class="card">
     <div class="right">
       <form action="/standup" method="post">
-        <input type="text" name="title" placeholder="New Standup" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Standup" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/standup">`)
-//line views/Home.html:96
+//line views/Home.html:92
 	components.StreamSVGRefIcon(qw422016, `standup`, ps)
-//line views/Home.html:96
+//line views/Home.html:92
 	qw422016.N().S(`Standups</a></h3>
 `)
-//line views/Home.html:97
+//line views/Home.html:93
 	if len(p.Standups) == 0 {
-//line views/Home.html:97
+//line views/Home.html:93
 		qw422016.N().S(`    <em>no standups available</em>
 `)
-//line views/Home.html:99
+//line views/Home.html:95
 	} else {
-//line views/Home.html:99
+//line views/Home.html:95
 		qw422016.N().S(`    <table class="expanded">
       <tbody>
 `)
-//line views/Home.html:102
+//line views/Home.html:98
 		for _, x := range p.Standups {
-//line views/Home.html:102
+//line views/Home.html:98
 			qw422016.N().S(`        <tr><td><a href="/standup/`)
-//line views/Home.html:103
+//line views/Home.html:99
 			qw422016.E().S(x.Slug)
-//line views/Home.html:103
+//line views/Home.html:99
 			qw422016.N().S(`">`)
-//line views/Home.html:103
+//line views/Home.html:99
 			qw422016.E().S(x.TitleString())
-//line views/Home.html:103
+//line views/Home.html:99
 			qw422016.N().S(`</a></td></tr>
 `)
-//line views/Home.html:104
+//line views/Home.html:100
 		}
-//line views/Home.html:104
+//line views/Home.html:100
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/Home.html:107
+//line views/Home.html:103
 	}
-//line views/Home.html:107
+//line views/Home.html:103
 	qw422016.N().S(`  </div>
   <div class="card">
     <div class="right">
       <form action="/retro" method="post">
-        <input type="text" name="title" placeholder="New Retro" />
-        <button type="submit">+</button>
+        <input type="text" name="title" class="combined" placeholder="New Retro" /><button type="submit" class="combined">+</button>
       </form>
     </div>
     <h3><a href="/retro">`)
-//line views/Home.html:116
+//line views/Home.html:111
 	components.StreamSVGRefIcon(qw422016, `retro`, ps)
-//line views/Home.html:116
+//line views/Home.html:111
 	qw422016.N().S(`Retros</a></h3>
 `)
-//line views/Home.html:117
+//line views/Home.html:112
 	if len(p.Retros) == 0 {
-//line views/Home.html:117
+//line views/Home.html:112
 		qw422016.N().S(`    <em>no retros available</em>
 `)
-//line views/Home.html:119
+//line views/Home.html:114
 	} else {
-//line views/Home.html:119
+//line views/Home.html:114
 		qw422016.N().S(`    <table class="expanded">
       <tbody>
 `)
-//line views/Home.html:122
+//line views/Home.html:117
 		for _, x := range p.Retros {
-//line views/Home.html:122
+//line views/Home.html:117
 			qw422016.N().S(`        <tr><td><a href="/retro/`)
-//line views/Home.html:123
+//line views/Home.html:118
 			qw422016.E().S(x.Slug)
-//line views/Home.html:123
+//line views/Home.html:118
 			qw422016.N().S(`">`)
-//line views/Home.html:123
+//line views/Home.html:118
 			qw422016.E().S(x.TitleString())
-//line views/Home.html:123
+//line views/Home.html:118
 			qw422016.N().S(`</a></td></tr>
 `)
-//line views/Home.html:124
+//line views/Home.html:119
 		}
-//line views/Home.html:124
+//line views/Home.html:119
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/Home.html:127
+//line views/Home.html:122
 	}
-//line views/Home.html:127
+//line views/Home.html:122
 	qw422016.N().S(`  </div>
 `)
-//line views/Home.html:129
+//line views/Home.html:124
 }
 
-//line views/Home.html:129
+//line views/Home.html:124
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:129
+//line views/Home.html:124
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:129
+//line views/Home.html:124
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:129
+//line views/Home.html:124
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:129
+//line views/Home.html:124
 }
 
-//line views/Home.html:129
+//line views/Home.html:124
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:129
+//line views/Home.html:124
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:129
+//line views/Home.html:124
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:129
+//line views/Home.html:124
 	qs422016 := string(qb422016.B)
-//line views/Home.html:129
+//line views/Home.html:124
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:129
+//line views/Home.html:124
 	return qs422016
-//line views/Home.html:129
+//line views/Home.html:124
 }

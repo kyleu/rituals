@@ -1,4 +1,5 @@
 {% import (
+  "github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
 ) %}
@@ -10,3 +11,18 @@
   {% if t != nil %}{% space %}in <a href="/team/{%s t.Slug %}">{%s t.TitleString() %}</a>{% endif %}
 </em>
 {% endstripspace %}{% endfunc %}
+
+{% func SelfModal(name string, picture string, role enum.MemberStatus) %}
+  <div id="modal-self" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Edit Self</h2>
+      </div>
+      <div class="modal-body">
+        TODO
+      </div>
+    </div>
+  </div>
+{% endfunc %}
