@@ -42,7 +42,7 @@ type State struct {
 	Started   time.Time
 }
 
-func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, logger util.Logger) (*State, error) {
+func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetry bool, port uint16, logger util.Logger) (*State, error) {
 	loc, err := time.LoadLocation("UTC")
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 	time.Local = loc
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
-	as := auth.NewService("", logger)
+	as := auth.NewService("", port, logger)
 	ts := theme.NewService(f)
 	gqls := graphql.NewService()
 
