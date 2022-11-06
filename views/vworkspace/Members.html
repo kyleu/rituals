@@ -50,7 +50,7 @@
           {%= components.FormSelect("role", "input-role", string(role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
           <hr />
           <div class="right"><button type="submit" name="action" value="member-edit">Save</button></div>
-          <button type="submit" name="action" value="member-leave" onclick="return confirm('Are you sure you wish to remove this user?');">Leave</button>
+          <button type="submit" name="action" value="member-leave" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
         </form>
       </div>
     </div>

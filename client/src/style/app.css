@@ -1,2 +1,37 @@
 /* $PF_IGNORE$ */
 @import "./workspace.css";
+
+.billboard {
+  text-align: center;
+  padding: var(--padding);
+  border: var(--border);
+}
+
+.story-members {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.story-members .member {
+  margin: var(--padding);
+  text-align: center;
+}
+
+.story-choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.story-choices .choice {
+  border: var(--border);
+  margin: var(--padding);
+  padding: var(--padding);
+  min-height: 48px;
+  min-width: 48px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+}

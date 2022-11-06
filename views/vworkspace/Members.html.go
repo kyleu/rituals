@@ -171,7 +171,7 @@ func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string,
 	qw422016.N().S(`
           <hr />
           <div class="right"><button type="submit" name="action" value="member-edit">Save</button></div>
-          <button type="submit" name="action" value="member-leave" onclick="return confirm('Are you sure you wish to remove this user?');">Leave</button>
+          <button type="submit" name="action" value="member-leave" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
         </form>
       </div>
     </div>
