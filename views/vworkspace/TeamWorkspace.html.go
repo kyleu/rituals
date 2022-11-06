@@ -265,7 +265,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
       </div>
       `)
 //line views/vworkspace/TeamWorkspace.html:100
-	StreamSelfModal(qw422016, self.Name, self.Picture, self.Role)
+	StreamSelfModal(qw422016, self.Name, self.Picture, self.Role, "/team/"+w.Team.Slug)
 //line views/vworkspace/TeamWorkspace.html:100
 	qw422016.N().S(`
     </div>
@@ -284,7 +284,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vworkspace/TeamWorkspace.html:107
 		qw422016.N().S(`            `)
 //line views/vworkspace/TeamWorkspace.html:108
-		StreamMemberRow(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated)
+		StreamMemberRow(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps)
 //line views/vworkspace/TeamWorkspace.html:108
 		qw422016.N().S(`
 `)
@@ -299,7 +299,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 //line views/vworkspace/TeamWorkspace.html:112
 		qw422016.N().S(`        `)
 //line views/vworkspace/TeamWorkspace.html:113
-		StreamMemberModal(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated)
+		StreamMemberModal(qw422016, m.UserID, m.Name, m.Picture, m.Role, m.Updated, "/team/"+w.Team.Slug)
 //line views/vworkspace/TeamWorkspace.html:113
 		qw422016.N().S(`
 `)
@@ -423,43 +423,56 @@ func StreamTeamWorkspaceModal(qw422016 *qt422016.Writer, w *workspace.FullTeam) 
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>`)
-//line views/vworkspace/TeamWorkspace.html:144
-	qw422016.E().S(w.Team.TitleString())
-//line views/vworkspace/TeamWorkspace.html:144
-	qw422016.N().S(`</h2>
+        <h2>Team</h2>
       </div>
       <div class="modal-body">
-        TODO
+        <form action="/team/`)
+//line views/vworkspace/TeamWorkspace.html:147
+	qw422016.E().S(w.Team.Slug)
+//line views/vworkspace/TeamWorkspace.html:147
+	qw422016.N().S(`" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          <em>Name</em><br />
+          `)
+//line views/vworkspace/TeamWorkspace.html:150
+	components.StreamFormInput(qw422016, "title", "input-title", w.Team.TitleString(), "The name of your team")
+//line views/vworkspace/TeamWorkspace.html:150
+	qw422016.N().S(`
+          <hr />
+          <em>Permissions</em>
+          <div>Control access to this team by <a href="">signing in</a></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 }
 
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 func WriteTeamWorkspaceModal(qq422016 qtio422016.Writer, w *workspace.FullTeam) {
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	StreamTeamWorkspaceModal(qw422016, w)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 }
 
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 func TeamWorkspaceModal(w *workspace.FullTeam) string {
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	WriteTeamWorkspaceModal(qb422016, w)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 	return qs422016
-//line views/vworkspace/TeamWorkspace.html:151
+//line views/vworkspace/TeamWorkspace.html:160
 }

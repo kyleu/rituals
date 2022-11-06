@@ -49,8 +49,12 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		w, err := workspace.WorkspaceFromAny(ps.Data)
+		if err != nil {
+			return "", err
+		}
 		ps.Title = r.Retro.TitleString()
 		ps.Data = r
-		return controller.Render(rc, as, &vworkspace.RetroWorkspace{Retro: r}, ps, "retros", r.Retro.ID.String())
+		return controller.Render(rc, as, &vworkspace.RetroWorkspace{Retro: r, Teams: w.Teams, Sprints: w.Sprints}, ps, "retros", r.Retro.ID.String())
 	})
 }

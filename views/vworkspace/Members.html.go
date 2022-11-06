@@ -10,75 +10,86 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/views/components"
 )
 
-//line views/vworkspace/Members.html:9
+//line views/vworkspace/Members.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/Members.html:9
+//line views/vworkspace/Members.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/Members.html:9
-func StreamMemberRow(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
-//line views/vworkspace/Members.html:9
+//line views/vworkspace/Members.html:11
+func StreamMemberRow(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) {
+//line views/vworkspace/Members.html:11
 	qw422016.N().S(`
   <tr>
-    <td><a href="#modal-member-`)
-//line views/vworkspace/Members.html:11
+    <td>
+      <a href="#modal-member-`)
+//line views/vworkspace/Members.html:14
 	qw422016.E().S(userID.String())
-//line views/vworkspace/Members.html:11
-	qw422016.N().S(`">`)
-//line views/vworkspace/Members.html:11
+//line views/vworkspace/Members.html:14
+	qw422016.N().S(`">
+        <div class="left" style="padding-right: var(--padding-small);">`)
+//line views/vworkspace/Members.html:15
+	components.StreamSVGRef(qw422016, `profile`, 18, 18, ``, ps)
+//line views/vworkspace/Members.html:15
+	qw422016.N().S(`</div>
+        `)
+//line views/vworkspace/Members.html:16
 	qw422016.E().S(name)
-//line views/vworkspace/Members.html:11
-	qw422016.N().S(`</a></td>
+//line views/vworkspace/Members.html:16
+	qw422016.N().S(`
+      </a>
+    </td>
     <td class="shrink">`)
-//line views/vworkspace/Members.html:12
+//line views/vworkspace/Members.html:19
 	qw422016.E().S(string(role))
-//line views/vworkspace/Members.html:12
+//line views/vworkspace/Members.html:19
 	qw422016.N().S(`</td>
   </tr>
 `)
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
 }
 
-//line views/vworkspace/Members.html:14
-func WriteMemberRow(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
+func WriteMemberRow(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) {
+//line views/vworkspace/Members.html:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/Members.html:14
-	StreamMemberRow(qw422016, userID, name, picture, role, updated)
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
+	StreamMemberRow(qw422016, userID, name, picture, role, updated, ps)
+//line views/vworkspace/Members.html:21
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
 }
 
-//line views/vworkspace/Members.html:14
-func MemberRow(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) string {
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
+func MemberRow(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) string {
+//line views/vworkspace/Members.html:21
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/Members.html:14
-	WriteMemberRow(qb422016, userID, name, picture, role, updated)
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
+	WriteMemberRow(qb422016, userID, name, picture, role, updated, ps)
+//line views/vworkspace/Members.html:21
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
 	return qs422016
-//line views/vworkspace/Members.html:14
+//line views/vworkspace/Members.html:21
 }
 
-//line views/vworkspace/Members.html:16
+//line views/vworkspace/Members.html:23
 func StreamInviteModal(qw422016 *qt422016.Writer) {
-//line views/vworkspace/Members.html:16
+//line views/vworkspace/Members.html:23
 	qw422016.N().S(`
   <div id="modal-invite" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -93,85 +104,104 @@ func StreamInviteModal(qw422016 *qt422016.Writer) {
     </div>
   </div>
 `)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 }
 
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 func WriteInviteModal(qq422016 qtio422016.Writer) {
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	StreamInviteModal(qw422016)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 }
 
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 func InviteModal() string {
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	WriteInviteModal(qb422016)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 	return qs422016
-//line views/vworkspace/Members.html:29
+//line views/vworkspace/Members.html:36
 }
 
-//line views/vworkspace/Members.html:31
-func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
-//line views/vworkspace/Members.html:31
+//line views/vworkspace/Members.html:38
+func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) {
+//line views/vworkspace/Members.html:38
 	qw422016.N().S(`
   <div id="modal-member-`)
-//line views/vworkspace/Members.html:32
+//line views/vworkspace/Members.html:39
 	qw422016.E().S(userID.String())
-//line views/vworkspace/Members.html:32
+//line views/vworkspace/Members.html:39
 	qw422016.N().S(`" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vworkspace/Members.html:37
+//line views/vworkspace/Members.html:44
 	qw422016.E().S(name)
-//line views/vworkspace/Members.html:37
+//line views/vworkspace/Members.html:44
 	qw422016.N().S(`</h2>
       </div>
       <div class="modal-body">
-        TODO
+        <form action="`)
+//line views/vworkspace/Members.html:47
+	qw422016.E().S(url)
+//line views/vworkspace/Members.html:47
+	qw422016.N().S(`" method="post" class="expanded">
+          <input type="hidden" name="userID" value="`)
+//line views/vworkspace/Members.html:48
+	qw422016.E().S(userID.String())
+//line views/vworkspace/Members.html:48
+	qw422016.N().S(`" />
+          <em>Role</em><br />
+          `)
+//line views/vworkspace/Members.html:50
+	components.StreamFormSelect(qw422016, "role", "input-role", string(role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5)
+//line views/vworkspace/Members.html:50
+	qw422016.N().S(`
+          <hr />
+          <div class="right"><button type="submit" name="action" value="member-edit">Save</button></div>
+          <button type="submit" name="action" value="member-leave" onclick="return confirm('Are you sure you wish to remove this user?');">Leave</button>
+        </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
 }
 
-//line views/vworkspace/Members.html:44
-func WriteMemberModal(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) {
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
+func WriteMemberModal(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) {
+//line views/vworkspace/Members.html:58
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/Members.html:44
-	StreamMemberModal(qw422016, userID, name, picture, role, updated)
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
+	StreamMemberModal(qw422016, userID, name, picture, role, updated, url)
+//line views/vworkspace/Members.html:58
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
 }
 
-//line views/vworkspace/Members.html:44
-func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time) string {
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
+func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) string {
+//line views/vworkspace/Members.html:58
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/Members.html:44
-	WriteMemberModal(qb422016, userID, name, picture, role, updated)
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
+	WriteMemberModal(qb422016, userID, name, picture, role, updated, url)
+//line views/vworkspace/Members.html:58
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
 	return qs422016
-//line views/vworkspace/Members.html:44
+//line views/vworkspace/Members.html:58
 }

@@ -12,14 +12,16 @@ import (
 )
 
 type Sprint struct {
-	ID      uuid.UUID          `json:"id"`
-	Slug    string             `json:"slug"`
-	Title   string             `json:"title"`
-	Status  enum.SessionStatus `json:"status"`
-	TeamID  *uuid.UUID         `json:"teamID,omitempty"`
-	Owner   uuid.UUID          `json:"owner"`
-	Created time.Time          `json:"created"`
-	Updated *time.Time         `json:"updated,omitempty"`
+	ID        uuid.UUID          `json:"id"`
+	Slug      string             `json:"slug"`
+	Title     string             `json:"title"`
+	Status    enum.SessionStatus `json:"status"`
+	TeamID    *uuid.UUID         `json:"teamID,omitempty"`
+	Owner     uuid.UUID          `json:"owner"`
+	StartDate *time.Time         `json:"startDate,omitempty"`
+	EndDate   *time.Time         `json:"endDate,omitempty"`
+	Created   time.Time          `json:"created"`
+	Updated   *time.Time         `json:"updated,omitempty"`
 }
 
 func New(id uuid.UUID) *Sprint {
@@ -28,14 +30,16 @@ func New(id uuid.UUID) *Sprint {
 
 func Random() *Sprint {
 	return &Sprint{
-		ID:      util.UUID(),
-		Slug:    util.RandomString(12),
-		Title:   util.RandomString(12),
-		Status:  enum.SessionStatus(util.RandomString(12)),
-		TeamID:  util.UUIDP(),
-		Owner:   util.UUID(),
-		Created: time.Now(),
-		Updated: util.NowPointer(),
+		ID:        util.UUID(),
+		Slug:      util.RandomString(12),
+		Title:     util.RandomString(12),
+		Status:    enum.SessionStatus(util.RandomString(12)),
+		TeamID:    util.UUIDP(),
+		Owner:     util.UUID(),
+		StartDate: util.NowPointer(),
+		EndDate:   util.NowPointer(),
+		Created:   time.Now(),
+		Updated:   util.NowPointer(),
 	}
 }
 
@@ -77,6 +81,14 @@ func FromMap(m util.ValueMap, setPK bool) (*Sprint, error) {
 	if retOwner != nil {
 		ret.Owner = *retOwner
 	}
+	ret.StartDate, err = m.ParseTime("startDate", true, true)
+	if err != nil {
+		return nil, err
+	}
+	ret.EndDate, err = m.ParseTime("endDate", true, true)
+	if err != nil {
+		return nil, err
+	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -84,14 +96,16 @@ func FromMap(m util.ValueMap, setPK bool) (*Sprint, error) {
 
 func (s *Sprint) Clone() *Sprint {
 	return &Sprint{
-		ID:      s.ID,
-		Slug:    s.Slug,
-		Title:   s.Title,
-		Status:  s.Status,
-		TeamID:  s.TeamID,
-		Owner:   s.Owner,
-		Created: s.Created,
-		Updated: s.Updated,
+		ID:        s.ID,
+		Slug:      s.Slug,
+		Title:     s.Title,
+		Status:    s.Status,
+		TeamID:    s.TeamID,
+		Owner:     s.Owner,
+		StartDate: s.StartDate,
+		EndDate:   s.EndDate,
+		Created:   s.Created,
+		Updated:   s.Updated,
 	}
 }
 
@@ -127,6 +141,12 @@ func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 	if s.Owner != sx.Owner {
 		diffs = append(diffs, util.NewDiff("owner", s.Owner.String(), sx.Owner.String()))
 	}
+	if (s.StartDate == nil && sx.StartDate != nil) || (s.StartDate != nil && sx.StartDate == nil) || (s.StartDate != nil && sx.StartDate != nil && *s.StartDate != *sx.StartDate) {
+		diffs = append(diffs, util.NewDiff("startDate", fmt.Sprint(s.StartDate), fmt.Sprint(sx.StartDate))) //nolint:gocritic // it's nullable
+	}
+	if (s.EndDate == nil && sx.EndDate != nil) || (s.EndDate != nil && sx.EndDate == nil) || (s.EndDate != nil && sx.EndDate != nil && *s.EndDate != *sx.EndDate) {
+		diffs = append(diffs, util.NewDiff("endDate", fmt.Sprint(s.EndDate), fmt.Sprint(sx.EndDate))) //nolint:gocritic // it's nullable
+	}
 	if s.Created != sx.Created {
 		diffs = append(diffs, util.NewDiff("created", s.Created.String(), sx.Created.String()))
 	}
@@ -134,5 +154,5 @@ func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 }
 
 func (s *Sprint) ToData() []any {
-	return []any{s.ID, s.Slug, s.Title, s.Status, s.TeamID, s.Owner, s.Created, s.Updated}
+	return []any{s.ID, s.Slug, s.Title, s.Status, s.TeamID, s.Owner, s.StartDate, s.EndDate, s.Created, s.Updated}
 }

@@ -97,7 +97,7 @@
         <a href="#modal-self"><h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3></a>
         <em>{%s string(self.Role) %}</em>
       </div>
-      {%= SelfModal(self.Name, self.Picture, self.Role) %}
+      {%= SelfModal(self.Name, self.Picture, self.Role, "/team/" + w.Team.Slug) %}
     </div>
     <div id="panel-members">
       <div class="card">
@@ -105,12 +105,12 @@
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
-            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
             {%- endfor -%}
           </tbody>
         </table>
         {%- for _, m := range others -%}
-        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, "/team/" + w.Team.Slug) %}
         {%- endfor -%}
       </div>
       {%= InviteModal() %}
@@ -141,10 +141,19 @@
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s w.Team.TitleString() %}</h2>
+        <h2>Team</h2>
       </div>
       <div class="modal-body">
-        TODO
+        <form action="/team/{%s w.Team.Slug %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          <em>Name</em><br />
+          {%= components.FormInput("title", "input-title", w.Team.TitleString(), "The name of your team") %}
+          <hr />
+          <em>Permissions</em>
+          <div>Control access to this team by <a href="">signing in</a></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
       </div>
     </div>
   </div>

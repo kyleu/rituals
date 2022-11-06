@@ -49,8 +49,12 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		w, err := workspace.WorkspaceFromAny(ps.Data)
+		if err != nil {
+			return "", err
+		}
 		ps.Title = e.Estimate.TitleString()
 		ps.Data = e
-		return controller.Render(rc, as, &vworkspace.EstimateWorkspace{Estimate: e}, ps, "estimates", e.Estimate.ID.String())
+		return controller.Render(rc, as, &vworkspace.EstimateWorkspace{Estimate: e, Teams: w.Teams, Sprints: w.Sprints}, ps, "estimates", e.Estimate.ID.String())
 	})
 }

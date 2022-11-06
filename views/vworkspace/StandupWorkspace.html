@@ -1,6 +1,8 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
@@ -10,6 +12,8 @@
 {% code type StandupWorkspace struct {
   layout.Basic
   Standup *workspace.FullStandup
+  Teams team.Teams
+  Sprints sprint.Sprints
 } %}
 
 {% func (p *StandupWorkspace) Body(as *app.State, ps *cutil.PageState) %}
@@ -27,7 +31,7 @@
         <div class="right"><a href="#modal-standup"><button type="button">JSON</button></a></div>
         <a href="#modal-standup-config"><h3>{%= components.SVGRefIcon(`standup`, ps) %}{%s t.TitleString() %}</h3></a>
         {%= Banner(w.Team, w.Sprint, "standup") %}
-        {%= StandupWorkspaceModal(w) %}
+        {%= StandupWorkspaceModal(w, p.Teams, p.Sprints) %}
       </div>
     </div>
     <div id="panel-detail">
@@ -64,7 +68,7 @@
         <a href="#modal-self"><h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3></a>
         <em>{%s string(self.Role) %}</em>
       </div>
-      {%= SelfModal(self.Name, self.Picture, self.Role) %}
+      {%= SelfModal(self.Name, self.Picture, self.Role, "/standup/" + w.Standup.Slug) %}
     </div>
     <div id="panel-members">
       <div class="card">
@@ -72,12 +76,12 @@
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
-            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
             {%- endfor -%}
           </tbody>
         </table>
         {%- for _, m := range others -%}
-        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, "/standup/" + w.Standup.Slug) %}
         {%- endfor -%}
       </div>
       {%= InviteModal() %}
@@ -94,17 +98,34 @@
   </script>
 {% endfunc %}
 
-{% func StandupWorkspaceModal(w *workspace.FullStandup) %}
+{% func StandupWorkspaceModal(w *workspace.FullStandup, teams team.Teams, sprints sprint.Sprints) %}
   <div id="modal-standup-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s w.Standup.TitleString() %}</h2>
+        <h2>Standup</h2>
       </div>
       <div class="modal-body">
-        TODO
+        <form action="/team/{%s w.Standup.Slug %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          <em>Name</em><br />
+          {%= components.FormInput("title", "input-title", w.Standup.TitleString(), "The name of your standup") %}
+          <hr />
+          <em>Team</em><br />
+          {%= components.FormSelect("team", "input-team", util.UUIDString(w.Standup.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          <hr />
+          <em>Sprint</em><br />
+          {%= components.FormSelect("sprint", "input-sprint", util.UUIDString(w.Standup.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          <hr />
+          <em>Permissions</em>
+          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this standup's team</label></div>
+          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this standup's sprint</label></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
       </div>
     </div>
   </div>
 {% endfunc %}
+

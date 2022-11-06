@@ -20,6 +20,8 @@
         {%= components.TableHeaderSimple("sprint", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("sprint", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("sprint", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("sprint", "start_date", "Start Date", "Calendar date (optional)", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("sprint", "end_date", "End Date", "Calendar date (optional)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("sprint", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("sprint", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
       </tr>
@@ -39,13 +41,15 @@
           <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
           <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
         </td>
+        <td>{%= components.DisplayTimestampDay(model.StartDate) %}</td>
+        <td>{%= components.DisplayTimestampDay(model.EndDate) %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="8">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="10">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

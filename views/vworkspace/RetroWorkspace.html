@@ -1,6 +1,10 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
@@ -10,6 +14,8 @@
 {% code type RetroWorkspace struct {
   layout.Basic
   Retro *workspace.FullRetro
+  Teams team.Teams
+  Sprints sprint.Sprints
 } %}
 
 {% func (p *RetroWorkspace) Body(as *app.State, ps *cutil.PageState) %}
@@ -27,7 +33,7 @@
         <div class="right"><a href="#modal-retro"><button type="button">JSON</button></a></div>
         <a href="#modal-retro-config"><h3>{%= components.SVGRefIcon(`retro`, ps) %}{%s t.TitleString() %}</h3></a>
         {%= Banner(w.Team, w.Sprint, "retrospective") %}
-        {%= RetroWorkspaceModal(w) %}
+        {%= RetroWorkspaceModal(w, p.Teams, p.Sprints) %}
       </div>
     </div>
     <div id="panel-detail">
@@ -64,7 +70,7 @@
         <a href="#modal-self"><h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</h3></a>
         <em>{%s string(self.Role) %}</em>
       </div>
-      {%= SelfModal(self.Name, self.Picture, self.Role) %}
+      {%= SelfModal(self.Name, self.Picture, self.Role, "/retro/" + w.Retro.Slug) %}
     </div>
     <div id="panel-members">
       <div class="card">
@@ -72,12 +78,12 @@
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
-            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+            {%= MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
             {%- endfor -%}
           </tbody>
         </table>
         {%- for _, m := range others -%}
-        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated) %}
+        {%= MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, "/retro/" + w.Retro.Slug) %}
         {%- endfor -%}
       </div>
       {%= InviteModal() %}
@@ -94,16 +100,35 @@
   </script>
 {% endfunc %}
 
-{% func RetroWorkspaceModal(w *workspace.FullRetro) %}
+{% func RetroWorkspaceModal(w *workspace.FullRetro, teams team.Teams, sprints sprint.Sprints) %}
   <div id="modal-retro-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s w.Retro.TitleString() %}</h2>
+        <h2>Retro</h2>
       </div>
       <div class="modal-body">
-        TODO
+        <form action="/team/{%s w.Retro.Slug %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          <em>Name</em><br />
+          {%= components.FormInput("title", "input-title", w.Retro.TitleString(), "The name of your retro") %}
+          <hr />
+          <em>Categories</em><br />
+          {%= components.FormInput("categories", "input-categories", strings.Join(w.Retro.Categories, ", "), "The available categories for this retro") %}
+          <hr />
+          <em>Team</em><br />
+          {%= components.FormSelect("team", "input-team", util.UUIDString(w.Retro.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          <hr />
+          <em>Sprint</em><br />
+          {%= components.FormSelect("sprint", "input-sprint", util.UUIDString(w.Retro.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          <hr />
+          <em>Permissions</em>
+          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this retro's team</label></div>
+          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this retro's sprint</label></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
       </div>
     </div>
   </div>

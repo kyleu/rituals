@@ -54,6 +54,16 @@
       "type": "uuid"
     },
     {
+      "name": "start_date",
+      "type": "date",
+      "nullable": true
+    },
+    {
+      "name": "end_date",
+      "type": "date",
+      "nullable": true
+    },
+    {
       "name": "created",
       "type": "timestamp",
       "sqlDefault": "now()",
@@ -101,6 +111,8 @@
       "new",
       "10000000-0000-0000-0000-000000000000",
       "90000000-0000-0000-0000-000000000000",
+      "2022-01-01",
+      "2022-02-01",
       "now()",
       null
     ]

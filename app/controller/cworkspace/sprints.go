@@ -49,8 +49,12 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		w, err := workspace.WorkspaceFromAny(ps.Data)
+		if err != nil {
+			return "", err
+		}
 		ps.Title = s.Sprint.TitleString()
 		ps.Data = s
-		return controller.Render(rc, as, &vworkspace.SprintWorkspace{Sprint: s}, ps, "sprints", s.Sprint.ID.String())
+		return controller.Render(rc, as, &vworkspace.SprintWorkspace{Sprint: s, Teams: w.Teams}, ps, "sprints", s.Sprint.ID.String())
 	})
 }

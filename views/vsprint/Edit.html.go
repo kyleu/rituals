@@ -114,37 +114,47 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	components.StreamTableInputUUID(qw422016, "owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vsprint/Edit.html:34
 	qw422016.N().S(`
+          `)
+//line views/vsprint/Edit.html:35
+	components.StreamTableInputTimestampDay(qw422016, "startDate", "Start Date", p.Model.StartDate, 5, "Calendar date (optional)")
+//line views/vsprint/Edit.html:35
+	qw422016.N().S(`
+          `)
+//line views/vsprint/Edit.html:36
+	components.StreamTableInputTimestampDay(qw422016, "endDate", "End Date", p.Model.EndDate, 5, "Calendar date (optional)")
+//line views/vsprint/Edit.html:36
+	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
       </table>
     </form>
   </div>
 `)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 }
 
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 }
 
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	qs422016 := string(qb422016.B)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 	return qs422016
-//line views/vsprint/Edit.html:40
+//line views/vsprint/Edit.html:42
 }

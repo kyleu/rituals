@@ -77,6 +77,14 @@
           </td>
         </tr>
         <tr>
+          <th class="shrink" title="Calendar date (optional)">Start Date</th>
+          <td>{%= components.DisplayTimestampDay(p.Model.StartDate) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Calendar date (optional)">End Date</th>
+          <td>{%= components.DisplayTimestampDay(p.Model.EndDate) %}</td>
+        </tr>
+        <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
         </tr>

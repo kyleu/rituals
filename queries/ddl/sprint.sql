@@ -11,6 +11,8 @@ create table if not exists "sprint" (
   "status" session_status not null,
   "team_id" uuid,
   "owner" uuid not null,
+  "start_date" timestamp,
+  "end_date" timestamp,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
   foreign key ("owner") references "user" ("id"),

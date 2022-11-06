@@ -49,8 +49,12 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
+		w, err := workspace.WorkspaceFromAny(ps.Data)
+		if err != nil {
+			return "", err
+		}
 		ps.Title = u.Standup.TitleString()
 		ps.Data = u
-		return controller.Render(rc, as, &vworkspace.StandupWorkspace{Standup: u}, ps, "standups", u.Standup.ID.String())
+		return controller.Render(rc, as, &vworkspace.StandupWorkspace{Standup: u, Teams: w.Teams, Sprints: w.Sprints}, ps, "standups", u.Standup.ID.String())
 	})
 }
