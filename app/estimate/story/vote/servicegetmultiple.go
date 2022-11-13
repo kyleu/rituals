@@ -3,6 +3,7 @@ package vote
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -20,7 +21,7 @@ func (s *Service) GetByStoryIDs(ctx context.Context, tx *sqlx.Tx, params *filter
 		placeholders = append(placeholders, fmt.Sprintf("$%d", idx+1))
 		values = append(values, sid)
 	}
-	wc := "\"story_id\" in (%s)"
+	wc := fmt.Sprintf("\"story_id\" in (%s)", strings.Join(placeholders, ", "))
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, values...)
