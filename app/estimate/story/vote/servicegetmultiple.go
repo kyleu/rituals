@@ -2,9 +2,6 @@ package vote
 
 import (
 	"context"
-	"fmt"
-	"strings"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
@@ -15,16 +12,10 @@ import (
 
 func (s *Service) GetByStoryIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, storyIDs ...string) (Votes, error) {
 	params = filters(params)
-	var placeholders []string
-	var values []any
-	for idx, sid := range storyIDs {
-		placeholders = append(placeholders, fmt.Sprintf("$%d", idx+1))
-		values = append(values, sid)
-	}
-	wc := fmt.Sprintf("\"story_id\" in (%s)", strings.Join(placeholders, ", "))
+	wc := database.SQLInClause("\"story_id\"", len(storyIDs), 0)
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, values...)
+	err := s.db.Select(ctx, &ret, q, tx, logger, util.InterfaceArrayFrom(storyIDs...)...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get votes by storyIDs")
 	}
