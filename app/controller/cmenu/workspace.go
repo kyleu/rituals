@@ -3,7 +3,6 @@ package cmenu
 import (
 	"context"
 	"fmt"
-	"github.com/kyleu/rituals/app/lib/filter"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -12,6 +11,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/lib/menu"
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/user"

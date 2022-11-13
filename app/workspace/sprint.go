@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"context"
-	"github.com/kyleu/rituals/app/lib/filter"
 	"time"
 
 	"github.com/google/uuid"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/sprint/shistory"
