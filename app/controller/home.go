@@ -2,17 +2,17 @@
 package controller
 
 import (
-	"github.com/kyleu/rituals/app/workspace"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/workspace"
 	"github.com/kyleu/rituals/views"
 )
 
 func Home(rc *fasthttp.RequestCtx) {
 	Act("home", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.WorkspaceFromAny(ps.Data)
+		w, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}

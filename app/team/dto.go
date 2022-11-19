@@ -15,7 +15,7 @@ import (
 var (
 	table         = "team"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "slug", "title", "status", "owner", "created", "updated"}
+	columns       = []string{"id", "slug", "title", "icon", "status", "owner", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -24,6 +24,7 @@ type dto struct {
 	ID      uuid.UUID          `db:"id"`
 	Slug    string             `db:"slug"`
 	Title   string             `db:"title"`
+	Icon    string             `db:"icon"`
 	Status  enum.SessionStatus `db:"status"`
 	Owner   uuid.UUID          `db:"owner"`
 	Created time.Time          `db:"created"`
@@ -38,6 +39,7 @@ func (d *dto) ToTeam() *Team {
 		ID:      d.ID,
 		Slug:    d.Slug,
 		Title:   d.Title,
+		Icon:    d.Icon,
 		Status:  d.Status,
 		Owner:   d.Owner,
 		Created: d.Created,

@@ -17,6 +17,14 @@ func (e Emails) Get(id uuid.UUID) *Email {
 	return nil
 }
 
+func (e Emails) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(e)+1)
+	for _, x := range e {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (e Emails) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(e)+1)
 	if includeNil {

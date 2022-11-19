@@ -99,12 +99,23 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:28
 	qw422016.N().S(`  </div>
 
+  <div class="card">
+    <h3>`)
+//line views/vadmin/Settings.html:32
+	components.StreamSVGRefIcon(qw422016, `database`, ps)
+//line views/vadmin/Settings.html:32
+	qw422016.N().S(`Database Management</h3>
+    <ul class="mt">
+      <li><a href="/admin/database">Database management</a></li>
+    </ul>
+  </div>
+
   <div class="flex-wrap" style="align-items: stretch;">
     <div class="card" style="flex-grow: 1;">
       <h3>`)
-//line views/vadmin/Settings.html:33
+//line views/vadmin/Settings.html:40
 	components.StreamSVGRefIcon(qw422016, `archive`, ps)
-//line views/vadmin/Settings.html:33
+//line views/vadmin/Settings.html:40
 	qw422016.N().S(`Admin Functions</h3>
       <ul class="mt">
         <li><a href="/admin/modules">View Go modules</a></li>
@@ -115,9 +126,9 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <div class="card" style="flex-grow: 1;">
       <h3>`)
-//line views/vadmin/Settings.html:42
+//line views/vadmin/Settings.html:49
 	components.StreamSVGRefIcon(qw422016, `bolt`, ps)
-//line views/vadmin/Settings.html:42
+//line views/vadmin/Settings.html:49
 	qw422016.N().S(`HTTP Methods</h3>
       <ul class="mt">
         <li><a href="/admin/sitemap">Sitemap</a></li>
@@ -129,9 +140,9 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
     </div>
     <div class="card" style="flex-grow: 1;">
       <h3>`)
-//line views/vadmin/Settings.html:52
+//line views/vadmin/Settings.html:59
 	components.StreamSVGRefIcon(qw422016, `cog`, ps)
-//line views/vadmin/Settings.html:52
+//line views/vadmin/Settings.html:59
 	qw422016.N().S(`App Profiling</h3>
       <ul class="mt">
         <li><a href="/admin/cpu/start">Start CPU profile</a></li>
@@ -143,42 +154,42 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   </div>
 
   `)
-//line views/vadmin/Settings.html:62
+//line views/vadmin/Settings.html:69
 	vauth.StreamAuthentication(qw422016, as, ps)
-//line views/vadmin/Settings.html:62
+//line views/vadmin/Settings.html:69
 	qw422016.N().S(`
 
   `)
-//line views/vadmin/Settings.html:64
+//line views/vadmin/Settings.html:71
 	vauth.StreamPermissions(qw422016, p.Perms, as)
-//line views/vadmin/Settings.html:64
+//line views/vadmin/Settings.html:71
 	qw422016.N().S(`
 `)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 }
 
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 func (p *Settings) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 }
 
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 func (p *Settings) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 	return qs422016
-//line views/vadmin/Settings.html:65
+//line views/vadmin/Settings.html:72
 }

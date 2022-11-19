@@ -102,7 +102,7 @@
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%- if len(p.ActionsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`gamepad`, ps) %} Related actions by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`action`, ps) %} Related actions by [user id]</h3>
     <div class="overflow clear">
       {%= vaction.Table(p.ActionsByUserID, nil, p.Params, as, ps) %}
     </div>
@@ -118,7 +118,7 @@
   {%- endif -%}
   {%- if len(p.EmailsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`envelope`, ps) %} Related emails by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`email`, ps) %} Related emails by [user id]</h3>
     <div class="overflow clear">
       {%= vemail.Table(p.EmailsByUserID, nil, p.Params, as, ps) %}
     </div>
@@ -206,7 +206,7 @@
   {%- endif -%}
   {%- if len(p.StoriesByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`book-reader`, ps) %} Related stories by [user id]</h3>
+    <h3>{%= components.SVGRefIcon(`story`, ps) %} Related stories by [user id]</h3>
     <div class="overflow clear">
       {%= vstory.Table(p.StoriesByUserID, nil, nil, p.Params, as, ps) %}
     </div>

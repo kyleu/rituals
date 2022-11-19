@@ -37,14 +37,6 @@
           <td>{%= components.DisplayUUID(&p.Model.ModelID) %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Target Type</th>
-          <td>{%s p.Model.TargetType %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Target ID</th>
-          <td>{%= components.DisplayUUID(&p.Model.TargetID) %}</td>
-        </tr>
-        <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td>
             <div class="icon">{%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.Users.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>

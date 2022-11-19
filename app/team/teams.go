@@ -17,6 +17,14 @@ func (t Teams) Get(id uuid.UUID) *Team {
 	return nil
 }
 
+func (t Teams) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(t)+1)
+	for _, x := range t {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (t Teams) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(t)+1)
 	if includeNil {

@@ -8,13 +8,21 @@ import (
 
 type StandupPermissions []*StandupPermission
 
-func (s StandupPermissions) Get(standupID uuid.UUID, k string, v string) *StandupPermission {
+func (s StandupPermissions) Get(standupID uuid.UUID, key string, value string) *StandupPermission {
 	for _, x := range s {
-		if x.StandupID == standupID && x.K == k && x.V == v {
+		if x.StandupID == standupID && x.Key == key && x.Value == value {
 			return x
 		}
 	}
 	return nil
+}
+
+func (s StandupPermissions) StandupIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.StandupID)
+	}
+	return ret
 }
 
 func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
@@ -28,24 +36,40 @@ func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (s StandupPermissions) KStrings(includeNil bool) []string {
+func (s StandupPermissions) Keys() []string {
 	ret := make([]string, 0, len(s)+1)
-	if includeNil {
-		ret = append(ret, "")
-	}
 	for _, x := range s {
-		ret = append(ret, x.K)
+		ret = append(ret, x.Key)
 	}
 	return ret
 }
 
-func (s StandupPermissions) VStrings(includeNil bool) []string {
+func (s StandupPermissions) KeyStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {
 		ret = append(ret, "")
 	}
 	for _, x := range s {
-		ret = append(ret, x.V)
+		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (s StandupPermissions) Values() []string {
+	ret := make([]string, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.Value)
+	}
+	return ret
+}
+
+func (s StandupPermissions) ValueStrings(includeNil bool) []string {
+	ret := make([]string, 0, len(s)+1)
+	if includeNil {
+		ret = append(ret, "")
+	}
+	for _, x := range s {
+		ret = append(ret, x.Value)
 	}
 	return ret
 }

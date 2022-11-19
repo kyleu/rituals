@@ -17,6 +17,14 @@ func (c Comments) Get(id uuid.UUID) *Comment {
 	return nil
 }
 
+func (c Comments) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(c)+1)
+	for _, x := range c {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (c Comments) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(c)+1)
 	if includeNil {

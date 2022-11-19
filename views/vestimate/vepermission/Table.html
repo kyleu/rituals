@@ -14,8 +14,8 @@
     <thead>
       <tr>
         {%= components.TableHeaderSimple("epermission", "estimate_id", "Estimate ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("epermission", "k", "K", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("epermission", "v", "V", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("epermission", "key", "Key", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("epermission", "value", "Value", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("epermission", "access", "Access", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("epermission", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
       </tr>
@@ -24,11 +24,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td>
-          <div class="icon"><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.K %}/{%u model.V %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
+          <div class="icon"><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
           <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRefIcon("estimate", ps) %}</a>
         </td>
-        <td><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.K %}/{%u model.V %}">{%s model.K %}</a></td>
-        <td><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.K %}/{%u model.V %}">{%s model.V %}</a></td>
+        <td><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
+        <td><a href="/admin/db/estimate/permission/{%= components.DisplayUUID(&model.EstimateID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>
         <td>{%s model.Access %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
       </tr>

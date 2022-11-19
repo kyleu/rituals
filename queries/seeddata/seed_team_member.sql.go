@@ -28,7 +28,7 @@ insert into "team_member" (
 ) values (
   '10000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', 'Test User', 'https://google.com', 'owner', now(), null
 ), (
-  '10000000-0000-0000-0000-000000000000', '90000001-0000-0000-0000-000000000000', 'Test User 2', 'https://google.com', 'owner', now(), null
+  '10000000-0000-0000-0000-000000000000', '90000001-0000-0000-0000-000000000000', 'Test User 2', 'https://google.com', 'member', now(), null
 ) on conflict do nothing;
 -- `)
 //line queries/seeddata/seed_team_member.sql:9

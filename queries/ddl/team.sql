@@ -8,6 +8,7 @@ create table if not exists "team" (
   "id" uuid not null,
   "slug" text not null,
   "title" text not null,
+  "icon" text not null,
   "status" session_status not null,
   "owner" uuid not null,
   "created" timestamp not null default now(),

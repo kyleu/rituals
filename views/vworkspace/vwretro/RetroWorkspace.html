@@ -1,0 +1,124 @@
+{% import (
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/retro"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
+) %}
+
+{% code type RetroWorkspace struct {
+  layout.Basic
+  Retro *workspace.FullRetro
+  Teams team.Teams
+  Sprints sprint.Sprints
+} %}
+
+{% func (p *RetroWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    w := p.Retro
+    r := w.Retro
+    self, others, _ := w.Members.Split(ps.Profile.ID)
+  -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary">
+      <div class="card">
+        <h3><a href="#modal-retro-config">{%= components.SVGRefIcon(`retro`, ps) %}{%s r.TitleString() %}</a></h3>
+        {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
+        {%= RetroWorkspaceModal(r, p.Teams, p.Sprints, ps) %}
+      </div>
+    </div>
+    <div id="panel-detail">
+      <div class="card">
+        <h3>{%= components.SVGRefIcon(`comment`, ps) %}Feedback</h3>
+        <div class="clear"></div>
+        {%= RetroWorkspaceFeedbacks(ps.Profile.ID, ps.Profile.Name, w) %}
+      </div>
+    </div>
+    <div id="panel-self">
+      <div class="card">
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, r.PublicWebPath()) %}
+    </div>
+    <div id="panel-members">
+      <div class="card">
+        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, r.PublicWebPath()) %}
+        {%- endfor -%}
+      </div>
+      {%= vwutil.InviteModal() %}
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const retro = {%s= util.ToJSONCompact(r) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace('{%s util.KeyRetro %}', retro, members, permissions);
+    });
+  </script>
+{% endfunc %}
+
+{% func RetroWorkspaceModal(r *retro.Retro, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) %}
+  <div id="modal-retro-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Retro</h2>
+      </div>
+      <div class="modal-body">
+        <form action="{%s r.PublicWebPath() %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          {%= components.FormVerticalInput("title", "Title", r.TitleString(), 5, "The name of your retro") %}
+          {%= components.FormVerticalIconPicker("icon", "Icon", r.IconSafe(), ps, 5) %}
+          {%= components.FormVerticalInputTags("categories", "Categories", r.Categories, ps, 5, "The available categories for this retro") %}
+          {%= components.FormVerticalSelect(util.KeyTeam, "Team", util.UUIDString(r.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeySprint, "Sprint", util.UUIDString(r.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          <hr />
+          <em>Permissions</em>
+          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this retro's team</label></div>
+          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this retro's sprint</label></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func RetroWorkspaceList(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}</div>
+    <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
+    {%- if len(retros) == 0 -%}
+    <div class="mt"><em>no retros</em></div>
+    {%- else -%}
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, x := range retros -%}
+        <tr>
+          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}

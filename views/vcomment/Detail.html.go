@@ -90,110 +90,94 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Target Type</th>
-          <td>`)
-//line views/vcomment/Detail.html:41
-	qw422016.E().S(p.Model.TargetType)
-//line views/vcomment/Detail.html:41
-	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Target ID</th>
-          <td>`)
-//line views/vcomment/Detail.html:45
-	components.StreamDisplayUUID(qw422016, &p.Model.TargetID)
-//line views/vcomment/Detail.html:45
-	qw422016.N().S(`</td>
-        </tr>
-        <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td>
             <div class="icon">`)
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 	if x := p.Users.Get(p.Model.UserID); x != nil {
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 		qw422016.N().S(` (`)
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 		qw422016.E().S(x.TitleString())
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 		qw422016.N().S(`)`)
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 	}
-//line views/vcomment/Detail.html:50
+//line views/vcomment/Detail.html:42
 	qw422016.N().S(`</div>
             <a title="User" href="`)
-//line views/vcomment/Detail.html:51
+//line views/vcomment/Detail.html:43
 	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
-//line views/vcomment/Detail.html:51
+//line views/vcomment/Detail.html:43
 	qw422016.N().S(`">`)
-//line views/vcomment/Detail.html:51
+//line views/vcomment/Detail.html:43
 	components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vcomment/Detail.html:51
+//line views/vcomment/Detail.html:43
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Content</th>
           <td>`)
-//line views/vcomment/Detail.html:56
+//line views/vcomment/Detail.html:48
 	qw422016.E().S(p.Model.Content)
-//line views/vcomment/Detail.html:56
+//line views/vcomment/Detail.html:48
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
           <td>`)
-//line views/vcomment/Detail.html:60
+//line views/vcomment/Detail.html:52
 	qw422016.E().S(p.Model.HTML)
-//line views/vcomment/Detail.html:60
+//line views/vcomment/Detail.html:52
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:56
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:56
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vcomment/Detail.html:70
+//line views/vcomment/Detail.html:62
 	qw422016.N().S(`  `)
-//line views/vcomment/Detail.html:71
+//line views/vcomment/Detail.html:63
 	components.StreamJSONModal(qw422016, "comment", "Comment JSON", p.Model, 1)
-//line views/vcomment/Detail.html:71
+//line views/vcomment/Detail.html:63
 	qw422016.N().S(`
 `)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 }
 
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	p.StreamBody(qw422016, as, ps)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 }
 
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	p.WriteBody(qb422016, as, ps)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 	return qs422016
-//line views/vcomment/Detail.html:72
+//line views/vcomment/Detail.html:64
 }

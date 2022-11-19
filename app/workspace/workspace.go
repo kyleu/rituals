@@ -1,12 +1,13 @@
 package workspace
 
 import (
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/estimate"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
 	"github.com/kyleu/rituals/app/team"
-	"github.com/pkg/errors"
 )
 
 type Workspace struct {
@@ -17,7 +18,7 @@ type Workspace struct {
 	Retros    retro.Retros       `json:"retros"`
 }
 
-func WorkspaceFromAny(x any) (*Workspace, error) {
+func FromAny(x any) (*Workspace, error) {
 	if x == nil {
 		return nil, errors.New("data is nil, not [*Workspace]")
 	}

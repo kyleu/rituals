@@ -16,7 +16,7 @@ type Action struct {
 	ModelID uuid.UUID         `json:"modelID"`
 	UserID  uuid.UUID         `json:"userID"`
 	Act     string            `json:"act"`
-	Content string            `json:"content"`
+	Content util.ValueMap     `json:"content"`
 	Note    string            `json:"note"`
 	Created time.Time         `json:"created"`
 }
@@ -32,7 +32,7 @@ func Random() *Action {
 		ModelID: util.UUID(),
 		UserID:  util.UUID(),
 		Act:     util.RandomString(12),
-		Content: util.RandomString(12),
+		Content: util.RandomValueMap(4),
 		Note:    util.RandomString(12),
 		Created: time.Now(),
 	}
@@ -75,7 +75,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Action, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Content, err = m.ParseString("content", true, true)
+	ret.Content, err = m.ParseMap("content", true, true)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (a *Action) Clone() *Action {
 		ModelID: a.ModelID,
 		UserID:  a.UserID,
 		Act:     a.Act,
-		Content: a.Content,
+		Content: a.Content.Clone(),
 		Note:    a.Note,
 		Created: a.Created,
 	}
@@ -110,7 +110,7 @@ func (a *Action) TitleString() string {
 }
 
 func (a *Action) WebPath() string {
-	return "/admin/db/action" + "/" + a.ID.String()
+	return "/admin/db/action/" + a.ID.String()
 }
 
 func (a *Action) Diff(ax *Action) util.Diffs {
@@ -130,9 +130,7 @@ func (a *Action) Diff(ax *Action) util.Diffs {
 	if a.Act != ax.Act {
 		diffs = append(diffs, util.NewDiff("act", a.Act, ax.Act))
 	}
-	if a.Content != ax.Content {
-		diffs = append(diffs, util.NewDiff("content", a.Content, ax.Content))
-	}
+	diffs = append(diffs, util.DiffObjects(a.Content, ax.Content, "content")...)
 	if a.Note != ax.Note {
 		diffs = append(diffs, util.NewDiff("note", a.Note, ax.Note))
 	}

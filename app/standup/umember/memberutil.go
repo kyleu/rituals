@@ -5,10 +5,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (t StandupMembers) Split(userID uuid.UUID) (*StandupMember, StandupMembers, error) {
+func (s StandupMembers) Split(userID uuid.UUID) (*StandupMember, StandupMembers, error) {
 	var match *StandupMember
-	others := make(StandupMembers, 0, len(t))
-	for _, x := range t {
+	others := make(StandupMembers, 0, len(s))
+	for _, x := range s {
 		if x.UserID == userID {
 			if match != nil {
 				return nil, nil, errors.Errorf("multiple members found with user ID [%s]", x.UserID.String())

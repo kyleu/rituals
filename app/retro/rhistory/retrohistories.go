@@ -14,6 +14,14 @@ func (r RetroHistories) Get(slug string) *RetroHistory {
 	return nil
 }
 
+func (r RetroHistories) Slugs() []string {
+	ret := make([]string, 0, len(r)+1)
+	for _, x := range r {
+		ret = append(ret, x.Slug)
+	}
+	return ret
+}
+
 func (r RetroHistories) SlugStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(r)+1)
 	if includeNil {

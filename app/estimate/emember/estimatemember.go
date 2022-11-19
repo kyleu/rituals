@@ -102,7 +102,7 @@ func (e *EstimateMember) TitleString() string {
 }
 
 func (e *EstimateMember) WebPath() string {
-	return "/admin/db/estimate/member" + "/" + e.EstimateID.String() + "/" + e.UserID.String()
+	return "/admin/db/estimate/member/" + e.EstimateID.String() + "/" + e.UserID.String()
 }
 
 func (e *EstimateMember) Diff(ex *EstimateMember) util.Diffs {

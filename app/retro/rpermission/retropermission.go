@@ -12,27 +12,27 @@ import (
 
 type PK struct {
 	RetroID uuid.UUID `json:"retroID"`
-	K       string    `json:"k"`
-	V       string    `json:"v"`
+	Key     string    `json:"key"`
+	Value   string    `json:"value"`
 }
 
 type RetroPermission struct {
 	RetroID uuid.UUID `json:"retroID"`
-	K       string    `json:"k"`
-	V       string    `json:"v"`
+	Key     string    `json:"key"`
+	Value   string    `json:"value"`
 	Access  string    `json:"access"`
 	Created time.Time `json:"created"`
 }
 
-func New(retroID uuid.UUID, k string, v string) *RetroPermission {
-	return &RetroPermission{RetroID: retroID, K: k, V: v}
+func New(retroID uuid.UUID, key string, value string) *RetroPermission {
+	return &RetroPermission{RetroID: retroID, Key: key, Value: value}
 }
 
 func Random() *RetroPermission {
 	return &RetroPermission{
 		RetroID: util.UUID(),
-		K:       util.RandomString(12),
-		V:       util.RandomString(12),
+		Key:     util.RandomString(12),
+		Value:   util.RandomString(12),
 		Access:  util.RandomString(12),
 		Created: time.Now(),
 	}
@@ -49,11 +49,11 @@ func FromMap(m util.ValueMap, setPK bool) (*RetroPermission, error) {
 		if retRetroID != nil {
 			ret.RetroID = *retRetroID
 		}
-		ret.K, err = m.ParseString("k", true, true)
+		ret.Key, err = m.ParseString("key", true, true)
 		if err != nil {
 			return nil, err
 		}
-		ret.V, err = m.ParseString("v", true, true)
+		ret.Value, err = m.ParseString("value", true, true)
 		if err != nil {
 			return nil, err
 		}
@@ -72,15 +72,15 @@ func FromMap(m util.ValueMap, setPK bool) (*RetroPermission, error) {
 func (r *RetroPermission) Clone() *RetroPermission {
 	return &RetroPermission{
 		RetroID: r.RetroID,
-		K:       r.K,
-		V:       r.V,
+		Key:     r.Key,
+		Value:   r.Value,
 		Access:  r.Access,
 		Created: r.Created,
 	}
 }
 
 func (r *RetroPermission) String() string {
-	return fmt.Sprintf("%s::%s::%s", r.RetroID.String(), r.K, r.V)
+	return fmt.Sprintf("%s::%s::%s", r.RetroID.String(), r.Key, r.Value)
 }
 
 func (r *RetroPermission) TitleString() string {
@@ -88,7 +88,7 @@ func (r *RetroPermission) TitleString() string {
 }
 
 func (r *RetroPermission) WebPath() string {
-	return "/admin/db/retro/permission" + "/" + r.RetroID.String() + "/" + r.K + "/" + r.V
+	return "/admin/db/retro/permission/" + r.RetroID.String() + "/" + r.Key + "/" + r.Value
 }
 
 func (r *RetroPermission) Diff(rx *RetroPermission) util.Diffs {
@@ -96,11 +96,11 @@ func (r *RetroPermission) Diff(rx *RetroPermission) util.Diffs {
 	if r.RetroID != rx.RetroID {
 		diffs = append(diffs, util.NewDiff("retroID", r.RetroID.String(), rx.RetroID.String()))
 	}
-	if r.K != rx.K {
-		diffs = append(diffs, util.NewDiff("k", r.K, rx.K))
+	if r.Key != rx.Key {
+		diffs = append(diffs, util.NewDiff("key", r.Key, rx.Key))
 	}
-	if r.V != rx.V {
-		diffs = append(diffs, util.NewDiff("v", r.V, rx.V))
+	if r.Value != rx.Value {
+		diffs = append(diffs, util.NewDiff("value", r.Value, rx.Value))
 	}
 	if r.Access != rx.Access {
 		diffs = append(diffs, util.NewDiff("access", r.Access, rx.Access))
@@ -112,5 +112,5 @@ func (r *RetroPermission) Diff(rx *RetroPermission) util.Diffs {
 }
 
 func (r *RetroPermission) ToData() []any {
-	return []any{r.RetroID, r.K, r.V, r.Access, r.Created}
+	return []any{r.RetroID, r.Key, r.Value, r.Access, r.Created}
 }

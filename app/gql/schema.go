@@ -3,11 +3,8 @@ package gql
 import (
 	_ "embed"
 
-	"github.com/kyleu/rituals/app/util"
-)
-
-import (
 	"github.com/kyleu/rituals/app/lib/graphql"
+	"github.com/kyleu/rituals/app/util"
 )
 
 //go:embed schema.graphql

@@ -5,7 +5,7 @@
     "sprint"
   ],
   "description": "TODO",
-  "icon": "clock",
+  "icon": "history",
   "ordering": [
     {
       "column": "created",

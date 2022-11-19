@@ -113,234 +113,242 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <th class="shrink" title="String text">Icon</th>
           <td>`)
 //line views/vteam/Detail.html:64
-	qw422016.E().V(p.Model.Status)
+	qw422016.E().S(p.Model.Icon)
 //line views/vteam/Detail.html:64
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>`)
+//line views/vteam/Detail.html:68
+	qw422016.E().V(p.Model.Status)
+//line views/vteam/Detail.html:68
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
           <td>
             <div class="icon">`)
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 	if x := p.Users.Get(p.Model.Owner); x != nil {
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 		qw422016.N().S(` (`)
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 		qw422016.E().S(x.TitleString())
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 		qw422016.N().S(`)`)
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 	}
-//line views/vteam/Detail.html:69
+//line views/vteam/Detail.html:73
 	qw422016.N().S(`</div>
             <a title="User" href="`)
-//line views/vteam/Detail.html:70
+//line views/vteam/Detail.html:74
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
-//line views/vteam/Detail.html:70
+//line views/vteam/Detail.html:74
 	qw422016.N().S(`">`)
-//line views/vteam/Detail.html:70
+//line views/vteam/Detail.html:74
 	components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vteam/Detail.html:70
+//line views/vteam/Detail.html:74
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vteam/Detail.html:75
+//line views/vteam/Detail.html:79
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vteam/Detail.html:75
+//line views/vteam/Detail.html:79
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vteam/Detail.html:79
+//line views/vteam/Detail.html:83
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vteam/Detail.html:79
+//line views/vteam/Detail.html:83
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vteam/Detail.html:86
+//line views/vteam/Detail.html:90
 	if len(p.EstimatesByTeamID) > 0 {
-//line views/vteam/Detail.html:86
+//line views/vteam/Detail.html:90
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:88
+//line views/vteam/Detail.html:92
 		components.StreamSVGRefIcon(qw422016, `estimate`, ps)
-//line views/vteam/Detail.html:88
+//line views/vteam/Detail.html:92
 		qw422016.N().S(` Related estimates by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:90
+//line views/vteam/Detail.html:94
 		vestimate.StreamTable(qw422016, p.EstimatesByTeamID, nil, nil, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:90
+//line views/vteam/Detail.html:94
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:93
+//line views/vteam/Detail.html:97
 	}
-//line views/vteam/Detail.html:94
+//line views/vteam/Detail.html:98
 	if len(p.RetrosByTeamID) > 0 {
-//line views/vteam/Detail.html:94
+//line views/vteam/Detail.html:98
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:96
+//line views/vteam/Detail.html:100
 		components.StreamSVGRefIcon(qw422016, `retro`, ps)
-//line views/vteam/Detail.html:96
+//line views/vteam/Detail.html:100
 		qw422016.N().S(` Related retros by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:98
+//line views/vteam/Detail.html:102
 		vretro.StreamTable(qw422016, p.RetrosByTeamID, nil, nil, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:98
+//line views/vteam/Detail.html:102
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:101
+//line views/vteam/Detail.html:105
 	}
-//line views/vteam/Detail.html:102
+//line views/vteam/Detail.html:106
 	if len(p.SprintsByTeamID) > 0 {
-//line views/vteam/Detail.html:102
+//line views/vteam/Detail.html:106
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:104
+//line views/vteam/Detail.html:108
 		components.StreamSVGRefIcon(qw422016, `sprint`, ps)
-//line views/vteam/Detail.html:104
+//line views/vteam/Detail.html:108
 		qw422016.N().S(` Related sprints by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:106
+//line views/vteam/Detail.html:110
 		vsprint.StreamTable(qw422016, p.SprintsByTeamID, nil, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:106
+//line views/vteam/Detail.html:110
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:109
+//line views/vteam/Detail.html:113
 	}
-//line views/vteam/Detail.html:110
+//line views/vteam/Detail.html:114
 	if len(p.StandupsByTeamID) > 0 {
-//line views/vteam/Detail.html:110
+//line views/vteam/Detail.html:114
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:112
+//line views/vteam/Detail.html:116
 		components.StreamSVGRefIcon(qw422016, `standup`, ps)
-//line views/vteam/Detail.html:112
+//line views/vteam/Detail.html:116
 		qw422016.N().S(` Related standups by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:114
+//line views/vteam/Detail.html:118
 		vstandup.StreamTable(qw422016, p.StandupsByTeamID, nil, nil, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:114
+//line views/vteam/Detail.html:118
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:117
+//line views/vteam/Detail.html:121
 	}
-//line views/vteam/Detail.html:118
+//line views/vteam/Detail.html:122
 	if len(p.TeamHistoriesByTeamID) > 0 {
-//line views/vteam/Detail.html:118
+//line views/vteam/Detail.html:122
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:120
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
-//line views/vteam/Detail.html:120
+//line views/vteam/Detail.html:124
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
+//line views/vteam/Detail.html:124
 		qw422016.N().S(` Related histories by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:122
+//line views/vteam/Detail.html:126
 		vthistory.StreamTable(qw422016, p.TeamHistoriesByTeamID, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:122
+//line views/vteam/Detail.html:126
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:125
+//line views/vteam/Detail.html:129
 	}
-//line views/vteam/Detail.html:126
+//line views/vteam/Detail.html:130
 	if len(p.TeamMembersByTeamID) > 0 {
-//line views/vteam/Detail.html:126
+//line views/vteam/Detail.html:130
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:128
+//line views/vteam/Detail.html:132
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vteam/Detail.html:128
+//line views/vteam/Detail.html:132
 		qw422016.N().S(` Related members by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:130
+//line views/vteam/Detail.html:134
 		vtmember.StreamTable(qw422016, p.TeamMembersByTeamID, nil, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:130
+//line views/vteam/Detail.html:134
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:133
+//line views/vteam/Detail.html:137
 	}
-//line views/vteam/Detail.html:134
+//line views/vteam/Detail.html:138
 	if len(p.TeamPermissionsByTeamID) > 0 {
-//line views/vteam/Detail.html:134
+//line views/vteam/Detail.html:138
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vteam/Detail.html:136
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
-//line views/vteam/Detail.html:136
+//line views/vteam/Detail.html:140
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
+//line views/vteam/Detail.html:140
 		qw422016.N().S(` Related permissions by [team id]</h3>
     <div class="overflow clear">
       `)
-//line views/vteam/Detail.html:138
+//line views/vteam/Detail.html:142
 		vtpermission.StreamTable(qw422016, p.TeamPermissionsByTeamID, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:138
+//line views/vteam/Detail.html:142
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vteam/Detail.html:141
+//line views/vteam/Detail.html:145
 	}
-//line views/vteam/Detail.html:141
+//line views/vteam/Detail.html:145
 	qw422016.N().S(`  `)
-//line views/vteam/Detail.html:142
+//line views/vteam/Detail.html:146
 	components.StreamJSONModal(qw422016, "team", "Team JSON", p.Model, 1)
-//line views/vteam/Detail.html:142
+//line views/vteam/Detail.html:146
 	qw422016.N().S(`
 `)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 }
 
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 }
 
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	qs422016 := string(qb422016.B)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 	return qs422016
-//line views/vteam/Detail.html:143
+//line views/vteam/Detail.html:147
 }

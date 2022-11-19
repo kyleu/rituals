@@ -17,6 +17,14 @@ func (a Actions) Get(id uuid.UUID) *Action {
 	return nil
 }
 
+func (a Actions) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(a)+1)
+	for _, x := range a {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (a Actions) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(a)+1)
 	if includeNil {

@@ -42,7 +42,8 @@
         <thead>
           <tr>
             <th class="shrink">ID</th>
-            <th>Profile</th>
+            <th>User ID</th>
+            <th>Profile Name</th>
             <th>Service</th>
             <th>Channels</th>
             <th></th>
@@ -52,6 +53,7 @@
           {%- for _, x := range p.Connections -%}
           <tr>
             <td class="shrink"><a href="/admin/sockets/conn/{%s x.ID.String() %}">{%s x.ID.String() %}</a></td>
+            <td><a href="/admin/db/user/{%s x.Profile.ID.String() %}">{%s x.Profile.ID.String() %}</a></td>
             <td>{%s x.Profile.String() %}</td>
             <td>{%s x.Svc %}</td>
             <td>{%s strings.Join(x.Channels, ", ") %}</td>
@@ -137,7 +139,7 @@
         </tr>
         <tr>
           <th>User ID</th>
-          <td>{%s c.Profile.ID.String() %}</td>
+          <td><a href="/admin/db/user/{%s c.Profile.ID.String() %}">{%s c.Profile.ID.String() %}</a></td>
         </tr>
         <tr>
           <th>Name</th>

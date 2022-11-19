@@ -80,16 +80,15 @@ func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, 
 	return ret.ToSprints(), nil
 }
 
-func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, params *filter.Params, logger util.Logger) (Sprints, error) {
-	params = filters(params)
+func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*Sprint, error) {
 	wc := "\"slug\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, slug)
+	ret := &dto{}
+	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get sprints by slug [%v]", slug)
+		return nil, errors.Wrapf(err, "unable to get sprint by slug [%v]", slug)
 	}
-	return ret.ToSprints(), nil
+	return ret.ToSprint(), nil
 }
 
 func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.SessionStatus, params *filter.Params, logger util.Logger) (Sprints, error) {
@@ -116,9 +115,9 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	return ret.ToSprints(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (Sprints, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Sprints, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get sprints using custom SQL")
 	}

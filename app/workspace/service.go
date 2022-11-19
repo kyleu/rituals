@@ -1,6 +1,9 @@
 package workspace
 
 import (
+	"github.com/kyleu/rituals/app/action"
+	"github.com/kyleu/rituals/app/comment"
+	"github.com/kyleu/rituals/app/email"
 	"github.com/kyleu/rituals/app/estimate"
 	"github.com/kyleu/rituals/app/estimate/ehistory"
 	"github.com/kyleu/rituals/app/estimate/emember"
@@ -25,6 +28,7 @@ import (
 	"github.com/kyleu/rituals/app/team/thistory"
 	"github.com/kyleu/rituals/app/team/tmember"
 	"github.com/kyleu/rituals/app/team/tpermission"
+	"github.com/kyleu/rituals/app/user"
 )
 
 type Service struct {
@@ -56,6 +60,11 @@ type Service struct {
 	rm *rmember.Service
 	rp *rpermission.Service
 	f  *feedback.Service
+
+	us *user.Service
+	a  *action.Service
+	c  *comment.Service
+	el *email.Service
 }
 
 func NewService(
@@ -64,6 +73,7 @@ func NewService(
 	e *estimate.Service, eh *ehistory.Service, em *emember.Service, ep *epermission.Service, st *story.Service, v *vote.Service,
 	u *standup.Service, uh *uhistory.Service, um *umember.Service, up *upermission.Service, rt *report.Service,
 	r *retro.Service, rh *rhistory.Service, rm *rmember.Service, rp *rpermission.Service, f *feedback.Service,
+	us *user.Service, a *action.Service, c *comment.Service, el *email.Service,
 ) *Service {
 	return &Service{
 		t: t, th: th, tm: tm, tp: tp,
@@ -71,5 +81,6 @@ func NewService(
 		e: e, eh: eh, em: em, ep: ep, st: st, v: v,
 		u: u, uh: uh, um: um, up: up, rt: rt,
 		r: r, rh: rh, rm: rm, rp: rp, f: f,
+		us: us, a: a, c: c, el: el,
 	}
 }

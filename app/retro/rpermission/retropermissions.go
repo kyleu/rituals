@@ -8,13 +8,21 @@ import (
 
 type RetroPermissions []*RetroPermission
 
-func (r RetroPermissions) Get(retroID uuid.UUID, k string, v string) *RetroPermission {
+func (r RetroPermissions) Get(retroID uuid.UUID, key string, value string) *RetroPermission {
 	for _, x := range r {
-		if x.RetroID == retroID && x.K == k && x.V == v {
+		if x.RetroID == retroID && x.Key == key && x.Value == value {
 			return x
 		}
 	}
 	return nil
+}
+
+func (r RetroPermissions) RetroIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(r)+1)
+	for _, x := range r {
+		ret = append(ret, x.RetroID)
+	}
+	return ret
 }
 
 func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
@@ -28,24 +36,40 @@ func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (r RetroPermissions) KStrings(includeNil bool) []string {
+func (r RetroPermissions) Keys() []string {
 	ret := make([]string, 0, len(r)+1)
-	if includeNil {
-		ret = append(ret, "")
-	}
 	for _, x := range r {
-		ret = append(ret, x.K)
+		ret = append(ret, x.Key)
 	}
 	return ret
 }
 
-func (r RetroPermissions) VStrings(includeNil bool) []string {
+func (r RetroPermissions) KeyStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(r)+1)
 	if includeNil {
 		ret = append(ret, "")
 	}
 	for _, x := range r {
-		ret = append(ret, x.V)
+		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (r RetroPermissions) Values() []string {
+	ret := make([]string, 0, len(r)+1)
+	for _, x := range r {
+		ret = append(ret, x.Value)
+	}
+	return ret
+}
+
+func (r RetroPermissions) ValueStrings(includeNil bool) []string {
+	ret := make([]string, 0, len(r)+1)
+	if includeNil {
+		ret = append(ret, "")
+	}
+	for _, x := range r {
+		ret = append(ret, x.Value)
 	}
 	return ret
 }

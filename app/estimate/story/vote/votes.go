@@ -17,6 +17,14 @@ func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
 	return nil
 }
 
+func (v Votes) StoryIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(v)+1)
+	for _, x := range v {
+		ret = append(ret, x.StoryID)
+	}
+	return ret
+}
+
 func (v Votes) StoryIDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(v)+1)
 	if includeNil {
@@ -24,6 +32,14 @@ func (v Votes) StoryIDStrings(includeNil bool) []string {
 	}
 	for _, x := range v {
 		ret = append(ret, x.StoryID.String())
+	}
+	return ret
+}
+
+func (v Votes) UserIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(v)+1)
+	for _, x := range v {
+		ret = append(ret, x.UserID)
 	}
 	return ret
 }

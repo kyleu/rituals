@@ -1,4 +1,0 @@
--- {% import "github.com/kyleu/rituals/queries/seeddata" %}
--- {% func Migration2SeedData() %}
--- {%= seeddata.SeedDataAll() %}
--- {% endfunc %}

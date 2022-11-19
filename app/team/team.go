@@ -14,6 +14,7 @@ type Team struct {
 	ID      uuid.UUID          `json:"id"`
 	Slug    string             `json:"slug"`
 	Title   string             `json:"title"`
+	Icon    string             `json:"icon"`
 	Status  enum.SessionStatus `json:"status"`
 	Owner   uuid.UUID          `json:"owner"`
 	Created time.Time          `json:"created"`
@@ -29,6 +30,7 @@ func Random() *Team {
 		ID:      util.UUID(),
 		Slug:    util.RandomString(12),
 		Title:   util.RandomString(12),
+		Icon:    util.RandomString(12),
 		Status:  enum.SessionStatus(util.RandomString(12)),
 		Owner:   util.UUID(),
 		Created: time.Now(),
@@ -58,6 +60,10 @@ func FromMap(m util.ValueMap, setPK bool) (*Team, error) {
 	if err != nil {
 		return nil, err
 	}
+	ret.Icon, err = m.ParseString("icon", true, true)
+	if err != nil {
+		return nil, err
+	}
 	retStatus, err := m.ParseString("status", true, true)
 	if err != nil {
 		return nil, err
@@ -80,6 +86,7 @@ func (t *Team) Clone() *Team {
 		ID:      t.ID,
 		Slug:    t.Slug,
 		Title:   t.Title,
+		Icon:    t.Icon,
 		Status:  t.Status,
 		Owner:   t.Owner,
 		Created: t.Created,
@@ -96,7 +103,7 @@ func (t *Team) TitleString() string {
 }
 
 func (t *Team) WebPath() string {
-	return "/admin/db/team" + "/" + t.ID.String()
+	return "/admin/db/team/" + t.ID.String()
 }
 
 func (t *Team) Diff(tx *Team) util.Diffs {
@@ -109,6 +116,9 @@ func (t *Team) Diff(tx *Team) util.Diffs {
 	}
 	if t.Title != tx.Title {
 		diffs = append(diffs, util.NewDiff("title", t.Title, tx.Title))
+	}
+	if t.Icon != tx.Icon {
+		diffs = append(diffs, util.NewDiff("icon", t.Icon, tx.Icon))
 	}
 	if t.Status != tx.Status {
 		diffs = append(diffs, util.NewDiff("status", string(t.Status), string(tx.Status)))
@@ -123,5 +133,5 @@ func (t *Team) Diff(tx *Team) util.Diffs {
 }
 
 func (t *Team) ToData() []any {
-	return []any{t.ID, t.Slug, t.Title, t.Status, t.Owner, t.Created, t.Updated}
+	return []any{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Owner, t.Created, t.Updated}
 }

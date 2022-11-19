@@ -17,6 +17,14 @@ func (s SprintMembers) Get(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 	return nil
 }
 
+func (s SprintMembers) SprintIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.SprintID)
+	}
+	return ret
+}
+
 func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {
@@ -24,6 +32,14 @@ func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
 	}
 	for _, x := range s {
 		ret = append(ret, x.SprintID.String())
+	}
+	return ret
+}
+
+func (s SprintMembers) UserIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.UserID)
 	}
 	return ret
 }

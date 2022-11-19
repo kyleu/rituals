@@ -17,6 +17,14 @@ func (e EstimateMembers) Get(estimateID uuid.UUID, userID uuid.UUID) *EstimateMe
 	return nil
 }
 
+func (e EstimateMembers) EstimateIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(e)+1)
+	for _, x := range e {
+		ret = append(ret, x.EstimateID)
+	}
+	return ret
+}
+
 func (e EstimateMembers) EstimateIDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(e)+1)
 	if includeNil {
@@ -24,6 +32,14 @@ func (e EstimateMembers) EstimateIDStrings(includeNil bool) []string {
 	}
 	for _, x := range e {
 		ret = append(ret, x.EstimateID.String())
+	}
+	return ret
+}
+
+func (e EstimateMembers) UserIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(e)+1)
+	for _, x := range e {
+		ret = append(ret, x.UserID)
 	}
 	return ret
 }

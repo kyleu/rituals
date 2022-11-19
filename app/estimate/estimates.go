@@ -17,6 +17,14 @@ func (e Estimates) Get(id uuid.UUID) *Estimate {
 	return nil
 }
 
+func (e Estimates) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(e)+1)
+	for _, x := range e {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (e Estimates) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(e)+1)
 	if includeNil {

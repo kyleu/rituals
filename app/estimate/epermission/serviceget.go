@@ -39,13 +39,13 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	return int(ret), nil
 }
 
-func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, k string, v string, logger util.Logger) (*EstimatePermission, error) {
+func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, key string, value string, logger util.Logger) (*EstimatePermission, error) {
 	wc := defaultWC(0)
 	ret := &dto{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
-	err := s.db.Get(ctx, ret, q, tx, logger, estimateID, k, v)
+	err := s.db.Get(ctx, ret, q, tx, logger, estimateID, key, value)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimatePermission by estimateID [%v], k [%v], v [%v]", estimateID, k, v)
+		return nil, errors.Wrapf(err, "unable to get estimatePermission by estimateID [%v], key [%v], value [%v]", estimateID, key, value)
 	}
 	return ret.ToEstimatePermission(), nil
 }
@@ -59,14 +59,14 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 		if idx > 0 {
 			wc += " or "
 		}
-		wc += fmt.Sprintf("(estimate_id = $%d and k = $%d and v = $%d)", (idx*3)+1, (idx*3)+2, (idx*3)+3)
+		wc += fmt.Sprintf("(estimate_id = $%d and key = $%d and value = $%d)", (idx*3)+1, (idx*3)+2, (idx*3)+3)
 	}
 	wc += ")"
 	ret := dtos{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	vals := make([]any, 0, len(pks)*3)
 	for _, x := range pks {
-		vals = append(vals, x.EstimateID, x.K, x.V)
+		vals = append(vals, x.EstimateID, x.Key, x.Value)
 	}
 	err := s.db.Select(ctx, &ret, q, tx, logger, vals...)
 	if err != nil {
@@ -75,7 +75,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	return ret.ToEstimatePermissions(), nil
 }
 
-func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
+func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, params *filter.Params, logger util.Logger) (EstimatePermissions, error) { //nolint:lll
 	params = filters(params)
 	wc := "\"estimate_id\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
@@ -87,33 +87,33 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	return ret.ToEstimatePermissions(), nil
 }
 
-func (s *Service) GetByK(ctx context.Context, tx *sqlx.Tx, k string, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
+func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
 	params = filters(params)
-	wc := "\"k\" = $1"
+	wc := "\"key\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, k)
+	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_permissions by k [%v]", k)
+		return nil, errors.Wrapf(err, "unable to get estimate_permissions by key [%v]", key)
 	}
 	return ret.ToEstimatePermissions(), nil
 }
 
-func (s *Service) GetByV(ctx context.Context, tx *sqlx.Tx, v string, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
+func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
 	params = filters(params)
-	wc := "\"v\" = $1"
+	wc := "\"value\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, v)
+	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_permissions by v [%v]", v)
+		return nil, errors.Wrapf(err, "unable to get estimate_permissions by value [%v]", value)
 	}
 	return ret.ToEstimatePermissions(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (EstimatePermissions, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (EstimatePermissions, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get permissions using custom SQL")
 	}

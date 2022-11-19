@@ -74,7 +74,7 @@ func (s *SprintHistory) TitleString() string {
 }
 
 func (s *SprintHistory) WebPath() string {
-	return "/admin/db/sprint/history" + "/" + s.Slug
+	return "/admin/db/sprint/history/" + s.Slug
 }
 
 func (s *SprintHistory) Diff(sx *SprintHistory) util.Diffs {

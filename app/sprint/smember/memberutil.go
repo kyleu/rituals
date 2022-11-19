@@ -5,10 +5,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (t SprintMembers) Split(userID uuid.UUID) (*SprintMember, SprintMembers, error) {
+func (s SprintMembers) Split(userID uuid.UUID) (*SprintMember, SprintMembers, error) {
 	var match *SprintMember
-	others := make(SprintMembers, 0, len(t))
-	for _, x := range t {
+	others := make(SprintMembers, 0, len(s))
+	for _, x := range s {
 		if x.UserID == userID {
 			if match != nil {
 				return nil, nil, errors.Errorf("multiple members found with user ID [%s]", x.UserID.String())

@@ -14,15 +14,15 @@ import (
 var (
 	table         = "team_permission"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"team_id", "k", "v", "access", "created"}
+	columns       = []string{"team_id", "key", "value", "access", "created"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
 type dto struct {
 	TeamID  uuid.UUID `db:"team_id"`
-	K       string    `db:"k"`
-	V       string    `db:"v"`
+	Key     string    `db:"key"`
+	Value   string    `db:"value"`
 	Access  string    `db:"access"`
 	Created time.Time `db:"created"`
 }
@@ -33,8 +33,8 @@ func (d *dto) ToTeamPermission() *TeamPermission {
 	}
 	return &TeamPermission{
 		TeamID:  d.TeamID,
-		K:       d.K,
-		V:       d.V,
+		Key:     d.Key,
+		Value:   d.Value,
 		Access:  d.Access,
 		Created: d.Created,
 	}
@@ -51,5 +51,5 @@ func (x dtos) ToTeamPermissions() TeamPermissions {
 }
 
 func defaultWC(idx int) string {
-	return fmt.Sprintf("\"team_id\" = $%d and \"k\" = $%d and \"v\" = $%d", idx+1, idx+2, idx+3)
+	return fmt.Sprintf("\"team_id\" = $%d and \"key\" = $%d and \"value\" = $%d", idx+1, idx+2, idx+3)
 }

@@ -80,16 +80,15 @@ func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, 
 	return ret.ToEstimates(), nil
 }
 
-func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, params *filter.Params, logger util.Logger) (Estimates, error) {
-	params = filters(params)
+func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*Estimate, error) {
 	wc := "\"slug\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, slug)
+	ret := &dto{}
+	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimates by slug [%v]", slug)
+		return nil, errors.Wrapf(err, "unable to get estimate by slug [%v]", slug)
 	}
-	return ret.ToEstimates(), nil
+	return ret.ToEstimate(), nil
 }
 
 func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
@@ -128,9 +127,9 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	return ret.ToEstimates(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (Estimates, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Estimates, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get estimates using custom SQL")
 	}

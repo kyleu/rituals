@@ -8,8 +8,6 @@ create table if not exists "comment" (
   "id" uuid not null,
   "svc" model_service not null,
   "model_id" uuid not null,
-  "target_type" text not null,
-  "target_id" uuid not null,
   "user_id" uuid not null,
   "content" text not null,
   "html" text not null,
@@ -19,4 +17,5 @@ create table if not exists "comment" (
 );
 
 create index if not exists "comment__user_id_idx" on "comment" ("user_id");
+create index if not exists "comment__svc_model_id_idx" on "comment" ("svc", "model_id");
 -- {% endfunc %}

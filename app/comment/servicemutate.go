@@ -34,7 +34,7 @@ func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Comment, logge
 		return errors.Wrapf(err, "can't get original comment [%s]", model.String())
 	}
 	model.Created = curr.Created
-	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $10", "")
+	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $8", "")
 	data := model.ToData()
 	data = append(data, model.ID)
 	_, err = s.db.Update(ctx, q, tx, 1, logger, data...)

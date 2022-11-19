@@ -17,6 +17,14 @@ func (f Feedbacks) Get(id uuid.UUID) *Feedback {
 	return nil
 }
 
+func (f Feedbacks) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(f)+1)
+	for _, x := range f {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (f Feedbacks) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(f)+1)
 	if includeNil {

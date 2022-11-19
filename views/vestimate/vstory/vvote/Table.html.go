@@ -105,7 +105,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 //line views/vestimate/vstory/vvote/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:29
-		components.StreamSVGRefIcon(qw422016, "book-reader", ps)
+		components.StreamSVGRefIcon(qw422016, "story", ps)
 //line views/vestimate/vstory/vvote/Table.html:29
 		qw422016.N().S(`</a>
         </td>

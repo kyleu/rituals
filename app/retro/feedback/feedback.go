@@ -112,7 +112,7 @@ func (f *Feedback) TitleString() string {
 }
 
 func (f *Feedback) WebPath() string {
-	return "/admin/db/retro/feedback" + "/" + f.ID.String()
+	return "/admin/db/retro/feedback/" + f.ID.String()
 }
 
 func (f *Feedback) Diff(fx *Feedback) util.Diffs {

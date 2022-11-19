@@ -59,6 +59,10 @@
           <td><strong>{%s p.Model.Title %}</strong></td>
         </tr>
         <tr>
+          <th class="shrink" title="String text">Icon</th>
+          <td>{%s p.Model.Icon %}</td>
+        </tr>
+        <tr>
           <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
           <td>{%v p.Model.Status %}</td>
         </tr>
@@ -115,7 +119,7 @@
   {%- endif -%}
   {%- if len(p.SprintHistoriesBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`clock`, ps) %} Related histories by [sprint id]</h3>
+    <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [sprint id]</h3>
     <div class="overflow clear">
       {%= vshistory.Table(p.SprintHistoriesBySprintID, nil, p.Params, as, ps) %}
     </div>
@@ -131,7 +135,7 @@
   {%- endif -%}
   {%- if len(p.SprintPermissionsBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`lock`, ps) %} Related permissions by [sprint id]</h3>
+    <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [sprint id]</h3>
     <div class="overflow clear">
       {%= vspermission.Table(p.SprintPermissionsBySprintID, nil, p.Params, as, ps) %}
     </div>

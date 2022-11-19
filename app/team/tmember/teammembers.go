@@ -17,6 +17,14 @@ func (t TeamMembers) Get(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
 	return nil
 }
 
+func (t TeamMembers) TeamIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(t)+1)
+	for _, x := range t {
+		ret = append(ret, x.TeamID)
+	}
+	return ret
+}
+
 func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(t)+1)
 	if includeNil {
@@ -24,6 +32,14 @@ func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
 	}
 	for _, x := range t {
 		ret = append(ret, x.TeamID.String())
+	}
+	return ret
+}
+
+func (t TeamMembers) UserIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(t)+1)
+	for _, x := range t {
+		ret = append(ret, x.UserID)
 	}
 	return ret
 }

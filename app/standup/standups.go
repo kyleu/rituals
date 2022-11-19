@@ -17,6 +17,14 @@ func (s Standups) Get(id uuid.UUID) *Standup {
 	return nil
 }
 
+func (s Standups) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (s Standups) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {

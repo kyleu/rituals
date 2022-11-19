@@ -14,6 +14,14 @@ func (t TeamHistories) Get(slug string) *TeamHistory {
 	return nil
 }
 
+func (t TeamHistories) Slugs() []string {
+	ret := make([]string, 0, len(t)+1)
+	for _, x := range t {
+		ret = append(ret, x.Slug)
+	}
+	return ret
+}
+
 func (t TeamHistories) SlugStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(t)+1)
 	if includeNil {

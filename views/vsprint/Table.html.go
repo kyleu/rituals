@@ -59,201 +59,211 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:20
-	components.StreamTableHeaderSimple(qw422016, "sprint", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "icon", "Icon", "String text", prms, ps.URI, ps)
 //line views/vsprint/Table.html:20
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "sprint", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
 //line views/vsprint/Table.html:21
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:22
-	components.StreamTableHeaderSimple(qw422016, "sprint", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
 //line views/vsprint/Table.html:22
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:23
-	components.StreamTableHeaderSimple(qw422016, "sprint", "start_date", "Start Date", "Calendar date (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
 //line views/vsprint/Table.html:23
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:24
-	components.StreamTableHeaderSimple(qw422016, "sprint", "end_date", "End Date", "Calendar date (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "start_date", "Start Date", "Calendar date (optional)", prms, ps.URI, ps)
 //line views/vsprint/Table.html:24
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:25
-	components.StreamTableHeaderSimple(qw422016, "sprint", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "end_date", "End Date", "Calendar date (optional)", prms, ps.URI, ps)
 //line views/vsprint/Table.html:25
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:26
-	components.StreamTableHeaderSimple(qw422016, "sprint", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
 //line views/vsprint/Table.html:26
+	qw422016.N().S(`
+        `)
+//line views/vsprint/Table.html:27
+	components.StreamTableHeaderSimple(qw422016, "sprint", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
+//line views/vsprint/Table.html:27
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vsprint/Table.html:30
+//line views/vsprint/Table.html:31
 	for _, model := range models {
-//line views/vsprint/Table.html:30
+//line views/vsprint/Table.html:31
 		qw422016.N().S(`      <tr>
         <td><a href="/admin/db/sprint/`)
-//line views/vsprint/Table.html:32
+//line views/vsprint/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vsprint/Table.html:32
+//line views/vsprint/Table.html:33
 		qw422016.N().S(`">`)
-//line views/vsprint/Table.html:32
+//line views/vsprint/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vsprint/Table.html:32
+//line views/vsprint/Table.html:33
 		qw422016.N().S(`</a></td>
         <td>`)
-//line views/vsprint/Table.html:33
+//line views/vsprint/Table.html:34
 		qw422016.E().S(model.Slug)
-//line views/vsprint/Table.html:33
+//line views/vsprint/Table.html:34
 		qw422016.N().S(`</td>
         <td><strong>`)
-//line views/vsprint/Table.html:34
+//line views/vsprint/Table.html:35
 		qw422016.E().S(model.Title)
-//line views/vsprint/Table.html:34
+//line views/vsprint/Table.html:35
 		qw422016.N().S(`</strong></td>
         <td>`)
-//line views/vsprint/Table.html:35
+//line views/vsprint/Table.html:36
+		qw422016.E().S(model.Icon)
+//line views/vsprint/Table.html:36
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vsprint/Table.html:37
 		qw422016.E().V(model.Status)
-//line views/vsprint/Table.html:35
+//line views/vsprint/Table.html:37
 		qw422016.N().S(`</td>
         <td>
           <div class="icon">`)
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 		components.StreamDisplayUUID(qw422016, model.TeamID)
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 		if model.TeamID != nil {
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 			if x := teams.Get(*model.TeamID); x != nil {
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 				qw422016.N().S(` (`)
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 				qw422016.E().S(x.TitleString())
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 				qw422016.N().S(`)`)
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 			}
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 		}
-//line views/vsprint/Table.html:37
+//line views/vsprint/Table.html:39
 		qw422016.N().S(`</div>
           `)
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 		if model.TeamID != nil {
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 			qw422016.N().S(`<a title="Team" href="`)
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 			qw422016.E().S(`/team` + `/` + model.TeamID.String())
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 			qw422016.N().S(`">`)
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 			components.StreamSVGRefIcon(qw422016, "team", ps)
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 			qw422016.N().S(`</a>`)
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 		}
-//line views/vsprint/Table.html:38
+//line views/vsprint/Table.html:40
 		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 		components.StreamDisplayUUID(qw422016, &model.Owner)
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 		if x := users.Get(model.Owner); x != nil {
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 			qw422016.N().S(` (`)
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 			qw422016.E().S(x.TitleString())
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 			qw422016.N().S(`)`)
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 		}
-//line views/vsprint/Table.html:41
+//line views/vsprint/Table.html:43
 		qw422016.N().S(`</div>
           <a title="User" href="`)
-//line views/vsprint/Table.html:42
+//line views/vsprint/Table.html:44
 		qw422016.E().S(`/user` + `/` + model.Owner.String())
-//line views/vsprint/Table.html:42
+//line views/vsprint/Table.html:44
 		qw422016.N().S(`">`)
-//line views/vsprint/Table.html:42
+//line views/vsprint/Table.html:44
 		components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vsprint/Table.html:42
+//line views/vsprint/Table.html:44
 		qw422016.N().S(`</a>
         </td>
         <td>`)
-//line views/vsprint/Table.html:44
+//line views/vsprint/Table.html:46
 		components.StreamDisplayTimestampDay(qw422016, model.StartDate)
-//line views/vsprint/Table.html:44
+//line views/vsprint/Table.html:46
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vsprint/Table.html:45
+//line views/vsprint/Table.html:47
 		components.StreamDisplayTimestampDay(qw422016, model.EndDate)
-//line views/vsprint/Table.html:45
+//line views/vsprint/Table.html:47
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vsprint/Table.html:46
+//line views/vsprint/Table.html:48
 		components.StreamDisplayTimestamp(qw422016, &model.Created)
-//line views/vsprint/Table.html:46
+//line views/vsprint/Table.html:48
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vsprint/Table.html:47
-		components.StreamDisplayTimestamp(qw422016, model.Updated)
-//line views/vsprint/Table.html:47
-		qw422016.N().S(`</td>
-      </tr>
-`)
 //line views/vsprint/Table.html:49
-	}
-//line views/vsprint/Table.html:50
-	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vsprint/Table.html:50
-		qw422016.N().S(`      <tr>
-        <td colspan="10">`)
-//line views/vsprint/Table.html:52
-		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vsprint/Table.html:52
+		components.StreamDisplayTimestamp(qw422016, model.Updated)
+//line views/vsprint/Table.html:49
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vsprint/Table.html:54
+//line views/vsprint/Table.html:51
 	}
+//line views/vsprint/Table.html:52
+	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
+//line views/vsprint/Table.html:52
+		qw422016.N().S(`      <tr>
+        <td colspan="11">`)
 //line views/vsprint/Table.html:54
+		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
+//line views/vsprint/Table.html:54
+		qw422016.N().S(`</td>
+      </tr>
+`)
+//line views/vsprint/Table.html:56
+	}
+//line views/vsprint/Table.html:56
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 }
 
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 func WriteTable(qq422016 qtio422016.Writer, models sprint.Sprints, users user.Users, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	StreamTable(qw422016, models, users, teams, params, as, ps)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 }
 
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 func Table(models sprint.Sprints, users user.Users, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	WriteTable(qb422016, models, users, teams, params, as, ps)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	qs422016 := string(qb422016.B)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 	return qs422016
-//line views/vsprint/Table.html:57
+//line views/vsprint/Table.html:59
 }

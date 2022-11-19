@@ -10,6 +10,11 @@
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwestimate"
+  "github.com/kyleu/rituals/views/vworkspace/vwretro"
+  "github.com/kyleu/rituals/views/vworkspace/vwsprint"
+  "github.com/kyleu/rituals/views/vworkspace/vwstandup"
+  "github.com/kyleu/rituals/views/vworkspace/vwteam"
 ) %}
 
 {% code type Home struct {
@@ -26,99 +31,9 @@
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
   </div>
-  <div class="card">
-    <div class="right">
-      <form action="/team" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Team" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/team">{%= components.SVGRefIcon(`team`, ps) %}Teams</a></h3>
-    {%- if len(p.Teams) == 0 -%}
-    <em>no teams available</em>
-    {%- else -%}
-    <table class="expanded">
-      <tbody>
-        {%- for _, x := range p.Teams -%}
-        <tr><td><a href="/team/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-    {%- endif -%}
-  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/sprint" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Sprint" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/sprint">{%= components.SVGRefIcon(`sprint`, ps) %}Sprints</a></h3>
-    {%- if len(p.Sprints) == 0 -%}
-    <em>no sprints available</em>
-    {%- else -%}
-    <table class="expanded">
-      <tbody>
-        {%- for _, x := range p.Sprints -%}
-        <tr><td><a href="/sprint/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-    {%- endif -%}
-  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/estimate" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Estimate" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/estimate">{%= components.SVGRefIcon(`estimate`, ps) %}Estimates</a></h3>
-    {%- if len(p.Estimates) == 0 -%}
-    <em>no estimates available</em>
-    {%- else -%}
-    <table class="expanded">
-      <tbody>
-        {%- for _, x := range p.Estimates -%}
-        <tr><td><a href="/estimate/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-    {%- endif -%}
-  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/standup" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Standup" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/standup">{%= components.SVGRefIcon(`standup`, ps) %}Standups</a></h3>
-    {%- if len(p.Standups) == 0 -%}
-    <em>no standups available</em>
-    {%- else -%}
-    <table class="expanded">
-      <tbody>
-        {%- for _, x := range p.Standups -%}
-        <tr><td><a href="/standup/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-    {%- endif -%}
-  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/retro" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Retro" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/retro">{%= components.SVGRefIcon(`retro`, ps) %}Retros</a></h3>
-    {%- if len(p.Retros) == 0 -%}
-    <em>no retros available</em>
-    {%- else -%}
-    <table class="expanded">
-      <tbody>
-        {%- for _, x := range p.Retros -%}
-        <tr><td><a href="/retro/{%s x.Slug %}">{%s x.TitleString() %}</a></td></tr>
-        {%- endfor -%}
-      </tbody>
-    </table>
-    {%- endif -%}
-  </div>
+  {%= vwteam.TeamWorkspaceList(p.Teams, nil, nil, ps) %}
+  {%= vwsprint.SprintWorkspaceList(p.Sprints, nil, nil, ps) %}
+  {%= vwestimate.EstimateWorkspaceList(p.Estimates, nil, nil, ps) %}
+  {%= vwstandup.StandupWorkspaceList(p.Standups, nil, nil, ps) %}
+  {%= vwretro.RetroWorkspaceList(p.Retros, nil, nil, ps) %}
 {% endfunc %}

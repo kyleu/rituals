@@ -74,7 +74,7 @@ func (t *TeamHistory) TitleString() string {
 }
 
 func (t *TeamHistory) WebPath() string {
-	return "/admin/db/team/history" + "/" + t.Slug
+	return "/admin/db/team/history/" + t.Slug
 }
 
 func (t *TeamHistory) Diff(tx *TeamHistory) util.Diffs {

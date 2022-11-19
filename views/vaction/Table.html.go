@@ -68,7 +68,7 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Us
 	qw422016.N().S(`
         `)
 //line views/vaction/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "action", "content", "Content", "String text", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "action", "content", "Content", "JSON object", prms, ps.URI, ps)
 //line views/vaction/Table.html:21
 	qw422016.N().S(`
         `)
@@ -141,7 +141,7 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Us
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vaction/Table.html:37
-		qw422016.E().S(model.Content)
+		components.StreamJSON(qw422016, model.Content)
 //line views/vaction/Table.html:37
 		qw422016.N().S(`</td>
         <td>`)

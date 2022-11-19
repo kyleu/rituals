@@ -18,7 +18,7 @@
         {%= components.TableHeaderSimple("action", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("action", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("action", "act", "Act", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "content", "Content", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("action", "content", "Content", "JSON object", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("action", "note", "Note", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("action", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
       </tr>
@@ -34,7 +34,7 @@
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
         </td>
         <td>{%s model.Act %}</td>
-        <td>{%s model.Content %}</td>
+        <td>{%= components.JSON(model.Content) %}</td>
         <td>{%s model.Note %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
       </tr>

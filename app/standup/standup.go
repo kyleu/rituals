@@ -15,6 +15,7 @@ type Standup struct {
 	ID       uuid.UUID          `json:"id"`
 	Slug     string             `json:"slug"`
 	Title    string             `json:"title"`
+	Icon     string             `json:"icon"`
 	Status   enum.SessionStatus `json:"status"`
 	TeamID   *uuid.UUID         `json:"teamID,omitempty"`
 	SprintID *uuid.UUID         `json:"sprintID,omitempty"`
@@ -32,6 +33,7 @@ func Random() *Standup {
 		ID:       util.UUID(),
 		Slug:     util.RandomString(12),
 		Title:    util.RandomString(12),
+		Icon:     util.RandomString(12),
 		Status:   enum.SessionStatus(util.RandomString(12)),
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
@@ -60,6 +62,10 @@ func FromMap(m util.ValueMap, setPK bool) (*Standup, error) {
 		return nil, err
 	}
 	ret.Title, err = m.ParseString("title", true, true)
+	if err != nil {
+		return nil, err
+	}
+	ret.Icon, err = m.ParseString("icon", true, true)
 	if err != nil {
 		return nil, err
 	}
@@ -93,6 +99,7 @@ func (s *Standup) Clone() *Standup {
 		ID:       s.ID,
 		Slug:     s.Slug,
 		Title:    s.Title,
+		Icon:     s.Icon,
 		Status:   s.Status,
 		TeamID:   s.TeamID,
 		SprintID: s.SprintID,
@@ -111,9 +118,10 @@ func (s *Standup) TitleString() string {
 }
 
 func (s *Standup) WebPath() string {
-	return "/admin/db/standup" + "/" + s.ID.String()
+	return "/admin/db/standup/" + s.ID.String()
 }
 
+//nolint:gocognit
 func (s *Standup) Diff(sx *Standup) util.Diffs {
 	var diffs util.Diffs
 	if s.ID != sx.ID {
@@ -125,13 +133,16 @@ func (s *Standup) Diff(sx *Standup) util.Diffs {
 	if s.Title != sx.Title {
 		diffs = append(diffs, util.NewDiff("title", s.Title, sx.Title))
 	}
+	if s.Icon != sx.Icon {
+		diffs = append(diffs, util.NewDiff("icon", s.Icon, sx.Icon))
+	}
 	if s.Status != sx.Status {
 		diffs = append(diffs, util.NewDiff("status", string(s.Status), string(sx.Status)))
 	}
 	if (s.TeamID == nil && sx.TeamID != nil) || (s.TeamID != nil && sx.TeamID == nil) || (s.TeamID != nil && sx.TeamID != nil && *s.TeamID != *sx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(s.TeamID), fmt.Sprint(sx.TeamID))) //nolint:gocritic // it's nullable
 	}
-	if (s.SprintID == nil && sx.SprintID != nil) || (s.SprintID != nil && sx.SprintID == nil) || (s.SprintID != nil && sx.SprintID != nil && *s.SprintID != *sx.SprintID) {
+	if (s.SprintID == nil && sx.SprintID != nil) || (s.SprintID != nil && sx.SprintID == nil) || (s.SprintID != nil && sx.SprintID != nil && *s.SprintID != *sx.SprintID) { //nolint:lll
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(s.SprintID), fmt.Sprint(sx.SprintID))) //nolint:gocritic // it's nullable
 	}
 	if s.Owner != sx.Owner {
@@ -144,5 +155,5 @@ func (s *Standup) Diff(sx *Standup) util.Diffs {
 }
 
 func (s *Standup) ToData() []any {
-	return []any{s.ID, s.Slug, s.Title, s.Status, s.TeamID, s.SprintID, s.Owner, s.Created, s.Updated}
+	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Owner, s.Created, s.Updated}
 }

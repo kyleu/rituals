@@ -16,8 +16,6 @@
         {%= components.TableHeaderSimple("comment", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "svc", "Svc", "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("comment", "target_type", "Target Type", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("comment", "target_id", "Target ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "content", "Content", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "html", "HTML", "String text", prms, ps.URI, ps) %}
@@ -30,8 +28,6 @@
         <td><a href="/admin/db/comment/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>{%v model.Svc %}</td>
         <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
-        <td>{%s model.TargetType %}</td>
-        <td>{%= components.DisplayUUID(&model.TargetID) %}</td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
@@ -43,7 +39,7 @@
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="9">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

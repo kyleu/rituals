@@ -65,6 +65,7 @@ create table if not exists "standup" (
   "id" uuid not null,
   "slug" text not null,
   "title" text not null,
+  "icon" text not null,
   "status" session_status not null,
   "team_id" uuid,
   "sprint_id" uuid,
@@ -88,31 +89,31 @@ create index if not exists "standup__team_id_idx" on "standup" ("team_id");
 
 create index if not exists "standup__sprint_id_idx" on "standup" ("sprint_id");
 -- `)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 }
 
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 func WriteStandupCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	StreamStandupCreate(qw422016)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 }
 
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 func StandupCreate() string {
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	WriteStandupCreate(qb422016)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	qs422016 := string(qb422016.B)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 	return qs422016
-//line queries/ddl/standup.sql:33
+//line queries/ddl/standup.sql:34
 }

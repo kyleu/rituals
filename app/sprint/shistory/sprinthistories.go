@@ -14,6 +14,14 @@ func (s SprintHistories) Get(slug string) *SprintHistory {
 	return nil
 }
 
+func (s SprintHistories) Slugs() []string {
+	ret := make([]string, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.Slug)
+	}
+	return ret
+}
+
 func (s SprintHistories) SlugStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {

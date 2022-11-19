@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vaction/Detail.html:23
-	components.StreamSVGRefIcon(qw422016, `gamepad`, ps)
+	components.StreamSVGRefIcon(qw422016, `action`, ps)
 //line views/vaction/Detail.html:23
 	qw422016.N().S(` `)
 //line views/vaction/Detail.html:23
@@ -127,10 +127,10 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Content</th>
+          <th class="shrink" title="JSON object">Content</th>
           <td>`)
 //line views/vaction/Detail.html:52
-	qw422016.E().S(p.Model.Content)
+	components.StreamJSON(qw422016, p.Model.Content)
 //line views/vaction/Detail.html:52
 	qw422016.N().S(`</td>
         </tr>

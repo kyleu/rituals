@@ -1,0 +1,118 @@
+{% import (
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwestimate"
+  "github.com/kyleu/rituals/views/vworkspace/vwretro"
+  "github.com/kyleu/rituals/views/vworkspace/vwsprint"
+  "github.com/kyleu/rituals/views/vworkspace/vwstandup"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
+) %}
+
+{% code type TeamWorkspace struct {
+  layout.Basic
+  Team *workspace.FullTeam
+} %}
+
+{% func (p *TeamWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    w := p.Team
+    t := w.Team
+    self, others, _ := w.Members.Split(ps.Profile.ID)
+  -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary">
+      <div class="card">
+        <h3><a href="#modal-team-config">{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%s t.TitleString() %}</a></h3>
+        {%= vwutil.Banner(nil, nil, util.KeyTeam) %}
+        {%= TeamWorkspaceModal(t, ps) %}
+      </div>
+    </div>
+    <div id="panel-detail">
+      {%= vwsprint.SprintWorkspaceList(w.Sprints, &t.ID, nil, ps) %}
+      {%= vwestimate.EstimateWorkspaceList(w.Estimates, &t.ID, nil, ps) %}
+      {%= vwstandup.StandupWorkspaceList(w.Standups, &t.ID, nil, ps) %}
+      {%= vwretro.RetroWorkspaceList(w.Retros, &t.ID, nil, ps) %}
+    </div>
+    <div id="panel-self">
+      <div class="card">
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, t.PublicWebPath()) %}
+    </div>
+    <div id="panel-members">
+      <div class="card">
+        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, t.PublicWebPath()) %}
+        {%- endfor -%}
+      </div>
+      {%= vwutil.InviteModal() %}
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const team = {%s= util.ToJSONCompact(t) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace('{%s util.KeyTeam %}', team, members, permissions);
+    });
+  </script>
+{% endfunc %}
+
+{% func TeamWorkspaceModal(t *team.Team, ps *cutil.PageState) %}
+  <div id="modal-team-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Team</h2>
+      </div>
+      <div class="modal-body">
+        <form action="{%s t.PublicWebPath() %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          {%= components.FormVerticalInput("title", "Title", t.TitleString(), 5, "The name of your team") %}
+          {%= components.FormVerticalIconPicker("icon", "Icon", t.IconSafe(), ps, 5) %}
+          <em class="title">Permissions</em>
+          <div class="mt">Control access to this team by <a href="/profile">signing in</a></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func TeamWorkspaceList(teams team.Teams, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, teamID, sprintID, "New Team") %}</div>
+    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
+    {%- if len(teams) == 0 -%}
+    <div class="mt"><em>no teams</em></div>
+    {%- else -%}
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, x := range teams -%}
+        <tr>
+          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}

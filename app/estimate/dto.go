@@ -16,7 +16,7 @@ import (
 var (
 	table         = "estimate"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "slug", "title", "status", "team_id", "sprint_id", "owner", "choices", "created", "updated"}
+	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "choices", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -25,6 +25,7 @@ type dto struct {
 	ID       uuid.UUID          `db:"id"`
 	Slug     string             `db:"slug"`
 	Title    string             `db:"title"`
+	Icon     string             `db:"icon"`
 	Status   enum.SessionStatus `db:"status"`
 	TeamID   *uuid.UUID         `db:"team_id"`
 	SprintID *uuid.UUID         `db:"sprint_id"`
@@ -44,6 +45,7 @@ func (d *dto) ToEstimate() *Estimate {
 		ID:       d.ID,
 		Slug:     d.Slug,
 		Title:    d.Title,
+		Icon:     d.Icon,
 		Status:   d.Status,
 		TeamID:   d.TeamID,
 		SprintID: d.SprintID,

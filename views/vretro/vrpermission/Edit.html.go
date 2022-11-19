@@ -47,7 +47,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/retro/permission/random"><button>Random</button></a></div>
     <h3>`)
 //line views/vretro/vrpermission/Edit.html:20
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
 //line views/vretro/vrpermission/Edit.html:20
 		qw422016.N().S(` New Permission</h3>
     <form action="/admin/db/retro/permission/new" class="mt" method="post">
@@ -66,7 +66,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
 //line views/vretro/vrpermission/Edit.html:24
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
 //line views/vretro/vrpermission/Edit.html:24
 		qw422016.N().S(` Edit Permission [`)
 //line views/vretro/vrpermission/Edit.html:24
@@ -93,7 +93,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/vrpermission/Edit.html:30
 	if p.IsNew {
 //line views/vretro/vrpermission/Edit.html:30
-		components.StreamTableInput(qw422016, "k", "K", p.Model.K, 5, "String text")
+		components.StreamTableInput(qw422016, "key", "Key", p.Model.Key, 5, "String text")
 //line views/vretro/vrpermission/Edit.html:30
 	}
 //line views/vretro/vrpermission/Edit.html:30
@@ -102,7 +102,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/vrpermission/Edit.html:31
 	if p.IsNew {
 //line views/vretro/vrpermission/Edit.html:31
-		components.StreamTableInput(qw422016, "v", "V", p.Model.V, 5, "String text")
+		components.StreamTableInput(qw422016, "value", "Value", p.Model.Value, 5, "String text")
 //line views/vretro/vrpermission/Edit.html:31
 	}
 //line views/vretro/vrpermission/Edit.html:31

@@ -13,68 +13,78 @@ import "github.com/kyleu/rituals/queries/ddl"
 // --
 
 //line queries/migrations/1-initial-database.sql:3
+import "github.com/kyleu/rituals/queries/seeddata"
+
+// --
+
+//line queries/migrations/1-initial-database.sql:5
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line queries/migrations/1-initial-database.sql:3
+//line queries/migrations/1-initial-database.sql:5
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line queries/migrations/1-initial-database.sql:3
+//line queries/migrations/1-initial-database.sql:5
 func StreamMigration1InitialDatabase(qw422016 *qt422016.Writer, debug bool) {
-//line queries/migrations/1-initial-database.sql:3
+//line queries/migrations/1-initial-database.sql:5
 	qw422016.N().S(`
 
 --`)
-//line queries/migrations/1-initial-database.sql:5
+//line queries/migrations/1-initial-database.sql:7
 	if debug {
-//line queries/migrations/1-initial-database.sql:5
+//line queries/migrations/1-initial-database.sql:7
 		qw422016.N().S(`-- `)
-//line queries/migrations/1-initial-database.sql:6
+//line queries/migrations/1-initial-database.sql:8
 		ddl.StreamDropAll(qw422016)
-//line queries/migrations/1-initial-database.sql:6
+//line queries/migrations/1-initial-database.sql:8
 		qw422016.N().S(`
 --`)
-//line queries/migrations/1-initial-database.sql:7
+//line queries/migrations/1-initial-database.sql:9
 	}
-//line queries/migrations/1-initial-database.sql:7
+//line queries/migrations/1-initial-database.sql:9
 	qw422016.N().S(`
 -- `)
-//line queries/migrations/1-initial-database.sql:9
+//line queries/migrations/1-initial-database.sql:11
 	ddl.StreamCreateAll(qw422016)
-//line queries/migrations/1-initial-database.sql:9
+//line queries/migrations/1-initial-database.sql:11
 	qw422016.N().S(`
 -- `)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:12
+	seeddata.StreamSeedDataAll(qw422016)
+//line queries/migrations/1-initial-database.sql:12
+	qw422016.N().S(`
+-- `)
+//line queries/migrations/1-initial-database.sql:13
 }
 
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 func WriteMigration1InitialDatabase(qq422016 qtio422016.Writer, debug bool) {
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	StreamMigration1InitialDatabase(qw422016, debug)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	qt422016.ReleaseWriter(qw422016)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 }
 
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 func Migration1InitialDatabase(debug bool) string {
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	WriteMigration1InitialDatabase(qb422016, debug)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	qs422016 := string(qb422016.B)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 	return qs422016
-//line queries/migrations/1-initial-database.sql:10
+//line queries/migrations/1-initial-database.sql:13
 }

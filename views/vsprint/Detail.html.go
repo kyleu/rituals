@@ -112,51 +112,59 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <th class="shrink" title="String text">Icon</th>
           <td>`)
 //line views/vsprint/Detail.html:63
-	qw422016.E().V(p.Model.Status)
+	qw422016.E().S(p.Model.Icon)
 //line views/vsprint/Detail.html:63
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>`)
+//line views/vsprint/Detail.html:67
+	qw422016.E().V(p.Model.Status)
+//line views/vsprint/Detail.html:67
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td>
             <div class="icon">`)
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 	if p.Model.TeamID != nil {
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 			qw422016.N().S(` (`)
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 			qw422016.E().S(x.TitleString())
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 			qw422016.N().S(`)`)
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 		}
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 	}
-//line views/vsprint/Detail.html:68
+//line views/vsprint/Detail.html:72
 	qw422016.N().S(`</div>
             `)
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 	if p.Model.TeamID != nil {
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 		qw422016.N().S(`<a title="Team" href="`)
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 		qw422016.N().S(`">`)
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 		components.StreamSVGRefIcon(qw422016, "team", ps)
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 		qw422016.N().S(`</a>`)
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 	}
-//line views/vsprint/Detail.html:69
+//line views/vsprint/Detail.html:73
 	qw422016.N().S(`
           </td>
         </tr>
@@ -164,219 +172,219 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
           <td>
             <div class="icon">`)
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 	if x := p.Users.Get(p.Model.Owner); x != nil {
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 		qw422016.N().S(` (`)
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 		qw422016.E().S(x.TitleString())
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 		qw422016.N().S(`)`)
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 	}
-//line views/vsprint/Detail.html:75
+//line views/vsprint/Detail.html:79
 	qw422016.N().S(`</div>
             <a title="User" href="`)
-//line views/vsprint/Detail.html:76
+//line views/vsprint/Detail.html:80
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
-//line views/vsprint/Detail.html:76
+//line views/vsprint/Detail.html:80
 	qw422016.N().S(`">`)
-//line views/vsprint/Detail.html:76
+//line views/vsprint/Detail.html:80
 	components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vsprint/Detail.html:76
+//line views/vsprint/Detail.html:80
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Calendar date (optional)">Start Date</th>
           <td>`)
-//line views/vsprint/Detail.html:81
+//line views/vsprint/Detail.html:85
 	components.StreamDisplayTimestampDay(qw422016, p.Model.StartDate)
-//line views/vsprint/Detail.html:81
+//line views/vsprint/Detail.html:85
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Calendar date (optional)">End Date</th>
           <td>`)
-//line views/vsprint/Detail.html:85
+//line views/vsprint/Detail.html:89
 	components.StreamDisplayTimestampDay(qw422016, p.Model.EndDate)
-//line views/vsprint/Detail.html:85
+//line views/vsprint/Detail.html:89
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vsprint/Detail.html:89
+//line views/vsprint/Detail.html:93
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vsprint/Detail.html:89
+//line views/vsprint/Detail.html:93
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vsprint/Detail.html:93
+//line views/vsprint/Detail.html:97
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vsprint/Detail.html:93
+//line views/vsprint/Detail.html:97
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vsprint/Detail.html:100
+//line views/vsprint/Detail.html:104
 	if len(p.EstimatesBySprintID) > 0 {
-//line views/vsprint/Detail.html:100
+//line views/vsprint/Detail.html:104
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vsprint/Detail.html:102
+//line views/vsprint/Detail.html:106
 		components.StreamSVGRefIcon(qw422016, `estimate`, ps)
-//line views/vsprint/Detail.html:102
+//line views/vsprint/Detail.html:106
 		qw422016.N().S(` Related estimates by [sprint id]</h3>
     <div class="overflow clear">
       `)
-//line views/vsprint/Detail.html:104
+//line views/vsprint/Detail.html:108
 		vestimate.StreamTable(qw422016, p.EstimatesBySprintID, nil, nil, nil, p.Params, as, ps)
-//line views/vsprint/Detail.html:104
+//line views/vsprint/Detail.html:108
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vsprint/Detail.html:107
+//line views/vsprint/Detail.html:111
 	}
-//line views/vsprint/Detail.html:108
+//line views/vsprint/Detail.html:112
 	if len(p.RetrosBySprintID) > 0 {
-//line views/vsprint/Detail.html:108
+//line views/vsprint/Detail.html:112
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vsprint/Detail.html:110
+//line views/vsprint/Detail.html:114
 		components.StreamSVGRefIcon(qw422016, `retro`, ps)
-//line views/vsprint/Detail.html:110
+//line views/vsprint/Detail.html:114
 		qw422016.N().S(` Related retros by [sprint id]</h3>
     <div class="overflow clear">
       `)
-//line views/vsprint/Detail.html:112
+//line views/vsprint/Detail.html:116
 		vretro.StreamTable(qw422016, p.RetrosBySprintID, nil, nil, nil, p.Params, as, ps)
-//line views/vsprint/Detail.html:112
+//line views/vsprint/Detail.html:116
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vsprint/Detail.html:115
+//line views/vsprint/Detail.html:119
 	}
-//line views/vsprint/Detail.html:116
+//line views/vsprint/Detail.html:120
 	if len(p.SprintHistoriesBySprintID) > 0 {
-//line views/vsprint/Detail.html:116
+//line views/vsprint/Detail.html:120
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vsprint/Detail.html:118
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
-//line views/vsprint/Detail.html:118
+//line views/vsprint/Detail.html:122
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
+//line views/vsprint/Detail.html:122
 		qw422016.N().S(` Related histories by [sprint id]</h3>
     <div class="overflow clear">
       `)
-//line views/vsprint/Detail.html:120
+//line views/vsprint/Detail.html:124
 		vshistory.StreamTable(qw422016, p.SprintHistoriesBySprintID, nil, p.Params, as, ps)
-//line views/vsprint/Detail.html:120
+//line views/vsprint/Detail.html:124
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vsprint/Detail.html:123
+//line views/vsprint/Detail.html:127
 	}
-//line views/vsprint/Detail.html:124
+//line views/vsprint/Detail.html:128
 	if len(p.SprintMembersBySprintID) > 0 {
-//line views/vsprint/Detail.html:124
+//line views/vsprint/Detail.html:128
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vsprint/Detail.html:126
+//line views/vsprint/Detail.html:130
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vsprint/Detail.html:126
+//line views/vsprint/Detail.html:130
 		qw422016.N().S(` Related members by [sprint id]</h3>
     <div class="overflow clear">
       `)
-//line views/vsprint/Detail.html:128
+//line views/vsprint/Detail.html:132
 		vsmember.StreamTable(qw422016, p.SprintMembersBySprintID, nil, nil, p.Params, as, ps)
-//line views/vsprint/Detail.html:128
+//line views/vsprint/Detail.html:132
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vsprint/Detail.html:131
+//line views/vsprint/Detail.html:135
 	}
-//line views/vsprint/Detail.html:132
+//line views/vsprint/Detail.html:136
 	if len(p.SprintPermissionsBySprintID) > 0 {
-//line views/vsprint/Detail.html:132
+//line views/vsprint/Detail.html:136
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vsprint/Detail.html:134
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
-//line views/vsprint/Detail.html:134
+//line views/vsprint/Detail.html:138
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
+//line views/vsprint/Detail.html:138
 		qw422016.N().S(` Related permissions by [sprint id]</h3>
     <div class="overflow clear">
       `)
-//line views/vsprint/Detail.html:136
+//line views/vsprint/Detail.html:140
 		vspermission.StreamTable(qw422016, p.SprintPermissionsBySprintID, nil, p.Params, as, ps)
-//line views/vsprint/Detail.html:136
+//line views/vsprint/Detail.html:140
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vsprint/Detail.html:139
+//line views/vsprint/Detail.html:143
 	}
-//line views/vsprint/Detail.html:140
+//line views/vsprint/Detail.html:144
 	if len(p.StandupsBySprintID) > 0 {
-//line views/vsprint/Detail.html:140
+//line views/vsprint/Detail.html:144
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vsprint/Detail.html:142
+//line views/vsprint/Detail.html:146
 		components.StreamSVGRefIcon(qw422016, `standup`, ps)
-//line views/vsprint/Detail.html:142
+//line views/vsprint/Detail.html:146
 		qw422016.N().S(` Related standups by [sprint id]</h3>
     <div class="overflow clear">
       `)
-//line views/vsprint/Detail.html:144
+//line views/vsprint/Detail.html:148
 		vstandup.StreamTable(qw422016, p.StandupsBySprintID, nil, nil, nil, p.Params, as, ps)
-//line views/vsprint/Detail.html:144
+//line views/vsprint/Detail.html:148
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vsprint/Detail.html:147
+//line views/vsprint/Detail.html:151
 	}
-//line views/vsprint/Detail.html:147
+//line views/vsprint/Detail.html:151
 	qw422016.N().S(`  `)
-//line views/vsprint/Detail.html:148
+//line views/vsprint/Detail.html:152
 	components.StreamJSONModal(qw422016, "sprint", "Sprint JSON", p.Model, 1)
-//line views/vsprint/Detail.html:148
+//line views/vsprint/Detail.html:152
 	qw422016.N().S(`
 `)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 }
 
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 }
 
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	qs422016 := string(qb422016.B)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 	return qs422016
-//line views/vsprint/Detail.html:149
+//line views/vsprint/Detail.html:153
 }

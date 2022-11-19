@@ -105,8 +105,8 @@ func StandupPermissionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse StandupPermission from form")
 		}
 		frm.StandupID = ret.StandupID
-		frm.K = ret.K
-		frm.V = ret.V
+		frm.Key = ret.Key
+		frm.Value = ret.Value
 		err = as.Services.StandupPermission.Update(ps.Context, nil, frm, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update StandupPermission [%s]", frm.String())
@@ -122,7 +122,7 @@ func StandupPermissionDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.StandupPermission.Delete(ps.Context, nil, ret.StandupID, ret.K, ret.V, ps.Logger)
+		err = as.Services.StandupPermission.Delete(ps.Context, nil, ret.StandupID, ret.Key, ret.Value, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
@@ -141,15 +141,15 @@ func upermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 		return nil, errors.Errorf("argument [standupID] (%s) is not a valid UUID", standupIDArgStr)
 	}
 	standupIDArg := *standupIDArgP
-	kArg, err := cutil.RCRequiredString(rc, "k", false)
+	keyArg, err := cutil.RCRequiredString(rc, "key", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [k] as an argument")
+		return nil, errors.Wrap(err, "must provide [key] as an argument")
 	}
-	vArg, err := cutil.RCRequiredString(rc, "v", false)
+	valueArg, err := cutil.RCRequiredString(rc, "value", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [v] as an argument")
+		return nil, errors.Wrap(err, "must provide [value] as an argument")
 	}
-	return as.Services.StandupPermission.Get(ps.Context, nil, standupIDArg, kArg, vArg, ps.Logger)
+	return as.Services.StandupPermission.Get(ps.Context, nil, standupIDArg, keyArg, valueArg, ps.Logger)
 }
 
 func upermissionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*upermission.StandupPermission, error) {

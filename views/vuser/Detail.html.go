@@ -170,7 +170,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vuser/Detail.html:105
-		components.StreamSVGRefIcon(qw422016, `gamepad`, ps)
+		components.StreamSVGRefIcon(qw422016, `action`, ps)
 //line views/vuser/Detail.html:105
 		qw422016.N().S(` Related actions by [user id]</h3>
     <div class="overflow clear">
@@ -210,7 +210,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vuser/Detail.html:121
-		components.StreamSVGRefIcon(qw422016, `envelope`, ps)
+		components.StreamSVGRefIcon(qw422016, `email`, ps)
 //line views/vuser/Detail.html:121
 		qw422016.N().S(` Related emails by [user id]</h3>
     <div class="overflow clear">
@@ -430,7 +430,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 		qw422016.N().S(`  <div class="card">
     <h3>`)
 //line views/vuser/Detail.html:209
-		components.StreamSVGRefIcon(qw422016, `book-reader`, ps)
+		components.StreamSVGRefIcon(qw422016, `story`, ps)
 //line views/vuser/Detail.html:209
 		qw422016.N().S(` Related stories by [user id]</h3>
     <div class="overflow clear">

@@ -102,7 +102,7 @@ func (r *RetroMember) TitleString() string {
 }
 
 func (r *RetroMember) WebPath() string {
-	return "/admin/db/retro/member" + "/" + r.RetroID.String() + "/" + r.UserID.String()
+	return "/admin/db/retro/member/" + r.RetroID.String() + "/" + r.UserID.String()
 }
 
 func (r *RetroMember) Diff(rx *RetroMember) util.Diffs {

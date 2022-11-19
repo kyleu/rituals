@@ -101,13 +101,18 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vteam/Edit.html:32
-	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
+	components.StreamTableInput(qw422016, "icon", "Icon", p.Model.Icon, 5, "String text")
 //line views/vteam/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vteam/Edit.html:33
-	components.StreamTableInputUUID(qw422016, "owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
 //line views/vteam/Edit.html:33
+	qw422016.N().S(`
+          `)
+//line views/vteam/Edit.html:34
+	components.StreamTableInputUUID(qw422016, "owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+//line views/vteam/Edit.html:34
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -115,31 +120,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 }
 
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 }
 
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	qs422016 := string(qb422016.B)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 	return qs422016
-//line views/vteam/Edit.html:39
+//line views/vteam/Edit.html:40
 }

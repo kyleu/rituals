@@ -1,0 +1,25 @@
+.categories {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 1024px) {
+  .categories {
+    flex-direction: column;
+  }
+}
+
+.category {
+  display: block;
+  flex-grow: 1;
+  margin: var(--padding-small);
+  padding: var(--padding);
+  border: var(--border);
+}
+
+.feedback {
+  display: block;
+  margin: var(--padding-small);
+  padding: var(--padding);
+  border: var(--border);
+}

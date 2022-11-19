@@ -1,0 +1,123 @@
+{% import (
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/standup"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
+) %}
+
+{% code type StandupWorkspace struct {
+  layout.Basic
+  Standup *workspace.FullStandup
+  Teams team.Teams
+  Sprints sprint.Sprints
+} %}
+
+{% func (p *StandupWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    w := p.Standup
+    u := w.Standup
+    self, others, _ := w.Members.Split(ps.Profile.ID)
+  -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary">
+      <div class="card">
+        <h3><a href="#modal-standup-config">{%= components.SVGRefIcon(util.KeyStandup, ps) %}{%s u.TitleString() %}</a></h3>
+        {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
+        {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, ps) %}
+      </div>
+    </div>
+    <div id="panel-detail">
+      <div class="card">
+        <div class="right"><a href="#modal-report--add"><button>Add Report</button></a></div>
+        <h3>{%= components.SVGRefIcon(`file-alt`, ps) %}Reports</h3>
+        <div class="mt">{%= StandupWorkspaceReports(w, ps) %}</div>
+        {%= StandupWorkspaceReportModalAdd() %}
+      </div>
+    </div>
+    <div id="panel-self">
+      <div class="card">
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, u.PublicWebPath()) %}
+    </div>
+    <div id="panel-members">
+      <div class="card">
+        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, u.PublicWebPath()) %}
+        {%- endfor -%}
+      </div>
+      {%= vwutil.InviteModal() %}
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const standup = {%s= util.ToJSONCompact(u) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace('{%s util.KeyStandup %}', standup, members, permissions);
+    });
+  </script>
+{% endfunc %}
+
+{% func StandupWorkspaceModal(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) %}
+  <div id="modal-standup-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Standup</h2>
+      </div>
+      <div class="modal-body">
+        <form action="{%s u.PublicWebPath() %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          {%= components.FormVerticalInput("title", "Title", u.TitleString(), 5, "The name of your standup") %}
+          {%= components.FormVerticalIconPicker("icon", "Icon", u.IconSafe(), ps, 5) %}
+          {%= components.FormVerticalSelect(util.KeyTeam, "Team", util.UUIDString(u.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeySprint, "Sprint", util.UUIDString(u.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          <em class="title">Permissions</em>
+          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this standup's team</label></div>
+          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this standup's sprint</label></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
+    <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
+    {%- if len(standups) == 0 -%}
+    <div class="mt"><em>no standups</em></div>
+    {%- else -%}
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, x := range standups -%}
+        <tr>
+          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}

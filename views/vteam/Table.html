@@ -16,6 +16,7 @@
         {%= components.TableHeaderSimple("team", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "slug", "Slug", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "title", "Title", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("team", "icon", "Icon", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
@@ -28,6 +29,7 @@
         <td><a href="/admin/db/team/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>{%s model.Slug %}</td>
         <td><strong>{%s model.Title %}</strong></td>
+        <td>{%s model.Icon %}</td>
         <td>{%v model.Status %}</td>
         <td>
           <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
@@ -39,7 +41,7 @@
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="8">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

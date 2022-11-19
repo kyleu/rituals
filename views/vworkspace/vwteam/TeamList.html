@@ -1,0 +1,47 @@
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/team"
+	"github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type TeamList struct {
+  layout.Basic
+  Teams team.Teams
+} %}
+
+{% func (p *TeamList) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%d len(p.Teams) %} {%s util.StringPluralMaybe("Team", len(p.Teams)) %}</h3>
+    <em>Join your friends and colleagues, working towards a common goal</em>
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, t := range p.Teams -%}
+        <tr>
+          <td><a href="{%s t.PublicWebPath() %}">{%s t.TitleString() %}</a></td>
+          <td style="text-align: right;">{%s string(t.Status) %}</td>
+          <td class="shrink">{%= components.DisplayTimestamp(&t.Created) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}New Team</h3>
+    {%= TeamForm(&team.Team{}, as, ps) %}
+  </div>
+{% endfunc %}
+
+{% func TeamForm(m *team.Team, as *app.State, ps *cutil.PageState) %}
+  <form action="" method="post">
+    <table class="mt expanded">
+      <tbody>
+        {%= components.TableInput("title", "Team Title", m.Title, 5, "The name of your team") %}
+        {%= components.TableInput("name", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called") %}
+        <tr><td colspan="2"><button type="submit">Add Team</button></td></tr>
+      </tbody>
+    </table>
+  </form>
+{% endfunc %}

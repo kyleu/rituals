@@ -79,9 +79,9 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.
 	return ret.ToSprintHistories(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (SprintHistories, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (SprintHistories, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get histories using custom SQL")
 	}

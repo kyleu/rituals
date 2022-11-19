@@ -14,6 +14,14 @@ func (e EstimateHistories) Get(slug string) *EstimateHistory {
 	return nil
 }
 
+func (e EstimateHistories) Slugs() []string {
+	ret := make([]string, 0, len(e)+1)
+	for _, x := range e {
+		ret = append(ret, x.Slug)
+	}
+	return ret
+}
+
 func (e EstimateHistories) SlugStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(e)+1)
 	if includeNil {

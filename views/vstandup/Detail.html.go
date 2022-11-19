@@ -108,51 +108,59 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <th class="shrink" title="String text">Icon</th>
           <td>`)
 //line views/vstandup/Detail.html:59
-	qw422016.E().V(p.Model.Status)
+	qw422016.E().S(p.Model.Icon)
 //line views/vstandup/Detail.html:59
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>`)
+//line views/vstandup/Detail.html:63
+	qw422016.E().V(p.Model.Status)
+//line views/vstandup/Detail.html:63
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td>
             <div class="icon">`)
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 	if p.Model.TeamID != nil {
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 			qw422016.N().S(` (`)
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 			qw422016.E().S(x.TitleString())
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 			qw422016.N().S(`)`)
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 		}
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 	}
-//line views/vstandup/Detail.html:64
+//line views/vstandup/Detail.html:68
 	qw422016.N().S(`</div>
             `)
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 	if p.Model.TeamID != nil {
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 		qw422016.N().S(`<a title="Team" href="`)
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 		qw422016.N().S(`">`)
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 		components.StreamSVGRefIcon(qw422016, "team", ps)
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 		qw422016.N().S(`</a>`)
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 	}
-//line views/vstandup/Detail.html:65
+//line views/vstandup/Detail.html:69
 	qw422016.N().S(`
           </td>
         </tr>
@@ -160,40 +168,40 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td>
             <div class="icon">`)
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 	components.StreamDisplayUUID(qw422016, p.Model.SprintID)
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 	if p.Model.SprintID != nil {
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 		if x := p.Sprints.Get(*p.Model.SprintID); x != nil {
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 			qw422016.N().S(` (`)
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 			qw422016.E().S(x.TitleString())
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 			qw422016.N().S(`)`)
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 		}
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 	}
-//line views/vstandup/Detail.html:71
+//line views/vstandup/Detail.html:75
 	qw422016.N().S(`</div>
             `)
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 	if p.Model.SprintID != nil {
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 		qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 		qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 		qw422016.N().S(`">`)
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 		components.StreamSVGRefIcon(qw422016, "sprint", ps)
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 		qw422016.N().S(`</a>`)
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 	}
-//line views/vstandup/Detail.html:72
+//line views/vstandup/Detail.html:76
 	qw422016.N().S(`
           </td>
         </tr>
@@ -201,163 +209,163 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
           <td>
             <div class="icon">`)
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 	if x := p.Users.Get(p.Model.Owner); x != nil {
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 		qw422016.N().S(` (`)
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 		qw422016.E().S(x.TitleString())
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 		qw422016.N().S(`)`)
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 	}
-//line views/vstandup/Detail.html:78
+//line views/vstandup/Detail.html:82
 	qw422016.N().S(`</div>
             <a title="User" href="`)
-//line views/vstandup/Detail.html:79
+//line views/vstandup/Detail.html:83
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
-//line views/vstandup/Detail.html:79
+//line views/vstandup/Detail.html:83
 	qw422016.N().S(`">`)
-//line views/vstandup/Detail.html:79
+//line views/vstandup/Detail.html:83
 	components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vstandup/Detail.html:79
+//line views/vstandup/Detail.html:83
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vstandup/Detail.html:84
+//line views/vstandup/Detail.html:88
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vstandup/Detail.html:84
+//line views/vstandup/Detail.html:88
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vstandup/Detail.html:88
+//line views/vstandup/Detail.html:92
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vstandup/Detail.html:88
+//line views/vstandup/Detail.html:92
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vstandup/Detail.html:95
+//line views/vstandup/Detail.html:99
 	if len(p.ReportsByStandupID) > 0 {
-//line views/vstandup/Detail.html:95
+//line views/vstandup/Detail.html:99
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vstandup/Detail.html:97
+//line views/vstandup/Detail.html:101
 		components.StreamSVGRefIcon(qw422016, `file-alt`, ps)
-//line views/vstandup/Detail.html:97
+//line views/vstandup/Detail.html:101
 		qw422016.N().S(` Related reports by [standup id]</h3>
     <div class="overflow clear">
       `)
-//line views/vstandup/Detail.html:99
+//line views/vstandup/Detail.html:103
 		vreport.StreamTable(qw422016, p.ReportsByStandupID, nil, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:99
+//line views/vstandup/Detail.html:103
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vstandup/Detail.html:102
+//line views/vstandup/Detail.html:106
 	}
-//line views/vstandup/Detail.html:103
+//line views/vstandup/Detail.html:107
 	if len(p.StandupHistoriesByStandupID) > 0 {
-//line views/vstandup/Detail.html:103
+//line views/vstandup/Detail.html:107
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vstandup/Detail.html:105
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
-//line views/vstandup/Detail.html:105
+//line views/vstandup/Detail.html:109
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
+//line views/vstandup/Detail.html:109
 		qw422016.N().S(` Related histories by [standup id]</h3>
     <div class="overflow clear">
       `)
-//line views/vstandup/Detail.html:107
+//line views/vstandup/Detail.html:111
 		vuhistory.StreamTable(qw422016, p.StandupHistoriesByStandupID, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:107
+//line views/vstandup/Detail.html:111
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vstandup/Detail.html:110
+//line views/vstandup/Detail.html:114
 	}
-//line views/vstandup/Detail.html:111
+//line views/vstandup/Detail.html:115
 	if len(p.StandupMembersByStandupID) > 0 {
-//line views/vstandup/Detail.html:111
+//line views/vstandup/Detail.html:115
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vstandup/Detail.html:113
+//line views/vstandup/Detail.html:117
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vstandup/Detail.html:113
+//line views/vstandup/Detail.html:117
 		qw422016.N().S(` Related members by [standup id]</h3>
     <div class="overflow clear">
       `)
-//line views/vstandup/Detail.html:115
+//line views/vstandup/Detail.html:119
 		vumember.StreamTable(qw422016, p.StandupMembersByStandupID, nil, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:115
+//line views/vstandup/Detail.html:119
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vstandup/Detail.html:118
+//line views/vstandup/Detail.html:122
 	}
-//line views/vstandup/Detail.html:119
+//line views/vstandup/Detail.html:123
 	if len(p.StandupPermissionsByStandupID) > 0 {
-//line views/vstandup/Detail.html:119
+//line views/vstandup/Detail.html:123
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vstandup/Detail.html:121
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
-//line views/vstandup/Detail.html:121
+//line views/vstandup/Detail.html:125
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
+//line views/vstandup/Detail.html:125
 		qw422016.N().S(` Related permissions by [standup id]</h3>
     <div class="overflow clear">
       `)
-//line views/vstandup/Detail.html:123
+//line views/vstandup/Detail.html:127
 		vupermission.StreamTable(qw422016, p.StandupPermissionsByStandupID, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:123
+//line views/vstandup/Detail.html:127
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vstandup/Detail.html:126
+//line views/vstandup/Detail.html:130
 	}
-//line views/vstandup/Detail.html:126
+//line views/vstandup/Detail.html:130
 	qw422016.N().S(`  `)
-//line views/vstandup/Detail.html:127
+//line views/vstandup/Detail.html:131
 	components.StreamJSONModal(qw422016, "standup", "Standup JSON", p.Model, 1)
-//line views/vstandup/Detail.html:127
+//line views/vstandup/Detail.html:131
 	qw422016.N().S(`
 `)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 }
 
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 }
 
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	qs422016 := string(qb422016.B)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 	return qs422016
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:132
 }

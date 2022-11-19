@@ -2,7 +2,7 @@
   "name": "action",
   "package": "action",
   "description": "TODO",
-  "icon": "gamepad",
+  "icon": "action",
   "ordering": [
     {
       "column": "created",
@@ -40,7 +40,7 @@
     },
     {
       "name": "content",
-      "type": "string"
+      "type": "valuemap"
     },
     {
       "name": "note",
@@ -74,7 +74,7 @@
       "20000000-0000-0000-0000-000000000000",
       "90000000-0000-0000-0000-000000000000",
       "create-stuff",
-      "{}",
+      {},
       "A note!",
       "now()"
     ]

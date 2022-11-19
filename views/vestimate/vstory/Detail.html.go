@@ -62,7 +62,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vestimate/vstory/Detail.html:30
-	components.StreamSVGRefIcon(qw422016, `book-reader`, ps)
+	components.StreamSVGRefIcon(qw422016, `story`, ps)
 //line views/vestimate/vstory/Detail.html:30
 	qw422016.N().S(` `)
 //line views/vestimate/vstory/Detail.html:30

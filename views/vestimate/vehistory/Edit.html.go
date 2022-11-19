@@ -47,7 +47,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/estimate/history/random"><button>Random</button></a></div>
     <h3>`)
 //line views/vestimate/vehistory/Edit.html:20
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
 //line views/vestimate/vehistory/Edit.html:20
 		qw422016.N().S(` New History</h3>
     <form action="/admin/db/estimate/history/new" class="mt" method="post">
@@ -66,7 +66,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
 //line views/vestimate/vehistory/Edit.html:24
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
 //line views/vestimate/vehistory/Edit.html:24
 		qw422016.N().S(` Edit History [`)
 //line views/vestimate/vehistory/Edit.html:24

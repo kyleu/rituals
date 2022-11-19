@@ -12,27 +12,27 @@ import (
 
 type PK struct {
 	SprintID uuid.UUID `json:"sprintID"`
-	K        string    `json:"k"`
-	V        string    `json:"v"`
+	Key      string    `json:"key"`
+	Value    string    `json:"value"`
 }
 
 type SprintPermission struct {
 	SprintID uuid.UUID `json:"sprintID"`
-	K        string    `json:"k"`
-	V        string    `json:"v"`
+	Key      string    `json:"key"`
+	Value    string    `json:"value"`
 	Access   string    `json:"access"`
 	Created  time.Time `json:"created"`
 }
 
-func New(sprintID uuid.UUID, k string, v string) *SprintPermission {
-	return &SprintPermission{SprintID: sprintID, K: k, V: v}
+func New(sprintID uuid.UUID, key string, value string) *SprintPermission {
+	return &SprintPermission{SprintID: sprintID, Key: key, Value: value}
 }
 
 func Random() *SprintPermission {
 	return &SprintPermission{
 		SprintID: util.UUID(),
-		K:        util.RandomString(12),
-		V:        util.RandomString(12),
+		Key:      util.RandomString(12),
+		Value:    util.RandomString(12),
 		Access:   util.RandomString(12),
 		Created:  time.Now(),
 	}
@@ -49,11 +49,11 @@ func FromMap(m util.ValueMap, setPK bool) (*SprintPermission, error) {
 		if retSprintID != nil {
 			ret.SprintID = *retSprintID
 		}
-		ret.K, err = m.ParseString("k", true, true)
+		ret.Key, err = m.ParseString("key", true, true)
 		if err != nil {
 			return nil, err
 		}
-		ret.V, err = m.ParseString("v", true, true)
+		ret.Value, err = m.ParseString("value", true, true)
 		if err != nil {
 			return nil, err
 		}
@@ -72,15 +72,15 @@ func FromMap(m util.ValueMap, setPK bool) (*SprintPermission, error) {
 func (s *SprintPermission) Clone() *SprintPermission {
 	return &SprintPermission{
 		SprintID: s.SprintID,
-		K:        s.K,
-		V:        s.V,
+		Key:      s.Key,
+		Value:    s.Value,
 		Access:   s.Access,
 		Created:  s.Created,
 	}
 }
 
 func (s *SprintPermission) String() string {
-	return fmt.Sprintf("%s::%s::%s", s.SprintID.String(), s.K, s.V)
+	return fmt.Sprintf("%s::%s::%s", s.SprintID.String(), s.Key, s.Value)
 }
 
 func (s *SprintPermission) TitleString() string {
@@ -88,7 +88,7 @@ func (s *SprintPermission) TitleString() string {
 }
 
 func (s *SprintPermission) WebPath() string {
-	return "/admin/db/sprint/permission" + "/" + s.SprintID.String() + "/" + s.K + "/" + s.V
+	return "/admin/db/sprint/permission/" + s.SprintID.String() + "/" + s.Key + "/" + s.Value
 }
 
 func (s *SprintPermission) Diff(sx *SprintPermission) util.Diffs {
@@ -96,11 +96,11 @@ func (s *SprintPermission) Diff(sx *SprintPermission) util.Diffs {
 	if s.SprintID != sx.SprintID {
 		diffs = append(diffs, util.NewDiff("sprintID", s.SprintID.String(), sx.SprintID.String()))
 	}
-	if s.K != sx.K {
-		diffs = append(diffs, util.NewDiff("k", s.K, sx.K))
+	if s.Key != sx.Key {
+		diffs = append(diffs, util.NewDiff("key", s.Key, sx.Key))
 	}
-	if s.V != sx.V {
-		diffs = append(diffs, util.NewDiff("v", s.V, sx.V))
+	if s.Value != sx.Value {
+		diffs = append(diffs, util.NewDiff("value", s.Value, sx.Value))
 	}
 	if s.Access != sx.Access {
 		diffs = append(diffs, util.NewDiff("access", s.Access, sx.Access))
@@ -112,5 +112,5 @@ func (s *SprintPermission) Diff(sx *SprintPermission) util.Diffs {
 }
 
 func (s *SprintPermission) ToData() []any {
-	return []any{s.SprintID, s.K, s.V, s.Access, s.Created}
+	return []any{s.SprintID, s.Key, s.Value, s.Access, s.Created}
 }

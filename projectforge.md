@@ -9,6 +9,7 @@ The following modules were used to build this project:
 
 - [core](./doc/module/core.md)
 - [database](./doc/module/database.md)
+- [databaseui](./doc/module/databaseui.md)
 - [export](./doc/module/export.md)
 - [filesystem](./doc/module/filesystem.md)
 - [graphql](./doc/module/graphql.md)

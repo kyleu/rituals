@@ -20,7 +20,7 @@
       <a href="#modal-action"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`gamepad`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGRefIcon(`action`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/action"><em>Action</em></a></div>
     <table class="mt">
       <tbody>
@@ -48,8 +48,8 @@
           <td>{%s p.Model.Act %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">Content</th>
-          <td>{%s p.Model.Content %}</td>
+          <th class="shrink" title="JSON object">Content</th>
+          <td>{%= components.JSON(p.Model.Content) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Note</th>

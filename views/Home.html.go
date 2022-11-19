@@ -18,22 +18,27 @@ import (
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
+	"github.com/kyleu/rituals/views/vworkspace/vwestimate"
+	"github.com/kyleu/rituals/views/vworkspace/vwretro"
+	"github.com/kyleu/rituals/views/vworkspace/vwsprint"
+	"github.com/kyleu/rituals/views/vworkspace/vwstandup"
+	"github.com/kyleu/rituals/views/vworkspace/vwteam"
 )
 
-//line views/Home.html:15
+//line views/Home.html:20
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/Home.html:15
+//line views/Home.html:20
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/Home.html:15
+//line views/Home.html:20
 type Home struct {
 	layout.Basic
 	Teams     team.Teams
@@ -43,276 +48,71 @@ type Home struct {
 	Retros    retro.Retros
 }
 
-//line views/Home.html:24
+//line views/Home.html:29
 func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:24
+//line views/Home.html:29
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/Home.html:26
+//line views/Home.html:31
 	components.StreamSVGRefIcon(qw422016, `app`, ps)
-//line views/Home.html:26
+//line views/Home.html:31
 	qw422016.E().S(util.AppName)
-//line views/Home.html:26
+//line views/Home.html:31
 	qw422016.N().S(`</h3>
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
   </div>
-  <div class="card">
-    <div class="right">
-      <form action="/team" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Team" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/team">`)
+  `)
+//line views/Home.html:34
+	vwteam.StreamTeamWorkspaceList(qw422016, p.Teams, nil, nil, ps)
+//line views/Home.html:34
+	qw422016.N().S(`
+  `)
 //line views/Home.html:35
-	components.StreamSVGRefIcon(qw422016, `team`, ps)
+	vwsprint.StreamSprintWorkspaceList(qw422016, p.Sprints, nil, nil, ps)
 //line views/Home.html:35
-	qw422016.N().S(`Teams</a></h3>
-`)
+	qw422016.N().S(`
+  `)
 //line views/Home.html:36
-	if len(p.Teams) == 0 {
+	vwestimate.StreamEstimateWorkspaceList(qw422016, p.Estimates, nil, nil, ps)
 //line views/Home.html:36
-		qw422016.N().S(`    <em>no teams available</em>
-`)
+	qw422016.N().S(`
+  `)
+//line views/Home.html:37
+	vwstandup.StreamStandupWorkspaceList(qw422016, p.Standups, nil, nil, ps)
+//line views/Home.html:37
+	qw422016.N().S(`
+  `)
 //line views/Home.html:38
-	} else {
+	vwretro.StreamRetroWorkspaceList(qw422016, p.Retros, nil, nil, ps)
 //line views/Home.html:38
-		qw422016.N().S(`    <table class="expanded">
-      <tbody>
+	qw422016.N().S(`
 `)
-//line views/Home.html:41
-		for _, x := range p.Teams {
-//line views/Home.html:41
-			qw422016.N().S(`        <tr><td><a href="/team/`)
-//line views/Home.html:42
-			qw422016.E().S(x.Slug)
-//line views/Home.html:42
-			qw422016.N().S(`">`)
-//line views/Home.html:42
-			qw422016.E().S(x.TitleString())
-//line views/Home.html:42
-			qw422016.N().S(`</a></td></tr>
-`)
-//line views/Home.html:43
-		}
-//line views/Home.html:43
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/Home.html:46
-	}
-//line views/Home.html:46
-	qw422016.N().S(`  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/sprint" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Sprint" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/sprint">`)
-//line views/Home.html:54
-	components.StreamSVGRefIcon(qw422016, `sprint`, ps)
-//line views/Home.html:54
-	qw422016.N().S(`Sprints</a></h3>
-`)
-//line views/Home.html:55
-	if len(p.Sprints) == 0 {
-//line views/Home.html:55
-		qw422016.N().S(`    <em>no sprints available</em>
-`)
-//line views/Home.html:57
-	} else {
-//line views/Home.html:57
-		qw422016.N().S(`    <table class="expanded">
-      <tbody>
-`)
-//line views/Home.html:60
-		for _, x := range p.Sprints {
-//line views/Home.html:60
-			qw422016.N().S(`        <tr><td><a href="/sprint/`)
-//line views/Home.html:61
-			qw422016.E().S(x.Slug)
-//line views/Home.html:61
-			qw422016.N().S(`">`)
-//line views/Home.html:61
-			qw422016.E().S(x.TitleString())
-//line views/Home.html:61
-			qw422016.N().S(`</a></td></tr>
-`)
-//line views/Home.html:62
-		}
-//line views/Home.html:62
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/Home.html:65
-	}
-//line views/Home.html:65
-	qw422016.N().S(`  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/estimate" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Estimate" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/estimate">`)
-//line views/Home.html:73
-	components.StreamSVGRefIcon(qw422016, `estimate`, ps)
-//line views/Home.html:73
-	qw422016.N().S(`Estimates</a></h3>
-`)
-//line views/Home.html:74
-	if len(p.Estimates) == 0 {
-//line views/Home.html:74
-		qw422016.N().S(`    <em>no estimates available</em>
-`)
-//line views/Home.html:76
-	} else {
-//line views/Home.html:76
-		qw422016.N().S(`    <table class="expanded">
-      <tbody>
-`)
-//line views/Home.html:79
-		for _, x := range p.Estimates {
-//line views/Home.html:79
-			qw422016.N().S(`        <tr><td><a href="/estimate/`)
-//line views/Home.html:80
-			qw422016.E().S(x.Slug)
-//line views/Home.html:80
-			qw422016.N().S(`">`)
-//line views/Home.html:80
-			qw422016.E().S(x.TitleString())
-//line views/Home.html:80
-			qw422016.N().S(`</a></td></tr>
-`)
-//line views/Home.html:81
-		}
-//line views/Home.html:81
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/Home.html:84
-	}
-//line views/Home.html:84
-	qw422016.N().S(`  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/standup" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Standup" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/standup">`)
-//line views/Home.html:92
-	components.StreamSVGRefIcon(qw422016, `standup`, ps)
-//line views/Home.html:92
-	qw422016.N().S(`Standups</a></h3>
-`)
-//line views/Home.html:93
-	if len(p.Standups) == 0 {
-//line views/Home.html:93
-		qw422016.N().S(`    <em>no standups available</em>
-`)
-//line views/Home.html:95
-	} else {
-//line views/Home.html:95
-		qw422016.N().S(`    <table class="expanded">
-      <tbody>
-`)
-//line views/Home.html:98
-		for _, x := range p.Standups {
-//line views/Home.html:98
-			qw422016.N().S(`        <tr><td><a href="/standup/`)
-//line views/Home.html:99
-			qw422016.E().S(x.Slug)
-//line views/Home.html:99
-			qw422016.N().S(`">`)
-//line views/Home.html:99
-			qw422016.E().S(x.TitleString())
-//line views/Home.html:99
-			qw422016.N().S(`</a></td></tr>
-`)
-//line views/Home.html:100
-		}
-//line views/Home.html:100
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/Home.html:103
-	}
-//line views/Home.html:103
-	qw422016.N().S(`  </div>
-  <div class="card">
-    <div class="right">
-      <form action="/retro" method="post">
-        <input type="text" name="title" class="combined" placeholder="New Retro" /><button type="submit" class="combined">+</button>
-      </form>
-    </div>
-    <h3><a href="/retro">`)
-//line views/Home.html:111
-	components.StreamSVGRefIcon(qw422016, `retro`, ps)
-//line views/Home.html:111
-	qw422016.N().S(`Retros</a></h3>
-`)
-//line views/Home.html:112
-	if len(p.Retros) == 0 {
-//line views/Home.html:112
-		qw422016.N().S(`    <em>no retros available</em>
-`)
-//line views/Home.html:114
-	} else {
-//line views/Home.html:114
-		qw422016.N().S(`    <table class="expanded">
-      <tbody>
-`)
-//line views/Home.html:117
-		for _, x := range p.Retros {
-//line views/Home.html:117
-			qw422016.N().S(`        <tr><td><a href="/retro/`)
-//line views/Home.html:118
-			qw422016.E().S(x.Slug)
-//line views/Home.html:118
-			qw422016.N().S(`">`)
-//line views/Home.html:118
-			qw422016.E().S(x.TitleString())
-//line views/Home.html:118
-			qw422016.N().S(`</a></td></tr>
-`)
-//line views/Home.html:119
-		}
-//line views/Home.html:119
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/Home.html:122
-	}
-//line views/Home.html:122
-	qw422016.N().S(`  </div>
-`)
-//line views/Home.html:124
+//line views/Home.html:39
 }
 
-//line views/Home.html:124
+//line views/Home.html:39
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:124
+//line views/Home.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:124
+//line views/Home.html:39
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:124
+//line views/Home.html:39
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:124
+//line views/Home.html:39
 }
 
-//line views/Home.html:124
+//line views/Home.html:39
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:124
+//line views/Home.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:124
+//line views/Home.html:39
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:124
+//line views/Home.html:39
 	qs422016 := string(qb422016.B)
-//line views/Home.html:124
+//line views/Home.html:39
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:124
+//line views/Home.html:39
 	return qs422016
-//line views/Home.html:124
+//line views/Home.html:39
 }

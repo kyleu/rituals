@@ -105,8 +105,8 @@ func EstimatePermissionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse EstimatePermission from form")
 		}
 		frm.EstimateID = ret.EstimateID
-		frm.K = ret.K
-		frm.V = ret.V
+		frm.Key = ret.Key
+		frm.Value = ret.Value
 		err = as.Services.EstimatePermission.Update(ps.Context, nil, frm, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update EstimatePermission [%s]", frm.String())
@@ -122,7 +122,7 @@ func EstimatePermissionDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.EstimatePermission.Delete(ps.Context, nil, ret.EstimateID, ret.K, ret.V, ps.Logger)
+		err = as.Services.EstimatePermission.Delete(ps.Context, nil, ret.EstimateID, ret.Key, ret.Value, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
@@ -141,15 +141,15 @@ func epermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 		return nil, errors.Errorf("argument [estimateID] (%s) is not a valid UUID", estimateIDArgStr)
 	}
 	estimateIDArg := *estimateIDArgP
-	kArg, err := cutil.RCRequiredString(rc, "k", false)
+	keyArg, err := cutil.RCRequiredString(rc, "key", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [k] as an argument")
+		return nil, errors.Wrap(err, "must provide [key] as an argument")
 	}
-	vArg, err := cutil.RCRequiredString(rc, "v", false)
+	valueArg, err := cutil.RCRequiredString(rc, "value", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [v] as an argument")
+		return nil, errors.Wrap(err, "must provide [value] as an argument")
 	}
-	return as.Services.EstimatePermission.Get(ps.Context, nil, estimateIDArg, kArg, vArg, ps.Logger)
+	return as.Services.EstimatePermission.Get(ps.Context, nil, estimateIDArg, keyArg, valueArg, ps.Logger)
 }
 
 func epermissionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*epermission.EstimatePermission, error) {

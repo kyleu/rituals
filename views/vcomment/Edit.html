@@ -29,8 +29,6 @@
           {% if p.IsNew %}{%= components.TableInputUUID("id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {%= components.TableSelect("svc", "Svc", string(p.Model.Svc), []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, 5, "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]") %}
           {%= components.TableInputUUID("modelID", "Model ID", &p.Model.ModelID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
-          {%= components.TableInput("targetType", "Target Type", p.Model.TargetType, 5, "String text") %}
-          {%= components.TableInputUUID("targetID", "Target ID", &p.Model.TargetID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
           {%= components.TableInputUUID("userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
           {%= components.TableInput("content", "Content", p.Model.Content, 5, "String text") %}
           {%= components.TableInput("html", "HTML", p.Model.HTML, 5, "String text") %}

@@ -79,9 +79,9 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	return ret.ToStandupHistories(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (StandupHistories, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (StandupHistories, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get histories using custom SQL")
 	}

@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vretro/vrhistory/Detail.html:23
-	components.StreamSVGRefIcon(qw422016, `clock`, ps)
+	components.StreamSVGRefIcon(qw422016, `history`, ps)
 //line views/vretro/vrhistory/Detail.html:23
 	qw422016.N().S(` `)
 //line views/vretro/vrhistory/Detail.html:23

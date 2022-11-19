@@ -14,6 +14,14 @@ func (s StandupHistories) Get(slug string) *StandupHistory {
 	return nil
 }
 
+func (s StandupHistories) Slugs() []string {
+	ret := make([]string, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.Slug)
+	}
+	return ret
+}
+
 func (s StandupHistories) SlugStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {

@@ -17,6 +17,14 @@ func (s StandupMembers) Get(standupID uuid.UUID, userID uuid.UUID) *StandupMembe
 	return nil
 }
 
+func (s StandupMembers) StandupIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.StandupID)
+	}
+	return ret
+}
+
 func (s StandupMembers) StandupIDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {
@@ -24,6 +32,14 @@ func (s StandupMembers) StandupIDStrings(includeNil bool) []string {
 	}
 	for _, x := range s {
 		ret = append(ret, x.StandupID.String())
+	}
+	return ret
+}
+
+func (s StandupMembers) UserIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.UserID)
 	}
 	return ret
 }

@@ -29,14 +29,14 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 }
 
 func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *StandupPermission, logger util.Logger) error {
-	curr, err := s.Get(ctx, tx, model.StandupID, model.K, model.V, logger)
+	curr, err := s.Get(ctx, tx, model.StandupID, model.Key, model.Value, logger)
 	if err != nil {
 		return errors.Wrapf(err, "can't get original permission [%s]", model.String())
 	}
 	model.Created = curr.Created
-	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"standup_id\" = $6 and \"k\" = $7 and \"v\" = $8", "")
+	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"standup_id\" = $6 and \"key\" = $7 and \"value\" = $8", "")
 	data := model.ToData()
-	data = append(data, model.StandupID, model.K, model.V)
+	data = append(data, model.StandupID, model.Key, model.Value)
 	_, err = s.db.Update(ctx, q, tx, 1, logger, data...)
 	if err != nil {
 		return err
@@ -51,7 +51,7 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 	for _, model := range models {
 		model.Created = time.Now()
 	}
-	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"standup_id", "k", "v"}, columnsQuoted, "")
+	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"standup_id", "key", "value"}, columnsQuoted, "")
 	var data []any
 	for _, model := range models {
 		data = append(data, model.ToData()...)
@@ -59,9 +59,9 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 	return s.db.Insert(ctx, q, tx, logger, data...)
 }
 
-func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, standupID uuid.UUID, k string, v string, logger util.Logger) error {
+func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, standupID uuid.UUID, key string, value string, logger util.Logger) error {
 	q := database.SQLDelete(tableQuoted, defaultWC(0))
-	_, err := s.db.Delete(ctx, q, tx, 1, logger, standupID, k, v)
+	_, err := s.db.Delete(ctx, q, tx, 1, logger, standupID, key, value)
 	return err
 }
 

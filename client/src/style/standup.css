@@ -1,0 +1,5 @@
+.report {
+  display: block;
+  padding: var(--padding);
+  border: var(--border);
+}

@@ -8,13 +8,21 @@ import (
 
 type TeamPermissions []*TeamPermission
 
-func (t TeamPermissions) Get(teamID uuid.UUID, k string, v string) *TeamPermission {
+func (t TeamPermissions) Get(teamID uuid.UUID, key string, value string) *TeamPermission {
 	for _, x := range t {
-		if x.TeamID == teamID && x.K == k && x.V == v {
+		if x.TeamID == teamID && x.Key == key && x.Value == value {
 			return x
 		}
 	}
 	return nil
+}
+
+func (t TeamPermissions) TeamIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(t)+1)
+	for _, x := range t {
+		ret = append(ret, x.TeamID)
+	}
+	return ret
 }
 
 func (t TeamPermissions) TeamIDStrings(includeNil bool) []string {
@@ -28,24 +36,40 @@ func (t TeamPermissions) TeamIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (t TeamPermissions) KStrings(includeNil bool) []string {
+func (t TeamPermissions) Keys() []string {
 	ret := make([]string, 0, len(t)+1)
-	if includeNil {
-		ret = append(ret, "")
-	}
 	for _, x := range t {
-		ret = append(ret, x.K)
+		ret = append(ret, x.Key)
 	}
 	return ret
 }
 
-func (t TeamPermissions) VStrings(includeNil bool) []string {
+func (t TeamPermissions) KeyStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(t)+1)
 	if includeNil {
 		ret = append(ret, "")
 	}
 	for _, x := range t {
-		ret = append(ret, x.V)
+		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (t TeamPermissions) Values() []string {
+	ret := make([]string, 0, len(t)+1)
+	for _, x := range t {
+		ret = append(ret, x.Value)
+	}
+	return ret
+}
+
+func (t TeamPermissions) ValueStrings(includeNil bool) []string {
+	ret := make([]string, 0, len(t)+1)
+	if includeNil {
+		ret = append(ret, "")
+	}
+	for _, x := range t {
+		ret = append(ret, x.Value)
 	}
 	return ret
 }

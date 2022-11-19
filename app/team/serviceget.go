@@ -80,16 +80,15 @@ func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, 
 	return ret.ToTeams(), nil
 }
 
-func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, params *filter.Params, logger util.Logger) (Teams, error) {
-	params = filters(params)
+func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*Team, error) {
 	wc := "\"slug\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, slug)
+	ret := &dto{}
+	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get teams by slug [%v]", slug)
+		return nil, errors.Wrapf(err, "unable to get team by slug [%v]", slug)
 	}
-	return ret.ToTeams(), nil
+	return ret.ToTeam(), nil
 }
 
 func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.SessionStatus, params *filter.Params, logger util.Logger) (Teams, error) {
@@ -104,9 +103,9 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 	return ret.ToTeams(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (Teams, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Teams, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get teams using custom SQL")
 	}

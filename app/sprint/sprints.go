@@ -17,6 +17,14 @@ func (s Sprints) Get(id uuid.UUID) *Sprint {
 	return nil
 }
 
+func (s Sprints) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (s Sprints) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {

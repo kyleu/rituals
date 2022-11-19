@@ -24,36 +24,38 @@ func StreamCommentSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_comment.sql:1
 	qw422016.N().S(`
 insert into "comment" (
-  "id", "svc", "model_id", "target_type", "target_id", "user_id", "content", "html", "created"
+  "id", "svc", "model_id", "user_id", "content", "html", "created"
 ) values (
-  '11000000-0000-0000-0000-000000000000', 'sprint', '20000000-0000-0000-0000-000000000000', 'story', '13000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', 'Hello!', '<h1>Hello!</h1>', now()
+  '11000000-0000-0000-0000-000000000000', 'sprint', '20000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', 'Sprint!', '<em>Sprint!</h1>', now()
+), (
+  '11000001-0000-0000-0000-000000000000', 'estimate', '30000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', 'Estimate!', '<em>Estimate!</h1>', now()
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 }
 
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 func WriteCommentSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	StreamCommentSeedData(qw422016)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 }
 
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 func CommentSeedData() string {
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	WriteCommentSeedData(qb422016)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 	return qs422016
-//line queries/seeddata/seed_comment.sql:7
+//line queries/seeddata/seed_comment.sql:9
 }

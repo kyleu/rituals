@@ -66,6 +66,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 }
 
 func (s State) Close(ctx context.Context, logger util.Logger) error {
+	defer func() { _ = telemetry.Close(ctx) }()
 	if err := s.DB.Close(); err != nil {
 		logger.Errorf("error closing database: %+v", err)
 	}

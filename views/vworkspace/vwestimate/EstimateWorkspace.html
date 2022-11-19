@@ -1,0 +1,125 @@
+{% import (
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
+) %}
+
+{% code type EstimateWorkspace struct {
+  layout.Basic
+  Estimate *workspace.FullEstimate
+  Teams team.Teams
+  Sprints sprint.Sprints
+} %}
+
+{% func (p *EstimateWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    w := p.Estimate
+    e := w.Estimate
+    self, others, _ := w.Members.Split(ps.Profile.ID)
+  -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary">
+      <div class="card">
+        <h3><a href="#modal-estimate-config">{%= components.SVGRefIcon(e.IconSafe(), ps) %}{%s e.TitleString() %}</a></h3>
+        {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
+        {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, ps) %}
+      </div>
+    </div>
+    <div id="panel-detail">
+      <div class="card">
+        <div class="right"><a href="#modal-story--add"><button>Add Story</button></a></div>
+        <h3>{%= components.SVGRefIcon(util.KeyStory, ps) %}Stories</h3>
+        {%= EstimateWorkspaceStories(w, ps) %}
+        {%= EstimateWorkspaceStoryModalAdd() %}
+      </div>
+    </div>
+    <div id="panel-self">
+      <div class="card">
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, e.PublicWebPath()) %}
+    </div>
+    <div id="panel-members">
+      <div class="card">
+        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, e.PublicWebPath()) %}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%= vwutil.InviteModal() %}
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const estimate = {%s= util.ToJSONCompact(e) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace('{%s util.KeyEstimate %}', estimate, members, permissions);
+    });
+  </script>
+{% endfunc %}
+
+{% func EstimateWorkspaceModal(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) %}
+  <div id="modal-estimate-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Estimate</h2>
+      </div>
+      <div class="modal-body">
+        <form action="{%s e.PublicWebPath() %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          {%= components.FormVerticalInput("title", "Title", e.TitleString(), 5, "The name of your estimate") %}
+          {%= components.FormVerticalIconPicker("icon", "Icon", e.IconSafe(), ps, 5) %}
+          {%= components.FormVerticalInputTags("choices", "Choices", e.Choices, ps, 5, "The available options for stories in this estimate") %}
+          {%= components.FormVerticalSelect(util.KeyTeam, "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeySprint, "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          <hr />
+          <em>Permissions</em>
+          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this estimate's team</label></div>
+          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this estimate's sprint</label></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func EstimateWorkspaceList(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyEstimate, teamID, sprintID, "New Estimate") %}</div>
+    <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
+    {%- if len(estimates) == 0 -%}
+    <div class="mt"><em>no estimates</em></div>
+    {%- else -%}
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, x := range estimates -%}
+        <tr>
+          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}

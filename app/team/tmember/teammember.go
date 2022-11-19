@@ -102,7 +102,7 @@ func (t *TeamMember) TitleString() string {
 }
 
 func (t *TeamMember) WebPath() string {
-	return "/admin/db/team/member" + "/" + t.TeamID.String() + "/" + t.UserID.String()
+	return "/admin/db/team/member/" + t.TeamID.String() + "/" + t.UserID.String()
 }
 
 func (t *TeamMember) Diff(tx *TeamMember) util.Diffs {

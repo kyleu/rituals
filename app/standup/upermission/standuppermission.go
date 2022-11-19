@@ -12,27 +12,27 @@ import (
 
 type PK struct {
 	StandupID uuid.UUID `json:"standupID"`
-	K         string    `json:"k"`
-	V         string    `json:"v"`
+	Key       string    `json:"key"`
+	Value     string    `json:"value"`
 }
 
 type StandupPermission struct {
 	StandupID uuid.UUID `json:"standupID"`
-	K         string    `json:"k"`
-	V         string    `json:"v"`
+	Key       string    `json:"key"`
+	Value     string    `json:"value"`
 	Access    string    `json:"access"`
 	Created   time.Time `json:"created"`
 }
 
-func New(standupID uuid.UUID, k string, v string) *StandupPermission {
-	return &StandupPermission{StandupID: standupID, K: k, V: v}
+func New(standupID uuid.UUID, key string, value string) *StandupPermission {
+	return &StandupPermission{StandupID: standupID, Key: key, Value: value}
 }
 
 func Random() *StandupPermission {
 	return &StandupPermission{
 		StandupID: util.UUID(),
-		K:         util.RandomString(12),
-		V:         util.RandomString(12),
+		Key:       util.RandomString(12),
+		Value:     util.RandomString(12),
 		Access:    util.RandomString(12),
 		Created:   time.Now(),
 	}
@@ -49,11 +49,11 @@ func FromMap(m util.ValueMap, setPK bool) (*StandupPermission, error) {
 		if retStandupID != nil {
 			ret.StandupID = *retStandupID
 		}
-		ret.K, err = m.ParseString("k", true, true)
+		ret.Key, err = m.ParseString("key", true, true)
 		if err != nil {
 			return nil, err
 		}
-		ret.V, err = m.ParseString("v", true, true)
+		ret.Value, err = m.ParseString("value", true, true)
 		if err != nil {
 			return nil, err
 		}
@@ -72,15 +72,15 @@ func FromMap(m util.ValueMap, setPK bool) (*StandupPermission, error) {
 func (s *StandupPermission) Clone() *StandupPermission {
 	return &StandupPermission{
 		StandupID: s.StandupID,
-		K:         s.K,
-		V:         s.V,
+		Key:       s.Key,
+		Value:     s.Value,
 		Access:    s.Access,
 		Created:   s.Created,
 	}
 }
 
 func (s *StandupPermission) String() string {
-	return fmt.Sprintf("%s::%s::%s", s.StandupID.String(), s.K, s.V)
+	return fmt.Sprintf("%s::%s::%s", s.StandupID.String(), s.Key, s.Value)
 }
 
 func (s *StandupPermission) TitleString() string {
@@ -88,7 +88,7 @@ func (s *StandupPermission) TitleString() string {
 }
 
 func (s *StandupPermission) WebPath() string {
-	return "/admin/db/standup/permission" + "/" + s.StandupID.String() + "/" + s.K + "/" + s.V
+	return "/admin/db/standup/permission/" + s.StandupID.String() + "/" + s.Key + "/" + s.Value
 }
 
 func (s *StandupPermission) Diff(sx *StandupPermission) util.Diffs {
@@ -96,11 +96,11 @@ func (s *StandupPermission) Diff(sx *StandupPermission) util.Diffs {
 	if s.StandupID != sx.StandupID {
 		diffs = append(diffs, util.NewDiff("standupID", s.StandupID.String(), sx.StandupID.String()))
 	}
-	if s.K != sx.K {
-		diffs = append(diffs, util.NewDiff("k", s.K, sx.K))
+	if s.Key != sx.Key {
+		diffs = append(diffs, util.NewDiff("key", s.Key, sx.Key))
 	}
-	if s.V != sx.V {
-		diffs = append(diffs, util.NewDiff("v", s.V, sx.V))
+	if s.Value != sx.Value {
+		diffs = append(diffs, util.NewDiff("value", s.Value, sx.Value))
 	}
 	if s.Access != sx.Access {
 		diffs = append(diffs, util.NewDiff("access", s.Access, sx.Access))
@@ -112,5 +112,5 @@ func (s *StandupPermission) Diff(sx *StandupPermission) util.Diffs {
 }
 
 func (s *StandupPermission) ToData() []any {
-	return []any{s.StandupID, s.K, s.V, s.Access, s.Created}
+	return []any{s.StandupID, s.Key, s.Value, s.Access, s.Created}
 }

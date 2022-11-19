@@ -101,28 +101,18 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:32
-	components.StreamTableInput(qw422016, "targetType", "Target Type", p.Model.TargetType, 5, "String text")
+	components.StreamTableInputUUID(qw422016, "userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vcomment/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:33
-	components.StreamTableInputUUID(qw422016, "targetID", "Target ID", &p.Model.TargetID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInput(qw422016, "content", "Content", p.Model.Content, 5, "String text")
 //line views/vcomment/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:34
-	components.StreamTableInputUUID(qw422016, "userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vcomment/Edit.html:34
-	qw422016.N().S(`
-          `)
-//line views/vcomment/Edit.html:35
-	components.StreamTableInput(qw422016, "content", "Content", p.Model.Content, 5, "String text")
-//line views/vcomment/Edit.html:35
-	qw422016.N().S(`
-          `)
-//line views/vcomment/Edit.html:36
 	components.StreamTableInput(qw422016, "html", "HTML", p.Model.HTML, 5, "String text")
-//line views/vcomment/Edit.html:36
+//line views/vcomment/Edit.html:34
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -130,31 +120,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 }
 
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	p.StreamBody(qw422016, as, ps)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 }
 
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	p.WriteBody(qb422016, as, ps)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 	return qs422016
-//line views/vcomment/Edit.html:42
+//line views/vcomment/Edit.html:40
 }

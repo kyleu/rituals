@@ -2,6 +2,7 @@
 package action
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -26,7 +27,7 @@ type dto struct {
 	ModelID uuid.UUID         `db:"model_id"`
 	UserID  uuid.UUID         `db:"user_id"`
 	Act     string            `db:"act"`
-	Content string            `db:"content"`
+	Content json.RawMessage   `db:"content"`
 	Note    string            `db:"note"`
 	Created time.Time         `db:"created"`
 }
@@ -35,13 +36,15 @@ func (d *dto) ToAction() *Action {
 	if d == nil {
 		return nil
 	}
+	contentArg := util.ValueMap{}
+	_ = util.FromJSON(d.Content, &contentArg)
 	return &Action{
 		ID:      d.ID,
 		Svc:     d.Svc,
 		ModelID: d.ModelID,
 		UserID:  d.UserID,
 		Act:     d.Act,
-		Content: d.Content,
+		Content: contentArg,
 		Note:    d.Note,
 		Created: d.Created,
 	}

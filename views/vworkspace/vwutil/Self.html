@@ -1,0 +1,31 @@
+{% import (
+  "github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/views/components"
+) %}
+
+{% func SelfModal(name string, picture string, role enum.MemberStatus, action string) %}
+  <div id="modal-self" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Edit Self</h2>
+      </div>
+      <div class="modal-body">
+        <form action="{%s action %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="self" />
+          <em>Name</em><br />
+          {%= components.FormInput("name", "input-name", name, "The name you wish to be called") %}
+          <div><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>
+          <div><label><input type="radio" name="choice" value="global"> Change global default</label></div>
+          <hr />
+          <em>Picture</em>
+          <div>To set a profile picture, <a href="/profile">sign in</a></div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+          <a href="#"><button type="button">Leave</button></a>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

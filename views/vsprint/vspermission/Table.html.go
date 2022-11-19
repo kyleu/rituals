@@ -48,12 +48,12 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 	qw422016.N().S(`
         `)
 //line views/vsprint/vspermission/Table.html:17
-	components.StreamTableHeaderSimple(qw422016, "spermission", "k", "K", "String text", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "spermission", "key", "Key", "String text", prms, ps.URI, ps)
 //line views/vsprint/vspermission/Table.html:17
 	qw422016.N().S(`
         `)
 //line views/vsprint/vspermission/Table.html:18
-	components.StreamTableHeaderSimple(qw422016, "spermission", "v", "V", "String text", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "spermission", "value", "Value", "String text", prms, ps.URI, ps)
 //line views/vsprint/vspermission/Table.html:18
 	qw422016.N().S(`
         `)
@@ -81,11 +81,11 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:27
 		qw422016.N().S(`/`)
 //line views/vsprint/vspermission/Table.html:27
-		qw422016.N().U(model.K)
+		qw422016.N().U(model.Key)
 //line views/vsprint/vspermission/Table.html:27
 		qw422016.N().S(`/`)
 //line views/vsprint/vspermission/Table.html:27
-		qw422016.N().U(model.V)
+		qw422016.N().U(model.Value)
 //line views/vsprint/vspermission/Table.html:27
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:27
@@ -118,15 +118,15 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:30
 		qw422016.N().S(`/`)
 //line views/vsprint/vspermission/Table.html:30
-		qw422016.N().U(model.K)
+		qw422016.N().U(model.Key)
 //line views/vsprint/vspermission/Table.html:30
 		qw422016.N().S(`/`)
 //line views/vsprint/vspermission/Table.html:30
-		qw422016.N().U(model.V)
+		qw422016.N().U(model.Value)
 //line views/vsprint/vspermission/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:30
-		qw422016.E().S(model.K)
+		qw422016.E().S(model.Key)
 //line views/vsprint/vspermission/Table.html:30
 		qw422016.N().S(`</a></td>
         <td><a href="/admin/db/sprint/permission/`)
@@ -135,15 +135,15 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:31
 		qw422016.N().S(`/`)
 //line views/vsprint/vspermission/Table.html:31
-		qw422016.N().U(model.K)
+		qw422016.N().U(model.Key)
 //line views/vsprint/vspermission/Table.html:31
 		qw422016.N().S(`/`)
 //line views/vsprint/vspermission/Table.html:31
-		qw422016.N().U(model.V)
+		qw422016.N().U(model.Value)
 //line views/vsprint/vspermission/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:31
-		qw422016.E().S(model.V)
+		qw422016.E().S(model.Value)
 //line views/vsprint/vspermission/Table.html:31
 		qw422016.N().S(`</a></td>
         <td>`)

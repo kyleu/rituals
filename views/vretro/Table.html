@@ -18,6 +18,7 @@
         {%= components.TableHeaderSimple("retro", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("retro", "slug", "Slug", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("retro", "title", "Title", "String text", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("retro", "icon", "Icon", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("retro", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("retro", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("retro", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
@@ -33,6 +34,7 @@
         <td><a href="/admin/db/retro/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>{%s model.Slug %}</td>
         <td><strong>{%s model.Title %}</strong></td>
+        <td>{%s model.Icon %}</td>
         <td>{%v model.Status %}</td>
         <td>
           <div class="icon">{%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
@@ -53,7 +55,7 @@
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="10">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="11">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

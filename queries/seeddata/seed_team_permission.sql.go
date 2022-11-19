@@ -24,7 +24,7 @@ func StreamTeamPermissionSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_team_permission.sql:1
 	qw422016.N().S(`
 insert into "team_permission" (
-  "team_id", "k", "v", "access", "created"
+  "team_id", "key", "value", "access", "created"
 ) values (
   '10000000-0000-0000-0000-000000000000', 'key', 'value', 'access', now()
 ) on conflict do nothing;

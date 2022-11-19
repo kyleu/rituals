@@ -1,0 +1,120 @@
+{% import (
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/estimate/story"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func EstimateWorkspaceStories(w *workspace.FullEstimate, ps *cutil.PageState) %}
+  <table class="mt expanded">
+    <tbody>
+      {%- for _, s := range w.Stories -%}
+      <tr>
+        <td><a href="#modal-story-{%s s.ID.String() %}">{%s s.TitleString() %}</a></td>
+        <td class="shrink">0</td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+  </table>
+  {%- for _, s := range w.Stories -%}
+  {%- if ps.Profile.ID == s.UserID -%}
+  {%= EstimateWorkspaceStoryModalEdit(s, ps) %}
+  {%- endif -%}
+  {%= EstimateWorkspaceStoryModal(w, s, ps) %}
+  {%- endfor -%}
+{% endfunc %}
+
+{% func EstimateWorkspaceStoryModalAdd() %}
+  <div id="modal-story--add" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Add Story</h2>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          <input type="hidden" name="action" value="story-add" />
+          {%= components.FormVerticalInput("title", "Title", "", 5, "Story title") %}
+          <div class="mt">
+            <a href="#"><button type="button">Cancel</button></a>
+            <button type="submit">Add Story</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func EstimateWorkspaceStoryModal(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) %}
+  <div id="modal-story-{%s s.ID.String() %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Story</h2>
+      </div>
+      <div class="modal-body">
+        <h2 class="billboard">{%s s.TitleString() %}</h2>
+        <div>Your story is available to <a href="#modal-story-{%s s.ID.String() %}-edit">edit</a> and ready to start voting</div>
+        <hr />
+        <div>Members</div>
+        <div class="story-members">
+          {%- for _, m := range w.Members -%}
+          {%- code v := w.Votes.Get(s.ID, m.UserID) -%}
+          <div class="member">
+            {%- if v == nil -%}
+            <div>-</div>
+            {%- else -%}
+            <div>{%s v.Choice %}</div>
+            {%- endif -%}
+            {%s m.Name %}
+          </div>
+          {%- endfor -%}
+        </div>
+        <hr />
+        <div>Choices</div>
+        <div class="story-votes">
+          {%- code selfVote := w.Votes.Get(s.ID, ps.Profile.ID) -%}
+          {%- for _, c := range w.Estimate.Choices -%}
+          <div class="vote">
+            <label>
+              {%- if selfVote != nil && selfVote.Choice == c -%}
+              <input type="radio" name="vote" value="{%s c %}" checked="checked" />
+              {%- else -%}
+              <input type="radio" name="vote" value="{%s c %}" />
+              {%- endif -%}
+              <div class="vote-choice">{%s c %}</div>
+            </label>
+          </div>
+          {%- endfor -%}
+        </div>
+        <hr />
+        <div>Results</div>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func EstimateWorkspaceStoryModalEdit(s *story.Story, ps *cutil.PageState) %}
+  <div id="modal-story-{%s s.ID.String() %}-edit" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Edit Story</h2>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          <input type="hidden" name="action" value="story-edit" />
+          <input type="hidden" name="storyID" value="{%s s.ID.String() %}" />
+          {%= components.FormVerticalInput("title", "Title", s.Title, 5, "Story title") %}
+          <div class="mt">
+            <a href="#"><button type="button">Cancel</button></a>
+            <button type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

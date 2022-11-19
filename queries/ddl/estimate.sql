@@ -8,6 +8,7 @@ create table if not exists "estimate" (
   "id" uuid not null,
   "slug" text not null,
   "title" text not null,
+  "icon" text not null,
   "status" session_status not null,
   "team_id" uuid,
   "sprint_id" uuid,

@@ -8,15 +8,16 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app"
+	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/search/result"
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/util"
 )
 
-type Provider func(context.Context, *app.State, *Params, util.Logger) (result.Results, error)
+type Provider func(context.Context, *Params, *app.State, *cutil.PageState, util.Logger) (result.Results, error)
 
-func Search(ctx context.Context, as *app.State, params *Params, logger util.Logger) (result.Results, []error) {
-	ctx, span, logger := telemetry.StartSpan(ctx, "search", logger)
+func Search(ctx context.Context, params *Params, as *app.State, page *cutil.PageState) (result.Results, []error) {
+	ctx, span, logger := telemetry.StartSpan(ctx, "search", page.Logger)
 	defer span.Complete()
 
 	if params.Q == "" {
@@ -24,10 +25,10 @@ func Search(ctx context.Context, as *app.State, params *Params, logger util.Logg
 	}
 	var allProviders []Provider
 	// $PF_SECTION_START(search_functions)$
-	testFunc := func(ctx context.Context, as *app.State, p *Params, logger util.Logger) (result.Results, error) {
-		return result.Results{{URL: "/search?q=test", Title: "Test Result", Icon: "star", Matches: nil}}, nil
+	workspaceSearch := func(ctx context.Context, p *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
+		return as.Services.Workspace.Search(ctx, p.Q, p.PS, page.Profile, page.Data, logger)
 	}
-	allProviders = append(allProviders, testFunc)
+	allProviders = append(allProviders, workspaceSearch)
 	// $PF_SECTION_END(search_functions)$
 
 	allProviders = append(allProviders, generatedSearch()...)
@@ -38,7 +39,7 @@ func Search(ctx context.Context, as *app.State, params *Params, logger util.Logg
 	params.Q = strings.TrimSpace(params.Q)
 
 	results, errs := util.AsyncCollect(allProviders, func(item Provider) (result.Results, error) {
-		return item(ctx, as, params, logger)
+		return item(ctx, params, as, page, logger)
 	})
 
 	ret := make(result.Results, 0, len(results)*len(results))

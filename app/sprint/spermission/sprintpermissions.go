@@ -8,13 +8,21 @@ import (
 
 type SprintPermissions []*SprintPermission
 
-func (s SprintPermissions) Get(sprintID uuid.UUID, k string, v string) *SprintPermission {
+func (s SprintPermissions) Get(sprintID uuid.UUID, key string, value string) *SprintPermission {
 	for _, x := range s {
-		if x.SprintID == sprintID && x.K == k && x.V == v {
+		if x.SprintID == sprintID && x.Key == key && x.Value == value {
 			return x
 		}
 	}
 	return nil
+}
+
+func (s SprintPermissions) SprintIDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.SprintID)
+	}
+	return ret
 }
 
 func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
@@ -28,24 +36,40 @@ func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (s SprintPermissions) KStrings(includeNil bool) []string {
+func (s SprintPermissions) Keys() []string {
 	ret := make([]string, 0, len(s)+1)
-	if includeNil {
-		ret = append(ret, "")
-	}
 	for _, x := range s {
-		ret = append(ret, x.K)
+		ret = append(ret, x.Key)
 	}
 	return ret
 }
 
-func (s SprintPermissions) VStrings(includeNil bool) []string {
+func (s SprintPermissions) KeyStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {
 		ret = append(ret, "")
 	}
 	for _, x := range s {
-		ret = append(ret, x.V)
+		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (s SprintPermissions) Values() []string {
+	ret := make([]string, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.Value)
+	}
+	return ret
+}
+
+func (s SprintPermissions) ValueStrings(includeNil bool) []string {
+	ret := make([]string, 0, len(s)+1)
+	if includeNil {
+		ret = append(ret, "")
+	}
+	for _, x := range s {
+		ret = append(ret, x.Value)
 	}
 	return ret
 }

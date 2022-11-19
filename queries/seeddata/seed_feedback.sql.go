@@ -26,34 +26,38 @@ func StreamFeedbackSeedData(qw422016 *qt422016.Writer) {
 insert into "feedback" (
   "id", "retro_id", "idx", "user_id", "category", "content", "html", "created", "updated"
 ) values (
-  '51000000-0000-0000-0000-000000000000', '50000000-0000-0000-0000-000000000000', 0, '90000000-0000-0000-0000-000000000000', 'Category', 'Content', 'HTML', now(), null
+  '51000000-0000-0000-0000-000000000000', '50000000-0000-0000-0000-000000000000', 0, '90000000-0000-0000-0000-000000000000', 'good', 'First feedback', '<em>First feedback</em>', now(), null
+), (
+  '51000001-0000-0000-0000-000000000000', '50000000-0000-0000-0000-000000000000', 0, '90000000-0000-0000-0000-000000000000', 'bad', 'Second feedback', '<em>Second feedback</em>', now(), null
+), (
+  '51000002-0000-0000-0000-000000000000', '50000000-0000-0000-0000-000000000000', 0, '90000001-0000-0000-0000-000000000000', 'extra', 'Third feedback', '<em>Third feedback</em>', now(), null
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 }
 
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 func WriteFeedbackSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	StreamFeedbackSeedData(qw422016)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 }
 
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 func FeedbackSeedData() string {
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	WriteFeedbackSeedData(qb422016)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 	return qs422016
-//line queries/seeddata/seed_feedback.sql:7
+//line queries/seeddata/seed_feedback.sql:11
 }

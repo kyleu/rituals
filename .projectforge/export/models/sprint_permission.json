@@ -5,7 +5,7 @@
     "sprint"
   ],
   "description": "TODO",
-  "icon": "lock",
+  "icon": "permission",
   "ordering": [
     {
       "column": "created",
@@ -22,13 +22,13 @@
       "search": true
     },
     {
-      "name": "k",
+      "name": "key",
       "type": "string",
       "pk": true,
       "search": true
     },
     {
-      "name": "v",
+      "name": "value",
       "type": "string",
       "pk": true,
       "search": true

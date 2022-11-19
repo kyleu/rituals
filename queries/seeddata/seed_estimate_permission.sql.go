@@ -24,7 +24,7 @@ func StreamEstimatePermissionSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_estimate_permission.sql:1
 	qw422016.N().S(`
 insert into "estimate_permission" (
-  "estimate_id", "k", "v", "access", "created"
+  "estimate_id", "key", "value", "access", "created"
 ) values (
   '30000000-0000-0000-0000-000000000000', 'key', 'value', 'access', now()
 ) on conflict do nothing;

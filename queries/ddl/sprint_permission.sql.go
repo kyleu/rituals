@@ -63,19 +63,19 @@ func StreamSprintPermissionCreate(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 create table if not exists "sprint_permission" (
   "sprint_id" uuid not null,
-  "k" text not null,
-  "v" text not null,
+  "key" text not null,
+  "value" text not null,
   "access" text not null,
   "created" timestamp not null default now(),
   foreign key ("sprint_id") references "sprint" ("id"),
-  primary key ("sprint_id", "k", "v")
+  primary key ("sprint_id", "key", "value")
 );
 
 create index if not exists "sprint_permission__sprint_id_idx" on "sprint_permission" ("sprint_id");
 
-create index if not exists "sprint_permission__k_idx" on "sprint_permission" ("k");
+create index if not exists "sprint_permission__key_idx" on "sprint_permission" ("key");
 
-create index if not exists "sprint_permission__v_idx" on "sprint_permission" ("v");
+create index if not exists "sprint_permission__value_idx" on "sprint_permission" ("value");
 -- `)
 //line queries/ddl/sprint_permission.sql:22
 }

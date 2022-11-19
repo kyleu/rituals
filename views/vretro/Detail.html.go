@@ -108,51 +108,59 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <th class="shrink" title="String text">Icon</th>
           <td>`)
 //line views/vretro/Detail.html:59
-	qw422016.E().V(p.Model.Status)
+	qw422016.E().S(p.Model.Icon)
 //line views/vretro/Detail.html:59
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>`)
+//line views/vretro/Detail.html:63
+	qw422016.E().V(p.Model.Status)
+//line views/vretro/Detail.html:63
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td>
             <div class="icon">`)
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 	if p.Model.TeamID != nil {
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 			qw422016.N().S(` (`)
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 			qw422016.E().S(x.TitleString())
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 			qw422016.N().S(`)`)
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 		}
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 	}
-//line views/vretro/Detail.html:64
+//line views/vretro/Detail.html:68
 	qw422016.N().S(`</div>
             `)
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 	if p.Model.TeamID != nil {
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 		qw422016.N().S(`<a title="Team" href="`)
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 		qw422016.N().S(`">`)
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 		components.StreamSVGRefIcon(qw422016, "team", ps)
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 		qw422016.N().S(`</a>`)
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 	}
-//line views/vretro/Detail.html:65
+//line views/vretro/Detail.html:69
 	qw422016.N().S(`
           </td>
         </tr>
@@ -160,40 +168,40 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td>
             <div class="icon">`)
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 	components.StreamDisplayUUID(qw422016, p.Model.SprintID)
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 	if p.Model.SprintID != nil {
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 		if x := p.Sprints.Get(*p.Model.SprintID); x != nil {
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 			qw422016.N().S(` (`)
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 			qw422016.E().S(x.TitleString())
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 			qw422016.N().S(`)`)
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 		}
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 	}
-//line views/vretro/Detail.html:71
+//line views/vretro/Detail.html:75
 	qw422016.N().S(`</div>
             `)
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 	if p.Model.SprintID != nil {
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 		qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 		qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 		qw422016.N().S(`">`)
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 		components.StreamSVGRefIcon(qw422016, "sprint", ps)
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 		qw422016.N().S(`</a>`)
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 	}
-//line views/vretro/Detail.html:72
+//line views/vretro/Detail.html:76
 	qw422016.N().S(`
           </td>
         </tr>
@@ -201,171 +209,171 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
           <td>
             <div class="icon">`)
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 	if x := p.Users.Get(p.Model.Owner); x != nil {
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 		qw422016.N().S(` (`)
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 		qw422016.E().S(x.TitleString())
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 		qw422016.N().S(`)`)
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 	}
-//line views/vretro/Detail.html:78
+//line views/vretro/Detail.html:82
 	qw422016.N().S(`</div>
             <a title="User" href="`)
-//line views/vretro/Detail.html:79
+//line views/vretro/Detail.html:83
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
-//line views/vretro/Detail.html:79
+//line views/vretro/Detail.html:83
 	qw422016.N().S(`">`)
-//line views/vretro/Detail.html:79
+//line views/vretro/Detail.html:83
 	components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vretro/Detail.html:79
+//line views/vretro/Detail.html:83
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Comma-separated list of values">Categories</th>
           <td>`)
-//line views/vretro/Detail.html:84
+//line views/vretro/Detail.html:88
 	components.StreamDisplayStringArray(qw422016, p.Model.Categories)
-//line views/vretro/Detail.html:84
+//line views/vretro/Detail.html:88
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vretro/Detail.html:88
+//line views/vretro/Detail.html:92
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vretro/Detail.html:88
+//line views/vretro/Detail.html:92
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vretro/Detail.html:92
+//line views/vretro/Detail.html:96
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vretro/Detail.html:92
+//line views/vretro/Detail.html:96
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vretro/Detail.html:99
+//line views/vretro/Detail.html:103
 	if len(p.FeedbacksByRetroID) > 0 {
-//line views/vretro/Detail.html:99
+//line views/vretro/Detail.html:103
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vretro/Detail.html:101
+//line views/vretro/Detail.html:105
 		components.StreamSVGRefIcon(qw422016, `comment`, ps)
-//line views/vretro/Detail.html:101
+//line views/vretro/Detail.html:105
 		qw422016.N().S(` Related feedbacks by [retro id]</h3>
     <div class="overflow clear">
       `)
-//line views/vretro/Detail.html:103
+//line views/vretro/Detail.html:107
 		vfeedback.StreamTable(qw422016, p.FeedbacksByRetroID, nil, nil, p.Params, as, ps)
-//line views/vretro/Detail.html:103
+//line views/vretro/Detail.html:107
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vretro/Detail.html:106
+//line views/vretro/Detail.html:110
 	}
-//line views/vretro/Detail.html:107
+//line views/vretro/Detail.html:111
 	if len(p.RetroHistoriesByRetroID) > 0 {
-//line views/vretro/Detail.html:107
+//line views/vretro/Detail.html:111
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vretro/Detail.html:109
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
-//line views/vretro/Detail.html:109
+//line views/vretro/Detail.html:113
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
+//line views/vretro/Detail.html:113
 		qw422016.N().S(` Related histories by [retro id]</h3>
     <div class="overflow clear">
       `)
-//line views/vretro/Detail.html:111
+//line views/vretro/Detail.html:115
 		vrhistory.StreamTable(qw422016, p.RetroHistoriesByRetroID, nil, p.Params, as, ps)
-//line views/vretro/Detail.html:111
+//line views/vretro/Detail.html:115
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vretro/Detail.html:114
+//line views/vretro/Detail.html:118
 	}
-//line views/vretro/Detail.html:115
+//line views/vretro/Detail.html:119
 	if len(p.RetroMembersByRetroID) > 0 {
-//line views/vretro/Detail.html:115
+//line views/vretro/Detail.html:119
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vretro/Detail.html:117
+//line views/vretro/Detail.html:121
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vretro/Detail.html:117
+//line views/vretro/Detail.html:121
 		qw422016.N().S(` Related members by [retro id]</h3>
     <div class="overflow clear">
       `)
-//line views/vretro/Detail.html:119
+//line views/vretro/Detail.html:123
 		vrmember.StreamTable(qw422016, p.RetroMembersByRetroID, nil, nil, p.Params, as, ps)
-//line views/vretro/Detail.html:119
+//line views/vretro/Detail.html:123
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vretro/Detail.html:122
+//line views/vretro/Detail.html:126
 	}
-//line views/vretro/Detail.html:123
+//line views/vretro/Detail.html:127
 	if len(p.RetroPermissionsByRetroID) > 0 {
-//line views/vretro/Detail.html:123
+//line views/vretro/Detail.html:127
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vretro/Detail.html:125
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
-//line views/vretro/Detail.html:125
+//line views/vretro/Detail.html:129
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
+//line views/vretro/Detail.html:129
 		qw422016.N().S(` Related permissions by [retro id]</h3>
     <div class="overflow clear">
       `)
-//line views/vretro/Detail.html:127
+//line views/vretro/Detail.html:131
 		vrpermission.StreamTable(qw422016, p.RetroPermissionsByRetroID, nil, p.Params, as, ps)
-//line views/vretro/Detail.html:127
+//line views/vretro/Detail.html:131
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vretro/Detail.html:130
+//line views/vretro/Detail.html:134
 	}
-//line views/vretro/Detail.html:130
+//line views/vretro/Detail.html:134
 	qw422016.N().S(`  `)
-//line views/vretro/Detail.html:131
+//line views/vretro/Detail.html:135
 	components.StreamJSONModal(qw422016, "retro", "Retro JSON", p.Model, 1)
-//line views/vretro/Detail.html:131
+//line views/vretro/Detail.html:135
 	qw422016.N().S(`
 `)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 }
 
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	p.StreamBody(qw422016, as, ps)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 }
 
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	p.WriteBody(qb422016, as, ps)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	qs422016 := string(qb422016.B)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 	return qs422016
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:136
 }

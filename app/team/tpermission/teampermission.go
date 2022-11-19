@@ -12,27 +12,27 @@ import (
 
 type PK struct {
 	TeamID uuid.UUID `json:"teamID"`
-	K      string    `json:"k"`
-	V      string    `json:"v"`
+	Key    string    `json:"key"`
+	Value  string    `json:"value"`
 }
 
 type TeamPermission struct {
 	TeamID  uuid.UUID `json:"teamID"`
-	K       string    `json:"k"`
-	V       string    `json:"v"`
+	Key     string    `json:"key"`
+	Value   string    `json:"value"`
 	Access  string    `json:"access"`
 	Created time.Time `json:"created"`
 }
 
-func New(teamID uuid.UUID, k string, v string) *TeamPermission {
-	return &TeamPermission{TeamID: teamID, K: k, V: v}
+func New(teamID uuid.UUID, key string, value string) *TeamPermission {
+	return &TeamPermission{TeamID: teamID, Key: key, Value: value}
 }
 
 func Random() *TeamPermission {
 	return &TeamPermission{
 		TeamID:  util.UUID(),
-		K:       util.RandomString(12),
-		V:       util.RandomString(12),
+		Key:     util.RandomString(12),
+		Value:   util.RandomString(12),
 		Access:  util.RandomString(12),
 		Created: time.Now(),
 	}
@@ -49,11 +49,11 @@ func FromMap(m util.ValueMap, setPK bool) (*TeamPermission, error) {
 		if retTeamID != nil {
 			ret.TeamID = *retTeamID
 		}
-		ret.K, err = m.ParseString("k", true, true)
+		ret.Key, err = m.ParseString("key", true, true)
 		if err != nil {
 			return nil, err
 		}
-		ret.V, err = m.ParseString("v", true, true)
+		ret.Value, err = m.ParseString("value", true, true)
 		if err != nil {
 			return nil, err
 		}
@@ -72,15 +72,15 @@ func FromMap(m util.ValueMap, setPK bool) (*TeamPermission, error) {
 func (t *TeamPermission) Clone() *TeamPermission {
 	return &TeamPermission{
 		TeamID:  t.TeamID,
-		K:       t.K,
-		V:       t.V,
+		Key:     t.Key,
+		Value:   t.Value,
 		Access:  t.Access,
 		Created: t.Created,
 	}
 }
 
 func (t *TeamPermission) String() string {
-	return fmt.Sprintf("%s::%s::%s", t.TeamID.String(), t.K, t.V)
+	return fmt.Sprintf("%s::%s::%s", t.TeamID.String(), t.Key, t.Value)
 }
 
 func (t *TeamPermission) TitleString() string {
@@ -88,7 +88,7 @@ func (t *TeamPermission) TitleString() string {
 }
 
 func (t *TeamPermission) WebPath() string {
-	return "/admin/db/team/permission" + "/" + t.TeamID.String() + "/" + t.K + "/" + t.V
+	return "/admin/db/team/permission/" + t.TeamID.String() + "/" + t.Key + "/" + t.Value
 }
 
 func (t *TeamPermission) Diff(tx *TeamPermission) util.Diffs {
@@ -96,11 +96,11 @@ func (t *TeamPermission) Diff(tx *TeamPermission) util.Diffs {
 	if t.TeamID != tx.TeamID {
 		diffs = append(diffs, util.NewDiff("teamID", t.TeamID.String(), tx.TeamID.String()))
 	}
-	if t.K != tx.K {
-		diffs = append(diffs, util.NewDiff("k", t.K, tx.K))
+	if t.Key != tx.Key {
+		diffs = append(diffs, util.NewDiff("key", t.Key, tx.Key))
 	}
-	if t.V != tx.V {
-		diffs = append(diffs, util.NewDiff("v", t.V, tx.V))
+	if t.Value != tx.Value {
+		diffs = append(diffs, util.NewDiff("value", t.Value, tx.Value))
 	}
 	if t.Access != tx.Access {
 		diffs = append(diffs, util.NewDiff("access", t.Access, tx.Access))
@@ -112,5 +112,5 @@ func (t *TeamPermission) Diff(tx *TeamPermission) util.Diffs {
 }
 
 func (t *TeamPermission) ToData() []any {
-	return []any{t.TeamID, t.K, t.V, t.Access, t.Created}
+	return []any{t.TeamID, t.Key, t.Value, t.Access, t.Created}
 }

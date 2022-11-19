@@ -105,8 +105,8 @@ func RetroPermissionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to parse RetroPermission from form")
 		}
 		frm.RetroID = ret.RetroID
-		frm.K = ret.K
-		frm.V = ret.V
+		frm.Key = ret.Key
+		frm.Value = ret.Value
 		err = as.Services.RetroPermission.Update(ps.Context, nil, frm, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update RetroPermission [%s]", frm.String())
@@ -122,7 +122,7 @@ func RetroPermissionDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		err = as.Services.RetroPermission.Delete(ps.Context, nil, ret.RetroID, ret.K, ret.V, ps.Logger)
+		err = as.Services.RetroPermission.Delete(ps.Context, nil, ret.RetroID, ret.Key, ret.Value, ps.Logger)
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
@@ -141,15 +141,15 @@ func rpermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 		return nil, errors.Errorf("argument [retroID] (%s) is not a valid UUID", retroIDArgStr)
 	}
 	retroIDArg := *retroIDArgP
-	kArg, err := cutil.RCRequiredString(rc, "k", false)
+	keyArg, err := cutil.RCRequiredString(rc, "key", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [k] as an argument")
+		return nil, errors.Wrap(err, "must provide [key] as an argument")
 	}
-	vArg, err := cutil.RCRequiredString(rc, "v", false)
+	valueArg, err := cutil.RCRequiredString(rc, "value", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [v] as an argument")
+		return nil, errors.Wrap(err, "must provide [value] as an argument")
 	}
-	return as.Services.RetroPermission.Get(ps.Context, nil, retroIDArg, kArg, vArg, ps.Logger)
+	return as.Services.RetroPermission.Get(ps.Context, nil, retroIDArg, keyArg, valueArg, ps.Logger)
 }
 
 func rpermissionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*rpermission.RetroPermission, error) {

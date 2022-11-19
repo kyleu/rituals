@@ -80,16 +80,15 @@ func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, 
 	return ret.ToRetros(), nil
 }
 
-func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, params *filter.Params, logger util.Logger) (Retros, error) {
-	params = filters(params)
+func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*Retro, error) {
 	wc := "\"slug\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, slug)
+	ret := &dto{}
+	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retros by slug [%v]", slug)
+		return nil, errors.Wrapf(err, "unable to get retro by slug [%v]", slug)
 	}
-	return ret.ToRetros(), nil
+	return ret.ToRetro(), nil
 }
 
 func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid.UUID, params *filter.Params, logger util.Logger) (Retros, error) {
@@ -128,9 +127,9 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	return ret.ToRetros(), nil
 }
 
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger) (Retros, error) {
+func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Retros, error) {
 	ret := dtos{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger)
+	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get retros using custom SQL")
 	}

@@ -1,0 +1,213 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/database"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Mode string
+  Svc *database.Service
+  Recent database.DebugStatements
+  Sizes database.TableSizes
+  SQL string
+  Columns []string
+  Results [][]any
+  Timing int
+  Commit bool
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}{%s p.Svc.Key %}</h3>
+    <div class="mt">
+      {%- if p.Svc.Tracing() == "" -%}
+      <em>tracing is disabled</em>
+      {%- else -%}
+      <em>tracing is enabled in [{%s p.Svc.Tracing() %}] mode</em>
+      {%- endif -%}
+    </div>
+    <div class="mt">
+      <a href="#modal-settings"><button>Tracing Settings</button></a>
+      {%= settingsModal(p.Svc) %}
+      {%- if p.Svc.Tracing() != "" -%}
+      <a href="/admin/database/{%s p.Svc.Key %}/recent"><button>Recent Activity</button></a>
+      {%- endif -%}
+      <a href="/admin/database/{%s p.Svc.Key %}/tables"><button>Tables</button></a>
+      <a href="/admin/database/{%s p.Svc.Key %}/analyze"><button>Analyze</button></a>
+      <a href="/admin/database/{%s p.Svc.Key %}/sql"><button>SQL</button></a>
+    </div>
+  </div>
+  {%- switch p.Mode -%}
+  {%- case "recent" -%}
+  {%= recentStatements(p.Recent, p.Svc, as, ps) %}
+  {%- case "tables" -%}
+  {%= tableSizes(p.Svc.Key, p.Sizes, as, ps) %}
+  {%- case "sql" -%}
+  {%= sqlEditor(p.SQL, p.Svc, p.Commit, p.Columns, p.Results, p.Timing, as, ps) %}
+  {%- endswitch -%}
+{% endfunc %}
+
+{% func recentStatements(recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Recent Activity</h3>
+    {%- if len(recent) == 0 -%}
+      {%- if svc.Tracing() == "" -%}
+      <em>Tracing is not enabled for this database</em>
+      {%- else -%}
+      <em>No recent statements</em>
+      {%- endif -%}
+    {%- else -%}
+    <table>
+      <thead>
+      <tr>
+        <th>SQL</th>
+        <th>Values</th>
+        <th>Count</th>
+        <th>Message</th>
+        <th>Duration</th>
+      </tr>
+      </thead>
+      <tbody>
+        {%- for _, s := range recent -%}
+        <tr>
+          <td>
+            <a href="?idx={%d s.Index %}">{%s s.SQLTrimmed(100) %}</a>
+          </td>
+          <td>{%d len(s.Values) %}</td>
+          <td>{%d s.Count %}</td>
+          <td>{%s s.Message %}</td>
+          <td>{%s util.MicrosToMillis(s.Timing) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}
+
+{% func tableSizes(key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>Table Sizes</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Schema</th>
+        <th>Name</th>
+        <th title="(estimated)">Rows*</th>
+        <th>Total</th>
+        <th>Index</th>
+        <th>Toast</th>
+        <th>Table</th>
+      </tr>
+      </thead>
+      <tbody>
+      {%- for _, size := range sizes -%}
+      <tr>
+        <td>{%s size.Schema %}</td>
+        <td><a href="/admin/database/{%s key %}/tables/{%s size.Schema %}/{%s size.Name %}">{%s size.Name %}</a></td>
+        <td>{%s size.Rows %}</td>
+        <td>{%s size.Total.String %}</td>
+        <td>{%s size.Index.String %}</td>
+        <td>{%s size.Toast.String %}</td>
+        <td>{%s size.Table.String %}</td>
+      </tr>
+      {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}
+
+{% func sqlEditor(sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>SQL Editor</h3>
+    <form method="post" action="/admin/database/{%s svc.Key %}/sql">
+      <div class="mt expanded">
+        <textarea name="sql" rows="12" placeholder="SQL statement">{%s sql %}</textarea>
+      </div>
+      {%- if svc.ReadOnly -%}
+      <input type="hidden" name="commit" value="false" />
+      {%- else -%}
+      <div class="mt">
+        <label><input type="checkbox" name="commit" value="true" {% if commit %}checked="checked"{% endif %}/> Commit Changes</label>
+      </div>
+      {%- endif -%}
+      <div class="mt">
+        <button type="submit" name="action" value="run">Run</button>
+        <button type="submit" name="action" value="analyze">Analyze</button>
+      </div>
+    </form>
+  </div>
+  {%- if results != nil -%}
+  <div class="card">
+    <div class="right">{%s util.MicrosToMillis(timing) %}</div>
+    <h3>Results</h3>
+    {%- if len(results) == 0 -%}
+      <em>No rows returned</em>
+    {%- else -%}
+      <table class="mt expanded">
+        <thead>
+          <tr>
+            {%- for _, c := range columns -%}
+            <th>{%s c %}</th>
+            {%- endfor -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- for _, row := range results -%}
+            <tr>
+              {%- for _, x := range row -%}
+              <td>{%v x %}</td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+{% endfunc %}
+
+{% func settingsModal(svc *database.Service) %}
+  <div id="modal-settings" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Tracing Settings</h2>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/database/{%s svc.Key %}/enable">
+          <table>
+            <tbody>
+              {%- code trc := svc.Tracing() %}
+              <tr>
+                <td><label><input type="radio" name="tracing" value=""{% if trc == `` %} checked="checked"{% endif %}> No Tracing</label></td>
+                <td><em>Fastest configuration, no tracing overhead</em></td>
+              </tr>
+              <tr>
+                <td><label><input type="radio" name="tracing" value="statement"{% if trc == `statement` %} checked="checked"{% endif %}> Save Queries</label></td>
+                <td><em>Save most recent 100 SQL statements with timing information</em></td>
+              </tr>
+              <tr>
+                <td><label><input type="radio" name="tracing" value="values"{% if trc == `values` %} checked="checked"{% endif %}> Save Results</label></td>
+                <td><em>Saves SQL, timing, and the results of the query</em></td>
+              </tr>
+              <tr>
+                <td><label><input type="radio" name="tracing" value="analyze"{% if trc == `analyze` %} checked="checked"{% endif %}> Analyze Queries</label></td>
+                <td><em>In addition to the above, runs an explain plan on each query</em></td>
+              </tr>
+              <tr>
+                <td colspan="2"><button>Submit</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

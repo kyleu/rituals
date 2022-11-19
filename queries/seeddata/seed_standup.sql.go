@@ -24,9 +24,9 @@ func StreamStandupSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_standup.sql:1
 	qw422016.N().S(`
 insert into "standup" (
-  "id", "slug", "title", "status", "team_id", "sprint_id", "owner", "created", "updated"
+  "id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "created", "updated"
 ) values (
-  '40000000-0000-0000-0000-000000000000', 'standup-a', 'Standup A', 'new', '10000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', now(), null
+  '40000000-0000-0000-0000-000000000000', 'standup-1', 'Standup 1', 'star', 'active', '10000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', now(), null
 ) on conflict do nothing;
 -- `)
 //line queries/seeddata/seed_standup.sql:7

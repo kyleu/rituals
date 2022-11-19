@@ -4,9 +4,6 @@ package app
 import (
 	"context"
 
-	"github.com/kyleu/rituals/app/gql"
-	"github.com/kyleu/rituals/app/workspace"
-
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
@@ -18,6 +15,7 @@ import (
 	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
+	"github.com/kyleu/rituals/app/gql"
 	"github.com/kyleu/rituals/app/lib/database/migrate"
 	"github.com/kyleu/rituals/app/lib/websocket"
 	"github.com/kyleu/rituals/app/retro"
@@ -40,6 +38,7 @@ import (
 	"github.com/kyleu/rituals/app/team/tpermission"
 	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
+	"github.com/kyleu/rituals/app/workspace"
 	"github.com/kyleu/rituals/queries/migrations"
 )
 
@@ -125,7 +124,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	el := email.NewService(st.DB)
 
 	g := gql.NewSchema(st.GraphQL)
-	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f)
+	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f, us, a, c, el)
 	ws := websocket.NewService(logger, w.SocketOpen, w.SocketHandler, w.SocketClose, nil)
 
 	return &Services{

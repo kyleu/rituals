@@ -17,6 +17,14 @@ func (r Retros) Get(id uuid.UUID) *Retro {
 	return nil
 }
 
+func (r Retros) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(r)+1)
+	for _, x := range r {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (r Retros) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(r)+1)
 	if includeNil {

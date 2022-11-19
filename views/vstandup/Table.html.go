@@ -60,224 +60,234 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, users user.
 	qw422016.N().S(`
         `)
 //line views/vstandup/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "standup", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "standup", "icon", "Icon", "String text", prms, ps.URI, ps)
 //line views/vstandup/Table.html:21
 	qw422016.N().S(`
         `)
 //line views/vstandup/Table.html:22
-	components.StreamTableHeaderSimple(qw422016, "standup", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "standup", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
 //line views/vstandup/Table.html:22
 	qw422016.N().S(`
         `)
 //line views/vstandup/Table.html:23
-	components.StreamTableHeaderSimple(qw422016, "standup", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "standup", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
 //line views/vstandup/Table.html:23
 	qw422016.N().S(`
         `)
 //line views/vstandup/Table.html:24
-	components.StreamTableHeaderSimple(qw422016, "standup", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "standup", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
 //line views/vstandup/Table.html:24
 	qw422016.N().S(`
         `)
 //line views/vstandup/Table.html:25
-	components.StreamTableHeaderSimple(qw422016, "standup", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "standup", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
 //line views/vstandup/Table.html:25
 	qw422016.N().S(`
         `)
 //line views/vstandup/Table.html:26
-	components.StreamTableHeaderSimple(qw422016, "standup", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "standup", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
 //line views/vstandup/Table.html:26
+	qw422016.N().S(`
+        `)
+//line views/vstandup/Table.html:27
+	components.StreamTableHeaderSimple(qw422016, "standup", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
+//line views/vstandup/Table.html:27
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vstandup/Table.html:30
+//line views/vstandup/Table.html:31
 	for _, model := range models {
-//line views/vstandup/Table.html:30
+//line views/vstandup/Table.html:31
 		qw422016.N().S(`      <tr>
         <td><a href="/admin/db/standup/`)
-//line views/vstandup/Table.html:32
+//line views/vstandup/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vstandup/Table.html:32
+//line views/vstandup/Table.html:33
 		qw422016.N().S(`">`)
-//line views/vstandup/Table.html:32
+//line views/vstandup/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vstandup/Table.html:32
+//line views/vstandup/Table.html:33
 		qw422016.N().S(`</a></td>
         <td>`)
-//line views/vstandup/Table.html:33
+//line views/vstandup/Table.html:34
 		qw422016.E().S(model.Slug)
-//line views/vstandup/Table.html:33
+//line views/vstandup/Table.html:34
 		qw422016.N().S(`</td>
         <td><strong>`)
-//line views/vstandup/Table.html:34
+//line views/vstandup/Table.html:35
 		qw422016.E().S(model.Title)
-//line views/vstandup/Table.html:34
+//line views/vstandup/Table.html:35
 		qw422016.N().S(`</strong></td>
         <td>`)
-//line views/vstandup/Table.html:35
+//line views/vstandup/Table.html:36
+		qw422016.E().S(model.Icon)
+//line views/vstandup/Table.html:36
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vstandup/Table.html:37
 		qw422016.E().V(model.Status)
-//line views/vstandup/Table.html:35
+//line views/vstandup/Table.html:37
 		qw422016.N().S(`</td>
         <td>
           <div class="icon">`)
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 		components.StreamDisplayUUID(qw422016, model.TeamID)
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 		if model.TeamID != nil {
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 			if x := teams.Get(*model.TeamID); x != nil {
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 				qw422016.N().S(` (`)
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 				qw422016.E().S(x.TitleString())
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 				qw422016.N().S(`)`)
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 			}
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 		}
-//line views/vstandup/Table.html:37
+//line views/vstandup/Table.html:39
 		qw422016.N().S(`</div>
           `)
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 		if model.TeamID != nil {
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 			qw422016.N().S(`<a title="Team" href="`)
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 			qw422016.E().S(`/team` + `/` + model.TeamID.String())
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 			qw422016.N().S(`">`)
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 			components.StreamSVGRefIcon(qw422016, "team", ps)
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 			qw422016.N().S(`</a>`)
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 		}
-//line views/vstandup/Table.html:38
+//line views/vstandup/Table.html:40
 		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 		components.StreamDisplayUUID(qw422016, model.SprintID)
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 		if model.SprintID != nil {
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 			if x := sprints.Get(*model.SprintID); x != nil {
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 				qw422016.N().S(` (`)
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 				qw422016.E().S(x.TitleString())
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 				qw422016.N().S(`)`)
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 			}
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 		}
-//line views/vstandup/Table.html:41
+//line views/vstandup/Table.html:43
 		qw422016.N().S(`</div>
           `)
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 		if model.SprintID != nil {
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 			qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 			qw422016.E().S(`/sprint` + `/` + model.SprintID.String())
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 			qw422016.N().S(`">`)
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 			components.StreamSVGRefIcon(qw422016, "sprint", ps)
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 			qw422016.N().S(`</a>`)
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 		}
-//line views/vstandup/Table.html:42
+//line views/vstandup/Table.html:44
 		qw422016.N().S(`
         </td>
         <td>
           <div class="icon">`)
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 		components.StreamDisplayUUID(qw422016, &model.Owner)
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 		if x := users.Get(model.Owner); x != nil {
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 			qw422016.N().S(` (`)
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 			qw422016.E().S(x.TitleString())
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 			qw422016.N().S(`)`)
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 		}
-//line views/vstandup/Table.html:45
+//line views/vstandup/Table.html:47
 		qw422016.N().S(`</div>
           <a title="User" href="`)
-//line views/vstandup/Table.html:46
+//line views/vstandup/Table.html:48
 		qw422016.E().S(`/user` + `/` + model.Owner.String())
-//line views/vstandup/Table.html:46
+//line views/vstandup/Table.html:48
 		qw422016.N().S(`">`)
-//line views/vstandup/Table.html:46
+//line views/vstandup/Table.html:48
 		components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vstandup/Table.html:46
+//line views/vstandup/Table.html:48
 		qw422016.N().S(`</a>
         </td>
         <td>`)
-//line views/vstandup/Table.html:48
+//line views/vstandup/Table.html:50
 		components.StreamDisplayTimestamp(qw422016, &model.Created)
-//line views/vstandup/Table.html:48
+//line views/vstandup/Table.html:50
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vstandup/Table.html:49
-		components.StreamDisplayTimestamp(qw422016, model.Updated)
-//line views/vstandup/Table.html:49
-		qw422016.N().S(`</td>
-      </tr>
-`)
 //line views/vstandup/Table.html:51
-	}
-//line views/vstandup/Table.html:52
-	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vstandup/Table.html:52
-		qw422016.N().S(`      <tr>
-        <td colspan="9">`)
-//line views/vstandup/Table.html:54
-		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vstandup/Table.html:54
+		components.StreamDisplayTimestamp(qw422016, model.Updated)
+//line views/vstandup/Table.html:51
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vstandup/Table.html:56
+//line views/vstandup/Table.html:53
 	}
+//line views/vstandup/Table.html:54
+	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
+//line views/vstandup/Table.html:54
+		qw422016.N().S(`      <tr>
+        <td colspan="10">`)
 //line views/vstandup/Table.html:56
+		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
+//line views/vstandup/Table.html:56
+		qw422016.N().S(`</td>
+      </tr>
+`)
+//line views/vstandup/Table.html:58
+	}
+//line views/vstandup/Table.html:58
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 }
 
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 func WriteTable(qq422016 qtio422016.Writer, models standup.Standups, users user.Users, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	StreamTable(qw422016, models, users, teams, sprints, params, as, ps)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 }
 
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 func Table(models standup.Standups, users user.Users, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	WriteTable(qb422016, models, users, teams, sprints, params, as, ps)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	qs422016 := string(qb422016.B)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 	return qs422016
-//line views/vstandup/Table.html:59
+//line views/vstandup/Table.html:61
 }

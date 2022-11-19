@@ -1,0 +1,28 @@
+{% import (
+  "github.com/google/uuid"
+
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
+	"github.com/kyleu/rituals/app/util"
+) %}
+
+{% func Banner(t *team.Team, s *sprint.Sprint, mdl string) %}{% stripspace %}
+<em>
+  {% if s != nil %}<a href="{%s s.PublicWebPath() %}">{%s s.TitleString() %}</a>{% space %}{% endif %}
+  {%s mdl %}
+  {% if t != nil %}{% space %}in <a href="{%s t.PublicWebPath() %}">{%s t.TitleString() %}</a>{% endif %}
+</em>
+{% endstripspace %}{% endfunc %}
+
+{% func EditWorkspaceForm(svc string, teamID *uuid.UUID, sprintID *uuid.UUID, placeholder string) %}{% stripspace %}
+  <form action="/{%s svc %}" method="post">
+    {% if teamID != nil %}
+      <input type="hidden" name="{%s util.KeyTeam %}" value="{%s teamID.String() %}" />
+    {% endif %}
+    {% if sprintID != nil %}
+      <input type="hidden" name="{%s util.KeySprint %}" value="{%s sprintID.String() %}" />
+    {% endif %}
+    <input type="text" name="title" class="combined" placeholder="{%s placeholder %}" />
+    <button type="submit" class="combined">+</button>
+  </form>
+{% endstripspace %}{% endfunc %}

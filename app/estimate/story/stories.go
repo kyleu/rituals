@@ -17,6 +17,14 @@ func (s Stories) Get(id uuid.UUID) *Story {
 	return nil
 }
 
+func (s Stories) IDs() []uuid.UUID {
+	ret := make([]uuid.UUID, 0, len(s)+1)
+	for _, x := range s {
+		ret = append(ret, x.ID)
+	}
+	return ret
+}
+
 func (s Stories) IDStrings(includeNil bool) []string {
 	ret := make([]string, 0, len(s)+1)
 	if includeNil {

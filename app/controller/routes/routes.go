@@ -41,6 +41,11 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	r.POST("/graphql/{key}", controller.GraphQLRun)
 
 	r.GET("/admin", clib.Admin)
+	r.GET("/admin/database", clib.DatabaseList)
+	r.GET("/admin/database/{key}", clib.DatabaseDetail)
+	r.GET("/admin/database/{key}/{act}", clib.DatabaseAction)
+	r.GET("/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView)
+	r.POST("/admin/database/{key}/sql", clib.DatabaseSQLRun)
 	r.GET("/admin/sandbox", controller.SandboxList)
 	r.GET("/admin/sandbox/{key}", controller.SandboxRun)
 	r.GET("/admin/{path:*}", clib.Admin)

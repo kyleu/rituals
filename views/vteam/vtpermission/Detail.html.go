@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vteam/vtpermission/Detail.html:23
-	components.StreamSVGRefIcon(qw422016, `lock`, ps)
+	components.StreamSVGRefIcon(qw422016, `permission`, ps)
 //line views/vteam/vtpermission/Detail.html:23
 	qw422016.N().S(` `)
 //line views/vteam/vtpermission/Detail.html:23
@@ -95,18 +95,18 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           </td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">K</th>
+          <th class="shrink" title="String text">Key</th>
           <td>`)
 //line views/vteam/vtpermission/Detail.html:36
-	qw422016.E().S(p.Model.K)
+	qw422016.E().S(p.Model.Key)
 //line views/vteam/vtpermission/Detail.html:36
 	qw422016.N().S(`</td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">V</th>
+          <th class="shrink" title="String text">Value</th>
           <td>`)
 //line views/vteam/vtpermission/Detail.html:40
-	qw422016.E().S(p.Model.V)
+	qw422016.E().S(p.Model.Value)
 //line views/vteam/vtpermission/Detail.html:40
 	qw422016.N().S(`</td>
         </tr>

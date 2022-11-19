@@ -65,8 +65,6 @@ create table if not exists "comment" (
   "id" uuid not null,
   "svc" model_service not null,
   "model_id" uuid not null,
-  "target_type" text not null,
-  "target_id" uuid not null,
   "user_id" uuid not null,
   "content" text not null,
   "html" text not null,
@@ -76,32 +74,33 @@ create table if not exists "comment" (
 );
 
 create index if not exists "comment__user_id_idx" on "comment" ("user_id");
+create index if not exists "comment__svc_model_id_idx" on "comment" ("svc", "model_id");
 -- `)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 }
 
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 func WriteCommentCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	StreamCommentCreate(qw422016)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 }
 
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 func CommentCreate() string {
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	WriteCommentCreate(qb422016)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	qs422016 := string(qb422016.B)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 	return qs422016
-//line queries/ddl/comment.sql:22
+//line queries/ddl/comment.sql:21
 }

@@ -15,21 +15,19 @@ import (
 var (
 	table         = "comment"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "svc", "model_id", "target_type", "target_id", "user_id", "content", "html", "created"}
+	columns       = []string{"id", "svc", "model_id", "user_id", "content", "html", "created"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
 type dto struct {
-	ID         uuid.UUID         `db:"id"`
-	Svc        enum.ModelService `db:"svc"`
-	ModelID    uuid.UUID         `db:"model_id"`
-	TargetType string            `db:"target_type"`
-	TargetID   uuid.UUID         `db:"target_id"`
-	UserID     uuid.UUID         `db:"user_id"`
-	Content    string            `db:"content"`
-	HTML       string            `db:"html"`
-	Created    time.Time         `db:"created"`
+	ID      uuid.UUID         `db:"id"`
+	Svc     enum.ModelService `db:"svc"`
+	ModelID uuid.UUID         `db:"model_id"`
+	UserID  uuid.UUID         `db:"user_id"`
+	Content string            `db:"content"`
+	HTML    string            `db:"html"`
+	Created time.Time         `db:"created"`
 }
 
 func (d *dto) ToComment() *Comment {
@@ -37,15 +35,13 @@ func (d *dto) ToComment() *Comment {
 		return nil
 	}
 	return &Comment{
-		ID:         d.ID,
-		Svc:        d.Svc,
-		ModelID:    d.ModelID,
-		TargetType: d.TargetType,
-		TargetID:   d.TargetID,
-		UserID:     d.UserID,
-		Content:    d.Content,
-		HTML:       d.HTML,
-		Created:    d.Created,
+		ID:      d.ID,
+		Svc:     d.Svc,
+		ModelID: d.ModelID,
+		UserID:  d.UserID,
+		Content: d.Content,
+		HTML:    d.HTML,
+		Created: d.Created,
 	}
 }
 

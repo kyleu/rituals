@@ -102,28 +102,33 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:33
-	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
+	components.StreamTableInput(qw422016, "icon", "Icon", p.Model.Icon, 5, "String text")
 //line views/vestimate/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:34
-	components.StreamTableInputUUID(qw422016, "teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
 //line views/vestimate/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:35
-	components.StreamTableInputUUID(qw422016, "sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableInputUUID(qw422016, "teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vestimate/Edit.html:35
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:36
-	components.StreamTableInputUUID(qw422016, "owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vestimate/Edit.html:36
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:37
-	components.StreamTableTextarea(qw422016, "choices", "Choices", 8, util.ToJSON(p.Model.Choices), 5, "Comma-separated list of values")
+	components.StreamTableInputUUID(qw422016, "owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/Edit.html:37
+	qw422016.N().S(`
+          `)
+//line views/vestimate/Edit.html:38
+	components.StreamTableTextarea(qw422016, "choices", "Choices", 8, util.ToJSON(p.Model.Choices), 5, "Comma-separated list of values")
+//line views/vestimate/Edit.html:38
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -131,31 +136,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 }
 
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 }
 
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	qs422016 := string(qb422016.B)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 	return qs422016
-//line views/vestimate/Edit.html:43
+//line views/vestimate/Edit.html:44
 }

@@ -20,7 +20,7 @@
       <a href="#modal-estimatePermission"><button type="button">JSON</button></a>
       <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`lock`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGRefIcon(`permission`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/estimate/permission"><em>Permission</em></a></div>
     <table class="mt">
       <tbody>
@@ -32,12 +32,12 @@
           </td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">K</th>
-          <td>{%s p.Model.K %}</td>
+          <th class="shrink" title="String text">Key</th>
+          <td>{%s p.Model.Key %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="String text">V</th>
-          <td>{%s p.Model.V %}</td>
+          <th class="shrink" title="String text">Value</th>
+          <td>{%s p.Model.Value %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Access</th>

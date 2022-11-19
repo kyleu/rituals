@@ -114,7 +114,7 @@ func (s *Story) TitleString() string {
 }
 
 func (s *Story) WebPath() string {
-	return "/admin/db/estimate/story" + "/" + s.ID.String()
+	return "/admin/db/estimate/story/" + s.ID.String()
 }
 
 func (s *Story) Diff(sx *Story) util.Diffs {

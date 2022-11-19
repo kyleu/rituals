@@ -10,7 +10,7 @@ create table if not exists "action" (
   "model_id" uuid not null,
   "user_id" uuid not null,
   "act" text not null,
-  "content" text not null,
+  "content" jsonb not null,
   "note" text not null,
   "created" timestamp not null default now(),
   foreign key ("user_id") references "user" ("id"),

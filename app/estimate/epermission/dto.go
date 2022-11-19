@@ -14,15 +14,15 @@ import (
 var (
 	table         = "estimate_permission"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"estimate_id", "k", "v", "access", "created"}
+	columns       = []string{"estimate_id", "key", "value", "access", "created"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
 type dto struct {
 	EstimateID uuid.UUID `db:"estimate_id"`
-	K          string    `db:"k"`
-	V          string    `db:"v"`
+	Key        string    `db:"key"`
+	Value      string    `db:"value"`
 	Access     string    `db:"access"`
 	Created    time.Time `db:"created"`
 }
@@ -33,8 +33,8 @@ func (d *dto) ToEstimatePermission() *EstimatePermission {
 	}
 	return &EstimatePermission{
 		EstimateID: d.EstimateID,
-		K:          d.K,
-		V:          d.V,
+		Key:        d.Key,
+		Value:      d.Value,
 		Access:     d.Access,
 		Created:    d.Created,
 	}
@@ -51,5 +51,5 @@ func (x dtos) ToEstimatePermissions() EstimatePermissions {
 }
 
 func defaultWC(idx int) string {
-	return fmt.Sprintf("\"estimate_id\" = $%d and \"k\" = $%d and \"v\" = $%d", idx+1, idx+2, idx+3)
+	return fmt.Sprintf("\"estimate_id\" = $%d and \"key\" = $%d and \"value\" = $%d", idx+1, idx+2, idx+3)
 }

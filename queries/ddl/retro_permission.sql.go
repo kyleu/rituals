@@ -63,19 +63,19 @@ func StreamRetroPermissionCreate(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 create table if not exists "retro_permission" (
   "retro_id" uuid not null,
-  "k" text not null,
-  "v" text not null,
+  "key" text not null,
+  "value" text not null,
   "access" text not null,
   "created" timestamp not null default now(),
   foreign key ("retro_id") references "retro" ("id"),
-  primary key ("retro_id", "k", "v")
+  primary key ("retro_id", "key", "value")
 );
 
 create index if not exists "retro_permission__retro_id_idx" on "retro_permission" ("retro_id");
 
-create index if not exists "retro_permission__k_idx" on "retro_permission" ("k");
+create index if not exists "retro_permission__key_idx" on "retro_permission" ("key");
 
-create index if not exists "retro_permission__v_idx" on "retro_permission" ("v");
+create index if not exists "retro_permission__value_idx" on "retro_permission" ("value");
 -- `)
 //line queries/ddl/retro_permission.sql:22
 }

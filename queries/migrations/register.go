@@ -7,5 +7,4 @@ import (
 
 func LoadMigrations(debug bool) {
 	migrate.RegisterMigration("create initial database", Migration1InitialDatabase(debug))
-	migrate.RegisterMigration("seed data", Migration2SeedData())
 }

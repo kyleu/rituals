@@ -96,7 +96,8 @@ func (p *Sockets) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <thead>
           <tr>
             <th class="shrink">ID</th>
-            <th>Profile</th>
+            <th>User ID</th>
+            <th>Profile Name</th>
             <th>Service</th>
             <th>Channels</th>
             <th></th>
@@ -104,258 +105,267 @@ func (p *Sockets) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         </thead>
         <tbody>
 `)
-//line views/vadmin/Sockets.html:52
+//line views/vadmin/Sockets.html:53
 		for _, x := range p.Connections {
-//line views/vadmin/Sockets.html:52
+//line views/vadmin/Sockets.html:53
 			qw422016.N().S(`          <tr>
             <td class="shrink"><a href="/admin/sockets/conn/`)
-//line views/vadmin/Sockets.html:54
+//line views/vadmin/Sockets.html:55
 			qw422016.E().S(x.ID.String())
-//line views/vadmin/Sockets.html:54
+//line views/vadmin/Sockets.html:55
 			qw422016.N().S(`">`)
-//line views/vadmin/Sockets.html:54
+//line views/vadmin/Sockets.html:55
 			qw422016.E().S(x.ID.String())
-//line views/vadmin/Sockets.html:54
+//line views/vadmin/Sockets.html:55
+			qw422016.N().S(`</a></td>
+            <td><a href="/admin/db/user/`)
+//line views/vadmin/Sockets.html:56
+			qw422016.E().S(x.Profile.ID.String())
+//line views/vadmin/Sockets.html:56
+			qw422016.N().S(`">`)
+//line views/vadmin/Sockets.html:56
+			qw422016.E().S(x.Profile.ID.String())
+//line views/vadmin/Sockets.html:56
 			qw422016.N().S(`</a></td>
             <td>`)
-//line views/vadmin/Sockets.html:55
+//line views/vadmin/Sockets.html:57
 			qw422016.E().S(x.Profile.String())
-//line views/vadmin/Sockets.html:55
+//line views/vadmin/Sockets.html:57
 			qw422016.N().S(`</td>
             <td>`)
-//line views/vadmin/Sockets.html:56
+//line views/vadmin/Sockets.html:58
 			qw422016.E().S(x.Svc)
-//line views/vadmin/Sockets.html:56
+//line views/vadmin/Sockets.html:58
 			qw422016.N().S(`</td>
             <td>`)
-//line views/vadmin/Sockets.html:57
+//line views/vadmin/Sockets.html:59
 			qw422016.E().S(strings.Join(x.Channels, ", "))
-//line views/vadmin/Sockets.html:57
+//line views/vadmin/Sockets.html:59
 			qw422016.N().S(`</td>
             <td class="shrink"><a href="#modal-conn-`)
-//line views/vadmin/Sockets.html:58
+//line views/vadmin/Sockets.html:60
 			qw422016.E().S(x.ID.String())
-//line views/vadmin/Sockets.html:58
+//line views/vadmin/Sockets.html:60
 			qw422016.N().S(`"><button type="button">JSON</button></a></td>
           </tr>
 `)
-//line views/vadmin/Sockets.html:60
+//line views/vadmin/Sockets.html:62
 		}
-//line views/vadmin/Sockets.html:60
+//line views/vadmin/Sockets.html:62
 		qw422016.N().S(`        </tbody>
       </table>
 `)
-//line views/vadmin/Sockets.html:63
+//line views/vadmin/Sockets.html:65
 	}
-//line views/vadmin/Sockets.html:63
+//line views/vadmin/Sockets.html:65
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vadmin/Sockets.html:66
+//line views/vadmin/Sockets.html:68
 	for _, x := range p.Connections {
-//line views/vadmin/Sockets.html:66
+//line views/vadmin/Sockets.html:68
 		qw422016.N().S(`  `)
-//line views/vadmin/Sockets.html:67
+//line views/vadmin/Sockets.html:69
 		components.StreamJSONModal(qw422016, "conn-"+x.ID.String(), "Connection ["+x.ID.String()+"] JSON", x, 1)
-//line views/vadmin/Sockets.html:67
+//line views/vadmin/Sockets.html:69
 		qw422016.N().S(`
 `)
-//line views/vadmin/Sockets.html:68
+//line views/vadmin/Sockets.html:70
 	}
-//line views/vadmin/Sockets.html:69
+//line views/vadmin/Sockets.html:71
 	if p.Context != nil {
-//line views/vadmin/Sockets.html:69
+//line views/vadmin/Sockets.html:71
 		qw422016.N().S(`  <div class="card">
     <h3>Server Context</h3>
     `)
-//line views/vadmin/Sockets.html:72
+//line views/vadmin/Sockets.html:74
 		qw422016.N().S(components.JSON(p.Context))
-//line views/vadmin/Sockets.html:72
+//line views/vadmin/Sockets.html:74
 		qw422016.N().S(`
   </div>
 `)
-//line views/vadmin/Sockets.html:74
+//line views/vadmin/Sockets.html:76
 	}
-//line views/vadmin/Sockets.html:75
-}
-
-//line views/vadmin/Sockets.html:75
-func (p *Sockets) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:75
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sockets.html:75
-	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Sockets.html:75
-	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sockets.html:75
-}
-
-//line views/vadmin/Sockets.html:75
-func (p *Sockets) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sockets.html:75
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sockets.html:75
-	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Sockets.html:75
-	qs422016 := string(qb422016.B)
-//line views/vadmin/Sockets.html:75
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sockets.html:75
-	return qs422016
-//line views/vadmin/Sockets.html:75
+//line views/vadmin/Sockets.html:77
 }
 
 //line views/vadmin/Sockets.html:77
+func (p *Sockets) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/Sockets.html:77
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vadmin/Sockets.html:77
+	p.StreamBody(qw422016, as, ps)
+//line views/vadmin/Sockets.html:77
+	qt422016.ReleaseWriter(qw422016)
+//line views/vadmin/Sockets.html:77
+}
+
+//line views/vadmin/Sockets.html:77
+func (p *Sockets) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vadmin/Sockets.html:77
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vadmin/Sockets.html:77
+	p.WriteBody(qb422016, as, ps)
+//line views/vadmin/Sockets.html:77
+	qs422016 := string(qb422016.B)
+//line views/vadmin/Sockets.html:77
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vadmin/Sockets.html:77
+	return qs422016
+//line views/vadmin/Sockets.html:77
+}
+
+//line views/vadmin/Sockets.html:79
 type Tap struct {
 	layout.Basic
 }
 
-//line views/vadmin/Sockets.html:81
+//line views/vadmin/Sockets.html:83
 func (p *Tap) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:81
+//line views/vadmin/Sockets.html:83
 	qw422016.N().S(`
   <div class="card">
     <h3>Tap Activity</h3>
     <em>TODO</em>
   </div>
 `)
-//line views/vadmin/Sockets.html:86
-}
-
-//line views/vadmin/Sockets.html:86
-func (p *Tap) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:86
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sockets.html:86
-	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Sockets.html:86
-	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sockets.html:86
-}
-
-//line views/vadmin/Sockets.html:86
-func (p *Tap) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sockets.html:86
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sockets.html:86
-	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Sockets.html:86
-	qs422016 := string(qb422016.B)
-//line views/vadmin/Sockets.html:86
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sockets.html:86
-	return qs422016
-//line views/vadmin/Sockets.html:86
+//line views/vadmin/Sockets.html:88
 }
 
 //line views/vadmin/Sockets.html:88
+func (p *Tap) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/Sockets.html:88
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vadmin/Sockets.html:88
+	p.StreamBody(qw422016, as, ps)
+//line views/vadmin/Sockets.html:88
+	qt422016.ReleaseWriter(qw422016)
+//line views/vadmin/Sockets.html:88
+}
+
+//line views/vadmin/Sockets.html:88
+func (p *Tap) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vadmin/Sockets.html:88
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vadmin/Sockets.html:88
+	p.WriteBody(qb422016, as, ps)
+//line views/vadmin/Sockets.html:88
+	qs422016 := string(qb422016.B)
+//line views/vadmin/Sockets.html:88
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vadmin/Sockets.html:88
+	return qs422016
+//line views/vadmin/Sockets.html:88
+}
+
+//line views/vadmin/Sockets.html:90
 type Channel struct {
 	layout.Basic
 	Channel *websocket.Channel
 	Members []*websocket.Connection
 }
 
-//line views/vadmin/Sockets.html:94
+//line views/vadmin/Sockets.html:96
 func (p *Channel) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:94
+//line views/vadmin/Sockets.html:96
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="#modal-channel"><button type="button">JSON</button></a></div>
     <h3>Channel [`)
-//line views/vadmin/Sockets.html:97
+//line views/vadmin/Sockets.html:99
 	qw422016.E().S(p.Channel.Key)
-//line views/vadmin/Sockets.html:97
+//line views/vadmin/Sockets.html:99
 	qw422016.N().S(`]</h3>
   </div>
   `)
-//line views/vadmin/Sockets.html:99
+//line views/vadmin/Sockets.html:101
 	components.StreamJSONModal(qw422016, "channel", "Channel ["+p.Channel.Key+"] JSON", p.Channel, 1)
-//line views/vadmin/Sockets.html:99
+//line views/vadmin/Sockets.html:101
 	qw422016.N().S(`
 `)
-//line views/vadmin/Sockets.html:100
+//line views/vadmin/Sockets.html:102
 	for _, m := range p.Members {
-//line views/vadmin/Sockets.html:100
+//line views/vadmin/Sockets.html:102
 		qw422016.N().S(`  `)
-//line views/vadmin/Sockets.html:101
+//line views/vadmin/Sockets.html:103
 		StreamConnectionCard(qw422016, m, as, ps)
-//line views/vadmin/Sockets.html:101
+//line views/vadmin/Sockets.html:103
 		qw422016.N().S(`
 `)
-//line views/vadmin/Sockets.html:102
+//line views/vadmin/Sockets.html:104
 	}
-//line views/vadmin/Sockets.html:103
-}
-
-//line views/vadmin/Sockets.html:103
-func (p *Channel) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:103
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sockets.html:103
-	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Sockets.html:103
-	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sockets.html:103
-}
-
-//line views/vadmin/Sockets.html:103
-func (p *Channel) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sockets.html:103
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sockets.html:103
-	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Sockets.html:103
-	qs422016 := string(qb422016.B)
-//line views/vadmin/Sockets.html:103
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sockets.html:103
-	return qs422016
-//line views/vadmin/Sockets.html:103
+//line views/vadmin/Sockets.html:105
 }
 
 //line views/vadmin/Sockets.html:105
+func (p *Channel) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vadmin/Sockets.html:105
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vadmin/Sockets.html:105
+	p.StreamBody(qw422016, as, ps)
+//line views/vadmin/Sockets.html:105
+	qt422016.ReleaseWriter(qw422016)
+//line views/vadmin/Sockets.html:105
+}
+
+//line views/vadmin/Sockets.html:105
+func (p *Channel) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vadmin/Sockets.html:105
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vadmin/Sockets.html:105
+	p.WriteBody(qb422016, as, ps)
+//line views/vadmin/Sockets.html:105
+	qs422016 := string(qb422016.B)
+//line views/vadmin/Sockets.html:105
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vadmin/Sockets.html:105
+	return qs422016
+//line views/vadmin/Sockets.html:105
+}
+
+//line views/vadmin/Sockets.html:107
 type Connection struct {
 	layout.Basic
 	Connection *websocket.Connection
 }
 
-//line views/vadmin/Sockets.html:110
+//line views/vadmin/Sockets.html:112
 func (p *Connection) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:110
+//line views/vadmin/Sockets.html:112
 	qw422016.N().S(`
   `)
-//line views/vadmin/Sockets.html:111
+//line views/vadmin/Sockets.html:113
 	StreamConnectionCard(qw422016, p.Connection, as, ps)
-//line views/vadmin/Sockets.html:111
+//line views/vadmin/Sockets.html:113
 	qw422016.N().S(`
   <div class="card">
     <h3>Send Message</h3>
     <form action="/admin/sockets/conn/`)
-//line views/vadmin/Sockets.html:114
+//line views/vadmin/Sockets.html:116
 	qw422016.E().S(p.Connection.ID.String())
-//line views/vadmin/Sockets.html:114
+//line views/vadmin/Sockets.html:116
 	qw422016.N().S(`/send" method="post">
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vadmin/Sockets.html:117
+//line views/vadmin/Sockets.html:119
 	components.StreamTableInput(qw422016, "from", "From", ps.Profile.ID.String(), 5, "The user this message is from")
-//line views/vadmin/Sockets.html:117
+//line views/vadmin/Sockets.html:119
 	qw422016.N().S(`
           `)
-//line views/vadmin/Sockets.html:118
+//line views/vadmin/Sockets.html:120
 	components.StreamTableInput(qw422016, "channel", "Channel", "", 5, "The channel this message is from")
-//line views/vadmin/Sockets.html:118
+//line views/vadmin/Sockets.html:120
 	qw422016.N().S(`
           `)
-//line views/vadmin/Sockets.html:119
+//line views/vadmin/Sockets.html:121
 	components.StreamTableInput(qw422016, "cmd", "Command", "", 5, "The command for this message")
-//line views/vadmin/Sockets.html:119
+//line views/vadmin/Sockets.html:121
 	qw422016.N().S(`
           `)
-//line views/vadmin/Sockets.html:120
+//line views/vadmin/Sockets.html:122
 	components.StreamTableTextarea(qw422016, "param", "Parameter", 8, "", 5, "JSON object message payload")
-//line views/vadmin/Sockets.html:120
+//line views/vadmin/Sockets.html:122
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Send</button></td></tr>
         </tbody>
@@ -363,138 +373,142 @@ func (p *Connection) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
     </form>
   </div>
 `)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 }
 
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 func (p *Connection) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 }
 
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 func (p *Connection) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 	return qs422016
-//line views/vadmin/Sockets.html:126
+//line views/vadmin/Sockets.html:128
 }
 
-//line views/vadmin/Sockets.html:128
+//line views/vadmin/Sockets.html:130
 func StreamConnectionCard(qw422016 *qt422016.Writer, c *websocket.Connection, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:128
+//line views/vadmin/Sockets.html:130
 	qw422016.N().S(`
   <div class="card">
     <div class="right"><a href="#modal-connection-`)
-//line views/vadmin/Sockets.html:130
+//line views/vadmin/Sockets.html:132
 	qw422016.E().S(c.ID.String())
-//line views/vadmin/Sockets.html:130
+//line views/vadmin/Sockets.html:132
 	qw422016.N().S(`"><button type="button">JSON</button></a></div>
     <h3>`)
-//line views/vadmin/Sockets.html:131
+//line views/vadmin/Sockets.html:133
 	qw422016.E().S(c.ID.String())
-//line views/vadmin/Sockets.html:131
+//line views/vadmin/Sockets.html:133
 	qw422016.N().S(` (`)
-//line views/vadmin/Sockets.html:131
+//line views/vadmin/Sockets.html:133
 	qw422016.E().S(c.Profile.Name)
-//line views/vadmin/Sockets.html:131
+//line views/vadmin/Sockets.html:133
 	qw422016.N().S(`)</h3>
     <table class="mt expanded">
       <tbody>
         <tr>
           <th>Connection ID</th>
           <td>`)
-//line views/vadmin/Sockets.html:136
+//line views/vadmin/Sockets.html:138
 	qw422016.E().S(c.ID.String())
-//line views/vadmin/Sockets.html:136
+//line views/vadmin/Sockets.html:138
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>User ID</th>
-          <td>`)
-//line views/vadmin/Sockets.html:140
+          <td><a href="/admin/db/user/`)
+//line views/vadmin/Sockets.html:142
 	qw422016.E().S(c.Profile.ID.String())
-//line views/vadmin/Sockets.html:140
-	qw422016.N().S(`</td>
+//line views/vadmin/Sockets.html:142
+	qw422016.N().S(`">`)
+//line views/vadmin/Sockets.html:142
+	qw422016.E().S(c.Profile.ID.String())
+//line views/vadmin/Sockets.html:142
+	qw422016.N().S(`</a></td>
         </tr>
         <tr>
           <th>Name</th>
           <td>`)
-//line views/vadmin/Sockets.html:144
+//line views/vadmin/Sockets.html:146
 	qw422016.E().S(c.Profile.Name)
-//line views/vadmin/Sockets.html:144
+//line views/vadmin/Sockets.html:146
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Theme</th>
           <td>`)
-//line views/vadmin/Sockets.html:148
+//line views/vadmin/Sockets.html:150
 	qw422016.E().S(c.Profile.Theme)
-//line views/vadmin/Sockets.html:148
+//line views/vadmin/Sockets.html:150
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Service</th>
           <td>`)
-//line views/vadmin/Sockets.html:152
+//line views/vadmin/Sockets.html:154
 	qw422016.E().S(c.Svc)
-//line views/vadmin/Sockets.html:152
+//line views/vadmin/Sockets.html:154
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th>Channels</th>
           <td>`)
-//line views/vadmin/Sockets.html:156
+//line views/vadmin/Sockets.html:158
 	qw422016.E().S(strings.Join(c.Channels, ", "))
-//line views/vadmin/Sockets.html:156
+//line views/vadmin/Sockets.html:158
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
   `)
-//line views/vadmin/Sockets.html:161
+//line views/vadmin/Sockets.html:163
 	components.StreamJSONModal(qw422016, "connection-"+c.ID.String(), "Connection ["+c.ID.String()+"] JSON", c, 1)
-//line views/vadmin/Sockets.html:161
+//line views/vadmin/Sockets.html:163
 	qw422016.N().S(`
 `)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 }
 
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 func WriteConnectionCard(qq422016 qtio422016.Writer, c *websocket.Connection, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	StreamConnectionCard(qw422016, c, as, ps)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 }
 
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 func ConnectionCard(c *websocket.Connection, as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	WriteConnectionCard(qb422016, c, as, ps)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 	return qs422016
-//line views/vadmin/Sockets.html:162
+//line views/vadmin/Sockets.html:164
 }

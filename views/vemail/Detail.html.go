@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
     <h3>`)
 //line views/vemail/Detail.html:23
-	components.StreamSVGRefIcon(qw422016, `envelope`, ps)
+	components.StreamSVGRefIcon(qw422016, `email`, ps)
 //line views/vemail/Detail.html:23
 	qw422016.N().S(` `)
 //line views/vemail/Detail.html:23

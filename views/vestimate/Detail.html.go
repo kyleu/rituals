@@ -108,51 +108,59 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <th class="shrink" title="String text">Icon</th>
           <td>`)
 //line views/vestimate/Detail.html:59
-	qw422016.E().V(p.Model.Status)
+	qw422016.E().S(p.Model.Icon)
 //line views/vestimate/Detail.html:59
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <td>`)
+//line views/vestimate/Detail.html:63
+	qw422016.E().V(p.Model.Status)
+//line views/vestimate/Detail.html:63
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td>
             <div class="icon">`)
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 	if p.Model.TeamID != nil {
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 			qw422016.N().S(` (`)
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 			qw422016.E().S(x.TitleString())
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 			qw422016.N().S(`)`)
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 		}
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 	}
-//line views/vestimate/Detail.html:64
+//line views/vestimate/Detail.html:68
 	qw422016.N().S(`</div>
             `)
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 	if p.Model.TeamID != nil {
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 		qw422016.N().S(`<a title="Team" href="`)
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 		qw422016.N().S(`">`)
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 		components.StreamSVGRefIcon(qw422016, "team", ps)
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 		qw422016.N().S(`</a>`)
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 	}
-//line views/vestimate/Detail.html:65
+//line views/vestimate/Detail.html:69
 	qw422016.N().S(`
           </td>
         </tr>
@@ -160,40 +168,40 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td>
             <div class="icon">`)
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 	components.StreamDisplayUUID(qw422016, p.Model.SprintID)
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 	if p.Model.SprintID != nil {
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 		if x := p.Sprints.Get(*p.Model.SprintID); x != nil {
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 			qw422016.N().S(` (`)
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 			qw422016.E().S(x.TitleString())
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 			qw422016.N().S(`)`)
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 		}
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 	}
-//line views/vestimate/Detail.html:71
+//line views/vestimate/Detail.html:75
 	qw422016.N().S(`</div>
             `)
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 	if p.Model.SprintID != nil {
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 		qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 		qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 		qw422016.N().S(`">`)
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 		components.StreamSVGRefIcon(qw422016, "sprint", ps)
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 		qw422016.N().S(`</a>`)
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 	}
-//line views/vestimate/Detail.html:72
+//line views/vestimate/Detail.html:76
 	qw422016.N().S(`
           </td>
         </tr>
@@ -201,171 +209,171 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
           <td>
             <div class="icon">`)
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 	if x := p.Users.Get(p.Model.Owner); x != nil {
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 		qw422016.N().S(` (`)
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 		qw422016.E().S(x.TitleString())
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 		qw422016.N().S(`)`)
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 	}
-//line views/vestimate/Detail.html:78
+//line views/vestimate/Detail.html:82
 	qw422016.N().S(`</div>
             <a title="User" href="`)
-//line views/vestimate/Detail.html:79
+//line views/vestimate/Detail.html:83
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
-//line views/vestimate/Detail.html:79
+//line views/vestimate/Detail.html:83
 	qw422016.N().S(`">`)
-//line views/vestimate/Detail.html:79
+//line views/vestimate/Detail.html:83
 	components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vestimate/Detail.html:79
+//line views/vestimate/Detail.html:83
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Comma-separated list of values">Choices</th>
           <td>`)
-//line views/vestimate/Detail.html:84
+//line views/vestimate/Detail.html:88
 	components.StreamDisplayStringArray(qw422016, p.Model.Choices)
-//line views/vestimate/Detail.html:84
+//line views/vestimate/Detail.html:88
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vestimate/Detail.html:88
+//line views/vestimate/Detail.html:92
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vestimate/Detail.html:88
+//line views/vestimate/Detail.html:92
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vestimate/Detail.html:92
+//line views/vestimate/Detail.html:96
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vestimate/Detail.html:92
+//line views/vestimate/Detail.html:96
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vestimate/Detail.html:99
+//line views/vestimate/Detail.html:103
 	if len(p.EstimateHistoriesByEstimateID) > 0 {
-//line views/vestimate/Detail.html:99
+//line views/vestimate/Detail.html:103
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vestimate/Detail.html:101
-		components.StreamSVGRefIcon(qw422016, `clock`, ps)
-//line views/vestimate/Detail.html:101
+//line views/vestimate/Detail.html:105
+		components.StreamSVGRefIcon(qw422016, `history`, ps)
+//line views/vestimate/Detail.html:105
 		qw422016.N().S(` Related histories by [estimate id]</h3>
     <div class="overflow clear">
       `)
-//line views/vestimate/Detail.html:103
+//line views/vestimate/Detail.html:107
 		vehistory.StreamTable(qw422016, p.EstimateHistoriesByEstimateID, nil, p.Params, as, ps)
-//line views/vestimate/Detail.html:103
+//line views/vestimate/Detail.html:107
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vestimate/Detail.html:106
+//line views/vestimate/Detail.html:110
 	}
-//line views/vestimate/Detail.html:107
+//line views/vestimate/Detail.html:111
 	if len(p.EstimateMembersByEstimateID) > 0 {
-//line views/vestimate/Detail.html:107
+//line views/vestimate/Detail.html:111
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vestimate/Detail.html:109
+//line views/vestimate/Detail.html:113
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vestimate/Detail.html:109
+//line views/vestimate/Detail.html:113
 		qw422016.N().S(` Related members by [estimate id]</h3>
     <div class="overflow clear">
       `)
-//line views/vestimate/Detail.html:111
+//line views/vestimate/Detail.html:115
 		vemember.StreamTable(qw422016, p.EstimateMembersByEstimateID, nil, nil, p.Params, as, ps)
-//line views/vestimate/Detail.html:111
+//line views/vestimate/Detail.html:115
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vestimate/Detail.html:114
+//line views/vestimate/Detail.html:118
 	}
-//line views/vestimate/Detail.html:115
+//line views/vestimate/Detail.html:119
 	if len(p.EstimatePermissionsByEstimateID) > 0 {
-//line views/vestimate/Detail.html:115
+//line views/vestimate/Detail.html:119
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vestimate/Detail.html:117
-		components.StreamSVGRefIcon(qw422016, `lock`, ps)
-//line views/vestimate/Detail.html:117
+//line views/vestimate/Detail.html:121
+		components.StreamSVGRefIcon(qw422016, `permission`, ps)
+//line views/vestimate/Detail.html:121
 		qw422016.N().S(` Related permissions by [estimate id]</h3>
     <div class="overflow clear">
       `)
-//line views/vestimate/Detail.html:119
+//line views/vestimate/Detail.html:123
 		vepermission.StreamTable(qw422016, p.EstimatePermissionsByEstimateID, nil, p.Params, as, ps)
-//line views/vestimate/Detail.html:119
+//line views/vestimate/Detail.html:123
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vestimate/Detail.html:122
+//line views/vestimate/Detail.html:126
 	}
-//line views/vestimate/Detail.html:123
+//line views/vestimate/Detail.html:127
 	if len(p.StoriesByEstimateID) > 0 {
-//line views/vestimate/Detail.html:123
+//line views/vestimate/Detail.html:127
 		qw422016.N().S(`  <div class="card">
     <h3>`)
-//line views/vestimate/Detail.html:125
-		components.StreamSVGRefIcon(qw422016, `book-reader`, ps)
-//line views/vestimate/Detail.html:125
+//line views/vestimate/Detail.html:129
+		components.StreamSVGRefIcon(qw422016, `story`, ps)
+//line views/vestimate/Detail.html:129
 		qw422016.N().S(` Related stories by [estimate id]</h3>
     <div class="overflow clear">
       `)
-//line views/vestimate/Detail.html:127
+//line views/vestimate/Detail.html:131
 		vstory.StreamTable(qw422016, p.StoriesByEstimateID, nil, nil, p.Params, as, ps)
-//line views/vestimate/Detail.html:127
+//line views/vestimate/Detail.html:131
 		qw422016.N().S(`
     </div>
   </div>
 `)
-//line views/vestimate/Detail.html:130
+//line views/vestimate/Detail.html:134
 	}
-//line views/vestimate/Detail.html:130
+//line views/vestimate/Detail.html:134
 	qw422016.N().S(`  `)
-//line views/vestimate/Detail.html:131
+//line views/vestimate/Detail.html:135
 	components.StreamJSONModal(qw422016, "estimate", "Estimate JSON", p.Model, 1)
-//line views/vestimate/Detail.html:131
+//line views/vestimate/Detail.html:135
 	qw422016.N().S(`
 `)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 }
 
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 }
 
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	qs422016 := string(qb422016.B)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 	return qs422016
-//line views/vestimate/Detail.html:132
+//line views/vestimate/Detail.html:136
 }

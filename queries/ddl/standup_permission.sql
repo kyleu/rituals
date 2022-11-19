@@ -6,17 +6,17 @@ drop table if exists "standup_permission";
 -- {% func StandupPermissionCreate() %}
 create table if not exists "standup_permission" (
   "standup_id" uuid not null,
-  "k" text not null,
-  "v" text not null,
+  "key" text not null,
+  "value" text not null,
   "access" text not null,
   "created" timestamp not null default now(),
   foreign key ("standup_id") references "standup" ("id"),
-  primary key ("standup_id", "k", "v")
+  primary key ("standup_id", "key", "value")
 );
 
 create index if not exists "standup_permission__standup_id_idx" on "standup_permission" ("standup_id");
 
-create index if not exists "standup_permission__k_idx" on "standup_permission" ("k");
+create index if not exists "standup_permission__key_idx" on "standup_permission" ("key");
 
-create index if not exists "standup_permission__v_idx" on "standup_permission" ("v");
+create index if not exists "standup_permission__value_idx" on "standup_permission" ("value");
 -- {% endfunc %}

@@ -34,6 +34,7 @@ type Service struct {
 	Debug        bool    `json:"debug,omitempty"`
 	Type         *DBType `json:"type"`
 	ReadOnly     bool    `json:"readonly,omitempty"`
+	tracing      string
 	db           *sqlx.DB
 	metrics      *dbmetrics.Metrics
 }
@@ -98,7 +99,21 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger uti
 	if s.Debug {
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}
-	return func(count int, msg string, err error, output ...any) {}
+	if s.tracing == "" {
+		return func(count int, msg string, err error, output ...any) {}
+	}
+	t := util.TimerStart()
+	return func(count int, msg string, err error, output ...any) {
+		go func() {
+			st, stErr := s.newStatement(ctx, q, values, t.End(), logger)
+			if stErr == nil {
+				st.Complete(count, msg, err, output...)
+				s.addDebug(st)
+			} else {
+				logger.Warnf("error inserting trace history: %+v", stErr)
+			}
+		}()
+	}
 }
 
 func (s *Service) newSpan(

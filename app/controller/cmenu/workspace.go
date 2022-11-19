@@ -88,70 +88,70 @@ func workspaceMenu(ctx context.Context, as *app.State, params filter.ParamSet, p
 	return ret, w, nil
 }
 
-func teamMenu(ctx context.Context, user uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, team.Teams, error) {
-	ret := &menu.Item{Key: "teams", Title: "Teams", Description: "TODO", Icon: "team", Route: "/team"}
-	t, err := as.Services.Team.GetByMember(ctx, nil, user, params.Get("team", nil, logger), logger)
+func teamMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, team.Teams, error) {
+	ret := &menu.Item{Key: "teams", Title: "Teams", Description: "TODO", Icon: util.KeyTeam, Route: "/team"}
+	t, err := as.Services.Team.GetByMember(ctx, nil, usr, params.Get(util.KeyTeam, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	for _, x := range t {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "team", Route: "/team/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyTeam, Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(t))
 	return ret, t, nil
 }
 
-func sprintMenu(ctx context.Context, user uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, sprint.Sprints, error) {
-	ret := &menu.Item{Key: "sprints", Title: "Sprints", Description: "TODO", Icon: "sprint", Route: "/sprint"}
-	s, err := as.Services.Sprint.GetByMember(ctx, nil, user, params.Get("sprint", nil, logger), logger)
+func sprintMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, sprint.Sprints, error) {
+	ret := &menu.Item{Key: "sprints", Title: "Sprints", Description: "TODO", Icon: util.KeySprint, Route: "/sprint"}
+	s, err := as.Services.Sprint.GetByMember(ctx, nil, usr, params.Get(util.KeySprint, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	for _, x := range s {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "sprint", Route: "/sprint/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeySprint, Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(s))
 	return ret, s, nil
 }
 
-func estimateMenu(ctx context.Context, user uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, estimate.Estimates, error) {
-	ret := &menu.Item{Key: "estimates", Title: "Estimates", Description: "TODO", Icon: "estimate", Route: "/estimate"}
-	e, err := as.Services.Estimate.GetByMember(ctx, nil, user, params.Get("estimate", nil, logger), logger)
+func estimateMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, estimate.Estimates, error) {
+	ret := &menu.Item{Key: "estimates", Title: "Estimates", Description: "TODO", Icon: util.KeyEstimate, Route: "/estimate"}
+	e, err := as.Services.Estimate.GetByMember(ctx, nil, usr, params.Get(util.KeyEstimate, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	for _, x := range e {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "estimate", Route: "/estimate/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyEstimate, Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(e))
 	return ret, e, nil
 }
 
-func standupMenu(ctx context.Context, user uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, standup.Standups, error) {
-	ret := &menu.Item{Key: "standups", Title: "Standups", Description: "TODO", Icon: "standup", Route: "/standup"}
-	u, err := as.Services.Standup.GetByMember(ctx, nil, user, params.Get("standup", nil, logger), logger)
+func standupMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, standup.Standups, error) {
+	ret := &menu.Item{Key: "standups", Title: "Standups", Description: "TODO", Icon: util.KeyStandup, Route: "/standup"}
+	u, err := as.Services.Standup.GetByMember(ctx, nil, usr, params.Get(util.KeyStandup, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	for _, x := range u {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "standup", Route: "/standup/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyStandup, Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(u))
 	return ret, u, nil
 }
 
-func retroMenu(ctx context.Context, user uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, retro.Retros, error) {
-	ret := &menu.Item{Key: "retros", Title: "Retros", Description: "TODO", Icon: "retro", Route: "/retro"}
-	r, err := as.Services.Retro.GetByMember(ctx, nil, user, params.Get("retro", nil, logger), logger)
+func retroMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, retro.Retros, error) {
+	ret := &menu.Item{Key: "retros", Title: "Retros", Description: "TODO", Icon: util.KeyRetro, Route: "/retro"}
+	r, err := as.Services.Retro.GetByMember(ctx, nil, usr, params.Get(util.KeyRetro, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	for _, x := range r {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: "retro", Route: "/retro/" + x.Slug}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyRetro, Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(r))

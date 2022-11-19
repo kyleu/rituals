@@ -1,0 +1,126 @@
+{% import (
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/sprint"
+  "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwestimate"
+  "github.com/kyleu/rituals/views/vworkspace/vwstandup"
+  "github.com/kyleu/rituals/views/vworkspace/vwretro"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
+) %}
+
+{% code type SprintWorkspace struct {
+  layout.Basic
+  Sprint *workspace.FullSprint
+  Teams team.Teams
+} %}
+
+{% func (p *SprintWorkspace) Body(as *app.State, ps *cutil.PageState) %}
+  {%- code
+    w := p.Sprint
+    s := w.Sprint
+    self, others, _ := w.Members.Split(ps.Profile.ID)
+  -%}
+  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary">
+      <div class="card">
+        <h3><a href="#modal-sprint-config">{%= components.SVGRefIcon(s.IconSafe(), ps) %}{%s s.TitleString() %}</a></h3>
+        <div class="clear"></div>
+        <div class="right">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
+        {%= vwutil.Banner(w.Team, nil, util.KeySprint) %}
+        {%= SprintWorkspaceModal(s, p.Teams, ps) %}
+      </div>
+    </div>
+    <div id="panel-detail">
+      {%= vwestimate.EstimateWorkspaceList(w.Estimates, s.TeamID, &s.ID, ps) %}
+      {%= vwstandup.StandupWorkspaceList(w.Standups, s.TeamID, &s.ID, ps) %}
+      {%= vwretro.RetroWorkspaceList(w.Retros, s.TeamID, &s.ID, ps) %}
+    </div>
+    <div id="panel-self">
+      <div class="card">
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
+        <em>{%s string(self.Role) %}</em>
+      </div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, s.PublicWebPath()) %}
+    </div>
+    <div id="panel-members">
+      <div class="card">
+        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <table class="mt expanded">
+          <tbody>
+            {%- for _, m := range others -%}
+            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        {%- for _, m := range others -%}
+        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, s.PublicWebPath()) %}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%= vwutil.InviteModal() %}
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const sprint = {%s= util.ToJSONCompact(s) %};
+      const members = {%s= util.ToJSONCompact(w.Members) %};
+      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
+      rituals.initWorkspace('{%s util.KeySprint %}', sprint, members, permissions);
+    });
+  </script>
+{% endfunc %}
+
+{% func SprintWorkspaceModal(s *sprint.Sprint, teams team.Teams, ps *cutil.PageState) %}
+  <div id="modal-sprint-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>Sprint</h2>
+      </div>
+      <div class="modal-body">
+        <form action="{%s s.PublicWebPath() %}" method="post" class="expanded">
+          <input type="hidden" name="action" value="edit" />
+          <em></em><br />
+          {%= components.FormVerticalInput("title", "Title", s.TitleString(), 5, "The name of your sprint") %}
+          {%= components.FormVerticalIconPicker("icon", "Icon", s.IconSafe(), ps, 5) %}
+          {%= components.FormVerticalInputTimestampDay("startDate", "Start Date", s.StartDate, 5, "The day your sprint begins") %}
+          {%= components.FormVerticalInputTimestampDay("endDate", "End Date", s.EndDate, 5, "The day your sprint ends") %}
+          {%= components.FormVerticalSelect(util.KeyTeam, "Team", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          <em>Permissions</em>
+          <div>
+            <label><input type="checkbox" name="perm-team" value="true"> Must be a member of this sprint's team</label>
+          </div>
+          <hr />
+          <div class="right"><button type="submit">Save</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func SprintWorkspaceList(sprints sprint.Sprints, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, sprintID, "New Sprint") %}</div>
+    <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
+    {%- if len(sprints) == 0 -%}
+    <div class="mt"><em>no sprints</em></div>
+    {%- else -%}
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, x := range sprints -%}
+        <tr>
+          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
+{% endfunc %}

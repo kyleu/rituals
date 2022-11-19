@@ -1,0 +1,111 @@
+{% import (
+  "github.com/google/uuid"
+	"golang.org/x/exp/slices"
+
+  "github.com/kyleu/rituals/app/retro/feedback"
+  "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func RetroWorkspaceFeedbacks(userID uuid.UUID, username string, w *workspace.FullRetro) %}
+  <div class="categories">
+    {%- for _, grp := range w.Feedbacks.Grouped(w.Retro.Categories) -%}
+    <div class="category">
+      <div class="right"><a href="#modal-feedback--add-{%s grp.Category %}"><button>New</button></a></div>
+      <h4>{%s grp.Category %}</h4>
+      {%- for _, f := range grp.Feedbacks -%}
+      {%- code
+        uname := "Former Guest"
+        curr := w.Members.Get(w.Retro.ID, f.UserID)
+        if curr != nil {
+          uname = curr.Name
+        }
+      -%}
+      <div class="clear"></div>
+      <div class="feedback mt">
+        <a href="#modal-feedback-{%s f.ID.String() %}">{%s uname %}</a>
+        <div class="mt">{%s= f.HTML %}</div>
+      </div>
+      {%- endfor -%}
+      {%= RetroWorkspaceFeedbackModalAdd(w.Retro.Categories, grp.Category) %}
+    </div>
+    {%- endfor -%}
+  </div>
+  {%- for _, f := range w.Feedbacks -%}
+  {%- if userID == f.UserID -%}
+  {%= RetroWorkspaceFeedbackModalEdit(f, w.Retro.Categories, username) %}
+  {%- else -%}
+  {%= RetroWorkspaceFeedbackModalView(f, username) %}
+  {%- endif -%}
+  {%- endfor -%}
+{% endfunc %}
+
+{% func RetroWorkspaceFeedbackModalAdd(categories []string, category string) %}
+  {%- if !slices.Contains(categories, category) -%}
+  {%- code categories = append(categories, category) -%}
+  {%- endif -%}
+  <div id="modal-feedback--add-{%s category %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>New Feedback</h2>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          <input type="hidden" name="action" value="feedback-add" />
+          <table class="mt expanded">
+            <tbody>
+              {%= components.FormVerticalSelect("category", "Category", category, categories, categories, 5) %}
+              {%= components.FormVerticalTextarea("content", "Content", 8, "", 5, "HTML and Markdown supported") %}
+              <tr><td colspan="2"><button type="submit">Add Feedback</button></td></tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func RetroWorkspaceFeedbackModalEdit(f *feedback.Feedback, categories []string, username string) %}
+  {%- if !slices.Contains(categories, f.Category) -%}
+  {%- code categories = append(categories, f.Category) -%}
+  {%- endif -%}
+  <div id="modal-feedback-{%s f.ID.String() %}" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s f.Category %} :: {%s username %}</h2>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          <input type="hidden" name="action" value="feedback-edit" />
+          <input type="hidden" name="feedbackID" value="{%s f.ID.String() %}" />
+          <table class="mt expanded">
+            <tbody>
+              {%= components.FormVerticalSelect("category", "Category", string(f.Category), categories, categories, 5) %}
+              {%= components.FormVerticalTextarea("content", "Content", 8, f.Content, 5, "HTML and Markdown supported") %}
+              <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func RetroWorkspaceFeedbackModalView(f *feedback.Feedback, username string) %}
+<div id="modal-feedback-{%s f.ID.String() %}" class="modal" style="display: none;">
+  <a class="backdrop" href="#"></a>
+  <div class="modal-content">
+    <div class="modal-header">
+      <a href="#" class="modal-close">×</a>
+      <h2>{%s f.Category %} :: {%s username %}</h2>
+    </div>
+    <div class="modal-body">
+      <div>{%s= f.HTML %}</div>
+    </div>
+  </div>
+</div>
+{% endfunc %}
