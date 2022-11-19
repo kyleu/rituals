@@ -4,7 +4,7 @@
   "group": [
     "standup"
   ],
-  "description": "TODO",
+  "description": "Membership roster for standups",
   "icon": "users",
   "ordering": [
     {

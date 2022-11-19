@@ -22,7 +22,7 @@ brews:
       email: "kyle@kyleu.com"
     folder: Formula
     homepage: "https://rituals.dev"
-    description: "TODO"
+    description: "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
     license: "MIT"
     skip_upload: "false"
     install: "bin.install \"rituals\""
@@ -55,7 +55,7 @@ nfpms:
     vendor: "Kyle U"
     homepage: "https://rituals.dev}"
     maintainer: "Kyle U <kyle@kyleu.com>"
-    description: "TODO"
+    description: "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
     license: "MIT"
     replacements: *replacements
     formats:
@@ -81,8 +81,8 @@ snapcrafts:
   -
     publish: false
     replacements: *replacements
-    summary: "TODO"
-    description: "TODO"
+    summary: "Work with your team to estimate work, track your progress, and gather feedback"
+    description: "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
     grade: stable
     confinement: strict
     license: "MIT"

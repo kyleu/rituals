@@ -34,8 +34,8 @@
     "license": "MIT",
     "homepage": "https://rituals.dev",
     "sourcecode": "https://github.com/kyleu/rituals",
-    "summary": "TODO",
-    "description": "TODO"
+    "summary": "Work with your team to estimate work, track your progress, and gather feedback",
+    "description": "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
   },
   "theme": {
     "light": {

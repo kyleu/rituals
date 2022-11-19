@@ -1,7 +1,7 @@
 {
   "name": "estimate",
   "package": "estimate",
-  "description": "TODO",
+  "description": "Planning poker for any stories you need to work on",
   "icon": "estimate",
   "ordering": [
     {

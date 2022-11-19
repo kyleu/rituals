@@ -1,9 +1,8 @@
 package cworkspace
 
 import (
-	"fmt"
+	"github.com/kyleu/rituals/app/util"
 
-	"github.com/fasthttp/websocket"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -11,33 +10,45 @@ import (
 	"github.com/kyleu/rituals/app/controller/cutil"
 )
 
-var upgrader = websocket.FastHTTPUpgrader{
-	EnableCompression: true,
+func TeamSocket(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.team.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(rc, util.KeyTeam, as, ps)
+	})
 }
 
-func Socket(rc *fasthttp.RequestCtx) {
-	controller.Act("socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		err := upgrader.Upgrade(rc, func(conn *websocket.Conn) {
-			connID, err := as.Services.Socket.Register(ps.Profile, conn)
-			if err != nil {
-				ps.Logger.Warn("unable to register websocket connection")
-				return
-			}
-			joined, err := as.Services.Socket.Join(connID.ID, "TODO")
-			if err != nil {
-				ps.Logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
-				return
-			}
-			err = as.Services.Socket.ReadLoop(connID.ID, nil)
-			if err != nil {
-				ps.Logger.Error(fmt.Sprintf("error processing socket read loop: %+v", err))
-				return
-			}
-		})
-		if err != nil {
-			ps.Logger.Warn("unable to upgrade connection to websocket")
-			return "", err
-		}
-		return "", nil
+func SprintSocket(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.sprint.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(rc, util.KeySprint, as, ps)
 	})
+}
+
+func EstimateSocket(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.estimate.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(rc, util.KeyEstimate, as, ps)
+	})
+}
+
+func StandupSocket(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.standup.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(rc, util.KeyStandup, as, ps)
+	})
+}
+
+func RetroSocket(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.retro.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(rc, util.KeyRetro, as, ps)
+	})
+}
+
+func Socket(rc *fasthttp.RequestCtx, svc string, as *app.State, ps *cutil.PageState) (string, error) {
+	id, err := cutil.RCRequiredUUID(rc, "id")
+	if err != nil {
+		return "", err
+	}
+	err = as.Services.Socket.Upgrade(rc, svc+":"+id.String(), ps.Profile, ps.Logger)
+	if err != nil {
+		ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
+		return "", err
+	}
+	return "", nil
 }

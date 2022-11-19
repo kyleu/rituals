@@ -17,12 +17,12 @@
 
 {% code type TeamWorkspace struct {
   layout.Basic
-  Team *workspace.FullTeam
+  FullTeam *workspace.FullTeam
 } %}
 
 {% func (p *TeamWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    w := p.Team
+    w := p.FullTeam
     t := w.Team
     self, others, _ := w.Members.Split(ps.Profile.ID)
   -%}

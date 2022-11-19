@@ -4,7 +4,7 @@
   "group": [
     "retro"
   ],
-  "description": "TODO",
+  "description": "Security controls for retrospectives",
   "icon": "permission",
   "ordering": [
     {

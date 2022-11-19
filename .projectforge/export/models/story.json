@@ -4,7 +4,7 @@
   "group": [
     "estimate"
   ],
-  "description": "TODO",
+  "description": "The detailed use cases for an estimate session",
   "icon": "story",
   "ordering": [
     {

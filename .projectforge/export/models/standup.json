@@ -1,7 +1,7 @@
 {
   "name": "standup",
   "package": "standup",
-  "description": "TODO",
+  "description": "Share your progress with your team",
   "icon": "standup",
   "ordering": [
     {

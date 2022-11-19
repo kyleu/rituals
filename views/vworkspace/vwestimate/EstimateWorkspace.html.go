@@ -36,9 +36,9 @@ var (
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:16
 type EstimateWorkspace struct {
 	layout.Basic
-	Estimate *workspace.FullEstimate
-	Teams    team.Teams
-	Sprints  sprint.Sprints
+	FullEstimate *workspace.FullEstimate
+	Teams        team.Teams
+	Sprints      sprint.Sprints
 }
 
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:23
@@ -47,7 +47,7 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
 	qw422016.N().S(`
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:25
-	w := p.Estimate
+	w := p.FullEstimate
 	e := w.Estimate
 	self, others, _ := w.Members.Split(ps.Profile.ID)
 

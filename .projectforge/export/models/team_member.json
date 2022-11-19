@@ -4,7 +4,7 @@
   "group": [
     "team"
   ],
-  "description": "TODO",
+  "description": "Membership roster for teams",
   "icon": "users",
   "ordering": [
     {

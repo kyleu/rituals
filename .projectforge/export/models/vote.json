@@ -5,7 +5,7 @@
     "estimate",
     "story"
   ],
-  "description": "TODO",
+  "description": "An estimate for a story, from a user",
   "icon": "vote-yea",
   "ordering": [
     {

@@ -1,7 +1,7 @@
 {
   "name": "email",
   "package": "email",
-  "description": "TODO",
+  "description": "An email message that has been sent",
   "icon": "email",
   "ordering": [
     {

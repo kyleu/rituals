@@ -4,7 +4,7 @@
   "group": [
     "retro"
   ],
-  "description": "TODO",
+  "description": "User feedback for a retrospective",
   "icon": "comment",
   "ordering": [
     {

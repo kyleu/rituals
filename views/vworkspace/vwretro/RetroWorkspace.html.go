@@ -36,9 +36,9 @@ var (
 //line views/vworkspace/vwretro/RetroWorkspace.html:16
 type RetroWorkspace struct {
 	layout.Basic
-	Retro   *workspace.FullRetro
-	Teams   team.Teams
-	Sprints sprint.Sprints
+	FullRetro *workspace.FullRetro
+	Teams     team.Teams
+	Sprints   sprint.Sprints
 }
 
 //line views/vworkspace/vwretro/RetroWorkspace.html:23
@@ -47,7 +47,7 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
 	qw422016.N().S(`
 `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:25
-	w := p.Retro
+	w := p.FullRetro
 	r := w.Retro
 	self, others, _ := w.Members.Split(ps.Profile.ID)
 

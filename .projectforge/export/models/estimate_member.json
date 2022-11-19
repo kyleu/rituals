@@ -4,7 +4,7 @@
   "group": [
     "estimate"
   ],
-  "description": "TODO",
+  "description": "Membership roster for estimate sessions",
   "icon": "users",
   "ordering": [
     {

@@ -2,7 +2,7 @@
 # rituals.dev
 ![app logo](./assets/favicon.png)
 
-TODO
+Work with your team to estimate work, track your progress, and gather feedback
 
 - https://rituals.dev
 - https://rituals.dev/rituals

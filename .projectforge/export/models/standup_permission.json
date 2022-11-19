@@ -4,7 +4,7 @@
   "group": [
     "standup"
   ],
-  "description": "TODO",
+  "description": "Security controls for standups",
   "icon": "permission",
   "ordering": [
     {

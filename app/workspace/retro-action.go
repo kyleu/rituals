@@ -8,14 +8,14 @@ import (
 )
 
 func (s *Service) ActionRetro(
-	ctx context.Context, slug string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullRetro, string, string, error) {
 	r, err := s.LoadRetro(ctx, slug, userID, nil, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 
-	switch act := frm.GetStringOpt("action"); act {
+	switch act {
 	case "edit":
 		tgt := r.Retro.Clone()
 		tgt.Title = frm.GetStringOpt("title")

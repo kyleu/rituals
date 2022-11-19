@@ -15,14 +15,14 @@
 
 {% code type EstimateWorkspace struct {
   layout.Basic
-  Estimate *workspace.FullEstimate
+  FullEstimate *workspace.FullEstimate
   Teams team.Teams
   Sprints sprint.Sprints
 } %}
 
 {% func (p *EstimateWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    w := p.Estimate
+    w := p.FullEstimate
     e := w.Estimate
     self, others, _ := w.Members.Split(ps.Profile.ID)
   -%}

@@ -15,14 +15,14 @@
 
 {% code type RetroWorkspace struct {
   layout.Basic
-  Retro *workspace.FullRetro
+  FullRetro *workspace.FullRetro
   Teams team.Teams
   Sprints sprint.Sprints
 } %}
 
 {% func (p *RetroWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    w := p.Retro
+    w := p.FullRetro
     r := w.Retro
     self, others, _ := w.Members.Split(ps.Profile.ID)
   -%}

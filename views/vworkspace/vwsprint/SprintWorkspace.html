@@ -17,13 +17,13 @@
 
 {% code type SprintWorkspace struct {
   layout.Basic
-  Sprint *workspace.FullSprint
+  FullSprint *workspace.FullSprint
   Teams team.Teams
 } %}
 
 {% func (p *SprintWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    w := p.Sprint
+    w := p.FullSprint
     s := w.Sprint
     self, others, _ := w.Members.Split(ps.Profile.ID)
   -%}

@@ -89,7 +89,7 @@ func workspaceMenu(ctx context.Context, as *app.State, params filter.ParamSet, p
 }
 
 func teamMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, team.Teams, error) {
-	ret := &menu.Item{Key: "teams", Title: "Teams", Description: "TODO", Icon: util.KeyTeam, Route: "/team"}
+	ret := &menu.Item{Key: "teams", Title: "Teams", Description: util.KeyEstimateDesc, Icon: util.KeyTeam, Route: "/team"}
 	t, err := as.Services.Team.GetByMember(ctx, nil, usr, params.Get(util.KeyTeam, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
@@ -103,7 +103,7 @@ func teamMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *ap
 }
 
 func sprintMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, sprint.Sprints, error) {
-	ret := &menu.Item{Key: "sprints", Title: "Sprints", Description: "TODO", Icon: util.KeySprint, Route: "/sprint"}
+	ret := &menu.Item{Key: "sprints", Title: "Sprints", Description: util.KeySprintDesc, Icon: util.KeySprint, Route: "/sprint"}
 	s, err := as.Services.Sprint.GetByMember(ctx, nil, usr, params.Get(util.KeySprint, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
@@ -117,7 +117,7 @@ func sprintMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *
 }
 
 func estimateMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, estimate.Estimates, error) {
-	ret := &menu.Item{Key: "estimates", Title: "Estimates", Description: "TODO", Icon: util.KeyEstimate, Route: "/estimate"}
+	ret := &menu.Item{Key: "estimates", Title: "Estimates", Description: util.KeyEstimateDesc, Icon: util.KeyEstimate, Route: "/estimate"}
 	e, err := as.Services.Estimate.GetByMember(ctx, nil, usr, params.Get(util.KeyEstimate, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
@@ -131,7 +131,7 @@ func estimateMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as
 }
 
 func standupMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, standup.Standups, error) {
-	ret := &menu.Item{Key: "standups", Title: "Standups", Description: "TODO", Icon: util.KeyStandup, Route: "/standup"}
+	ret := &menu.Item{Key: "standups", Title: "Standups", Description: util.KeyStandupDesc, Icon: util.KeyStandup, Route: "/standup"}
 	u, err := as.Services.Standup.GetByMember(ctx, nil, usr, params.Get(util.KeyStandup, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err
@@ -145,7 +145,7 @@ func standupMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as 
 }
 
 func retroMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *app.State, logger util.Logger) (*menu.Item, retro.Retros, error) {
-	ret := &menu.Item{Key: "retros", Title: "Retros", Description: "TODO", Icon: util.KeyRetro, Route: "/retro"}
+	ret := &menu.Item{Key: "retros", Title: "Retrospectives", Description: util.KeyRetroDesc, Icon: util.KeyRetro, Route: "/retro"}
 	r, err := as.Services.Retro.GetByMember(ctx, nil, usr, params.Get(util.KeyRetro, nil, logger), logger)
 	if err != nil {
 		return nil, nil, err

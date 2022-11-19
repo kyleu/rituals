@@ -4,7 +4,7 @@
   "group": [
     "sprint"
   ],
-  "description": "TODO",
+  "description": "Membership roster for sprints",
   "icon": "users",
   "ordering": [
     {

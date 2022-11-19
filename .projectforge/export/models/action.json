@@ -1,7 +1,7 @@
 {
   "name": "action",
   "package": "action",
-  "description": "TODO",
+  "description": "An action within a workspace",
   "icon": "action",
   "ordering": [
     {

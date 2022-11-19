@@ -1,7 +1,7 @@
 {
   "name": "team",
   "package": "team",
-  "description": "TODO",
+  "description": "Join your friends and work towards a common goal",
   "icon": "team",
   "ordering": [
     {

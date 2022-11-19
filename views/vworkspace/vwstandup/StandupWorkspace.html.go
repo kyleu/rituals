@@ -36,9 +36,9 @@ var (
 //line views/vworkspace/vwstandup/StandupWorkspace.html:16
 type StandupWorkspace struct {
 	layout.Basic
-	Standup *workspace.FullStandup
-	Teams   team.Teams
-	Sprints sprint.Sprints
+	FullStandup *workspace.FullStandup
+	Teams       team.Teams
+	Sprints     sprint.Sprints
 }
 
 //line views/vworkspace/vwstandup/StandupWorkspace.html:23
@@ -47,7 +47,7 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
 	qw422016.N().S(`
 `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:25
-	w := p.Standup
+	w := p.FullStandup
 	u := w.Standup
 	self, others, _ := w.Members.Split(ps.Profile.ID)
 

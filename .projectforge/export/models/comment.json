@@ -1,7 +1,7 @@
 {
   "name": "comment",
   "package": "comment",
-  "description": "TODO",
+  "description": "A comment on a model within the system",
   "icon": "comments",
   "ordering": [
     {

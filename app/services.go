@@ -125,7 +125,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 
 	g := gql.NewSchema(st.GraphQL)
 	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f, us, a, c, el)
-	ws := websocket.NewService(logger, w.SocketOpen, w.SocketHandler, w.SocketClose, nil)
+	ws := websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose, nil)
 
 	return &Services{
 		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,

@@ -310,7 +310,11 @@ func StreamStandupWorkspaceReportModalView(qw422016 *qt422016.Writer, r *report.
 	qw422016.N().S(`</h2>
       </div>
       <div class="modal-body">
-        TODO
+        `)
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:102
+	qw422016.N().S(r.HTML)
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:102
+	qw422016.N().S(`
       </div>
     </div>
   </div>

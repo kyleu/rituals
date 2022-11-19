@@ -4,7 +4,7 @@
   "group": [
     "standup"
   ],
-  "description": "TODO",
+  "description": "Daily status reports for a standup",
   "icon": "file-alt",
   "ordering": [
     {

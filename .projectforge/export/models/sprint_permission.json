@@ -4,7 +4,7 @@
   "group": [
     "sprint"
   ],
-  "description": "TODO",
+  "description": "Security controls for sprints",
   "icon": "permission",
   "ordering": [
     {

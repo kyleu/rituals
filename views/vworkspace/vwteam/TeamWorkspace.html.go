@@ -38,7 +38,7 @@ var (
 //line views/vworkspace/vwteam/TeamWorkspace.html:18
 type TeamWorkspace struct {
 	layout.Basic
-	Team *workspace.FullTeam
+	FullTeam *workspace.FullTeam
 }
 
 //line views/vworkspace/vwteam/TeamWorkspace.html:23
@@ -47,7 +47,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	qw422016.N().S(`
 `)
 //line views/vworkspace/vwteam/TeamWorkspace.html:25
-	w := p.Team
+	w := p.FullTeam
 	t := w.Team
 	self, others, _ := w.Members.Split(ps.Profile.ID)
 

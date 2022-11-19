@@ -4,7 +4,7 @@
   "group": [
     "estimate"
   ],
-  "description": "TODO",
+  "description": "Historical names and URLs for estimate sessions",
   "icon": "history",
   "ordering": [
     {

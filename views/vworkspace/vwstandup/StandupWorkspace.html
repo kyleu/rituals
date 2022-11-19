@@ -15,14 +15,14 @@
 
 {% code type StandupWorkspace struct {
   layout.Basic
-  Standup *workspace.FullStandup
+  FullStandup *workspace.FullStandup
   Teams team.Teams
   Sprints sprint.Sprints
 } %}
 
 {% func (p *StandupWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
-    w := p.Standup
+    w := p.FullStandup
     u := w.Standup
     self, others, _ := w.Members.Split(ps.Profile.ID)
   -%}

@@ -4,7 +4,7 @@
   "group": [
     "retro"
   ],
-  "description": "TODO",
+  "description": "Membership roster for retrospectives",
   "icon": "users",
   "ordering": [
     {

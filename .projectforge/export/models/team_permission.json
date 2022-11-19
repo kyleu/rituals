@@ -4,7 +4,7 @@
   "group": [
     "team"
   ],
-  "description": "TODO",
+  "description": "Security controls for teams",
   "icon": "permission",
   "ordering": [
     {

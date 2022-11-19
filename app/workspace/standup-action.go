@@ -8,13 +8,13 @@ import (
 )
 
 func (s *Service) ActionStandup(
-	ctx context.Context, slug string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullStandup, string, string, error) {
 	u, err := s.LoadStandup(ctx, slug, userID, nil, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	switch act := frm.GetStringOpt("action"); act {
+	switch act {
 	case "edit":
 		tgt := u.Standup.Clone()
 		tgt.Title = frm.GetStringOpt("title")

@@ -17,7 +17,7 @@ function err(e: any) {
 }
 
 export function initWorkspace(t: string, x: any, members?: any[], permissions?: any[]) {
-  new (window as any).rituals.Socket(true, open, recv, err, "/" + t + "/" + x.slug + "/connect");
+  new (window as any).rituals.Socket(true, open, recv, err, "/" + t + "/" + x.id + "/connect");
   console.log("loaded [" + t + "] workspace with [" + members?.length + "] members and [" + permissions?.length + "] permissions");
 }
 
