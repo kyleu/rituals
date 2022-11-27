@@ -472,7 +472,7 @@ func StreamEstimateWorkspaceStoryModal(qw422016 *qt422016.Writer, w *workspace.F
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:168
 	if s.Status == enum.SessionStatusComplete {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:169
-		results := w.Votes.GetByStoryID(s.ID).Results()
+		results := w.Votes.GetByStoryIDs(s.ID).Results()
 
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:169
 		qw422016.N().S(`            <pre>`)
@@ -484,7 +484,7 @@ func StreamEstimateWorkspaceStoryModal(qw422016 *qt422016.Writer, w *workspace.F
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:171
 	} else {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:171
-		qw422016.N().S(`            <em>TODO</em>
+		qw422016.N().S(`            <em>Voting is still active</em>
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:173
 	}

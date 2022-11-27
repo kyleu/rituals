@@ -17,6 +17,16 @@ func (s SprintMembers) Get(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 	return nil
 }
 
+func (s SprintMembers) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintMembers {
+	var ret SprintMembers
+	for _, x := range s {
+		if slices.Contains(sprintIDs, x.SprintID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s SprintMembers) SprintIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {
@@ -32,6 +42,16 @@ func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
 	}
 	for _, x := range s {
 		ret = append(ret, x.SprintID.String())
+	}
+	return ret
+}
+
+func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
+	var ret SprintMembers
+	for _, x := range s {
+		if slices.Contains(userIDs, x.UserID) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

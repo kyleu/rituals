@@ -17,6 +17,16 @@ func (s StandupMembers) Get(standupID uuid.UUID, userID uuid.UUID) *StandupMembe
 	return nil
 }
 
+func (s StandupMembers) GetByStandupIDs(standupIDs ...uuid.UUID) StandupMembers {
+	var ret StandupMembers
+	for _, x := range s {
+		if slices.Contains(standupIDs, x.StandupID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s StandupMembers) StandupIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {
@@ -32,6 +42,16 @@ func (s StandupMembers) StandupIDStrings(includeNil bool) []string {
 	}
 	for _, x := range s {
 		ret = append(ret, x.StandupID.String())
+	}
+	return ret
+}
+
+func (s StandupMembers) GetByUserIDs(userIDs ...uuid.UUID) StandupMembers {
+	var ret StandupMembers
+	for _, x := range s {
+		if slices.Contains(userIDs, x.UserID) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

@@ -17,6 +17,16 @@ func (c Comments) Get(id uuid.UUID) *Comment {
 	return nil
 }
 
+func (c Comments) GetByIDs(ids ...uuid.UUID) Comments {
+	var ret Comments
+	for _, x := range c {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (c Comments) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(c)+1)
 	for _, x := range c {

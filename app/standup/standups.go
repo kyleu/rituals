@@ -17,6 +17,16 @@ func (s Standups) Get(id uuid.UUID) *Standup {
 	return nil
 }
 
+func (s Standups) GetByIDs(ids ...uuid.UUID) Standups {
+	var ret Standups
+	for _, x := range s {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s Standups) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {

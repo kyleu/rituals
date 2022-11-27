@@ -17,6 +17,16 @@ func (t TeamPermissions) Get(teamID uuid.UUID, key string, value string) *TeamPe
 	return nil
 }
 
+func (t TeamPermissions) GetByTeamIDs(teamIDs ...uuid.UUID) TeamPermissions {
+	var ret TeamPermissions
+	for _, x := range t {
+		if slices.Contains(teamIDs, x.TeamID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (t TeamPermissions) TeamIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(t)+1)
 	for _, x := range t {
@@ -36,6 +46,16 @@ func (t TeamPermissions) TeamIDStrings(includeNil bool) []string {
 	return ret
 }
 
+func (t TeamPermissions) GetByKeys(keys ...string) TeamPermissions {
+	var ret TeamPermissions
+	for _, x := range t {
+		if slices.Contains(keys, x.Key) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (t TeamPermissions) Keys() []string {
 	ret := make([]string, 0, len(t)+1)
 	for _, x := range t {
@@ -51,6 +71,16 @@ func (t TeamPermissions) KeyStrings(includeNil bool) []string {
 	}
 	for _, x := range t {
 		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
+	var ret TeamPermissions
+	for _, x := range t {
+		if slices.Contains(values, x.Value) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

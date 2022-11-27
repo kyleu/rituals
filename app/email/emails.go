@@ -17,6 +17,16 @@ func (e Emails) Get(id uuid.UUID) *Email {
 	return nil
 }
 
+func (e Emails) GetByIDs(ids ...uuid.UUID) Emails {
+	var ret Emails
+	for _, x := range e {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (e Emails) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(e)+1)
 	for _, x := range e {

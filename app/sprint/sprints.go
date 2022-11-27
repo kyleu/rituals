@@ -17,6 +17,16 @@ func (s Sprints) Get(id uuid.UUID) *Sprint {
 	return nil
 }
 
+func (s Sprints) GetByIDs(ids ...uuid.UUID) Sprints {
+	var ret Sprints
+	for _, x := range s {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s Sprints) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {

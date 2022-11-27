@@ -166,10 +166,10 @@
           <hr />
           <div class="mt story-calculations">
             {%- if s.Status == enum.SessionStatusComplete -%}
-            {%- code results := w.Votes.GetByStoryID(s.ID).Results() -%}
+            {%- code results := w.Votes.GetByStoryIDs(s.ID).Results() -%}
             <pre>{%s util.ToJSON(results) %}</pre>
             {%- else -%}
-            <em>TODO</em>
+            <em>Voting is still active</em>
             {%- endif -%}
           </div>
           <hr />

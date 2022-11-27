@@ -14,6 +14,16 @@ func (e EstimateHistories) Get(slug string) *EstimateHistory {
 	return nil
 }
 
+func (e EstimateHistories) GetBySlugs(slugs ...string) EstimateHistories {
+	var ret EstimateHistories
+	for _, x := range e {
+		if slices.Contains(slugs, x.Slug) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (e EstimateHistories) Slugs() []string {
 	ret := make([]string, 0, len(e)+1)
 	for _, x := range e {

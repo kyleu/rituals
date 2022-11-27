@@ -168,7 +168,7 @@ func estimateStoryDelete(
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
 	}
-	for _, v := range fe.Votes.GetByStoryID(*id) {
+	for _, v := range fe.Votes.GetByStoryIDs(*id) {
 		err := s.v.Delete(ctx, nil, v.StoryID, v.UserID, logger)
 		if err != nil {
 			return nil, "", "", errors.Wrap(err, "unable to delete vote")

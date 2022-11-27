@@ -17,6 +17,16 @@ func (r RetroMembers) Get(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
 	return nil
 }
 
+func (r RetroMembers) GetByRetroIDs(retroIDs ...uuid.UUID) RetroMembers {
+	var ret RetroMembers
+	for _, x := range r {
+		if slices.Contains(retroIDs, x.RetroID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (r RetroMembers) RetroIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(r)+1)
 	for _, x := range r {
@@ -32,6 +42,16 @@ func (r RetroMembers) RetroIDStrings(includeNil bool) []string {
 	}
 	for _, x := range r {
 		ret = append(ret, x.RetroID.String())
+	}
+	return ret
+}
+
+func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
+	var ret RetroMembers
+	for _, x := range r {
+		if slices.Contains(userIDs, x.UserID) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

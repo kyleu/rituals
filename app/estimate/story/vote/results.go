@@ -18,6 +18,9 @@ type Results struct {
 }
 
 func (v Votes) Results() *Results {
+	if len(v) == 0 {
+		return &Results{}
+	}
 	ret := &Results{Floats: make([]float64, 0, len(v))}
 	for _, x := range v {
 		fl, err := strconv.ParseFloat(x.Choice, 64)

@@ -17,6 +17,16 @@ func (e Estimates) Get(id uuid.UUID) *Estimate {
 	return nil
 }
 
+func (e Estimates) GetByIDs(ids ...uuid.UUID) Estimates {
+	var ret Estimates
+	for _, x := range e {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (e Estimates) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(e)+1)
 	for _, x := range e {

@@ -14,6 +14,16 @@ func (t TeamHistories) Get(slug string) *TeamHistory {
 	return nil
 }
 
+func (t TeamHistories) GetBySlugs(slugs ...string) TeamHistories {
+	var ret TeamHistories
+	for _, x := range t {
+		if slices.Contains(slugs, x.Slug) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (t TeamHistories) Slugs() []string {
 	ret := make([]string, 0, len(t)+1)
 	for _, x := range t {

@@ -17,20 +17,10 @@ func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
 	return nil
 }
 
-func (v Votes) GetByStoryID(storyID uuid.UUID) Votes {
+func (v Votes) GetByStoryIDs(storyIDs ...uuid.UUID) Votes {
 	var ret Votes
 	for _, x := range v {
-		if x.StoryID == storyID {
-			ret = append(ret, x)
-		}
-	}
-	return ret
-}
-
-func (v Votes) GetByUserID(userID uuid.UUID) Votes {
-	var ret Votes
-	for _, x := range v {
-		if x.UserID == userID {
+		if slices.Contains(storyIDs, x.StoryID) {
 			ret = append(ret, x)
 		}
 	}
@@ -52,6 +42,16 @@ func (v Votes) StoryIDStrings(includeNil bool) []string {
 	}
 	for _, x := range v {
 		ret = append(ret, x.StoryID.String())
+	}
+	return ret
+}
+
+func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
+	var ret Votes
+	for _, x := range v {
+		if slices.Contains(userIDs, x.UserID) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

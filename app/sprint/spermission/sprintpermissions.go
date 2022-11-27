@@ -17,6 +17,16 @@ func (s SprintPermissions) Get(sprintID uuid.UUID, key string, value string) *Sp
 	return nil
 }
 
+func (s SprintPermissions) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintPermissions {
+	var ret SprintPermissions
+	for _, x := range s {
+		if slices.Contains(sprintIDs, x.SprintID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s SprintPermissions) SprintIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {
@@ -36,6 +46,16 @@ func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
 	return ret
 }
 
+func (s SprintPermissions) GetByKeys(keys ...string) SprintPermissions {
+	var ret SprintPermissions
+	for _, x := range s {
+		if slices.Contains(keys, x.Key) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s SprintPermissions) Keys() []string {
 	ret := make([]string, 0, len(s)+1)
 	for _, x := range s {
@@ -51,6 +71,16 @@ func (s SprintPermissions) KeyStrings(includeNil bool) []string {
 	}
 	for _, x := range s {
 		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
+	var ret SprintPermissions
+	for _, x := range s {
+		if slices.Contains(values, x.Value) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

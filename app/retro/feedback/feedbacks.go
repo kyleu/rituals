@@ -17,6 +17,16 @@ func (f Feedbacks) Get(id uuid.UUID) *Feedback {
 	return nil
 }
 
+func (f Feedbacks) GetByIDs(ids ...uuid.UUID) Feedbacks {
+	var ret Feedbacks
+	for _, x := range f {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (f Feedbacks) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(f)+1)
 	for _, x := range f {

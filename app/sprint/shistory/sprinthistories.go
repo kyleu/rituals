@@ -14,6 +14,16 @@ func (s SprintHistories) Get(slug string) *SprintHistory {
 	return nil
 }
 
+func (s SprintHistories) GetBySlugs(slugs ...string) SprintHistories {
+	var ret SprintHistories
+	for _, x := range s {
+		if slices.Contains(slugs, x.Slug) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s SprintHistories) Slugs() []string {
 	ret := make([]string, 0, len(s)+1)
 	for _, x := range s {

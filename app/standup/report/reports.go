@@ -17,6 +17,16 @@ func (r Reports) Get(id uuid.UUID) *Report {
 	return nil
 }
 
+func (r Reports) GetByIDs(ids ...uuid.UUID) Reports {
+	var ret Reports
+	for _, x := range r {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (r Reports) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(r)+1)
 	for _, x := range r {

@@ -14,6 +14,16 @@ func (s StandupHistories) Get(slug string) *StandupHistory {
 	return nil
 }
 
+func (s StandupHistories) GetBySlugs(slugs ...string) StandupHistories {
+	var ret StandupHistories
+	for _, x := range s {
+		if slices.Contains(slugs, x.Slug) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s StandupHistories) Slugs() []string {
 	ret := make([]string, 0, len(s)+1)
 	for _, x := range s {

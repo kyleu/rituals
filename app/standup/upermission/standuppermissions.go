@@ -17,6 +17,16 @@ func (s StandupPermissions) Get(standupID uuid.UUID, key string, value string) *
 	return nil
 }
 
+func (s StandupPermissions) GetByStandupIDs(standupIDs ...uuid.UUID) StandupPermissions {
+	var ret StandupPermissions
+	for _, x := range s {
+		if slices.Contains(standupIDs, x.StandupID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s StandupPermissions) StandupIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {
@@ -36,6 +46,16 @@ func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
 	return ret
 }
 
+func (s StandupPermissions) GetByKeys(keys ...string) StandupPermissions {
+	var ret StandupPermissions
+	for _, x := range s {
+		if slices.Contains(keys, x.Key) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s StandupPermissions) Keys() []string {
 	ret := make([]string, 0, len(s)+1)
 	for _, x := range s {
@@ -51,6 +71,16 @@ func (s StandupPermissions) KeyStrings(includeNil bool) []string {
 	}
 	for _, x := range s {
 		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
+	var ret StandupPermissions
+	for _, x := range s {
+		if slices.Contains(values, x.Value) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

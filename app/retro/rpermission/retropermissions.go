@@ -17,6 +17,16 @@ func (r RetroPermissions) Get(retroID uuid.UUID, key string, value string) *Retr
 	return nil
 }
 
+func (r RetroPermissions) GetByRetroIDs(retroIDs ...uuid.UUID) RetroPermissions {
+	var ret RetroPermissions
+	for _, x := range r {
+		if slices.Contains(retroIDs, x.RetroID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (r RetroPermissions) RetroIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(r)+1)
 	for _, x := range r {
@@ -36,6 +46,16 @@ func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
 	return ret
 }
 
+func (r RetroPermissions) GetByKeys(keys ...string) RetroPermissions {
+	var ret RetroPermissions
+	for _, x := range r {
+		if slices.Contains(keys, x.Key) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (r RetroPermissions) Keys() []string {
 	ret := make([]string, 0, len(r)+1)
 	for _, x := range r {
@@ -51,6 +71,16 @@ func (r RetroPermissions) KeyStrings(includeNil bool) []string {
 	}
 	for _, x := range r {
 		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
+	var ret RetroPermissions
+	for _, x := range r {
+		if slices.Contains(values, x.Value) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }

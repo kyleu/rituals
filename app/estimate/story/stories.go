@@ -17,6 +17,16 @@ func (s Stories) Get(id uuid.UUID) *Story {
 	return nil
 }
 
+func (s Stories) GetByIDs(ids ...uuid.UUID) Stories {
+	var ret Stories
+	for _, x := range s {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (s Stories) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(s)+1)
 	for _, x := range s {

@@ -17,6 +17,16 @@ func (u Users) Get(id uuid.UUID) *User {
 	return nil
 }
 
+func (u Users) GetByIDs(ids ...uuid.UUID) Users {
+	var ret Users
+	for _, x := range u {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (u Users) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(u)+1)
 	for _, x := range u {

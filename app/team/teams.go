@@ -17,6 +17,16 @@ func (t Teams) Get(id uuid.UUID) *Team {
 	return nil
 }
 
+func (t Teams) GetByIDs(ids ...uuid.UUID) Teams {
+	var ret Teams
+	for _, x := range t {
+		if slices.Contains(ids, x.ID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (t Teams) IDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(t)+1)
 	for _, x := range t {

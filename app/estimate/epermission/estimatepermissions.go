@@ -17,6 +17,16 @@ func (e EstimatePermissions) Get(estimateID uuid.UUID, key string, value string)
 	return nil
 }
 
+func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
+	var ret EstimatePermissions
+	for _, x := range e {
+		if slices.Contains(estimateIDs, x.EstimateID) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (e EstimatePermissions) EstimateIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(e)+1)
 	for _, x := range e {
@@ -36,6 +46,16 @@ func (e EstimatePermissions) EstimateIDStrings(includeNil bool) []string {
 	return ret
 }
 
+func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
+	var ret EstimatePermissions
+	for _, x := range e {
+		if slices.Contains(keys, x.Key) {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (e EstimatePermissions) Keys() []string {
 	ret := make([]string, 0, len(e)+1)
 	for _, x := range e {
@@ -51,6 +71,16 @@ func (e EstimatePermissions) KeyStrings(includeNil bool) []string {
 	}
 	for _, x := range e {
 		ret = append(ret, x.Key)
+	}
+	return ret
+}
+
+func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
+	var ret EstimatePermissions
+	for _, x := range e {
+		if slices.Contains(values, x.Value) {
+			ret = append(ret, x)
+		}
 	}
 	return ret
 }
