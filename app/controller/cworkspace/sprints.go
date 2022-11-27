@@ -28,13 +28,13 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.sprint", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		fs, err := as.Services.Workspace.LoadSprint(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		if x := fs.Members.Get(fs.Sprint.ID, ps.Profile.ID); x == nil {
+		if fs.Self == nil {
 			return "", errors.New("TODO: Register")
 		}
 		w, err := workspace.FromAny(ps.Data)
@@ -65,7 +65,7 @@ func SprintAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.sprint.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {

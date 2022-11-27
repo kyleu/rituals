@@ -28,13 +28,13 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.team", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
-		ft, err := as.Services.Workspace.LoadTeam(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
+		ft, err := as.Services.Workspace.LoadTeam(ps.Context, slug, ps.Profile.ID, ps.Profile.Name, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		if x := ft.Members.Get(ft.Team.ID, ps.Profile.ID); x == nil {
+		if ft.Self == nil {
 			return "", errors.New("TODO: Register")
 		}
 		ps.Title = ft.Team.TitleString()
@@ -61,7 +61,7 @@ func TeamAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.team.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {

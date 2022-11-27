@@ -37,7 +37,7 @@
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a href="#modal-report--add"><button>Add Report</button></a></div>
-        <h3>{%= components.SVGRefIcon(`file-alt`, ps) %}Reports</h3>
+        <h3><a href="#modal-report--add">{%= components.SVGRefIcon(`file-alt`, ps) %}Reports</a></h3>
         <div class="mt">{%= StandupWorkspaceReports(w, ps) %}</div>
         {%= StandupWorkspaceReportModalAdd() %}
       </div>

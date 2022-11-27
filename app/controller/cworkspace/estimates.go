@@ -28,13 +28,13 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.estimate", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		fe, err := as.Services.Workspace.LoadEstimate(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		if x := fe.Members.Get(fe.Estimate.ID, ps.Profile.ID); x == nil {
+		if fe.Self == nil {
 			return "", errors.New("TODO: Register")
 		}
 		w, err := workspace.FromAny(ps.Data)
@@ -65,7 +65,7 @@ func EstimateAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.estimate.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {

@@ -73,7 +73,7 @@ func (s *Service) SearchStories(ctx context.Context, q string, prms filter.Param
 		return nil, errors.Wrap(err, "can't load stories")
 	}
 	for _, x := range curr {
-		res := result.NewResult(util.KeyStory, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyStory, x, q)
+		res := result.NewResult(util.KeyStory, x.ID.String(), x.PublicWebPath(""), x.TitleString(), util.KeyStory, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}

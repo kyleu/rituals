@@ -4,6 +4,9 @@ import (
 	"fmt"
 )
 
-func (s *Story) PublicWebPath() string {
-	return fmt.Sprintf("/estimate/%v#modal-story-%v", s.EstimateID.String(), s.ID.String())
+func (s *Story) PublicWebPath(eslug string) string {
+	if eslug == "" {
+		eslug = s.EstimateID.String()
+	}
+	return fmt.Sprintf("/estimate/%v#modal-story-%v", eslug, s.ID.String())
 }

@@ -17,6 +17,26 @@ func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
 	return nil
 }
 
+func (v Votes) GetByStoryID(storyID uuid.UUID) Votes {
+	var ret Votes
+	for _, x := range v {
+		if x.StoryID == storyID {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
+func (v Votes) GetByUserID(userID uuid.UUID) Votes {
+	var ret Votes
+	for _, x := range v {
+		if x.UserID == userID {
+			ret = append(ret, x)
+		}
+	}
+	return ret
+}
+
 func (v Votes) StoryIDs() []uuid.UUID {
 	ret := make([]uuid.UUID, 0, len(v)+1)
 	for _, x := range v {

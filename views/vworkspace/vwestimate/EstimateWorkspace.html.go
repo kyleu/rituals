@@ -77,11 +77,11 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a href="#modal-story--add"><button>Add Story</button></a></div>
-        <h3>`)
+        <h3><a href="#modal-story--add">`)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:40
 	components.StreamSVGRefIcon(qw422016, util.KeyStory, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:40
-	qw422016.N().S(`Stories</h3>
+	qw422016.N().S(`Stories</a></h3>
         `)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:41
 	StreamEstimateWorkspaceStories(qw422016, w, ps)

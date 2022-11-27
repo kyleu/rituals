@@ -28,13 +28,13 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.standup", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		fu, err := as.Services.Workspace.LoadStandup(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
-		if x := fu.Members.Get(fu.Standup.ID, ps.Profile.ID); x == nil {
+		if fu.Self == nil {
 			return "", errors.New("TODO: Register")
 		}
 		w, err := workspace.FromAny(ps.Data)
@@ -65,7 +65,7 @@ func StandupAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.standup.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)
 		if err != nil {
-			return "", errors.Wrap(err, "must provide [slug] in path")
+			return "", err
 		}
 		frm, err := cutil.ParseForm(rc)
 		if err != nil {

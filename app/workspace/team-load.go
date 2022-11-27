@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"time"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
@@ -35,7 +36,9 @@ type FullTeam struct {
 	Actions     action.Actions              `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadTeam(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullTeam, error) {
+func (s *Service) LoadTeam(
+	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
+) (*FullTeam, error) {
 	t, err := s.t.GetBySlug(ctx, tx, slug, logger)
 	if err != nil {
 		if hist, _ := s.th.Get(ctx, tx, slug, logger); hist != nil {
@@ -65,7 +68,20 @@ func (s *Service) LoadTeam(ctx context.Context, slug string, user uuid.UUID, tx 
 	if err != nil {
 		return nil, err
 	}
-	ret.Self = ret.Members.Get(t.ID, user)
+	ret.Self = ret.Members.Get(t.ID, userID)
+	if ret.Self == nil && username != "" {
+		m := &tmember.TeamMember{TeamID: t.ID, UserID: userID, Name: username, Role: enum.MemberStatusMember, Created: time.Now()}
+		err = s.tm.Create(ctx, tx, logger, m)
+		if err != nil {
+			return nil, err
+		}
+		ret.Members, err = s.tm.GetByTeamID(ctx, tx, t.ID, params.Get("tmember", nil, logger), logger)
+		if err != nil {
+			return nil, err
+		}
+		ret.Self = ret.Members.Get(t.ID, userID)
+	}
+
 	ret.Permissions, err = s.tp.GetByTeamID(ctx, tx, t.ID, params.Get("tpermission", nil, logger), logger)
 	if err != nil {
 		return nil, err

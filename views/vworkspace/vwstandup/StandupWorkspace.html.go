@@ -77,11 +77,11 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a href="#modal-report--add"><button>Add Report</button></a></div>
-        <h3>`)
+        <h3><a href="#modal-report--add">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:40
 	components.StreamSVGRefIcon(qw422016, `file-alt`, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:40
-	qw422016.N().S(`Reports</h3>
+	qw422016.N().S(`Reports</a></h3>
         <div class="mt">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:41
 	StreamStandupWorkspaceReports(qw422016, w, ps)

@@ -50,7 +50,7 @@
         <h2>New Report</h2>
       </div>
       <div class="modal-body">
-        <form action="" method="post">
+        <form action="#" method="post">
           <input type="hidden" name="action" value="report-add" />
           <table class="mt expanded">
             <tbody>
@@ -74,14 +74,16 @@
         <h2>{%s r.TitleString() %}</h2>
       </div>
       <div class="modal-body">
-        <form action="" method="post">
-          <input type="hidden" name="action" value="report-edit" />
+        <form action="#" method="post">
           <input type="hidden" name="reportID" value="{%s r.ID.String() %}" />
           <table class="mt expanded">
             <tbody>
             {%= components.FormVerticalInputTimestampDay("day", "Day", &r.Day, 5, ) %}
             {%= components.FormVerticalTextarea("content", "Content", 8, r.Content, 5, "HTML and Markdown supported") %}
-            <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
+            <tr><td colspan="2">
+              <div class="right"><button type="submit" name="action" value="report-delete" onclick="return confirm('Are you sure you want to delete this report?');">Delete</button></div>
+              <button type="submit" name="action" value="report-edit">Save Changes</button>
+            </td></tr>
             </tbody>
           </table>
         </form>

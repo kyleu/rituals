@@ -36,3 +36,18 @@
 .story-votes .vote input:checked ~ * {
   border: 3px solid var(--color-foreground-muted);
 }
+
+.vote-results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.vote-results .vote-result {
+  margin: var(--padding);
+  text-align: center;
+}
+
+.vote-results .vote-result .number {
+  font-size: 150%;
+}
