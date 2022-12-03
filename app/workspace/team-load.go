@@ -2,10 +2,10 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"time"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
@@ -64,22 +64,9 @@ func (s *Service) LoadTeam(
 	if err != nil {
 		return nil, err
 	}
-	ret.Members, err = s.tm.GetByTeamID(ctx, tx, t.ID, params.Get("tmember", nil, logger), logger)
+	ret.Members, ret.Self, err = s.membersTeam(ctx, tx, t.ID, userID, username, params.Get("tmember", nil, logger), logger)
 	if err != nil {
 		return nil, err
-	}
-	ret.Self = ret.Members.Get(t.ID, userID)
-	if ret.Self == nil && username != "" {
-		m := &tmember.TeamMember{TeamID: t.ID, UserID: userID, Name: username, Role: enum.MemberStatusMember, Created: time.Now()}
-		err = s.tm.Create(ctx, tx, logger, m)
-		if err != nil {
-			return nil, err
-		}
-		ret.Members, err = s.tm.GetByTeamID(ctx, tx, t.ID, params.Get("tmember", nil, logger), logger)
-		if err != nil {
-			return nil, err
-		}
-		ret.Self = ret.Members.Get(t.ID, userID)
 	}
 
 	ret.Permissions, err = s.tp.GetByTeamID(ctx, tx, t.ID, params.Get("tpermission", nil, logger), logger)
@@ -129,4 +116,30 @@ func (s *Service) LoadTeam(
 	}
 
 	return ret, nil
+}
+
+func (s *Service) membersTeam(
+	ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
+) (tmember.TeamMembers, *tmember.TeamMember, error) {
+	members, err := s.tm.GetByTeamID(ctx, tx, teamID, params, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	self := members.Get(teamID, userID)
+	if self == nil && username != "" {
+		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		_, err = s.tm.Register(ctx, teamID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		members, err = s.tm.GetByTeamID(ctx, tx, teamID, params, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		self = members.Get(teamID, userID)
+	}
+	return members, self, nil
 }

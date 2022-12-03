@@ -3,6 +3,7 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
@@ -16,14 +17,22 @@ import (
 
 func UserList(rc *fasthttp.RequestCtx) {
 	Act("user.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
 		prms := ps.Params.Get("user", nil, ps.Logger).Sanitize("user")
-		ret, err := as.Services.User.List(ps.Context, nil, prms, ps.Logger)
+		var ret user.Users
+		var err error
+		if q == "" {
+			ret, err = as.Services.User.List(ps.Context, nil, prms, ps.Logger)
+		} else {
+			ret, err = as.Services.User.Search(ps.Context, q, nil, prms, ps.Logger)
+		}
 		if err != nil {
 			return "", err
 		}
 		ps.Title = "Users"
 		ps.Data = ret
-		return Render(rc, as, &vuser.List{Models: ret, Params: ps.Params}, ps, "user")
+		page := &vuser.List{Models: ret, Params: ps.Params, SearchQuery: q}
+		return Render(rc, as, page, ps, "user")
 	})
 }
 

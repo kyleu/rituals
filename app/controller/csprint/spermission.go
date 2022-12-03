@@ -33,7 +33,8 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vspermission.List{Models: ret, Sprints: sprints, Params: ps.Params}, ps, "sprint", "spermission")
+		page := &vspermission.List{Models: ret, Sprints: sprints, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "sprint", "spermission")
 	})
 }
 

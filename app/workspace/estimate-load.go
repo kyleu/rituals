@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -36,7 +37,7 @@ type FullEstimate struct {
 }
 
 func (s *Service) LoadEstimate(
-	ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
+	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
 ) (*FullEstimate, error) {
 	e, err := s.e.GetBySlug(ctx, tx, slug, logger)
 	if err != nil {
@@ -63,11 +64,10 @@ func (s *Service) LoadEstimate(
 	if err != nil {
 		return nil, err
 	}
-	ret.Members, err = s.em.GetByEstimateID(ctx, tx, e.ID, params.Get("emember", nil, logger), logger)
+	ret.Members, ret.Self, err = s.membersEstimate(ctx, tx, e.ID, userID, username, params.Get("emember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Self = ret.Members.Get(e.ID, user)
 	ret.Permissions, err = s.ep.GetByEstimateID(ctx, tx, e.ID, params.Get("epermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
@@ -112,4 +112,30 @@ func (s *Service) LoadEstimate(
 	}
 
 	return ret, nil
+}
+
+func (s *Service) membersEstimate(
+	ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
+) (emember.EstimateMembers, *emember.EstimateMember, error) {
+	members, err := s.em.GetByEstimateID(ctx, tx, estimateID, params, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	self := members.Get(estimateID, userID)
+	if self == nil && username != "" {
+		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		_, err = s.em.Register(ctx, estimateID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		members, err = s.em.GetByEstimateID(ctx, tx, estimateID, params, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		self = members.Get(estimateID, userID)
+	}
+	return members, self, nil
 }

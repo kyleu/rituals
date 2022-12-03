@@ -7,8 +7,11 @@ const (
 	ActConnect Act = "connect"
 	ActUpdate  Act = "update"
 
-	ActMemberAdd   Act = "member-add"
-	ActPermissions Act = "permissions"
+	ActMemberSelf   Act = "self"
+	ActMemberAdd    Act = "member-add"
+	ActMemberUpdate Act = "member-update"
+	ActMemberRemove Act = "member-remove"
+	ActPermissions  Act = "permissions"
 
 	ActContentAdd Act = "content-add"
 
@@ -24,7 +27,5 @@ const (
 	ActStoryUpdate Act = "story-update"
 	ActStoryRemove Act = "story-remove"
 	ActStoryStatus Act = "story-status"
-
-	ActVoteAdd    Act = "vote-add"
-	ActVoteUpdate Act = "vote-update"
+	ActVote        Act = "vote"
 )

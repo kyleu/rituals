@@ -2,6 +2,7 @@
   "github.com/google/uuid"
 
   "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/retro"
   "github.com/kyleu/rituals/app/sprint"
@@ -85,7 +86,7 @@
       </div>
       <div class="modal-body">
         <form action="{%s r.PublicWebPath() %}" method="post" class="expanded">
-          <input type="hidden" name="action" value="edit" />
+          <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
           {%= components.FormVerticalInput("title", "Title", r.TitleString(), 5, "The name of your retro") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", r.IconSafe(), ps, 5) %}
           {%= components.FormVerticalInputTags("categories", "Categories", r.Categories, ps, 5, "The available categories for this retro") %}

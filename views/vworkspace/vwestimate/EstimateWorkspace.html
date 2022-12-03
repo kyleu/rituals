@@ -2,6 +2,7 @@
   "github.com/google/uuid"
 
   "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/sprint"
@@ -86,7 +87,7 @@
       </div>
       <div class="modal-body">
         <form action="{%s e.PublicWebPath() %}" method="post" class="expanded">
-          <input type="hidden" name="action" value="edit" />
+          <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
           {%= components.FormVerticalInput("title", "Title", e.TitleString(), 5, "The name of your estimate") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", e.IconSafe(), ps, 5) %}
           {%= components.FormVerticalInputTags("choices", "Choices", e.Choices, ps, 5, "The available options for stories in this estimate") %}

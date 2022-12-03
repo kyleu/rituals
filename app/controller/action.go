@@ -32,7 +32,8 @@ func ActionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vaction.List{Models: ret, Users: users, Params: ps.Params}, ps, "action")
+		page := &vaction.List{Models: ret, Users: users, Params: ps.Params}
+		return Render(rc, as, page, ps, "action")
 	})
 }
 

@@ -3,6 +3,7 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -17,8 +18,15 @@ import (
 
 func SprintList(rc *fasthttp.RequestCtx) {
 	Act("sprint.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
 		prms := ps.Params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
-		ret, err := as.Services.Sprint.List(ps.Context, nil, prms, ps.Logger)
+		var ret sprint.Sprints
+		var err error
+		if q == "" {
+			ret, err = as.Services.Sprint.List(ps.Context, nil, prms, ps.Logger)
+		} else {
+			ret, err = as.Services.Sprint.Search(ps.Context, q, nil, prms, ps.Logger)
+		}
 		if err != nil {
 			return "", err
 		}
@@ -40,7 +48,8 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vsprint.List{Models: ret, Users: users, Teams: teams, Params: ps.Params}, ps, "sprint")
+		page := &vsprint.List{Models: ret, Users: users, Teams: teams, Params: ps.Params, SearchQuery: q}
+		return Render(rc, as, page, ps, "sprint")
 	})
 }
 

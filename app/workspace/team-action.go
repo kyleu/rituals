@@ -2,14 +2,17 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/action"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 func (s *Service) ActionTeam(
-	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullTeam, string, string, error) {
 	ft, err := s.LoadTeam(ctx, slug, userID, "", nil, nil, logger)
 	if err != nil {
@@ -17,13 +20,13 @@ func (s *Service) ActionTeam(
 	}
 
 	switch act {
-	case "edit":
-		return teamEdit(ctx, ft, userID, frm, slug, s, logger)
-	case "member-edit":
-		return teamMemberEdit(ctx, ft, frm, s, logger)
-	case "member-leave":
-		return teamMemberLeave(ctx, ft, frm, s, logger)
-	case "self":
+	case action.ActUpdate:
+		return teamUpdate(ctx, ft, userID, frm, slug, s, logger)
+	case action.ActMemberUpdate:
+		return teamMemberUpdate(ctx, ft, frm, s, logger)
+	case action.ActMemberRemove:
+		return teamMemberRemove(ctx, ft, frm, s, logger)
+	case action.ActMemberSelf:
 		return teamUpdateSelf(ctx, ft, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
@@ -32,7 +35,7 @@ func (s *Service) ActionTeam(
 	}
 }
 
-func teamEdit(
+func teamUpdate(
 	ctx context.Context, ft *FullTeam, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
 ) (*FullTeam, string, string, error) {
 	tgt := ft.Team.Clone()
@@ -52,7 +55,7 @@ func teamEdit(
 	return ft, "Team saved", model.PublicWebPath(), nil
 }
 
-func teamMemberEdit(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamMemberUpdate(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
 	if fe.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
@@ -69,7 +72,7 @@ func teamMemberEdit(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *Ser
 	}
 	curr := fe.Members.Get(fe.Team.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this team")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
 	err := s.tm.Update(ctx, nil, curr, logger)
@@ -79,7 +82,7 @@ func teamMemberEdit(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *Ser
 	return fe, "Member updated", fe.Team.PublicWebPath(), nil
 }
 
-func teamMemberLeave(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamMemberRemove(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
 	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
@@ -92,7 +95,7 @@ func teamMemberLeave(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Se
 	}
 	curr := ft.Members.Get(ft.Team.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this team")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
 	err := s.tm.Delete(ctx, nil, curr.TeamID, curr.UserID, logger)
 	if err != nil {
@@ -116,7 +119,7 @@ func teamUpdateSelf(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Ser
 		return nil, "", "", err
 	}
 	if choice == "global" {
-		return nil, "", "", errors.New("can't change global name yet!")
+		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return ft, "Profile edited", ft.Team.PublicWebPath(), nil
 }

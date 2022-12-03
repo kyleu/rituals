@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -35,7 +36,9 @@ type FullSprint struct {
 	Actions     action.Actions                `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullSprint, error) {
+func (s *Service) LoadSprint(
+	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
+) (*FullSprint, error) {
 	spr, err := s.s.GetBySlug(ctx, tx, slug, logger)
 	if err != nil {
 		if hist, _ := s.sh.Get(ctx, tx, slug, logger); hist != nil {
@@ -61,11 +64,10 @@ func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, t
 	if err != nil {
 		return nil, err
 	}
-	ret.Members, err = s.sm.GetBySprintID(ctx, tx, spr.ID, params.Get("smember", nil, logger), logger)
+	ret.Members, ret.Self, err = s.membersSprint(ctx, tx, spr.ID, userID, username, params.Get("smember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Self = ret.Members.Get(spr.ID, user)
 	ret.Permissions, err = s.sp.GetBySprintID(ctx, tx, spr.ID, params.Get("spermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
@@ -113,4 +115,30 @@ func (s *Service) LoadSprint(ctx context.Context, slug string, user uuid.UUID, t
 	}
 
 	return ret, nil
+}
+
+func (s *Service) membersSprint(
+	ctx context.Context, tx *sqlx.Tx, sprintID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
+) (smember.SprintMembers, *smember.SprintMember, error) {
+	members, err := s.sm.GetBySprintID(ctx, tx, sprintID, params, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	self := members.Get(sprintID, userID)
+	if self == nil && username != "" {
+		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		_, err = s.sm.Register(ctx, sprintID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		members, err = s.sm.GetBySprintID(ctx, tx, sprintID, params, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		self = members.Get(sprintID, userID)
+	}
+	return members, self, nil
 }

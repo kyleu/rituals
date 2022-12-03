@@ -12,12 +12,17 @@
   layout.Basic
   Models user.Users
   Params filter.ParamSet
+  SearchQuery string
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/admin/db/user/new"><button>New</button></a></div>
-    <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s ps.Title %}</h3>
+    <div class="right">{%= components.SearchForm("", "q", "Search users", p.SearchQuery, ps) %}</div>
+    <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s ps.Title %} <a href="/admin/db/user/new"><button>New</button></a></h3>
+    <div class="clear"></div>
+    {%- if p.SearchQuery != "" -%}
+    <em>Search results for [{%s p.SearchQuery %}]</em>
+    {%- endif -%}
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No users available</em></div>
     {%- else -%}

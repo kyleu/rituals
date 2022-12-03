@@ -23,8 +23,8 @@
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete estimate [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
     <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Edit Estimate [{%s p.Model.String() %}]</h3>
-    {%- endif -%}
     <form action="" method="post">
+    {%- endif -%}
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= components.TableInputUUID("id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
@@ -41,4 +41,11 @@
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-owner"), "/admin/db/user?user.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-teamID"), "/admin/db/team?team.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-sprintID"), "/admin/db/sprint?sprint.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 {% endfunc %}

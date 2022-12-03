@@ -41,7 +41,8 @@ func EstimateMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vemember.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params}, ps, "estimate", "emember")
+		page := &vemember.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "estimate", "emember")
 	})
 }
 

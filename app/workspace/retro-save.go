@@ -28,12 +28,12 @@ func (s *Service) CreateRetro(
 		return nil, nil, errors.Wrap(err, "unable to save retro")
 	}
 
-	err = s.a.Post(ctx, util.KeyRetro, model.ID, user, action.ActCreate, nil, nil, logger)
+	err = s.a.Post(ctx, util.KeyRetro, model.ID, user, action.ActCreate, util.ValueMap{"payload": model}, nil, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save retro activity")
 	}
 
-	member, err := s.rm.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, logger)
+	member, err := s.rm.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save retro owner")
 	}

@@ -32,7 +32,8 @@ func SprintHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vshistory.List{Models: ret, Sprints: sprints, Params: ps.Params}, ps, "sprint", "shistory")
+		page := &vshistory.List{Models: ret, Sprints: sprints, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "sprint", "shistory")
 	})
 }
 

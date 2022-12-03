@@ -32,7 +32,8 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vehistory.List{Models: ret, Estimates: estimates, Params: ps.Params}, ps, "estimate", "ehistory")
+		page := &vehistory.List{Models: ret, Estimates: estimates, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "estimate", "ehistory")
 	})
 }
 

@@ -115,6 +115,20 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	return ret.ToSprints(), nil
 }
 
+const searchClause = "(lower(id::text) like $1 or lower(slug) like $1 or lower(title) like $1)"
+
+func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Sprints, error) {
+	params = filters(params)
+	wc := searchClause
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
+	if err != nil {
+		return nil, err
+	}
+	return ret.ToSprints(), nil
+}
+
 func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Sprints, error) {
 	ret := dtos{}
 	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)

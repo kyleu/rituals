@@ -10,86 +10,87 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/views/components"
 )
 
-//line views/vworkspace/vwutil/Members.html:11
+//line views/vworkspace/vwutil/Members.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/vwutil/Members.html:11
+//line views/vworkspace/vwutil/Members.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/vwutil/Members.html:11
+//line views/vworkspace/vwutil/Members.html:12
 func StreamMemberRow(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Members.html:11
+//line views/vworkspace/vwutil/Members.html:12
 	qw422016.N().S(`
   <tr>
     <td>
       <a href="#modal-member-`)
-//line views/vworkspace/vwutil/Members.html:14
+//line views/vworkspace/vwutil/Members.html:15
 	qw422016.E().S(userID.String())
-//line views/vworkspace/vwutil/Members.html:14
+//line views/vworkspace/vwutil/Members.html:15
 	qw422016.N().S(`">
         <div class="left" style="padding-right: var(--padding-small);">`)
-//line views/vworkspace/vwutil/Members.html:15
+//line views/vworkspace/vwutil/Members.html:16
 	components.StreamSVGRef(qw422016, `profile`, 18, 18, ``, ps)
-//line views/vworkspace/vwutil/Members.html:15
+//line views/vworkspace/vwutil/Members.html:16
 	qw422016.N().S(`</div>
         `)
-//line views/vworkspace/vwutil/Members.html:16
+//line views/vworkspace/vwutil/Members.html:17
 	qw422016.E().S(name)
-//line views/vworkspace/vwutil/Members.html:16
+//line views/vworkspace/vwutil/Members.html:17
 	qw422016.N().S(`
       </a>
     </td>
     <td class="shrink">`)
-//line views/vworkspace/vwutil/Members.html:19
+//line views/vworkspace/vwutil/Members.html:20
 	qw422016.E().S(string(role))
-//line views/vworkspace/vwutil/Members.html:19
+//line views/vworkspace/vwutil/Members.html:20
 	qw422016.N().S(`</td>
   </tr>
 `)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 }
 
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 func WriteMemberRow(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	StreamMemberRow(qw422016, userID, name, picture, role, updated, ps)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 }
 
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 func MemberRow(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	WriteMemberRow(qb422016, userID, name, picture, role, updated, ps)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 	return qs422016
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:22
 }
 
-//line views/vworkspace/vwutil/Members.html:23
+//line views/vworkspace/vwutil/Members.html:24
 func StreamInviteModal(qw422016 *qt422016.Writer) {
-//line views/vworkspace/vwutil/Members.html:23
+//line views/vworkspace/vwutil/Members.html:24
 	qw422016.N().S(`
   <div id="modal-invite" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -104,104 +105,112 @@ func StreamInviteModal(qw422016 *qt422016.Writer) {
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 }
 
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 func WriteInviteModal(qq422016 qtio422016.Writer) {
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	StreamInviteModal(qw422016)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 }
 
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 func InviteModal() string {
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	WriteInviteModal(qb422016)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 	return qs422016
-//line views/vworkspace/vwutil/Members.html:36
+//line views/vworkspace/vwutil/Members.html:37
 }
 
-//line views/vworkspace/vwutil/Members.html:38
+//line views/vworkspace/vwutil/Members.html:39
 func StreamMemberModal(qw422016 *qt422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) {
-//line views/vworkspace/vwutil/Members.html:38
+//line views/vworkspace/vwutil/Members.html:39
 	qw422016.N().S(`
   <div id="modal-member-`)
-//line views/vworkspace/vwutil/Members.html:39
+//line views/vworkspace/vwutil/Members.html:40
 	qw422016.E().S(userID.String())
-//line views/vworkspace/vwutil/Members.html:39
+//line views/vworkspace/vwutil/Members.html:40
 	qw422016.N().S(`" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vworkspace/vwutil/Members.html:44
+//line views/vworkspace/vwutil/Members.html:45
 	qw422016.E().S(name)
-//line views/vworkspace/vwutil/Members.html:44
+//line views/vworkspace/vwutil/Members.html:45
 	qw422016.N().S(`</h2>
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwutil/Members.html:47
+//line views/vworkspace/vwutil/Members.html:48
 	qw422016.E().S(url)
-//line views/vworkspace/vwutil/Members.html:47
+//line views/vworkspace/vwutil/Members.html:48
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="userID" value="`)
-//line views/vworkspace/vwutil/Members.html:48
+//line views/vworkspace/vwutil/Members.html:49
 	qw422016.E().S(userID.String())
-//line views/vworkspace/vwutil/Members.html:48
+//line views/vworkspace/vwutil/Members.html:49
 	qw422016.N().S(`" />
           <em>Role</em><br />
           `)
-//line views/vworkspace/vwutil/Members.html:50
+//line views/vworkspace/vwutil/Members.html:51
 	components.StreamFormSelect(qw422016, "role", "input-role", string(role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5)
-//line views/vworkspace/vwutil/Members.html:50
+//line views/vworkspace/vwutil/Members.html:51
 	qw422016.N().S(`
           <hr />
-          <div class="right"><button type="submit" name="action" value="member-edit">Save</button></div>
-          <button type="submit" name="action" value="member-leave" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
+          <div class="right"><button type="submit" name="action" value="`)
+//line views/vworkspace/vwutil/Members.html:53
+	qw422016.E().S(string(action.ActMemberUpdate))
+//line views/vworkspace/vwutil/Members.html:53
+	qw422016.N().S(`">Save</button></div>
+          <button type="submit" name="action" value="`)
+//line views/vworkspace/vwutil/Members.html:54
+	qw422016.E().S(string(action.ActMemberRemove))
+//line views/vworkspace/vwutil/Members.html:54
+	qw422016.N().S(`" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
         </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 }
 
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 func WriteMemberModal(qq422016 qtio422016.Writer, userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) {
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	StreamMemberModal(qw422016, userID, name, picture, role, updated, url)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 }
 
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) string {
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	WriteMemberModal(qb422016, userID, name, picture, role, updated, url)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 	return qs422016
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:59
 }

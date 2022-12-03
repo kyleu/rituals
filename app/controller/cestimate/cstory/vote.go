@@ -41,7 +41,8 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vvote.List{Models: ret, Stories: stories, Users: users, Params: ps.Params}, ps, "estimate", "story", "vote")
+		page := &vvote.List{Models: ret, Stories: stories, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "estimate", "story", "vote")
 	})
 }
 

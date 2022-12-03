@@ -3,6 +3,7 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -17,8 +18,15 @@ import (
 
 func RetroList(rc *fasthttp.RequestCtx) {
 	Act("retro.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
 		prms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
-		ret, err := as.Services.Retro.List(ps.Context, nil, prms, ps.Logger)
+		var ret retro.Retros
+		var err error
+		if q == "" {
+			ret, err = as.Services.Retro.List(ps.Context, nil, prms, ps.Logger)
+		} else {
+			ret, err = as.Services.Retro.Search(ps.Context, q, nil, prms, ps.Logger)
+		}
 		if err != nil {
 			return "", err
 		}
@@ -48,7 +56,8 @@ func RetroList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vretro.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: ps.Params}, ps, "retro")
+		page := &vretro.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: ps.Params, SearchQuery: q}
+		return Render(rc, as, page, ps, "retro")
 	})
 }
 

@@ -73,12 +73,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.E().S(p.Model.String())
 //line views/vteam/vthistory/Edit.html:24
 		qw422016.N().S(`]</h3>
+    <form action="" method="post">
 `)
-//line views/vteam/vthistory/Edit.html:25
+//line views/vteam/vthistory/Edit.html:26
 	}
-//line views/vteam/vthistory/Edit.html:25
-	qw422016.N().S(`    <form action="" method="post">
-      <table class="mt expanded">
+//line views/vteam/vthistory/Edit.html:26
+	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
 //line views/vteam/vthistory/Edit.html:29
@@ -104,32 +104,37 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-teamID"), "/admin/db/team?team.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 `)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 }
 
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 }
 
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	qs422016 := string(qb422016.B)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 	return qs422016
-//line views/vteam/vthistory/Edit.html:37
+//line views/vteam/vthistory/Edit.html:42
 }

@@ -67,6 +67,20 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	return ret.ToUsers(), nil
 }
 
+const searchClause = "(lower(id::text) like $1 or lower(name) like $1)"
+
+func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Users, error) {
+	params = filters(params)
+	wc := searchClause
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
+	if err != nil {
+		return nil, err
+	}
+	return ret.ToUsers(), nil
+}
+
 func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Users, error) {
 	ret := dtos{}
 	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)

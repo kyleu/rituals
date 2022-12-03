@@ -69,7 +69,7 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vworkspace/vwestimate/EstimateList.html:29
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwestimate/EstimateList.html:29
-		qw422016.E().S(e.TitleString())
+		qw422016.E().S(e.Title)
 //line views/vworkspace/vwestimate/EstimateList.html:29
 		qw422016.N().S(`</a></td>
           <td style="text-align: right;">`)

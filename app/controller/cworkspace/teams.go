@@ -1,8 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/kyleu/rituals/views/vworkspace/vwteam"
-
+	"github.com/kyleu/rituals/app/action"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/workspace"
+	"github.com/kyleu/rituals/views/vworkspace/vwteam"
 )
 
 func TeamList(rc *fasthttp.RequestCtx) {
@@ -30,7 +30,7 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ft, err := as.Services.Workspace.LoadTeam(ps.Context, slug, ps.Profile.ID, ps.Profile.Name, nil, ps.Params, ps.Logger)
+		ft, err := as.Services.Workspace.LoadTeam(ps.Context, slug, ps.Profile.ID, ps.Profile.NameSafe(), nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -67,7 +67,8 @@ func TeamAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		_, msg, u, err := as.Services.Workspace.ActionTeam(ps.Context, slug, frm.GetStringOpt("action"), frm, ps.Profile.ID, ps.Logger)
+		act := action.Act(frm.GetStringOpt("action"))
+		_, msg, u, err := as.Services.Workspace.ActionTeam(ps.Context, slug, act, frm, ps.Profile.ID, ps.Logger)
 		if err != nil {
 			return "", err
 		}

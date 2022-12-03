@@ -3,6 +3,7 @@ package controller
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -17,8 +18,15 @@ import (
 
 func TeamList(rc *fasthttp.RequestCtx) {
 	Act("team.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
 		prms := ps.Params.Get("team", nil, ps.Logger).Sanitize("team")
-		ret, err := as.Services.Team.List(ps.Context, nil, prms, ps.Logger)
+		var ret team.Teams
+		var err error
+		if q == "" {
+			ret, err = as.Services.Team.List(ps.Context, nil, prms, ps.Logger)
+		} else {
+			ret, err = as.Services.Team.Search(ps.Context, q, nil, prms, ps.Logger)
+		}
 		if err != nil {
 			return "", err
 		}
@@ -32,7 +40,8 @@ func TeamList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vteam.List{Models: ret, Users: users, Params: ps.Params}, ps, "team")
+		page := &vteam.List{Models: ret, Users: users, Params: ps.Params, SearchQuery: q}
+		return Render(rc, as, page, ps, "team")
 	})
 }
 

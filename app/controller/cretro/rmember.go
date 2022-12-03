@@ -41,7 +41,8 @@ func RetroMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vrmember.List{Models: ret, Retros: retros, Users: users, Params: ps.Params}, ps, "retro", "rmember")
+		page := &vrmember.List{Models: ret, Retros: retros, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "retro", "rmember")
 	})
 }
 

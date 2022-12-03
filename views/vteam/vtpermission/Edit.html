@@ -22,8 +22,8 @@
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete permission [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
     <h3>{%= components.SVGRefIcon(`permission`, ps) %} Edit Permission [{%s p.Model.String() %}]</h3>
-    {%- endif -%}
     <form action="" method="post">
+    {%- endif -%}
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= components.TableInputUUID("teamID", "Team ID", &p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
@@ -35,4 +35,9 @@
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-teamID"), "/admin/db/team?team.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 {% endfunc %}

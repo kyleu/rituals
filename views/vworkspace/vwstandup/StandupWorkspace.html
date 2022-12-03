@@ -2,6 +2,7 @@
   "github.com/google/uuid"
 
   "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/standup"
@@ -86,7 +87,7 @@
       </div>
       <div class="modal-body">
         <form action="{%s u.PublicWebPath() %}" method="post" class="expanded">
-          <input type="hidden" name="action" value="edit" />
+          <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
           {%= components.FormVerticalInput("title", "Title", u.TitleString(), 5, "The name of your standup") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", u.IconSafe(), ps, 5) %}
           {%= components.FormVerticalSelect(util.KeyTeam, "Team", util.UUIDString(u.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}

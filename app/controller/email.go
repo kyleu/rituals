@@ -32,7 +32,8 @@ func EmailList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vemail.List{Models: ret, Users: users, Params: ps.Params}, ps, "email")
+		page := &vemail.List{Models: ret, Users: users, Params: ps.Params}
+		return Render(rc, as, page, ps, "email")
 	})
 }
 

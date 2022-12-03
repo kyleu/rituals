@@ -33,7 +33,8 @@ func StandupPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vupermission.List{Models: ret, Standups: standups, Params: ps.Params}, ps, "standup", "upermission")
+		page := &vupermission.List{Models: ret, Standups: standups, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "standup", "upermission")
 	})
 }
 

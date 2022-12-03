@@ -26,7 +26,7 @@
       <tbody>
         {%- for _, e := range p.Estimates -%}
         <tr>
-          <td><a href="{%s e.PublicWebPath() %}">{%s e.TitleString() %}</a></td>
+          <td><a href="{%s e.PublicWebPath() %}">{%s e.Title %}</a></td>
           <td style="text-align: right;">{%= components.DisplayTimestamp(&e.Created) %}</td>
         </tr>
         {%- endfor -%}

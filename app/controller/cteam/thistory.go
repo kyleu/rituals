@@ -32,7 +32,8 @@ func TeamHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vthistory.List{Models: ret, Teams: teams, Params: ps.Params}, ps, "team", "thistory")
+		page := &vthistory.List{Models: ret, Teams: teams, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "team", "thistory")
 	})
 }
 

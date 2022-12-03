@@ -32,7 +32,8 @@ func CommentList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return Render(rc, as, &vcomment.List{Models: ret, Users: users, Params: ps.Params}, ps, "comment")
+		page := &vcomment.List{Models: ret, Users: users, Params: ps.Params}
+		return Render(rc, as, page, ps, "comment")
 	})
 }
 

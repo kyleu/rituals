@@ -26,12 +26,12 @@ func (s *Service) CreateTeam(
 		return nil, nil, errors.Wrap(err, "unable to save team")
 	}
 
-	err = s.a.Post(ctx, util.KeyTeam, model.ID, user, action.ActCreate, nil, nil, logger)
+	err = s.a.Post(ctx, util.KeyTeam, model.ID, user, action.ActCreate, util.ValueMap{"payload": model}, nil, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save team activity")
 	}
 
-	member, err := s.tm.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, logger)
+	member, err := s.tm.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save team owner")
 	}

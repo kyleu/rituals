@@ -2,6 +2,7 @@ package comment
 
 import (
 	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app/enum"
 )
 

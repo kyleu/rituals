@@ -3,6 +3,7 @@ package cmenu
 
 import "github.com/kyleu/rituals/app/lib/menu"
 
+//nolint:lll
 func generatedMenu() menu.Items {
 	return menu.Items{
 		&menu.Item{Key: "action", Title: "Actions", Description: "An action within a workspace", Icon: "action", Route: "/admin/db/action"},

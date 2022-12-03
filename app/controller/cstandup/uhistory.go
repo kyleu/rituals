@@ -32,7 +32,8 @@ func StandupHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vuhistory.List{Models: ret, Standups: standups, Params: ps.Params}, ps, "standup", "uhistory")
+		page := &vuhistory.List{Models: ret, Standups: standups, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "standup", "uhistory")
 	})
 }
 

@@ -22,8 +22,8 @@
     {%- else -%}
     <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete history [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
     <h3>{%= components.SVGRefIcon(`history`, ps) %} Edit History [{%s p.Model.String() %}]</h3>
-    {%- endif -%}
     <form action="" method="post">
+    {%- endif -%}
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= components.TableInput("slug", "Slug", p.Model.Slug, 5, "String text") %}{% endif %}
@@ -34,4 +34,9 @@
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-retroID"), "/admin/db/retro?retro.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " / " + o["categories"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 {% endfunc %}

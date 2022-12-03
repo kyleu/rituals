@@ -33,7 +33,8 @@ func TeamPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vtpermission.List{Models: ret, Teams: teams, Params: ps.Params}, ps, "team", "tpermission")
+		page := &vtpermission.List{Models: ret, Teams: teams, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "team", "tpermission")
 	})
 }
 

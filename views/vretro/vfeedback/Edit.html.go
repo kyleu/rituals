@@ -73,12 +73,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.E().S(p.Model.String())
 //line views/vretro/vfeedback/Edit.html:24
 		qw422016.N().S(`]</h3>
+    <form action="" method="post">
 `)
-//line views/vretro/vfeedback/Edit.html:25
+//line views/vretro/vfeedback/Edit.html:26
 	}
-//line views/vretro/vfeedback/Edit.html:25
-	qw422016.N().S(`    <form action="" method="post">
-      <table class="mt expanded">
+//line views/vretro/vfeedback/Edit.html:26
+	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
 //line views/vretro/vfeedback/Edit.html:29
@@ -124,32 +124,38 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-retroID"), "/admin/db/retro?retro.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " / " + o["categories"] + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-userID"), "/admin/db/user?user.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 `)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 }
 
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 }
 
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	qs422016 := string(qb422016.B)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 	return qs422016
-//line views/vretro/vfeedback/Edit.html:41
+//line views/vretro/vfeedback/Edit.html:47
 }

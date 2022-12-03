@@ -35,73 +35,90 @@ var (
 //line views/vstandup/List.html:14
 type List struct {
 	layout.Basic
-	Models  standup.Standups
-	Users   user.Users
-	Teams   team.Teams
-	Sprints sprint.Sprints
-	Params  filter.ParamSet
+	Models      standup.Standups
+	Users       user.Users
+	Teams       team.Teams
+	Sprints     sprint.Sprints
+	Params      filter.ParamSet
+	SearchQuery string
 }
 
-//line views/vstandup/List.html:23
+//line views/vstandup/List.html:24
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/List.html:23
+//line views/vstandup/List.html:24
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/admin/db/standup/new"><button>New</button></a></div>
+    <div class="right">`)
+//line views/vstandup/List.html:26
+	components.StreamSearchForm(qw422016, "", "q", "Search standups", p.SearchQuery, ps)
+//line views/vstandup/List.html:26
+	qw422016.N().S(`</div>
     <h3>`)
-//line views/vstandup/List.html:26
+//line views/vstandup/List.html:27
 	components.StreamSVGRefIcon(qw422016, `standup`, ps)
-//line views/vstandup/List.html:26
+//line views/vstandup/List.html:27
 	qw422016.E().S(ps.Title)
-//line views/vstandup/List.html:26
-	qw422016.N().S(`</h3>
+//line views/vstandup/List.html:27
+	qw422016.N().S(` <a href="/admin/db/standup/new"><button>New</button></a></h3>
+    <div class="clear"></div>
 `)
-//line views/vstandup/List.html:27
+//line views/vstandup/List.html:29
+	if p.SearchQuery != "" {
+//line views/vstandup/List.html:29
+		qw422016.N().S(`    <em>Search results for [`)
+//line views/vstandup/List.html:30
+		qw422016.E().S(p.SearchQuery)
+//line views/vstandup/List.html:30
+		qw422016.N().S(`]</em>
+`)
+//line views/vstandup/List.html:31
+	}
+//line views/vstandup/List.html:32
 	if len(p.Models) == 0 {
-//line views/vstandup/List.html:27
+//line views/vstandup/List.html:32
 		qw422016.N().S(`    <div class="mt"><em>No standups available</em></div>
 `)
-//line views/vstandup/List.html:29
+//line views/vstandup/List.html:34
 	} else {
-//line views/vstandup/List.html:29
+//line views/vstandup/List.html:34
 		qw422016.N().S(`    <div class="overflow clear">
       `)
-//line views/vstandup/List.html:31
+//line views/vstandup/List.html:36
 		StreamTable(qw422016, p.Models, p.Users, p.Teams, p.Sprints, p.Params, as, ps)
-//line views/vstandup/List.html:31
+//line views/vstandup/List.html:36
 		qw422016.N().S(`
     </div>
 `)
-//line views/vstandup/List.html:33
+//line views/vstandup/List.html:38
 	}
-//line views/vstandup/List.html:33
+//line views/vstandup/List.html:38
 	qw422016.N().S(`  </div>
 `)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 }
 
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 }
 
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	qs422016 := string(qb422016.B)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 	return qs422016
-//line views/vstandup/List.html:35
+//line views/vstandup/List.html:40
 }

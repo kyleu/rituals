@@ -3,12 +3,15 @@ package app
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/email"
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
 	"github.com/kyleu/rituals/app/estimate/ehistory"
 	"github.com/kyleu/rituals/app/estimate/emember"
@@ -125,8 +128,12 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 
 	g := gql.NewSchema(st.GraphQL)
 	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f, us, a, c, el)
-	ws := websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose, nil)
-
+	ws := websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose)
+	w.RegisterSend(func(svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger) error {
+		ch := fmt.Sprintf("%s:%s", string(svc), id.String())
+		msg := websocket.NewMessage(userID, ch, string(act), param)
+		return ws.WriteChannel(msg, logger)
+	})
 	return &Services{
 		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
 		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,

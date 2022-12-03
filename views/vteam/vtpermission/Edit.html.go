@@ -73,12 +73,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.E().S(p.Model.String())
 //line views/vteam/vtpermission/Edit.html:24
 		qw422016.N().S(`]</h3>
+    <form action="" method="post">
 `)
-//line views/vteam/vtpermission/Edit.html:25
+//line views/vteam/vtpermission/Edit.html:26
 	}
-//line views/vteam/vtpermission/Edit.html:25
-	qw422016.N().S(`    <form action="" method="post">
-      <table class="mt expanded">
+//line views/vteam/vtpermission/Edit.html:26
+	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
 //line views/vteam/vtpermission/Edit.html:29
@@ -117,32 +117,37 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-teamID"), "/admin/db/team?team.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 `)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 }
 
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 }
 
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	qs422016 := string(qb422016.B)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 	return qs422016
-//line views/vteam/vtpermission/Edit.html:38
+//line views/vteam/vtpermission/Edit.html:43
 }

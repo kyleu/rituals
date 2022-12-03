@@ -33,7 +33,8 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vrpermission.List{Models: ret, Retros: retros, Params: ps.Params}, ps, "retro", "rpermission")
+		page := &vrpermission.List{Models: ret, Retros: retros, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "retro", "rpermission")
 	})
 }
 

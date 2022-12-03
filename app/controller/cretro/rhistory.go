@@ -32,7 +32,8 @@ func RetroHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vrhistory.List{Models: ret, Retros: retros, Params: ps.Params}, ps, "retro", "rhistory")
+		page := &vrhistory.List{Models: ret, Retros: retros, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "retro", "rhistory")
 	})
 }
 

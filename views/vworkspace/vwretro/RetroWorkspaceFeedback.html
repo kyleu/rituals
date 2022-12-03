@@ -2,6 +2,7 @@
   "github.com/google/uuid"
 	"golang.org/x/exp/slices"
 
+  "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/retro/feedback"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
@@ -53,7 +54,7 @@
       </div>
       <div class="modal-body">
         <form action="#" method="post">
-          <input type="hidden" name="action" value="feedback-add" />
+          <input type="hidden" name="action" value="{%s string(action.ActFeedbackAdd) %}" />
           <table class="mt expanded">
             <tbody>
               {%= components.FormVerticalSelect("category", "Category", category, categories, categories, 5) %}
@@ -86,8 +87,8 @@
               {%= components.FormVerticalSelect("category", "Category", string(f.Category), categories, categories, 5) %}
               {%= components.FormVerticalTextarea("content", "Content", 8, f.Content, 5, "HTML and Markdown supported") %}
               <tr><td colspan="2">
-                <div class="right"><button type="submit" name="action" value="feedback-delete" onclick="return confirm('Are you sure you want to delete this feedback?');">Delete</button></div>
-                <button type="submit" name="action" value="feedback-edit">Save Changes</button>
+                <div class="right"><button type="submit" name="action" value="{%s string(action.ActFeedbackRemove) %}" onclick="return confirm('Are you sure you want to delete this feedback?');">Delete</button></div>
+                <button type="submit" name="action" value="{%s string(action.ActFeedbackUpdate) %}">Save Changes</button>
               </td></tr>
             </tbody>
           </table>

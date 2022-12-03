@@ -65,6 +65,8 @@ type Service struct {
 	a  *action.Service
 	c  *comment.Service
 	el *email.Service
+
+	send action.SendFn
 }
 
 func NewService(
@@ -83,4 +85,8 @@ func NewService(
 		r: r, rh: rh, rm: rm, rp: rp, f: f,
 		us: us, a: a, c: c, el: el,
 	}
+}
+
+func (s *Service) RegisterSend(send action.SendFn) {
+	s.send = send
 }

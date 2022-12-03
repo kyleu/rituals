@@ -2,35 +2,38 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/action"
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/standup/report"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
-	"time"
 )
 
 func (s *Service) ActionStandup(
-	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullStandup, string, string, error) {
-	fu, err := s.LoadStandup(ctx, slug, userID, nil, nil, logger)
+	fu, err := s.LoadStandup(ctx, slug, userID, "", nil, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	switch act {
-	case "edit":
-		return standupEdit(ctx, fu, userID, frm, slug, s, logger)
-	case "report-add":
+	case action.ActUpdate:
+		return standupUpdate(ctx, fu, userID, frm, slug, s, logger)
+	case action.ActReportAdd:
 		return standupReportAdd(ctx, fu, userID, frm, s, logger)
-	case "report-edit":
-		return standupReportEdit(ctx, fu, userID, frm, s, logger)
-	case "report-delete":
-		return standupReportDelete(ctx, fu, userID, frm, s, logger)
-	case "member-edit":
-		return standupMemberEdit(ctx, fu, frm, s, logger)
-	case "member-leave":
-		return standupMemberLeave(ctx, fu, frm, s, logger)
-	case "self":
+	case action.ActReportUpdate:
+		return standupReportUpdate(ctx, fu, userID, frm, s, logger)
+	case action.ActReportRemove:
+		return standupReportRemove(ctx, fu, userID, frm, s, logger)
+	case action.ActMemberUpdate:
+		return standupMemberUpdate(ctx, fu, frm, s, logger)
+	case action.ActMemberRemove:
+		return standupMemberRemove(ctx, fu, frm, s, logger)
+	case action.ActMemberSelf:
 		return standupUpdateSelf(ctx, fu, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
@@ -39,7 +42,7 @@ func (s *Service) ActionStandup(
 	}
 }
 
-func standupEdit(
+func standupUpdate(
 	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
 ) (*FullStandup, string, string, error) {
 	tgt := fu.Standup.Clone()
@@ -81,7 +84,7 @@ func standupReportAdd(
 	return fu, "Report added", fu.Standup.PublicWebPath(), nil
 }
 
-func standupReportEdit(
+func standupReportUpdate(
 	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
 ) (*FullStandup, string, string, error) {
 	id, _ := frm.GetUUID("reportID", false)
@@ -109,7 +112,7 @@ func standupReportEdit(
 	return fu, "Report saved", fu.Standup.PublicWebPath(), nil
 }
 
-func standupReportDelete(
+func standupReportRemove(
 	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
 ) (*FullStandup, string, string, error) {
 	id, _ := frm.GetUUID("reportID", false)
@@ -127,7 +130,7 @@ func standupReportDelete(
 	return fu, "Report deleted", fu.Standup.PublicWebPath(), nil
 }
 
-func standupMemberEdit(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupMemberUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
@@ -144,7 +147,7 @@ func standupMemberEdit(ctx context.Context, fu *FullStandup, frm util.ValueMap, 
 	}
 	curr := fu.Members.Get(fu.Standup.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this standup")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this standup", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
 	err := s.um.Update(ctx, nil, curr, logger)
@@ -154,7 +157,7 @@ func standupMemberEdit(ctx context.Context, fu *FullStandup, frm util.ValueMap, 
 	return fu, "Member updated", fu.Standup.PublicWebPath(), nil
 }
 
-func standupMemberLeave(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupMemberRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
@@ -167,7 +170,7 @@ func standupMemberLeave(ctx context.Context, fu *FullStandup, frm util.ValueMap,
 	}
 	curr := fu.Members.Get(fu.Standup.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this standup")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this standup", userID.String())
 	}
 	err := s.um.Delete(ctx, nil, curr.StandupID, curr.UserID, logger)
 	if err != nil {
@@ -191,7 +194,7 @@ func standupUpdateSelf(ctx context.Context, fu *FullStandup, frm util.ValueMap, 
 		return nil, "", "", err
 	}
 	if choice == "global" {
-		return nil, "", "", errors.New("can't change global name yet!")
+		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fu, "Profile edited", fu.Standup.PublicWebPath(), nil
 }

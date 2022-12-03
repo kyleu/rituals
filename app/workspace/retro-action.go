@@ -2,36 +2,39 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/action"
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/retro/feedback"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
-	"time"
 )
 
 func (s *Service) ActionRetro(
-	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullRetro, string, string, error) {
-	fr, err := s.LoadRetro(ctx, slug, userID, nil, nil, logger)
+	fr, err := s.LoadRetro(ctx, slug, userID, "", nil, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 
 	switch act {
-	case "edit":
-		return retroEdit(ctx, fr, userID, frm, slug, s, logger)
-	case "feedback-add":
+	case action.ActUpdate:
+		return retroUpdate(ctx, fr, userID, frm, slug, s, logger)
+	case action.ActFeedbackAdd:
 		return retroFeedbackAdd(ctx, fr, userID, frm, s, logger)
-	case "feedback-edit":
-		return retroFeedbackEdit(ctx, fr, userID, frm, s, logger)
-	case "feedback-delete":
-		return retroFeedbackDelete(ctx, fr, userID, frm, s, logger)
-	case "member-edit":
-		return retroMemberEdit(ctx, fr, frm, s, logger)
-	case "member-leave":
-		return retroMemberLeave(ctx, fr, frm, s, logger)
-	case "self":
+	case action.ActFeedbackUpdate:
+		return retroFeedbackUpdate(ctx, fr, userID, frm, s, logger)
+	case action.ActFeedbackRemove:
+		return retroFeedbackRemove(ctx, fr, userID, frm, s, logger)
+	case action.ActMemberUpdate:
+		return retroMemberUpdate(ctx, fr, frm, s, logger)
+	case action.ActMemberRemove:
+		return retroMemberRemove(ctx, fr, frm, s, logger)
+	case action.ActMemberSelf:
 		return retroUpdateSelf(ctx, fr, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
@@ -40,7 +43,7 @@ func (s *Service) ActionRetro(
 	}
 }
 
-func retroEdit(
+func retroUpdate(
 	ctx context.Context, fr *FullRetro, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
 ) (*FullRetro, string, string, error) {
 	tgt := fr.Retro.Clone()
@@ -79,7 +82,7 @@ func retroFeedbackAdd(
 	return fu, "Feedback added", fu.Retro.PublicWebPath(), nil
 }
 
-func retroFeedbackEdit(
+func retroFeedbackUpdate(
 	ctx context.Context, fu *FullRetro, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
 ) (*FullRetro, string, string, error) {
 	id, _ := frm.GetUUID("feedbackID", false)
@@ -103,7 +106,7 @@ func retroFeedbackEdit(
 	return fu, "Feedback saved", fu.Retro.PublicWebPath(), nil
 }
 
-func retroFeedbackDelete(
+func retroFeedbackRemove(
 	ctx context.Context, fr *FullRetro, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
 ) (*FullRetro, string, string, error) {
 	id, _ := frm.GetUUID("feedbackID", false)
@@ -121,7 +124,7 @@ func retroFeedbackDelete(
 	return fr, "Feedback deleted", fr.Retro.PublicWebPath(), nil
 }
 
-func retroMemberEdit(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
+func retroMemberUpdate(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
 	if fr.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this retro")
 	}
@@ -138,7 +141,7 @@ func retroMemberEdit(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *S
 	}
 	curr := fr.Members.Get(fr.Retro.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this retro")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this retro", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
 	err := s.rm.Update(ctx, nil, curr, logger)
@@ -148,7 +151,7 @@ func retroMemberEdit(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *S
 	return fr, "Member updated", fr.Retro.PublicWebPath(), nil
 }
 
-func retroMemberLeave(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
+func retroMemberRemove(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
 	if fr.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this retro")
 	}
@@ -161,7 +164,7 @@ func retroMemberLeave(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *
 	}
 	curr := fr.Members.Get(fr.Retro.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this retro")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this retro", userID.String())
 	}
 	err := s.rm.Delete(ctx, nil, curr.RetroID, curr.UserID, logger)
 	if err != nil {
@@ -185,7 +188,7 @@ func retroUpdateSelf(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *S
 		return nil, "", "", err
 	}
 	if choice == "global" {
-		return nil, "", "", errors.New("can't change global name yet!")
+		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fr, "Profile edited", fr.Retro.PublicWebPath(), nil
 }

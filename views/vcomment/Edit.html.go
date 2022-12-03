@@ -73,12 +73,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.E().S(p.Model.String())
 //line views/vcomment/Edit.html:24
 		qw422016.N().S(`]</h3>
+    <form action="" method="post">
 `)
-//line views/vcomment/Edit.html:25
+//line views/vcomment/Edit.html:26
 	}
-//line views/vcomment/Edit.html:25
-	qw422016.N().S(`    <form action="" method="post">
-      <table class="mt expanded">
+//line views/vcomment/Edit.html:26
+	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
 //line views/vcomment/Edit.html:29
@@ -119,32 +119,37 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
       </table>
     </form>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      rituals.autocomplete(document.getElementById("input-userID"), "/admin/db/user?user.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
+    });
+  </script>
 `)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 }
 
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 }
 
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 	return qs422016
-//line views/vcomment/Edit.html:40
+//line views/vcomment/Edit.html:45
 }

@@ -2,28 +2,31 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/action"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
 )
 
 func (s *Service) ActionSprint(
-	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullSprint, string, string, error) {
-	fs, err := s.LoadSprint(ctx, slug, userID, nil, nil, logger)
+	fs, err := s.LoadSprint(ctx, slug, userID, "", nil, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 
 	switch act {
-	case "edit":
-		return sprintEdit(ctx, fs, userID, frm, slug, s, logger)
-	case "member-edit":
-		return sprintMemberEdit(ctx, fs, frm, s, logger)
-	case "member-leave":
-		return sprintMemberLeave(ctx, fs, frm, s, logger)
-	case "self":
+	case action.ActUpdate:
+		return sprintUpdate(ctx, fs, userID, frm, slug, s, logger)
+	case action.ActMemberUpdate:
+		return sprintMemberUpdate(ctx, fs, frm, s, logger)
+	case action.ActMemberRemove:
+		return sprintMemberRemove(ctx, fs, frm, s, logger)
+	case action.ActMemberSelf:
 		return sprintUpdateSelf(ctx, fs, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
@@ -32,7 +35,7 @@ func (s *Service) ActionSprint(
 	}
 }
 
-func sprintEdit(
+func sprintUpdate(
 	ctx context.Context, fs *FullSprint, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
 ) (*FullSprint, string, string, error) {
 	tgt := fs.Sprint.Clone()
@@ -55,7 +58,7 @@ func sprintEdit(
 	return fs, "Sprint saved", model.PublicWebPath(), nil
 }
 
-func sprintMemberEdit(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintMemberUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
@@ -72,7 +75,7 @@ func sprintMemberEdit(ctx context.Context, fs *FullSprint, frm util.ValueMap, s 
 	}
 	curr := fs.Members.Get(fs.Sprint.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
 	err := s.sm.Update(ctx, nil, curr, logger)
@@ -82,7 +85,7 @@ func sprintMemberEdit(ctx context.Context, fs *FullSprint, frm util.ValueMap, s 
 	return fs, "Member updated", fs.Sprint.PublicWebPath(), nil
 }
 
-func sprintMemberLeave(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintMemberRemove(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
@@ -95,7 +98,7 @@ func sprintMemberLeave(ctx context.Context, fs *FullSprint, frm util.ValueMap, s
 	}
 	curr := fs.Members.Get(fs.Sprint.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint", userID.String())
 	}
 	err := s.sm.Delete(ctx, nil, curr.SprintID, curr.UserID, logger)
 	if err != nil {
@@ -119,7 +122,7 @@ func sprintUpdateSelf(ctx context.Context, fs *FullSprint, frm util.ValueMap, s 
 		return nil, "", "", err
 	}
 	if choice == "global" {
-		return nil, "", "", errors.New("can't change global name yet!")
+		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fs, "Profile edited", fs.Sprint.PublicWebPath(), nil
 }

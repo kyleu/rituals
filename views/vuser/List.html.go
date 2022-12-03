@@ -32,70 +32,87 @@ var (
 //line views/vuser/List.html:11
 type List struct {
 	layout.Basic
-	Models user.Users
-	Params filter.ParamSet
+	Models      user.Users
+	Params      filter.ParamSet
+	SearchQuery string
 }
 
-//line views/vuser/List.html:17
+//line views/vuser/List.html:18
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vuser/List.html:17
+//line views/vuser/List.html:18
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/admin/db/user/new"><button>New</button></a></div>
+    <div class="right">`)
+//line views/vuser/List.html:20
+	components.StreamSearchForm(qw422016, "", "q", "Search users", p.SearchQuery, ps)
+//line views/vuser/List.html:20
+	qw422016.N().S(`</div>
     <h3>`)
-//line views/vuser/List.html:20
+//line views/vuser/List.html:21
 	components.StreamSVGRefIcon(qw422016, `profile`, ps)
-//line views/vuser/List.html:20
+//line views/vuser/List.html:21
 	qw422016.E().S(ps.Title)
-//line views/vuser/List.html:20
-	qw422016.N().S(`</h3>
+//line views/vuser/List.html:21
+	qw422016.N().S(` <a href="/admin/db/user/new"><button>New</button></a></h3>
+    <div class="clear"></div>
 `)
-//line views/vuser/List.html:21
+//line views/vuser/List.html:23
+	if p.SearchQuery != "" {
+//line views/vuser/List.html:23
+		qw422016.N().S(`    <em>Search results for [`)
+//line views/vuser/List.html:24
+		qw422016.E().S(p.SearchQuery)
+//line views/vuser/List.html:24
+		qw422016.N().S(`]</em>
+`)
+//line views/vuser/List.html:25
+	}
+//line views/vuser/List.html:26
 	if len(p.Models) == 0 {
-//line views/vuser/List.html:21
+//line views/vuser/List.html:26
 		qw422016.N().S(`    <div class="mt"><em>No users available</em></div>
 `)
-//line views/vuser/List.html:23
+//line views/vuser/List.html:28
 	} else {
-//line views/vuser/List.html:23
+//line views/vuser/List.html:28
 		qw422016.N().S(`    <div class="overflow clear">
       `)
-//line views/vuser/List.html:25
+//line views/vuser/List.html:30
 		StreamTable(qw422016, p.Models, p.Params, as, ps)
-//line views/vuser/List.html:25
+//line views/vuser/List.html:30
 		qw422016.N().S(`
     </div>
 `)
-//line views/vuser/List.html:27
+//line views/vuser/List.html:32
 	}
-//line views/vuser/List.html:27
+//line views/vuser/List.html:32
 	qw422016.N().S(`  </div>
 `)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 }
 
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	p.StreamBody(qw422016, as, ps)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 }
 
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	p.WriteBody(qb422016, as, ps)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	qs422016 := string(qb422016.B)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 	return qs422016
-//line views/vuser/List.html:29
+//line views/vuser/List.html:34
 }

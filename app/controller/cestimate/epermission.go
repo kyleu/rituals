@@ -33,7 +33,8 @@ func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vepermission.List{Models: ret, Estimates: estimates, Params: ps.Params}, ps, "estimate", "epermission")
+		page := &vepermission.List{Models: ret, Estimates: estimates, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "estimate", "epermission")
 	})
 }
 

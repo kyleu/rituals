@@ -25,6 +25,5 @@ func (s *Service) GetByModels(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 		wc = append(wc, fmt.Sprintf(`("svc" = $%d and "model_id" = $%d)`, i+1, i+2))
 	}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, strings.Join(wc, " or "))
-	println(q)
 	return s.ListSQL(ctx, tx, q, logger, vals...)
 }

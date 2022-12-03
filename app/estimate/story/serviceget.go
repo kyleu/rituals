@@ -91,6 +91,20 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	return ret.ToStories(), nil
 }
 
+const searchClause = "(lower(id::text) like $1 or lower(title) like $1)"
+
+func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Stories, error) {
+	params = filters(params)
+	wc := searchClause
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
+	if err != nil {
+		return nil, err
+	}
+	return ret.ToStories(), nil
+}
+
 func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Stories, error) {
 	ret := dtos{}
 	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)

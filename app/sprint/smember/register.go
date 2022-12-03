@@ -13,16 +13,23 @@ import (
 )
 
 func (s *Service) Register(
-	ctx context.Context, t uuid.UUID, userID uuid.UUID, name string, role enum.MemberStatus, tx *sqlx.Tx, actSvc *action.Service, logger util.Logger,
+	ctx context.Context, spr uuid.UUID, userID uuid.UUID, name string, role enum.MemberStatus, tx *sqlx.Tx,
+	actSvc *action.Service, send action.SendFn, logger util.Logger,
 ) (*SprintMember, error) {
-	m := &SprintMember{SprintID: t, UserID: userID, Name: name, Role: role, Created: time.Now()}
+	m := &SprintMember{SprintID: spr, UserID: userID, Name: name, Role: role, Created: time.Now()}
 	err := s.Save(ctx, tx, logger, m)
 	if err != nil {
 		return nil, err
 	}
-	err = actSvc.Post(ctx, enum.ModelServiceSprint, t, userID, action.ActMemberAdd, nil, nil, logger)
+	err = actSvc.Post(ctx, enum.ModelServiceSprint, spr, userID, action.ActMemberAdd, util.ValueMap{"payload": m}, nil, logger)
 	if err != nil {
 		return nil, err
+	}
+	if send != nil {
+		err = send(enum.ModelServiceSprint, spr, action.ActMemberAdd, m, nil, logger)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return m, nil
 }

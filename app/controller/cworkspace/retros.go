@@ -1,8 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/kyleu/rituals/views/vworkspace/vwretro"
-
+	"github.com/kyleu/rituals/app/action"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/workspace"
+	"github.com/kyleu/rituals/views/vworkspace/vwretro"
 )
 
 func RetroList(rc *fasthttp.RequestCtx) {
@@ -30,7 +30,7 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		fr, err := as.Services.Workspace.LoadRetro(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
+		fr, err := as.Services.Workspace.LoadRetro(ps.Context, slug, ps.Profile.ID, ps.Profile.NameSafe(), nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -72,7 +72,8 @@ func RetroAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		_, msg, u, err := as.Services.Workspace.ActionRetro(ps.Context, slug, frm.GetStringOpt("action"), frm, ps.Profile.ID, ps.Logger)
+		act := action.Act(frm.GetStringOpt("action"))
+		_, msg, u, err := as.Services.Workspace.ActionRetro(ps.Context, slug, act, frm, ps.Profile.ID, ps.Logger)
 		if err != nil {
 			return "", err
 		}

@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -33,7 +34,9 @@ type FullStandup struct {
 	Actions     action.Actions                 `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullStandup, error) {
+func (s *Service) LoadStandup(
+	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
+) (*FullStandup, error) {
 	u, err := s.u.GetBySlug(ctx, tx, slug, logger)
 	if err != nil {
 		if hist, _ := s.uh.Get(ctx, tx, slug, logger); hist != nil {
@@ -59,11 +62,10 @@ func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, 
 	if err != nil {
 		return nil, err
 	}
-	ret.Members, err = s.um.GetByStandupID(ctx, tx, u.ID, params.Get("umember", nil, logger), logger)
+	ret.Members, ret.Self, err = s.membersStandup(ctx, tx, u.ID, userID, username, params.Get("umember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Self = ret.Members.Get(u.ID, user)
 	ret.Permissions, err = s.up.GetByStandupID(ctx, tx, u.ID, params.Get("upermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
@@ -103,4 +105,30 @@ func (s *Service) LoadStandup(ctx context.Context, slug string, user uuid.UUID, 
 	}
 
 	return ret, nil
+}
+
+func (s *Service) membersStandup(
+	ctx context.Context, tx *sqlx.Tx, standupID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
+) (umember.StandupMembers, *umember.StandupMember, error) {
+	members, err := s.um.GetByStandupID(ctx, tx, standupID, params, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	self := members.Get(standupID, userID)
+	if self == nil && username != "" {
+		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		_, err = s.um.Register(ctx, standupID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		members, err = s.um.GetByStandupID(ctx, tx, standupID, params, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		self = members.Get(standupID, userID)
+	}
+	return members, self, nil
 }

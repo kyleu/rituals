@@ -9,6 +9,9 @@
       "asc": false
     }
   ],
+  "tags": [
+    "search"
+  ],
   "route": "admin/db/estimate",
   "columns": [
     {

@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -35,7 +36,9 @@ type FullRetro struct {
 	Actions     action.Actions               `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) (*FullRetro, error) {
+func (s *Service) LoadRetro(
+	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
+) (*FullRetro, error) {
 	r, err := s.r.GetBySlug(ctx, tx, slug, logger)
 	if err != nil {
 		if hist, _ := s.rh.Get(ctx, tx, slug, logger); hist != nil {
@@ -61,11 +64,10 @@ func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx
 	if err != nil {
 		return nil, err
 	}
-	ret.Members, err = s.rm.GetByRetroID(ctx, tx, r.ID, params.Get("rmember", nil, logger), logger)
+	ret.Members, ret.Self, err = s.membersRetro(ctx, tx, r.ID, userID, username, params.Get("rmember", nil, logger), logger)
 	if err != nil {
 		return nil, err
 	}
-	ret.Self = ret.Members.Get(r.ID, user)
 	ret.Permissions, err = s.rp.GetByRetroID(ctx, tx, r.ID, params.Get("rpermission", nil, logger), logger)
 	if err != nil {
 		return nil, err
@@ -105,4 +107,30 @@ func (s *Service) LoadRetro(ctx context.Context, slug string, user uuid.UUID, tx
 	}
 
 	return ret, nil
+}
+
+func (s *Service) membersRetro(
+	ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
+) (rmember.RetroMembers, *rmember.RetroMember, error) {
+	members, err := s.rm.GetByRetroID(ctx, tx, retroID, params, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	self := members.Get(retroID, userID)
+	if self == nil && username != "" {
+		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		_, err = s.rm.Register(ctx, retroID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		members, err = s.rm.GetByRetroID(ctx, tx, retroID, params, logger)
+		if err != nil {
+			return nil, nil, err
+		}
+		self = members.Get(retroID, userID)
+	}
+	return members, self, nil
 }

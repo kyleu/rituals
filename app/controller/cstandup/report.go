@@ -41,7 +41,8 @@ func ReportList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vreport.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}, ps, "standup", "report")
+		page := &vreport.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "standup", "report")
 	})
 }
 

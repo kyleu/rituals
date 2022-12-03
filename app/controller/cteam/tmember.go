@@ -41,7 +41,8 @@ func TeamMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vtmember.List{Models: ret, Teams: teams, Users: users, Params: ps.Params}, ps, "team", "tmember")
+		page := &vtmember.List{Models: ret, Teams: teams, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "team", "tmember")
 	})
 }
 

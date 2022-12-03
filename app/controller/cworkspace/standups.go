@@ -1,8 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/kyleu/rituals/views/vworkspace/vwstandup"
-
+	"github.com/kyleu/rituals/app/action"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/workspace"
+	"github.com/kyleu/rituals/views/vworkspace/vwstandup"
 )
 
 func StandupList(rc *fasthttp.RequestCtx) {
@@ -30,7 +30,7 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		fu, err := as.Services.Workspace.LoadStandup(ps.Context, slug, ps.Profile.ID, nil, ps.Params, ps.Logger)
+		fu, err := as.Services.Workspace.LoadStandup(ps.Context, slug, ps.Profile.ID, ps.Profile.NameSafe(), nil, ps.Params, ps.Logger)
 		if err != nil {
 			return "", err
 		}
@@ -71,7 +71,8 @@ func StandupAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		_, msg, u, err := as.Services.Workspace.ActionStandup(ps.Context, slug, frm.GetStringOpt("action"), frm, ps.Profile.ID, ps.Logger)
+		act := action.Act(frm.GetStringOpt("action"))
+		_, msg, u, err := as.Services.Workspace.ActionStandup(ps.Context, slug, act, frm, ps.Profile.ID, ps.Logger)
 		if err != nil {
 			return "", err
 		}

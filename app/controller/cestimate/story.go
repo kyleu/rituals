@@ -3,6 +3,7 @@ package cestimate
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -18,8 +19,15 @@ import (
 
 func StoryList(rc *fasthttp.RequestCtx) {
 	controller.Act("story.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
 		prms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
-		ret, err := as.Services.Story.List(ps.Context, nil, prms, ps.Logger)
+		var ret story.Stories
+		var err error
+		if q == "" {
+			ret, err = as.Services.Story.List(ps.Context, nil, prms, ps.Logger)
+		} else {
+			ret, err = as.Services.Story.Search(ps.Context, q, nil, prms, ps.Logger)
+		}
 		if err != nil {
 			return "", err
 		}
@@ -41,7 +49,8 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vstory.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params}, ps, "estimate", "story")
+		page := &vstory.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params, SearchQuery: q}
+		return controller.Render(rc, as, page, ps, "estimate", "story")
 	})
 }
 

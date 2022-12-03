@@ -51,3 +51,22 @@
 .vote-results .vote-result .number {
   font-size: 150%;
 }
+
+.vote-calculations {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.vote-calculations .vote-calculation {
+  margin: var(--padding);
+  text-align: center;
+}
+
+.vote-calculations .vote-calculation .value {
+  border: 3px solid var(--color-background-muted);
+  border-radius: 36px;
+  min-width: 60px;
+  padding: var(--padding);
+  font-size: 150%;
+}

@@ -2,42 +2,45 @@ package workspace
 
 import (
 	"context"
+	"github.com/kyleu/rituals/app/action"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"golang.org/x/exp/slices"
+
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
 	"github.com/kyleu/rituals/app/util"
-	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
-	"strings"
-	"time"
 )
 
 func (s *Service) ActionEstimate(
-	ctx context.Context, slug string, act string, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
+	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullEstimate, string, string, error) {
-	fe, err := s.LoadEstimate(ctx, slug, userID, nil, nil, logger)
+	fe, err := s.LoadEstimate(ctx, slug, userID, "", nil, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	switch act {
-	case "edit":
-		return estimateEdit(ctx, fe, userID, frm, slug, s, logger)
-	case "story-add":
+	case action.ActUpdate:
+		return estimateUpdate(ctx, fe, userID, frm, slug, s, logger)
+	case action.ActStoryAdd:
 		return estimateStoryAdd(ctx, fe, userID, frm, s, logger)
-	case "story-edit":
-		return estimateStoryEdit(ctx, fe, userID, frm, s, logger)
-	case "story-status":
+	case action.ActStoryUpdate:
+		return estimateStoryUpdate(ctx, fe, userID, frm, s, logger)
+	case action.ActStoryStatus:
 		return estimateStoryStatus(ctx, fe, userID, frm, s, logger)
-	case "vote":
+	case action.ActVote:
 		return estimateStoryVote(ctx, fe, userID, frm, s, logger)
-	case "story-delete":
-		return estimateStoryDelete(ctx, fe, userID, frm, s, logger)
-	case "member-edit":
-		return estimateMemberEdit(ctx, fe, frm, s, logger)
-	case "member-leave":
-		return estimateMemberLeave(ctx, fe, frm, s, logger)
-	case "self":
+	case action.ActStoryRemove:
+		return estimateStoryRemove(ctx, fe, userID, frm, s, logger)
+	case action.ActMemberUpdate:
+		return estimateMemberUpdate(ctx, fe, frm, s, logger)
+	case action.ActMemberRemove:
+		return estimateMemberRemove(ctx, fe, frm, s, logger)
+	case action.ActMemberSelf:
 		return estimateUpdateSelf(ctx, fe, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
@@ -46,7 +49,7 @@ func (s *Service) ActionEstimate(
 	}
 }
 
-func estimateEdit(
+func estimateUpdate(
 	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
 ) (*FullEstimate, string, string, error) {
 	tgt := fe.Estimate.Clone()
@@ -76,7 +79,9 @@ func estimateStoryAdd(
 	if title == "" {
 		return nil, "", "", errors.New("must provide [title]")
 	}
-	st := &story.Story{ID: util.UUID(), EstimateID: fe.Estimate.ID, Idx: len(fe.Stories), UserID: userID, Title: title, Status: enum.SessionStatusNew, Created: time.Now()}
+	st := &story.Story{
+		ID: util.UUID(), EstimateID: fe.Estimate.ID, Idx: len(fe.Stories), UserID: userID, Title: title, Status: enum.SessionStatusNew, Created: time.Now(),
+	}
 	err := s.st.Create(ctx, nil, logger, st)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
@@ -84,7 +89,7 @@ func estimateStoryAdd(
 	return fe, "Story added", st.PublicWebPath(fe.Estimate.Slug), nil
 }
 
-func estimateStoryEdit(
+func estimateStoryUpdate(
 	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
 ) (*FullEstimate, string, string, error) {
 	id, _ := frm.GetUUID("storyID", false)
@@ -161,7 +166,7 @@ func estimateStoryVote(
 	return fe, "Vote recorded", currStory.PublicWebPath(fe.Estimate.Slug), nil
 }
 
-func estimateStoryDelete(
+func estimateStoryRemove(
 	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
 ) (*FullEstimate, string, string, error) {
 	id, _ := frm.GetUUID("storyID", false)
@@ -185,7 +190,7 @@ func estimateStoryDelete(
 	return fe, "Story deleted", fe.Estimate.PublicWebPath(), nil
 }
 
-func estimateMemberEdit(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
+func estimateMemberUpdate(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	if fe.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this estimate")
 	}
@@ -202,7 +207,7 @@ func estimateMemberEdit(ctx context.Context, fe *FullEstimate, frm util.ValueMap
 	}
 	curr := fe.Members.Get(fe.Estimate.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this estimate")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this estimate", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
 	err := s.em.Update(ctx, nil, curr, logger)
@@ -212,7 +217,7 @@ func estimateMemberEdit(ctx context.Context, fe *FullEstimate, frm util.ValueMap
 	return fe, "Member updated", fe.Estimate.PublicWebPath(), nil
 }
 
-func estimateMemberLeave(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
+func estimateMemberRemove(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	if fe.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this estimate")
 	}
@@ -225,7 +230,7 @@ func estimateMemberLeave(ctx context.Context, fe *FullEstimate, frm util.ValueMa
 	}
 	curr := fe.Members.Get(fe.Estimate.ID, *userID)
 	if curr == nil {
-		return nil, "", "", errors.Errorf("user [%s] is not a member of this estimate")
+		return nil, "", "", errors.Errorf("user [%s] is not a member of this estimate", userID.String())
 	}
 	err := s.em.Delete(ctx, nil, curr.EstimateID, curr.UserID, logger)
 	if err != nil {
@@ -249,7 +254,7 @@ func estimateUpdateSelf(ctx context.Context, fe *FullEstimate, frm util.ValueMap
 		return nil, "", "", err
 	}
 	if choice == "global" {
-		return nil, "", "", errors.New("can't change global name yet!")
+		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fe, "Profile edited", fe.Estimate.PublicWebPath(), nil
 }

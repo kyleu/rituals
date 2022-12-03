@@ -13,6 +13,9 @@
     }
   ],
   "title": "Story",
+  "tags": [
+    "search"
+  ],
   "route": "admin/db/estimate/story",
   "columns": [
     {

@@ -1,13 +1,12 @@
 package cworkspace
 
 import (
-	"github.com/kyleu/rituals/app/util"
-
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/util"
 )
 
 func TeamSocket(rc *fasthttp.RequestCtx) {

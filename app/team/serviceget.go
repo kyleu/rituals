@@ -103,6 +103,20 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 	return ret.ToTeams(), nil
 }
 
+const searchClause = "(lower(id::text) like $1 or lower(slug) like $1 or lower(title) like $1)"
+
+func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Teams, error) {
+	params = filters(params)
+	wc := searchClause
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	ret := dtos{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
+	if err != nil {
+		return nil, err
+	}
+	return ret.ToTeams(), nil
+}
+
 func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Teams, error) {
 	ret := dtos{}
 	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)

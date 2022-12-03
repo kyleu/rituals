@@ -41,7 +41,8 @@ func StandupMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vumember.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}, ps, "standup", "umember")
+		page := &vumember.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "standup", "umember")
 	})
 }
 

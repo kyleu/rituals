@@ -6,26 +6,27 @@ package vwutil
 
 //line views/vworkspace/vwutil/Self.html:1
 import (
+	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/views/components"
 )
 
-//line views/vworkspace/vwutil/Self.html:6
+//line views/vworkspace/vwutil/Self.html:7
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/vwutil/Self.html:6
+//line views/vworkspace/vwutil/Self.html:7
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/vwutil/Self.html:6
-func StreamSelfModal(qw422016 *qt422016.Writer, name string, picture string, role enum.MemberStatus, action string) {
-//line views/vworkspace/vwutil/Self.html:6
+//line views/vworkspace/vwutil/Self.html:7
+func StreamSelfModal(qw422016 *qt422016.Writer, name string, picture string, role enum.MemberStatus, formAction string) {
+//line views/vworkspace/vwutil/Self.html:7
 	qw422016.N().S(`
   <div id="modal-self" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -36,16 +37,20 @@ func StreamSelfModal(qw422016 *qt422016.Writer, name string, picture string, rol
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwutil/Self.html:15
-	qw422016.E().S(action)
-//line views/vworkspace/vwutil/Self.html:15
+//line views/vworkspace/vwutil/Self.html:16
+	qw422016.E().S(formAction)
+//line views/vworkspace/vwutil/Self.html:16
 	qw422016.N().S(`" method="post" class="expanded">
-          <input type="hidden" name="action" value="self" />
+          <input type="hidden" name="action" value="`)
+//line views/vworkspace/vwutil/Self.html:17
+	qw422016.E().S(string(action.ActMemberSelf))
+//line views/vworkspace/vwutil/Self.html:17
+	qw422016.N().S(`" />
           <em>Name</em><br />
           `)
-//line views/vworkspace/vwutil/Self.html:18
+//line views/vworkspace/vwutil/Self.html:19
 	components.StreamFormInput(qw422016, "name", "input-name", name, "The name you wish to be called")
-//line views/vworkspace/vwutil/Self.html:18
+//line views/vworkspace/vwutil/Self.html:19
 	qw422016.N().S(`
           <div><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>
           <div><label><input type="radio" name="choice" value="global"> Change global default</label></div>
@@ -60,31 +65,31 @@ func StreamSelfModal(qw422016 *qt422016.Writer, name string, picture string, rol
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
 }
 
-//line views/vworkspace/vwutil/Self.html:31
-func WriteSelfModal(qq422016 qtio422016.Writer, name string, picture string, role enum.MemberStatus, action string) {
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
+func WriteSelfModal(qq422016 qtio422016.Writer, name string, picture string, role enum.MemberStatus, formAction string) {
+//line views/vworkspace/vwutil/Self.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Self.html:31
-	StreamSelfModal(qw422016, name, picture, role, action)
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
+	StreamSelfModal(qw422016, name, picture, role, formAction)
+//line views/vworkspace/vwutil/Self.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
 }
 
-//line views/vworkspace/vwutil/Self.html:31
-func SelfModal(name string, picture string, role enum.MemberStatus, action string) string {
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
+func SelfModal(name string, picture string, role enum.MemberStatus, formAction string) string {
+//line views/vworkspace/vwutil/Self.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Self.html:31
-	WriteSelfModal(qb422016, name, picture, role, action)
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
+	WriteSelfModal(qb422016, name, picture, role, formAction)
+//line views/vworkspace/vwutil/Self.html:32
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
 	return qs422016
-//line views/vworkspace/vwutil/Self.html:31
+//line views/vworkspace/vwutil/Self.html:32
 }

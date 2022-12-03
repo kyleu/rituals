@@ -41,7 +41,8 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.Render(rc, as, &vsmember.List{Models: ret, Sprints: sprints, Users: users, Params: ps.Params}, ps, "sprint", "smember")
+		page := &vsmember.List{Models: ret, Sprints: sprints, Users: users, Params: ps.Params}
+		return controller.Render(rc, as, page, ps, "sprint", "smember")
 	})
 }
 
