@@ -3,6 +3,7 @@ package cutil
 
 import (
 	"fmt"
+	h "html"
 	"strings"
 
 	"github.com/alecthomas/chroma"
@@ -81,4 +82,50 @@ func FormatString(content string, l chroma.Lexer) (string, error) {
 	}
 	ret = strings.Replace(ret, `<td class="lntd"><pre tabindex="0" class="chroma"><span class="lnt">1<br /></span></pre></td>`, "", 1)
 	return ret, nil
+}
+
+func FormatMarkdown(s string) (string, error) {
+	match, end := "<pre><code class=\"language-", "</code></pre>"
+	idx := strings.Index(s, match)
+	for idx > -1 {
+		startQuote := idx + len(match)
+		endQuote := strings.Index(s[startQuote:], "\"")
+		lang := s[startQuote : startQuote+endQuote]
+		if lang == "shell" {
+			lang = "bash"
+		}
+		contentStart := startQuote + endQuote + 2
+		contentEnd := strings.Index(s[startQuote:], end) + startQuote
+		content := s[contentStart:contentEnd]
+		content = h.UnescapeString(content)
+		code, err := FormatLang(content, lang)
+		if err != nil {
+			return "", err
+		}
+		s = s[:idx] + code + s[contentEnd+len(end):]
+		idx = strings.Index(s, match)
+	}
+	return s, nil
+}
+
+func FormatCleanMarkup(s string, icon string) (string, string, error) {
+	ret, err := FormatMarkdown(s)
+	if err != nil {
+		return "", "", err
+	}
+	title := ""
+	if h1Idx := strings.Index(ret, "<h1>"); h1Idx > -1 {
+		if h1EndIdx := strings.Index(ret, "</h1>"); h1EndIdx > -1 {
+			title = s[h1Idx+4 : h1EndIdx]
+		}
+		ic := fmt.Sprintf(`<svg class="icon" style="width: 20px; height: 20px;"><use xlink:href="#svg-%s" /></svg> `, icon)
+		ret = ret[:h1Idx+4] + ic + ret[h1Idx+4:]
+		ret = strings.ReplaceAll(ret, "<h3>", "<h4>")
+		ret = strings.ReplaceAll(ret, "</h3>", "</h4>")
+		ret = strings.ReplaceAll(ret, "<h2>", "<h4>")
+		ret = strings.ReplaceAll(ret, "</h2>", "</h4>")
+		ret = strings.ReplaceAll(ret, "<h1>", "<h3 style=\"margin-top: 0;\">")
+		ret = strings.ReplaceAll(ret, "</h1>", "</h3>")
+	}
+	return title, ret, nil
 }

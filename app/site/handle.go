@@ -43,13 +43,13 @@ func Handle(path []string, rc *fasthttp.RequestCtx, as *app.State, ps *cutil.Pag
 		ps.Data = util.ValueMap{"base": "https://github.com/kyleu/rituals/releases/download/v" + as.BuildInfo.Version, "links": dls}
 		page = &vsite.Download{Links: dls}
 	case keyInstall:
-		page, err = mdTemplate("Installation", "This static page contains installation instructions", "installation.md", "code", ps)
+		page, err = mdTemplate("This static page contains installation instructions", "installation.md", "code", ps)
 	case keyContrib:
-		page, err = mdTemplate("Contributing", "This static page describes how to build "+util.AppName, "contributing.md", "cog", ps)
+		page, err = mdTemplate("This static page describes how to build "+util.AppName, "contributing.md", "cog", ps)
 	case keyTech:
-		page, err = mdTemplate("Technology", "This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
+		page, err = mdTemplate("This static page describes the technology used in "+util.AppName, "technology.md", "shield", ps)
 	default:
-		page, err = mdTemplate("Documentation", "Documentation for "+util.AppName, path[0]+".md", "", ps)
+		page, err = mdTemplate("Documentation for "+util.AppName, path[0]+".md", "", ps)
 		if err != nil {
 			page = &verror.NotFound{Path: "/" + strings.Join(path, "/")}
 			err = nil
@@ -66,20 +66,18 @@ func siteData(result string, kvs ...string) util.ValueMap {
 	return ret
 }
 
-func mdTemplate(title string, description string, path string, icon string, ps *cutil.PageState) (layout.Page, error) {
+func mdTemplate(description string, path string, icon string, ps *cutil.PageState) (layout.Page, error) {
 	if icon == "" {
 		icon = "cog"
 	}
-	ps.Data = siteData(title, "description", description)
-	ps.Title = title
-	html, err := doc.HTML(path)
+	title, html, err := doc.HTML(path, path, func(s string) (string, string, error) {
+		return cutil.FormatCleanMarkup(s, icon)
+	})
 	if err != nil {
 		return nil, err
 	}
-	if h1Idx := strings.Index(html, "<h1>"); h1Idx > -1 {
-		ic := fmt.Sprintf(`<svg class="icon" style="width: 36px; height: 36px;"><use xlink:href="#svg-%s" /></svg> `, icon)
-		html = html[:h1Idx+4] + ic + html[h1Idx+4:]
-	}
+	ps.Data = siteData(title, "description", description)
+	ps.Title = title
 	page := &vsite.MarkdownPage{Title: title, HTML: html}
 	return page, nil
 }

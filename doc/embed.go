@@ -23,17 +23,36 @@ func Content(path string) ([]byte, error) {
 	return data, nil
 }
 
-var htmlCache = map[string]string{}
+var (
+	titleCache = map[string]string{}
+	htmlCache  = map[string]string{}
+)
 
-func HTML(path string) (string, error) {
-	if curr, ok := htmlCache[path]; ok {
-		return curr, nil
+func HTML(key string, path string, f func(s string) (string, string, error)) (string, string, error) {
+	if curr, ok := htmlCache[key]; ok {
+		return curr, titleCache[key], nil
 	}
 	data, err := Content(path)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
+	return HTMLString(key, data, f)
+}
+
+func HTMLString(key string, data []byte, f func(s string) (string, string, error)) (string, string, error) {
+	if curr, ok := htmlCache[key]; ok {
+		return titleCache[key], curr, nil
+	}
+	var title string
 	html := string(markdown.ToHTML(data, nil, nil))
-	htmlCache[path] = html
-	return html, nil
+	if f != nil {
+		var err error
+		title, html, err = f(html)
+		if err != nil {
+			return "", "", err
+		}
+	}
+	titleCache[key] = title
+	htmlCache[key] = html
+	return title, html, nil
 }

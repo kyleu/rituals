@@ -5,7 +5,7 @@
 Download any package from the [release page](https://github.com/kyleu/rituals/releases).
 
 ### Homebrew
-```
+```shell
 brew install kyleu/kyleu/rituals
 ```
 

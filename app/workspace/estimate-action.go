@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"context"
-	"github.com/kyleu/rituals/app/action"
 	"strings"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slices"
 
+	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"

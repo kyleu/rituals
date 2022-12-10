@@ -2,11 +2,11 @@ package workspace
 
 import (
 	"context"
-	"github.com/kyleu/rituals/app/action"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
+	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
 )
