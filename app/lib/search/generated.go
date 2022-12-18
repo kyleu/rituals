@@ -22,7 +22,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("estimate", m.String(), m.WebPath(), m.String(), "estimate", m, params.Q))
+			res = append(res, result.NewResult("estimate", m.String(), m.WebPath(), m.String(), "estimate", m, m, params.Q))
 		}
 		return res, nil
 	}
@@ -36,7 +36,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("retro", m.String(), m.WebPath(), m.String(), "retro", m, params.Q))
+			res = append(res, result.NewResult("retro", m.String(), m.WebPath(), m.String(), "retro", m, m, params.Q))
 		}
 		return res, nil
 	}
@@ -50,7 +50,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("sprint", m.String(), m.WebPath(), m.String(), "sprint", m, params.Q))
+			res = append(res, result.NewResult("sprint", m.String(), m.WebPath(), m.String(), "sprint", m, m, params.Q))
 		}
 		return res, nil
 	}
@@ -64,7 +64,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("standup", m.String(), m.WebPath(), m.String(), "standup", m, params.Q))
+			res = append(res, result.NewResult("standup", m.String(), m.WebPath(), m.String(), "standup", m, m, params.Q))
 		}
 		return res, nil
 	}
@@ -78,7 +78,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("story", m.String(), m.WebPath(), m.String(), "story", m, params.Q))
+			res = append(res, result.NewResult("story", m.String(), m.WebPath(), m.String(), "story", m, m, params.Q))
 		}
 		return res, nil
 	}
@@ -92,7 +92,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("team", m.String(), m.WebPath(), m.String(), "team", m, params.Q))
+			res = append(res, result.NewResult("team", m.String(), m.WebPath(), m.String(), "team", m, m, params.Q))
 		}
 		return res, nil
 	}
@@ -106,7 +106,7 @@ func generatedSearch() []Provider {
 		}
 		res := make(result.Results, 0, len(models))
 		for _, m := range models {
-			res = append(res, result.NewResult("user", m.String(), m.WebPath(), m.String(), "profile", m, params.Q))
+			res = append(res, result.NewResult("user", m.String(), m.WebPath(), m.String(), "profile", m, m, params.Q))
 		}
 		return res, nil
 	}
