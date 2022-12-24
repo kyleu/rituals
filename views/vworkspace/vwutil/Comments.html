@@ -1,0 +1,43 @@
+{% import (
+	"github.com/google/uuid"
+
+	"github.com/kyleu/rituals/app/action"
+	"github.com/kyleu/rituals/app/comment"
+  "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) %}
+  {%- code
+    comments := allComments.GetByModel(svc, id)
+    icon := "comment-dots"
+    if len(comments) == 0 {
+      icon = "comment-alt"
+    }
+  -%}
+  <a href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
+  <div id="modal-{%s string(svc) %}-{%s id.String() %}-comments" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{%s title %} Comments</h2>
+      </div>
+      <div class="modal-body">
+        {%- for _, c := range comments -%}
+        <div>{%v c %}</div>
+        <hr />
+        {%- endfor -%}
+        <form action="#" method="post" class="expanded">
+          <input type="hidden" name="action" value="{%s string(action.ActComment) %}" />
+          <input type="hidden" name="svc" value="{%s string(svc) %}" />
+          <input type="hidden" name="modelID" value="{%s id.String() %}" />
+          <div><textarea name="content" placeholder="Add a comment, Markdown and HTML supported"></textarea></div>
+          <div class="mt right"><button type="submit">Add Comment</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}

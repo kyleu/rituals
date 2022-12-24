@@ -36,6 +36,8 @@ func (s *Service) ActionRetro(
 		return retroMemberRemove(ctx, fr, frm, s, logger)
 	case action.ActMemberSelf:
 		return retroUpdateSelf(ctx, fr, frm, s, logger)
+	case action.ActComment:
+		return retroComment(ctx, fr, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
@@ -191,4 +193,31 @@ func retroUpdateSelf(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *S
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fr, "Profile edited", fr.Retro.PublicWebPath(), nil
+}
+
+func retroComment(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
+	if fr.Self == nil {
+		return nil, "", "", errors.New("you are not a member of this retro")
+	}
+	c, u, err := commentFromForm(frm, fr.Self.UserID)
+	if err != nil {
+		return nil, "", "", err
+	}
+	switch c.Svc {
+	case enum.ModelServiceRetro:
+		if c.ModelID != fr.Retro.ID {
+			return nil, "", "", errors.New("this comment refers to a different retro")
+		}
+	case enum.ModelServiceFeedback:
+		if curr := fr.Feedbacks.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to a feedback that isn't part of this retro")
+		}
+	default:
+		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
+	}
+	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	return fr, "Comment added", fr.Retro.PublicWebPath() + u, nil
 }

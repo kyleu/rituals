@@ -1,9 +1,9 @@
 {% import (
-  "github.com/google/uuid"
-
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
@@ -30,16 +30,17 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, ps) %}</div>
         <h3><a href="#modal-team-config">{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%s t.TitleString() %}</a></h3>
         {%= vwutil.Banner(nil, nil, util.KeyTeam) %}
         {%= TeamWorkspaceModal(t, ps) %}
       </div>
     </div>
     <div id="panel-detail">
-      {%= vwsprint.SprintWorkspaceList(w.Sprints, &t.ID, nil, ps) %}
-      {%= vwestimate.EstimateWorkspaceList(w.Estimates, &t.ID, nil, ps) %}
-      {%= vwstandup.StandupWorkspaceList(w.Standups, &t.ID, nil, ps) %}
-      {%= vwretro.RetroWorkspaceList(w.Retros, &t.ID, nil, ps) %}
+      {%= vwsprint.SprintWorkspaceList(w.Sprints, &t.ID, true, w.Comments, ps) %}
+      {%= vwestimate.EstimateWorkspaceList(w.Estimates, &t.ID, nil, true, w.Comments, ps) %}
+      {%= vwstandup.StandupWorkspaceList(w.Standups, &t.ID, nil, true, w.Comments, ps) %}
+      {%= vwretro.RetroWorkspaceList(w.Retros, &t.ID, nil, true, w.Comments, ps) %}
     </div>
     <div id="panel-self">
       <div class="card">
@@ -98,9 +99,9 @@
   </div>
 {% endfunc %}
 
-{% func TeamWorkspaceList(teams team.Teams, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+{% func TeamWorkspaceList(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, teamID, sprintID, "New Team") %}</div>
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
     <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
     {%- if len(teams) == 0 -%}
     <div class="mt"><em>no teams</em></div>
@@ -109,7 +110,14 @@
       <tbody>
         {%- for _, x := range teams -%}
         <tr>
-          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+          <td>
+            {%- if showComments -%}
+            <div class="right">
+              {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, ps) %}
+            </div>
+            {%- endif -%}
+            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+          </td>
         </tr>
         {%- endfor -%}
       </tbody>

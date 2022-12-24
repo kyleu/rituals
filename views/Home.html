@@ -31,9 +31,9 @@
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
   </div>
-  {%= vwteam.TeamWorkspaceList(p.Teams, nil, nil, ps) %}
-  {%= vwsprint.SprintWorkspaceList(p.Sprints, nil, nil, ps) %}
-  {%= vwestimate.EstimateWorkspaceList(p.Estimates, nil, nil, ps) %}
-  {%= vwstandup.StandupWorkspaceList(p.Standups, nil, nil, ps) %}
-  {%= vwretro.RetroWorkspaceList(p.Retros, nil, nil, ps) %}
+  {%= vwteam.TeamWorkspaceList(p.Teams, false, nil, ps) %}
+  {%= vwsprint.SprintWorkspaceList(p.Sprints, nil, false, nil, ps) %}
+  {%= vwestimate.EstimateWorkspaceList(p.Estimates, nil, nil, false, nil, ps) %}
+  {%= vwstandup.StandupWorkspaceList(p.Standups, nil, nil, false, nil, ps) %}
+  {%= vwretro.RetroWorkspaceList(p.Retros, nil, nil, false, nil, ps) %}
 {% endfunc %}

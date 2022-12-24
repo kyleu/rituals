@@ -3,7 +3,9 @@
 
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
@@ -30,6 +32,7 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, ps) %}</div>
         <h3><a href="#modal-standup-config">{%= components.SVGRefIcon(util.KeyStandup, ps) %}{%s u.TitleString() %}</a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
         {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, ps) %}
@@ -103,7 +106,7 @@
   </div>
 {% endfunc %}
 
-{% func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+{% func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
     <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
@@ -114,7 +117,14 @@
       <tbody>
         {%- for _, x := range standups -%}
         <tr>
-          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+          <td>
+            {%- if showComments -%}
+            <div class="right">
+              {%= vwutil.Comments(enum.ModelServiceStandup, x.ID, x.TitleString(), comments, ps) %}
+            </div>
+            {%- endif -%}
+            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+          </td>
         </tr>
         {%- endfor -%}
       </tbody>

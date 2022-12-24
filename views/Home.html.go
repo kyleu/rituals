@@ -64,27 +64,27 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   `)
 //line views/Home.html:34
-	vwteam.StreamTeamWorkspaceList(qw422016, p.Teams, nil, nil, ps)
+	vwteam.StreamTeamWorkspaceList(qw422016, p.Teams, false, nil, ps)
 //line views/Home.html:34
 	qw422016.N().S(`
   `)
 //line views/Home.html:35
-	vwsprint.StreamSprintWorkspaceList(qw422016, p.Sprints, nil, nil, ps)
+	vwsprint.StreamSprintWorkspaceList(qw422016, p.Sprints, nil, false, nil, ps)
 //line views/Home.html:35
 	qw422016.N().S(`
   `)
 //line views/Home.html:36
-	vwestimate.StreamEstimateWorkspaceList(qw422016, p.Estimates, nil, nil, ps)
+	vwestimate.StreamEstimateWorkspaceList(qw422016, p.Estimates, nil, nil, false, nil, ps)
 //line views/Home.html:36
 	qw422016.N().S(`
   `)
 //line views/Home.html:37
-	vwstandup.StreamStandupWorkspaceList(qw422016, p.Standups, nil, nil, ps)
+	vwstandup.StreamStandupWorkspaceList(qw422016, p.Standups, nil, nil, false, nil, ps)
 //line views/Home.html:37
 	qw422016.N().S(`
   `)
 //line views/Home.html:38
-	vwretro.StreamRetroWorkspaceList(qw422016, p.Retros, nil, nil, ps)
+	vwretro.StreamRetroWorkspaceList(qw422016, p.Retros, nil, nil, false, nil, ps)
 //line views/Home.html:38
 	qw422016.N().S(`
 `)

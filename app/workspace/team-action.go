@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"context"
-
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
@@ -28,6 +27,8 @@ func (s *Service) ActionTeam(
 		return teamMemberRemove(ctx, ft, frm, s, logger)
 	case action.ActMemberSelf:
 		return teamUpdateSelf(ctx, ft, frm, s, logger)
+	case action.ActComment:
+		return teamComment(ctx, ft, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
@@ -122,4 +123,43 @@ func teamUpdateSelf(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Ser
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return ft, "Profile edited", ft.Team.PublicWebPath(), nil
+}
+
+func teamComment(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+	if ft.Self == nil {
+		return nil, "", "", errors.New("you are not a member of this team")
+	}
+	c, u, err := commentFromForm(frm, ft.Self.UserID)
+	if err != nil {
+		return nil, "", "", err
+	}
+	switch c.Svc {
+	case enum.ModelServiceTeam:
+		if c.ModelID != ft.Team.ID {
+			return nil, "", "", errors.New("this comment refers to a different team")
+		}
+	case enum.ModelServiceSprint:
+		if curr := ft.Sprints.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an sprint that isn't part of this team")
+		}
+	case enum.ModelServiceEstimate:
+		if curr := ft.Estimates.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an estimate that isn't part of this team")
+		}
+	case enum.ModelServiceStandup:
+		if curr := ft.Standups.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an standup that isn't part of this team")
+		}
+	case enum.ModelServiceRetro:
+		if curr := ft.Retros.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an retro that isn't part of this team")
+		}
+	default:
+		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
+	}
+	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	return ft, "Comment added", ft.Team.PublicWebPath() + u, nil
 }

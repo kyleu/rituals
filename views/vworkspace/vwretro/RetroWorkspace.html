@@ -3,7 +3,9 @@
 
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/retro"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/team"
@@ -30,6 +32,7 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, ps) %}</div>
         <h3><a href="#modal-retro-config">{%= components.SVGRefIcon(`retro`, ps) %}{%s r.TitleString() %}</a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
         {%= RetroWorkspaceModal(r, p.Teams, p.Sprints, ps) %}
@@ -104,9 +107,11 @@
   </div>
 {% endfunc %}
 
-{% func RetroWorkspaceList(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+{% func RetroWorkspaceList(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}</div>
+    <div class="right">
+      {%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}
+    </div>
     <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
     {%- if len(retros) == 0 -%}
     <div class="mt"><em>no retros</em></div>
@@ -115,7 +120,14 @@
       <tbody>
         {%- for _, x := range retros -%}
         <tr>
-          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+          <td>
+            {%- if showComments -%}
+            <div class="right">
+              {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, ps) %}
+            </div>
+            {%- endif -%}
+            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+          </td>
         </tr>
         {%- endfor -%}
       </tbody>

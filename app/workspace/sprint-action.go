@@ -28,6 +28,8 @@ func (s *Service) ActionSprint(
 		return sprintMemberRemove(ctx, fs, frm, s, logger)
 	case action.ActMemberSelf:
 		return sprintUpdateSelf(ctx, fs, frm, s, logger)
+	case action.ActComment:
+		return sprintComment(ctx, fs, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
@@ -125,4 +127,39 @@ func sprintUpdateSelf(ctx context.Context, fs *FullSprint, frm util.ValueMap, s 
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fs, "Profile edited", fs.Sprint.PublicWebPath(), nil
+}
+
+func sprintComment(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+	if fs.Self == nil {
+		return nil, "", "", errors.New("you are not a member of this sprint")
+	}
+	c, u, err := commentFromForm(frm, fs.Self.UserID)
+	if err != nil {
+		return nil, "", "", err
+	}
+	switch c.Svc {
+	case enum.ModelServiceSprint:
+		if c.ModelID != fs.Sprint.ID {
+			return nil, "", "", errors.New("this comment refers to a different sprint")
+		}
+	case enum.ModelServiceEstimate:
+		if curr := fs.Estimates.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an estimate that isn't part of this sprint")
+		}
+	case enum.ModelServiceStandup:
+		if curr := fs.Standups.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an standup that isn't part of this sprint")
+		}
+	case enum.ModelServiceRetro:
+		if curr := fs.Retros.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to an retro that isn't part of this sprint")
+		}
+	default:
+		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
+	}
+	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	return fs, "Comment added", fs.Sprint.PublicWebPath() + u, nil
 }

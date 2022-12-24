@@ -42,6 +42,8 @@ func (s *Service) ActionEstimate(
 		return estimateMemberRemove(ctx, fe, frm, s, logger)
 	case action.ActMemberSelf:
 		return estimateUpdateSelf(ctx, fe, frm, s, logger)
+	case action.ActComment:
+		return estimateComment(ctx, fe, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
@@ -257,4 +259,31 @@ func estimateUpdateSelf(ctx context.Context, fe *FullEstimate, frm util.ValueMap
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fe, "Profile edited", fe.Estimate.PublicWebPath(), nil
+}
+
+func estimateComment(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
+	if fe.Self == nil {
+		return nil, "", "", errors.New("you are not a member of this estimate")
+	}
+	c, u, err := commentFromForm(frm, fe.Self.UserID)
+	if err != nil {
+		return nil, "", "", err
+	}
+	switch c.Svc {
+	case enum.ModelServiceEstimate:
+		if c.ModelID != fe.Estimate.ID {
+			return nil, "", "", errors.New("this comment refers to a different estimate")
+		}
+	case enum.ModelServiceStory:
+		if curr := fe.Stories.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to a story that isn't part of this estimate")
+		}
+	default:
+		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
+	}
+	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	return fe, "Comment added", fe.Estimate.PublicWebPath() + u, nil
 }

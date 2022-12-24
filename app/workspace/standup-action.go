@@ -35,6 +35,8 @@ func (s *Service) ActionStandup(
 		return standupMemberRemove(ctx, fu, frm, s, logger)
 	case action.ActMemberSelf:
 		return standupUpdateSelf(ctx, fu, frm, s, logger)
+	case action.ActComment:
+		return standupComment(ctx, fu, frm, s, logger)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
@@ -197,4 +199,31 @@ func standupUpdateSelf(ctx context.Context, fu *FullStandup, frm util.ValueMap, 
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	return fu, "Profile edited", fu.Standup.PublicWebPath(), nil
+}
+
+func standupComment(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+	if fu.Self == nil {
+		return nil, "", "", errors.New("you are not a member of this standup")
+	}
+	c, u, err := commentFromForm(frm, fu.Self.UserID)
+	if err != nil {
+		return nil, "", "", err
+	}
+	switch c.Svc {
+	case enum.ModelServiceStandup:
+		if c.ModelID != fu.Standup.ID {
+			return nil, "", "", errors.New("this comment refers to a different standup")
+		}
+	case enum.ModelServiceReport:
+		if curr := fu.Reports.Get(c.ModelID); curr == nil {
+			return nil, "", "", errors.New("this comment refers to a report that isn't part of this standup")
+		}
+	default:
+		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
+	}
+	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	return fu, "Comment added", fu.Standup.PublicWebPath() + u, nil
 }

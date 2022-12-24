@@ -36,7 +36,7 @@ func (s *Service) Search(ctx context.Context, q string, params filter.ParamSet, 
 func (s *Service) SearchTeams(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Teams {
-		res := result.NewResult(util.KeyTeam, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyTeam, x, q)
+		res := result.NewResult(util.KeyTeam, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyTeam, x, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}
@@ -47,7 +47,7 @@ func (s *Service) SearchTeams(ctx context.Context, q string, prms filter.ParamSe
 func (s *Service) SearchSprints(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Sprints {
-		res := result.NewResult(util.KeySprint, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeySprint, x, q)
+		res := result.NewResult(util.KeySprint, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeySprint, x, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}
@@ -58,7 +58,7 @@ func (s *Service) SearchSprints(ctx context.Context, q string, prms filter.Param
 func (s *Service) SearchEstimates(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Estimates {
-		res := result.NewResult(util.KeyEstimate, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyEstimate, x, q)
+		res := result.NewResult(util.KeyEstimate, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyEstimate, x, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}
@@ -73,7 +73,7 @@ func (s *Service) SearchStories(ctx context.Context, q string, prms filter.Param
 		return nil, errors.Wrap(err, "can't load stories")
 	}
 	for _, x := range curr {
-		res := result.NewResult(util.KeyStory, x.ID.String(), x.PublicWebPath(""), x.TitleString(), util.KeyStory, x, q)
+		res := result.NewResult(util.KeyStory, x.ID.String(), x.PublicWebPath(""), x.TitleString(), util.KeyStory, x, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}
@@ -84,7 +84,7 @@ func (s *Service) SearchStories(ctx context.Context, q string, prms filter.Param
 func (s *Service) SearchStandups(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Standups {
-		res := result.NewResult(util.KeyStandup, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyStandup, x, q)
+		res := result.NewResult(util.KeyStandup, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyStandup, x, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}
@@ -95,7 +95,7 @@ func (s *Service) SearchStandups(ctx context.Context, q string, prms filter.Para
 func (s *Service) SearchRetros(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Retros {
-		res := result.NewResult(util.KeyRetro, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyRetro, x, q)
+		res := result.NewResult(util.KeyRetro, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyRetro, x, x, q)
 		if len(res.Matches) > 0 {
 			ret = append(ret, res)
 		}

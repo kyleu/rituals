@@ -14,6 +14,7 @@ const (
 	ActPermissions  Act = "permissions"
 
 	ActContentAdd Act = "content-add"
+	ActComment    Act = "comment"
 
 	ActFeedbackAdd    Act = "feedback-add"
 	ActFeedbackUpdate Act = "feedback-update"

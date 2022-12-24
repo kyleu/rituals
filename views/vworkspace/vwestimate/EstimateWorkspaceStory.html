@@ -158,7 +158,7 @@
         <input type="hidden" name="storyID" value="{%s s.ID.String() %}" />
         <input type="hidden" name="action" value="{%s string(action.ActStoryStatus) %}" />
         <input type="hidden" name="status" value="{%s string(enum.SessionStatusNew) %}" />
-        <div><button type="submit">Reopen</button></div>
+        <div><button type="submit">Restart</button></div>
       </form>
     </div>
   </div>
@@ -212,7 +212,7 @@
   <div class="vote-calculations">
     <div class="vote-calculation" title="portion of votes that were able to be parsed as numbers">
       <div class="value">{%d r.Count %}/{%d len(v) %}</div>
-      Count
+      Counted
     </div>
     <div class="vote-calculation" title="the minimum and maximum vote recorded">
       <div class="value">{%f r.Min %}-{%f r.Max %}</div>

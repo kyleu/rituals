@@ -3,7 +3,9 @@
 
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
@@ -31,6 +33,7 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, ps) %}</div>
         <h3><a href="#modal-sprint-config">{%= components.SVGRefIcon(s.IconSafe(), ps) %}{%s s.TitleString() %}</a></h3>
         <div class="clear"></div>
         <div class="right">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
@@ -39,9 +42,9 @@
       </div>
     </div>
     <div id="panel-detail">
-      {%= vwestimate.EstimateWorkspaceList(w.Estimates, s.TeamID, &s.ID, ps) %}
-      {%= vwstandup.StandupWorkspaceList(w.Standups, s.TeamID, &s.ID, ps) %}
-      {%= vwretro.RetroWorkspaceList(w.Retros, s.TeamID, &s.ID, ps) %}
+      {%= vwestimate.EstimateWorkspaceList(w.Estimates, s.TeamID, &s.ID, true, w.Comments, ps) %}
+      {%= vwstandup.StandupWorkspaceList(w.Standups, s.TeamID, &s.ID, true, w.Comments, ps) %}
+      {%= vwretro.RetroWorkspaceList(w.Retros, s.TeamID, &s.ID, true, w.Comments, ps) %}
     </div>
     <div id="panel-self">
       <div class="card">
@@ -106,9 +109,9 @@
   </div>
 {% endfunc %}
 
-{% func SprintWorkspaceList(sprints sprint.Sprints, teamID *uuid.UUID, sprintID *uuid.UUID, ps *cutil.PageState) %}
+{% func SprintWorkspaceList(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, sprintID, "New Sprint") %}</div>
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
     <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
     {%- if len(sprints) == 0 -%}
     <div class="mt"><em>no sprints</em></div>
@@ -117,7 +120,14 @@
       <tbody>
         {%- for _, x := range sprints -%}
         <tr>
-          <td><a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a></td>
+          <td>
+            {%- if showComments -%}
+            <div class="right">
+              {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, ps) %}
+            </div>
+            {%- endif -%}
+            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+          </td>
         </tr>
         {%- endfor -%}
       </tbody>

@@ -538,7 +538,7 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 	qw422016.E().S(string(enum.SessionStatusNew))
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:160
 	qw422016.N().S(`" />
-        <div><button type="submit">Reopen</button></div>
+        <div><button type="submit">Restart</button></div>
       </form>
     </div>
   </div>
@@ -731,7 +731,7 @@ func StreamEstimateWorkspaceStoryResults(qw422016 *qt422016.Writer, v vote.Votes
 	qw422016.N().D(len(v))
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:214
 	qw422016.N().S(`</div>
-      Count
+      Counted
     </div>
     <div class="vote-calculation" title="the minimum and maximum vote recorded">
       <div class="value">`)
