@@ -26,13 +26,13 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRefIcon("estimate", ps) %}</a>
+        <td class="nowrap">
+          <a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
         </td>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          <a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>

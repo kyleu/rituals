@@ -26,9 +26,9 @@
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
-          <td>
-            <div class="icon">{%= components.DisplayUUID(&p.Model.TeamID) %}{% if x := p.Teams.Get(p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
+          <td class="nowrap">
+            {%= components.DisplayUUID(&p.Model.TeamID) %}{% if x := p.Teams.Get(p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            <a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>

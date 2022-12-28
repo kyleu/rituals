@@ -108,8 +108,8 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Us
 		components.StreamDisplayUUID(qw422016, &model.ModelID)
 //line views/vaction/Table.html:31
 		qw422016.N().S(`</td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vaction/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vaction/Table.html:33
@@ -123,14 +123,14 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Us
 //line views/vaction/Table.html:33
 		}
 //line views/vaction/Table.html:33
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="User" href="`)
 //line views/vaction/Table.html:34
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
 //line views/vaction/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vaction/Table.html:34
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vaction/Table.html:34
 		qw422016.N().S(`</a>
         </td>

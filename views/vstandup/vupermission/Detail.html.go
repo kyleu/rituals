@@ -67,8 +67,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vstandup/vupermission/Detail.html:30
 	components.StreamDisplayUUID(qw422016, &p.Model.StandupID)
 //line views/vstandup/vupermission/Detail.html:30
@@ -82,14 +82,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:30
 	}
 //line views/vstandup/vupermission/Detail.html:30
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="Standup" href="`)
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.E().S(`/standup` + `/` + p.Model.StandupID.String())
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Detail.html:31
-	components.StreamSVGRefIcon(qw422016, "standup", ps)
+	components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
 //line views/vstandup/vupermission/Detail.html:31
 	qw422016.N().S(`</a>
           </td>

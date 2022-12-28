@@ -92,7 +92,7 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
         <div class="clear"></div>
         `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:45
-	StreamRetroWorkspaceFeedbacks(qw422016, ps.Profile.ID, ps.Profile.Name, w)
+	StreamRetroWorkspaceFeedbacks(qw422016, ps.Profile.ID, ps.Profile.Name, w, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:45
 	qw422016.N().S(`
       </div>

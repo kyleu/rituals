@@ -23,9 +23,9 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/team/permission/{%= components.DisplayUUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
+        <td class="nowrap">
+          <a href="/admin/db/team/permission/{%= components.DisplayUUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
         </td>
         <td><a href="/admin/db/team/permission/{%= components.DisplayUUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
         <td><a href="/admin/db/team/permission/{%= components.DisplayUUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>

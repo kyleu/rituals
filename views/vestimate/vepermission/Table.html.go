@@ -74,8 +74,8 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 	for _, model := range models {
 //line views/vestimate/vepermission/Table.html:24
 		qw422016.N().S(`      <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/permission/`)
+        <td class="nowrap">
+          <a href="/admin/db/estimate/permission/`)
 //line views/vestimate/vepermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vepermission/Table.html:27
@@ -101,14 +101,14 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 //line views/vestimate/vepermission/Table.html:27
 		}
 //line views/vestimate/vepermission/Table.html:27
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="Estimate" href="`)
 //line views/vestimate/vepermission/Table.html:28
 		qw422016.E().S(`/estimate` + `/` + model.EstimateID.String())
 //line views/vestimate/vepermission/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vestimate/vepermission/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "estimate", ps)
+		components.StreamSVGRef(qw422016, "estimate", 18, 18, "", ps)
 //line views/vestimate/vepermission/Table.html:28
 		qw422016.N().S(`</a>
         </td>

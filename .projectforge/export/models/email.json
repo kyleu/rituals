@@ -45,6 +45,8 @@
     {
       "name": "html",
       "type": "string",
+      "display": "detail",
+      "format": "html",
       "search": true
     },
     {

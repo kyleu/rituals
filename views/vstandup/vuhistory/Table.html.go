@@ -78,8 +78,8 @@ func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, st
 		qw422016.E().S(model.Slug)
 //line views/vstandup/vuhistory/Table.html:25
 		qw422016.N().S(`</a></td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vstandup/vuhistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vuhistory/Table.html:27
@@ -93,14 +93,14 @@ func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, st
 //line views/vstandup/vuhistory/Table.html:27
 		}
 //line views/vstandup/vuhistory/Table.html:27
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="Standup" href="`)
 //line views/vstandup/vuhistory/Table.html:28
 		qw422016.E().S(`/standup` + `/` + model.StandupID.String())
 //line views/vstandup/vuhistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vstandup/vuhistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "standup", ps)
+		components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
 //line views/vstandup/vuhistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

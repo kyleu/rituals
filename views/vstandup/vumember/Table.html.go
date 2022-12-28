@@ -85,8 +85,8 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 	for _, model := range models {
 //line views/vstandup/vumember/Table.html:27
 		qw422016.N().S(`      <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/standup/member/`)
+        <td class="nowrap">
+          <a href="/admin/db/standup/member/`)
 //line views/vstandup/vumember/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vumember/Table.html:30
@@ -108,19 +108,19 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 //line views/vstandup/vumember/Table.html:30
 		}
 //line views/vstandup/vumember/Table.html:30
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="Standup" href="`)
 //line views/vstandup/vumember/Table.html:31
 		qw422016.E().S(`/standup` + `/` + model.StandupID.String())
 //line views/vstandup/vumember/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:31
-		components.StreamSVGRefIcon(qw422016, "standup", ps)
+		components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
 //line views/vstandup/vumember/Table.html:31
 		qw422016.N().S(`</a>
         </td>
-        <td>
-          <div class="icon"><a href="/admin/db/standup/member/`)
+        <td class="nowrap">
+          <a href="/admin/db/standup/member/`)
 //line views/vstandup/vumember/Table.html:34
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vumember/Table.html:34
@@ -142,14 +142,14 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 //line views/vstandup/vumember/Table.html:34
 		}
 //line views/vstandup/vumember/Table.html:34
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="User" href="`)
 //line views/vstandup/vumember/Table.html:35
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
 //line views/vstandup/vumember/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:35
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vstandup/vumember/Table.html:35
 		qw422016.N().S(`</a>
         </td>

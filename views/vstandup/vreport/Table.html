@@ -19,7 +19,6 @@
         {%= components.TableHeaderSimple("report", "day", "Day", "Calendar date", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "content", "Content", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("report", "html", "HTML", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("report", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
       </tr>
@@ -28,24 +27,23 @@
       {%- for _, model := range models -%}
       <tr>
         <td><a href="/admin/db/standup/report/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRefIcon("standup", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRef("standup", 18, 18, "", ps) %}</a>
         </td>
         <td>{%= components.DisplayTimestampDay(&model.Day) %}</td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.Content %}</td>
-        <td>{%s model.HTML %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="8">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

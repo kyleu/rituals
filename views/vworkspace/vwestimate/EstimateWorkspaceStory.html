@@ -6,20 +6,26 @@
   "github.com/kyleu/rituals/app/estimate/story/vote"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
 {% func EstimateWorkspaceStories(w *workspace.FullEstimate, ps *cutil.PageState) %}
   <table class="mt expanded">
+    <thead>
+      <tr>
+        <th>Story</th>
+        <th class="shrink">Status</th>
+        <th class="shrink">Score</th>
+        <th class="shrink"></th>
+      </tr>
+    </thead>
     <tbody>
       {%- for _, s := range w.Stories -%}
       <tr>
         <td><a href="#modal-story-{%s s.ID.String() %}">{%s s.TitleString() %}</a></td>
-        <td class="shrink">
-          {%- switch s.Status -%}
-          {%- default -%}
-          {%s string(s.Status) %}: {%s s.FinalVoteSafe() %}
-          {%- endswitch -%}
-        </td>
+        <td>{%s string(s.Status) %}</td>
+        <td>{%s s.FinalVoteSafe() %}</td>
+        <td>{%= vwutil.Comments(enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, ps) %}</td>
       </tr>
       {%- endfor -%}
     </tbody>

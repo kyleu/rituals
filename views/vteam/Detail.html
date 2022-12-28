@@ -69,9 +69,9 @@
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
-          <td>
-            <div class="icon">{%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          <td class="nowrap">
+            {%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
+            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>

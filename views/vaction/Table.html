@@ -29,9 +29,9 @@
         <td><a href="/admin/db/action/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>{%v model.Svc %}</td>
         <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.Act %}</td>
         <td>{%= components.JSON(model.Content) %}</td>

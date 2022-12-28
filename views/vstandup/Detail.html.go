@@ -125,8 +125,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vstandup/Detail.html:68
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
 //line views/vstandup/Detail.html:68
@@ -144,7 +144,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:68
 	}
 //line views/vstandup/Detail.html:68
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             `)
 //line views/vstandup/Detail.html:69
 	if p.Model.TeamID != nil {
@@ -155,7 +155,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:69
 		qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:69
-		components.StreamSVGRefIcon(qw422016, "team", ps)
+		components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
 //line views/vstandup/Detail.html:69
 		qw422016.N().S(`</a>`)
 //line views/vstandup/Detail.html:69
@@ -166,8 +166,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vstandup/Detail.html:75
 	components.StreamDisplayUUID(qw422016, p.Model.SprintID)
 //line views/vstandup/Detail.html:75
@@ -185,7 +185,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:75
 	}
 //line views/vstandup/Detail.html:75
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             `)
 //line views/vstandup/Detail.html:76
 	if p.Model.SprintID != nil {
@@ -196,7 +196,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:76
 		qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:76
-		components.StreamSVGRefIcon(qw422016, "sprint", ps)
+		components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
 //line views/vstandup/Detail.html:76
 		qw422016.N().S(`</a>`)
 //line views/vstandup/Detail.html:76
@@ -207,8 +207,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vstandup/Detail.html:82
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
 //line views/vstandup/Detail.html:82
@@ -222,14 +222,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:82
 	}
 //line views/vstandup/Detail.html:82
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vstandup/Detail.html:83
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
 //line views/vstandup/Detail.html:83
 	qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:83
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vstandup/Detail.html:83
 	qw422016.N().S(`</a>
           </td>

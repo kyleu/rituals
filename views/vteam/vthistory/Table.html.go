@@ -78,8 +78,8 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
 		qw422016.E().S(model.Slug)
 //line views/vteam/vthistory/Table.html:25
 		qw422016.N().S(`</a></td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vteam/vthistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vthistory/Table.html:27
@@ -93,14 +93,14 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
 //line views/vteam/vthistory/Table.html:27
 		}
 //line views/vteam/vthistory/Table.html:27
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="Team" href="`)
 //line views/vteam/vthistory/Table.html:28
 		qw422016.E().S(`/team` + `/` + model.TeamID.String())
 //line views/vteam/vthistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vteam/vthistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "team", ps)
+		components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
 //line views/vteam/vthistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

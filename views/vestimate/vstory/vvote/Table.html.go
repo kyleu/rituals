@@ -75,8 +75,8 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 	for _, model := range models {
 //line views/vestimate/vstory/vvote/Table.html:25
 		qw422016.N().S(`      <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/story/vote/`)
+        <td class="nowrap">
+          <a href="/admin/db/estimate/story/vote/`)
 //line views/vestimate/vstory/vvote/Table.html:28
 		components.StreamDisplayUUID(qw422016, &model.StoryID)
 //line views/vestimate/vstory/vvote/Table.html:28
@@ -98,19 +98,19 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 //line views/vestimate/vstory/vvote/Table.html:28
 		}
 //line views/vestimate/vstory/vvote/Table.html:28
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="Story" href="`)
 //line views/vestimate/vstory/vvote/Table.html:29
 		qw422016.E().S(`/story` + `/` + model.StoryID.String())
 //line views/vestimate/vstory/vvote/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:29
-		components.StreamSVGRefIcon(qw422016, "story", ps)
+		components.StreamSVGRef(qw422016, "story", 18, 18, "", ps)
 //line views/vestimate/vstory/vvote/Table.html:29
 		qw422016.N().S(`</a>
         </td>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/story/vote/`)
+        <td class="nowrap">
+          <a href="/admin/db/estimate/story/vote/`)
 //line views/vestimate/vstory/vvote/Table.html:32
 		components.StreamDisplayUUID(qw422016, &model.StoryID)
 //line views/vestimate/vstory/vvote/Table.html:32
@@ -132,14 +132,14 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 //line views/vestimate/vstory/vvote/Table.html:32
 		}
 //line views/vestimate/vstory/vvote/Table.html:32
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="User" href="`)
 //line views/vestimate/vstory/vvote/Table.html:33
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
 //line views/vestimate/vstory/vvote/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:33
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vestimate/vstory/vvote/Table.html:33
 		qw422016.N().S(`</a>
         </td>

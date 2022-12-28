@@ -1,10 +1,12 @@
 {% import (
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/standup/report"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
 {% func StandupWorkspaceReports(w *workspace.FullStandup, ps *cutil.PageState) %}
@@ -15,7 +17,7 @@
       <label for="accordion-{%s util.TimeToYMD(&g.Day) %}">{%= components.ExpandCollapse(3, ps) %} {%s util.TimeToYMD(&g.Day) %}</label>
       <div class="bd">
         {%- for _, r := range g.Reports -%}
-        <a class="report" href="#modal-report-{%s r.ID.String() %}" style="text-decoration: none; color: var(--color-foreground);">
+        <div class="report">
           <div>
             {%- code
               uname := "Former Guest"
@@ -24,10 +26,13 @@
                 uname = curr.Name
               }
             -%}
-            <h4>{%s uname %}</h4>
-            <div>{%s= r.HTML %}</div>
+            <div class="right">{%= vwutil.Comments(enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, ps) %}</div>
+            <a href="#modal-report-{%s r.ID.String() %}" class="clean">
+              <h4>{%s uname %}</h4>
+              <div class="pt">{%s= r.HTML %}</div>
+            </a>
           </div>
-        </a>
+        </div>
         {%- endfor -%}
       </div>
     </li>

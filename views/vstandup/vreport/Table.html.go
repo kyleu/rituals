@@ -69,159 +69,149 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
 	qw422016.N().S(`
         `)
 //line views/vstandup/vreport/Table.html:22
-	components.StreamTableHeaderSimple(qw422016, "report", "html", "HTML", "String text", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "report", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
 //line views/vstandup/vreport/Table.html:22
 	qw422016.N().S(`
         `)
 //line views/vstandup/vreport/Table.html:23
-	components.StreamTableHeaderSimple(qw422016, "report", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vstandup/vreport/Table.html:23
-	qw422016.N().S(`
-        `)
-//line views/vstandup/vreport/Table.html:24
 	components.StreamTableHeaderSimple(qw422016, "report", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
-//line views/vstandup/vreport/Table.html:24
+//line views/vstandup/vreport/Table.html:23
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vstandup/vreport/Table.html:28
+//line views/vstandup/vreport/Table.html:27
 	for _, model := range models {
-//line views/vstandup/vreport/Table.html:28
+//line views/vstandup/vreport/Table.html:27
 		qw422016.N().S(`      <tr>
         <td><a href="/admin/db/standup/report/`)
-//line views/vstandup/vreport/Table.html:30
+//line views/vstandup/vreport/Table.html:29
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vstandup/vreport/Table.html:30
+//line views/vstandup/vreport/Table.html:29
 		qw422016.N().S(`">`)
-//line views/vstandup/vreport/Table.html:30
+//line views/vstandup/vreport/Table.html:29
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vstandup/vreport/Table.html:30
+//line views/vstandup/vreport/Table.html:29
 		qw422016.N().S(`</a></td>
-        <td>
-          <div class="icon">`)
-//line views/vstandup/vreport/Table.html:32
+        <td class="nowrap">
+          `)
+//line views/vstandup/vreport/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
-//line views/vstandup/vreport/Table.html:32
+//line views/vstandup/vreport/Table.html:31
 		if x := standups.Get(model.StandupID); x != nil {
-//line views/vstandup/vreport/Table.html:32
+//line views/vstandup/vreport/Table.html:31
 			qw422016.N().S(` (`)
-//line views/vstandup/vreport/Table.html:32
+//line views/vstandup/vreport/Table.html:31
 			qw422016.E().S(x.TitleString())
-//line views/vstandup/vreport/Table.html:32
+//line views/vstandup/vreport/Table.html:31
 			qw422016.N().S(`)`)
-//line views/vstandup/vreport/Table.html:32
+//line views/vstandup/vreport/Table.html:31
 		}
-//line views/vstandup/vreport/Table.html:32
-		qw422016.N().S(`</div>
+//line views/vstandup/vreport/Table.html:31
+		qw422016.N().S(`
           <a title="Standup" href="`)
-//line views/vstandup/vreport/Table.html:33
+//line views/vstandup/vreport/Table.html:32
 		qw422016.E().S(`/standup` + `/` + model.StandupID.String())
-//line views/vstandup/vreport/Table.html:33
+//line views/vstandup/vreport/Table.html:32
 		qw422016.N().S(`">`)
-//line views/vstandup/vreport/Table.html:33
-		components.StreamSVGRefIcon(qw422016, "standup", ps)
-//line views/vstandup/vreport/Table.html:33
+//line views/vstandup/vreport/Table.html:32
+		components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
+//line views/vstandup/vreport/Table.html:32
 		qw422016.N().S(`</a>
         </td>
         <td>`)
-//line views/vstandup/vreport/Table.html:35
+//line views/vstandup/vreport/Table.html:34
 		components.StreamDisplayTimestampDay(qw422016, &model.Day)
-//line views/vstandup/vreport/Table.html:35
+//line views/vstandup/vreport/Table.html:34
 		qw422016.N().S(`</td>
-        <td>
-          <div class="icon">`)
-//line views/vstandup/vreport/Table.html:37
+        <td class="nowrap">
+          `)
+//line views/vstandup/vreport/Table.html:36
 		components.StreamDisplayUUID(qw422016, &model.UserID)
-//line views/vstandup/vreport/Table.html:37
+//line views/vstandup/vreport/Table.html:36
 		if x := users.Get(model.UserID); x != nil {
-//line views/vstandup/vreport/Table.html:37
+//line views/vstandup/vreport/Table.html:36
 			qw422016.N().S(` (`)
-//line views/vstandup/vreport/Table.html:37
+//line views/vstandup/vreport/Table.html:36
 			qw422016.E().S(x.TitleString())
-//line views/vstandup/vreport/Table.html:37
+//line views/vstandup/vreport/Table.html:36
 			qw422016.N().S(`)`)
-//line views/vstandup/vreport/Table.html:37
+//line views/vstandup/vreport/Table.html:36
 		}
-//line views/vstandup/vreport/Table.html:37
-		qw422016.N().S(`</div>
+//line views/vstandup/vreport/Table.html:36
+		qw422016.N().S(`
           <a title="User" href="`)
-//line views/vstandup/vreport/Table.html:38
+//line views/vstandup/vreport/Table.html:37
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
-//line views/vstandup/vreport/Table.html:38
+//line views/vstandup/vreport/Table.html:37
 		qw422016.N().S(`">`)
-//line views/vstandup/vreport/Table.html:38
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vstandup/vreport/Table.html:38
+//line views/vstandup/vreport/Table.html:37
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
+//line views/vstandup/vreport/Table.html:37
 		qw422016.N().S(`</a>
         </td>
         <td>`)
-//line views/vstandup/vreport/Table.html:40
+//line views/vstandup/vreport/Table.html:39
 		qw422016.E().S(model.Content)
+//line views/vstandup/vreport/Table.html:39
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vstandup/vreport/Table.html:40
+		components.StreamDisplayTimestamp(qw422016, &model.Created)
 //line views/vstandup/vreport/Table.html:40
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vstandup/vreport/Table.html:41
-		qw422016.E().S(model.HTML)
+		components.StreamDisplayTimestamp(qw422016, model.Updated)
 //line views/vstandup/vreport/Table.html:41
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vstandup/vreport/Table.html:42
-		components.StreamDisplayTimestamp(qw422016, &model.Created)
-//line views/vstandup/vreport/Table.html:42
-		qw422016.N().S(`</td>
-        <td>`)
-//line views/vstandup/vreport/Table.html:43
-		components.StreamDisplayTimestamp(qw422016, model.Updated)
-//line views/vstandup/vreport/Table.html:43
-		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vstandup/vreport/Table.html:45
+//line views/vstandup/vreport/Table.html:43
 	}
-//line views/vstandup/vreport/Table.html:46
+//line views/vstandup/vreport/Table.html:44
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vstandup/vreport/Table.html:46
+//line views/vstandup/vreport/Table.html:44
 		qw422016.N().S(`      <tr>
-        <td colspan="8">`)
-//line views/vstandup/vreport/Table.html:48
+        <td colspan="7">`)
+//line views/vstandup/vreport/Table.html:46
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vstandup/vreport/Table.html:48
+//line views/vstandup/vreport/Table.html:46
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vstandup/vreport/Table.html:50
+//line views/vstandup/vreport/Table.html:48
 	}
-//line views/vstandup/vreport/Table.html:50
+//line views/vstandup/vreport/Table.html:48
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 }
 
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 func WriteTable(qq422016 qtio422016.Writer, models report.Reports, standups standup.Standups, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	StreamTable(qw422016, models, standups, users, params, as, ps)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 }
 
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 func Table(models report.Reports, standups standup.Standups, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	WriteTable(qb422016, models, standups, users, params, as, ps)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 	return qs422016
-//line views/vstandup/vreport/Table.html:53
+//line views/vstandup/vreport/Table.html:51
 }

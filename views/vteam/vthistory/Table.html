@@ -23,9 +23,9 @@
       {%- for _, model := range models -%}
       <tr>
         <td><a href="/admin/db/team/history/{%u model.Slug %}">{%s model.Slug %}</a></td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.TeamName %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>

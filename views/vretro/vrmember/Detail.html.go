@@ -69,8 +69,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vretro/vrmember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.RetroID)
 //line views/vretro/vrmember/Detail.html:32
@@ -84,22 +84,22 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrmember/Detail.html:32
 	}
 //line views/vretro/vrmember/Detail.html:32
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="Retro" href="`)
 //line views/vretro/vrmember/Detail.html:33
 	qw422016.E().S(`/retro` + `/` + p.Model.RetroID.String())
 //line views/vretro/vrmember/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:33
-	components.StreamSVGRefIcon(qw422016, "retro", ps)
+	components.StreamSVGRef(qw422016, "retro", 18, 18, "", ps)
 //line views/vretro/vrmember/Detail.html:33
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vretro/vrmember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vretro/vrmember/Detail.html:39
@@ -113,14 +113,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrmember/Detail.html:39
 	}
 //line views/vretro/vrmember/Detail.html:39
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vretro/vrmember/Detail.html:40
 	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
 //line views/vretro/vrmember/Detail.html:40
 	qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:40
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vretro/vrmember/Detail.html:40
 	qw422016.N().S(`</a>
           </td>

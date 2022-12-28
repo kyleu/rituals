@@ -75,8 +75,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vsprint/vshistory/Detail.html:34
 	components.StreamDisplayUUID(qw422016, &p.Model.SprintID)
 //line views/vsprint/vshistory/Detail.html:34
@@ -90,14 +90,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/vshistory/Detail.html:34
 	}
 //line views/vsprint/vshistory/Detail.html:34
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="Sprint" href="`)
 //line views/vsprint/vshistory/Detail.html:35
 	qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
 //line views/vsprint/vshistory/Detail.html:35
 	qw422016.N().S(`">`)
 //line views/vsprint/vshistory/Detail.html:35
-	components.StreamSVGRefIcon(qw422016, "sprint", ps)
+	components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
 //line views/vsprint/vshistory/Detail.html:35
 	qw422016.N().S(`</a>
           </td>

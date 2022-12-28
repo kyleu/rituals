@@ -77,8 +77,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vstandup/vreport/Detail.html:36
 	components.StreamDisplayUUID(qw422016, &p.Model.StandupID)
 //line views/vstandup/vreport/Detail.html:36
@@ -92,14 +92,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vreport/Detail.html:36
 	}
 //line views/vstandup/vreport/Detail.html:36
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="Standup" href="`)
 //line views/vstandup/vreport/Detail.html:37
 	qw422016.E().S(`/standup` + `/` + p.Model.StandupID.String())
 //line views/vstandup/vreport/Detail.html:37
 	qw422016.N().S(`">`)
 //line views/vstandup/vreport/Detail.html:37
-	components.StreamSVGRefIcon(qw422016, "standup", ps)
+	components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
 //line views/vstandup/vreport/Detail.html:37
 	qw422016.N().S(`</a>
           </td>
@@ -114,8 +114,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vstandup/vreport/Detail.html:47
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vstandup/vreport/Detail.html:47
@@ -129,14 +129,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vreport/Detail.html:47
 	}
 //line views/vstandup/vreport/Detail.html:47
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vstandup/vreport/Detail.html:48
 	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
 //line views/vstandup/vreport/Detail.html:48
 	qw422016.N().S(`">`)
 //line views/vstandup/vreport/Detail.html:48
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vstandup/vreport/Detail.html:48
 	qw422016.N().S(`</a>
           </td>
@@ -151,11 +151,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td>`)
+          <td><pre>`)
 //line views/vstandup/vreport/Detail.html:57
 	qw422016.E().S(p.Model.HTML)
 //line views/vstandup/vreport/Detail.html:57
-	qw422016.N().S(`</td>
+	qw422016.N().S(`</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>

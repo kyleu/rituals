@@ -78,8 +78,8 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 		qw422016.E().S(model.Slug)
 //line views/vretro/vrhistory/Table.html:25
 		qw422016.N().S(`</a></td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vretro/vrhistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrhistory/Table.html:27
@@ -93,14 +93,14 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 //line views/vretro/vrhistory/Table.html:27
 		}
 //line views/vretro/vrhistory/Table.html:27
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="Retro" href="`)
 //line views/vretro/vrhistory/Table.html:28
 		qw422016.E().S(`/retro` + `/` + model.RetroID.String())
 //line views/vretro/vrhistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vretro/vrhistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "retro", ps)
+		components.StreamSVGRef(qw422016, "retro", 18, 18, "", ps)
 //line views/vretro/vrhistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

@@ -129,8 +129,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vsprint/Detail.html:72
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
 //line views/vsprint/Detail.html:72
@@ -148,7 +148,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:72
 	}
 //line views/vsprint/Detail.html:72
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             `)
 //line views/vsprint/Detail.html:73
 	if p.Model.TeamID != nil {
@@ -159,7 +159,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:73
 		qw422016.N().S(`">`)
 //line views/vsprint/Detail.html:73
-		components.StreamSVGRefIcon(qw422016, "team", ps)
+		components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
 //line views/vsprint/Detail.html:73
 		qw422016.N().S(`</a>`)
 //line views/vsprint/Detail.html:73
@@ -170,8 +170,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vsprint/Detail.html:79
 	components.StreamDisplayUUID(qw422016, &p.Model.Owner)
 //line views/vsprint/Detail.html:79
@@ -185,14 +185,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:79
 	}
 //line views/vsprint/Detail.html:79
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vsprint/Detail.html:80
 	qw422016.E().S(`/user` + `/` + p.Model.Owner.String())
 //line views/vsprint/Detail.html:80
 	qw422016.N().S(`">`)
 //line views/vsprint/Detail.html:80
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vsprint/Detail.html:80
 	qw422016.N().S(`</a>
           </td>

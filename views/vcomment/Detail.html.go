@@ -91,8 +91,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vcomment/Detail.html:42
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vcomment/Detail.html:42
@@ -106,14 +106,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcomment/Detail.html:42
 	}
 //line views/vcomment/Detail.html:42
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vcomment/Detail.html:43
 	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
 //line views/vcomment/Detail.html:43
 	qw422016.N().S(`">`)
 //line views/vcomment/Detail.html:43
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vcomment/Detail.html:43
 	qw422016.N().S(`</a>
           </td>
@@ -128,11 +128,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td>`)
+          <td><pre>`)
 //line views/vcomment/Detail.html:52
 	qw422016.E().S(p.Model.HTML)
 //line views/vcomment/Detail.html:52
-	qw422016.N().S(`</td>
+	qw422016.N().S(`</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>

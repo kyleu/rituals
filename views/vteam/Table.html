@@ -31,9 +31,9 @@
         <td><strong>{%s model.Title %}</strong></td>
         <td>{%s model.Icon %}</td>
         <td>{%v model.Status %}</td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>

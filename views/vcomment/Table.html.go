@@ -68,128 +68,118 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, users user.
 	qw422016.N().S(`
         `)
 //line views/vcomment/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "comment", "html", "HTML", "String text", prms, ps.URI, ps)
-//line views/vcomment/Table.html:21
-	qw422016.N().S(`
-        `)
-//line views/vcomment/Table.html:22
 	components.StreamTableHeaderSimple(qw422016, "comment", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vcomment/Table.html:22
+//line views/vcomment/Table.html:21
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vcomment/Table.html:26
+//line views/vcomment/Table.html:25
 	for _, model := range models {
-//line views/vcomment/Table.html:26
+//line views/vcomment/Table.html:25
 		qw422016.N().S(`      <tr>
         <td><a href="/admin/db/comment/`)
-//line views/vcomment/Table.html:28
+//line views/vcomment/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vcomment/Table.html:28
+//line views/vcomment/Table.html:27
 		qw422016.N().S(`">`)
-//line views/vcomment/Table.html:28
+//line views/vcomment/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vcomment/Table.html:28
+//line views/vcomment/Table.html:27
 		qw422016.N().S(`</a></td>
         <td>`)
-//line views/vcomment/Table.html:29
+//line views/vcomment/Table.html:28
 		qw422016.E().V(model.Svc)
-//line views/vcomment/Table.html:29
+//line views/vcomment/Table.html:28
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vcomment/Table.html:30
+//line views/vcomment/Table.html:29
 		components.StreamDisplayUUID(qw422016, &model.ModelID)
-//line views/vcomment/Table.html:30
+//line views/vcomment/Table.html:29
 		qw422016.N().S(`</td>
-        <td>
-          <div class="icon">`)
-//line views/vcomment/Table.html:32
+        <td class="nowrap">
+          `)
+//line views/vcomment/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.UserID)
-//line views/vcomment/Table.html:32
+//line views/vcomment/Table.html:31
 		if x := users.Get(model.UserID); x != nil {
-//line views/vcomment/Table.html:32
+//line views/vcomment/Table.html:31
 			qw422016.N().S(` (`)
-//line views/vcomment/Table.html:32
+//line views/vcomment/Table.html:31
 			qw422016.E().S(x.TitleString())
-//line views/vcomment/Table.html:32
+//line views/vcomment/Table.html:31
 			qw422016.N().S(`)`)
-//line views/vcomment/Table.html:32
+//line views/vcomment/Table.html:31
 		}
-//line views/vcomment/Table.html:32
-		qw422016.N().S(`</div>
+//line views/vcomment/Table.html:31
+		qw422016.N().S(`
           <a title="User" href="`)
-//line views/vcomment/Table.html:33
+//line views/vcomment/Table.html:32
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
-//line views/vcomment/Table.html:33
+//line views/vcomment/Table.html:32
 		qw422016.N().S(`">`)
-//line views/vcomment/Table.html:33
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vcomment/Table.html:33
+//line views/vcomment/Table.html:32
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
+//line views/vcomment/Table.html:32
 		qw422016.N().S(`</a>
         </td>
         <td>`)
-//line views/vcomment/Table.html:35
+//line views/vcomment/Table.html:34
 		qw422016.E().S(model.Content)
+//line views/vcomment/Table.html:34
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vcomment/Table.html:35
+		components.StreamDisplayTimestamp(qw422016, &model.Created)
 //line views/vcomment/Table.html:35
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vcomment/Table.html:36
-		qw422016.E().S(model.HTML)
-//line views/vcomment/Table.html:36
-		qw422016.N().S(`</td>
-        <td>`)
-//line views/vcomment/Table.html:37
-		components.StreamDisplayTimestamp(qw422016, &model.Created)
-//line views/vcomment/Table.html:37
-		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vcomment/Table.html:39
+//line views/vcomment/Table.html:37
 	}
-//line views/vcomment/Table.html:40
+//line views/vcomment/Table.html:38
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vcomment/Table.html:40
+//line views/vcomment/Table.html:38
 		qw422016.N().S(`      <tr>
-        <td colspan="7">`)
-//line views/vcomment/Table.html:42
+        <td colspan="6">`)
+//line views/vcomment/Table.html:40
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vcomment/Table.html:42
+//line views/vcomment/Table.html:40
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vcomment/Table.html:44
+//line views/vcomment/Table.html:42
 	}
-//line views/vcomment/Table.html:44
+//line views/vcomment/Table.html:42
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 }
 
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 func WriteTable(qq422016 qtio422016.Writer, models comment.Comments, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	StreamTable(qw422016, models, users, params, as, ps)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 }
 
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 func Table(models comment.Comments, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	WriteTable(qb422016, models, users, params, as, ps)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 	return qs422016
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:45
 }

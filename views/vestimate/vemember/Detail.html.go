@@ -69,8 +69,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vestimate/vemember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.EstimateID)
 //line views/vestimate/vemember/Detail.html:32
@@ -84,22 +84,22 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vemember/Detail.html:32
 	}
 //line views/vestimate/vemember/Detail.html:32
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="Estimate" href="`)
 //line views/vestimate/vemember/Detail.html:33
 	qw422016.E().S(`/estimate` + `/` + p.Model.EstimateID.String())
 //line views/vestimate/vemember/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vestimate/vemember/Detail.html:33
-	components.StreamSVGRefIcon(qw422016, "estimate", ps)
+	components.StreamSVGRef(qw422016, "estimate", 18, 18, "", ps)
 //line views/vestimate/vemember/Detail.html:33
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vestimate/vemember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vestimate/vemember/Detail.html:39
@@ -113,14 +113,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vemember/Detail.html:39
 	}
 //line views/vestimate/vemember/Detail.html:39
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vestimate/vemember/Detail.html:40
 	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
 //line views/vestimate/vemember/Detail.html:40
 	qw422016.N().S(`">`)
 //line views/vestimate/vemember/Detail.html:40
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vestimate/vemember/Detail.html:40
 	qw422016.N().S(`</a>
           </td>

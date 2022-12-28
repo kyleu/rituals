@@ -78,8 +78,8 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
 		qw422016.E().S(model.Slug)
 //line views/vsprint/vshistory/Table.html:25
 		qw422016.N().S(`</a></td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vsprint/vshistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.SprintID)
 //line views/vsprint/vshistory/Table.html:27
@@ -93,14 +93,14 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
 //line views/vsprint/vshistory/Table.html:27
 		}
 //line views/vsprint/vshistory/Table.html:27
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="Sprint" href="`)
 //line views/vsprint/vshistory/Table.html:28
 		qw422016.E().S(`/sprint` + `/` + model.SprintID.String())
 //line views/vsprint/vshistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vsprint/vshistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "sprint", ps)
+		components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
 //line views/vsprint/vshistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

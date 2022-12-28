@@ -18,7 +18,6 @@
         {%= components.TableHeaderSimple("comment", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "content", "Content", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("comment", "html", "HTML", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
       </tr>
     </thead>
@@ -28,18 +27,17 @@
         <td><a href="/admin/db/comment/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td>{%v model.Svc %}</td>
         <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.Content %}</td>
-        <td>{%s model.HTML %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="6">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

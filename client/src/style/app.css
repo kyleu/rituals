@@ -11,3 +11,8 @@
   padding: var(--padding);
   border: var(--border);
 }
+
+a.clean {
+  text-decoration: none;
+  color: var(--color-foreground);
+}

@@ -78,8 +78,8 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 		qw422016.E().S(model.Slug)
 //line views/vestimate/vehistory/Table.html:25
 		qw422016.N().S(`</a></td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vestimate/vehistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vehistory/Table.html:27
@@ -93,14 +93,14 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 //line views/vestimate/vehistory/Table.html:27
 		}
 //line views/vestimate/vehistory/Table.html:27
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="Estimate" href="`)
 //line views/vestimate/vehistory/Table.html:28
 		qw422016.E().S(`/estimate` + `/` + model.EstimateID.String())
 //line views/vestimate/vehistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vestimate/vehistory/Table.html:28
-		components.StreamSVGRefIcon(qw422016, "estimate", ps)
+		components.StreamSVGRef(qw422016, "estimate", 18, 18, "", ps)
 //line views/vestimate/vehistory/Table.html:28
 		qw422016.N().S(`</a>
         </td>

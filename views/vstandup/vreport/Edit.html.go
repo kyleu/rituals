@@ -111,7 +111,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vstandup/vreport/Edit.html:34
-	components.StreamTableInput(qw422016, "html", "HTML", p.Model.HTML, 5, "String text")
+	components.StreamTableTextarea(qw422016, "html", "HTML", 8, p.Model.HTML, 5, "String text")
 //line views/vstandup/vreport/Edit.html:34
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

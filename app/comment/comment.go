@@ -31,7 +31,7 @@ func Random() *Comment {
 		ModelID: util.UUID(),
 		UserID:  util.UUID(),
 		Content: util.RandomString(12),
-		HTML:    util.RandomString(12),
+		HTML:    "<h3>" + util.RandomString(6) + "</h3>",
 		Created: time.Now(),
 	}
 }

@@ -107,16 +107,16 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td>`)
+          <td><pre>`)
 //line views/vemail/Detail.html:49
 	qw422016.E().S(p.Model.HTML)
 //line views/vemail/Detail.html:49
-	qw422016.N().S(`</td>
+	qw422016.N().S(`</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vemail/Detail.html:54
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vemail/Detail.html:54
@@ -130,14 +130,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vemail/Detail.html:54
 	}
 //line views/vemail/Detail.html:54
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vemail/Detail.html:55
 	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
 //line views/vemail/Detail.html:55
 	qw422016.N().S(`">`)
 //line views/vemail/Detail.html:55
-	components.StreamSVGRefIcon(qw422016, "profile", ps)
+	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vemail/Detail.html:55
 	qw422016.N().S(`</a>
           </td>

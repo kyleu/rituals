@@ -38,9 +38,9 @@
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td>
-            <div class="icon">{%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.Users.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="User" href="{%s `/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          <td class="nowrap">
+            {%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.Users.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            <a title="User" href="{%s `/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
@@ -49,7 +49,7 @@
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td>{%s p.Model.HTML %}</td>
+          <td><pre>{%s p.Model.HTML %}</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>

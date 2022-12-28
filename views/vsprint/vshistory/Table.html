@@ -23,9 +23,9 @@
       {%- for _, model := range models -%}
       <tr>
         <td><a href="/admin/db/sprint/history/{%u model.Slug %}">{%s model.Slug %}</a></td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("sprint", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.SprintName %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>

@@ -85,8 +85,8 @@ func StreamTable(qw422016 *qt422016.Writer, models emember.EstimateMembers, esti
 	for _, model := range models {
 //line views/vestimate/vemember/Table.html:27
 		qw422016.N().S(`      <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/member/`)
+        <td class="nowrap">
+          <a href="/admin/db/estimate/member/`)
 //line views/vestimate/vemember/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vemember/Table.html:30
@@ -108,19 +108,19 @@ func StreamTable(qw422016 *qt422016.Writer, models emember.EstimateMembers, esti
 //line views/vestimate/vemember/Table.html:30
 		}
 //line views/vestimate/vemember/Table.html:30
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="Estimate" href="`)
 //line views/vestimate/vemember/Table.html:31
 		qw422016.E().S(`/estimate` + `/` + model.EstimateID.String())
 //line views/vestimate/vemember/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vestimate/vemember/Table.html:31
-		components.StreamSVGRefIcon(qw422016, "estimate", ps)
+		components.StreamSVGRef(qw422016, "estimate", 18, 18, "", ps)
 //line views/vestimate/vemember/Table.html:31
 		qw422016.N().S(`</a>
         </td>
-        <td>
-          <div class="icon"><a href="/admin/db/estimate/member/`)
+        <td class="nowrap">
+          <a href="/admin/db/estimate/member/`)
 //line views/vestimate/vemember/Table.html:34
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vemember/Table.html:34
@@ -142,14 +142,14 @@ func StreamTable(qw422016 *qt422016.Writer, models emember.EstimateMembers, esti
 //line views/vestimate/vemember/Table.html:34
 		}
 //line views/vestimate/vemember/Table.html:34
-		qw422016.N().S(`</a></div>
+		qw422016.N().S(`</a>
           <a title="User" href="`)
 //line views/vestimate/vemember/Table.html:35
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
 //line views/vestimate/vemember/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vestimate/vemember/Table.html:35
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vestimate/vemember/Table.html:35
 		qw422016.N().S(`</a>
         </td>

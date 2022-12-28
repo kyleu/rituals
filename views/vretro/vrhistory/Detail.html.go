@@ -75,8 +75,8 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
-          <td>
-            <div class="icon">`)
+          <td class="nowrap">
+            `)
 //line views/vretro/vrhistory/Detail.html:34
 	components.StreamDisplayUUID(qw422016, &p.Model.RetroID)
 //line views/vretro/vrhistory/Detail.html:34
@@ -90,14 +90,14 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrhistory/Detail.html:34
 	}
 //line views/vretro/vrhistory/Detail.html:34
-	qw422016.N().S(`</div>
+	qw422016.N().S(`
             <a title="Retro" href="`)
 //line views/vretro/vrhistory/Detail.html:35
 	qw422016.E().S(`/retro` + `/` + p.Model.RetroID.String())
 //line views/vretro/vrhistory/Detail.html:35
 	qw422016.N().S(`">`)
 //line views/vretro/vrhistory/Detail.html:35
-	components.StreamSVGRefIcon(qw422016, "retro", ps)
+	components.StreamSVGRef(qw422016, "retro", 18, 18, "", ps)
 //line views/vretro/vrhistory/Detail.html:35
 	qw422016.N().S(`</a>
           </td>

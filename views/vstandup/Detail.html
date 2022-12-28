@@ -64,23 +64,23 @@
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
-          <td>
-            <div class="icon">{%= components.DisplayUUID(p.Model.TeamID) %}{% if p.Model.TeamID != nil %}{% if x := p.Teams.Get(*p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-            {% if p.Model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>{% endif %}
+          <td class="nowrap">
+            {%= components.DisplayUUID(p.Model.TeamID) %}{% if p.Model.TeamID != nil %}{% if x := p.Teams.Get(*p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+            {% if p.Model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
-          <td>
-            <div class="icon">{%= components.DisplayUUID(p.Model.SprintID) %}{% if p.Model.SprintID != nil %}{% if x := p.Sprints.Get(*p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-            {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRefIcon("sprint", ps) %}</a>{% endif %}
+          <td class="nowrap">
+            {%= components.DisplayUUID(p.Model.SprintID) %}{% if p.Model.SprintID != nil %}{% if x := p.Sprints.Get(*p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+            {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
-          <td>
-            <div class="icon">{%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+          <td class="nowrap">
+            {%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
+            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>

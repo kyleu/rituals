@@ -68,148 +68,138 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, users user.User
 	qw422016.N().S(`
         `)
 //line views/vemail/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "email", "html", "HTML", "String text", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "email", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
 //line views/vemail/Table.html:21
 	qw422016.N().S(`
         `)
 //line views/vemail/Table.html:22
-	components.StreamTableHeaderSimple(qw422016, "email", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "email", "status", "Status", "String text", prms, ps.URI, ps)
 //line views/vemail/Table.html:22
 	qw422016.N().S(`
         `)
 //line views/vemail/Table.html:23
-	components.StreamTableHeaderSimple(qw422016, "email", "status", "Status", "String text", prms, ps.URI, ps)
-//line views/vemail/Table.html:23
-	qw422016.N().S(`
-        `)
-//line views/vemail/Table.html:24
 	components.StreamTableHeaderSimple(qw422016, "email", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vemail/Table.html:24
+//line views/vemail/Table.html:23
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vemail/Table.html:28
+//line views/vemail/Table.html:27
 	for _, model := range models {
-//line views/vemail/Table.html:28
+//line views/vemail/Table.html:27
 		qw422016.N().S(`      <tr>
         <td><a href="/admin/db/email/`)
-//line views/vemail/Table.html:30
+//line views/vemail/Table.html:29
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vemail/Table.html:30
+//line views/vemail/Table.html:29
 		qw422016.N().S(`">`)
-//line views/vemail/Table.html:30
+//line views/vemail/Table.html:29
 		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vemail/Table.html:30
+//line views/vemail/Table.html:29
 		qw422016.N().S(`</a></td>
         <td>`)
-//line views/vemail/Table.html:31
+//line views/vemail/Table.html:30
 		components.StreamDisplayStringArray(qw422016, model.Recipients)
+//line views/vemail/Table.html:30
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vemail/Table.html:31
+		qw422016.E().S(model.Subject)
 //line views/vemail/Table.html:31
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vemail/Table.html:32
-		qw422016.E().S(model.Subject)
+		components.StreamJSON(qw422016, model.Data)
 //line views/vemail/Table.html:32
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vemail/Table.html:33
-		components.StreamJSON(qw422016, model.Data)
+		qw422016.E().S(model.Plain)
 //line views/vemail/Table.html:33
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vemail/Table.html:34
-		qw422016.E().S(model.Plain)
-//line views/vemail/Table.html:34
-		qw422016.N().S(`</td>
-        <td>`)
+        <td class="nowrap">
+          `)
 //line views/vemail/Table.html:35
-		qw422016.E().S(model.HTML)
-//line views/vemail/Table.html:35
-		qw422016.N().S(`</td>
-        <td>
-          <div class="icon">`)
-//line views/vemail/Table.html:37
 		components.StreamDisplayUUID(qw422016, &model.UserID)
-//line views/vemail/Table.html:37
+//line views/vemail/Table.html:35
 		if x := users.Get(model.UserID); x != nil {
-//line views/vemail/Table.html:37
+//line views/vemail/Table.html:35
 			qw422016.N().S(` (`)
-//line views/vemail/Table.html:37
+//line views/vemail/Table.html:35
 			qw422016.E().S(x.TitleString())
-//line views/vemail/Table.html:37
+//line views/vemail/Table.html:35
 			qw422016.N().S(`)`)
-//line views/vemail/Table.html:37
+//line views/vemail/Table.html:35
 		}
-//line views/vemail/Table.html:37
-		qw422016.N().S(`</div>
+//line views/vemail/Table.html:35
+		qw422016.N().S(`
           <a title="User" href="`)
-//line views/vemail/Table.html:38
+//line views/vemail/Table.html:36
 		qw422016.E().S(`/user` + `/` + model.UserID.String())
-//line views/vemail/Table.html:38
+//line views/vemail/Table.html:36
 		qw422016.N().S(`">`)
-//line views/vemail/Table.html:38
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
-//line views/vemail/Table.html:38
+//line views/vemail/Table.html:36
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
+//line views/vemail/Table.html:36
 		qw422016.N().S(`</a>
         </td>
         <td>`)
-//line views/vemail/Table.html:40
+//line views/vemail/Table.html:38
 		qw422016.E().S(model.Status)
-//line views/vemail/Table.html:40
+//line views/vemail/Table.html:38
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vemail/Table.html:41
+//line views/vemail/Table.html:39
 		components.StreamDisplayTimestamp(qw422016, &model.Created)
+//line views/vemail/Table.html:39
+		qw422016.N().S(`</td>
+      </tr>
+`)
 //line views/vemail/Table.html:41
-		qw422016.N().S(`</td>
-      </tr>
-`)
-//line views/vemail/Table.html:43
 	}
-//line views/vemail/Table.html:44
+//line views/vemail/Table.html:42
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vemail/Table.html:44
+//line views/vemail/Table.html:42
 		qw422016.N().S(`      <tr>
-        <td colspan="9">`)
-//line views/vemail/Table.html:46
+        <td colspan="8">`)
+//line views/vemail/Table.html:44
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vemail/Table.html:46
+//line views/vemail/Table.html:44
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vemail/Table.html:48
+//line views/vemail/Table.html:46
 	}
-//line views/vemail/Table.html:48
+//line views/vemail/Table.html:46
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 }
 
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 func WriteTable(qq422016 qtio422016.Writer, models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	StreamTable(qw422016, models, users, params, as, ps)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 }
 
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 func Table(models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	WriteTable(qb422016, models, users, params, as, ps)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	qs422016 := string(qb422016.B)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 	return qs422016
-//line views/vemail/Table.html:51
+//line views/vemail/Table.html:49
 }

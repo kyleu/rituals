@@ -32,7 +32,7 @@ func Random() *Email {
 		Subject:    util.RandomString(12),
 		Data:       util.RandomValueMap(4),
 		Plain:      util.RandomString(12),
-		HTML:       util.RandomString(12),
+		HTML:       "<h3>" + util.RandomString(6) + "</h3>",
 		UserID:     util.UUID(),
 		Status:     util.RandomString(12),
 		Created:    time.Now(),

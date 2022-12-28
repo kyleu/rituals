@@ -3,12 +3,15 @@
 	"golang.org/x/exp/slices"
 
   "github.com/kyleu/rituals/app/action"
+  "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/retro/feedback"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
-{% func RetroWorkspaceFeedbacks(userID uuid.UUID, username string, w *workspace.FullRetro) %}
+{% func RetroWorkspaceFeedbacks(userID uuid.UUID, username string, w *workspace.FullRetro, ps *cutil.PageState) %}
   <div class="categories">
     {%- for _, grp := range w.Feedbacks.Grouped(w.Retro.Categories) -%}
     <div class="category">
@@ -24,8 +27,11 @@
       -%}
       <div class="clear"></div>
       <div class="feedback mt">
-        <a href="#modal-feedback-{%s f.ID.String() %}">{%s uname %}</a>
-        <div class="mt">{%s= f.HTML %}</div>
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, ps) %}</div>
+        <a href="#modal-feedback-{%s f.ID.String() %}" class="clean">
+          {%s uname %}
+          <div class="pt">{%s= f.HTML %}</div>
+        </a>
       </div>
       {%- endfor -%}
       {%= RetroWorkspaceFeedbackModalAdd(w.Retro.Categories, grp.Category) %}

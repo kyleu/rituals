@@ -134,8 +134,8 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 		qw422016.E().V(model.Status)
 //line views/vsprint/Table.html:37
 		qw422016.N().S(`</td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vsprint/Table.html:39
 		components.StreamDisplayUUID(qw422016, model.TeamID)
 //line views/vsprint/Table.html:39
@@ -153,7 +153,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 //line views/vsprint/Table.html:39
 		}
 //line views/vsprint/Table.html:39
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           `)
 //line views/vsprint/Table.html:40
 		if model.TeamID != nil {
@@ -164,7 +164,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 //line views/vsprint/Table.html:40
 			qw422016.N().S(`">`)
 //line views/vsprint/Table.html:40
-			components.StreamSVGRefIcon(qw422016, "team", ps)
+			components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
 //line views/vsprint/Table.html:40
 			qw422016.N().S(`</a>`)
 //line views/vsprint/Table.html:40
@@ -172,8 +172,8 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 //line views/vsprint/Table.html:40
 		qw422016.N().S(`
         </td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vsprint/Table.html:43
 		components.StreamDisplayUUID(qw422016, &model.Owner)
 //line views/vsprint/Table.html:43
@@ -187,14 +187,14 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, users user.Us
 //line views/vsprint/Table.html:43
 		}
 //line views/vsprint/Table.html:43
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="User" href="`)
 //line views/vsprint/Table.html:44
 		qw422016.E().S(`/user` + `/` + model.Owner.String())
 //line views/vsprint/Table.html:44
 		qw422016.N().S(`">`)
 //line views/vsprint/Table.html:44
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vsprint/Table.html:44
 		qw422016.N().S(`</a>
         </td>

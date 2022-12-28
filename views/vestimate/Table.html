@@ -36,17 +36,17 @@
         <td><strong>{%s model.Title %}</strong></td>
         <td>{%s model.Icon %}</td>
         <td>{%v model.Status %}</td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-          {% if model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>{% endif %}
+        <td class="nowrap">
+          {%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+          {% if model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
         </td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprints.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}</div>
-          {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("sprint", ps) %}</a>{% endif %}
+        <td class="nowrap">
+          {%= components.DisplayUUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprints.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+          {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
         </td>
-        <td>
-          <div class="icon">{%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}</div>
-          <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          {%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
+          <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%= components.DisplayStringArray(model.Choices) %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>

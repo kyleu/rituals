@@ -135,8 +135,8 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 		qw422016.E().V(model.Status)
 //line views/vestimate/Table.html:38
 		qw422016.N().S(`</td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vestimate/Table.html:40
 		components.StreamDisplayUUID(qw422016, model.TeamID)
 //line views/vestimate/Table.html:40
@@ -154,7 +154,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:40
 		}
 //line views/vestimate/Table.html:40
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           `)
 //line views/vestimate/Table.html:41
 		if model.TeamID != nil {
@@ -165,7 +165,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:41
 			qw422016.N().S(`">`)
 //line views/vestimate/Table.html:41
-			components.StreamSVGRefIcon(qw422016, "team", ps)
+			components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
 //line views/vestimate/Table.html:41
 			qw422016.N().S(`</a>`)
 //line views/vestimate/Table.html:41
@@ -173,8 +173,8 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:41
 		qw422016.N().S(`
         </td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vestimate/Table.html:44
 		components.StreamDisplayUUID(qw422016, model.SprintID)
 //line views/vestimate/Table.html:44
@@ -192,7 +192,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:44
 		}
 //line views/vestimate/Table.html:44
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           `)
 //line views/vestimate/Table.html:45
 		if model.SprintID != nil {
@@ -203,7 +203,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:45
 			qw422016.N().S(`">`)
 //line views/vestimate/Table.html:45
-			components.StreamSVGRefIcon(qw422016, "sprint", ps)
+			components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
 //line views/vestimate/Table.html:45
 			qw422016.N().S(`</a>`)
 //line views/vestimate/Table.html:45
@@ -211,8 +211,8 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:45
 		qw422016.N().S(`
         </td>
-        <td>
-          <div class="icon">`)
+        <td class="nowrap">
+          `)
 //line views/vestimate/Table.html:48
 		components.StreamDisplayUUID(qw422016, &model.Owner)
 //line views/vestimate/Table.html:48
@@ -226,14 +226,14 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, users use
 //line views/vestimate/Table.html:48
 		}
 //line views/vestimate/Table.html:48
-		qw422016.N().S(`</div>
+		qw422016.N().S(`
           <a title="User" href="`)
 //line views/vestimate/Table.html:49
 		qw422016.E().S(`/user` + `/` + model.Owner.String())
 //line views/vestimate/Table.html:49
 		qw422016.N().S(`">`)
 //line views/vestimate/Table.html:49
-		components.StreamSVGRefIcon(qw422016, "profile", ps)
+		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
 //line views/vestimate/Table.html:49
 		qw422016.N().S(`</a>
         </td>

@@ -26,13 +26,13 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRefIcon("team", ps) %}</a>
+        <td class="nowrap">
+          <a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
         </td>
-        <td>
-          <div class="icon"><a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRefIcon("profile", ps) %}</a>
+        <td class="nowrap">
+          <a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>

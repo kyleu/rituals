@@ -23,9 +23,9 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td>
-          <div class="icon"><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a></div>
-          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRefIcon("sprint", ps) %}</a>
+        <td class="nowrap">
+          <a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
         </td>
         <td><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
         <td><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>

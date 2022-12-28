@@ -43,7 +43,9 @@
     },
     {
       "name": "html",
-      "type": "string"
+      "type": "string",
+      "display": "detail",
+      "format": "html"
     },
     {
       "name": "created",
