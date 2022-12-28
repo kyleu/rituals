@@ -25,6 +25,7 @@ type FullStandup struct {
 	Standup     *standup.Standup               `json:"standup"`
 	Histories   uhistory.StandupHistories      `json:"histories,omitempty"`
 	Members     umember.StandupMembers         `json:"members,omitempty"`
+	UtilMembers util.Members                   `json:"-"`
 	Self        *umember.StandupMember         `json:"self,omitempty"`
 	Permissions upermission.StandupPermissions `json:"permissions,omitempty"`
 	Team        *team.Team                     `json:"team,omitempty"`
@@ -66,6 +67,7 @@ func (s *Service) LoadStandup(
 	if err != nil {
 		return nil, err
 	}
+	ret.UtilMembers = ret.Members.ToMembers()
 	ret.Permissions, err = s.up.GetByStandupID(ctx, tx, u.ID, params.Get("upermission", nil, logger), logger)
 	if err != nil {
 		return nil, err

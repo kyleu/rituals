@@ -60,7 +60,7 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
       <div class="card">
         <div class="right">`)
 //line views/vworkspace/vwretro/RetroWorkspace.html:35
-	vwutil.StreamComments(qw422016, enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, ps)
+	vwutil.StreamComments(qw422016, enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:35
 	qw422016.N().S(`</div>
         <h3><a href="#modal-retro-config">`)
@@ -345,7 +345,7 @@ func StreamRetroWorkspaceList(qw422016 *qt422016.Writer, retros retro.Retros, te
 				qw422016.N().S(`            <div class="right">
               `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:126
-				vwutil.StreamComments(qw422016, enum.ModelServiceRetro, x.ID, x.TitleString(), comments, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:126
 				qw422016.N().S(`
             </div>

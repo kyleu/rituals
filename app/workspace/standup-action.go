@@ -75,7 +75,7 @@ func standupReportAdd(
 	}
 	day = util.TimeTruncate(day)
 	content := frm.GetStringOpt("content")
-	html := util.ToHTML(content)
+	html := util.ToHTML(content, true)
 	rpt := &report.Report{
 		ID: util.UUID(), StandupID: fu.Standup.ID, Day: *day, UserID: userID, Content: content, HTML: html, Created: time.Now(),
 	}
@@ -103,7 +103,7 @@ func standupReportUpdate(
 	}
 	day = util.TimeTruncate(day)
 	content := frm.GetStringOpt("content")
-	html := util.ToHTML(content)
+	html := util.ToHTML(content, true)
 	rpt := &report.Report{
 		ID: *id, StandupID: fu.Standup.ID, Day: *day, UserID: userID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
 	}

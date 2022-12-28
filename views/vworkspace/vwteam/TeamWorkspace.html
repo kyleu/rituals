@@ -30,7 +30,7 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
-        <div class="right">{%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, ps) %}</div>
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
         <h3><a href="#modal-team-config">{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%s t.TitleString() %}</a></h3>
         {%= vwutil.Banner(nil, nil, util.KeyTeam) %}
         {%= TeamWorkspaceModal(t, ps) %}
@@ -113,7 +113,7 @@
           <td>
             {%- if showComments -%}
             <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, ps) %}
+              {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps) %}
             </div>
             {%- endif -%}
             <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>

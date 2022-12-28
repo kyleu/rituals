@@ -61,7 +61,7 @@ func (p *SprintWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
       <div class="card">
         <div class="right">`)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:36
-	vwutil.StreamComments(qw422016, enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, ps)
+	vwutil.StreamComments(qw422016, enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:36
 	qw422016.N().S(`</div>
         <h3><a href="#modal-sprint-config">`)
@@ -373,7 +373,7 @@ func StreamSprintWorkspaceList(qw422016 *qt422016.Writer, sprints sprint.Sprints
 				qw422016.N().S(`            <div class="right">
               `)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:126
-				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:126
 				qw422016.N().S(`
             </div>

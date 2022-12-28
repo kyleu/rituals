@@ -32,7 +32,7 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
-        <div class="right">{%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, ps) %}</div>
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
         <h3><a href="#modal-retro-config">{%= components.SVGRefIcon(`retro`, ps) %}{%s r.TitleString() %}</a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
         {%= RetroWorkspaceModal(r, p.Teams, p.Sprints, ps) %}
@@ -123,7 +123,7 @@
           <td>
             {%- if showComments -%}
             <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, ps) %}
+              {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps) %}
             </div>
             {%- endif -%}
             <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>

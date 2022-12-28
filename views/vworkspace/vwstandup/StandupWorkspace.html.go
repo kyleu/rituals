@@ -60,7 +60,7 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
       <div class="card">
         <div class="right">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:35
-	vwutil.StreamComments(qw422016, enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, ps)
+	vwutil.StreamComments(qw422016, enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:35
 	qw422016.N().S(`</div>
         <h3><a href="#modal-standup-config">`)
@@ -342,7 +342,7 @@ func StreamStandupWorkspaceList(qw422016 *qt422016.Writer, standups standup.Stan
 				qw422016.N().S(`            <div class="right">
               `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:123
-				vwutil.StreamComments(qw422016, enum.ModelServiceStandup, x.ID, x.TitleString(), comments, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:123
 				qw422016.N().S(`
             </div>

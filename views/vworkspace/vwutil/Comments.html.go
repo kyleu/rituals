@@ -30,247 +30,186 @@ var (
 )
 
 //line views/vworkspace/vwutil/Comments.html:12
-func StreamComments(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) {
+func StreamComments(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Comments.html:12
 	qw422016.N().S(`
 `)
 //line views/vworkspace/vwutil/Comments.html:14
 	comments := allComments.GetByModel(svc, id)
+
+//line views/vworkspace/vwutil/Comments.html:15
+	qw422016.N().S(`  `)
+//line views/vworkspace/vwutil/Comments.html:16
+	StreamCommentsLink(qw422016, svc, id, title, comments, ps)
+//line views/vworkspace/vwutil/Comments.html:16
+	qw422016.N().S(`
+  `)
+//line views/vworkspace/vwutil/Comments.html:17
+	StreamCommentsModal(qw422016, svc, id, title, comments, members, ps)
+//line views/vworkspace/vwutil/Comments.html:17
+	qw422016.N().S(`
+`)
+//line views/vworkspace/vwutil/Comments.html:18
+}
+
+//line views/vworkspace/vwutil/Comments.html:18
+func WriteComments(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Comments.html:18
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwutil/Comments.html:18
+	StreamComments(qw422016, svc, id, title, allComments, members, ps)
+//line views/vworkspace/vwutil/Comments.html:18
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwutil/Comments.html:18
+}
+
+//line views/vworkspace/vwutil/Comments.html:18
+func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) string {
+//line views/vworkspace/vwutil/Comments.html:18
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwutil/Comments.html:18
+	WriteComments(qb422016, svc, id, title, allComments, members, ps)
+//line views/vworkspace/vwutil/Comments.html:18
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwutil/Comments.html:18
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwutil/Comments.html:18
+	return qs422016
+//line views/vworkspace/vwutil/Comments.html:18
+}
+
+//line views/vworkspace/vwutil/Comments.html:20
+func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Comments.html:20
+	qw422016.N().S(`
+`)
+//line views/vworkspace/vwutil/Comments.html:22
 	icon := "comment-dots"
 	if len(comments) == 0 {
 		icon = "comment-alt"
 	}
 
-//line views/vworkspace/vwutil/Comments.html:19
+//line views/vworkspace/vwutil/Comments.html:26
 	qw422016.N().S(`  <a href="#modal-`)
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.E().S(string(svc))
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`-comments" title="`)
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().D(len(comments))
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(` `)
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.E().S(util.StringPluralMaybe(`comment`, len(comments)))
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`">`)
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	components.StreamSVGRef(qw422016, icon, 18, 18, "", ps)
-//line views/vworkspace/vwutil/Comments.html:20
+//line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`</a>
+`)
+//line views/vworkspace/vwutil/Comments.html:28
+}
+
+//line views/vworkspace/vwutil/Comments.html:28
+func WriteCommentsLink(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Comments.html:28
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwutil/Comments.html:28
+	StreamCommentsLink(qw422016, svc, id, title, comments, ps)
+//line views/vworkspace/vwutil/Comments.html:28
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwutil/Comments.html:28
+}
+
+//line views/vworkspace/vwutil/Comments.html:28
+func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) string {
+//line views/vworkspace/vwutil/Comments.html:28
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwutil/Comments.html:28
+	WriteCommentsLink(qb422016, svc, id, title, comments, ps)
+//line views/vworkspace/vwutil/Comments.html:28
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwutil/Comments.html:28
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwutil/Comments.html:28
+	return qs422016
+//line views/vworkspace/vwutil/Comments.html:28
+}
+
+//line views/vworkspace/vwutil/Comments.html:30
+func StreamCommentsModal(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Comments.html:30
+	qw422016.N().S(`
   <div id="modal-`)
-//line views/vworkspace/vwutil/Comments.html:21
+//line views/vworkspace/vwutil/Comments.html:31
 	qw422016.E().S(string(svc))
-//line views/vworkspace/vwutil/Comments.html:21
+//line views/vworkspace/vwutil/Comments.html:31
 	qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Comments.html:21
+//line views/vworkspace/vwutil/Comments.html:31
 	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Comments.html:21
+//line views/vworkspace/vwutil/Comments.html:31
 	qw422016.N().S(`-comments" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vworkspace/vwutil/Comments.html:26
+//line views/vworkspace/vwutil/Comments.html:36
 	qw422016.E().S(title)
-//line views/vworkspace/vwutil/Comments.html:26
+//line views/vworkspace/vwutil/Comments.html:36
 	qw422016.N().S(` Comments</h2>
       </div>
       <div class="modal-body">
 `)
-//line views/vworkspace/vwutil/Comments.html:29
+//line views/vworkspace/vwutil/Comments.html:39
 	for _, c := range comments {
-//line views/vworkspace/vwutil/Comments.html:29
-		qw422016.N().S(`        <div>`)
-//line views/vworkspace/vwutil/Comments.html:30
-		qw422016.E().V(c)
-//line views/vworkspace/vwutil/Comments.html:30
+//line views/vworkspace/vwutil/Comments.html:41
+		un := c.UserID.String()
+		if m := members.Get(c.UserID); m != nil {
+			un = m.Name
+		}
+
+//line views/vworkspace/vwutil/Comments.html:45
+		qw422016.N().S(`        <div class="right">`)
+//line views/vworkspace/vwutil/Comments.html:46
+		qw422016.E().S(util.TimeRelative(&c.Created))
+//line views/vworkspace/vwutil/Comments.html:46
 		qw422016.N().S(`</div>
-        <hr />
-`)
-//line views/vworkspace/vwutil/Comments.html:32
-	}
-//line views/vworkspace/vwutil/Comments.html:32
-	qw422016.N().S(`        <form action="#" method="post" class="expanded">
-          <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwutil/Comments.html:34
-	qw422016.E().S(string(action.ActComment))
-//line views/vworkspace/vwutil/Comments.html:34
-	qw422016.N().S(`" />
-          <input type="hidden" name="svc" value="`)
-//line views/vworkspace/vwutil/Comments.html:35
-	qw422016.E().S(string(svc))
-//line views/vworkspace/vwutil/Comments.html:35
-	qw422016.N().S(`" />
-          <input type="hidden" name="modelID" value="`)
-//line views/vworkspace/vwutil/Comments.html:36
-	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Comments.html:36
-	qw422016.N().S(`" />
-          <div><textarea name="content" placeholder="Add a comment, Markdown and HTML supported"></textarea></div>
-          <div class="mt right"><button type="submit">Add Comment</button></div>
-        </form>
-      </div>
-    </div>
-  </div>
-`)
-//line views/vworkspace/vwutil/Comments.html:43
-}
-
-//line views/vworkspace/vwutil/Comments.html:43
-func WriteComments(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Comments.html:43
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Comments.html:43
-	StreamComments(qw422016, svc, id, title, allComments, ps)
-//line views/vworkspace/vwutil/Comments.html:43
-	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Comments.html:43
-}
-
-//line views/vworkspace/vwutil/Comments.html:43
-func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Comments.html:43
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Comments.html:43
-	WriteComments(qb422016, svc, id, title, allComments, ps)
-//line views/vworkspace/vwutil/Comments.html:43
-	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Comments.html:43
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Comments.html:43
-	return qs422016
-//line views/vworkspace/vwutil/Comments.html:43
-}
-
-//line views/vworkspace/vwutil/Comments.html:45
-func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Comments.html:45
-	qw422016.N().S(`
-`)
+        <div>`)
 //line views/vworkspace/vwutil/Comments.html:47
-	comments := allComments.GetByModel(svc, id)
-	icon := "comment-dots"
-	if len(comments) == 0 {
-		icon = "comment-alt"
-	}
-
-//line views/vworkspace/vwutil/Comments.html:52
-	qw422016.N().S(`  <a href="#modal-`)
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.E().S(string(svc))
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.N().S(`-comments" title="`)
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.N().D(len(comments))
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.N().S(` `)
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.E().S(util.StringPluralMaybe(`comment`, len(comments)))
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.N().S(`">`)
-//line views/vworkspace/vwutil/Comments.html:53
-	components.StreamSVGRef(qw422016, icon, 18, 18, "", ps)
-//line views/vworkspace/vwutil/Comments.html:53
-	qw422016.N().S(`</a>
-`)
-//line views/vworkspace/vwutil/Comments.html:54
-}
-
-//line views/vworkspace/vwutil/Comments.html:54
-func WriteCommentsLink(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Comments.html:54
-	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Comments.html:54
-	StreamCommentsLink(qw422016, svc, id, title, allComments, ps)
-//line views/vworkspace/vwutil/Comments.html:54
-	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Comments.html:54
-}
-
-//line views/vworkspace/vwutil/Comments.html:54
-func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Comments.html:54
-	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Comments.html:54
-	WriteCommentsLink(qb422016, svc, id, title, allComments, ps)
-//line views/vworkspace/vwutil/Comments.html:54
-	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Comments.html:54
-	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Comments.html:54
-	return qs422016
-//line views/vworkspace/vwutil/Comments.html:54
-}
-
-//line views/vworkspace/vwutil/Comments.html:56
-func StreamCommentsModal(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Comments.html:56
-	qw422016.N().S(`
-`)
-//line views/vworkspace/vwutil/Comments.html:58
-	comments := allComments.GetByModel(svc, id)
-
-//line views/vworkspace/vwutil/Comments.html:59
-	qw422016.N().S(`  <div id="modal-`)
-//line views/vworkspace/vwutil/Comments.html:60
-	qw422016.E().S(string(svc))
-//line views/vworkspace/vwutil/Comments.html:60
-	qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Comments.html:60
-	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Comments.html:60
-	qw422016.N().S(`-comments" class="modal" style="display: none;">
-    <a class="backdrop" href="#"></a>
-    <div class="modal-content">
-      <div class="modal-header">
-        <a href="#" class="modal-close">×</a>
-        <h2>`)
-//line views/vworkspace/vwutil/Comments.html:65
-	qw422016.E().S(title)
-//line views/vworkspace/vwutil/Comments.html:65
-	qw422016.N().S(` Comments</h2>
-      </div>
-      <div class="modal-body">
-`)
-//line views/vworkspace/vwutil/Comments.html:68
-	for _, c := range comments {
-//line views/vworkspace/vwutil/Comments.html:68
-		qw422016.N().S(`        <div>`)
-//line views/vworkspace/vwutil/Comments.html:69
-		qw422016.E().V(c)
-//line views/vworkspace/vwutil/Comments.html:69
+		qw422016.N().S(c.HTML)
+//line views/vworkspace/vwutil/Comments.html:47
 		qw422016.N().S(`</div>
+        <div><em>`)
+//line views/vworkspace/vwutil/Comments.html:48
+		qw422016.E().S(un)
+//line views/vworkspace/vwutil/Comments.html:48
+		qw422016.N().S(`</em></div>
         <hr />
 `)
-//line views/vworkspace/vwutil/Comments.html:71
+//line views/vworkspace/vwutil/Comments.html:50
 	}
-//line views/vworkspace/vwutil/Comments.html:71
+//line views/vworkspace/vwutil/Comments.html:50
 	qw422016.N().S(`        <form action="#" method="post" class="expanded">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwutil/Comments.html:73
+//line views/vworkspace/vwutil/Comments.html:52
 	qw422016.E().S(string(action.ActComment))
-//line views/vworkspace/vwutil/Comments.html:73
+//line views/vworkspace/vwutil/Comments.html:52
 	qw422016.N().S(`" />
           <input type="hidden" name="svc" value="`)
-//line views/vworkspace/vwutil/Comments.html:74
+//line views/vworkspace/vwutil/Comments.html:53
 	qw422016.E().S(string(svc))
-//line views/vworkspace/vwutil/Comments.html:74
+//line views/vworkspace/vwutil/Comments.html:53
 	qw422016.N().S(`" />
           <input type="hidden" name="modelID" value="`)
-//line views/vworkspace/vwutil/Comments.html:75
+//line views/vworkspace/vwutil/Comments.html:54
 	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Comments.html:75
+//line views/vworkspace/vwutil/Comments.html:54
 	qw422016.N().S(`" />
           <div><textarea name="content" placeholder="Add a comment, Markdown and HTML supported"></textarea></div>
           <div class="mt right"><button type="submit">Add Comment</button></div>
@@ -279,31 +218,31 @@ func StreamCommentsModal(qw422016 *qt422016.Writer, svc enum.ModelService, id uu
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
 }
 
-//line views/vworkspace/vwutil/Comments.html:82
-func WriteCommentsModal(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
+func WriteCommentsModal(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Comments.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Comments.html:82
-	StreamCommentsModal(qw422016, svc, id, title, allComments, ps)
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
+	StreamCommentsModal(qw422016, svc, id, title, comments, members, ps)
+//line views/vworkspace/vwutil/Comments.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
 }
 
-//line views/vworkspace/vwutil/Comments.html:82
-func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
+func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) string {
+//line views/vworkspace/vwutil/Comments.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Comments.html:82
-	WriteCommentsModal(qb422016, svc, id, title, allComments, ps)
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
+	WriteCommentsModal(qb422016, svc, id, title, comments, members, ps)
+//line views/vworkspace/vwutil/Comments.html:61
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
 	return qs422016
-//line views/vworkspace/vwutil/Comments.html:82
+//line views/vworkspace/vwutil/Comments.html:61
 }

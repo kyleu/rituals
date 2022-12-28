@@ -58,7 +58,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
       <div class="card">
         <div class="right">`)
 //line views/vworkspace/vwteam/TeamWorkspace.html:33
-	vwutil.StreamComments(qw422016, enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, ps)
+	vwutil.StreamComments(qw422016, enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwteam/TeamWorkspace.html:33
 	qw422016.N().S(`</div>
         <h3><a href="#modal-team-config">`)
@@ -331,7 +331,7 @@ func StreamTeamWorkspaceList(qw422016 *qt422016.Writer, teams team.Teams, showCo
 				qw422016.N().S(`            <div class="right">
               `)
 //line views/vworkspace/vwteam/TeamWorkspace.html:116
-				vwutil.StreamComments(qw422016, enum.ModelServiceTeam, x.ID, x.TitleString(), comments, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwteam/TeamWorkspace.html:116
 				qw422016.N().S(`
             </div>

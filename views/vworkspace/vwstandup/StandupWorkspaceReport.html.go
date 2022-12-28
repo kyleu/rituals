@@ -75,7 +75,7 @@ func StreamStandupWorkspaceReports(qw422016 *qt422016.Writer, w *workspace.FullS
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:28
 			qw422016.N().S(`            <div class="right">`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:29
-			vwutil.StreamComments(qw422016, enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, ps)
+			vwutil.StreamComments(qw422016, enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:29
 			qw422016.N().S(`</div>
             <a href="#modal-report-`)

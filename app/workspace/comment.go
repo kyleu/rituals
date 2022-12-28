@@ -26,7 +26,7 @@ func commentFromForm(frm util.ValueMap, userID uuid.UUID) (*comment.Comment, str
 	if content == "" {
 		return nil, "", errors.New("[content] may not be empty")
 	}
-	html := content
+	html := util.ToHTML(content, true)
 	c := &comment.Comment{ID: util.UUID(), Svc: svc, ModelID: *modelID, UserID: userID, Content: content, HTML: html, Created: time.Now()}
 	u := fmt.Sprintf("#modal-%s-%s-comments", c.Svc, c.ModelID.String())
 

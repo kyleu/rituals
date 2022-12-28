@@ -2,6 +2,7 @@ package rmember
 
 import (
 	"github.com/google/uuid"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/pkg/errors"
 )
 
@@ -22,4 +23,11 @@ func (r RetroMembers) Split(userID uuid.UUID) (*RetroMember, RetroMembers, error
 		return nil, nil, errors.Errorf("user [%s] is not a member", userID.String())
 	}
 	return match, others, nil
+}
+func (r RetroMembers) ToMembers() util.Members {
+	ret := make(util.Members, 0, len(r))
+	for _, x := range r {
+		ret = append(ret, &util.Member{UserID: x.UserID, Name: x.Name, Picture: x.Picture, Role: x.Role})
+	}
+	return ret
 }

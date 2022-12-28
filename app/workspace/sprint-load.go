@@ -26,6 +26,7 @@ type FullSprint struct {
 	Sprint      *sprint.Sprint                `json:"sprint"`
 	Histories   shistory.SprintHistories      `json:"histories,omitempty"`
 	Members     smember.SprintMembers         `json:"members,omitempty"`
+	UtilMembers util.Members                  `json:"-"`
 	Self        *smember.SprintMember         `json:"self,omitempty"`
 	Permissions spermission.SprintPermissions `json:"permissions,omitempty"`
 	Team        *team.Team                    `json:"team,omitempty"`
@@ -68,6 +69,7 @@ func (s *Service) LoadSprint(
 	if err != nil {
 		return nil, err
 	}
+	ret.UtilMembers = ret.Members.ToMembers()
 	ret.Permissions, err = s.sp.GetBySprintID(ctx, tx, spr.ID, params.Get("spermission", nil, logger), logger)
 	if err != nil {
 		return nil, err

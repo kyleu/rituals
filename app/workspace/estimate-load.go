@@ -26,6 +26,7 @@ type FullEstimate struct {
 	Estimate    *estimate.Estimate              `json:"estimate"`
 	Histories   ehistory.EstimateHistories      `json:"histories,omitempty"`
 	Members     emember.EstimateMembers         `json:"members,omitempty"`
+	UtilMembers util.Members                    `json:"-"`
 	Self        *emember.EstimateMember         `json:"self,omitempty"`
 	Permissions epermission.EstimatePermissions `json:"permissions,omitempty"`
 	Team        *team.Team                      `json:"team,omitempty"`
@@ -68,6 +69,7 @@ func (s *Service) LoadEstimate(
 	if err != nil {
 		return nil, err
 	}
+	ret.UtilMembers = ret.Members.ToMembers()
 	ret.Permissions, err = s.ep.GetByEstimateID(ctx, tx, e.ID, params.Get("epermission", nil, logger), logger)
 	if err != nil {
 		return nil, err

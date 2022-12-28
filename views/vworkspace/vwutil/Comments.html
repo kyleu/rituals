@@ -9,15 +9,25 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) %}
+{% func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) %}
   {%- code
     comments := allComments.GetByModel(svc, id)
+  -%}
+  {%= CommentsLink(svc, id, title, comments, ps) %}
+  {%= CommentsModal(svc, id, title, comments, members, ps) %}
+{% endfunc %}
+
+{% func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) %}
+  {%- code
     icon := "comment-dots"
     if len(comments) == 0 {
       icon = "comment-alt"
     }
   -%}
   <a href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
+{% endfunc %}
+
+{% func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div id="modal-{%s string(svc) %}-{%s id.String() %}-comments" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -27,46 +37,15 @@
       </div>
       <div class="modal-body">
         {%- for _, c := range comments -%}
-        <div>{%v c %}</div>
-        <hr />
-        {%- endfor -%}
-        <form action="#" method="post" class="expanded">
-          <input type="hidden" name="action" value="{%s string(action.ActComment) %}" />
-          <input type="hidden" name="svc" value="{%s string(svc) %}" />
-          <input type="hidden" name="modelID" value="{%s id.String() %}" />
-          <div><textarea name="content" placeholder="Add a comment, Markdown and HTML supported"></textarea></div>
-          <div class="mt right"><button type="submit">Add Comment</button></div>
-        </form>
-      </div>
-    </div>
-  </div>
-{% endfunc %}
-
-{% func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) %}
-  {%- code
-    comments := allComments.GetByModel(svc, id)
-    icon := "comment-dots"
-    if len(comments) == 0 {
-      icon = "comment-alt"
-    }
-  -%}
-  <a href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
-{% endfunc %}
-
-{% func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, ps *cutil.PageState) %}
-  {%- code
-    comments := allComments.GetByModel(svc, id)
-  -%}
-  <div id="modal-{%s string(svc) %}-{%s id.String() %}-comments" class="modal" style="display: none;">
-    <a class="backdrop" href="#"></a>
-    <div class="modal-content">
-      <div class="modal-header">
-        <a href="#" class="modal-close">×</a>
-        <h2>{%s title %} Comments</h2>
-      </div>
-      <div class="modal-body">
-        {%- for _, c := range comments -%}
-        <div>{%v c %}</div>
+        {%- code
+          un := c.UserID.String()
+          if m := members.Get(c.UserID); m != nil {
+            un = m.Name
+          }
+        -%}
+        <div class="right">{%s util.TimeRelative(&c.Created) %}</div>
+        <div>{%s= c.HTML %}</div>
+        <div><em>{%s un %}</em></div>
         <hr />
         {%- endfor -%}
         <form action="#" method="post" class="expanded">

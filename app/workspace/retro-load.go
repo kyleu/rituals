@@ -27,6 +27,7 @@ type FullRetro struct {
 	Retro       *retro.Retro                 `json:"retro"`
 	Histories   rhistory.RetroHistories      `json:"histories,omitempty"`
 	Members     rmember.RetroMembers         `json:"members,omitempty"`
+	UtilMembers util.Members                 `json:"-"`
 	Self        *rmember.RetroMember         `json:"self,omitempty"`
 	Permissions rpermission.RetroPermissions `json:"permissions,omitempty"`
 	Team        *team.Team                   `json:"team,omitempty"`
@@ -68,6 +69,7 @@ func (s *Service) LoadRetro(
 	if err != nil {
 		return nil, err
 	}
+	ret.UtilMembers = ret.Members.ToMembers()
 	ret.Permissions, err = s.rp.GetByRetroID(ctx, tx, r.ID, params.Get("rpermission", nil, logger), logger)
 	if err != nil {
 		return nil, err

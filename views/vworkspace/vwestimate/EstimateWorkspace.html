@@ -32,7 +32,7 @@
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
       <div class="card">
-        <div class="right">{%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, ps) %}</div>
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
         <h3><a href="#modal-estimate-config">{%= components.SVGRefIcon(e.IconSafe(), ps) %}{%s e.TitleString() %}</a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
         {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, ps) %}
@@ -122,7 +122,7 @@
           <td>
             {%- if showComments -%}
             <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, ps) %}
+              {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps) %}
             </div>
             {%- endif -%}
             <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>

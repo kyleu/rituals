@@ -26,6 +26,7 @@ type FullTeam struct {
 	Team        *team.Team                  `json:"team"`
 	Histories   thistory.TeamHistories      `json:"histories,omitempty"`
 	Members     tmember.TeamMembers         `json:"members,omitempty"`
+	UtilMembers util.Members                `json:"-"`
 	Self        *tmember.TeamMember         `json:"self,omitempty"`
 	Permissions tpermission.TeamPermissions `json:"permissions,omitempty"`
 	Sprints     sprint.Sprints              `json:"sprints,omitempty"`
@@ -68,7 +69,7 @@ func (s *Service) LoadTeam(
 	if err != nil {
 		return nil, err
 	}
-
+	ret.UtilMembers = ret.Members.ToMembers()
 	ret.Permissions, err = s.tp.GetByTeamID(ctx, tx, t.ID, params.Get("tpermission", nil, logger), logger)
 	if err != nil {
 		return nil, err

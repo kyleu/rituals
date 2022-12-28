@@ -60,7 +60,7 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
       <div class="card">
         <div class="right">`)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:35
-	vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, ps)
+	vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:35
 	qw422016.N().S(`</div>
         <h3><a href="#modal-estimate-config">`)
@@ -348,7 +348,7 @@ func StreamEstimateWorkspaceList(qw422016 *qt422016.Writer, estimates estimate.E
 				qw422016.N().S(`            <div class="right">
               `)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:125
-				vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:125
 				qw422016.N().S(`
             </div>

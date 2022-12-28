@@ -73,7 +73,7 @@ func retroFeedbackAdd(
 ) (*FullRetro, string, string, error) {
 	category := frm.GetStringOpt("category")
 	content := frm.GetStringOpt("content")
-	html := util.ToHTML(content)
+	html := util.ToHTML(content, true)
 	f := &feedback.Feedback{
 		ID: util.UUID(), RetroID: fu.Retro.ID, Category: category, UserID: userID, Content: content, HTML: html, Created: time.Now(),
 	}
@@ -97,7 +97,7 @@ func retroFeedbackUpdate(
 	}
 	category := frm.GetStringOpt("category")
 	content := frm.GetStringOpt("content")
-	html := util.ToHTML(content)
+	html := util.ToHTML(content, true)
 	f := &feedback.Feedback{
 		ID: *id, RetroID: fu.Retro.ID, Category: category, UserID: userID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
 	}
