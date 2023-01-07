@@ -98,7 +98,6 @@ function getSubscriptionUrl() {
     onEditOperationName: onEditOperationName,
     headerEditorEnabled: true,
     shouldPersistHeaders: true,
-    inputValueDeprecation: GraphQLVersion.includes('15.5') ? undefined : true,
     tabs: {onTabChange: onTabChange}
   }
   ReactDOM.render(

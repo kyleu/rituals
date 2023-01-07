@@ -3,13 +3,3 @@
   height: 100%;
   box-sizing: unset;
 }
-
-#graphiql .tabs {
-  margin: 0;
-  border: 0;
-}
-
-#graphiql input {
-  color: #000000;
-  background-color: #ffffff;
-}
