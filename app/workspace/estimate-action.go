@@ -25,17 +25,17 @@ func (s *Service) ActionEstimate(
 	}
 	switch act {
 	case action.ActUpdate:
-		return estimateUpdate(ctx, fe, userID, frm, slug, s, logger)
+		return estimateUpdate(ctx, fe, frm, slug, s, logger)
 	case action.ActStoryAdd:
-		return estimateStoryAdd(ctx, fe, userID, frm, s, logger)
+		return estimateStoryAdd(ctx, fe, frm, s, logger)
 	case action.ActStoryUpdate:
-		return estimateStoryUpdate(ctx, fe, userID, frm, s, logger)
+		return estimateStoryUpdate(ctx, fe, frm, s, logger)
 	case action.ActStoryStatus:
-		return estimateStoryStatus(ctx, fe, userID, frm, s, logger)
+		return estimateStoryStatus(ctx, fe, frm, s, logger)
 	case action.ActVote:
-		return estimateStoryVote(ctx, fe, userID, frm, s, logger)
+		return estimateStoryVote(ctx, fe, frm, s, logger)
 	case action.ActStoryRemove:
-		return estimateStoryRemove(ctx, fe, userID, frm, s, logger)
+		return estimateStoryRemove(ctx, fe, frm, s, logger)
 	case action.ActMemberUpdate:
 		return estimateMemberUpdate(ctx, fe, frm, s, logger)
 	case action.ActMemberRemove:
@@ -51,9 +51,7 @@ func (s *Service) ActionEstimate(
 	}
 }
 
-func estimateUpdate(
-	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
-) (*FullEstimate, string, string, error) {
+func estimateUpdate(ctx context.Context, fe *FullEstimate, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	tgt := fe.Estimate.Clone()
 	tgt.Title = frm.GetStringOpt("title")
 	tgt.Slug = frm.GetStringOpt("slug")
@@ -66,7 +64,7 @@ func estimateUpdate(
 	tgt.Choices = util.StringSplitAndTrim(frm.GetStringOpt("choices"), ",")
 	tgt.TeamID, _ = frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = frm.GetUUID(util.KeySprint, true)
-	model, err := s.SaveEstimate(ctx, tgt, userID, nil, logger)
+	model, err := s.SaveEstimate(ctx, tgt, fe.Self.UserID, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -74,15 +72,13 @@ func estimateUpdate(
 	return fe, "Estimate saved", model.PublicWebPath(), nil
 }
 
-func estimateStoryAdd(
-	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullEstimate, string, string, error) {
+func estimateStoryAdd(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	title := strings.TrimSpace(frm.GetStringOpt("title"))
 	if title == "" {
 		return nil, "", "", errors.New("must provide [title]")
 	}
 	st := &story.Story{
-		ID: util.UUID(), EstimateID: fe.Estimate.ID, Idx: len(fe.Stories), UserID: userID, Title: title, Status: enum.SessionStatusNew, Created: time.Now(),
+		ID: util.UUID(), EstimateID: fe.Estimate.ID, Idx: len(fe.Stories), UserID: fe.Self.UserID, Title: title, Status: enum.SessionStatusNew, Created: time.Now(),
 	}
 	err := s.st.Create(ctx, nil, logger, st)
 	if err != nil {
@@ -91,9 +87,7 @@ func estimateStoryAdd(
 	return fe, "Story added", st.PublicWebPath(fe.Estimate.Slug), nil
 }
 
-func estimateStoryUpdate(
-	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullEstimate, string, string, error) {
+func estimateStoryUpdate(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	id, _ := frm.GetUUID("storyID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [storyID]")
@@ -106,7 +100,7 @@ func estimateStoryUpdate(
 	if title == "" {
 		return nil, "", "", errors.New("must provide [title]")
 	}
-	st := &story.Story{ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: userID, Title: title, Status: curr.Status, Created: curr.Created}
+	st := &story.Story{ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: fe.Self.UserID, Title: title, Status: curr.Status, Created: curr.Created}
 	err := s.st.Update(ctx, nil, st, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
@@ -114,9 +108,7 @@ func estimateStoryUpdate(
 	return fe, "Story saved", st.PublicWebPath(fe.Estimate.Slug), nil
 }
 
-func estimateStoryStatus(
-	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullEstimate, string, string, error) {
+func estimateStoryStatus(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	id, _ := frm.GetUUID("storyID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [storyID]")
@@ -130,7 +122,7 @@ func estimateStoryStatus(
 		return nil, "", "", errors.New("must provide [status]")
 	}
 	status := enum.SessionStatus(statusStr)
-	st := &story.Story{ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: userID, Title: curr.Title, Status: status, Created: curr.Created}
+	st := &story.Story{ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: fe.Self.UserID, Title: curr.Title, Status: status, Created: curr.Created}
 	err := s.st.Update(ctx, nil, st, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save new status for story")
@@ -138,9 +130,7 @@ func estimateStoryStatus(
 	return fe, "Story status updated", st.PublicWebPath(fe.Estimate.Slug), nil
 }
 
-func estimateStoryVote(
-	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullEstimate, string, string, error) {
+func estimateStoryVote(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	id, _ := frm.GetUUID("storyID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [storyID]")
@@ -156,9 +146,9 @@ func estimateStoryVote(
 	if !slices.Contains(fe.Estimate.Choices, voteStr) {
 		return nil, "", "", errors.Errorf("vote choice [%s] is not one of the valid choices [%s]", voteStr, strings.Join(fe.Estimate.Choices, ", "))
 	}
-	v := fe.Votes.Get(*id, userID)
+	v := fe.Votes.Get(*id, fe.Self.UserID)
 	if v == nil {
-		v = &vote.Vote{StoryID: *id, UserID: userID, Created: time.Now()}
+		v = &vote.Vote{StoryID: *id, UserID: fe.Self.UserID, Created: time.Now()}
 	}
 	v.Choice = voteStr
 	err := s.v.Save(ctx, nil, logger, v)
@@ -168,9 +158,7 @@ func estimateStoryVote(
 	return fe, "Vote recorded", currStory.PublicWebPath(fe.Estimate.Slug), nil
 }
 
-func estimateStoryRemove(
-	ctx context.Context, fe *FullEstimate, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullEstimate, string, string, error) {
+func estimateStoryRemove(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s *Service, logger util.Logger) (*FullEstimate, string, string, error) {
 	id, _ := frm.GetUUID("storyID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
@@ -216,6 +204,10 @@ func estimateMemberUpdate(ctx context.Context, fe *FullEstimate, frm util.ValueM
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, curr, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fe, "Member updated", fe.Estimate.PublicWebPath(), nil
 }
 
@@ -238,6 +230,10 @@ func estimateMemberRemove(ctx context.Context, fe *FullEstimate, frm util.ValueM
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberRemove, userID, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fe, "Member removed", fe.Estimate.PublicWebPath(), nil
 }
 
@@ -257,6 +253,11 @@ func estimateUpdateSelf(ctx context.Context, fe *FullEstimate, frm util.ValueMap
 	}
 	if choice == "global" {
 		return nil, "", "", errors.New("can't change global name yet")
+	}
+	arg := util.ValueMap{"userID": fe.Self.UserID, "name": name}
+	err = s.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, arg, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fe, "Profile edited", fe.Estimate.PublicWebPath(), nil
 }
@@ -282,6 +283,10 @@ func estimateComment(ctx context.Context, fe *FullEstimate, frm util.ValueMap, s
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
 	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = s.send(enum.ModelServiceEstimate, c.ModelID, action.ActComment, c, &fe.Self.UserID, logger)
 	if err != nil {
 		return nil, "", "", err
 	}

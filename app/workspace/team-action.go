@@ -21,7 +21,7 @@ func (s *Service) ActionTeam(
 
 	switch act {
 	case action.ActUpdate:
-		return teamUpdate(ctx, ft, userID, frm, slug, s, logger)
+		return teamUpdate(ctx, ft, frm, slug, s, logger)
 	case action.ActMemberUpdate:
 		return teamMemberUpdate(ctx, ft, frm, s, logger)
 	case action.ActMemberRemove:
@@ -37,9 +37,7 @@ func (s *Service) ActionTeam(
 	}
 }
 
-func teamUpdate(
-	ctx context.Context, ft *FullTeam, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
-) (*FullTeam, string, string, error) {
+func teamUpdate(ctx context.Context, ft *FullTeam, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
 	tgt := ft.Team.Clone()
 	tgt.Title = frm.GetStringOpt("title")
 	tgt.Slug = frm.GetStringOpt("slug")
@@ -49,7 +47,7 @@ func teamUpdate(
 	tgt.Slug = s.r.Slugify(ctx, tgt.ID, tgt.Slug, slug, s.rh, nil, logger)
 	tgt.Icon = frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
-	model, err := s.SaveTeam(ctx, tgt, userID, nil, logger)
+	model, err := s.SaveTeam(ctx, tgt, ft.Self.UserID, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -57,11 +55,11 @@ func teamUpdate(
 	return ft, "Team saved", model.PublicWebPath(), nil
 }
 
-func teamMemberUpdate(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
-	if fe.Self == nil {
+func teamMemberUpdate(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
-	if fe.Self.Role != enum.MemberStatusOwner {
+	if ft.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this team")
 	}
 	userID, _ := frm.GetUUID("userID", false)
@@ -72,7 +70,7 @@ func teamMemberUpdate(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *S
 	if role == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
-	curr := fe.Members.Get(fe.Team.ID, *userID)
+	curr := ft.Members.Get(ft.Team.ID, *userID)
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
@@ -81,7 +79,11 @@ func teamMemberUpdate(ctx context.Context, fe *FullTeam, frm util.ValueMap, s *S
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fe, "Member updated", fe.Team.PublicWebPath(), nil
+	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, curr, &ft.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	return ft, "Member updated", ft.Team.PublicWebPath(), nil
 }
 
 func teamMemberRemove(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
@@ -100,6 +102,10 @@ func teamMemberRemove(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *S
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
 	err := s.tm.Delete(ctx, nil, curr.TeamID, curr.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberRemove, userID, &ft.Self.UserID, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -122,6 +128,11 @@ func teamUpdateSelf(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Ser
 	}
 	if choice == "global" {
 		return nil, "", "", errors.New("can't change global name yet")
+	}
+	arg := util.ValueMap{"userID": ft.Self.UserID, "name": name}
+	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, arg, &ft.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return ft, "Profile edited", ft.Team.PublicWebPath(), nil
 }
@@ -159,6 +170,10 @@ func teamComment(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Servic
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
 	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = s.send(enum.ModelServiceTeam, c.ModelID, action.ActComment, c, &ft.Self.UserID, logger)
 	if err != nil {
 		return nil, "", "", err
 	}

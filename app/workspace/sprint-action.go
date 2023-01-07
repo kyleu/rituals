@@ -21,7 +21,7 @@ func (s *Service) ActionSprint(
 
 	switch act {
 	case action.ActUpdate:
-		return sprintUpdate(ctx, fs, userID, frm, slug, s, logger)
+		return sprintUpdate(ctx, fs, frm, slug, s, logger)
 	case action.ActMemberUpdate:
 		return sprintMemberUpdate(ctx, fs, frm, s, logger)
 	case action.ActMemberRemove:
@@ -37,9 +37,7 @@ func (s *Service) ActionSprint(
 	}
 }
 
-func sprintUpdate(
-	ctx context.Context, fs *FullSprint, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
-) (*FullSprint, string, string, error) {
+func sprintUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
 	tgt := fs.Sprint.Clone()
 	tgt.Title = frm.GetStringOpt("title")
 	tgt.Slug = frm.GetStringOpt("slug")
@@ -52,7 +50,7 @@ func sprintUpdate(
 	tgt.StartDate, _ = frm.GetTime("startDate", false)
 	tgt.EndDate, _ = frm.GetTime("endDate", false)
 	tgt.TeamID, _ = frm.GetUUID(util.KeyTeam, true)
-	model, err := s.SaveSprint(ctx, tgt, userID, nil, logger)
+	model, err := s.SaveSprint(ctx, tgt, fs.Self.UserID, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -84,6 +82,10 @@ func sprintMemberUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, 
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, curr, &fs.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fs, "Member updated", fs.Sprint.PublicWebPath(), nil
 }
 
@@ -106,6 +108,10 @@ func sprintMemberRemove(ctx context.Context, fs *FullSprint, frm util.ValueMap, 
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberRemove, userID, &fs.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fs, "Member removed", fs.Sprint.PublicWebPath(), nil
 }
 
@@ -125,6 +131,11 @@ func sprintUpdateSelf(ctx context.Context, fs *FullSprint, frm util.ValueMap, s 
 	}
 	if choice == "global" {
 		return nil, "", "", errors.New("can't change global name yet")
+	}
+	arg := util.ValueMap{"userID": fs.Self.UserID, "name": name}
+	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, arg, &fs.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fs, "Profile edited", fs.Sprint.PublicWebPath(), nil
 }
@@ -158,6 +169,10 @@ func sprintComment(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Se
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
 	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = s.send(enum.ModelServiceSprint, c.ModelID, action.ActComment, c, &fs.Self.UserID, logger)
 	if err != nil {
 		return nil, "", "", err
 	}

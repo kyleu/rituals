@@ -23,13 +23,13 @@ func (s *Service) ActionRetro(
 
 	switch act {
 	case action.ActUpdate:
-		return retroUpdate(ctx, fr, userID, frm, slug, s, logger)
+		return retroUpdate(ctx, fr, frm, slug, s, logger)
 	case action.ActFeedbackAdd:
-		return retroFeedbackAdd(ctx, fr, userID, frm, s, logger)
+		return retroFeedbackAdd(ctx, fr, frm, s, logger)
 	case action.ActFeedbackUpdate:
-		return retroFeedbackUpdate(ctx, fr, userID, frm, s, logger)
+		return retroFeedbackUpdate(ctx, fr, frm, s, logger)
 	case action.ActFeedbackRemove:
-		return retroFeedbackRemove(ctx, fr, userID, frm, s, logger)
+		return retroFeedbackRemove(ctx, fr, frm, s, logger)
 	case action.ActMemberUpdate:
 		return retroMemberUpdate(ctx, fr, frm, s, logger)
 	case action.ActMemberRemove:
@@ -46,7 +46,7 @@ func (s *Service) ActionRetro(
 }
 
 func retroUpdate(
-	ctx context.Context, fr *FullRetro, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
+	ctx context.Context, fr *FullRetro, frm util.ValueMap, slug string, s *Service, logger util.Logger,
 ) (*FullRetro, string, string, error) {
 	tgt := fr.Retro.Clone()
 	tgt.Title = frm.GetStringOpt("title")
@@ -60,7 +60,7 @@ func retroUpdate(
 	tgt.Categories = util.StringSplitAndTrim(frm.GetStringOpt("categories"), ",")
 	tgt.TeamID, _ = frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = frm.GetUUID(util.KeySprint, true)
-	model, err := s.SaveRetro(ctx, tgt, userID, nil, logger)
+	model, err := s.SaveRetro(ctx, tgt, fr.Self.UserID, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -68,30 +68,26 @@ func retroUpdate(
 	return fr, "Retro saved", model.PublicWebPath(), nil
 }
 
-func retroFeedbackAdd(
-	ctx context.Context, fu *FullRetro, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullRetro, string, string, error) {
+func retroFeedbackAdd(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
 	category := frm.GetStringOpt("category")
 	content := frm.GetStringOpt("content")
 	html := util.ToHTML(content, true)
 	f := &feedback.Feedback{
-		ID: util.UUID(), RetroID: fu.Retro.ID, Category: category, UserID: userID, Content: content, HTML: html, Created: time.Now(),
+		ID: util.UUID(), RetroID: fr.Retro.ID, Category: category, UserID: fr.Self.UserID, Content: content, HTML: html, Created: time.Now(),
 	}
 	err := s.f.Create(ctx, nil, logger, f)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	return fu, "Feedback added", fu.Retro.PublicWebPath(), nil
+	return fr, "Feedback added", fr.Retro.PublicWebPath(), nil
 }
 
-func retroFeedbackUpdate(
-	ctx context.Context, fu *FullRetro, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullRetro, string, string, error) {
+func retroFeedbackUpdate(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
 	id, _ := frm.GetUUID("feedbackID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
 	}
-	curr := fu.Feedbacks.Get(*id)
+	curr := fr.Feedbacks.Get(*id)
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no feedback found with id [%s]", id.String())
 	}
@@ -99,18 +95,16 @@ func retroFeedbackUpdate(
 	content := frm.GetStringOpt("content")
 	html := util.ToHTML(content, true)
 	f := &feedback.Feedback{
-		ID: *id, RetroID: fu.Retro.ID, Category: category, UserID: userID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
+		ID: *id, RetroID: fr.Retro.ID, Category: category, UserID: fr.Self.UserID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
 	}
 	err := s.f.Update(ctx, nil, f, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	return fu, "Feedback saved", fu.Retro.PublicWebPath(), nil
+	return fr, "Feedback saved", fr.Retro.PublicWebPath(), nil
 }
 
-func retroFeedbackRemove(
-	ctx context.Context, fr *FullRetro, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullRetro, string, string, error) {
+func retroFeedbackRemove(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Service, logger util.Logger) (*FullRetro, string, string, error) {
 	id, _ := frm.GetUUID("feedbackID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
@@ -150,6 +144,10 @@ func retroMemberUpdate(ctx context.Context, fr *FullRetro, frm util.ValueMap, s 
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, curr, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fr, "Member updated", fr.Retro.PublicWebPath(), nil
 }
 
@@ -172,6 +170,10 @@ func retroMemberRemove(ctx context.Context, fr *FullRetro, frm util.ValueMap, s 
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberRemove, userID, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fr, "Member removed", fr.Retro.PublicWebPath(), nil
 }
 
@@ -191,6 +193,11 @@ func retroUpdateSelf(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *S
 	}
 	if choice == "global" {
 		return nil, "", "", errors.New("can't change global name yet")
+	}
+	arg := util.ValueMap{"userID": fr.Self.UserID, "name": name}
+	err = s.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, arg, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fr, "Profile edited", fr.Retro.PublicWebPath(), nil
 }
@@ -216,6 +223,10 @@ func retroComment(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *Serv
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
 	err = s.c.Save(ctx, nil, logger, c)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = s.send(enum.ModelServiceRetro, c.ModelID, action.ActComment, c, &fr.Self.UserID, logger)
 	if err != nil {
 		return nil, "", "", err
 	}

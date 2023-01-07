@@ -22,13 +22,13 @@ func (s *Service) ActionStandup(
 	}
 	switch act {
 	case action.ActUpdate:
-		return standupUpdate(ctx, fu, userID, frm, slug, s, logger)
+		return standupUpdate(ctx, fu, frm, slug, s, logger)
 	case action.ActReportAdd:
-		return standupReportAdd(ctx, fu, userID, frm, s, logger)
+		return standupReportAdd(ctx, fu, frm, s, logger)
 	case action.ActReportUpdate:
-		return standupReportUpdate(ctx, fu, userID, frm, s, logger)
+		return standupReportUpdate(ctx, fu, frm, s, logger)
 	case action.ActReportRemove:
-		return standupReportRemove(ctx, fu, userID, frm, s, logger)
+		return standupReportRemove(ctx, fu, frm, s, logger)
 	case action.ActMemberUpdate:
 		return standupMemberUpdate(ctx, fu, frm, s, logger)
 	case action.ActMemberRemove:
@@ -44,9 +44,7 @@ func (s *Service) ActionStandup(
 	}
 }
 
-func standupUpdate(
-	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, slug string, s *Service, logger util.Logger,
-) (*FullStandup, string, string, error) {
+func standupUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
 	tgt := fu.Standup.Clone()
 	tgt.Title = frm.GetStringOpt("title")
 	tgt.Slug = frm.GetStringOpt("slug")
@@ -58,7 +56,7 @@ func standupUpdate(
 	tgt.Icon = tgt.IconSafe()
 	tgt.TeamID, _ = frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = frm.GetUUID(util.KeySprint, true)
-	model, err := s.SaveStandup(ctx, tgt, userID, nil, logger)
+	model, err := s.SaveStandup(ctx, tgt, fu.Self.UserID, nil, logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -66,9 +64,7 @@ func standupUpdate(
 	return fu, "Standup saved", model.PublicWebPath(), nil
 }
 
-func standupReportAdd(
-	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullStandup, string, string, error) {
+func standupReportAdd(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
 	day, _ := frm.GetTime("day", false)
 	if day == nil {
 		return nil, "", "", errors.New("must provide [day]")
@@ -77,7 +73,7 @@ func standupReportAdd(
 	content := frm.GetStringOpt("content")
 	html := util.ToHTML(content, true)
 	rpt := &report.Report{
-		ID: util.UUID(), StandupID: fu.Standup.ID, Day: *day, UserID: userID, Content: content, HTML: html, Created: time.Now(),
+		ID: util.UUID(), StandupID: fu.Standup.ID, Day: *day, UserID: fu.Self.UserID, Content: content, HTML: html, Created: time.Now(),
 	}
 	err := s.rt.Create(ctx, nil, logger, rpt)
 	if err != nil {
@@ -86,9 +82,7 @@ func standupReportAdd(
 	return fu, "Report added", fu.Standup.PublicWebPath(), nil
 }
 
-func standupReportUpdate(
-	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullStandup, string, string, error) {
+func standupReportUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
 	id, _ := frm.GetUUID("reportID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
@@ -105,7 +99,7 @@ func standupReportUpdate(
 	content := frm.GetStringOpt("content")
 	html := util.ToHTML(content, true)
 	rpt := &report.Report{
-		ID: *id, StandupID: fu.Standup.ID, Day: *day, UserID: userID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
+		ID: *id, StandupID: fu.Standup.ID, Day: *day, UserID: fu.Self.UserID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
 	}
 	err := s.rt.Update(ctx, nil, rpt, logger)
 	if err != nil {
@@ -114,9 +108,7 @@ func standupReportUpdate(
 	return fu, "Report saved", fu.Standup.PublicWebPath(), nil
 }
 
-func standupReportRemove(
-	ctx context.Context, fu *FullStandup, userID uuid.UUID, frm util.ValueMap, s *Service, logger util.Logger,
-) (*FullStandup, string, string, error) {
+func standupReportRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
 	id, _ := frm.GetUUID("reportID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
@@ -156,6 +148,10 @@ func standupMemberUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, curr, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fu, "Member updated", fu.Standup.PublicWebPath(), nil
 }
 
@@ -178,6 +174,10 @@ func standupMemberRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberRemove, userID, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fu, "Member removed", fu.Standup.PublicWebPath(), nil
 }
 
@@ -197,6 +197,11 @@ func standupUpdateSelf(ctx context.Context, fu *FullStandup, frm util.ValueMap, 
 	}
 	if choice == "global" {
 		return nil, "", "", errors.New("can't change global name yet")
+	}
+	arg := util.ValueMap{"userID": fu.Self.UserID, "name": name}
+	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, arg, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fu, "Profile edited", fu.Standup.PublicWebPath(), nil
 }
@@ -225,5 +230,10 @@ func standupComment(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *
 	if err != nil {
 		return nil, "", "", err
 	}
+	err = s.send(enum.ModelServiceStandup, c.ModelID, action.ActComment, c, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+
 	return fu, "Comment added", fu.Standup.PublicWebPath() + u, nil
 }

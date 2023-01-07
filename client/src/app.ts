@@ -4,6 +4,7 @@ function open() {
 }
 
 function recv(m: any) {
+  console.log("[socket]: receive " + JSON.stringify(m, null, 2));
   const list = document.getElementById("socket-list");
   if (list) {
     const pre = document.createElement("pre");
