@@ -57,10 +57,9 @@ func (s *Service) SaveStandup(ctx context.Context, u *standup.Standup, user uuid
 		if err != nil {
 			return nil, err
 		}
-		curr.Slug = u.Slug
 	}
 
-	err = s.u.Update(ctx, tx, u, logger)
+	err = s.u.Save(ctx, tx, logger, u)
 	if err != nil {
 		return nil, err
 	}
@@ -71,5 +70,5 @@ func (s *Service) SaveStandup(ctx context.Context, u *standup.Standup, user uuid
 		return nil, err
 	}
 
-	return curr, nil
+	return u, nil
 }

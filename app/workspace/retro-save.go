@@ -57,14 +57,13 @@ func (s *Service) SaveRetro(ctx context.Context, r *retro.Retro, user uuid.UUID,
 		if err != nil {
 			return nil, err
 		}
-		curr.Slug = r.Slug
 	}
 
 	if len(r.Categories) == 0 {
 		r.Categories = RetroDefaultCategories
 	}
 
-	err = s.r.Update(ctx, tx, r, logger)
+	err = s.r.Save(ctx, tx, logger, r)
 	if err != nil {
 		return nil, err
 	}
@@ -75,5 +74,5 @@ func (s *Service) SaveRetro(ctx context.Context, r *retro.Retro, user uuid.UUID,
 		return nil, err
 	}
 
-	return curr, nil
+	return r, nil
 }

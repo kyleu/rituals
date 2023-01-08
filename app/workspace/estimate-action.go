@@ -70,6 +70,10 @@ func estimateUpdate(ctx context.Context, fe *FullEstimate, frm util.ValueMap, sl
 		return nil, "", "", err
 	}
 	fe.Estimate = model
+	err = s.send(enum.ModelServiceEstimate, fe.Team.ID, action.ActUpdate, model, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fe, "Estimate saved", model.PublicWebPath(), nil
 }
 
@@ -84,6 +88,10 @@ func estimateStoryAdd(ctx context.Context, fe *FullEstimate, frm util.ValueMap, 
 	err := s.st.Create(ctx, nil, logger, st)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
+	}
+	err = s.send(enum.ModelServiceEstimate, fe.Team.ID, action.ActStoryAdd, st, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fe, "Story added", st.PublicWebPath(fe.Estimate.Slug), nil
 }
@@ -106,6 +114,10 @@ func estimateStoryUpdate(ctx context.Context, fe *FullEstimate, frm util.ValueMa
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
 	}
+	err = s.send(enum.ModelServiceEstimate, fe.Team.ID, action.ActStoryUpdate, st, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fe, "Story saved", st.PublicWebPath(fe.Estimate.Slug), nil
 }
 
@@ -127,6 +139,10 @@ func estimateStoryStatus(ctx context.Context, fe *FullEstimate, frm util.ValueMa
 	err := s.st.Update(ctx, nil, st, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save new status for story")
+	}
+	err = s.send(enum.ModelServiceEstimate, fe.Team.ID, action.ActStoryStatus, st, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fe, "Story status updated", st.PublicWebPath(fe.Estimate.Slug), nil
 }
@@ -156,6 +172,10 @@ func estimateStoryVote(ctx context.Context, fe *FullEstimate, frm util.ValueMap,
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save vote for story")
 	}
+	err = s.send(enum.ModelServiceEstimate, fe.Team.ID, action.ActVote, v, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fe, "Vote recorded", currStory.PublicWebPath(fe.Estimate.Slug), nil
 }
 
@@ -177,6 +197,10 @@ func estimateStoryRemove(ctx context.Context, fe *FullEstimate, frm util.ValueMa
 	err := s.st.Delete(ctx, nil, *id, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete story")
+	}
+	err = s.send(enum.ModelServiceEstimate, fe.Team.ID, action.ActStoryRemove, id, &fe.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fe, "Story deleted", fe.Estimate.PublicWebPath(), nil
 }

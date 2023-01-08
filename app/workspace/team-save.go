@@ -55,10 +55,9 @@ func (s *Service) SaveTeam(ctx context.Context, t *team.Team, user uuid.UUID, tx
 		if err != nil {
 			return nil, err
 		}
-		curr.Slug = t.Slug
 	}
 
-	err = s.t.Update(ctx, tx, t, logger)
+	err = s.t.Save(ctx, tx, logger, t)
 	if err != nil {
 		return nil, err
 	}
@@ -69,5 +68,5 @@ func (s *Service) SaveTeam(ctx context.Context, t *team.Team, user uuid.UUID, tx
 		return nil, err
 	}
 
-	return curr, nil
+	return t, nil
 }

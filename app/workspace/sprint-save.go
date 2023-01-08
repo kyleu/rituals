@@ -55,10 +55,9 @@ func (s *Service) SaveSprint(ctx context.Context, spr *sprint.Sprint, user uuid.
 		if err != nil {
 			return nil, err
 		}
-		curr.Slug = spr.Slug
 	}
 
-	err = s.s.Update(ctx, tx, spr, logger)
+	err = s.s.Save(ctx, tx, logger, spr)
 	if err != nil {
 		return nil, err
 	}
@@ -69,5 +68,5 @@ func (s *Service) SaveSprint(ctx context.Context, spr *sprint.Sprint, user uuid.
 		return nil, err
 	}
 
-	return curr, nil
+	return spr, nil
 }

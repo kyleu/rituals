@@ -62,6 +62,10 @@ func standupUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, slug
 		return nil, "", "", err
 	}
 	fu.Standup = model
+	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActUpdate, model, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fu, "Standup saved", model.PublicWebPath(), nil
 }
 
@@ -79,6 +83,10 @@ func standupReportAdd(ctx context.Context, fu *FullStandup, frm util.ValueMap, s
 	err := s.rt.Create(ctx, nil, logger, rpt)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
+	}
+	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportAdd, rpt, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fu, "Report added", fu.Standup.PublicWebPath(), nil
 }
@@ -106,6 +114,10 @@ func standupReportUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
+	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fu, "Report saved", fu.Standup.PublicWebPath(), nil
 }
 
@@ -121,6 +133,10 @@ func standupReportRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	err := s.rt.Delete(ctx, nil, *id, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete report")
+	}
+	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportRemove, id, &fu.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fu, "Report deleted", fu.Standup.PublicWebPath(), nil
 }

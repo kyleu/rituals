@@ -66,6 +66,10 @@ func retroUpdate(
 		return nil, "", "", err
 	}
 	fr.Retro = model
+	err = s.send(enum.ModelServiceRetro, fr.Team.ID, action.ActUpdate, model, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fr, "Retro saved", model.PublicWebPath(), nil
 }
 
@@ -79,6 +83,10 @@ func retroFeedbackAdd(ctx context.Context, fr *FullRetro, frm util.ValueMap, s *
 	err := s.f.Create(ctx, nil, logger, f)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
+	}
+	err = s.send(enum.ModelServiceRetro, fr.Team.ID, action.ActFeedbackAdd, f, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fr, "Feedback added", fr.Retro.PublicWebPath(), nil
 }
@@ -102,6 +110,10 @@ func retroFeedbackUpdate(ctx context.Context, fr *FullRetro, frm util.ValueMap, 
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
+	err = s.send(enum.ModelServiceRetro, fr.Team.ID, action.ActFeedbackUpdate, f, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fr, "Feedback saved", fr.Retro.PublicWebPath(), nil
 }
 
@@ -117,6 +129,10 @@ func retroFeedbackRemove(ctx context.Context, fr *FullRetro, frm util.ValueMap, 
 	err := s.f.Delete(ctx, nil, *id, logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete feedback")
+	}
+	err = s.send(enum.ModelServiceRetro, fr.Team.ID, action.ActFeedbackRemove, id, &fr.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
 	}
 	return fr, "Feedback deleted", fr.Retro.PublicWebPath(), nil
 }

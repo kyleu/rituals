@@ -53,6 +53,10 @@ func teamUpdate(ctx context.Context, ft *FullTeam, frm util.ValueMap, slug strin
 		return nil, "", "", err
 	}
 	ft.Team = model
+	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return ft, "Team saved", model.PublicWebPath(), nil
 }
 

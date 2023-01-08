@@ -56,6 +56,10 @@ func sprintUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, slug s
 		return nil, "", "", err
 	}
 	fs.Sprint = model
+	err = s.send(enum.ModelServiceSprint, fs.Team.ID, action.ActUpdate, model, &fs.Self.UserID, logger)
+	if err != nil {
+		return nil, "", "", err
+	}
 	return fs, "Sprint saved", model.PublicWebPath(), nil
 }
 

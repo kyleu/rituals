@@ -59,14 +59,13 @@ func (s *Service) SaveEstimate(ctx context.Context, e *estimate.Estimate, user u
 		if err != nil {
 			return nil, err
 		}
-		curr.Slug = e.Slug
 	}
 
 	if len(e.Choices) == 0 {
 		e.Choices = DefaultEstimateChoices
 	}
 
-	err = s.e.Update(ctx, tx, e, logger)
+	err = s.e.Save(ctx, tx, logger, e)
 	if err != nil {
 		return nil, err
 	}
@@ -77,5 +76,5 @@ func (s *Service) SaveEstimate(ctx context.Context, e *estimate.Estimate, user u
 		return nil, err
 	}
 
-	return curr, nil
+	return e, nil
 }
