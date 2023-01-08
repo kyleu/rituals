@@ -19,7 +19,8 @@ import (
 func (s *Service) ActionEstimate(
 	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullEstimate, string, string, error) {
-	fe, err := s.LoadEstimate(ctx, slug, userID, "", nil, nil, logger)
+	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
+	fe, err := s.LoadEstimate(p)
 	if err != nil {
 		return nil, "", "", err
 	}

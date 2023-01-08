@@ -14,7 +14,8 @@ import (
 func (s *Service) ActionTeam(
 	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullTeam, string, string, error) {
-	ft, err := s.LoadTeam(ctx, slug, userID, "", nil, nil, logger)
+	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
+	ft, err := s.LoadTeam(p)
 	if err != nil {
 		return nil, "", "", err
 	}

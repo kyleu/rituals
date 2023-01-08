@@ -16,7 +16,8 @@ import (
 func (s *Service) ActionRetro(
 	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullRetro, string, string, error) {
-	fr, err := s.LoadRetro(ctx, slug, userID, "", nil, nil, logger)
+	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
+	fr, err := s.LoadRetro(p)
 	if err != nil {
 		return nil, "", "", err
 	}

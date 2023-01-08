@@ -1,13 +1,19 @@
 package workspace
 
 import (
+	"context"
+
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
 	"github.com/kyleu/rituals/app/team"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Workspace struct {
@@ -27,4 +33,18 @@ func FromAny(x any) (*Workspace, error) {
 		return nil, errors.Errorf("data is [%T], not [*Workspace]", x)
 	}
 	return w, nil
+}
+
+type LoadParams struct {
+	Ctx      context.Context
+	Slug     string
+	UserID   uuid.UUID
+	Username string
+	Tx       *sqlx.Tx
+	Params   filter.ParamSet
+	Logger   util.Logger
+}
+
+func NewLoadParams(ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) *LoadParams {
+	return &LoadParams{Ctx: ctx, Slug: slug, UserID: userID, Username: username, Tx: tx, Params: params, Logger: logger}
 }

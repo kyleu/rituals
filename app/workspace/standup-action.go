@@ -16,7 +16,8 @@ import (
 func (s *Service) ActionStandup(
 	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullStandup, string, string, error) {
-	fu, err := s.LoadStandup(ctx, slug, userID, "", nil, nil, logger)
+	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
+	fu, err := s.LoadStandup(p)
 	if err != nil {
 		return nil, "", "", err
 	}

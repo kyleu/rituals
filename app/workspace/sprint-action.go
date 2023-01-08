@@ -14,7 +14,8 @@ import (
 func (s *Service) ActionSprint(
 	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
 ) (*FullSprint, string, string, error) {
-	fs, err := s.LoadSprint(ctx, slug, userID, "", nil, nil, logger)
+	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
+	fs, err := s.LoadSprint(p)
 	if err != nil {
 		return nil, "", "", err
 	}

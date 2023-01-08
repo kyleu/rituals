@@ -1,9 +1,10 @@
 package cworkspace
 
 import (
-	"github.com/kyleu/rituals/app/action"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
+
+	"github.com/kyleu/rituals/app/action"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -30,7 +31,8 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		fs, err := as.Services.Workspace.LoadSprint(ps.Context, slug, ps.Profile.ID, ps.Profile.NameSafe(), nil, ps.Params, ps.Logger)
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile.ID, ps.Profile.NameSafe(), nil, ps.Params, ps.Logger)
+		fs, err := as.Services.Workspace.LoadSprint(p)
 		if err != nil {
 			return "", err
 		}

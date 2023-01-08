@@ -1,17 +1,13 @@
 package workspace
 
 import (
-	"context"
-
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
-	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
@@ -37,59 +33,81 @@ type FullTeam struct {
 	Actions     action.Actions              `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadTeam(
-	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
-) (*FullTeam, error) {
-	t, err := s.t.GetBySlug(ctx, tx, slug, logger)
+func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
+	t, err := s.t.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
-		if hist, _ := s.th.Get(ctx, tx, slug, logger); hist != nil {
-			t, err = s.t.Get(ctx, tx, hist.TeamID, logger)
+		if hist, _ := s.th.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
+			t, err = s.t.Get(p.Ctx, p.Tx, hist.TeamID, p.Logger)
 			if err != nil {
-				return nil, errors.Errorf("no team found with slug [%s]", slug)
+				return nil, errors.Errorf("no team found with slug [%s]", p.Slug)
 			}
 		}
 	}
 	if t == nil {
-		id := util.UUIDFromString(slug)
+		id := util.UUIDFromString(p.Slug)
 		if id == nil {
-			return nil, errors.Errorf("no team found with slug [%s]", slug)
+			return nil, errors.Errorf("no team found with slug [%s]", p.Slug)
 		}
-		t, err = s.t.Get(ctx, tx, *id, logger)
+		t, err = s.t.Get(p.Ctx, p.Tx, *id, p.Logger)
 		if err != nil {
-			return nil, errors.Errorf("no team found with id [%s]", slug)
+			return nil, errors.Errorf("no team found with id [%s]", p.Slug)
 		}
 	}
+
+	return s.loadFullTeam(p, t)
+}
+
+func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 	ret := &FullTeam{Team: t}
 
-	ret.Histories, err = s.th.GetByTeamID(ctx, tx, t.ID, params.Get("thistory", nil, logger), logger)
-	if err != nil {
-		return nil, err
+	funcs := []func() error{
+		func() error {
+			var err error
+			ret.Histories, err = s.th.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("thistory", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Members, ret.Self, err = s.membersTeam(p, t.ID)
+			ret.UtilMembers = ret.Members.ToMembers()
+			return err
+		},
+		func() error {
+			var err error
+			ret.Permissions, err = s.tp.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("tpermission", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Sprints, err = s.s.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeySprint, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Estimates, err = s.e.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyEstimate, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Standups, err = s.u.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyStandup, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Retros, err = s.r.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyRetro, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Actions, err = s.a.GetByModels(p.Ctx, p.Tx, p.Logger, enum.ModelServiceTeam, ret.Team.ID)
+			return err
+		},
 	}
-	ret.Members, ret.Self, err = s.membersTeam(ctx, tx, t.ID, userID, username, params.Get("tmember", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.UtilMembers = ret.Members.ToMembers()
-	ret.Permissions, err = s.tp.GetByTeamID(ctx, tx, t.ID, params.Get("tpermission", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	ret.Sprints, err = s.s.GetByTeamID(ctx, tx, &t.ID, params.Get(util.KeySprint, nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.Estimates, err = s.e.GetByTeamID(ctx, tx, &t.ID, params.Get(util.KeyEstimate, nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.Standups, err = s.u.GetByTeamID(ctx, tx, &t.ID, params.Get(util.KeyStandup, nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.Retros, err = s.r.GetByTeamID(ctx, tx, &t.ID, params.Get(util.KeyRetro, nil, logger), logger)
-	if err != nil {
-		return nil, err
+	_, errs := util.AsyncCollect(funcs, func(f func() error) (any, error) {
+		return nil, f()
+	})
+	if len(errs) > 0 {
+		return nil, util.ErrorMerge(errs...)
 	}
 
 	args := make([]any, 0, (len(ret.Sprints)*2)+(len(ret.Estimates)*2)+(len(ret.Standups)*2)+(len(ret.Retros)*2)+2)
@@ -107,11 +125,8 @@ func (s *Service) LoadTeam(
 		args = append(args, util.KeyRetro, x.ID)
 	}
 
-	ret.Comments, err = s.c.GetByModels(ctx, tx, logger, args...)
-	if err != nil {
-		return nil, err
-	}
-	ret.Actions, err = s.a.GetByModels(ctx, tx, logger, enum.ModelServiceTeam, ret.Team.ID)
+	var err error
+	ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -119,28 +134,27 @@ func (s *Service) LoadTeam(
 	return ret, nil
 }
 
-func (s *Service) membersTeam(
-	ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
-) (tmember.TeamMembers, *tmember.TeamMember, error) {
-	members, err := s.tm.GetByTeamID(ctx, tx, teamID, params, logger)
+func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMembers, *tmember.TeamMember, error) {
+	params := p.Params.Get("tmember", nil, p.Logger)
+	members, err := s.tm.GetByTeamID(p.Ctx, p.Tx, teamID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(teamID, userID)
-	if self == nil && username != "" {
-		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+	self := members.Get(teamID, p.UserID)
+	if self == nil && p.Username != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.tm.Register(ctx, teamID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		_, err = s.tm.Register(p.Ctx, teamID, p.UserID, p.Username, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		members, err = s.tm.GetByTeamID(ctx, tx, teamID, params, logger)
+		members, err = s.tm.GetByTeamID(p.Ctx, p.Tx, teamID, params, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(teamID, userID)
+		self = members.Get(teamID, p.UserID)
 	}
 	return members, self, nil
 }

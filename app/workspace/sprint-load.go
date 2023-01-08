@@ -1,17 +1,13 @@
 package workspace
 
 import (
-	"context"
-
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
-	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/sprint/shistory"
@@ -37,62 +33,82 @@ type FullSprint struct {
 	Actions     action.Actions                `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadSprint(
-	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
-) (*FullSprint, error) {
-	spr, err := s.s.GetBySlug(ctx, tx, slug, logger)
+func (s *Service) LoadSprint(p *LoadParams) (*FullSprint, error) {
+	spr, err := s.s.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
-		if hist, _ := s.sh.Get(ctx, tx, slug, logger); hist != nil {
-			spr, err = s.s.Get(ctx, tx, hist.SprintID, logger)
+		if hist, _ := s.sh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
+			spr, err = s.s.Get(p.Ctx, p.Tx, hist.SprintID, p.Logger)
 			if err != nil {
-				return nil, errors.Errorf("no sprint found with slug [%s]", slug)
+				return nil, errors.Errorf("no sprint found with slug [%s]", p.Slug)
 			}
 		}
 	}
 	if spr == nil {
-		id := util.UUIDFromString(slug)
+		id := util.UUIDFromString(p.Slug)
 		if id == nil {
-			return nil, errors.Errorf("no sprint found with slug [%s]", slug)
+			return nil, errors.Errorf("no sprint found with slug [%s]", p.Slug)
 		}
-		spr, err = s.s.Get(ctx, tx, *id, logger)
+		spr, err = s.s.Get(p.Ctx, p.Tx, *id, p.Logger)
 		if err != nil {
-			return nil, errors.Errorf("no sprint found with id [%s]", slug)
+			return nil, errors.Errorf("no sprint found with id [%s]", p.Slug)
 		}
 	}
+	return s.loadFullSprint(p, spr)
+}
+
+func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint) (*FullSprint, error) {
 	ret := &FullSprint{Sprint: spr}
 
-	ret.Histories, err = s.sh.GetBySprintID(ctx, tx, spr.ID, params.Get("shistory", nil, logger), logger)
-	if err != nil {
-		return nil, err
+	funcs := []func() error{
+		func() error {
+			var err error
+			ret.Histories, err = s.sh.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("shistory", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Members, ret.Self, err = s.membersSprint(p, spr.ID)
+			ret.UtilMembers = ret.Members.ToMembers()
+			return err
+		},
+		func() error {
+			var err error
+			ret.Permissions, err = s.sp.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("spermission", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			if spr.TeamID != nil {
+				ret.Team, err = s.t.Get(p.Ctx, p.Tx, *spr.TeamID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			ret.Estimates, err = s.e.GetBySprintID(p.Ctx, p.Tx, &spr.ID, p.Params.Get(util.KeyEstimate, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Standups, err = s.u.GetBySprintID(p.Ctx, p.Tx, &spr.ID, p.Params.Get(util.KeyStandup, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Retros, err = s.r.GetBySprintID(p.Ctx, p.Tx, &spr.ID, p.Params.Get(util.KeyRetro, nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Actions, err = s.a.GetByModels(p.Ctx, p.Tx, p.Logger, enum.ModelServiceSprint, ret.Sprint.ID)
+			return err
+		},
 	}
-	ret.Members, ret.Self, err = s.membersSprint(ctx, tx, spr.ID, userID, username, params.Get("smember", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.UtilMembers = ret.Members.ToMembers()
-	ret.Permissions, err = s.sp.GetBySprintID(ctx, tx, spr.ID, params.Get("spermission", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	if spr.TeamID != nil {
-		ret.Team, err = s.t.Get(ctx, tx, *spr.TeamID, logger)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	ret.Estimates, err = s.e.GetBySprintID(ctx, tx, &spr.ID, params.Get(util.KeyEstimate, nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.Standups, err = s.u.GetBySprintID(ctx, tx, &spr.ID, params.Get(util.KeyStandup, nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.Retros, err = s.r.GetBySprintID(ctx, tx, &spr.ID, params.Get(util.KeyRetro, nil, logger), logger)
-	if err != nil {
-		return nil, err
+	_, errs := util.AsyncCollect(funcs, func(f func() error) (any, error) {
+		return nil, f()
+	})
+	if len(errs) > 0 {
+		return nil, util.ErrorMerge(errs...)
 	}
 
 	args := make([]any, 0, (len(ret.Estimates)*2)+(len(ret.Standups)*2)+(len(ret.Retros)*2)+2)
@@ -107,11 +123,8 @@ func (s *Service) LoadSprint(
 		args = append(args, util.KeyRetro, x.ID)
 	}
 
-	ret.Comments, err = s.c.GetByModels(ctx, tx, logger, args...)
-	if err != nil {
-		return nil, err
-	}
-	ret.Actions, err = s.a.GetByModels(ctx, tx, logger, enum.ModelServiceSprint, ret.Sprint.ID)
+	var err error
+	ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -119,28 +132,27 @@ func (s *Service) LoadSprint(
 	return ret, nil
 }
 
-func (s *Service) membersSprint(
-	ctx context.Context, tx *sqlx.Tx, sprintID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
-) (smember.SprintMembers, *smember.SprintMember, error) {
-	members, err := s.sm.GetBySprintID(ctx, tx, sprintID, params, logger)
+func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.SprintMembers, *smember.SprintMember, error) {
+	params := p.Params.Get("smember", nil, p.Logger)
+	members, err := s.sm.GetBySprintID(p.Ctx, p.Tx, sprintID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(sprintID, userID)
-	if self == nil && username != "" {
-		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+	self := members.Get(sprintID, p.UserID)
+	if self == nil && p.Username != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.sm.Register(ctx, sprintID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		_, err = s.sm.Register(p.Ctx, sprintID, p.UserID, p.Username, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		members, err = s.sm.GetBySprintID(ctx, tx, sprintID, params, logger)
+		members, err = s.sm.GetBySprintID(p.Ctx, p.Tx, sprintID, params, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(sprintID, userID)
+		self = members.Get(sprintID, p.UserID)
 	}
 	return members, self, nil
 }

@@ -1,10 +1,7 @@
 package workspace
 
 import (
-	"context"
-
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
@@ -16,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
-	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
@@ -37,107 +33,115 @@ type FullEstimate struct {
 	Actions     action.Actions                  `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadEstimate(
-	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
-) (*FullEstimate, error) {
-	e, err := s.e.GetBySlug(ctx, tx, slug, logger)
+func (s *Service) LoadEstimate(p *LoadParams) (*FullEstimate, error) {
+	e, err := s.e.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
-		if hist, _ := s.eh.Get(ctx, tx, slug, logger); hist != nil {
-			e, err = s.e.Get(ctx, tx, hist.EstimateID, logger)
+		if hist, _ := s.eh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
+			e, err = s.e.Get(p.Ctx, p.Tx, hist.EstimateID, p.Logger)
 			if err != nil {
-				return nil, errors.Errorf("no estimate found with slug [%s]", slug)
+				return nil, errors.Errorf("no estimate found with slug [%s]", p.Slug)
 			}
 		}
 	}
 	if e == nil {
-		id := util.UUIDFromString(slug)
+		id := util.UUIDFromString(p.Slug)
 		if id == nil {
-			return nil, errors.Errorf("no estimate found with slug [%s]", slug)
+			return nil, errors.Errorf("no estimate found with slug [%s]", p.Slug)
 		}
-		e, err = s.e.Get(ctx, tx, *id, logger)
+		e, err = s.e.Get(p.Ctx, p.Tx, *id, p.Logger)
 		if err != nil {
-			return nil, errors.Errorf("no estimate found with id [%s]", slug)
+			return nil, errors.Errorf("no estimate found with id [%s]", p.Slug)
 		}
 	}
+	return s.loadFullEstimate(p, e)
+}
+
+func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEstimate, error) {
 	ret := &FullEstimate{Estimate: e}
-
-	ret.Histories, err = s.eh.GetByEstimateID(ctx, tx, e.ID, params.Get("ehistory", nil, logger), logger)
-	if err != nil {
-		return nil, err
+	funcs := []func() error{
+		func() error {
+			var err error
+			ret.Histories, err = s.eh.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("ehistory", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Members, ret.Self, err = s.membersEstimate(p, e.ID)
+			ret.UtilMembers = ret.Members.ToMembers()
+			return err
+		},
+		func() error {
+			var err error
+			ret.Permissions, err = s.ep.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("epermission", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			if e.TeamID != nil {
+				ret.Team, err = s.t.Get(p.Ctx, p.Tx, *e.TeamID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			if e.SprintID != nil {
+				ret.Sprint, err = s.s.Get(p.Ctx, p.Tx, *e.SprintID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			ret.Stories, err = s.st.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get(util.KeyStory, nil, p.Logger), p.Logger)
+			args := make([]any, 0, (len(ret.Stories)*2)+2)
+			args = append(args, util.KeyEstimate, e.ID)
+			for _, str := range ret.Stories {
+				args = append(args, util.KeyStory, str.ID)
+			}
+			ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Votes, err = s.v.GetByStoryIDs(p.Ctx, p.Tx, p.Params.Get(util.KeyVote, nil, p.Logger), p.Logger, ret.Stories.IDStrings(false)...)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Actions, err = s.a.GetByModels(p.Ctx, p.Tx, p.Logger, enum.ModelServiceEstimate, ret.Estimate.ID)
+			return err
+		},
 	}
-	ret.Members, ret.Self, err = s.membersEstimate(ctx, tx, e.ID, userID, username, params.Get("emember", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.UtilMembers = ret.Members.ToMembers()
-	ret.Permissions, err = s.ep.GetByEstimateID(ctx, tx, e.ID, params.Get("epermission", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	if e.TeamID != nil {
-		ret.Team, err = s.t.Get(ctx, tx, *e.TeamID, logger)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if e.SprintID != nil {
-		ret.Sprint, err = s.s.Get(ctx, tx, *e.SprintID, logger)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	ret.Stories, err = s.st.GetByEstimateID(ctx, tx, e.ID, params.Get(util.KeyStory, nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	ret.Votes, err = s.v.GetByStoryIDs(ctx, tx, params.Get(util.KeyVote, nil, logger), logger, ret.Stories.IDStrings(false)...)
-	if err != nil {
-		return nil, err
-	}
-
-	args := make([]any, 0, (len(ret.Stories)*2)+2)
-	args = append(args, util.KeyEstimate, e.ID)
-	for _, str := range ret.Stories {
-		args = append(args, util.KeyStory, str.ID)
-	}
-
-	ret.Comments, err = s.c.GetByModels(ctx, tx, logger, args...)
-	if err != nil {
-		return nil, err
-	}
-	ret.Actions, err = s.a.GetByModels(ctx, tx, logger, enum.ModelServiceEstimate, ret.Estimate.ID)
-	if err != nil {
-		return nil, err
+	_, errs := util.AsyncCollect(funcs, func(f func() error) (any, error) {
+		return nil, f()
+	})
+	if len(errs) > 0 {
+		return nil, util.ErrorMerge(errs...)
 	}
 
 	return ret, nil
 }
 
-func (s *Service) membersEstimate(
-	ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
-) (emember.EstimateMembers, *emember.EstimateMember, error) {
-	members, err := s.em.GetByEstimateID(ctx, tx, estimateID, params, logger)
+func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.EstimateMembers, *emember.EstimateMember, error) {
+	params := p.Params.Get("emember", nil, p.Logger)
+	members, err := s.em.GetByEstimateID(p.Ctx, p.Tx, estimateID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(estimateID, userID)
-	if self == nil && username != "" {
-		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+	self := members.Get(estimateID, p.UserID)
+	if self == nil && p.Username != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.em.Register(ctx, estimateID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		_, err = s.em.Register(p.Ctx, estimateID, p.UserID, p.Username, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		members, err = s.em.GetByEstimateID(ctx, tx, estimateID, params, logger)
+		members, err = s.em.GetByEstimateID(p.Ctx, p.Tx, estimateID, params, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(estimateID, userID)
+		self = members.Get(estimateID, p.UserID)
 	}
 	return members, self, nil
 }

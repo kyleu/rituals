@@ -1,16 +1,12 @@
 package workspace
 
 import (
-	"context"
-
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
-	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
 	"github.com/kyleu/rituals/app/standup/report"
@@ -35,102 +31,114 @@ type FullStandup struct {
 	Actions     action.Actions                 `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadStandup(
-	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
-) (*FullStandup, error) {
-	u, err := s.u.GetBySlug(ctx, tx, slug, logger)
+func (s *Service) LoadStandup(p *LoadParams) (*FullStandup, error) {
+	u, err := s.u.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
-		if hist, _ := s.uh.Get(ctx, tx, slug, logger); hist != nil {
-			u, err = s.u.Get(ctx, tx, hist.StandupID, logger)
+		if hist, _ := s.uh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
+			u, err = s.u.Get(p.Ctx, p.Tx, hist.StandupID, p.Logger)
 			if err != nil {
-				return nil, errors.Errorf("no standup found with slug [%s]", slug)
+				return nil, errors.Errorf("no standup found with slug [%s]", p.Slug)
 			}
 		}
 	}
 	if u == nil {
-		id := util.UUIDFromString(slug)
+		id := util.UUIDFromString(p.Slug)
 		if id == nil {
-			return nil, errors.Errorf("no standup found with slug [%s]", slug)
+			return nil, errors.Errorf("no standup found with slug [%s]", p.Slug)
 		}
-		u, err = s.u.Get(ctx, tx, *id, logger)
+		u, err = s.u.Get(p.Ctx, p.Tx, *id, p.Logger)
 		if err != nil {
-			return nil, errors.Errorf("no standup found with id [%s]", slug)
+			return nil, errors.Errorf("no standup found with id [%s]", p.Slug)
 		}
 	}
+	return s.loadFullStandup(p, u)
+}
+
+func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup) (*FullStandup, error) {
 	ret := &FullStandup{Standup: u}
 
-	ret.Histories, err = s.uh.GetByStandupID(ctx, tx, u.ID, params.Get("uhistory", nil, logger), logger)
-	if err != nil {
-		return nil, err
+	funcs := []func() error{
+		func() error {
+			var err error
+			ret.Histories, err = s.uh.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("uhistory", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Members, ret.Self, err = s.membersStandup(p, u.ID)
+			ret.UtilMembers = ret.Members.ToMembers()
+			return err
+		},
+		func() error {
+			var err error
+			ret.Permissions, err = s.up.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("upermission", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			if u.TeamID != nil {
+				ret.Team, err = s.t.Get(p.Ctx, p.Tx, *u.TeamID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			if u.SprintID != nil {
+				ret.Sprint, err = s.s.Get(p.Ctx, p.Tx, *u.SprintID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			ret.Reports, err = s.rt.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("report", nil, p.Logger), p.Logger)
+			if err != nil {
+				return err
+			}
+			args := make([]any, 0, (len(ret.Reports)*2)+2)
+			args = append(args, util.KeyStandup, u.ID)
+			for _, rpt := range ret.Reports {
+				args = append(args, util.KeyReport, rpt.ID)
+			}
+			ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Actions, err = s.a.GetByModels(p.Ctx, p.Tx, p.Logger, enum.ModelServiceStandup, ret.Standup.ID)
+			return err
+		},
 	}
-	ret.Members, ret.Self, err = s.membersStandup(ctx, tx, u.ID, userID, username, params.Get("umember", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.UtilMembers = ret.Members.ToMembers()
-	ret.Permissions, err = s.up.GetByStandupID(ctx, tx, u.ID, params.Get("upermission", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	if u.TeamID != nil {
-		ret.Team, err = s.t.Get(ctx, tx, *u.TeamID, logger)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if u.SprintID != nil {
-		ret.Sprint, err = s.s.Get(ctx, tx, *u.SprintID, logger)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	ret.Reports, err = s.rt.GetByStandupID(ctx, tx, u.ID, params.Get("report", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	args := make([]any, 0, (len(ret.Reports)*2)+2)
-	args = append(args, util.KeyStandup, u.ID)
-	for _, rpt := range ret.Reports {
-		args = append(args, util.KeyReport, rpt.ID)
-	}
-
-	ret.Comments, err = s.c.GetByModels(ctx, tx, logger, args...)
-	if err != nil {
-		return nil, err
-	}
-	ret.Actions, err = s.a.GetByModels(ctx, tx, logger, enum.ModelServiceStandup, ret.Standup.ID)
-	if err != nil {
-		return nil, err
+	_, errs := util.AsyncCollect(funcs, func(f func() error) (any, error) {
+		return nil, f()
+	})
+	if len(errs) > 0 {
+		return nil, util.ErrorMerge(errs...)
 	}
 
 	return ret, nil
 }
 
-func (s *Service) membersStandup(
-	ctx context.Context, tx *sqlx.Tx, standupID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
-) (umember.StandupMembers, *umember.StandupMember, error) {
-	members, err := s.um.GetByStandupID(ctx, tx, standupID, params, logger)
+func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.StandupMembers, *umember.StandupMember, error) {
+	params := p.Params.Get("umember", nil, p.Logger)
+	members, err := s.um.GetByStandupID(p.Ctx, p.Tx, standupID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(standupID, userID)
-	if self == nil && username != "" {
-		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+	self := members.Get(standupID, p.UserID)
+	if self == nil && p.Username != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.um.Register(ctx, standupID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		_, err = s.um.Register(p.Ctx, standupID, p.UserID, p.Username, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		members, err = s.um.GetByStandupID(ctx, tx, standupID, params, logger)
+		members, err = s.um.GetByStandupID(p.Ctx, p.Tx, standupID, params, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(standupID, userID)
+		self = members.Get(standupID, p.UserID)
 	}
 	return members, self, nil
 }

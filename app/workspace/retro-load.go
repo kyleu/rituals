@@ -1,16 +1,12 @@
 package workspace
 
 import (
-	"context"
-
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
-	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/retro/feedback"
 	"github.com/kyleu/rituals/app/retro/rhistory"
@@ -37,102 +33,118 @@ type FullRetro struct {
 	Actions     action.Actions               `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadRetro(
-	ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
-) (*FullRetro, error) {
-	r, err := s.r.GetBySlug(ctx, tx, slug, logger)
+func (s *Service) LoadRetro(p *LoadParams) (*FullRetro, error) {
+	r, err := s.r.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
-		if hist, _ := s.rh.Get(ctx, tx, slug, logger); hist != nil {
-			r, err = s.r.Get(ctx, tx, hist.RetroID, logger)
+		if hist, _ := s.rh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
+			r, err = s.r.Get(p.Ctx, p.Tx, hist.RetroID, p.Logger)
 			if err != nil {
-				return nil, errors.Errorf("no retro found with slug [%s]", slug)
+				return nil, errors.Errorf("no retro found with slug [%s]", p.Slug)
 			}
 		}
 	}
 	if r == nil {
-		id := util.UUIDFromString(slug)
+		id := util.UUIDFromString(p.Slug)
 		if id == nil {
-			return nil, errors.Errorf("no retro found with slug [%s]", slug)
+			return nil, errors.Errorf("no retro found with slug [%s]", p.Slug)
 		}
-		r, err = s.r.Get(ctx, tx, *id, logger)
+		r, err = s.r.Get(p.Ctx, p.Tx, *id, p.Logger)
 		if err != nil {
-			return nil, errors.Errorf("no retro found with id [%s]", slug)
+			return nil, errors.Errorf("no retro found with id [%s]", p.Slug)
 		}
 	}
+	return s.loadFullRetro(p, r)
+}
+
+func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro) (*FullRetro, error) {
 	ret := &FullRetro{Retro: r}
 
-	ret.Histories, err = s.rh.GetByRetroID(ctx, tx, r.ID, params.Get("rhistory", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.Members, ret.Self, err = s.membersRetro(ctx, tx, r.ID, userID, username, params.Get("rmember", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-	ret.UtilMembers = ret.Members.ToMembers()
-	ret.Permissions, err = s.rp.GetByRetroID(ctx, tx, r.ID, params.Get("rpermission", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
+	funcs := []func() error{
+		func() error {
+			var err error
+			ret.Histories, err = s.rh.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rhistory", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Members, ret.Self, err = s.membersRetro(p, r.ID)
+			ret.UtilMembers = ret.Members.ToMembers()
+			return err
+		},
+		func() error {
+			var err error
+			ret.Permissions, err = s.rp.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rpermission", nil, p.Logger), p.Logger)
+			return err
+		},
+		func() error {
+			var err error
+			if r.TeamID != nil {
+				ret.Team, err = s.t.Get(p.Ctx, p.Tx, *r.TeamID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			if r.SprintID != nil {
+				ret.Sprint, err = s.s.Get(p.Ctx, p.Tx, *r.SprintID, p.Logger)
+			}
+			return err
+		},
+		func() error {
+			var err error
+			ret.Feedbacks, err = s.f.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("feedback", nil, p.Logger), p.Logger)
+			if err != nil {
+				return err
+			}
+			args := make([]any, 0, (len(ret.Feedbacks)*2)+2)
+			args = append(args, util.KeyRetro, r.ID)
+			for _, f := range ret.Feedbacks {
+				args = append(args, util.KeyFeedback, f.ID)
+			}
+			ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
+			return err
+		},
+		func() error {
+			var err error
+			ret.Actions, err = s.a.GetByModels(p.Ctx, p.Tx, p.Logger, enum.ModelServiceRetro, ret.Retro.ID)
+			return err
+		},
+		func() error {
+			var err error
 
-	if r.TeamID != nil {
-		ret.Team, err = s.t.Get(ctx, tx, *r.TeamID, logger)
-		if err != nil {
-			return nil, err
-		}
+			return err
+		},
 	}
-	if r.SprintID != nil {
-		ret.Sprint, err = s.s.Get(ctx, tx, *r.SprintID, logger)
-		if err != nil {
-			return nil, err
-		}
+	_, errs := util.AsyncCollect(funcs, func(f func() error) (any, error) {
+		return nil, f()
+	})
+	if len(errs) > 0 {
+		return nil, util.ErrorMerge(errs...)
 	}
-
-	ret.Feedbacks, err = s.f.GetByRetroID(ctx, tx, r.ID, params.Get("feedback", nil, logger), logger)
-	if err != nil {
-		return nil, err
-	}
-
-	args := make([]any, 0, (len(ret.Feedbacks)*2)+2)
-	args = append(args, util.KeyRetro, r.ID)
-	for _, f := range ret.Feedbacks {
-		args = append(args, util.KeyFeedback, f.ID)
-	}
-
-	ret.Comments, err = s.c.GetByModels(ctx, tx, logger, args...)
-	if err != nil {
-		return nil, err
-	}
-	ret.Actions, err = s.a.GetByModels(ctx, tx, logger, enum.ModelServiceRetro, ret.Retro.ID)
-	if err != nil {
-		return nil, err
-	}
-
 	return ret, nil
 }
 
-func (s *Service) membersRetro(
-	ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, userID uuid.UUID, username string, params *filter.Params, logger util.Logger,
-) (rmember.RetroMembers, *rmember.RetroMember, error) {
-	members, err := s.rm.GetByRetroID(ctx, tx, retroID, params, logger)
+func (s *Service) membersRetro(p *LoadParams, retroID uuid.UUID) (rmember.RetroMembers, *rmember.RetroMember, error) {
+	params := p.Params.Get("rmember", nil, p.Logger)
+	members, err := s.rm.GetByRetroID(p.Ctx, p.Tx, retroID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(retroID, userID)
-	if self == nil && username != "" {
-		err = s.us.CreateIfNeeded(ctx, userID, username, tx, logger)
+	self := members.Get(retroID, p.UserID)
+	if self == nil && p.Username != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.rm.Register(ctx, retroID, userID, username, enum.MemberStatusMember, nil, s.a, s.send, logger)
+		_, err = s.rm.Register(p.Ctx, retroID, p.UserID, p.Username, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		members, err = s.rm.GetByRetroID(ctx, tx, retroID, params, logger)
+		members, err = s.rm.GetByRetroID(p.Ctx, p.Tx, retroID, params, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(retroID, userID)
+		self = members.Get(retroID, p.UserID)
 	}
 	return members, self, nil
 }
