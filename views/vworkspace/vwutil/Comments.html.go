@@ -153,7 +153,7 @@ func StreamCommentsModal(qw422016 *qt422016.Writer, svc enum.ModelService, id uu
 //line views/vworkspace/vwutil/Comments.html:31
 	qw422016.E().S(id.String())
 //line views/vworkspace/vwutil/Comments.html:31
-	qw422016.N().S(`-comments" class="modal" style="display: none;">
+	qw422016.N().S(`-comments" class="modal comments" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

@@ -68,10 +68,7 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const team = {%s= util.ToJSONCompact(t) %};
-      const members = {%s= util.ToJSONCompact(w.Members) %};
-      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
-      rituals.initWorkspace('{%s util.KeyTeam %}', team, members, permissions);
+      rituals.initWorkspace("{%s util.KeyTeam %}", "{%s t.ID.String() %}");
     });
   </script>
 {% endfunc %}

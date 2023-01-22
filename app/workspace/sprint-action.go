@@ -1,9 +1,6 @@
 package workspace
 
 import (
-	"context"
-
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
@@ -11,70 +8,68 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) ActionSprint(
-	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
-) (*FullSprint, string, string, error) {
-	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
-	fs, err := s.LoadSprint(p)
+func (s *Service) ActionSprint(p *Params) (*FullSprint, string, string, error) {
+	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	fs, err := p.Svc.LoadSprint(lp)
 	if err != nil {
 		return nil, "", "", err
 	}
 
-	switch act {
+	switch p.Act {
 	case action.ActUpdate:
-		return sprintUpdate(ctx, fs, frm, slug, s, logger)
+		return sprintUpdate(p, fs)
 	case action.ActMemberUpdate:
-		return sprintMemberUpdate(ctx, fs, frm, s, logger)
+		return sprintMemberUpdate(p, fs)
 	case action.ActMemberRemove:
-		return sprintMemberRemove(ctx, fs, frm, s, logger)
+		return sprintMemberRemove(p, fs)
 	case action.ActMemberSelf:
-		return sprintUpdateSelf(ctx, fs, frm, s, logger)
+		return sprintUpdateSelf(p, fs)
 	case action.ActComment:
-		return sprintComment(ctx, fs, frm, s, logger)
+		return sprintComment(p, fs)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
-		return nil, "", "", errors.Errorf("invalid action [%s]", act)
+		return nil, "", "", errors.Errorf("invalid action [%s]", p.Act)
 	}
 }
 
-func sprintUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	tgt := fs.Sprint.Clone()
-	tgt.Title = frm.GetStringOpt("title")
-	tgt.Slug = frm.GetStringOpt("slug")
+	tgt.Title = p.Frm.GetStringOpt("title")
+	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
 	}
-	tgt.Slug = s.r.Slugify(ctx, tgt.ID, tgt.Slug, slug, s.rh, nil, logger)
-	tgt.Icon = frm.GetStringOpt("icon")
+	tgt.Slug = p.Svc.r.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.rh, nil, p.Logger)
+	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
-	tgt.StartDate, _ = frm.GetTime("startDate", false)
-	tgt.EndDate, _ = frm.GetTime("endDate", false)
-	tgt.TeamID, _ = frm.GetUUID(util.KeyTeam, true)
-	model, err := s.SaveSprint(ctx, tgt, fs.Self.UserID, nil, logger)
+	tgt.StartDate, _ = p.Frm.GetTime("startDate", false)
+	tgt.EndDate, _ = p.Frm.GetTime("endDate", false)
+	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
+	model, err := p.Svc.SaveSprint(p.Ctx, tgt, fs.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	fs.Sprint = model
-	err = s.send(enum.ModelServiceSprint, fs.Team.ID, action.ActUpdate, model, &fs.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Team.ID, action.ActUpdate, model, &fs.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fs, "Sprint saved", model.PublicWebPath(), nil
 }
 
-func sprintMemberUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintMemberUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
 	if fs.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this sprint")
 	}
-	userID, _ := frm.GetUUID("userID", false)
+	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
 	}
-	role := frm.GetStringOpt("role")
+	role := p.Frm.GetStringOpt("role")
 	if role == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
@@ -83,25 +78,25 @@ func sprintMemberUpdate(ctx context.Context, fs *FullSprint, frm util.ValueMap, 
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
-	err := s.sm.Update(ctx, nil, curr, logger)
+	err := p.Svc.sm.Update(p.Ctx, nil, curr, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, curr, &fs.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, curr, &fs.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fs, "Member updated", fs.Sprint.PublicWebPath(), nil
 }
 
-func sprintMemberRemove(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintMemberRemove(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
 	if fs.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this sprint")
 	}
-	userID, _ := frm.GetUUID("userID", false)
+	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
 	}
@@ -109,28 +104,28 @@ func sprintMemberRemove(ctx context.Context, fs *FullSprint, frm util.ValueMap, 
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint", userID.String())
 	}
-	err := s.sm.Delete(ctx, nil, curr.SprintID, curr.UserID, logger)
+	err := p.Svc.sm.Delete(p.Ctx, nil, curr.SprintID, curr.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberRemove, userID, &fs.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberRemove, userID, &fs.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fs, "Member removed", fs.Sprint.PublicWebPath(), nil
 }
 
-func sprintUpdateSelf(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
-	choice := frm.GetStringOpt("choice")
-	name := frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	name := p.Frm.GetStringOpt("name")
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
 	fs.Self.Name = name
-	err := s.sm.Update(ctx, nil, fs.Self, logger)
+	err := p.Svc.sm.Update(p.Ctx, nil, fs.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -138,18 +133,18 @@ func sprintUpdateSelf(ctx context.Context, fs *FullSprint, frm util.ValueMap, s 
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fs.Self.UserID, "name": name}
-	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, arg, &fs.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, arg, &fs.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fs, "Profile edited", fs.Sprint.PublicWebPath(), nil
 }
 
-func sprintComment(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Service, logger util.Logger) (*FullSprint, string, string, error) {
+func sprintComment(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
-	c, u, err := commentFromForm(frm, fs.Self.UserID)
+	c, u, err := commentFromForm(p.Frm, fs.Self.UserID)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -173,11 +168,11 @@ func sprintComment(ctx context.Context, fs *FullSprint, frm util.ValueMap, s *Se
 	default:
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
-	err = s.c.Save(ctx, nil, logger, c)
+	err = p.Svc.c.Save(p.Ctx, nil, p.Logger, c)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceSprint, c.ModelID, action.ActComment, c, &fs.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActComment, c, &fs.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}

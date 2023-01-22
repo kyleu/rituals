@@ -1,10 +1,8 @@
 package workspace
 
 import (
-	"context"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
@@ -13,86 +11,84 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) ActionStandup(
-	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
-) (*FullStandup, string, string, error) {
-	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
-	fu, err := s.LoadStandup(p)
+func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error) {
+	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	fu, err := p.Svc.LoadStandup(lp)
 	if err != nil {
 		return nil, "", "", err
 	}
-	switch act {
+	switch p.Act {
 	case action.ActUpdate:
-		return standupUpdate(ctx, fu, frm, slug, s, logger)
+		return standupUpdate(p, fu)
 	case action.ActReportAdd:
-		return standupReportAdd(ctx, fu, frm, s, logger)
+		return standupReportAdd(p, fu)
 	case action.ActReportUpdate:
-		return standupReportUpdate(ctx, fu, frm, s, logger)
+		return standupReportUpdate(p, fu)
 	case action.ActReportRemove:
-		return standupReportRemove(ctx, fu, frm, s, logger)
+		return standupReportRemove(p, fu)
 	case action.ActMemberUpdate:
-		return standupMemberUpdate(ctx, fu, frm, s, logger)
+		return standupMemberUpdate(p, fu)
 	case action.ActMemberRemove:
-		return standupMemberRemove(ctx, fu, frm, s, logger)
+		return standupMemberRemove(p, fu)
 	case action.ActMemberSelf:
-		return standupUpdateSelf(ctx, fu, frm, s, logger)
+		return standupUpdateSelf(p, fu)
 	case action.ActComment:
-		return standupComment(ctx, fu, frm, s, logger)
+		return standupComment(p, fu)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
-		return nil, "", "", errors.Errorf("invalid action [%s]", act)
+		return nil, "", "", errors.Errorf("invalid action [%s]", p.Act)
 	}
 }
 
-func standupUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	tgt := fu.Standup.Clone()
-	tgt.Title = frm.GetStringOpt("title")
-	tgt.Slug = frm.GetStringOpt("slug")
+	tgt.Title = p.Frm.GetStringOpt("title")
+	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
 	}
-	tgt.Slug = s.u.Slugify(ctx, tgt.ID, tgt.Slug, slug, s.uh, nil, logger)
-	tgt.Icon = frm.GetStringOpt("icon")
+	tgt.Slug = p.Svc.u.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.uh, nil, p.Logger)
+	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
-	tgt.TeamID, _ = frm.GetUUID(util.KeyTeam, true)
-	tgt.SprintID, _ = frm.GetUUID(util.KeySprint, true)
-	model, err := s.SaveStandup(ctx, tgt, fu.Self.UserID, nil, logger)
+	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
+	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
+	model, err := p.Svc.SaveStandup(p.Ctx, tgt, fu.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	fu.Standup = model
-	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActUpdate, model, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActUpdate, model, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Standup saved", model.PublicWebPath(), nil
 }
 
-func standupReportAdd(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
-	day, _ := frm.GetTime("day", false)
+func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
+	day, _ := p.Frm.GetTime("day", false)
 	if day == nil {
 		return nil, "", "", errors.New("must provide [day]")
 	}
 	day = util.TimeTruncate(day)
-	content := frm.GetStringOpt("content")
+	content := p.Frm.GetStringOpt("content")
 	html := util.ToHTML(content, true)
 	rpt := &report.Report{
 		ID: util.UUID(), StandupID: fu.Standup.ID, Day: *day, UserID: fu.Self.UserID, Content: content, HTML: html, Created: time.Now(),
 	}
-	err := s.rt.Create(ctx, nil, logger, rpt)
+	err := p.Svc.rt.Create(p.Ctx, nil, p.Logger, rpt)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportAdd, rpt, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportAdd, rpt, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Report added", fu.Standup.PublicWebPath(), nil
 }
 
-func standupReportUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
-	id, _ := frm.GetUUID("reportID", false)
+func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
+	id, _ := p.Frm.GetUUID("reportID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
 	}
@@ -100,29 +96,29 @@ func standupReportUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no report found with id [%s]", id.String())
 	}
-	day, _ := frm.GetTime("day", false)
+	day, _ := p.Frm.GetTime("day", false)
 	if day == nil {
 		return nil, "", "", errors.New("must provide [day]")
 	}
 	day = util.TimeTruncate(day)
-	content := frm.GetStringOpt("content")
+	content := p.Frm.GetStringOpt("content")
 	html := util.ToHTML(content, true)
 	rpt := &report.Report{
 		ID: *id, StandupID: fu.Standup.ID, Day: *day, UserID: fu.Self.UserID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
 	}
-	err := s.rt.Update(ctx, nil, rpt, logger)
+	err := p.Svc.rt.Update(p.Ctx, nil, rpt, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Report saved", fu.Standup.PublicWebPath(), nil
 }
 
-func standupReportRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
-	id, _ := frm.GetUUID("reportID", false)
+func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
+	id, _ := p.Frm.GetUUID("reportID", false)
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
 	}
@@ -130,29 +126,29 @@ func standupReportRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no report found with id [%s]", id.String())
 	}
-	err := s.rt.Delete(ctx, nil, *id, logger)
+	err := p.Svc.rt.Delete(p.Ctx, nil, *id, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete report")
 	}
-	err = s.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportRemove, id, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportRemove, id, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Report deleted", fu.Standup.PublicWebPath(), nil
 }
 
-func standupMemberUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupMemberUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
 	if fu.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this standup")
 	}
-	userID, _ := frm.GetUUID("userID", false)
+	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
 	}
-	role := frm.GetStringOpt("role")
+	role := p.Frm.GetStringOpt("role")
 	if role == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
@@ -161,25 +157,25 @@ func standupMemberUpdate(ctx context.Context, fu *FullStandup, frm util.ValueMap
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this standup", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
-	err := s.um.Update(ctx, nil, curr, logger)
+	err := p.Svc.um.Update(p.Ctx, nil, curr, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, curr, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, curr, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Member updated", fu.Standup.PublicWebPath(), nil
 }
 
-func standupMemberRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupMemberRemove(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
 	if fu.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this standup")
 	}
-	userID, _ := frm.GetUUID("userID", false)
+	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
 	}
@@ -187,28 +183,28 @@ func standupMemberRemove(ctx context.Context, fu *FullStandup, frm util.ValueMap
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this standup", userID.String())
 	}
-	err := s.um.Delete(ctx, nil, curr.StandupID, curr.UserID, logger)
+	err := p.Svc.um.Delete(p.Ctx, nil, curr.StandupID, curr.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberRemove, userID, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberRemove, userID, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Member removed", fu.Standup.PublicWebPath(), nil
 }
 
-func standupUpdateSelf(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
-	choice := frm.GetStringOpt("choice")
-	name := frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	name := p.Frm.GetStringOpt("name")
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
 	fu.Self.Name = name
-	err := s.um.Update(ctx, nil, fu.Self, logger)
+	err := p.Svc.um.Update(p.Ctx, nil, fu.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -216,18 +212,18 @@ func standupUpdateSelf(ctx context.Context, fu *FullStandup, frm util.ValueMap, 
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fu.Self.UserID, "name": name}
-	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, arg, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, arg, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return fu, "Profile edited", fu.Standup.PublicWebPath(), nil
 }
 
-func standupComment(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *Service, logger util.Logger) (*FullStandup, string, string, error) {
+func standupComment(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
-	c, u, err := commentFromForm(frm, fu.Self.UserID)
+	c, u, err := commentFromForm(p.Frm, fu.Self.UserID)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -243,11 +239,11 @@ func standupComment(ctx context.Context, fu *FullStandup, frm util.ValueMap, s *
 	default:
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
-	err = s.c.Save(ctx, nil, logger, c)
+	err = p.Svc.c.Save(p.Ctx, nil, p.Logger, c)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceStandup, c.ModelID, action.ActComment, c, &fu.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActComment, c, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}

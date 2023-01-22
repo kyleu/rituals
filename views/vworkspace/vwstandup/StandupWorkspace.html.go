@@ -170,61 +170,50 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const standup = `)
+      rituals.initWorkspace("`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:75
-	qw422016.N().S(util.ToJSONCompact(u))
-//line views/vworkspace/vwstandup/StandupWorkspace.html:75
-	qw422016.N().S(`;
-      const members = `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:76
-	qw422016.N().S(util.ToJSONCompact(w.Members))
-//line views/vworkspace/vwstandup/StandupWorkspace.html:76
-	qw422016.N().S(`;
-      const permissions = `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:77
-	qw422016.N().S(util.ToJSONCompact(w.Permissions))
-//line views/vworkspace/vwstandup/StandupWorkspace.html:77
-	qw422016.N().S(`;
-      rituals.initWorkspace('`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	qw422016.E().S(util.KeyStandup)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:78
-	qw422016.N().S(`', standup, members, permissions);
+//line views/vworkspace/vwstandup/StandupWorkspace.html:75
+	qw422016.N().S(`", "`)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:75
+	qw422016.E().S(u.ID.String())
+//line views/vworkspace/vwstandup/StandupWorkspace.html:75
+	qw422016.N().S(`");
     });
   </script>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 func (p *StandupWorkspace) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 func (p *StandupWorkspace) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 	return qs422016
-//line views/vworkspace/vwstandup/StandupWorkspace.html:81
+//line views/vworkspace/vwstandup/StandupWorkspace.html:78
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:83
+//line views/vworkspace/vwstandup/StandupWorkspace.html:80
 func StreamStandupWorkspaceModal(qw422016 *qt422016.Writer, u *standup.Standup, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:83
+//line views/vworkspace/vwstandup/StandupWorkspace.html:80
 	qw422016.N().S(`
   <div id="modal-standup-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -235,34 +224,34 @@ func StreamStandupWorkspaceModal(qw422016 *qt422016.Writer, u *standup.Standup, 
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:92
+//line views/vworkspace/vwstandup/StandupWorkspace.html:89
 	qw422016.E().S(u.PublicWebPath())
-//line views/vworkspace/vwstandup/StandupWorkspace.html:92
+//line views/vworkspace/vwstandup/StandupWorkspace.html:89
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:93
+//line views/vworkspace/vwstandup/StandupWorkspace.html:90
 	qw422016.E().S(string(action.ActUpdate))
-//line views/vworkspace/vwstandup/StandupWorkspace.html:93
+//line views/vworkspace/vwstandup/StandupWorkspace.html:90
 	qw422016.N().S(`" />
           `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:94
+//line views/vworkspace/vwstandup/StandupWorkspace.html:91
 	components.StreamFormVerticalInput(qw422016, "title", "Title", u.TitleString(), 5, "The name of your standup")
-//line views/vworkspace/vwstandup/StandupWorkspace.html:94
+//line views/vworkspace/vwstandup/StandupWorkspace.html:91
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:95
+//line views/vworkspace/vwstandup/StandupWorkspace.html:92
 	components.StreamFormVerticalIconPicker(qw422016, "icon", "Icon", u.IconSafe(), ps, 5)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:95
+//line views/vworkspace/vwstandup/StandupWorkspace.html:92
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:96
+//line views/vworkspace/vwstandup/StandupWorkspace.html:93
 	components.StreamFormVerticalSelect(qw422016, util.KeyTeam, "Team", util.UUIDString(u.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:96
+//line views/vworkspace/vwstandup/StandupWorkspace.html:93
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:97
+//line views/vworkspace/vwstandup/StandupWorkspace.html:94
 	components.StreamFormVerticalSelect(qw422016, util.KeySprint, "Sprint", util.UUIDString(u.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:97
+//line views/vworkspace/vwstandup/StandupWorkspace.html:94
 	qw422016.N().S(`
           <em class="title">Permissions</em>
           <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this standup's team</label></div>
@@ -274,130 +263,130 @@ func StreamStandupWorkspaceModal(qw422016 *qt422016.Writer, u *standup.Standup, 
     </div>
   </div>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 func WriteStandupWorkspaceModal(qq422016 qtio422016.Writer, u *standup.Standup, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	StreamStandupWorkspaceModal(qw422016, u, teams, sprints, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 func StandupWorkspaceModal(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) string {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	WriteStandupWorkspaceModal(qb422016, u, teams, sprints, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 	return qs422016
-//line views/vworkspace/vwstandup/StandupWorkspace.html:107
+//line views/vworkspace/vwstandup/StandupWorkspace.html:104
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:109
+//line views/vworkspace/vwstandup/StandupWorkspace.html:106
 func StreamStandupWorkspaceList(qw422016 *qt422016.Writer, standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:109
+//line views/vworkspace/vwstandup/StandupWorkspace.html:106
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:111
+//line views/vworkspace/vwstandup/StandupWorkspace.html:108
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyStandup, teamID, sprintID, "New Standup")
-//line views/vworkspace/vwstandup/StandupWorkspace.html:111
+//line views/vworkspace/vwstandup/StandupWorkspace.html:108
 	qw422016.N().S(`</div>
     <h3>`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:112
+//line views/vworkspace/vwstandup/StandupWorkspace.html:109
 	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:112
+//line views/vworkspace/vwstandup/StandupWorkspace.html:109
 	qw422016.N().S(`Standups</h3>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:113
+//line views/vworkspace/vwstandup/StandupWorkspace.html:110
 	if len(standups) == 0 {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:113
+//line views/vworkspace/vwstandup/StandupWorkspace.html:110
 		qw422016.N().S(`    <div class="mt"><em>no standups</em></div>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:115
+//line views/vworkspace/vwstandup/StandupWorkspace.html:112
 	} else {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:115
+//line views/vworkspace/vwstandup/StandupWorkspace.html:112
 		qw422016.N().S(`    <table class="mt expanded">
       <tbody>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:118
+//line views/vworkspace/vwstandup/StandupWorkspace.html:115
 		for _, x := range standups {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:118
+//line views/vworkspace/vwstandup/StandupWorkspace.html:115
 			qw422016.N().S(`        <tr>
           <td>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:121
+//line views/vworkspace/vwstandup/StandupWorkspace.html:118
 			if showComments {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:121
+//line views/vworkspace/vwstandup/StandupWorkspace.html:118
 				qw422016.N().S(`            <div class="right">
               `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:123
+//line views/vworkspace/vwstandup/StandupWorkspace.html:120
 				vwutil.StreamComments(qw422016, enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:123
+//line views/vworkspace/vwstandup/StandupWorkspace.html:120
 				qw422016.N().S(`
             </div>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:125
+//line views/vworkspace/vwstandup/StandupWorkspace.html:122
 			}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:125
+//line views/vworkspace/vwstandup/StandupWorkspace.html:122
 			qw422016.N().S(`            <a href="`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:126
+//line views/vworkspace/vwstandup/StandupWorkspace.html:123
 			qw422016.E().S(x.PublicWebPath())
-//line views/vworkspace/vwstandup/StandupWorkspace.html:126
+//line views/vworkspace/vwstandup/StandupWorkspace.html:123
 			qw422016.N().S(`">`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:126
+//line views/vworkspace/vwstandup/StandupWorkspace.html:123
 			qw422016.E().S(x.TitleString())
-//line views/vworkspace/vwstandup/StandupWorkspace.html:126
+//line views/vworkspace/vwstandup/StandupWorkspace.html:123
 			qw422016.N().S(`</a>
           </td>
         </tr>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:129
+//line views/vworkspace/vwstandup/StandupWorkspace.html:126
 		}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:129
+//line views/vworkspace/vwstandup/StandupWorkspace.html:126
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:132
+//line views/vworkspace/vwstandup/StandupWorkspace.html:129
 	}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:132
+//line views/vworkspace/vwstandup/StandupWorkspace.html:129
 	qw422016.N().S(`  </div>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 func WriteStandupWorkspaceList(qq422016 qtio422016.Writer, standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	StreamStandupWorkspaceList(qw422016, standups, teamID, sprintID, showComments, comments, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	WriteStandupWorkspaceList(qb422016, standups, teamID, sprintID, showComments, comments, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 	return qs422016
-//line views/vworkspace/vwstandup/StandupWorkspace.html:134
+//line views/vworkspace/vwstandup/StandupWorkspace.html:131
 }

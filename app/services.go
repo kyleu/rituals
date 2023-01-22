@@ -129,10 +129,10 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	g := gql.NewSchema(st.GraphQL)
 	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f, us, a, c, el)
 	ws := websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose)
-	w.RegisterSend(func(svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger) error {
+	w.RegisterSend(func(svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error {
 		ch := fmt.Sprintf("%s:%s", string(svc), id.String())
 		msg := websocket.NewMessage(userID, ch, string(act), param)
-		return ws.WriteChannel(msg, logger)
+		return ws.WriteChannel(msg, logger, except...)
 	})
 	return &Services{
 		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,

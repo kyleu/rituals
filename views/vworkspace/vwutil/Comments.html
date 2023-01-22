@@ -28,7 +28,7 @@
 {% endfunc %}
 
 {% func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
-  <div id="modal-{%s string(svc) %}-{%s id.String() %}-comments" class="modal" style="display: none;">
+  <div id="modal-{%s string(svc) %}-{%s id.String() %}-comments" class="modal comments" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

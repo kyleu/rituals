@@ -75,7 +75,8 @@ func EstimateAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		act := action.Act(frm.GetStringOpt("action"))
-		_, msg, u, err := as.Services.Workspace.ActionEstimate(ps.Context, slug, act, frm, ps.Profile.ID, ps.Logger)
+		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile.ID, as.Services.Workspace, ps.Logger)
+		_, msg, u, err := as.Services.Workspace.ActionEstimate(p)
 		if err != nil {
 			return "", err
 		}

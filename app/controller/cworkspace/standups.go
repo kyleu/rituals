@@ -74,7 +74,8 @@ func StandupAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		act := action.Act(frm.GetStringOpt("action"))
-		_, msg, u, err := as.Services.Workspace.ActionStandup(ps.Context, slug, act, frm, ps.Profile.ID, ps.Logger)
+		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile.ID, as.Services.Workspace, ps.Logger)
+		_, msg, u, err := as.Services.Workspace.ActionStandup(p)
 		if err != nil {
 			return "", err
 		}

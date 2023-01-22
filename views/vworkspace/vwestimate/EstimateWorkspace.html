@@ -72,10 +72,7 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const estimate = {%s= util.ToJSONCompact(e) %};
-      const members = {%s= util.ToJSONCompact(w.Members) %};
-      const permissions = {%s= util.ToJSONCompact(w.Permissions) %};
-      rituals.initWorkspace('{%s util.KeyEstimate %}', estimate, members, permissions);
+      rituals.initWorkspace("{%s util.KeyEstimate %}", "{%s e.ID.String() %}");
     });
   </script>
 {% endfunc %}

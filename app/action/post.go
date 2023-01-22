@@ -11,11 +11,10 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-type SendFn func(svc enum.ModelService, id uuid.UUID, act Act, param any, userID *uuid.UUID, logger util.Logger) error
+type SendFn func(svc enum.ModelService, modelID uuid.UUID, act Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error
 
 func (s *Service) Post(
-	ctx context.Context, svc enum.ModelService, id uuid.UUID, userID uuid.UUID, a Act, t util.ValueMap, tx *sqlx.Tx, logger util.Logger,
-	sends ...func(svc enum.ModelService, id uuid.UUID, act Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error,
+	ctx context.Context, svc enum.ModelService, id uuid.UUID, userID uuid.UUID, a Act, t util.ValueMap, tx *sqlx.Tx, logger util.Logger, sends ...SendFn,
 ) error {
 	action := &Action{ID: util.UUID(), Svc: svc, ModelID: id, UserID: userID, Act: string(a), Content: t, Created: time.Now()}
 	err := s.Create(ctx, tx, logger, action)

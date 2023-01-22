@@ -1,9 +1,6 @@
 package workspace
 
 import (
-	"context"
-
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/action"
@@ -11,67 +8,65 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) ActionTeam(
-	ctx context.Context, slug string, act action.Act, frm util.ValueMap, userID uuid.UUID, logger util.Logger,
-) (*FullTeam, string, string, error) {
-	p := NewLoadParams(ctx, slug, userID, "", nil, nil, logger)
-	ft, err := s.LoadTeam(p)
+func (s *Service) ActionTeam(p *Params) (*FullTeam, string, string, error) {
+	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	ft, err := p.Svc.LoadTeam(lp)
 	if err != nil {
 		return nil, "", "", err
 	}
 
-	switch act {
+	switch p.Act {
 	case action.ActUpdate:
-		return teamUpdate(ctx, ft, frm, slug, s, logger)
+		return teamUpdate(p, ft)
 	case action.ActMemberUpdate:
-		return teamMemberUpdate(ctx, ft, frm, s, logger)
+		return teamMemberUpdate(p, ft)
 	case action.ActMemberRemove:
-		return teamMemberRemove(ctx, ft, frm, s, logger)
+		return teamMemberRemove(p, ft)
 	case action.ActMemberSelf:
-		return teamUpdateSelf(ctx, ft, frm, s, logger)
+		return teamUpdateSelf(p, ft)
 	case action.ActComment:
-		return teamComment(ctx, ft, frm, s, logger)
+		return teamComment(p, ft)
 	case "":
 		return nil, "", "", errors.New("field [action] is required")
 	default:
-		return nil, "", "", errors.Errorf("invalid action [%s]", act)
+		return nil, "", "", errors.Errorf("invalid action [%s]", p.Act)
 	}
 }
 
-func teamUpdate(ctx context.Context, ft *FullTeam, frm util.ValueMap, slug string, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	tgt := ft.Team.Clone()
-	tgt.Title = frm.GetStringOpt("title")
-	tgt.Slug = frm.GetStringOpt("slug")
+	tgt.Title = p.Frm.GetStringOpt("title")
+	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
 	}
-	tgt.Slug = s.r.Slugify(ctx, tgt.ID, tgt.Slug, slug, s.rh, nil, logger)
-	tgt.Icon = frm.GetStringOpt("icon")
+	tgt.Slug = p.Svc.r.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.rh, nil, p.Logger)
+	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
-	model, err := s.SaveTeam(ctx, tgt, ft.Self.UserID, nil, logger)
+	model, err := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	ft.Team = model
-	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return ft, "Team saved", model.PublicWebPath(), nil
 }
 
-func teamMemberUpdate(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
 	if ft.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this team")
 	}
-	userID, _ := frm.GetUUID("userID", false)
+	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
 	}
-	role := frm.GetStringOpt("role")
+	role := p.Frm.GetStringOpt("role")
 	if role == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
@@ -80,25 +75,25 @@ func teamMemberUpdate(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *S
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
 	curr.Role = enum.MemberStatus(role)
-	err := s.tm.Update(ctx, nil, curr, logger)
+	err := p.Svc.tm.Update(p.Ctx, nil, curr, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, curr, &ft.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, curr, &ft.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return ft, "Member updated", ft.Team.PublicWebPath(), nil
 }
 
-func teamMemberRemove(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamMemberRemove(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
 	if ft.Self.Role != enum.MemberStatusOwner {
 		return nil, "", "", errors.New("you are not the owner of this team")
 	}
-	userID, _ := frm.GetUUID("userID", false)
+	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
 	}
@@ -106,28 +101,28 @@ func teamMemberRemove(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *S
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
-	err := s.tm.Delete(ctx, nil, curr.TeamID, curr.UserID, logger)
+	err := p.Svc.tm.Delete(p.Ctx, nil, curr.TeamID, curr.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberRemove, userID, &ft.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberRemove, userID, &ft.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return ft, "Member removed", ft.Team.PublicWebPath(), nil
 }
 
-func teamUpdateSelf(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
-	choice := frm.GetStringOpt("choice")
-	name := frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	name := p.Frm.GetStringOpt("name")
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
 	ft.Self.Name = name
-	err := s.tm.Update(ctx, nil, ft.Self, logger)
+	err := p.Svc.tm.Update(p.Ctx, nil, ft.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -135,18 +130,18 @@ func teamUpdateSelf(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Ser
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": ft.Self.UserID, "name": name}
-	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, arg, &ft.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, arg, &ft.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
 	return ft, "Profile edited", ft.Team.PublicWebPath(), nil
 }
 
-func teamComment(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Service, logger util.Logger) (*FullTeam, string, string, error) {
+func teamComment(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
-	c, u, err := commentFromForm(frm, ft.Self.UserID)
+	c, u, err := commentFromForm(p.Frm, ft.Self.UserID)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -174,11 +169,11 @@ func teamComment(ctx context.Context, ft *FullTeam, frm util.ValueMap, s *Servic
 	default:
 		return nil, "", "", errors.Errorf("can't comment on object of type [%s]", c.Svc)
 	}
-	err = s.c.Save(ctx, nil, logger, c)
+	err = p.Svc.c.Save(p.Ctx, nil, p.Logger, c)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = s.send(enum.ModelServiceTeam, c.ModelID, action.ActComment, c, &ft.Self.UserID, logger)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActComment, c, &ft.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
