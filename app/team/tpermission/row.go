@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	TeamID  uuid.UUID `db:"team_id"`
 	Key     string    `db:"key"`
 	Value   string    `db:"value"`
@@ -27,22 +27,22 @@ type dto struct {
 	Created time.Time `db:"created"`
 }
 
-func (d *dto) ToTeamPermission() *TeamPermission {
-	if d == nil {
+func (r *row) ToTeamPermission() *TeamPermission {
+	if r == nil {
 		return nil
 	}
 	return &TeamPermission{
-		TeamID:  d.TeamID,
-		Key:     d.Key,
-		Value:   d.Value,
-		Access:  d.Access,
-		Created: d.Created,
+		TeamID:  r.TeamID,
+		Key:     r.Key,
+		Value:   r.Value,
+		Access:  r.Access,
+		Created: r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToTeamPermissions() TeamPermissions {
+func (x rows) ToTeamPermissions() TeamPermissions {
 	ret := make(TeamPermissions, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToTeamPermission())

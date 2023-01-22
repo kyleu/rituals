@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID       uuid.UUID  `db:"id"`
 	RetroID  uuid.UUID  `db:"retro_id"`
 	Idx      int        `db:"idx"`
@@ -31,26 +31,26 @@ type dto struct {
 	Updated  *time.Time `db:"updated"`
 }
 
-func (d *dto) ToFeedback() *Feedback {
-	if d == nil {
+func (r *row) ToFeedback() *Feedback {
+	if r == nil {
 		return nil
 	}
 	return &Feedback{
-		ID:       d.ID,
-		RetroID:  d.RetroID,
-		Idx:      d.Idx,
-		UserID:   d.UserID,
-		Category: d.Category,
-		Content:  d.Content,
-		HTML:     d.HTML,
-		Created:  d.Created,
-		Updated:  d.Updated,
+		ID:       r.ID,
+		RetroID:  r.RetroID,
+		Idx:      r.Idx,
+		UserID:   r.UserID,
+		Category: r.Category,
+		Content:  r.Content,
+		HTML:     r.HTML,
+		Created:  r.Created,
+		Updated:  r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToFeedbacks() Feedbacks {
+func (x rows) ToFeedbacks() Feedbacks {
 	ret := make(Feedbacks, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToFeedback())

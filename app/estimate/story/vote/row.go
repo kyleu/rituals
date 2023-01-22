@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	StoryID uuid.UUID  `db:"story_id"`
 	UserID  uuid.UUID  `db:"user_id"`
 	Choice  string     `db:"choice"`
@@ -27,22 +27,22 @@ type dto struct {
 	Updated *time.Time `db:"updated"`
 }
 
-func (d *dto) ToVote() *Vote {
-	if d == nil {
+func (r *row) ToVote() *Vote {
+	if r == nil {
 		return nil
 	}
 	return &Vote{
-		StoryID: d.StoryID,
-		UserID:  d.UserID,
-		Choice:  d.Choice,
-		Created: d.Created,
-		Updated: d.Updated,
+		StoryID: r.StoryID,
+		UserID:  r.UserID,
+		Choice:  r.Choice,
+		Created: r.Created,
+		Updated: r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToVotes() Votes {
+func (x rows) ToVotes() Votes {
 	ret := make(Votes, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToVote())

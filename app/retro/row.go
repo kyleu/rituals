@@ -21,7 +21,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID         uuid.UUID          `db:"id"`
 	Slug       string             `db:"slug"`
 	Title      string             `db:"title"`
@@ -35,30 +35,30 @@ type dto struct {
 	Updated    *time.Time         `db:"updated"`
 }
 
-func (d *dto) ToRetro() *Retro {
-	if d == nil {
+func (r *row) ToRetro() *Retro {
+	if r == nil {
 		return nil
 	}
 	categoriesArg := []string{}
-	_ = util.FromJSON(d.Categories, &categoriesArg)
+	_ = util.FromJSON(r.Categories, &categoriesArg)
 	return &Retro{
-		ID:         d.ID,
-		Slug:       d.Slug,
-		Title:      d.Title,
-		Icon:       d.Icon,
-		Status:     d.Status,
-		TeamID:     d.TeamID,
-		SprintID:   d.SprintID,
-		Owner:      d.Owner,
+		ID:         r.ID,
+		Slug:       r.Slug,
+		Title:      r.Title,
+		Icon:       r.Icon,
+		Status:     r.Status,
+		TeamID:     r.TeamID,
+		SprintID:   r.SprintID,
+		Owner:      r.Owner,
 		Categories: categoriesArg,
-		Created:    d.Created,
-		Updated:    d.Updated,
+		Created:    r.Created,
+		Updated:    r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToRetros() Retros {
+func (x rows) ToRetros() Retros {
 	ret := make(Retros, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToRetro())

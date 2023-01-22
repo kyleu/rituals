@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	RetroID uuid.UUID `db:"retro_id"`
 	Key     string    `db:"key"`
 	Value   string    `db:"value"`
@@ -27,22 +27,22 @@ type dto struct {
 	Created time.Time `db:"created"`
 }
 
-func (d *dto) ToRetroPermission() *RetroPermission {
-	if d == nil {
+func (r *row) ToRetroPermission() *RetroPermission {
+	if r == nil {
 		return nil
 	}
 	return &RetroPermission{
-		RetroID: d.RetroID,
-		Key:     d.Key,
-		Value:   d.Value,
-		Access:  d.Access,
-		Created: d.Created,
+		RetroID: r.RetroID,
+		Key:     r.Key,
+		Value:   r.Value,
+		Access:  r.Access,
+		Created: r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToRetroPermissions() RetroPermissions {
+func (x rows) ToRetroPermissions() RetroPermissions {
 	ret := make(RetroPermissions, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToRetroPermission())

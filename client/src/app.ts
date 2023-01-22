@@ -1,16 +1,18 @@
 // $PF_IGNORE$
+import {handle} from "./handle";
+
 function open() {
   console.log("[socket]: open");
 }
 
 function recv(m: any) {
-  console.log("[socket]: receive " + JSON.stringify(m, null, 2));
   const list = document.getElementById("socket-list");
   if (list) {
     const pre = document.createElement("pre");
     pre.innerText = JSON.stringify(m, null, 2);
     list.append(pre);
   }
+  handle(m);
 }
 
 function err(e: any) {

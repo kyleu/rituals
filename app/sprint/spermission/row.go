@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	SprintID uuid.UUID `db:"sprint_id"`
 	Key      string    `db:"key"`
 	Value    string    `db:"value"`
@@ -27,22 +27,22 @@ type dto struct {
 	Created  time.Time `db:"created"`
 }
 
-func (d *dto) ToSprintPermission() *SprintPermission {
-	if d == nil {
+func (r *row) ToSprintPermission() *SprintPermission {
+	if r == nil {
 		return nil
 	}
 	return &SprintPermission{
-		SprintID: d.SprintID,
-		Key:      d.Key,
-		Value:    d.Value,
-		Access:   d.Access,
-		Created:  d.Created,
+		SprintID: r.SprintID,
+		Key:      r.Key,
+		Value:    r.Value,
+		Access:   r.Access,
+		Created:  r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToSprintPermissions() SprintPermissions {
+func (x rows) ToSprintPermissions() SprintPermissions {
 	ret := make(SprintPermissions, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToSprintPermission())

@@ -18,7 +18,7 @@ func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, 
 	params = filters(params)
 	wc := ""
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get stories")
@@ -40,7 +40,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Story, error) {
 	wc := defaultWC(0)
-	ret := &dto{}
+	ret := &row{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
@@ -54,7 +54,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 		return Stories{}, nil
 	}
 	wc := database.SQLInClause("id", len(ids), 0)
-	ret := dtos{}
+	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	vals := make([]any, 0, len(ids))
 	for _, x := range ids {
@@ -71,7 +71,7 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	params = filters(params)
 	wc := "\"estimate_id\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get stories by estimateID [%v]", estimateID)
@@ -83,7 +83,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	params = filters(params)
 	wc := "\"user_id\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get stories by userID [%v]", userID)
@@ -97,7 +97,7 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 	params = filters(params)
 	wc := searchClause
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 }
 
 func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Stories, error) {
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get stories using custom SQL")

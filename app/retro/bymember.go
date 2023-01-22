@@ -16,7 +16,7 @@ func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, u uuid.UUID, par
 	params = filters(params)
 	wc := "\"owner\" = $1 or id in (select retro_id from retro_member where user_id = $1)"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, u)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get retros for member [%v]", u)

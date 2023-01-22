@@ -1,5 +1,5 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-package rmember
+package tmember
 
 import (
 	"fmt"
@@ -13,15 +13,15 @@ import (
 )
 
 var (
-	table         = "retro_member"
+	table         = "team_member"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"retro_id", "user_id", "name", "picture", "role", "created", "updated"}
+	columns       = []string{"team_id", "user_id", "name", "picture", "role", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
-	RetroID uuid.UUID         `db:"retro_id"`
+type row struct {
+	TeamID  uuid.UUID         `db:"team_id"`
 	UserID  uuid.UUID         `db:"user_id"`
 	Name    string            `db:"name"`
 	Picture string            `db:"picture"`
@@ -30,31 +30,31 @@ type dto struct {
 	Updated *time.Time        `db:"updated"`
 }
 
-func (d *dto) ToRetroMember() *RetroMember {
-	if d == nil {
+func (r *row) ToTeamMember() *TeamMember {
+	if r == nil {
 		return nil
 	}
-	return &RetroMember{
-		RetroID: d.RetroID,
-		UserID:  d.UserID,
-		Name:    d.Name,
-		Picture: d.Picture,
-		Role:    d.Role,
-		Created: d.Created,
-		Updated: d.Updated,
+	return &TeamMember{
+		TeamID:  r.TeamID,
+		UserID:  r.UserID,
+		Name:    r.Name,
+		Picture: r.Picture,
+		Role:    r.Role,
+		Created: r.Created,
+		Updated: r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToRetroMembers() RetroMembers {
-	ret := make(RetroMembers, 0, len(x))
+func (x rows) ToTeamMembers() TeamMembers {
+	ret := make(TeamMembers, 0, len(x))
 	for _, d := range x {
-		ret = append(ret, d.ToRetroMember())
+		ret = append(ret, d.ToTeamMember())
 	}
 	return ret
 }
 
 func defaultWC(idx int) string {
-	return fmt.Sprintf("\"retro_id\" = $%d and \"user_id\" = $%d", idx+1, idx+2)
+	return fmt.Sprintf("\"team_id\" = $%d and \"user_id\" = $%d", idx+1, idx+2)
 }

@@ -20,7 +20,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	SprintID uuid.UUID         `db:"sprint_id"`
 	UserID   uuid.UUID         `db:"user_id"`
 	Name     string            `db:"name"`
@@ -30,24 +30,24 @@ type dto struct {
 	Updated  *time.Time        `db:"updated"`
 }
 
-func (d *dto) ToSprintMember() *SprintMember {
-	if d == nil {
+func (r *row) ToSprintMember() *SprintMember {
+	if r == nil {
 		return nil
 	}
 	return &SprintMember{
-		SprintID: d.SprintID,
-		UserID:   d.UserID,
-		Name:     d.Name,
-		Picture:  d.Picture,
-		Role:     d.Role,
-		Created:  d.Created,
-		Updated:  d.Updated,
+		SprintID: r.SprintID,
+		UserID:   r.UserID,
+		Name:     r.Name,
+		Picture:  r.Picture,
+		Role:     r.Role,
+		Created:  r.Created,
+		Updated:  r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToSprintMembers() SprintMembers {
+func (x rows) ToSprintMembers() SprintMembers {
 	ret := make(SprintMembers, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToSprintMember())

@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID      uuid.UUID  `db:"id"`
 	Name    string     `db:"name"`
 	Picture string     `db:"picture"`
@@ -27,22 +27,22 @@ type dto struct {
 	Updated *time.Time `db:"updated"`
 }
 
-func (d *dto) ToUser() *User {
-	if d == nil {
+func (r *row) ToUser() *User {
+	if r == nil {
 		return nil
 	}
 	return &User{
-		ID:      d.ID,
-		Name:    d.Name,
-		Picture: d.Picture,
-		Created: d.Created,
-		Updated: d.Updated,
+		ID:      r.ID,
+		Name:    r.Name,
+		Picture: r.Picture,
+		Created: r.Created,
+		Updated: r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToUsers() Users {
+func (x rows) ToUsers() Users {
 	ret := make(Users, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToUser())

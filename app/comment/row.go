@@ -20,7 +20,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID      uuid.UUID         `db:"id"`
 	Svc     enum.ModelService `db:"svc"`
 	ModelID uuid.UUID         `db:"model_id"`
@@ -30,24 +30,24 @@ type dto struct {
 	Created time.Time         `db:"created"`
 }
 
-func (d *dto) ToComment() *Comment {
-	if d == nil {
+func (r *row) ToComment() *Comment {
+	if r == nil {
 		return nil
 	}
 	return &Comment{
-		ID:      d.ID,
-		Svc:     d.Svc,
-		ModelID: d.ModelID,
-		UserID:  d.UserID,
-		Content: d.Content,
-		HTML:    d.HTML,
-		Created: d.Created,
+		ID:      r.ID,
+		Svc:     r.Svc,
+		ModelID: r.ModelID,
+		UserID:  r.UserID,
+		Content: r.Content,
+		HTML:    r.HTML,
+		Created: r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToComments() Comments {
+func (x rows) ToComments() Comments {
 	ret := make(Comments, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToComment())

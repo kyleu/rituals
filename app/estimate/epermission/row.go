@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	EstimateID uuid.UUID `db:"estimate_id"`
 	Key        string    `db:"key"`
 	Value      string    `db:"value"`
@@ -27,22 +27,22 @@ type dto struct {
 	Created    time.Time `db:"created"`
 }
 
-func (d *dto) ToEstimatePermission() *EstimatePermission {
-	if d == nil {
+func (r *row) ToEstimatePermission() *EstimatePermission {
+	if r == nil {
 		return nil
 	}
 	return &EstimatePermission{
-		EstimateID: d.EstimateID,
-		Key:        d.Key,
-		Value:      d.Value,
-		Access:     d.Access,
-		Created:    d.Created,
+		EstimateID: r.EstimateID,
+		Key:        r.Key,
+		Value:      r.Value,
+		Access:     r.Access,
+		Created:    r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToEstimatePermissions() EstimatePermissions {
+func (x rows) ToEstimatePermissions() EstimatePermissions {
 	ret := make(EstimatePermissions, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToEstimatePermission())

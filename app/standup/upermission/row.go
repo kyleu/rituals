@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	StandupID uuid.UUID `db:"standup_id"`
 	Key       string    `db:"key"`
 	Value     string    `db:"value"`
@@ -27,22 +27,22 @@ type dto struct {
 	Created   time.Time `db:"created"`
 }
 
-func (d *dto) ToStandupPermission() *StandupPermission {
-	if d == nil {
+func (r *row) ToStandupPermission() *StandupPermission {
+	if r == nil {
 		return nil
 	}
 	return &StandupPermission{
-		StandupID: d.StandupID,
-		Key:       d.Key,
-		Value:     d.Value,
-		Access:    d.Access,
-		Created:   d.Created,
+		StandupID: r.StandupID,
+		Key:       r.Key,
+		Value:     r.Value,
+		Access:    r.Access,
+		Created:   r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToStandupPermissions() StandupPermissions {
+func (x rows) ToStandupPermissions() StandupPermissions {
 	ret := make(StandupPermissions, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToStandupPermission())

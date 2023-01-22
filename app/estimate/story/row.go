@@ -20,7 +20,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID         uuid.UUID          `db:"id"`
 	EstimateID uuid.UUID          `db:"estimate_id"`
 	Idx        int                `db:"idx"`
@@ -32,26 +32,26 @@ type dto struct {
 	Updated    *time.Time         `db:"updated"`
 }
 
-func (d *dto) ToStory() *Story {
-	if d == nil {
+func (r *row) ToStory() *Story {
+	if r == nil {
 		return nil
 	}
 	return &Story{
-		ID:         d.ID,
-		EstimateID: d.EstimateID,
-		Idx:        d.Idx,
-		UserID:     d.UserID,
-		Title:      d.Title,
-		Status:     d.Status,
-		FinalVote:  d.FinalVote,
-		Created:    d.Created,
-		Updated:    d.Updated,
+		ID:         r.ID,
+		EstimateID: r.EstimateID,
+		Idx:        r.Idx,
+		UserID:     r.UserID,
+		Title:      r.Title,
+		Status:     r.Status,
+		FinalVote:  r.FinalVote,
+		Created:    r.Created,
+		Updated:    r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToStories() Stories {
+func (x rows) ToStories() Stories {
 	ret := make(Stories, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToStory())

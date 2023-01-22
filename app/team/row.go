@@ -20,7 +20,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID      uuid.UUID          `db:"id"`
 	Slug    string             `db:"slug"`
 	Title   string             `db:"title"`
@@ -31,25 +31,25 @@ type dto struct {
 	Updated *time.Time         `db:"updated"`
 }
 
-func (d *dto) ToTeam() *Team {
-	if d == nil {
+func (r *row) ToTeam() *Team {
+	if r == nil {
 		return nil
 	}
 	return &Team{
-		ID:      d.ID,
-		Slug:    d.Slug,
-		Title:   d.Title,
-		Icon:    d.Icon,
-		Status:  d.Status,
-		Owner:   d.Owner,
-		Created: d.Created,
-		Updated: d.Updated,
+		ID:      r.ID,
+		Slug:    r.Slug,
+		Title:   r.Title,
+		Icon:    r.Icon,
+		Status:  r.Status,
+		Owner:   r.Owner,
+		Created: r.Created,
+		Updated: r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToTeams() Teams {
+func (x rows) ToTeams() Teams {
 	ret := make(Teams, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToTeam())

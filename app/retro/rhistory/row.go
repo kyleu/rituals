@@ -19,28 +19,28 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	Slug      string    `db:"slug"`
 	RetroID   uuid.UUID `db:"retro_id"`
 	RetroName string    `db:"retro_name"`
 	Created   time.Time `db:"created"`
 }
 
-func (d *dto) ToRetroHistory() *RetroHistory {
-	if d == nil {
+func (r *row) ToRetroHistory() *RetroHistory {
+	if r == nil {
 		return nil
 	}
 	return &RetroHistory{
-		Slug:      d.Slug,
-		RetroID:   d.RetroID,
-		RetroName: d.RetroName,
-		Created:   d.Created,
+		Slug:      r.Slug,
+		RetroID:   r.RetroID,
+		RetroName: r.RetroName,
+		Created:   r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToRetroHistories() RetroHistories {
+func (x rows) ToRetroHistories() RetroHistories {
 	ret := make(RetroHistories, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToRetroHistory())

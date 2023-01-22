@@ -19,28 +19,28 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	Slug       string    `db:"slug"`
 	SprintID   uuid.UUID `db:"sprint_id"`
 	SprintName string    `db:"sprint_name"`
 	Created    time.Time `db:"created"`
 }
 
-func (d *dto) ToSprintHistory() *SprintHistory {
-	if d == nil {
+func (r *row) ToSprintHistory() *SprintHistory {
+	if r == nil {
 		return nil
 	}
 	return &SprintHistory{
-		Slug:       d.Slug,
-		SprintID:   d.SprintID,
-		SprintName: d.SprintName,
-		Created:    d.Created,
+		Slug:       r.Slug,
+		SprintID:   r.SprintID,
+		SprintName: r.SprintName,
+		Created:    r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToSprintHistories() SprintHistories {
+func (x rows) ToSprintHistories() SprintHistories {
 	ret := make(SprintHistories, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToSprintHistory())

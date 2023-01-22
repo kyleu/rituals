@@ -21,7 +21,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID      uuid.UUID         `db:"id"`
 	Svc     enum.ModelService `db:"svc"`
 	ModelID uuid.UUID         `db:"model_id"`
@@ -32,27 +32,27 @@ type dto struct {
 	Created time.Time         `db:"created"`
 }
 
-func (d *dto) ToAction() *Action {
-	if d == nil {
+func (r *row) ToAction() *Action {
+	if r == nil {
 		return nil
 	}
 	contentArg := util.ValueMap{}
-	_ = util.FromJSON(d.Content, &contentArg)
+	_ = util.FromJSON(r.Content, &contentArg)
 	return &Action{
-		ID:      d.ID,
-		Svc:     d.Svc,
-		ModelID: d.ModelID,
-		UserID:  d.UserID,
-		Act:     d.Act,
+		ID:      r.ID,
+		Svc:     r.Svc,
+		ModelID: r.ModelID,
+		UserID:  r.UserID,
+		Act:     r.Act,
 		Content: contentArg,
-		Note:    d.Note,
-		Created: d.Created,
+		Note:    r.Note,
+		Created: r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToActions() Actions {
+func (x rows) ToActions() Actions {
 	ret := make(Actions, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToAction())

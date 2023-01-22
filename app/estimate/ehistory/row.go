@@ -19,28 +19,28 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	Slug         string    `db:"slug"`
 	EstimateID   uuid.UUID `db:"estimate_id"`
 	EstimateName string    `db:"estimate_name"`
 	Created      time.Time `db:"created"`
 }
 
-func (d *dto) ToEstimateHistory() *EstimateHistory {
-	if d == nil {
+func (r *row) ToEstimateHistory() *EstimateHistory {
+	if r == nil {
 		return nil
 	}
 	return &EstimateHistory{
-		Slug:         d.Slug,
-		EstimateID:   d.EstimateID,
-		EstimateName: d.EstimateName,
-		Created:      d.Created,
+		Slug:         r.Slug,
+		EstimateID:   r.EstimateID,
+		EstimateName: r.EstimateName,
+		Created:      r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToEstimateHistories() EstimateHistories {
+func (x rows) ToEstimateHistories() EstimateHistories {
 	ret := make(EstimateHistories, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToEstimateHistory())

@@ -19,7 +19,7 @@ func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, 
 	params = filters(params)
 	wc := ""
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get votes")
@@ -41,7 +41,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, storyID uuid.UUID, userID uuid.UUID, logger util.Logger) (*Vote, error) {
 	wc := defaultWC(0)
-	ret := &dto{}
+	ret := &row{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, storyID, userID)
 	if err != nil {
@@ -62,7 +62,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 		wc += fmt.Sprintf("(story_id = $%d and user_id = $%d)", (idx*2)+1, (idx*2)+2)
 	}
 	wc += ")"
-	ret := dtos{}
+	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	vals := make([]any, 0, len(pks)*2)
 	for _, x := range pks {
@@ -79,7 +79,7 @@ func (s *Service) GetByStoryID(ctx context.Context, tx *sqlx.Tx, storyID uuid.UU
 	params = filters(params)
 	wc := "\"story_id\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, storyID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get votes by storyID [%v]", storyID)
@@ -91,7 +91,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	params = filters(params)
 	wc := "\"user_id\" = $1"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get votes by userID [%v]", userID)
@@ -100,7 +100,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 }
 
 func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (Votes, error) {
-	ret := dtos{}
+	ret := rows{}
 	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get votes using custom SQL")

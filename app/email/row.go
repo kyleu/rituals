@@ -20,7 +20,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID         uuid.UUID       `db:"id"`
 	Recipients json.RawMessage `db:"recipients"`
 	Subject    string          `db:"subject"`
@@ -32,30 +32,30 @@ type dto struct {
 	Created    time.Time       `db:"created"`
 }
 
-func (d *dto) ToEmail() *Email {
-	if d == nil {
+func (r *row) ToEmail() *Email {
+	if r == nil {
 		return nil
 	}
 	recipientsArg := []string{}
-	_ = util.FromJSON(d.Recipients, &recipientsArg)
+	_ = util.FromJSON(r.Recipients, &recipientsArg)
 	dataArg := util.ValueMap{}
-	_ = util.FromJSON(d.Data, &dataArg)
+	_ = util.FromJSON(r.Data, &dataArg)
 	return &Email{
-		ID:         d.ID,
+		ID:         r.ID,
 		Recipients: recipientsArg,
-		Subject:    d.Subject,
+		Subject:    r.Subject,
 		Data:       dataArg,
-		Plain:      d.Plain,
-		HTML:       d.HTML,
-		UserID:     d.UserID,
-		Status:     d.Status,
-		Created:    d.Created,
+		Plain:      r.Plain,
+		HTML:       r.HTML,
+		UserID:     r.UserID,
+		Status:     r.Status,
+		Created:    r.Created,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToEmails() Emails {
+func (x rows) ToEmails() Emails {
 	ret := make(Emails, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToEmail())

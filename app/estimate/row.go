@@ -21,7 +21,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID       uuid.UUID          `db:"id"`
 	Slug     string             `db:"slug"`
 	Title    string             `db:"title"`
@@ -35,30 +35,30 @@ type dto struct {
 	Updated  *time.Time         `db:"updated"`
 }
 
-func (d *dto) ToEstimate() *Estimate {
-	if d == nil {
+func (r *row) ToEstimate() *Estimate {
+	if r == nil {
 		return nil
 	}
 	choicesArg := []string{}
-	_ = util.FromJSON(d.Choices, &choicesArg)
+	_ = util.FromJSON(r.Choices, &choicesArg)
 	return &Estimate{
-		ID:       d.ID,
-		Slug:     d.Slug,
-		Title:    d.Title,
-		Icon:     d.Icon,
-		Status:   d.Status,
-		TeamID:   d.TeamID,
-		SprintID: d.SprintID,
-		Owner:    d.Owner,
+		ID:       r.ID,
+		Slug:     r.Slug,
+		Title:    r.Title,
+		Icon:     r.Icon,
+		Status:   r.Status,
+		TeamID:   r.TeamID,
+		SprintID: r.SprintID,
+		Owner:    r.Owner,
 		Choices:  choicesArg,
-		Created:  d.Created,
-		Updated:  d.Updated,
+		Created:  r.Created,
+		Updated:  r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToEstimates() Estimates {
+func (x rows) ToEstimates() Estimates {
 	ret := make(Estimates, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToEstimate())

@@ -19,7 +19,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	ID        uuid.UUID  `db:"id"`
 	StandupID uuid.UUID  `db:"standup_id"`
 	Day       time.Time  `db:"day"`
@@ -30,25 +30,25 @@ type dto struct {
 	Updated   *time.Time `db:"updated"`
 }
 
-func (d *dto) ToReport() *Report {
-	if d == nil {
+func (r *row) ToReport() *Report {
+	if r == nil {
 		return nil
 	}
 	return &Report{
-		ID:        d.ID,
-		StandupID: d.StandupID,
-		Day:       d.Day,
-		UserID:    d.UserID,
-		Content:   d.Content,
-		HTML:      d.HTML,
-		Created:   d.Created,
-		Updated:   d.Updated,
+		ID:        r.ID,
+		StandupID: r.StandupID,
+		Day:       r.Day,
+		UserID:    r.UserID,
+		Content:   r.Content,
+		HTML:      r.HTML,
+		Created:   r.Created,
+		Updated:   r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToReports() Reports {
+func (x rows) ToReports() Reports {
 	ret := make(Reports, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToReport())

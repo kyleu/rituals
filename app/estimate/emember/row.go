@@ -20,7 +20,7 @@ var (
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
 
-type dto struct {
+type row struct {
 	EstimateID uuid.UUID         `db:"estimate_id"`
 	UserID     uuid.UUID         `db:"user_id"`
 	Name       string            `db:"name"`
@@ -30,24 +30,24 @@ type dto struct {
 	Updated    *time.Time        `db:"updated"`
 }
 
-func (d *dto) ToEstimateMember() *EstimateMember {
-	if d == nil {
+func (r *row) ToEstimateMember() *EstimateMember {
+	if r == nil {
 		return nil
 	}
 	return &EstimateMember{
-		EstimateID: d.EstimateID,
-		UserID:     d.UserID,
-		Name:       d.Name,
-		Picture:    d.Picture,
-		Role:       d.Role,
-		Created:    d.Created,
-		Updated:    d.Updated,
+		EstimateID: r.EstimateID,
+		UserID:     r.UserID,
+		Name:       r.Name,
+		Picture:    r.Picture,
+		Role:       r.Role,
+		Created:    r.Created,
+		Updated:    r.Updated,
 	}
 }
 
-type dtos []*dto
+type rows []*row
 
-func (x dtos) ToEstimateMembers() EstimateMembers {
+func (x rows) ToEstimateMembers() EstimateMembers {
 	ret := make(EstimateMembers, 0, len(x))
 	for _, d := range x {
 		ret = append(ret, d.ToEstimateMember())
