@@ -60,7 +60,7 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		return nil, "", "", err
 	}
 	fr.Retro = model
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Team.ID, action.ActUpdate, model, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActUpdate, model, &fr.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -78,7 +78,7 @@ func retroFeedbackAdd(p *Params, fr *FullRetro) (*FullRetro, string, string, err
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Team.ID, action.ActFeedbackAdd, f, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackAdd, f, &fr.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -104,7 +104,7 @@ func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Team.ID, action.ActFeedbackUpdate, f, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackUpdate, f, &fr.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -124,7 +124,7 @@ func retroFeedbackRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Team.ID, action.ActFeedbackRemove, id, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackRemove, id, &fr.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}

@@ -51,7 +51,7 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		return nil, "", "", err
 	}
 	fs.Sprint = model
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Team.ID, action.ActUpdate, model, &fs.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActUpdate, model, &fs.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}

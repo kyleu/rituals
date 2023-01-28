@@ -1,14 +1,15 @@
 import {Message} from "./socket";
-import {addComment, Comment} from "./comments";
-import {memberAdd, memberRemove, memberUpdate, onlineUpdate} from "./member";
+import {commentAdd, Comment} from "./comments";
+import {memberAdd, memberRemove, memberUpdate, onlineUpdate} from "./members";
 import {flashCreate} from "./flash";
+import {storyAdd} from "./estimate";
 
 export function handle(svc: string, m: Message) {
   switch (m.cmd) {
     case "error":
       return onError(m.param.message);
     case "comment":
-      return addComment(m.param as Comment);
+      return commentAdd(m.param as Comment);
     case "online-update":
       return onlineUpdate(m.param.userID, m.param.connected);
     case "member-add":
@@ -21,8 +22,8 @@ export function handle(svc: string, m: Message) {
   switch (svc) {
     case "estimate":
       switch (m.cmd) {
-        case "fooo":
-          return addComment(m.param as Comment);
+        case "story-add":
+          return storyAdd();
       }
   }
   return;

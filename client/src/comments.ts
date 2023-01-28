@@ -1,8 +1,7 @@
 import {els, req} from "./dom";
 import {send} from "./app";
-import {getSelfID, username} from "./member";
-import {relativeTime, utc} from "./time";
-import {snippetComment} from "./snippets";
+import {getSelfID, username} from "./members";
+import {snippetComment} from "./comment";
 
 export class Comment {
   svc?: string;
@@ -32,15 +31,15 @@ export function initComments() {
       c.content = ta.value;
       c.userID = getSelfID();
       send("comment", c);
-      addComment(c);
+      commentAdd(c);
       return false;
     }
   }
 }
 
-export function addComment(c: Comment) {
+export function commentAdd(c: Comment) {
   const ul = req("#comment-list-" + c.svc + "-" + c.modelID);
-  const un = username(c.userID!);
+  const un = username(c.userID);
   const li = snippetComment(c, un);
   ul.appendChild(li);
 

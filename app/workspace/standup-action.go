@@ -58,7 +58,7 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		return nil, "", "", err
 	}
 	fu.Standup = model
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActUpdate, model, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActUpdate, model, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -80,7 +80,7 @@ func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string,
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportAdd, rpt, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportAdd, rpt, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -110,7 +110,7 @@ func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -130,7 +130,7 @@ func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Team.ID, action.ActReportRemove, id, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportRemove, id, &fu.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err
 	}

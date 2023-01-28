@@ -1,11 +1,14 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
-import {snippetMember, snippetMemberModal} from "./snippets.jsx";
+import {snippetMember, snippetMemberModal} from "./member.jsx";
 
 let selfID: string;
 let names: { [key: string]: string; };
 
-export function username(id: string) {
+export function username(id?: string) {
+  if(!id) {
+    return "System";
+  }
   const ret = names[id];
   if (ret) {
     return ret;
@@ -80,8 +83,10 @@ export function refreshMembers() {
   const panel = req("#panel-members");
   const members = els(".member", panel);
   for (const m of members) {
-    const id = m.dataset["id"]!;
-    names[id] = req(".member-name", m).innerText;
+    const id = m.dataset["id"];
+    if(id) {
+      names[id] = req(".member-name", m).innerText;
+    }
   }
 }
 

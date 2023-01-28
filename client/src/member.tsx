@@ -1,28 +1,5 @@
-import {JSX} from "./jsx";
-import {Comment} from "./comments";
-import {relativeTime, utc} from "./time";
-
-function svg(key: string, cls?: string) {
-  return {
-    "__html": `<svg class="${cls || ""}" style="width: 18px; height: 18px;"><use href="#svg-${key}"></use></svg>`
-  }
-}
-
-export function snippetComment(c: Comment, un: string) {
-  const li = <li></li>;
-
-  const d = utc(new Date());
-  const timeSpan = <span class="nowrap reltime" data-time={d}>just now</span>;
-  relativeTime(d, timeSpan);
-
-  const time = <div class="right"></div>;
-  time.appendChild(timeSpan);
-  li.appendChild(time);
-
-  li.appendChild(<div>{ c.content }</div>);
-  li.appendChild(<div><em>{ un }</em></div>);
-  return li;
-}
+import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import {svg} from "./util";
 
 export function snippetMember(userID: string, name: string, role: string): HTMLElement {
   return <tr id={ "member-" + userID } class="member" data-id={ userID }>
@@ -36,6 +13,7 @@ export function snippetMember(userID: string, name: string, role: string): HTMLE
     <td class="shrink online-status" title="offline" dangerouslySetInnerHTML={svg("circle", "right")}></td>
   </tr>;
 }
+
 export function snippetMemberModal(userID: string, name: string, role: string): HTMLElement {
   const roles = [["owner", "Owner"], ["member", "Member"], ["observer", "Observer"]]
   return <div id={ "modal-member-" + userID } data-id={ userID } class="modal modal-member" style="display: none;">
