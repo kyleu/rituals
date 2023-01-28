@@ -47,12 +47,16 @@ func StreamEstimateWorkspaceStories(qw422016 *qt422016.Writer, w *workspace.Full
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:23
 	for _, s := range w.Stories {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:23
-		qw422016.N().S(`      <tr>
+		qw422016.N().S(`      <tr class="story-row" id="story-row-`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:24
+		qw422016.E().S(s.ID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:24
+		qw422016.N().S(`" data-idx="s.Idx">
         <td><a href="#modal-story-`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25
 		qw422016.E().S(s.ID.String())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25
-		qw422016.N().S(`">`)
+		qw422016.N().S(`" class="story-title">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25
 		qw422016.E().S(s.TitleString())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25

@@ -1,5 +1,5 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {Comment} from "./comments";
+import {Comment} from "./comment";
 import {relativeTime, utc} from "./time";
 
 export function snippetComment(c: Comment, un: string) {

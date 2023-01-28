@@ -1,16 +1,15 @@
-import {req} from "./dom";
-import {send} from "./app";
+import {initStories, storyAdd} from "./story";
+import {Message} from "./socket";
 
 export function initEstimate() {
-  const storyAddModal = req("#modal-story--add");
-  const storyAddForm = req("form", storyAddModal);
-  storyAddForm.onsubmit = function () {
-    const title = req<HTMLInputElement>("input[name=\"title\"]", storyAddForm).value;
-    send("story-add", {"title": title});
-    return false;
-  }
+  initStories();
 }
 
-export function storyAdd() {
-  console.log("TODO: storyAdd");
+export function handleEstimate(m: Message) {
+  switch (m.cmd) {
+    case "story-add":
+      return storyAdd(m.param);
+    default:
+      throw "invalid estimate command [" + m.cmd + "]"
+  }
 }

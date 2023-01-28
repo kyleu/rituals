@@ -1,8 +1,12 @@
 import {Message} from "./socket";
-import {commentAdd, Comment} from "./comments";
-import {memberAdd, memberRemove, memberUpdate, onlineUpdate} from "./members";
+import {commentAdd, Comment} from "./comment";
+import {memberAdd, memberRemove, memberUpdate, onlineUpdate} from "./member";
 import {flashCreate} from "./flash";
-import {storyAdd} from "./estimate";
+import {handleTeam} from "./team";
+import {handleSprint} from "./sprint";
+import {handleEstimate} from "./estimate";
+import {handleStandup} from "./standup";
+import {handleRetro} from "./retro";
 
 export function handle(svc: string, m: Message) {
   switch (m.cmd) {
@@ -20,16 +24,21 @@ export function handle(svc: string, m: Message) {
       return memberRemove(m.param);
   }
   switch (svc) {
+    case "team":
+      return handleTeam(m);
+    case "sprint":
+      return handleSprint(m);
     case "estimate":
-      switch (m.cmd) {
-        case "story-add":
-          return storyAdd();
-      }
+      return handleEstimate(m);
+    case "standup":
+      return handleStandup(m);
+    case "retro":
+      return handleRetro(m);
+    default:
+      throw "invalid service [" + svc + "]";
   }
-  return;
 }
 
-function onError(message: string) {
-  flashCreate("error", "error", message);
+function onError(log: string) {
+  flashCreate("error", "error", log);
 }
-

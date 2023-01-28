@@ -1,7 +1,7 @@
 // $PF_IGNORE$
-import {initComments} from "./comments";
+import {initComments} from "./comment";
 import {handle} from "./handle";
-import {initMembers} from "./members";
+import {initMembers} from "./member";
 import {Socket} from "./socket";
 import {initEstimate} from "./estimate";
 import {initTeam} from "./team";

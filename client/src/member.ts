@@ -1,6 +1,6 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
-import {snippetMember, snippetMemberModal} from "./member.jsx";
+import {snippetMember, snippetMemberModal} from "./members.jsx";
 
 let selfID: string;
 let names: { [key: string]: string; };

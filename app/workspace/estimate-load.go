@@ -63,6 +63,7 @@ func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEs
 	if er != nil {
 		return nil, er
 	}
+	ret.Stories.Sort()
 	funcs := []func() error{
 		func() error {
 			var err error

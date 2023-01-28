@@ -1,7 +1,7 @@
 import {els, req} from "./dom";
 import {send} from "./app";
-import {getSelfID, username} from "./members";
-import {snippetComment} from "./comment";
+import {getSelfID, username} from "./member";
+import {snippetComment} from "./comments";
 
 export class Comment {
   svc?: string;
