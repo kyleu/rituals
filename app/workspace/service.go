@@ -68,8 +68,9 @@ type Service struct {
 	c  *comment.Service
 	el *email.Service
 
-	send   action.SendFn
-	online func(key string) []uuid.UUID
+	send     action.SendFn
+	sendUser action.SendUserFn
+	online   func(key string) []uuid.UUID
 }
 
 func NewService(
@@ -90,8 +91,9 @@ func NewService(
 	}
 }
 
-func (s *Service) RegisterSend(send action.SendFn) {
+func (s *Service) RegisterSend(send action.SendFn, sendUser action.SendUserFn) {
 	s.send = send
+	s.sendUser = sendUser
 }
 func (s *Service) RegisterOnline(f func(key string) []uuid.UUID) {
 	s.online = f

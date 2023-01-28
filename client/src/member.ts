@@ -58,6 +58,7 @@ function wireMemberForm(modal: HTMLElement) {
       req(".member-role", panel).innerText = role;
     } else if (cmd === "member-remove") {
       panel.remove();
+      refreshMembers();
     }
     document.location.hash = "";
     return false;
@@ -145,6 +146,12 @@ export function memberUpdate(userID: string, name: string, role: string) {
     });
     tbl.replaceChildren(...itemsArr);
   }
+}
+
+export function memberRemove(userID: string) {
+  const panel = req("#member-" + userID);
+  panel.remove();
+  refreshMembers();
 }
 
 export function onlineUpdate(userID: string, connected: boolean) {

@@ -133,6 +133,10 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		ch := fmt.Sprintf("%s:%s", string(svc), id.String())
 		msg := websocket.NewMessage(userID, ch, string(act), param)
 		return ws.WriteChannel(msg, logger, except...)
+	}, func(connID uuid.UUID, svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger) error {
+		ch := fmt.Sprintf("%s:%s", string(svc), id.String())
+		msg := websocket.NewMessage(userID, ch, string(act), param)
+		return ws.WriteMessage(connID, msg, logger)
 	})
 	w.RegisterOnline(ws.GetOnline)
 	return &Services{

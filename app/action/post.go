@@ -12,6 +12,7 @@ import (
 )
 
 type SendFn func(svc enum.ModelService, modelID uuid.UUID, act Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error
+type SendUserFn func(connID uuid.UUID, svc enum.ModelService, modelID uuid.UUID, act Act, param any, userID *uuid.UUID, logger util.Logger) error
 
 func (s *Service) Post(
 	ctx context.Context, svc enum.ModelService, id uuid.UUID, userID uuid.UUID, a Act, t util.ValueMap, tx *sqlx.Tx, logger util.Logger, sends ...SendFn,
