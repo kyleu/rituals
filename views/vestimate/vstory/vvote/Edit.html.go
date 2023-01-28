@@ -84,7 +84,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vstory/vvote/Edit.html:29
 	if p.IsNew {
 //line views/vestimate/vstory/vvote/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "storyID", "Story ID", &p.Model.StoryID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "storyID", "", "Story ID", &p.Model.StoryID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vstory/vvote/Edit.html:29
 	}
 //line views/vestimate/vstory/vvote/Edit.html:29
@@ -93,14 +93,14 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vstory/vvote/Edit.html:30
 	if p.IsNew {
 //line views/vestimate/vstory/vvote/Edit.html:30
-		components.StreamTableInputUUID(qw422016, "userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vstory/vvote/Edit.html:30
 	}
 //line views/vestimate/vstory/vvote/Edit.html:30
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/vvote/Edit.html:31
-	components.StreamTableInput(qw422016, "choice", "Choice", p.Model.Choice, 5, "String text")
+	components.StreamTableInput(qw422016, "choice", "", "Choice", p.Model.Choice, 5, "String text")
 //line views/vestimate/vstory/vvote/Edit.html:31
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

@@ -68,7 +68,8 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint) (*FullSprint
 		func() error {
 			var err error
 			ret.Members, ret.Self, err = s.membersSprint(p, spr.ID)
-			ret.UtilMembers = ret.Members.ToMembers()
+			online := s.online(util.KeySprint + ":" + spr.ID.String())
+			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
 		},
 		func() error {

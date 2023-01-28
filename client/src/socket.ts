@@ -1,6 +1,6 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 export function socketInit() {
-  (window as any).rituals.Socket = Socket;
+  return Socket;
 }
 
 let appUnloading = false;

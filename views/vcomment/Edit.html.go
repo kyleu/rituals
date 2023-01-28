@@ -84,34 +84,34 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vcomment/Edit.html:29
 	if p.IsNew {
 //line views/vcomment/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vcomment/Edit.html:29
 	}
 //line views/vcomment/Edit.html:29
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:30
-	components.StreamTableSelect(qw422016, "svc", "Svc", string(p.Model.Svc), []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, 5, "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]")
+	components.StreamTableSelect(qw422016, "svc", "", "Svc", string(p.Model.Svc), []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, []string{"team", "sprint", "estimate", "standup", "retro", "story", "feedback", "report"}, 5, "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]")
 //line views/vcomment/Edit.html:30
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:31
-	components.StreamTableInputUUID(qw422016, "modelID", "Model ID", &p.Model.ModelID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "modelID", "", "Model ID", &p.Model.ModelID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vcomment/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:32
-	components.StreamTableInputUUID(qw422016, "userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vcomment/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:33
-	components.StreamTableInput(qw422016, "content", "Content", p.Model.Content, 5, "String text")
+	components.StreamTableInput(qw422016, "content", "", "Content", p.Model.Content, 5, "String text")
 //line views/vcomment/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vcomment/Edit.html:34
-	components.StreamTableTextarea(qw422016, "html", "HTML", 8, p.Model.HTML, 5, "String text")
+	components.StreamTableTextarea(qw422016, "html", "", "HTML", 8, p.Model.HTML, 5, "String text")
 //line views/vcomment/Edit.html:34
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

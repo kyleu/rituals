@@ -66,7 +66,8 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup) (*FullStand
 		func() error {
 			var err error
 			ret.Members, ret.Self, err = s.membersStandup(p, u.ID)
-			ret.UtilMembers = ret.Members.ToMembers()
+			online := s.online(util.KeyStandup + ":" + u.ID.String())
+			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
 		},
 		func() error {

@@ -1,35 +1,53 @@
 import {els, req} from "./dom";
 import {send} from "./app";
+import {getSelfID, username} from "./member";
+import {relativeTime, utc} from "./time";
+import {snippetComment} from "./snippets";
 
 export class Comment {
-  readonly debug: boolean;
-
-  constructor(debug: boolean) {
-    this.debug = debug
-  }
+  svc?: string;
+  modelID?: string;
+  content?: string;
+  userID?: string;
 }
 
 export function initComments() {
   const modals = els(".modal.comments");
   for (const modal of modals) {
     const form = req<HTMLFormElement>("form", modal);
-    form.onsubmit = function() {
+    form.onsubmit = function () {
       const inputs = els<HTMLInputElement>("input", form);
-      const m: { [key: string]: string; } = {};
+      const c: Comment = {};
       for (const input of inputs) {
-        switch(input.name) {
+        switch (input.name) {
           case "svc":
-            m["svc"] = input.value;
+            c.svc = input.value;
             break;
           case "modelID":
-            m["modelID"] = input.value;
+            c.modelID = input.value;
             break;
         }
       }
       const ta = req<HTMLTextAreaElement>("textarea", form);
-      m["content"] = ta.value;
-      send("comment", m);
+      c.content = ta.value;
+      c.userID = getSelfID();
+      send("comment", c);
+      addComment(c);
       return false;
     }
+  }
+}
+
+export function addComment(c: Comment) {
+  const ul = req("#comment-list-" + c.svc + "-" + c.modelID);
+  const un = username(c.userID!);
+  const li = snippetComment(c, un);
+  ul.appendChild(li);
+
+  const count = ul.childNodes.length - 1;
+  const link = req("#comment-link-" + c.svc + "-" + c.modelID);
+  link.title = count + (count == 1 ? " comment" : " comments");
+  if (link.innerHTML.indexOf("comment-dots") == -1) {
+    link.innerHTML = `<svg style="width: 18px; height: 18px;" class="right"><use xlink:href="#svg-comment-dots"></use></svg>`;
   }
 }

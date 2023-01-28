@@ -1,7 +1,7 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 import * as JSX from "./jsx"
 
-export function els<T extends HTMLElement>(selector: string, context?: HTMLElement): readonly T[] {
+export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
   if (context) {
     result = context.querySelectorAll(selector);
@@ -15,7 +15,7 @@ export function els<T extends HTMLElement>(selector: string, context?: HTMLEleme
   return ret;
 }
 
-export function opt<T extends HTMLElement>(selector: string, context?: HTMLElement): T | undefined {
+export function opt<T extends HTMLElement>(selector: string, context?: Element): T | undefined {
   const e = els<T>(selector, context);
   switch (e.length) {
     case 0:
@@ -27,7 +27,7 @@ export function opt<T extends HTMLElement>(selector: string, context?: HTMLEleme
   }
 }
 
-export function req<T extends HTMLElement>(selector: string, context?: HTMLElement): T {
+export function req<T extends HTMLElement>(selector: string, context?: Element): T {
   const res = opt<T>(selector, context);
   if (!res) {
     console.warn(`no element found for selector [${selector}]`);
@@ -43,7 +43,7 @@ export function setHTML(el: string | HTMLElement, html: string) {
   return el;
 }
 
-export function setDisplay(el: string | HTMLElement, condition: boolean, v: string = "block") {
+export function setDisplay(el: string | HTMLElement, condition: boolean, v = "block") {
   if (typeof el === "string") {
     el = req(el);
   }
@@ -52,7 +52,7 @@ export function setDisplay(el: string | HTMLElement, condition: boolean, v: stri
   return el;
 }
 
-export function setContent(el: string | HTMLElement, e: JSX.Element | JSX.Element[]) {
+export function setContent(el: string | HTMLElement, e: Element | Element[]) {
   if (typeof el === "string") {
     el = req(el);
   }

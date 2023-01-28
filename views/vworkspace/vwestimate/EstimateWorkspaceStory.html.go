@@ -151,7 +151,7 @@ func StreamEstimateWorkspaceStoryModalAdd(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`" />
           `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:52
-	components.StreamFormVerticalInput(qw422016, "title", "Title", "", 5, "Story title")
+	components.StreamFormVerticalInput(qw422016, "title", "", "Title", "", 5, "Story title")
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:52
 	qw422016.N().S(`
           <div class="mt">
@@ -827,7 +827,7 @@ func StreamEstimateWorkspaceStoryModalEdit(qw422016 *qt422016.Writer, s *story.S
 	qw422016.N().S(`" />
           `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:253
-	components.StreamFormVerticalInput(qw422016, "title", "Title", s.Title, 5, "Story title")
+	components.StreamFormVerticalInput(qw422016, "title", "", "Title", s.Title, 5, "Story title")
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:253
 	qw422016.N().S(`
           <div class="mt">

@@ -84,39 +84,39 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vstory/Edit.html:29
 	if p.IsNew {
 //line views/vestimate/vstory/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vstory/Edit.html:29
 	}
 //line views/vestimate/vstory/Edit.html:29
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:30
-	components.StreamTableInputUUID(qw422016, "estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "estimateID", "", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vstory/Edit.html:30
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:31
-	components.StreamTableInputNumber(qw422016, "idx", "Idx", p.Model.Idx, 5, "Integer")
+	components.StreamTableInputNumber(qw422016, "idx", "", "Idx", p.Model.Idx, 5, "Integer")
 //line views/vestimate/vstory/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:32
-	components.StreamTableInputUUID(qw422016, "userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vstory/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:33
-	components.StreamTableInput(qw422016, "title", "Title", p.Model.Title, 5, "String text")
+	components.StreamTableInput(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
 //line views/vestimate/vstory/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:34
-	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
+	components.StreamTableSelect(qw422016, "status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
 //line views/vestimate/vstory/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:35
-	components.StreamTableInput(qw422016, "finalVote", "Final Vote", p.Model.FinalVote, 5, "String text")
+	components.StreamTableInput(qw422016, "finalVote", "", "Final Vote", p.Model.FinalVote, 5, "String text")
 //line views/vestimate/vstory/Edit.html:35
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

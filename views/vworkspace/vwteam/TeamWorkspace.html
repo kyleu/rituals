@@ -25,7 +25,7 @@
   {%- code
     w := p.FullTeam
     t := w.Team
-    self, others, _ := w.Members.Split(ps.Profile.ID)
+    self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
@@ -44,8 +44,9 @@
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
-        <em>{%s string(self.Role) %}</em>
+        <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}<span id="self-name">{%s self.Name %}</span></a></h3>
+        <em id="self-role">{%s string(self.Role) %}</em>
       </div>
       {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, t.PublicWebPath()) %}
     </div>
@@ -55,20 +56,22 @@
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
-            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%= vwutil.MemberRow(m, ps) %}
             {%- endfor -%}
           </tbody>
         </table>
+        <div id="member-modals">
         {%- for _, m := range others -%}
-        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, t.PublicWebPath()) %}
+          {%= vwutil.MemberModal(m, t.PublicWebPath()) %}
         {%- endfor -%}
+        </div>
       </div>
       {%= vwutil.InviteModal() %}
     </div>
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.initWorkspace("{%s util.KeyTeam %}", "{%s t.ID.String() %}");
+      initWorkspace("{%s util.KeyTeam %}", "{%s t.ID.String() %}");
     });
   </script>
 {% endfunc %}
@@ -84,7 +87,7 @@
       <div class="modal-body">
         <form action="{%s t.PublicWebPath() %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
-          {%= components.FormVerticalInput("title", "Title", t.TitleString(), 5, "The name of your team") %}
+          {%= components.FormVerticalInput("title", "", "Title", t.TitleString(), 5, "The name of your team") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", t.IconSafe(), ps, 5) %}
           <em class="title">Permissions</em>
           <div class="mt">Control access to this team by <a href="/profile">signing in</a></div>

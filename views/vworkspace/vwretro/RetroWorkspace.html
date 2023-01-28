@@ -27,7 +27,7 @@
   {%- code
     w := p.FullRetro
     r := w.Retro
-    self, others, _ := w.Members.Split(ps.Profile.ID)
+    self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
   <div style="display: flex; flex-wrap: wrap;">
     <div id="panel-summary">
@@ -47,8 +47,9 @@
     </div>
     <div id="panel-self">
       <div class="card">
-        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}{%s self.Name %}</a></h3>
-        <em>{%s string(self.Role) %}</em>
+        <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
+        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}<span id="self-name">{%s self.Name %}</span></a></h3>
+        <em id="self-role">{%s string(self.Role) %}</em>
       </div>
       {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, r.PublicWebPath()) %}
     </div>
@@ -58,20 +59,22 @@
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
-            {%= vwutil.MemberRow(m.UserID, m.Name, m.Picture, m.Role, m.Updated, ps) %}
+            {%= vwutil.MemberRow(m, ps) %}
             {%- endfor -%}
           </tbody>
         </table>
+        <div id="member-modals">
         {%- for _, m := range others -%}
-        {%= vwutil.MemberModal(m.UserID, m.Name, m.Picture, m.Role, m.Updated, r.PublicWebPath()) %}
+          {%= vwutil.MemberModal(m, r.PublicWebPath()) %}
         {%- endfor -%}
+        </div>
       </div>
       {%= vwutil.InviteModal() %}
     </div>
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.initWorkspace("{%s util.KeyRetro %}", "{%s r.ID.String() %}");
+      initWorkspace("{%s util.KeyRetro %}", "{%s r.ID.String() %}");
     });
   </script>
 {% endfunc %}
@@ -87,11 +90,11 @@
       <div class="modal-body">
         <form action="{%s r.PublicWebPath() %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
-          {%= components.FormVerticalInput("title", "Title", r.TitleString(), 5, "The name of your retro") %}
+          {%= components.FormVerticalInput("title", "", "Title", r.TitleString(), 5, "The name of your retro") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", r.IconSafe(), ps, 5) %}
-          {%= components.FormVerticalInputTags("categories", "Categories", r.Categories, ps, 5, "The available categories for this retro") %}
-          {%= components.FormVerticalSelect(util.KeyTeam, "Team", util.UUIDString(r.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
-          {%= components.FormVerticalSelect(util.KeySprint, "Sprint", util.UUIDString(r.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          {%= components.FormVerticalInputTags("categories", "", "Categories", r.Categories, ps, 5, "The available categories for this retro") %}
+          {%= components.FormVerticalSelect(util.KeyTeam, "", "Team", util.UUIDString(r.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeySprint, "", "Sprint", util.UUIDString(r.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
           <hr />
           <em>Permissions</em>
           <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this retro's team</label></div>

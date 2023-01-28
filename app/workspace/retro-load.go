@@ -68,7 +68,8 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro) (*FullRetro, erro
 		func() error {
 			var err error
 			ret.Members, ret.Self, err = s.membersRetro(p, r.ID)
-			ret.UtilMembers = ret.Members.ToMembers()
+			online := s.online(util.KeyRetro + ":" + r.ID.String())
+			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
 		},
 		func() error {

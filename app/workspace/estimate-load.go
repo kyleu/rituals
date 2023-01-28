@@ -58,6 +58,11 @@ func (s *Service) LoadEstimate(p *LoadParams) (*FullEstimate, error) {
 
 func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEstimate, error) {
 	ret := &FullEstimate{Estimate: e}
+	var er error
+	ret.Stories, er = s.st.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get(util.KeyStory, nil, p.Logger), p.Logger)
+	if er != nil {
+		return nil, er
+	}
 	funcs := []func() error{
 		func() error {
 			var err error
@@ -67,7 +72,8 @@ func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEs
 		func() error {
 			var err error
 			ret.Members, ret.Self, err = s.membersEstimate(p, e.ID)
-			ret.UtilMembers = ret.Members.ToMembers()
+			online := s.online(util.KeyEstimate + ":" + e.ID.String())
+			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
 		},
 		func() error {
@@ -91,7 +97,6 @@ func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEs
 		},
 		func() error {
 			var err error
-			ret.Stories, err = s.st.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get(util.KeyStory, nil, p.Logger), p.Logger)
 			args := make([]any, 0, (len(ret.Stories)*2)+2)
 			args = append(args, util.KeyEstimate, e.ID)
 			for _, str := range ret.Stories {

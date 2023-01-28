@@ -16,7 +16,7 @@
         <form action="{%s formAction %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActMemberSelf) %}" />
           <em>Name</em><br />
-          {%= components.FormInput("name", "input-name", name, "The name you wish to be called") %}
+          {%= components.FormInput("name", "", name, "The name you wish to be called") %}
           <div><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>
           <div><label><input type="radio" name="choice" value="global"> Change global default</label></div>
           <hr />

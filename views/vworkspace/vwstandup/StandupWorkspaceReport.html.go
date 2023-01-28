@@ -183,12 +183,12 @@ func StreamStandupWorkspaceReportModalAdd(qw422016 *qt422016.Writer) {
             <tbody>
             `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:63
-	components.StreamFormVerticalInputTimestampDay(qw422016, "day", "Day", util.TimeToday(), 5)
+	components.StreamFormVerticalInputTimestampDay(qw422016, "day", "", "Day", util.TimeToday(), 5)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:63
 	qw422016.N().S(`
             `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:64
-	components.StreamFormVerticalTextarea(qw422016, "content", "Content", 8, "", 5, "HTML and Markdown supported")
+	components.StreamFormVerticalTextarea(qw422016, "content", "", "Content", 8, "", 5, "HTML and Markdown supported")
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:64
 	qw422016.N().S(`
             <tr><td colspan="2"><button type="submit">Add Report</button></td></tr>
@@ -258,12 +258,12 @@ func StreamStandupWorkspaceReportModalEdit(qw422016 *qt422016.Writer, r *report.
             <tbody>
             `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:87
-	components.StreamFormVerticalInputTimestampDay(qw422016, "day", "Day", &r.Day, 5)
+	components.StreamFormVerticalInputTimestampDay(qw422016, "day", "", "Day", &r.Day, 5)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:87
 	qw422016.N().S(`
             `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:88
-	components.StreamFormVerticalTextarea(qw422016, "content", "Content", 8, r.Content, 5, "HTML and Markdown supported")
+	components.StreamFormVerticalTextarea(qw422016, "content", "", "Content", 8, r.Content, 5, "HTML and Markdown supported")
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:88
 	qw422016.N().S(`
             <tr><td colspan="2">

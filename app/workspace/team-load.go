@@ -69,7 +69,8 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 		func() error {
 			var err error
 			ret.Members, ret.Self, err = s.membersTeam(p, t.ID)
-			ret.UtilMembers = ret.Members.ToMembers()
+			online := s.online(util.KeyTeam + ":" + t.ID.String())
+			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
 		},
 		func() error {

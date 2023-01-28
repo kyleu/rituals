@@ -56,5 +56,17 @@ func (s *Service) SocketHandler(
 }
 
 func (s *Service) SocketClose(sock *websocket.Service, conn *websocket.Connection, logger util.Logger) error {
+	param := util.ValueMap{"userID": conn.Profile.ID, "connected": false}
+	for _, ch := range conn.Channels {
+		svc, modelIDStr := util.StringSplit(ch, ':', true)
+		if modelIDStr == "" {
+			continue
+		}
+		modelID := util.UUIDFromString(modelIDStr)
+		err := s.send(enum.ModelService(svc), *modelID, "online-update", param, &conn.Profile.ID, logger, conn.ID)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

@@ -327,22 +327,22 @@ func (p *Connection) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
         <tbody>
           `)
 //line views/vadmin/Sockets.html:118
-	components.StreamTableInput(qw422016, "from", "From", ps.Profile.ID.String(), 5, "The user this message is from")
+	components.StreamTableInput(qw422016, "from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from")
 //line views/vadmin/Sockets.html:118
 	qw422016.N().S(`
           `)
 //line views/vadmin/Sockets.html:119
-	components.StreamTableInput(qw422016, "channel", "Channel", "", 5, "The channel this message is from")
+	components.StreamTableInput(qw422016, "channel", "", "Channel", "", 5, "The channel this message is from")
 //line views/vadmin/Sockets.html:119
 	qw422016.N().S(`
           `)
 //line views/vadmin/Sockets.html:120
-	components.StreamTableInput(qw422016, "cmd", "Command", "", 5, "The command for this message")
+	components.StreamTableInput(qw422016, "cmd", "", "Command", "", 5, "The command for this message")
 //line views/vadmin/Sockets.html:120
 	qw422016.N().S(`
           `)
 //line views/vadmin/Sockets.html:121
-	components.StreamTableTextarea(qw422016, "param", "Parameter", 8, "", 5, "JSON object message payload")
+	components.StreamTableTextarea(qw422016, "param", "", "Parameter", 8, "", 5, "JSON object message payload")
 //line views/vadmin/Sockets.html:121
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Send</button></td></tr>

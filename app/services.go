@@ -134,6 +134,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		msg := websocket.NewMessage(userID, ch, string(act), param)
 		return ws.WriteChannel(msg, logger, except...)
 	})
+	w.RegisterOnline(ws.GetOnline)
 	return &Services{
 		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
 		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,

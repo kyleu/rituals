@@ -49,7 +49,7 @@ func StreamSelfModal(qw422016 *qt422016.Writer, name string, picture string, rol
           <em>Name</em><br />
           `)
 //line views/vworkspace/vwutil/Self.html:19
-	components.StreamFormInput(qw422016, "name", "input-name", name, "The name you wish to be called")
+	components.StreamFormInput(qw422016, "name", "", name, "The name you wish to be called")
 //line views/vworkspace/vwutil/Self.html:19
 	qw422016.N().S(`
           <div><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>

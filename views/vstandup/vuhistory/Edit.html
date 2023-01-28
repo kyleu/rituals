@@ -26,9 +26,9 @@
     {%- endif -%}
       <table class="mt expanded">
         <tbody>
-          {% if p.IsNew %}{%= components.TableInput("slug", "Slug", p.Model.Slug, 5, "String text") %}{% endif %}
-          {%= components.TableInputUUID("standupID", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
-          {%= components.TableInput("standupName", "Standup Name", p.Model.StandupName, 5, "String text") %}
+          {% if p.IsNew %}{%= components.TableInput("slug", "", "Slug", p.Model.Slug, 5, "String text") %}{% endif %}
+          {%= components.TableInputUUID("standupID", "", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
+          {%= components.TableInput("standupName", "", "Standup Name", p.Model.StandupName, 5, "String text") %}
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
       </table>

@@ -275,7 +275,7 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 	if choice == "global" {
 		return nil, "", "", errors.New("can't change global name yet")
 	}
-	arg := util.ValueMap{"userID": fe.Self.UserID, "name": name}
+	arg := util.ValueMap{"userID": fe.Self.UserID, "name": name, "role": fe.Self.Role}
 	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, arg, &fe.Self.UserID, p.Logger, p.Except...)
 	if err != nil {
 		return nil, "", "", err

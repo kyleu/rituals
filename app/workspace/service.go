@@ -1,6 +1,8 @@
 package workspace
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/email"
@@ -66,7 +68,8 @@ type Service struct {
 	c  *comment.Service
 	el *email.Service
 
-	send action.SendFn
+	send   action.SendFn
+	online func(key string) []uuid.UUID
 }
 
 func NewService(
@@ -89,4 +92,7 @@ func NewService(
 
 func (s *Service) RegisterSend(send action.SendFn) {
 	s.send = send
+}
+func (s *Service) RegisterOnline(f func(key string) []uuid.UUID) {
+	s.online = f
 }

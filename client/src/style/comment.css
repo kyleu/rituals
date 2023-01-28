@@ -1,0 +1,10 @@
+ul.comment-list {
+  list-style: none;
+  padding: 0;
+}
+
+ul.comment-list li {
+  border-bottom: var(--border);
+  padding-bottom: var(--padding);
+  margin-bottom: var(--padding);
+}

@@ -1,23 +1,27 @@
 {% import (
-  "time"
-
-  "github.com/google/uuid"
-
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
-  "github.com/kyleu/rituals/app/enum"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func MemberRow(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, ps *cutil.PageState) %}
-  <tr>
+{% func MemberRow(m *util.Member, ps *cutil.PageState) %}
+  {%- code ps.AddIcon("circle", "check-circle") -%}
+  <tr id="member-{%s m.UserID.String() %}" class="member" data-id="{%s m.UserID.String() %}">
     <td>
-      <a href="#modal-member-{%s userID.String() %}">
+      <a href="#modal-member-{%s m.UserID.String() %}">
         <div class="left" style="padding-right: var(--padding-small);">{%= components.SVGRef(`profile`, 18, 18, ``, ps) %}</div>
-        {%s name %}
+        <span class="member-name">{%s m.Name %}</span>
       </a>
     </td>
-    <td class="shrink">{%s string(role) %}</td>
+    <td class="shrink" style="text-align: right"><em class="member-role">{%s string(m.Role) %}</em></td>
+    <td class="shrink online-status" title="{% if m.Online %}online{% else %}offline{% endif %}">
+      {%- if m.Online -%}
+      {%= components.SVGRef(`check-circle`, 18, 18, `right`, ps) %}
+      {%- else -%}
+      {%= components.SVGRef(`circle`, 18, 18, `right`, ps) %}
+      {%- endif -%}
+    </td>
   </tr>
 {% endfunc %}
 
@@ -36,22 +40,22 @@
   </div>
 {% endfunc %}
 
-{% func MemberModal(userID uuid.UUID, name string, picture string, role enum.MemberStatus, updated *time.Time, url string) %}
-  <div id="modal-member-{%s userID.String() %}" class="modal" style="display: none;">
+{% func MemberModal(m *util.Member, url string) %}
+  <div id="modal-member-{%s m.UserID.String() %}" data-id="{%s m.UserID.String() %}" class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s name %}</h2>
+        <h2>{%s m.Name %}</h2>
       </div>
       <div class="modal-body">
         <form action="{%s url %}" method="post" class="expanded">
-          <input type="hidden" name="userID" value="{%s userID.String() %}" />
+          <input type="hidden" name="userID" value="{%s m.UserID.String() %}" />
           <em>Role</em><br />
-          {%= components.FormSelect("role", "input-role", string(role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
+          {%= components.FormSelect("role", "", string(m.Role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
           <hr />
-          <div class="right"><button type="submit" name="action" value="{%s string(action.ActMemberUpdate) %}">Save</button></div>
-          <button type="submit" name="action" value="{%s string(action.ActMemberRemove) %}" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
+          <div class="right"><button class="member-update" type="submit" name="action" value="{%s string(action.ActMemberUpdate) %}">Save</button></div>
+          <button type="submit" class="member-remove" name="action" value="{%s string(action.ActMemberRemove) %}" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
         </form>
       </div>
     </div>

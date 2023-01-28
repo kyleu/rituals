@@ -136,22 +136,22 @@ func StreamStandupForm(qw422016 *qt422016.Writer, s *standup.Standup, teams team
       <tbody>
         `)
 //line views/vworkspace/vwstandup/StandupList.html:46
-	components.StreamTableInput(qw422016, "title", "Team Title", s.Title, 5, "The name of your standup")
+	components.StreamTableInput(qw422016, "title", "", "Team Title", s.Title, 5, "The name of your standup")
 //line views/vworkspace/vwstandup/StandupList.html:46
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwstandup/StandupList.html:47
-	components.StreamTableInput(qw422016, "name", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
+	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
 //line views/vworkspace/vwstandup/StandupList.html:47
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwstandup/StandupList.html:48
-	components.StreamTableSelect(qw422016, util.KeyTeam, "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this standup")
+	components.StreamTableSelect(qw422016, util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this standup")
 //line views/vworkspace/vwstandup/StandupList.html:48
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwstandup/StandupList.html:49
-	components.StreamTableSelect(qw422016, util.KeySprint, "Sprint", fmt.Sprint(s.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this standup")
+	components.StreamTableSelect(qw422016, util.KeySprint, "", "Sprint", fmt.Sprint(s.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this standup")
 //line views/vworkspace/vwstandup/StandupList.html:49
 	qw422016.N().S(`
         <tr><td colspan="2"><button type="submit">Add Standup</button></td></tr>

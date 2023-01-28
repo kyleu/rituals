@@ -85,44 +85,44 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vemail/Edit.html:30
 	if p.IsNew {
 //line views/vemail/Edit.html:30
-		components.StreamTableInputUUID(qw422016, "id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vemail/Edit.html:30
 	}
 //line views/vemail/Edit.html:30
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:31
-	components.StreamTableTextarea(qw422016, "recipients", "Recipients", 8, util.ToJSON(p.Model.Recipients), 5, "Comma-separated list of values")
+	components.StreamTableTextarea(qw422016, "recipients", "", "Recipients", 8, util.ToJSON(p.Model.Recipients), 5, "Comma-separated list of values")
 //line views/vemail/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:32
-	components.StreamTableInput(qw422016, "subject", "Subject", p.Model.Subject, 5, "String text")
+	components.StreamTableInput(qw422016, "subject", "", "Subject", p.Model.Subject, 5, "String text")
 //line views/vemail/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:33
-	components.StreamTableTextarea(qw422016, "data", "Data", 8, util.ToJSON(p.Model.Data), 5, "JSON object")
+	components.StreamTableTextarea(qw422016, "data", "", "Data", 8, util.ToJSON(p.Model.Data), 5, "JSON object")
 //line views/vemail/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:34
-	components.StreamTableInput(qw422016, "plain", "Plain", p.Model.Plain, 5, "String text")
+	components.StreamTableInput(qw422016, "plain", "", "Plain", p.Model.Plain, 5, "String text")
 //line views/vemail/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:35
-	components.StreamTableTextarea(qw422016, "html", "HTML", 8, p.Model.HTML, 5, "String text")
+	components.StreamTableTextarea(qw422016, "html", "", "HTML", 8, p.Model.HTML, 5, "String text")
 //line views/vemail/Edit.html:35
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:36
-	components.StreamTableInputUUID(qw422016, "userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vemail/Edit.html:36
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:37
-	components.StreamTableInput(qw422016, "status", "Status", p.Model.Status, 5, "String text")
+	components.StreamTableInput(qw422016, "status", "", "Status", p.Model.Status, 5, "String text")
 //line views/vemail/Edit.html:37
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

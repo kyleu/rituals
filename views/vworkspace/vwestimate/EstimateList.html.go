@@ -136,22 +136,22 @@ func StreamEstimateForm(qw422016 *qt422016.Writer, e *estimate.Estimate, teams t
       <tbody>
         `)
 //line views/vworkspace/vwestimate/EstimateList.html:46
-	components.StreamTableInput(qw422016, "title", "Team Title", e.Title, 5, "The name of your estimate")
+	components.StreamTableInput(qw422016, "title", "", "Team Title", e.Title, 5, "The name of your estimate")
 //line views/vworkspace/vwestimate/EstimateList.html:46
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwestimate/EstimateList.html:47
-	components.StreamTableInput(qw422016, "name", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
+	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
 //line views/vworkspace/vwestimate/EstimateList.html:47
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwestimate/EstimateList.html:48
-	components.StreamTableSelect(qw422016, util.KeyTeam, "Team", fmt.Sprint(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this estimate")
+	components.StreamTableSelect(qw422016, util.KeyTeam, "", "Team", fmt.Sprint(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this estimate")
 //line views/vworkspace/vwestimate/EstimateList.html:48
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwestimate/EstimateList.html:49
-	components.StreamTableSelect(qw422016, util.KeySprint, "Sprint", fmt.Sprint(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this estimate")
+	components.StreamTableSelect(qw422016, util.KeySprint, "", "Sprint", fmt.Sprint(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this estimate")
 //line views/vworkspace/vwestimate/EstimateList.html:49
 	qw422016.N().S(`
         <tr><td colspan="2"><button type="submit">Add Estimate</button></td></tr>

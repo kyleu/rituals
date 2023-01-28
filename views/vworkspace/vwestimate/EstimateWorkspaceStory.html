@@ -49,7 +49,7 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="action" value="{%s string(action.ActStoryAdd) %}" />
-          {%= components.FormVerticalInput("title", "Title", "", 5, "Story title") %}
+          {%= components.FormVerticalInput("title", "", "Title", "", 5, "Story title") %}
           <div class="mt">
             <a href="#"><button type="button">Cancel</button></a>
             <button type="submit">Add Story</button>
@@ -250,7 +250,7 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="storyID" value="{%s s.ID.String() %}" />
-          {%= components.FormVerticalInput("title", "Title", s.Title, 5, "Story title") %}
+          {%= components.FormVerticalInput("title", "", "Title", s.Title, 5, "Story title") %}
           <div class="mt">
             <div class="right"><button type="submit" name="action" value="{%s string(action.ActStoryRemove) %}" onclick="return confirm('Are you sure you want to delete this story?');">Delete</button></div>
             <button type="submit" name="action" value="{%s string(action.ActStoryUpdate) %}">Save Changes</button>

@@ -14,20 +14,38 @@ import {themeInit} from "./theme";
 import {socketInit} from "./socket";
 import {appInit} from "./app";
 
+declare global {
+  interface Window {
+    "rituals": {
+      relativeTime: (time: string, el?: HTMLElement) => string;
+      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) => void;
+      setSiblingToNull: (el: HTMLElement) => void;
+      initForm: (frm: HTMLFormElement) => void;
+      flash: (key: string, level: string, msg: string) => void;
+      tags: (el: HTMLElement) => void;
+      Socket: any;
+    };
+    "JSX": (tag: string, attrs: any) => HTMLElement;
+  }
+}
+
 export function init(): void {
-  (window as any).rituals = {};
-  (window as any).JSX = JSX;
+  const [s, i] = editorInit();
+  window.rituals = {
+    relativeTime: timeInit(),
+    autocomplete: autocompleteInit(),
+    setSiblingToNull: s,
+    initForm: i,
+    flash: flashInit(),
+    tags: tagsInit(),
+    Socket: socketInit()
+  };
   menuInit();
   modeInit();
-  flashInit();
   linkInit();
-  timeInit();
-  autocompleteInit();
   modalInit();
-  tagsInit();
-  editorInit();
   themeInit();
-  socketInit();
+  window.JSX = JSX;
   appInit();
 }
 

@@ -84,44 +84,44 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vstandup/Edit.html:29
 	if p.IsNew {
 //line views/vstandup/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vstandup/Edit.html:29
 	}
 //line views/vstandup/Edit.html:29
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:30
-	components.StreamTableInput(qw422016, "slug", "Slug", p.Model.Slug, 5, "String text")
+	components.StreamTableInput(qw422016, "slug", "", "Slug", p.Model.Slug, 5, "String text")
 //line views/vstandup/Edit.html:30
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:31
-	components.StreamTableInput(qw422016, "title", "Title", p.Model.Title, 5, "String text")
+	components.StreamTableInput(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
 //line views/vstandup/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:32
-	components.StreamTableInput(qw422016, "icon", "Icon", p.Model.Icon, 5, "String text")
+	components.StreamTableInput(qw422016, "icon", "", "Icon", p.Model.Icon, 5, "String text")
 //line views/vstandup/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:33
-	components.StreamTableSelect(qw422016, "status", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
+	components.StreamTableSelect(qw422016, "status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
 //line views/vstandup/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:34
-	components.StreamTableInputUUID(qw422016, "teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableInputUUID(qw422016, "teamID", "", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vstandup/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:35
-	components.StreamTableInputUUID(qw422016, "sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableInputUUID(qw422016, "sprintID", "", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vstandup/Edit.html:35
 	qw422016.N().S(`
           `)
 //line views/vstandup/Edit.html:36
-	components.StreamTableInputUUID(qw422016, "owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "owner", "", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vstandup/Edit.html:36
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

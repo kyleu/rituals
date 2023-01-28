@@ -194,12 +194,12 @@ func StreamRetroWorkspaceFeedbackModalAdd(qw422016 *qt422016.Writer, categories 
             <tbody>
               `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:66
-	components.StreamFormVerticalSelect(qw422016, "category", "Category", category, categories, categories, 5)
+	components.StreamFormVerticalSelect(qw422016, "category", "", "Category", category, categories, categories, 5)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:66
 	qw422016.N().S(`
               `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:67
-	components.StreamFormVerticalTextarea(qw422016, "content", "Content", 8, "", 5, "HTML and Markdown supported")
+	components.StreamFormVerticalTextarea(qw422016, "content", "", "Content", 8, "", 5, "HTML and Markdown supported")
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:67
 	qw422016.N().S(`
               <tr><td colspan="2"><button type="submit">Add Feedback</button></td></tr>
@@ -282,12 +282,12 @@ func StreamRetroWorkspaceFeedbackModalEdit(qw422016 *qt422016.Writer, f *feedbac
             <tbody>
               `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:93
-	components.StreamFormVerticalSelect(qw422016, "category", "Category", string(f.Category), categories, categories, 5)
+	components.StreamFormVerticalSelect(qw422016, "category", "", "Category", string(f.Category), categories, categories, 5)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:93
 	qw422016.N().S(`
               `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:94
-	components.StreamFormVerticalTextarea(qw422016, "content", "Content", 8, f.Content, 5, "HTML and Markdown supported")
+	components.StreamFormVerticalTextarea(qw422016, "content", "", "Content", 8, f.Content, 5, "HTML and Markdown supported")
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:94
 	qw422016.N().S(`
               <tr><td colspan="2">

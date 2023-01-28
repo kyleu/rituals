@@ -84,19 +84,19 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vuser/Edit.html:29
 	if p.IsNew {
 //line views/vuser/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "id", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vuser/Edit.html:29
 	}
 //line views/vuser/Edit.html:29
 	qw422016.N().S(`
           `)
 //line views/vuser/Edit.html:30
-	components.StreamTableInput(qw422016, "name", "Name", p.Model.Name, 5, "String text")
+	components.StreamTableInput(qw422016, "name", "", "Name", p.Model.Name, 5, "String text")
 //line views/vuser/Edit.html:30
 	qw422016.N().S(`
           `)
 //line views/vuser/Edit.html:31
-	components.StreamTableInput(qw422016, "picture", "Picture", p.Model.Picture, 5, "URL in string form")
+	components.StreamTableInput(qw422016, "picture", "", "Picture", p.Model.Picture, 5, "URL in string form")
 //line views/vuser/Edit.html:31
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
