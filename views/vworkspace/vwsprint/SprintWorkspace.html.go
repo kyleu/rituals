@@ -46,207 +46,275 @@ type SprintWorkspace struct {
 }
 
 //line views/vworkspace/vwsprint/SprintWorkspace.html:27
-func (p *SprintWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+func streamsummary(qw422016 *qt422016.Writer, s *sprint.Sprint) {
 //line views/vworkspace/vwsprint/SprintWorkspace.html:27
-	qw422016.N().S(`
-`)
+	qw422016.N().S(`<span>`)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:29
-	w := p.FullSprint
-	s := w.Sprint
-	self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
-
-//line views/vworkspace/vwsprint/SprintWorkspace.html:32
-	qw422016.N().S(`  <div style="display: flex; flex-wrap: wrap;">
-    <div id="panel-summary">
-      <div class="card">
-        <div class="right">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:36
-	vwutil.StreamComments(qw422016, enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:36
-	qw422016.N().S(`</div>
-        <h3><a href="#modal-sprint-config">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:37
-	components.StreamSVGRefIcon(qw422016, s.IconSafe(), ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:37
-	qw422016.E().S(s.TitleString())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:37
-	qw422016.N().S(`</a></h3>
-        <div class="clear"></div>
-        <div class="right">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
 	if s.StartDate != nil {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
-		qw422016.N().S(`starts `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
+//line views/vworkspace/vwsprint/SprintWorkspace.html:29
+		qw422016.N().S(`starts`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:30
+		qw422016.N().S(` `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:31
 		components.StreamDisplayTimestampDay(qw422016, s.StartDate)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
+//line views/vworkspace/vwsprint/SprintWorkspace.html:32
 		if s.EndDate != nil {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
-			qw422016.N().S(`, `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
+//line views/vworkspace/vwsprint/SprintWorkspace.html:32
+			qw422016.N().S(`,`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:33
+			qw422016.N().S(` `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:34
 		}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
+//line views/vworkspace/vwsprint/SprintWorkspace.html:35
 	}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
+//line views/vworkspace/vwsprint/SprintWorkspace.html:36
 	if s.EndDate != nil {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
-		qw422016.N().S(`ends `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:39
+//line views/vworkspace/vwsprint/SprintWorkspace.html:36
+		qw422016.N().S(`ends`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:37
+		qw422016.N().S(` `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:38
 		components.StreamDisplayTimestampDay(qw422016, s.EndDate)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:39
 	}
 //line views/vworkspace/vwsprint/SprintWorkspace.html:39
+	qw422016.N().S(`</span>`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+}
+
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+func writesummary(qq422016 qtio422016.Writer, s *sprint.Sprint) {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	streamsummary(qw422016, s)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+}
+
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+func summary(s *sprint.Sprint) string {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	writesummary(qb422016, s)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+	return qs422016
+//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+}
+
+//line views/vworkspace/vwsprint/SprintWorkspace.html:43
+func (p *SprintWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:43
+	qw422016.N().S(`
+`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:45
+	w := p.FullSprint
+	s := w.Sprint
+	self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
+
+//line views/vworkspace/vwsprint/SprintWorkspace.html:48
+	qw422016.N().S(`  <div style="display: flex; flex-wrap: wrap;">
+    <div id="panel-summary">
+      <div class="card">
+        <div class="right">`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:52
+	vwutil.StreamComments(qw422016, enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:52
+	qw422016.N().S(`</div>
+        <h3><a href="#modal-sprint-config">
+          <span id="model-icon">`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:54
+	components.StreamSVGRefIcon(qw422016, s.IconSafe(), ps)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:54
+	qw422016.N().S(`</span>
+          <span id="model-title">`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:55
+	qw422016.E().S(s.TitleString())
+//line views/vworkspace/vwsprint/SprintWorkspace.html:55
+	qw422016.N().S(`</span>
+        </a></h3>
+        <div class="clear"></div>
+        <div class="right" id="model-summary">`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+	if s.StartDate != nil {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+		qw422016.N().S(`starts `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+		components.StreamDisplayTimestampDay(qw422016, s.StartDate)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+		if s.EndDate != nil {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+			qw422016.N().S(`, `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+		}
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+	}
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+	if s.EndDate != nil {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+		qw422016.N().S(`ends `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+		components.StreamDisplayTimestampDay(qw422016, s.EndDate)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
+	}
+//line views/vworkspace/vwsprint/SprintWorkspace.html:58
 	qw422016.N().S(`</div>
         `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:40
+//line views/vworkspace/vwsprint/SprintWorkspace.html:59
 	vwutil.StreamBanner(qw422016, w.Team, nil, util.KeySprint)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:40
+//line views/vworkspace/vwsprint/SprintWorkspace.html:59
 	qw422016.N().S(`
         `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+//line views/vworkspace/vwsprint/SprintWorkspace.html:60
 	StreamSprintWorkspaceModal(qw422016, s, p.Teams, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:41
+//line views/vworkspace/vwsprint/SprintWorkspace.html:60
 	qw422016.N().S(`
       </div>
     </div>
     <div id="panel-detail">
       `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:45
+//line views/vworkspace/vwsprint/SprintWorkspace.html:64
 	vwestimate.StreamEstimateWorkspaceList(qw422016, w.Estimates, s.TeamID, &s.ID, true, w.Comments, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:45
+//line views/vworkspace/vwsprint/SprintWorkspace.html:64
 	qw422016.N().S(`
       `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:46
+//line views/vworkspace/vwsprint/SprintWorkspace.html:65
 	vwstandup.StreamStandupWorkspaceList(qw422016, w.Standups, s.TeamID, &s.ID, true, w.Comments, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:46
+//line views/vworkspace/vwsprint/SprintWorkspace.html:65
 	qw422016.N().S(`
       `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:47
+//line views/vworkspace/vwsprint/SprintWorkspace.html:66
 	vwretro.StreamRetroWorkspaceList(qw422016, w.Retros, s.TeamID, &s.ID, true, w.Comments, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:47
+//line views/vworkspace/vwsprint/SprintWorkspace.html:66
 	qw422016.N().S(`
     </div>
     <div id="panel-self">
       <div class="card">
         <span id="self-id" style="display: none;">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:51
+//line views/vworkspace/vwsprint/SprintWorkspace.html:70
 	qw422016.E().S(self.UserID.String())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:51
+//line views/vworkspace/vwsprint/SprintWorkspace.html:70
 	qw422016.N().S(`</span>
         <h3><a href="#modal-self">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:52
+//line views/vworkspace/vwsprint/SprintWorkspace.html:71
 	components.StreamSVGRefIcon(qw422016, `profile`, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:52
+//line views/vworkspace/vwsprint/SprintWorkspace.html:71
 	qw422016.N().S(`<span id="self-name">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:52
+//line views/vworkspace/vwsprint/SprintWorkspace.html:71
 	qw422016.E().S(self.Name)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:52
+//line views/vworkspace/vwsprint/SprintWorkspace.html:71
 	qw422016.N().S(`</span></a></h3>
         <em id="self-role">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:53
+//line views/vworkspace/vwsprint/SprintWorkspace.html:72
 	qw422016.E().S(string(self.Role))
-//line views/vworkspace/vwsprint/SprintWorkspace.html:53
+//line views/vworkspace/vwsprint/SprintWorkspace.html:72
 	qw422016.N().S(`</em>
       </div>
       `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:55
+//line views/vworkspace/vwsprint/SprintWorkspace.html:74
 	vwutil.StreamSelfModal(qw422016, self.Name, self.Picture, self.Role, s.PublicWebPath())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:55
+//line views/vworkspace/vwsprint/SprintWorkspace.html:74
 	qw422016.N().S(`
     </div>
     <div id="panel-members">
       <div class="card">
         <h3><a href="#modal-invite">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:59
+//line views/vworkspace/vwsprint/SprintWorkspace.html:78
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:59
+//line views/vworkspace/vwsprint/SprintWorkspace.html:78
 	qw422016.N().S(`Members</a></h3>
         <table class="mt expanded">
           <tbody>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:62
+//line views/vworkspace/vwsprint/SprintWorkspace.html:81
 	for _, m := range others {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:62
+//line views/vworkspace/vwsprint/SprintWorkspace.html:81
 		qw422016.N().S(`            `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:63
+//line views/vworkspace/vwsprint/SprintWorkspace.html:82
 		vwutil.StreamMemberRow(qw422016, m, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:63
+//line views/vworkspace/vwsprint/SprintWorkspace.html:82
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:64
+//line views/vworkspace/vwsprint/SprintWorkspace.html:83
 	}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:64
+//line views/vworkspace/vwsprint/SprintWorkspace.html:83
 	qw422016.N().S(`          </tbody>
         </table>
         <div id="member-modals">
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:68
+//line views/vworkspace/vwsprint/SprintWorkspace.html:87
 	for _, m := range others {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:68
+//line views/vworkspace/vwsprint/SprintWorkspace.html:87
 		qw422016.N().S(`          `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:69
+//line views/vworkspace/vwsprint/SprintWorkspace.html:88
 		vwutil.StreamMemberModal(qw422016, m, s.PublicWebPath())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:69
+//line views/vworkspace/vwsprint/SprintWorkspace.html:88
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:70
+//line views/vworkspace/vwsprint/SprintWorkspace.html:89
 	}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:70
+//line views/vworkspace/vwsprint/SprintWorkspace.html:89
 	qw422016.N().S(`        </div>
       </div>
     </div>
     `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:74
+//line views/vworkspace/vwsprint/SprintWorkspace.html:93
 	vwutil.StreamInviteModal(qw422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:74
+//line views/vworkspace/vwsprint/SprintWorkspace.html:93
 	qw422016.N().S(`
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       initWorkspace("`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:78
+//line views/vworkspace/vwsprint/SprintWorkspace.html:97
 	qw422016.E().S(util.KeySprint)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:78
+//line views/vworkspace/vwsprint/SprintWorkspace.html:97
 	qw422016.N().S(`", "`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:78
+//line views/vworkspace/vwsprint/SprintWorkspace.html:97
 	qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:78
+//line views/vworkspace/vwsprint/SprintWorkspace.html:97
 	qw422016.N().S(`");
     });
   </script>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 func (p *SprintWorkspace) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 func (p *SprintWorkspace) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 	return qs422016
-//line views/vworkspace/vwsprint/SprintWorkspace.html:81
+//line views/vworkspace/vwsprint/SprintWorkspace.html:100
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:83
+//line views/vworkspace/vwsprint/SprintWorkspace.html:102
 func StreamSprintWorkspaceModal(qw422016 *qt422016.Writer, s *sprint.Sprint, teams team.Teams, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:83
+//line views/vworkspace/vwsprint/SprintWorkspace.html:102
 	qw422016.N().S(`
   <div id="modal-sprint-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -257,40 +325,40 @@ func StreamSprintWorkspaceModal(qw422016 *qt422016.Writer, s *sprint.Sprint, tea
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:92
+//line views/vworkspace/vwsprint/SprintWorkspace.html:111
 	qw422016.E().S(s.PublicWebPath())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:92
+//line views/vworkspace/vwsprint/SprintWorkspace.html:111
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:93
+//line views/vworkspace/vwsprint/SprintWorkspace.html:112
 	qw422016.E().S(string(action.ActUpdate))
-//line views/vworkspace/vwsprint/SprintWorkspace.html:93
+//line views/vworkspace/vwsprint/SprintWorkspace.html:112
 	qw422016.N().S(`" />
           <em></em><br />
           `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:95
+//line views/vworkspace/vwsprint/SprintWorkspace.html:114
 	components.StreamFormVerticalInput(qw422016, "title", "", "Title", s.TitleString(), 5, "The name of your sprint")
-//line views/vworkspace/vwsprint/SprintWorkspace.html:95
+//line views/vworkspace/vwsprint/SprintWorkspace.html:114
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:96
+//line views/vworkspace/vwsprint/SprintWorkspace.html:115
 	components.StreamFormVerticalIconPicker(qw422016, "icon", "Icon", s.IconSafe(), ps, 5)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:96
+//line views/vworkspace/vwsprint/SprintWorkspace.html:115
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:97
+//line views/vworkspace/vwsprint/SprintWorkspace.html:116
 	components.StreamFormVerticalInputTimestampDay(qw422016, "startDate", "", "Start Date", s.StartDate, 5, "The day your sprint begins")
-//line views/vworkspace/vwsprint/SprintWorkspace.html:97
+//line views/vworkspace/vwsprint/SprintWorkspace.html:116
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:98
+//line views/vworkspace/vwsprint/SprintWorkspace.html:117
 	components.StreamFormVerticalInputTimestampDay(qw422016, "endDate", "", "End Date", s.EndDate, 5, "The day your sprint ends")
-//line views/vworkspace/vwsprint/SprintWorkspace.html:98
+//line views/vworkspace/vwsprint/SprintWorkspace.html:117
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:99
+//line views/vworkspace/vwsprint/SprintWorkspace.html:118
 	components.StreamFormVerticalSelect(qw422016, util.KeyTeam, "", "Team", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:99
+//line views/vworkspace/vwsprint/SprintWorkspace.html:118
 	qw422016.N().S(`
           <em>Permissions</em>
           <div>
@@ -303,130 +371,130 @@ func StreamSprintWorkspaceModal(qw422016 *qt422016.Writer, s *sprint.Sprint, tea
     </div>
   </div>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 func WriteSprintWorkspaceModal(qq422016 qtio422016.Writer, s *sprint.Sprint, teams team.Teams, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	StreamSprintWorkspaceModal(qw422016, s, teams, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 func SprintWorkspaceModal(s *sprint.Sprint, teams team.Teams, ps *cutil.PageState) string {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	WriteSprintWorkspaceModal(qb422016, s, teams, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 	return qs422016
-//line views/vworkspace/vwsprint/SprintWorkspace.html:110
+//line views/vworkspace/vwsprint/SprintWorkspace.html:129
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:112
+//line views/vworkspace/vwsprint/SprintWorkspace.html:131
 func StreamSprintWorkspaceList(qw422016 *qt422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:112
+//line views/vworkspace/vwsprint/SprintWorkspace.html:131
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:114
+//line views/vworkspace/vwsprint/SprintWorkspace.html:133
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeySprint, teamID, nil, "New Sprint")
-//line views/vworkspace/vwsprint/SprintWorkspace.html:114
+//line views/vworkspace/vwsprint/SprintWorkspace.html:133
 	qw422016.N().S(`</div>
     <h3>`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:115
+//line views/vworkspace/vwsprint/SprintWorkspace.html:134
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:115
+//line views/vworkspace/vwsprint/SprintWorkspace.html:134
 	qw422016.N().S(`Sprints</h3>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:116
+//line views/vworkspace/vwsprint/SprintWorkspace.html:135
 	if len(sprints) == 0 {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:116
+//line views/vworkspace/vwsprint/SprintWorkspace.html:135
 		qw422016.N().S(`    <div class="mt"><em>no sprints</em></div>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:118
+//line views/vworkspace/vwsprint/SprintWorkspace.html:137
 	} else {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:118
+//line views/vworkspace/vwsprint/SprintWorkspace.html:137
 		qw422016.N().S(`    <table class="mt expanded">
       <tbody>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:121
+//line views/vworkspace/vwsprint/SprintWorkspace.html:140
 		for _, x := range sprints {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:121
+//line views/vworkspace/vwsprint/SprintWorkspace.html:140
 			qw422016.N().S(`        <tr>
           <td>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:124
+//line views/vworkspace/vwsprint/SprintWorkspace.html:143
 			if showComments {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:124
+//line views/vworkspace/vwsprint/SprintWorkspace.html:143
 				qw422016.N().S(`            <div class="right">
               `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:126
+//line views/vworkspace/vwsprint/SprintWorkspace.html:145
 				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:126
+//line views/vworkspace/vwsprint/SprintWorkspace.html:145
 				qw422016.N().S(`
             </div>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:128
+//line views/vworkspace/vwsprint/SprintWorkspace.html:147
 			}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:128
+//line views/vworkspace/vwsprint/SprintWorkspace.html:147
 			qw422016.N().S(`            <a href="`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:129
+//line views/vworkspace/vwsprint/SprintWorkspace.html:148
 			qw422016.E().S(x.PublicWebPath())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:129
+//line views/vworkspace/vwsprint/SprintWorkspace.html:148
 			qw422016.N().S(`">`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:129
+//line views/vworkspace/vwsprint/SprintWorkspace.html:148
 			qw422016.E().S(x.TitleString())
-//line views/vworkspace/vwsprint/SprintWorkspace.html:129
+//line views/vworkspace/vwsprint/SprintWorkspace.html:148
 			qw422016.N().S(`</a>
           </td>
         </tr>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:132
+//line views/vworkspace/vwsprint/SprintWorkspace.html:151
 		}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:132
+//line views/vworkspace/vwsprint/SprintWorkspace.html:151
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:135
+//line views/vworkspace/vwsprint/SprintWorkspace.html:154
 	}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:135
+//line views/vworkspace/vwsprint/SprintWorkspace.html:154
 	qw422016.N().S(`  </div>
 `)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 func WriteSprintWorkspaceList(qq422016 qtio422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	StreamSprintWorkspaceList(qw422016, sprints, teamID, showComments, comments, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 }
 
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 func SprintWorkspaceList(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	WriteSprintWorkspaceList(qb422016, sprints, teamID, showComments, comments, ps)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 	return qs422016
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+//line views/vworkspace/vwsprint/SprintWorkspace.html:156
 }

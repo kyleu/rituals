@@ -33,7 +33,10 @@
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-        <h3><a href="#modal-standup-config">{%= components.SVGRefIcon(util.KeyStandup, ps) %}{%s u.TitleString() %}</a></h3>
+        <h3><a href="#modal-standup-config">
+          <span id="model-icon">{%= components.SVGRefIcon(u.IconSafe(), ps) %}</span>
+          <span id="model-title">{%s u.TitleString() %}</span>
+        </a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
         {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, ps) %}
       </div>

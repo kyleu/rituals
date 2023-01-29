@@ -7,7 +7,7 @@
 ) %}
 
 {% func Banner(t *team.Team, s *sprint.Sprint, mdl string) %}{% stripspace %}
-<em>
+<em id="model-banner">
   {% if s != nil %}<a href="{%s s.PublicWebPath() %}">{%s s.TitleString() %}</a>{% space %}{% endif %}
   {%s mdl %}
   {% if t != nil %}{% space %}in <a href="{%s t.PublicWebPath() %}">{%s t.TitleString() %}</a>{% endif %}

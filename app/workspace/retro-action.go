@@ -45,6 +45,9 @@ func (s *Service) ActionRetro(p *Params) (*FullRetro, string, string, error) {
 func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	tgt := fr.Retro.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
+	if len(tgt.Title) == 0 {
+		return nil, "", "", errors.New("title may not be empty")
+	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
@@ -60,7 +63,7 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		return nil, "", "", err
 	}
 	fr.Retro = model
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActUpdate, model, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActUpdate, model, &fr.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -78,7 +81,7 @@ func retroFeedbackAdd(p *Params, fr *FullRetro) (*FullRetro, string, string, err
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackAdd, f, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackAdd, f, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -104,7 +107,7 @@ func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackUpdate, f, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackUpdate, f, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -124,7 +127,7 @@ func retroFeedbackRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackRemove, id, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackRemove, id, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -155,7 +158,7 @@ func retroMemberUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, er
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, curr, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, curr, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -181,7 +184,7 @@ func retroMemberRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, er
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberRemove, userID, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberRemove, userID, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -206,7 +209,7 @@ func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, erro
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fr.Self.UserID, "name": name}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, arg, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, arg, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -237,7 +240,7 @@ func retroComment(p *Params, fr *FullRetro) (*FullRetro, string, string, error) 
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActComment, c, &fr.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActComment, c, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

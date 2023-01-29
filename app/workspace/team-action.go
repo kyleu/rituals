@@ -36,6 +36,9 @@ func (s *Service) ActionTeam(p *Params) (*FullTeam, string, string, error) {
 func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	tgt := ft.Team.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
+	if len(tgt.Title) == 0 {
+		return nil, "", "", errors.New("title may not be empty")
+	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
@@ -48,7 +51,7 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 		return nil, "", "", err
 	}
 	ft.Team = model
-	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -79,7 +82,7 @@ func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, curr, &ft.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, curr, &ft.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -105,7 +108,7 @@ func teamMemberRemove(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberRemove, userID, &ft.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberRemove, userID, &ft.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -130,7 +133,7 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": ft.Self.UserID, "name": name}
-	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, arg, &ft.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, arg, &ft.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -173,7 +176,7 @@ func teamComment(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActComment, c, &ft.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActComment, c, &ft.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

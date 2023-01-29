@@ -29,7 +29,7 @@ var (
 //line views/vworkspace/vwutil/TemplateUtils.html:9
 func StreamBanner(qw422016 *qt422016.Writer, t *team.Team, s *sprint.Sprint, mdl string) {
 //line views/vworkspace/vwutil/TemplateUtils.html:9
-	qw422016.N().S(`<em>`)
+	qw422016.N().S(`<em id="model-banner">`)
 //line views/vworkspace/vwutil/TemplateUtils.html:11
 	if s != nil {
 //line views/vworkspace/vwutil/TemplateUtils.html:11

@@ -24,6 +24,22 @@
   Teams team.Teams
 } %}
 
+{% func summary(s *sprint.Sprint) %}{% stripspace %}
+  <span>
+    {% if s.StartDate != nil %}
+      starts{% space %}
+      {%= components.DisplayTimestampDay(s.StartDate) %}
+      {% if s.EndDate != nil %}
+        ,{% space %}
+      {% endif %}
+    {% endif %}
+    {% if s.EndDate != nil %}
+      ends{% space %}
+      {%= components.DisplayTimestampDay(s.EndDate) %}
+    {% endif %}
+  </span>
+{% endstripspace %}{% endfunc %}
+
 {% func (p *SprintWorkspace) Body(as *app.State, ps *cutil.PageState) %}
   {%- code
     w := p.FullSprint
@@ -34,9 +50,12 @@
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-        <h3><a href="#modal-sprint-config">{%= components.SVGRefIcon(s.IconSafe(), ps) %}{%s s.TitleString() %}</a></h3>
+        <h3><a href="#modal-sprint-config">
+          <span id="model-icon">{%= components.SVGRefIcon(s.IconSafe(), ps) %}</span>
+          <span id="model-title">{%s s.TitleString() %}</span>
+        </a></h3>
         <div class="clear"></div>
-        <div class="right">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
+        <div class="right" id="model-summary">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
         {%= vwutil.Banner(w.Team, nil, util.KeySprint) %}
         {%= SprintWorkspaceModal(s, p.Teams, ps) %}
       </div>

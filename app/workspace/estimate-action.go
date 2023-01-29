@@ -51,6 +51,9 @@ func (s *Service) ActionEstimate(p *Params) (*FullEstimate, string, string, erro
 func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
 	tgt := fe.Estimate.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
+	if len(tgt.Title) == 0 {
+		return nil, "", "", errors.New("title may not be empty")
+	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
@@ -66,7 +69,7 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 		return nil, "", "", err
 	}
 	fe.Estimate = model
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActUpdate, model, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActUpdate, model, &fe.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -110,7 +113,7 @@ func estimateStoryUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryUpdate, st, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryUpdate, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -136,7 +139,7 @@ func estimateStoryStatus(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save new status for story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryStatus, st, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryStatus, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -168,7 +171,7 @@ func estimateStoryVote(p *Params, fe *FullEstimate) (*FullEstimate, string, stri
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save vote for story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActVote, v, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActVote, v, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -194,7 +197,7 @@ func estimateStoryRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryRemove, id, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryRemove, id, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -225,7 +228,7 @@ func estimateMemberUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, curr, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, curr, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -251,7 +254,7 @@ func estimateMemberRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberRemove, userID, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberRemove, userID, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -276,7 +279,7 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fe.Self.UserID, "name": name, "role": fe.Self.Role}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, arg, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, arg, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -307,7 +310,7 @@ func estimateComment(p *Params, fe *FullEstimate) (*FullEstimate, string, string
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActComment, c, &fe.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActComment, c, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

@@ -30,12 +30,14 @@
       {%- endfor -%}
     </tbody>
   </table>
-  {%- for _, s := range w.Stories -%}
-  {%- if ps.Profile.ID == s.UserID -%}
-  {%= EstimateWorkspaceStoryModalEdit(s, ps) %}
-  {%- endif -%}
-  {%= EstimateWorkspaceStoryModal(w, s, ps) %}
-  {%- endfor -%}
+  <div id="story-modals">
+    {%- for _, s := range w.Stories -%}
+    {%- if ps.Profile.ID == s.UserID -%}
+    {%= EstimateWorkspaceStoryModalEdit(s, ps) %}
+    {%- endif -%}
+    {%= EstimateWorkspaceStoryModal(w, s, ps) %}
+    {%- endfor -%}
+  </div>
 {% endfunc %}
 
 {% func EstimateWorkspaceStoryModalAdd() %}

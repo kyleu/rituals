@@ -95,7 +95,7 @@ func teamMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *ap
 		return nil, nil, err
 	}
 	for _, x := range t {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyTeam, Route: x.PublicWebPath()}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(t))
@@ -109,7 +109,7 @@ func sprintMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *
 		return nil, nil, err
 	}
 	for _, x := range s {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeySprint, Route: x.PublicWebPath()}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(s))
@@ -123,7 +123,7 @@ func estimateMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as
 		return nil, nil, err
 	}
 	for _, x := range e {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyEstimate, Route: x.PublicWebPath()}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(e))
@@ -137,7 +137,7 @@ func standupMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as 
 		return nil, nil, err
 	}
 	for _, x := range u {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyStandup, Route: x.PublicWebPath()}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(u))
@@ -151,7 +151,7 @@ func retroMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *a
 		return nil, nil, err
 	}
 	for _, x := range r {
-		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: util.KeyRetro, Route: x.PublicWebPath()}
+		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
 	}
 	ret.Badge = fmt.Sprint(len(r))

@@ -1,12 +1,14 @@
 import {req} from "./dom";
 import {send} from "./app";
-import {snippetStory} from "./stories";
+import {snippetStory, snippetStoryModal} from "./stories";
 
 export function initStories() {
   const storyAddModal = req("#modal-story--add");
   const storyAddForm = req("form", storyAddModal);
   storyAddForm.onsubmit = function () {
-    const title = req<HTMLInputElement>("input[name=\"title\"]", storyAddForm).value;
+    const input = req<HTMLInputElement>("input[name=\"title\"]", storyAddForm);
+    const title = input.value;
+    input.value = "";
     send("story-add", {"title": title});
     return false;
   }
@@ -25,7 +27,6 @@ export interface Story {
 }
 
 export function storyAdd(s: Story) {
-  console.log("TODO: storyAdd");
   const tbl = req("#panel-detail table tbody");
   let idx = -1;
   for (let i = 0; i < tbl.children.length; i++) {
@@ -50,4 +51,8 @@ export function storyAdd(s: Story) {
   } else {
     tbl.insertBefore(tr, tbl.children[idx]);
   }
+
+  const modal = snippetStoryModal(s);
+  req("#story-modals").appendChild(modal);
+  document.location.hash = "modal-story-" + s.id;
 }

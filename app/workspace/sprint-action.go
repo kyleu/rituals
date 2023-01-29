@@ -36,6 +36,9 @@ func (s *Service) ActionSprint(p *Params) (*FullSprint, string, string, error) {
 func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	tgt := fs.Sprint.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
+	if len(tgt.Title) == 0 {
+		return nil, "", "", errors.New("title may not be empty")
+	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
@@ -51,7 +54,7 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		return nil, "", "", err
 	}
 	fs.Sprint = model
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActUpdate, model, &fs.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActUpdate, model, &fs.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -82,7 +85,7 @@ func sprintMemberUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string,
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, curr, &fs.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, curr, &fs.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -108,7 +111,7 @@ func sprintMemberRemove(p *Params, fs *FullSprint) (*FullSprint, string, string,
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberRemove, userID, &fs.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberRemove, userID, &fs.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -133,7 +136,7 @@ func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, e
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fs.Self.UserID, "name": name}
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, arg, &fs.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, arg, &fs.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -172,7 +175,7 @@ func sprintComment(p *Params, fs *FullSprint) (*FullSprint, string, string, erro
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActComment, c, &fs.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActComment, c, &fs.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

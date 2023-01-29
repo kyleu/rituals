@@ -44,6 +44,9 @@ func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error)
 func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	tgt := fu.Standup.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
+	if len(tgt.Title) == 0 {
+		return nil, "", "", errors.New("title may not be empty")
+	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
@@ -58,7 +61,7 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		return nil, "", "", err
 	}
 	fu.Standup = model
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActUpdate, model, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActUpdate, model, &fu.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -80,7 +83,7 @@ func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string,
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportAdd, rpt, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportAdd, rpt, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -110,7 +113,7 @@ func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -130,7 +133,7 @@ func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportRemove, id, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportRemove, id, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -161,7 +164,7 @@ func standupMemberUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, curr, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, curr, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -187,7 +190,7 @@ func standupMemberRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberRemove, userID, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberRemove, userID, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -212,7 +215,7 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fu.Self.UserID, "name": name}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, arg, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, arg, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -243,7 +246,7 @@ func standupComment(p *Params, fu *FullStandup) (*FullStandup, string, string, e
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActComment, c, &fu.Self.UserID, p.Logger, p.Except...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActComment, c, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

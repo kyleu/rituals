@@ -15,18 +15,10 @@ export function initComments() {
   for (const modal of modals) {
     const form = req<HTMLFormElement>("form", modal);
     form.onsubmit = function () {
-      const inputs = els<HTMLInputElement>("input", form);
-      const c: Comment = {};
-      for (const input of inputs) {
-        switch (input.name) {
-          case "svc":
-            c.svc = input.value;
-            break;
-          case "modelID":
-            c.modelID = input.value;
-            break;
-        }
-      }
+      const c: Comment = {
+        svc: req<HTMLInputElement>("input[name=\"svc\"]", form).value,
+        modelID: req<HTMLInputElement>("input[name=\"modelID\"]", form).value
+      };
       const ta = req<HTMLTextAreaElement>("textarea", form);
       c.content = ta.value;
       c.userID = getSelfID();
