@@ -12,7 +12,7 @@ import (
 )
 
 func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
 	fu, err := p.Svc.LoadStandup(lp)
 	if err != nil {
 		return nil, "", "", err
@@ -20,11 +20,11 @@ func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error)
 	switch p.Act {
 	case action.ActUpdate:
 		return standupUpdate(p, fu)
-	case action.ActReportAdd:
+	case action.ActChildAdd:
 		return standupReportAdd(p, fu)
-	case action.ActReportUpdate:
+	case action.ActChildUpdate:
 		return standupReportUpdate(p, fu)
-	case action.ActReportRemove:
+	case action.ActChildRemove:
 		return standupReportRemove(p, fu)
 	case action.ActMemberUpdate:
 		return standupMemberUpdate(p, fu)
@@ -56,7 +56,18 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 	tgt.Icon = tgt.IconSafe()
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
+	if len(fu.Standup.Diff(tgt)) == 0 {
+		return fu, "No changes needed", fu.Standup.PublicWebPath(), nil
+	}
 	model, err := p.Svc.SaveStandup(p.Ctx, tgt, fu.Self.UserID, nil, p.Logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateTeam("standup", fu.Standup.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fu.Self.UserID, p)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateSprint("standup", fu.Standup.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), fu.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -65,7 +76,7 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fu, "Standup saved", model.PublicWebPath(), nil
+	return fu, "Standup updated", model.PublicWebPath(), nil
 }
 
 func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
@@ -75,6 +86,9 @@ func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string,
 	}
 	day = util.TimeTruncate(day)
 	content := p.Frm.GetStringOpt("content")
+	if content == "" {
+		return nil, "", "", errors.New("must provide [content]")
+	}
 	html := util.ToHTML(content, true)
 	rpt := &report.Report{
 		ID: util.UUID(), StandupID: fu.Standup.ID, Day: *day, UserID: fu.Self.UserID, Content: content, HTML: html, Created: time.Now(),
@@ -83,7 +97,7 @@ func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string,
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportAdd, rpt, &fu.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActChildAdd, rpt, &fu.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -99,21 +113,23 @@ func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no report found with id [%s]", id.String())
 	}
+	rpt := curr.Clone()
 	day, _ := p.Frm.GetTime("day", false)
 	if day == nil {
 		return nil, "", "", errors.New("must provide [day]")
 	}
 	day = util.TimeTruncate(day)
-	content := p.Frm.GetStringOpt("content")
-	html := util.ToHTML(content, true)
-	rpt := &report.Report{
-		ID: *id, StandupID: fu.Standup.ID, Day: *day, UserID: fu.Self.UserID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
+	rpt.Day = *day
+	rpt.Content = p.Frm.GetStringOpt("content")
+	rpt.HTML = util.ToHTML(rpt.Content, true)
+	if len(curr.Diff(rpt)) == 0 {
+		return fu, "No changes needed", fu.Standup.PublicWebPath(), nil
 	}
 	err := p.Svc.rt.Update(p.Ctx, nil, rpt, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportUpdate, rpt, &fu.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActChildUpdate, rpt, &fu.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -133,7 +149,7 @@ func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete report")
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReportRemove, id, &fu.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActChildRemove, id, &fu.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}

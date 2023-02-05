@@ -324,39 +324,41 @@ func StreamRetroWorkspaceList(qw422016 *qt422016.Writer, retros retro.Retros, te
 	components.StreamSVGRefIcon(qw422016, `retro`, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:118
 	qw422016.N().S(`Retros</h3>
-`)
-//line views/vworkspace/vwretro/RetroWorkspace.html:119
-	if len(retros) == 0 {
-//line views/vworkspace/vwretro/RetroWorkspace.html:119
-		qw422016.N().S(`    <div class="mt"><em>no retros</em></div>
-`)
-//line views/vworkspace/vwretro/RetroWorkspace.html:121
-	} else {
-//line views/vworkspace/vwretro/RetroWorkspace.html:121
-		qw422016.N().S(`    <table class="mt expanded">
+    <table id="retro-list" class="mt expanded">
       <tbody>
 `)
+//line views/vworkspace/vwretro/RetroWorkspace.html:121
+	if len(retros) == 0 {
+//line views/vworkspace/vwretro/RetroWorkspace.html:121
+		qw422016.N().S(`          <tr class="empty"><td><em>no retros</em></td></tr>
+`)
+//line views/vworkspace/vwretro/RetroWorkspace.html:123
+	} else {
 //line views/vworkspace/vwretro/RetroWorkspace.html:124
 		for _, x := range retros {
 //line views/vworkspace/vwretro/RetroWorkspace.html:124
-			qw422016.N().S(`        <tr>
-          <td>
+			qw422016.N().S(`          <tr id="retro-list-`)
+//line views/vworkspace/vwretro/RetroWorkspace.html:125
+			qw422016.E().S(x.ID.String())
+//line views/vworkspace/vwretro/RetroWorkspace.html:125
+			qw422016.N().S(`">
+            <td>
 `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:127
 			if showComments {
 //line views/vworkspace/vwretro/RetroWorkspace.html:127
-				qw422016.N().S(`            <div class="right">
-              `)
+				qw422016.N().S(`              <div class="right">
+                `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:129
 				vwutil.StreamComments(qw422016, enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:129
 				qw422016.N().S(`
-            </div>
+              </div>
 `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:131
 			}
 //line views/vworkspace/vwretro/RetroWorkspace.html:131
-			qw422016.N().S(`            <a href="`)
+			qw422016.N().S(`              <a href="`)
 //line views/vworkspace/vwretro/RetroWorkspace.html:132
 			qw422016.E().S(x.PublicWebPath())
 //line views/vworkspace/vwretro/RetroWorkspace.html:132
@@ -365,19 +367,17 @@ func StreamRetroWorkspaceList(qw422016 *qt422016.Writer, retros retro.Retros, te
 			qw422016.E().S(x.TitleString())
 //line views/vworkspace/vwretro/RetroWorkspace.html:132
 			qw422016.N().S(`</a>
-          </td>
-        </tr>
+            </td>
+          </tr>
 `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:135
 		}
-//line views/vworkspace/vwretro/RetroWorkspace.html:135
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/vworkspace/vwretro/RetroWorkspace.html:138
+//line views/vworkspace/vwretro/RetroWorkspace.html:136
 	}
-//line views/vworkspace/vwretro/RetroWorkspace.html:138
-	qw422016.N().S(`  </div>
+//line views/vworkspace/vwretro/RetroWorkspace.html:136
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
 //line views/vworkspace/vwretro/RetroWorkspace.html:140
 }

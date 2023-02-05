@@ -1,4 +1,4 @@
-import {initStories, storyAdd} from "./story";
+import {initStories, Story, storyAdd} from "./story";
 import {Message} from "./socket";
 import {els, req} from "./dom";
 import {send} from "./app";
@@ -6,6 +6,18 @@ import {svgRef} from "./util";
 import {modelBanner} from "./workspace";
 import {flashCreate} from "./flash";
 import {tagsWire} from "./tags";
+
+export type Estimate = {
+  id: string;
+  slug: string;
+  title: string;
+  choices: string;
+  icon: string;
+  status: string;
+  teamID: string;
+  sprintID: string;
+  owner: string;
+}
 
 export function initEstimate() {
   const frm = req<HTMLFormElement>("#modal-estimate-config form");
@@ -19,22 +31,21 @@ export function initEstimate() {
     document.location.hash = "";
     return false;
   };
-
   initStories();
 }
 
 export function handleEstimate(m: Message) {
   switch (m.cmd) {
     case "update":
-      return onUpdate(m.param);
-    case "story-add":
-      return storyAdd(m.param);
+      return onUpdate(m.param as Estimate);
+    case "child-add":
+      return storyAdd(m.param as Story);
     default:
       throw "invalid estimate command [" + m.cmd + "]"
   }
 }
 
-function onUpdate(param: any) {
+function onUpdate(param: Estimate) {
   const frm = req<HTMLFormElement>("#modal-estimate-config form");
   req<HTMLInputElement>("input[name=\"title\"]", frm).value = param.title;
   for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {

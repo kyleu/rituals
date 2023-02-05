@@ -16,6 +16,9 @@ func (s *Service) Slugify(ctx context.Context, id uuid.UUID, n string, o string,
 		return n
 	}
 	if curr, _ := s.GetBySlug(ctx, tx, n, logger); curr != nil {
+		if curr.ID == id {
+			return n
+		}
 		return s.Slugify(ctx, id, n+"-"+util.RandomString(4), o, h, tx, logger)
 	}
 	if hist, _ := h.Get(ctx, tx, n, logger); hist != nil {

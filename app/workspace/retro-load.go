@@ -53,7 +53,12 @@ func (s *Service) LoadRetro(p *LoadParams) (*FullRetro, error) {
 			return nil, errors.Errorf("no retro found with id [%s]", p.Slug)
 		}
 	}
-	return s.loadFullRetro(p, r)
+	ret, err := s.loadFullRetro(p, r)
+	if err != nil {
+		return nil, err
+	}
+	// permissions check
+	return ret, nil
 }
 
 func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro) (*FullRetro, error) {

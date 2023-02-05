@@ -32,7 +32,7 @@ func (s *Service) SocketHandler(
 		return err
 	}
 
-	p := NewParams(ctx, idStr, action.Act(cmd), frm, conn.Profile.ID, s, logger, conn.ID)
+	p := NewParams(ctx, idStr, action.Act(cmd), frm, conn.Profile, s, logger, conn.ID)
 
 	service := enum.ModelService(svc)
 	switch service {

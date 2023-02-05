@@ -15,17 +15,17 @@ import {socketInit} from "./socket";
 import {appInit} from "./app";
 
 declare global {
-  interface Window {
+  interface Window { // eslint-disable-line @typescript-eslint/consistent-type-definitions
     "rituals": {
       relativeTime: (time: string, el?: HTMLElement) => string;
-      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: any) => string, val: (x: any) => string) => void;
+      autocomplete: (el: HTMLInputElement, url: string, field: string, title: (x: unknown) => string, val: (x: unknown) => string) => void;
       setSiblingToNull: (el: HTMLElement) => void;
       initForm: (frm: HTMLFormElement) => void;
-      flash: (key: string, level: string, msg: string) => void;
+      flash: (key: string, level: "success" | "error", msg: string) => void;
       tags: (el: HTMLElement) => void;
-      Socket: any;
+      Socket: unknown;
     };
-    "JSX": (tag: string, attrs: any) => HTMLElement;
+    "JSX": (tag: string, attrs: unknown[]) => HTMLElement;
   }
 }
 

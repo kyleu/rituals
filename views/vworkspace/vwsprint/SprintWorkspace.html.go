@@ -415,39 +415,41 @@ func StreamSprintWorkspaceList(qw422016 *qt422016.Writer, sprints sprint.Sprints
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:134
 	qw422016.N().S(`Sprints</h3>
-`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:135
-	if len(sprints) == 0 {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:135
-		qw422016.N().S(`    <div class="mt"><em>no sprints</em></div>
-`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
-	} else {
-//line views/vworkspace/vwsprint/SprintWorkspace.html:137
-		qw422016.N().S(`    <table class="mt expanded">
+    <table id="sprint-list" class="mt expanded">
       <tbody>
 `)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+	if len(sprints) == 0 {
+//line views/vworkspace/vwsprint/SprintWorkspace.html:137
+		qw422016.N().S(`          <tr class="empty"><td><em>no sprints</em></td></tr>
+`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:139
+	} else {
 //line views/vworkspace/vwsprint/SprintWorkspace.html:140
 		for _, x := range sprints {
 //line views/vworkspace/vwsprint/SprintWorkspace.html:140
-			qw422016.N().S(`        <tr>
-          <td>
+			qw422016.N().S(`          <tr id="sprint-list-`)
+//line views/vworkspace/vwsprint/SprintWorkspace.html:141
+			qw422016.E().S(x.ID.String())
+//line views/vworkspace/vwsprint/SprintWorkspace.html:141
+			qw422016.N().S(`">
+            <td>
 `)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:143
 			if showComments {
 //line views/vworkspace/vwsprint/SprintWorkspace.html:143
-				qw422016.N().S(`            <div class="right">
-              `)
+				qw422016.N().S(`              <div class="right">
+                `)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:145
 				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:145
 				qw422016.N().S(`
-            </div>
+              </div>
 `)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:147
 			}
 //line views/vworkspace/vwsprint/SprintWorkspace.html:147
-			qw422016.N().S(`            <a href="`)
+			qw422016.N().S(`              <a href="`)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:148
 			qw422016.E().S(x.PublicWebPath())
 //line views/vworkspace/vwsprint/SprintWorkspace.html:148
@@ -456,19 +458,17 @@ func StreamSprintWorkspaceList(qw422016 *qt422016.Writer, sprints sprint.Sprints
 			qw422016.E().S(x.TitleString())
 //line views/vworkspace/vwsprint/SprintWorkspace.html:148
 			qw422016.N().S(`</a>
-          </td>
-        </tr>
+            </td>
+          </tr>
 `)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:151
 		}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:151
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/vworkspace/vwsprint/SprintWorkspace.html:154
+//line views/vworkspace/vwsprint/SprintWorkspace.html:152
 	}
-//line views/vworkspace/vwsprint/SprintWorkspace.html:154
-	qw422016.N().S(`  </div>
+//line views/vworkspace/vwsprint/SprintWorkspace.html:152
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:156
 }

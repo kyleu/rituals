@@ -21,9 +21,7 @@ export function snippetStoryModal(s: Story): HTMLElement {
         <a href="#" class="modal-close">×</a>
         <h2>{ s.title }</h2>
       </div>
-      <div class="modal-body">
-        TODO
-      </div>
+      <div class="modal-body"></div>
     </div>
   </div>
 }

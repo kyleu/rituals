@@ -53,7 +53,12 @@ func (s *Service) LoadEstimate(p *LoadParams) (*FullEstimate, error) {
 			return nil, errors.Errorf("no estimate found with id [%s]", p.Slug)
 		}
 	}
-	return s.loadFullEstimate(p, e)
+	ret, err := s.loadFullEstimate(p, e)
+	if err != nil {
+		return nil, err
+	}
+	// permissions check
+	return ret, nil
 }
 
 func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEstimate, error) {

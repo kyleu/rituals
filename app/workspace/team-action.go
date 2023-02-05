@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Service) ActionTeam(p *Params) (*FullTeam, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
 	ft, err := p.Svc.LoadTeam(lp)
 	if err != nil {
 		return nil, "", "", err
@@ -46,6 +46,9 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	tgt.Slug = p.Svc.r.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.rh, nil, p.Logger)
 	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
+	if len(ft.Team.Diff(tgt)) == 0 {
+		return ft, "No changes needed", ft.Team.PublicWebPath(), nil
+	}
 	model, err := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
@@ -55,7 +58,7 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if err != nil {
 		return nil, "", "", err
 	}
-	return ft, "Team saved", model.PublicWebPath(), nil
+	return ft, "Team updated", model.PublicWebPath(), nil
 }
 
 func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {

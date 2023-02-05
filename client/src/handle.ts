@@ -11,17 +11,20 @@ import {handleRetro} from "./retro";
 export function handle(svc: string, m: Message) {
   switch (m.cmd) {
     case "error":
-      return onError(m.param.message);
+      return onError((m.param as { message: string }).message);
     case "comment":
       return commentAdd(m.param as Comment);
     case "online-update":
-      return onlineUpdate(m.param.userID, m.param.connected);
+      const ou = m.param as { userID: string; connected: boolean; }
+      return onlineUpdate(ou.userID, ou.connected);
     case "member-add":
-      return memberAdd(m.param.userID, m.param.name, m.param.role);
+      const ma = m.param as { userID: string; name: string; role: string; }
+      return memberAdd(ma.userID, ma.name, ma.role);
     case "member-update":
-      return memberUpdate(m.param.userID, m.param.name, m.param.role);
+      const mu = m.param as { userID: string; name: string; role: string; }
+      return memberUpdate(mu.userID, mu.name, mu.role);
     case "member-remove":
-      return memberRemove(m.param);
+      return memberRemove(m.param as string);
   }
   switch (svc) {
     case "team":

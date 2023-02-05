@@ -53,7 +53,12 @@ func (s *Service) LoadSprint(p *LoadParams) (*FullSprint, error) {
 			return nil, errors.Errorf("no sprint found with id [%s]", p.Slug)
 		}
 	}
-	return s.loadFullSprint(p, spr)
+	ret, err := s.loadFullSprint(p, spr)
+	if err != nil {
+		return nil, err
+	}
+	// permissions check
+	return ret, nil
 }
 
 func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint) (*FullSprint, error) {

@@ -15,7 +15,7 @@ import (
 )
 
 func (s *Service) ActionEstimate(p *Params) (*FullEstimate, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
 	fe, err := s.LoadEstimate(lp)
 	if err != nil {
 		return nil, "", "", err
@@ -23,15 +23,15 @@ func (s *Service) ActionEstimate(p *Params) (*FullEstimate, string, string, erro
 	switch p.Act {
 	case action.ActUpdate:
 		return estimateUpdate(p, fe)
-	case action.ActStoryAdd:
+	case action.ActChildAdd:
 		return estimateStoryAdd(p, fe)
-	case action.ActStoryUpdate:
+	case action.ActChildUpdate:
 		return estimateStoryUpdate(p, fe)
-	case action.ActStoryStatus:
+	case action.ActChildStatus:
 		return estimateStoryStatus(p, fe)
 	case action.ActVote:
 		return estimateStoryVote(p, fe)
-	case action.ActStoryRemove:
+	case action.ActChildRemove:
 		return estimateStoryRemove(p, fe)
 	case action.ActMemberUpdate:
 		return estimateMemberUpdate(p, fe)
@@ -64,7 +64,18 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 	tgt.Choices = util.StringSplitAndTrim(p.Frm.GetStringOpt("choices"), ",")
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
+	if len(fe.Estimate.Diff(tgt)) == 0 {
+		return fe, "No changes needed", fe.Estimate.PublicWebPath(), nil
+	}
 	model, err := p.Svc.SaveEstimate(p.Ctx, tgt, fe.Self.UserID, nil, p.Logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateTeam("estimate", fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fe.Self.UserID, p)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateSprint("estimate", fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), fe.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -73,7 +84,7 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fe, "Estimate saved", model.PublicWebPath(), nil
+	return fe, "Estimate updated", model.PublicWebPath(), nil
 }
 
 func estimateStoryAdd(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
@@ -88,7 +99,7 @@ func estimateStoryAdd(p *Params, fe *FullEstimate) (*FullEstimate, string, strin
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryAdd, st, &fe.Self.UserID, p.Logger)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildAdd, st, &fe.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -104,16 +115,19 @@ func estimateStoryUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no story found with id [%s]", id.String())
 	}
-	title := strings.TrimSpace(p.Frm.GetStringOpt("title"))
-	if title == "" {
+	st := curr.Clone()
+	st.Title = strings.TrimSpace(p.Frm.GetStringOpt("title"))
+	if st.Title == "" {
 		return nil, "", "", errors.New("must provide [title]")
 	}
-	st := &story.Story{ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: fe.Self.UserID, Title: title, Status: curr.Status, Created: curr.Created}
+	if len(curr.Diff(st)) == 0 {
+		return fe, "No changes needed", st.PublicWebPath(fe.Estimate.Slug), nil
+	}
 	err := p.Svc.st.Update(p.Ctx, nil, st, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryUpdate, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildUpdate, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -139,7 +153,7 @@ func estimateStoryStatus(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save new status for story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryStatus, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildStatus, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -197,7 +211,7 @@ func estimateStoryRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActStoryRemove, id, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildRemove, id, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

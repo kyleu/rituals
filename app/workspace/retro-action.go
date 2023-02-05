@@ -12,7 +12,7 @@ import (
 )
 
 func (s *Service) ActionRetro(p *Params) (*FullRetro, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
 	fr, err := p.Svc.LoadRetro(lp)
 	if err != nil {
 		return nil, "", "", err
@@ -21,11 +21,11 @@ func (s *Service) ActionRetro(p *Params) (*FullRetro, string, string, error) {
 	switch p.Act {
 	case action.ActUpdate:
 		return retroUpdate(p, fr)
-	case action.ActFeedbackAdd:
+	case action.ActChildAdd:
 		return retroFeedbackAdd(p, fr)
-	case action.ActFeedbackUpdate:
+	case action.ActChildUpdate:
 		return retroFeedbackUpdate(p, fr)
-	case action.ActFeedbackRemove:
+	case action.ActChildRemove:
 		return retroFeedbackRemove(p, fr)
 	case action.ActMemberUpdate:
 		return retroMemberUpdate(p, fr)
@@ -58,7 +58,18 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	tgt.Categories = util.StringSplitAndTrim(p.Frm.GetStringOpt("categories"), ",")
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
+	if len(fr.Retro.Diff(tgt)) == 0 {
+		return fr, "No changes needed", fr.Retro.PublicWebPath(), nil
+	}
 	model, err := p.Svc.SaveRetro(p.Ctx, tgt, fr.Self.UserID, nil, p.Logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateTeam("retro", fr.Retro.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fr.Self.UserID, p)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateSprint("retro", fr.Retro.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), fr.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -67,12 +78,15 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fr, "Retro saved", model.PublicWebPath(), nil
+	return fr, "Retro updated", model.PublicWebPath(), nil
 }
 
 func retroFeedbackAdd(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	category := p.Frm.GetStringOpt("category")
 	content := p.Frm.GetStringOpt("content")
+	if content == "" {
+		return nil, "", "", errors.New("must provide [content]")
+	}
 	html := util.ToHTML(content, true)
 	f := &feedback.Feedback{
 		ID: util.UUID(), RetroID: fr.Retro.ID, Category: category, UserID: fr.Self.UserID, Content: content, HTML: html, Created: time.Now(),
@@ -81,7 +95,7 @@ func retroFeedbackAdd(p *Params, fr *FullRetro) (*FullRetro, string, string, err
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackAdd, f, &fr.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActChildAdd, f, &fr.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -97,17 +111,18 @@ func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no feedback found with id [%s]", id.String())
 	}
-	category := p.Frm.GetStringOpt("category")
-	content := p.Frm.GetStringOpt("content")
-	html := util.ToHTML(content, true)
-	f := &feedback.Feedback{
-		ID: *id, RetroID: fr.Retro.ID, Category: category, UserID: fr.Self.UserID, Content: content, HTML: html, Created: curr.Created, Updated: util.TimeToday(),
+	f := curr.Clone()
+	f.Category = p.Frm.GetStringOpt("category")
+	f.Content = p.Frm.GetStringOpt("content")
+	f.HTML = util.ToHTML(f.Content, true)
+	if len(curr.Diff(f)) == 0 {
+		return fr, "No changes needed", fr.Retro.PublicWebPath(), nil
 	}
 	err := p.Svc.f.Update(p.Ctx, nil, f, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackUpdate, f, &fr.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActChildUpdate, f, &fr.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -127,7 +142,7 @@ func retroFeedbackRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete feedback")
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActFeedbackRemove, id, &fr.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActChildRemove, id, &fr.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}

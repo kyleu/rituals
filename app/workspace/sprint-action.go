@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Service) ActionSprint(p *Params) (*FullSprint, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.UserID, "", nil, nil, p.Logger)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
 	fs, err := p.Svc.LoadSprint(lp)
 	if err != nil {
 		return nil, "", "", err
@@ -47,9 +47,18 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
 	tgt.StartDate, _ = p.Frm.GetTime("startDate", false)
+	tgt.StartDate = util.TimeTruncate(tgt.StartDate)
 	tgt.EndDate, _ = p.Frm.GetTime("endDate", false)
+	tgt.EndDate = util.TimeTruncate(tgt.EndDate)
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
+	if len(fs.Sprint.Diff(tgt)) == 0 {
+		return fs, "No changes needed", fs.Sprint.PublicWebPath(), nil
+	}
 	model, err := p.Svc.SaveSprint(p.Ctx, tgt, fs.Self.UserID, nil, p.Logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	err = updateTeam("sprint", fs.Sprint.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fs.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -58,7 +67,7 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fs, "Sprint saved", model.PublicWebPath(), nil
+	return fs, "Sprint updated", model.PublicWebPath(), nil
 }
 
 func sprintMemberUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {

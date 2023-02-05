@@ -12,6 +12,8 @@
 .category {
   display: block;
   flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
   margin: var(--padding-small);
   padding: var(--padding);
   border: var(--border);

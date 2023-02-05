@@ -116,25 +116,25 @@
       {%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}
     </div>
     <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
-    {%- if len(retros) == 0 -%}
-    <div class="mt"><em>no retros</em></div>
-    {%- else -%}
-    <table class="mt expanded">
+    <table id="retro-list" class="mt expanded">
       <tbody>
-        {%- for _, x := range retros -%}
-        <tr>
-          <td>
-            {%- if showComments -%}
-            <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps) %}
-            </div>
-            {%- endif -%}
-            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
-          </td>
-        </tr>
-        {%- endfor -%}
+        {%- if len(retros) == 0 -%}
+          <tr class="empty"><td><em>no retros</em></td></tr>
+        {%- else -%}
+          {%- for _, x := range retros -%}
+          <tr id="retro-list-{%s x.ID.String() %}">
+            <td>
+              {%- if showComments -%}
+              <div class="right">
+                {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps) %}
+              </div>
+              {%- endif -%}
+              <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+            </td>
+          </tr>
+          {%- endfor -%}
+        {%- endif -%}
       </tbody>
     </table>
-    {%- endif -%}
   </div>
 {% endfunc %}

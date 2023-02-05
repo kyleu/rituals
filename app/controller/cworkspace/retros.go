@@ -31,7 +31,7 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile.ID, ps.Profile.NameSafe(), nil, ps.Params, ps.Logger)
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, nil, ps.Params, ps.Logger)
 		fr, err := as.Services.Workspace.LoadRetro(p)
 		if err != nil {
 			return "", err
@@ -75,7 +75,7 @@ func RetroAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		act := action.Act(frm.GetStringOpt("action"))
-		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile.ID, as.Services.Workspace, ps.Logger)
+		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile, as.Services.Workspace, ps.Logger)
 		_, msg, u, err := as.Services.Workspace.ActionRetro(p)
 		if err != nil {
 			return "", err

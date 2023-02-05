@@ -332,7 +332,7 @@ func (p *Connection) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	qw422016.N().S(`
           `)
 //line views/vadmin/Sockets.html:119
-	components.StreamTableInput(qw422016, "channel", "", "Channel", "", 5, "The channel this message is from")
+	components.StreamTableInput(qw422016, "channel", "", "Channel", "", 5, "The channel this message is for")
 //line views/vadmin/Sockets.html:119
 	qw422016.N().S(`
           `)

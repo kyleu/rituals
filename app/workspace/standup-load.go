@@ -51,7 +51,12 @@ func (s *Service) LoadStandup(p *LoadParams) (*FullStandup, error) {
 			return nil, errors.Errorf("no standup found with id [%s]", p.Slug)
 		}
 	}
-	return s.loadFullStandup(p, u)
+	ret, err := s.loadFullStandup(p, u)
+	if err != nil {
+		return nil, err
+	}
+	// permissions check
+	return ret, nil
 }
 
 func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup) (*FullStandup, error) {

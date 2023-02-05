@@ -54,7 +54,12 @@ func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
 		}
 	}
 
-	return s.loadFullTeam(p, t)
+	ret, err := s.loadFullTeam(p, t)
+	if err != nil {
+		return nil, err
+	}
+	// permissions check
+	return ret, nil
 }
 
 func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {

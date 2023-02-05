@@ -176,19 +176,19 @@ func StreamStandupWorkspaceReportModalAdd(qw422016 *qt422016.Writer) {
         <form action="#" method="post">
           <input type="hidden" name="action" value="`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:60
-	qw422016.E().S(string(action.ActReportAdd))
+	qw422016.E().S(string(action.ActChildAdd))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:60
 	qw422016.N().S(`" />
           <table class="mt expanded">
             <tbody>
             `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:63
-	components.StreamFormVerticalInputTimestampDay(qw422016, "day", "", "Day", util.TimeToday(), 5)
+	components.StreamFormVerticalInputTimestampDay(qw422016, "day", "report-add-day", "Day", util.TimeToday(), 5)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:63
 	qw422016.N().S(`
             `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:64
-	components.StreamFormVerticalTextarea(qw422016, "content", "", "Content", 8, "", 5, "HTML and Markdown supported")
+	components.StreamFormVerticalTextarea(qw422016, "content", "report-add-content", "Content", 8, "", 5, "HTML and Markdown supported")
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:64
 	qw422016.N().S(`
             <tr><td colspan="2"><button type="submit">Add Report</button></td></tr>
@@ -269,12 +269,12 @@ func StreamStandupWorkspaceReportModalEdit(qw422016 *qt422016.Writer, r *report.
             <tr><td colspan="2">
               <div class="right"><button type="submit" name="action" value="`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:90
-	qw422016.E().S(string(action.ActReportRemove))
+	qw422016.E().S(string(action.ActChildRemove))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:90
 	qw422016.N().S(`" onclick="return confirm('Are you sure you want to delete this report?');">Delete</button></div>
               <button type="submit" name="action" value="`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:91
-	qw422016.E().S(string(action.ActReportUpdate))
+	qw422016.E().S(string(action.ActChildUpdate))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:91
 	qw422016.N().S(`">Save Changes</button>
             </td></tr>

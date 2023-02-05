@@ -89,8 +89,8 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
     </div>
     <div id="panel-detail">
       <div class="card">
-        <div class="right"><a href="#modal-report--add"><button>Add Report</button></a></div>
-        <h3><a href="#modal-report--add">`)
+        <div class="right"><a class="add-report-link" href="#modal-report--add"><button>Add Report</button></a></div>
+        <h3><a class="add-report-link" href="#modal-report--add">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:47
 	components.StreamSVGRefIcon(qw422016, `file-alt`, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:47
@@ -321,39 +321,41 @@ func StreamStandupWorkspaceList(qw422016 *qt422016.Writer, standups standup.Stan
 	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:115
 	qw422016.N().S(`Standups</h3>
-`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:116
-	if len(standups) == 0 {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:116
-		qw422016.N().S(`    <div class="mt"><em>no standups</em></div>
-`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:118
-	} else {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:118
-		qw422016.N().S(`    <table class="mt expanded">
+    <table id="standup-list" class="mt expanded">
       <tbody>
 `)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:118
+	if len(standups) == 0 {
+//line views/vworkspace/vwstandup/StandupWorkspace.html:118
+		qw422016.N().S(`          <tr class="empty"><td><em>no standups</em></td></tr>
+`)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:120
+	} else {
 //line views/vworkspace/vwstandup/StandupWorkspace.html:121
 		for _, x := range standups {
 //line views/vworkspace/vwstandup/StandupWorkspace.html:121
-			qw422016.N().S(`        <tr>
-          <td>
+			qw422016.N().S(`          <tr id="standup-list-`)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:122
+			qw422016.E().S(x.ID.String())
+//line views/vworkspace/vwstandup/StandupWorkspace.html:122
+			qw422016.N().S(`">
+            <td>
 `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:124
 			if showComments {
 //line views/vworkspace/vwstandup/StandupWorkspace.html:124
-				qw422016.N().S(`            <div class="right">
-              `)
+				qw422016.N().S(`              <div class="right">
+                `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:126
 				vwutil.StreamComments(qw422016, enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:126
 				qw422016.N().S(`
-            </div>
+              </div>
 `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:128
 			}
 //line views/vworkspace/vwstandup/StandupWorkspace.html:128
-			qw422016.N().S(`            <a href="`)
+			qw422016.N().S(`              <a href="`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:129
 			qw422016.E().S(x.PublicWebPath())
 //line views/vworkspace/vwstandup/StandupWorkspace.html:129
@@ -362,19 +364,17 @@ func StreamStandupWorkspaceList(qw422016 *qt422016.Writer, standups standup.Stan
 			qw422016.E().S(x.TitleString())
 //line views/vworkspace/vwstandup/StandupWorkspace.html:129
 			qw422016.N().S(`</a>
-          </td>
-        </tr>
+            </td>
+          </tr>
 `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:132
 		}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:132
-		qw422016.N().S(`      </tbody>
-    </table>
-`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:135
+//line views/vworkspace/vwstandup/StandupWorkspace.html:133
 	}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:135
-	qw422016.N().S(`  </div>
+//line views/vworkspace/vwstandup/StandupWorkspace.html:133
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:137
 }

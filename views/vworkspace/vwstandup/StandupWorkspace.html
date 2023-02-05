@@ -43,8 +43,8 @@
     </div>
     <div id="panel-detail">
       <div class="card">
-        <div class="right"><a href="#modal-report--add"><button>Add Report</button></a></div>
-        <h3><a href="#modal-report--add">{%= components.SVGRefIcon(`file-alt`, ps) %}Reports</a></h3>
+        <div class="right"><a class="add-report-link" href="#modal-report--add"><button>Add Report</button></a></div>
+        <h3><a class="add-report-link" href="#modal-report--add">{%= components.SVGRefIcon(`file-alt`, ps) %}Reports</a></h3>
         <div class="mt">{%= StandupWorkspaceReports(w, ps) %}</div>
         {%= StandupWorkspaceReportModalAdd() %}
       </div>
@@ -113,25 +113,25 @@
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
     <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
-    {%- if len(standups) == 0 -%}
-    <div class="mt"><em>no standups</em></div>
-    {%- else -%}
-    <table class="mt expanded">
+    <table id="standup-list" class="mt expanded">
       <tbody>
-        {%- for _, x := range standups -%}
-        <tr>
-          <td>
-            {%- if showComments -%}
-            <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, ps) %}
-            </div>
-            {%- endif -%}
-            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
-          </td>
-        </tr>
-        {%- endfor -%}
+        {%- if len(standups) == 0 -%}
+          <tr class="empty"><td><em>no standups</em></td></tr>
+        {%- else -%}
+          {%- for _, x := range standups -%}
+          <tr id="standup-list-{%s x.ID.String() %}">
+            <td>
+              {%- if showComments -%}
+              <div class="right">
+                {%= vwutil.Comments(enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, ps) %}
+              </div>
+              {%- endif -%}
+              <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+            </td>
+          </tr>
+          {%- endfor -%}
+        {%- endif -%}
       </tbody>
     </table>
-    {%- endif -%}
   </div>
 {% endfunc %}

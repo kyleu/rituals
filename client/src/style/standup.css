@@ -2,4 +2,5 @@
   display: block;
   padding: var(--padding);
   border: var(--border);
+  margin-bottom: var(--padding-small);
 }

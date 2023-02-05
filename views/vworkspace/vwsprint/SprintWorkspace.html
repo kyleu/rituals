@@ -132,25 +132,25 @@
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
     <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
-    {%- if len(sprints) == 0 -%}
-    <div class="mt"><em>no sprints</em></div>
-    {%- else -%}
-    <table class="mt expanded">
+    <table id="sprint-list" class="mt expanded">
       <tbody>
-        {%- for _, x := range sprints -%}
-        <tr>
-          <td>
-            {%- if showComments -%}
-            <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps) %}
-            </div>
-            {%- endif -%}
-            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
-          </td>
-        </tr>
-        {%- endfor -%}
+        {%- if len(sprints) == 0 -%}
+          <tr class="empty"><td><em>no sprints</em></td></tr>
+        {%- else -%}
+          {%- for _, x := range sprints -%}
+          <tr id="sprint-list-{%s x.ID.String() %}">
+            <td>
+              {%- if showComments -%}
+              <div class="right">
+                {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps) %}
+              </div>
+              {%- endif -%}
+              <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+            </td>
+          </tr>
+          {%- endfor -%}
+        {%- endif -%}
       </tbody>
     </table>
-    {%- endif -%}
   </div>
 {% endfunc %}

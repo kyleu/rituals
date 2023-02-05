@@ -43,10 +43,11 @@
     </div>
     <div id="panel-detail">
       <div class="card">
-        <div class="right"><a href="#modal-story--add"><button>Add Story</button></a></div>
-        <h3><a href="#modal-story--add">{%= components.SVGRefIcon(util.KeyStory, ps) %}Stories</a></h3>
+        <div class="right"><a class="add-story-link" href="#modal-story--add"><button>Add Story</button></a></div>
+        <h3><a class="add-story-link" href="#modal-story--add">{%= components.SVGRefIcon(util.KeyStory, ps) %}Stories</a></h3>
         {%= EstimateWorkspaceStories(w, ps) %}
         {%= EstimateWorkspaceStoryModalAdd() %}
+        {%= EstimateWorkspaceStoryModalEmpty(ps) %}
       </div>
     </div>
     <div id="panel-self">
@@ -115,25 +116,25 @@
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyEstimate, teamID, sprintID, "New Estimate") %}</div>
     <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
-    {%- if len(estimates) == 0 -%}
-    <div class="mt"><em>no estimates</em></div>
-    {%- else -%}
-    <table class="mt expanded">
+    <table id="estimate-list" class="mt expanded">
       <tbody>
-        {%- for _, x := range estimates -%}
-        <tr>
-          <td>
-            {%- if showComments -%}
-            <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps) %}
-            </div>
-            {%- endif -%}
-            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
-          </td>
-        </tr>
-        {%- endfor -%}
+        {%- if len(estimates) == 0 -%}
+          <tr class="empty"><td><em>no estimates</em></td></tr>
+        {%- else -%}
+          {%- for _, x := range estimates -%}
+          <tr id="estimate-list-{%s x.ID.String() %}">
+            <td>
+              {%- if showComments -%}
+              <div class="right">
+                {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps) %}
+              </div>
+              {%- endif -%}
+              <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+            </td>
+          </tr>
+          {%- endfor -%}
+        {%- endif -%}
       </tbody>
     </table>
-    {%- endif -%}
   </div>
 {% endfunc %}

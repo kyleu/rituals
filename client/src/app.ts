@@ -2,7 +2,7 @@
 import {initComments} from "./comment";
 import {handle} from "./handle";
 import {initMembers} from "./member";
-import {Socket} from "./socket";
+import {Message, Socket} from "./socket";
 import {initEstimate} from "./estimate";
 import {initTeam} from "./team";
 import {initSprint} from "./sprint";
@@ -17,7 +17,7 @@ function open() {
   console.log("[socket]: open");
 }
 
-function recv(m: any) {
+function recv(m: Message) {
   const list = document.getElementById("socket-list");
   if (list) {
     const pre = document.createElement("pre");
@@ -27,7 +27,7 @@ function recv(m: any) {
   handle(svc, m);
 }
 
-function err(e: any) {
+function err(e: unknown) {
   console.log("[socket error]: " + e);
 }
 
@@ -57,13 +57,12 @@ export function initWorkspace(t: string, idStr: string) {
   console.log("loaded [" + svc + "] workspace [" + id + "]");
 }
 
-export function send(cmd: string, param: any) {
+export function send(cmd: string, param: unknown) {
   sock.send({channel: svc + ":" + id, cmd: cmd, param: param})
 }
 
-
 declare global {
-  interface Window {
+  interface Window { // eslint-disable-line @typescript-eslint/consistent-type-definitions
     initWorkspace: (t: string, idStr: string) => void
   }
 }

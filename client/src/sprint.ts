@@ -3,7 +3,19 @@ import {els, req} from "./dom";
 import {send} from "./app";
 import {svgRef} from "./util";
 import {flashCreate} from "./flash";
-import {modelBanner} from "./workspace";
+import {ChildAdd, ChildRemove, modelBanner, onChildAddModel, onChildRemoveModel} from "./workspace";
+
+export type Sprint = {
+  id: string;
+  slug: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  icon: string;
+  status: string;
+  teamID: string;
+  owner: string;
+}
 
 export function initSprint() {
   const frm = req<HTMLFormElement>("#modal-sprint-config form");
@@ -22,13 +34,17 @@ export function initSprint() {
 export function handleSprint(m: Message) {
   switch (m.cmd) {
     case "update":
-      return onUpdate(m.param);
+      return onUpdate(m.param as Sprint);
+    case "child-add":
+      return onChildAddModel(m.param as ChildAdd);
+    case "child-remove":
+      return onChildRemoveModel(m.param as ChildRemove);
     default:
       throw "invalid sprint command [" + m.cmd + "]"
   }
 }
 
-function onUpdate(param: any) {
+function onUpdate(param: Sprint) {
   const frm = req<HTMLFormElement>("#modal-sprint-config form");
   req<HTMLInputElement>("input[name=\"title\"]", frm).value = param.title;
   for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {
@@ -41,12 +57,12 @@ function onUpdate(param: any) {
   req("#model-title").innerText = param.title;
   req("#model-icon").innerHTML = svgRef(param.icon, 20);
   req("#model-summary").innerText = summary(param);
-  req("#model-banner").innerHTML = modelBanner("sprint", frm, param.teamID, param.sprintID);
+  req("#model-banner").innerHTML = modelBanner("sprint", frm, param.teamID, "");
 
   flashCreate("sprint", "success", "sprint updated");
 }
 
-function summary(param: any) {
+function summary(param: Sprint) {
   let ret = "";
   if (param.startDate) {
     ret += "starts ";

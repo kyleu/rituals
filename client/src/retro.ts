@@ -5,6 +5,19 @@ import {svgRef} from "./util";
 import {modelBanner} from "./workspace";
 import {flashCreate} from "./flash";
 import {tagsWire} from "./tags";
+import {Feedback, feedbackAdd, initFeedbacks} from "./feedback";
+
+export type Retro = {
+  id: string;
+  slug: string;
+  title: string;
+  categories: string;
+  icon: string;
+  status: string;
+  teamID: string;
+  sprintID: string;
+  owner: string;
+}
 
 export function initRetro() {
   const frm = req<HTMLFormElement>("#modal-retro-config form");
@@ -18,18 +31,21 @@ export function initRetro() {
     document.location.hash = "";
     return false;
   };
+  initFeedbacks();
 }
 
 export function handleRetro(m: Message) {
   switch (m.cmd) {
     case "update":
-      return onUpdate(m.param);
+      return onUpdate(m.param as Retro);
+    case "child-add":
+      return feedbackAdd(m.param as Feedback);
     default:
       throw "invalid retro command [" + m.cmd + "]"
   }
 }
 
-function onUpdate(param: any) {
+function onUpdate(param: Retro) {
   const frm = req<HTMLFormElement>("#modal-retro-config form");
   req<HTMLInputElement>("input[name=\"title\"]", frm).value = param.title;
   for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {

@@ -9,6 +9,7 @@ import (
 
 	"github.com/kyleu/rituals/app/estimate"
 	"github.com/kyleu/rituals/app/lib/filter"
+	"github.com/kyleu/rituals/app/lib/user"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
@@ -45,6 +46,6 @@ type LoadParams struct {
 	Logger   util.Logger
 }
 
-func NewLoadParams(ctx context.Context, slug string, userID uuid.UUID, username string, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) *LoadParams {
-	return &LoadParams{Ctx: ctx, Slug: slug, UserID: userID, Username: username, Tx: tx, Params: params, Logger: logger}
+func NewLoadParams(ctx context.Context, slug string, profile *user.Profile, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) *LoadParams {
+	return &LoadParams{Ctx: ctx, Slug: slug, UserID: profile.ID, Username: profile.Name, Tx: tx, Params: params, Logger: logger}
 }
