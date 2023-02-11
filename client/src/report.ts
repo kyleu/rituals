@@ -1,7 +1,7 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
-import {snippetReport, snippetReportContainer} from "./reports";
-import {username} from "./member";
+import {snippetReport, snippetReportContainer, snippetReportModalEdit, snippetReportModalView} from "./reports";
+import {getSelfID, username} from "./member";
 import {initCommentsModal} from "./comment";
 import {flashCreate} from "./flash";
 import {focusDelay} from "./util";
@@ -84,6 +84,13 @@ export function reportAdd(r: Report) {
     list.appendChild(div);
   } else {
     list.insertBefore(div, list.children[idx]);
+  }
+  if( getSelfID() === r.userID) {
+    const modal = snippetReportModalEdit(r);
+    initEditModal(modal);
+    req("#report-modals").appendChild(modal);
+  } else {
+    req("#report-modals").appendChild(snippetReportModalView(r));
   }
   initCommentsModal(req(".modal", div));
 }

@@ -26,20 +26,20 @@ export function snippetReport(r: Report): HTMLElement {
 }
 
 export function snippetReportModalView(r: Report): HTMLElement {
-  return <div id={"modal-report-" + r.id} className="modal report-modal-view" style="display: none;">
-    <a className="backdrop" href="#"></a>
-    <div className="modal-content">
-      <div className="modal-header">
-        <a href="#" className="modal-close">×</a>
+  return <div id={"modal-report-" + r.id} class="modal report-modal-view" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
         <h2>{r.day + ": " + username(r.userID)}</h2>
       </div>
-      <div className="modal-body" dangerouslySetInnerHTML={r.html}></div>
+      <div class="modal-body" dangerouslySetInnerHTML={r.html}></div>
     </div>
   </div>;
 }
 
 export function snippetReportModalEdit(r: Report): HTMLElement {
-  return <div id={"modal-report-" + r.id} className="modal report-modal-edit" style="display: none;">
+  return <div id={"modal-report-" + r.id} class="modal report-modal-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

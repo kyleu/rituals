@@ -57,7 +57,7 @@ func (s *Service) LoadEstimate(p *LoadParams, tf func() (team.Teams, error), sf 
 	if err != nil {
 		return nil, err
 	}
-	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+	if ok, msg := CheckPermissions(util.KeyEstimate, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
 		return nil, errors.New(msg)
 	}
 	return ret, nil

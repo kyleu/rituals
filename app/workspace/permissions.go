@@ -26,20 +26,24 @@ func AvailablePermissions(accounts user.Accounts, ts team.Teams, ss sprint.Sprin
 	return ret
 }
 
-func CheckPermissions(perms util.Permissions, accounts user.Accounts, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (bool, string) {
-	if ok, msg := checkTeamPermissions(perms.TeamPerms().Values(), tf); !ok {
+func CheckPermissions(
+	key string, perms util.Permissions, accounts user.Accounts,
+	tf func() (team.Teams, error),
+	sf func() (sprint.Sprints, error),
+) (bool, string) {
+	if ok, msg := checkTeamPermissions(key, perms.TeamPerms().Values(), tf); !ok {
 		return false, msg
 	}
-	if ok, msg := checkSprintPermissions(perms.SprintPerms().Values(), sf); !ok {
+	if ok, msg := checkSprintPermissions(key, perms.SprintPerms().Values(), sf); !ok {
 		return false, msg
 	}
-	if ok, msg := checkAuthPermissions(perms.AuthPerms(), accounts); !ok {
+	if ok, msg := checkAuthPermissions(key, perms.AuthPerms(), accounts); !ok {
 		return false, msg
 	}
 	return true, KeyOK
 }
 
-func checkTeamPermissions(idStrings []string, tf func() (team.Teams, error)) (bool, string) {
+func checkTeamPermissions(key string, idStrings []string, tf func() (team.Teams, error)) (bool, string) {
 	if len(idStrings) == 0 {
 		return true, KeyOK
 	}
@@ -61,10 +65,10 @@ func checkTeamPermissions(idStrings []string, tf func() (team.Teams, error)) (bo
 		}
 	}
 	tNames := util.StringArrayOxfordComma(idStrings, "or")
-	return false, fmt.Sprintf("to join, you must be a member of one of the following teams: %s", tNames)
+	return false, fmt.Sprintf("to join this %s, you must be a member of one of the following teams: %s", key, tNames)
 }
 
-func checkSprintPermissions(idStrings []string, sf func() (sprint.Sprints, error)) (bool, string) {
+func checkSprintPermissions(key string, idStrings []string, sf func() (sprint.Sprints, error)) (bool, string) {
 	if len(idStrings) == 0 {
 		return true, KeyOK
 	}
@@ -86,10 +90,10 @@ func checkSprintPermissions(idStrings []string, sf func() (sprint.Sprints, error
 		}
 	}
 	tNames := util.StringArrayOxfordComma(idStrings, "or")
-	return false, fmt.Sprintf("to join, you must be a member of one of the following sprints: %s", tNames)
+	return false, fmt.Sprintf("to join this %s, you must be a member of one of the following sprints: %s", key, tNames)
 }
 
-func checkAuthPermissions(perms util.Permissions, accounts user.Accounts) (bool, string) {
+func checkAuthPermissions(key string, perms util.Permissions, accounts user.Accounts) (bool, string) {
 	if len(perms) == 0 {
 		return true, KeyOK
 	}
@@ -107,5 +111,5 @@ func checkAuthPermissions(perms util.Permissions, accounts user.Accounts) (bool,
 			ret = append(ret, fmt.Sprintf("[%s] with an email matching [%s]", perm.Key, perm.Value))
 		}
 	}
-	return false, fmt.Sprintf("you must be signed in to %s", util.StringArrayOxfordComma(ret, "or"))
+	return false, fmt.Sprintf("you must be signed in to %s to join this %s", util.StringArrayOxfordComma(ret, "or"), key)
 }

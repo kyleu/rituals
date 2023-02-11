@@ -57,7 +57,7 @@ func (s *Service) LoadSprint(p *LoadParams, tf func() (team.Teams, error)) (*Ful
 	if err != nil {
 		return nil, err
 	}
-	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, func() (sprint.Sprints, error) { return nil, nil }); !ok {
+	if ok, msg := CheckPermissions(util.KeySprint, ret.Permissions.ToPermissions(), p.Accounts, tf, func() (sprint.Sprints, error) { return nil, nil }); !ok {
 		return nil, errors.New(msg)
 	}
 	return ret, nil

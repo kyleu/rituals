@@ -55,7 +55,7 @@ func (s *Service) LoadStandup(p *LoadParams, tf func() (team.Teams, error), sf f
 	if err != nil {
 		return nil, err
 	}
-	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+	if ok, msg := CheckPermissions(util.KeyStandup, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
 		return nil, errors.New(msg)
 	}
 	return ret, nil

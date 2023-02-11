@@ -58,7 +58,7 @@ func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
 	if err != nil {
 		return nil, err
 	}
-	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, func() (team.Teams, error) {
+	if ok, msg := CheckPermissions(util.KeyTeam, ret.Permissions.ToPermissions(), p.Accounts, func() (team.Teams, error) {
 		return nil, nil
 	}, func() (sprint.Sprints, error) {
 		return nil, nil
