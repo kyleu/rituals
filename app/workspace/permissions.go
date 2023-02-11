@@ -36,12 +36,12 @@ func CheckPermissions(perms util.Permissions, accounts user.Accounts, tf func() 
 	if ok, msg := checkAuthPermissions(perms.AuthPerms(), accounts); !ok {
 		return false, msg
 	}
-	return true, "ok"
+	return true, KeyOK
 }
 
 func checkTeamPermissions(idStrings []string, tf func() (team.Teams, error)) (bool, string) {
 	if len(idStrings) == 0 {
-		return true, "ok"
+		return true, KeyOK
 	}
 	ids := make([]uuid.UUID, 0, len(idStrings))
 	for _, x := range idStrings {
@@ -57,7 +57,7 @@ func checkTeamPermissions(idStrings []string, tf func() (team.Teams, error)) (bo
 	}
 	for _, id := range ids {
 		if ts.Get(id) != nil {
-			return true, "ok"
+			return true, KeyOK
 		}
 	}
 	tNames := util.StringArrayOxfordComma(idStrings, "or")
@@ -66,7 +66,7 @@ func checkTeamPermissions(idStrings []string, tf func() (team.Teams, error)) (bo
 
 func checkSprintPermissions(idStrings []string, sf func() (sprint.Sprints, error)) (bool, string) {
 	if len(idStrings) == 0 {
-		return true, "ok"
+		return true, KeyOK
 	}
 	ids := make([]uuid.UUID, 0, len(idStrings))
 	for _, x := range idStrings {
@@ -82,7 +82,7 @@ func checkSprintPermissions(idStrings []string, sf func() (sprint.Sprints, error
 	}
 	for _, id := range ids {
 		if ss.Get(id) != nil {
-			return true, "ok"
+			return true, KeyOK
 		}
 	}
 	tNames := util.StringArrayOxfordComma(idStrings, "or")
@@ -91,14 +91,14 @@ func checkSprintPermissions(idStrings []string, sf func() (sprint.Sprints, error
 
 func checkAuthPermissions(perms util.Permissions, accounts user.Accounts) (bool, string) {
 	if len(perms) == 0 {
-		return true, "ok"
+		return true, KeyOK
 	}
 	ret := make([]string, 0, len(perms))
 	for _, perm := range perms {
 		curr := accounts.GetByProvider(perm.Key)
 		for _, a := range curr {
 			if strings.HasSuffix(a.Email, perm.Value) {
-				return true, "ok"
+				return true, KeyOK
 			}
 		}
 		if perm.Value == "" {

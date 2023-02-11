@@ -72,7 +72,7 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.E().S(u.TitleString())
 //line views/vworkspace/vwstandup/StandupList.html:29
 		qw422016.N().S(`</a></td>
-          <td style="text-align: right;">`)
+          <td class="text-align-right">`)
 //line views/vworkspace/vwstandup/StandupList.html:30
 		components.StreamDisplayTimestamp(qw422016, &u.Created)
 //line views/vworkspace/vwstandup/StandupList.html:30

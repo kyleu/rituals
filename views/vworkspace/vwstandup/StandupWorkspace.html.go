@@ -55,7 +55,7 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
 	self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
 
 //line views/vworkspace/vwstandup/StandupWorkspace.html:31
-	qw422016.N().S(`  <div style="display: flex; flex-wrap: wrap;">
+	qw422016.N().S(`  <div class="flex-wrap">
     <div id="panel-summary">
       <div class="card">
         <div class="right">`)
@@ -359,48 +359,54 @@ func StreamStandupWorkspaceList(qw422016 *qt422016.Writer, standups standup.Stan
 //line views/vworkspace/vwstandup/StandupWorkspace.html:129
 			qw422016.E().S(x.PublicWebPath())
 //line views/vworkspace/vwstandup/StandupWorkspace.html:129
-			qw422016.N().S(`">`)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:129
+			qw422016.N().S(`"><div>
+                <span>`)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:130
+			components.StreamSVGRef(qw422016, x.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:130
+			qw422016.N().S(`</span><span>`)
+//line views/vworkspace/vwstandup/StandupWorkspace.html:130
 			qw422016.E().S(x.TitleString())
-//line views/vworkspace/vwstandup/StandupWorkspace.html:129
-			qw422016.N().S(`</a>
+//line views/vworkspace/vwstandup/StandupWorkspace.html:130
+			qw422016.N().S(`</span>
+              </div></a>
             </td>
           </tr>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:132
+//line views/vworkspace/vwstandup/StandupWorkspace.html:134
 		}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:133
+//line views/vworkspace/vwstandup/StandupWorkspace.html:135
 	}
-//line views/vworkspace/vwstandup/StandupWorkspace.html:133
+//line views/vworkspace/vwstandup/StandupWorkspace.html:135
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 func WriteStandupWorkspaceList(qq422016 qtio422016.Writer, standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	StreamStandupWorkspaceList(qw422016, standups, teamID, sprintID, showComments, comments, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 }
 
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	WriteStandupWorkspaceList(qb422016, standups, teamID, sprintID, showComments, comments, ps)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 	return qs422016
-//line views/vworkspace/vwstandup/StandupWorkspace.html:137
+//line views/vworkspace/vwstandup/StandupWorkspace.html:139
 }

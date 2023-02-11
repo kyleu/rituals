@@ -2,6 +2,7 @@ import {els, req} from "./dom";
 import {send} from "./app";
 import {getSelfID, username} from "./member";
 import {snippetComment} from "./comments";
+import {focusDelay, svgRef} from "./util";
 
 export class Comment {
   svc?: string;
@@ -11,10 +12,16 @@ export class Comment {
 }
 
 export function initComments() {
-  const modals = els(".modal.comments");
-  for (const modal of modals) {
+  for (const link of els(".comment-link")) {
+    initCommentsLink(link);
+  }
+  for (const modal of els(".modal.comments")) {
     initCommentsModal(modal);
   }
+}
+
+export function initCommentsLink(link: HTMLElement) {
+  link.onclick = () => focusDelay(req("#modal-" + link.dataset["key"] + "-comments form textarea"));
 }
 
 export function initCommentsModal(modal: HTMLElement) {
@@ -43,6 +50,6 @@ export function commentAdd(c: Comment) {
   const link = req("#comment-link-" + c.svc + "-" + c.modelID);
   link.title = count + (count == 1 ? " comment" : " comments");
   if (link.innerHTML.indexOf("comment-dots") == -1) {
-    link.innerHTML = `<svg style="width: 18px; height: 18px;" class="right"><use xlink:href="#svg-comment-dots"></use></svg>`;
+    link.innerHTML = svgRef("comment-dots", 18, "right");
   }
 }

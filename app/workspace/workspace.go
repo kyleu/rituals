@@ -36,7 +36,7 @@ func FromAny(x any) (*Workspace, error) {
 }
 
 type LoadParams struct {
-	Ctx      context.Context
+	Ctx      context.Context //nolint:containedctx
 	Slug     string
 	Profile  *user.Profile
 	Accounts user.Accounts

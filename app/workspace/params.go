@@ -11,7 +11,7 @@ import (
 )
 
 type Params struct {
-	Ctx      context.Context
+	Ctx      context.Context //nolint:containedctx
 	Slug     string
 	Act      action.Act
 	Frm      util.ValueMap

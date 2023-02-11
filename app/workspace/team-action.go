@@ -36,7 +36,7 @@ func (s *Service) ActionTeam(p *Params) (*FullTeam, string, string, error) {
 func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	tgt := ft.Team.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
-	if len(tgt.Title) == 0 {
+	if tgt.Title == "" {
 		return nil, "", "", errors.New("title may not be empty")
 	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
@@ -47,7 +47,7 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
 	if len(ft.Team.Diff(tgt)) == 0 {
-		return ft, "No changes needed", ft.Team.PublicWebPath(), nil
+		return ft, MsgNoChangesNeeded, ft.Team.PublicWebPath(), nil
 	}
 	model, err := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, nil, p.Logger)
 	if err != nil {
@@ -89,7 +89,7 @@ func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 	if err != nil {
 		return nil, "", "", err
 	}
-	return ft, "Member updated", ft.Team.PublicWebPath(), nil
+	return ft, MsgMemberUpdated, ft.Team.PublicWebPath(), nil
 }
 
 func teamMemberRemove(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
@@ -115,7 +115,7 @@ func teamMemberRemove(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 	if err != nil {
 		return nil, "", "", err
 	}
-	return ft, "Member removed", ft.Team.PublicWebPath(), nil
+	return ft, MsgMemberRemoved, ft.Team.PublicWebPath(), nil
 }
 
 func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
@@ -132,7 +132,7 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 	if err != nil {
 		return nil, "", "", err
 	}
-	if choice == "global" {
+	if choice == KeyGlobal {
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": ft.Self.UserID, "name": name}
@@ -140,7 +140,7 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 	if err != nil {
 		return nil, "", "", err
 	}
-	return ft, "Profile edited", ft.Team.PublicWebPath(), nil
+	return ft, MsgProfileEdited, ft.Team.PublicWebPath(), nil
 }
 
 func teamComment(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
@@ -183,5 +183,5 @@ func teamComment(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if err != nil {
 		return nil, "", "", err
 	}
-	return ft, "Comment added", ft.Team.PublicWebPath() + u, nil
+	return ft, MsgCommentAdded, ft.Team.PublicWebPath() + u, nil
 }

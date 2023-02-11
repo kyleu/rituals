@@ -74,7 +74,7 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 		qw422016.E().S(r.TitleString())
 //line views/vworkspace/vwretro/RetroList.html:29
 		qw422016.N().S(`</a></td>
-          <td style="text-align: right;">`)
+          <td class="text-align-right">`)
 //line views/vworkspace/vwretro/RetroList.html:30
 		components.StreamDisplayTimestamp(qw422016, &r.Created)
 //line views/vworkspace/vwretro/RetroList.html:30

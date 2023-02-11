@@ -27,7 +27,7 @@
         {%- for _, u := range p.Standups -%}
         <tr>
           <td><a href="{%s u.PublicWebPath() %}">{%s u.TitleString() %}</a></td>
-          <td style="text-align: right;">{%= components.DisplayTimestamp(&u.Created) %}</td>
+          <td class="text-align-right">{%= components.DisplayTimestamp(&u.Created) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

@@ -7,7 +7,7 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 )
 
-func updateTeam(t string, src *uuid.UUID, tgt *uuid.UUID, modelID uuid.UUID, modelTitle string, path string, userID uuid.UUID, p *Params) error {
+func updateTeam(t string, src *uuid.UUID, tgt *uuid.UUID, modelID uuid.UUID, modelTitle string, path string, icon string, userID uuid.UUID, p *Params) error {
 	if src != tgt {
 		if src != nil {
 			param := map[string]any{"type": t, "id": modelID}
@@ -17,7 +17,7 @@ func updateTeam(t string, src *uuid.UUID, tgt *uuid.UUID, modelID uuid.UUID, mod
 			}
 		}
 		if tgt != nil {
-			param := map[string]any{"type": t, "id": modelID, "title": modelTitle, "path": path}
+			param := map[string]any{"type": t, "id": modelID, "title": modelTitle, "path": path, "icon": icon}
 			err := p.Svc.send(enum.ModelServiceTeam, *tgt, action.ActChildAdd, param, &userID, p.Logger)
 			if err != nil {
 				return err

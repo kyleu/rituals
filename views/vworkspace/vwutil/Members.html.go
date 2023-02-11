@@ -49,7 +49,7 @@ func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageSt
 	qw422016.E().S(m.UserID.String())
 //line views/vworkspace/vwutil/Members.html:12
 	qw422016.N().S(`">
-        <div class="left" style="padding-right: var(--padding-small);">`)
+        <div class="left prs">`)
 //line views/vworkspace/vwutil/Members.html:13
 	components.StreamSVGRef(qw422016, `profile`, 18, 18, ``, ps)
 //line views/vworkspace/vwutil/Members.html:13
@@ -61,7 +61,7 @@ func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageSt
 	qw422016.N().S(`</span>
       </a>
     </td>
-    <td class="shrink" style="text-align: right"><em class="member-role">`)
+    <td class="shrink text-align-right"><em class="member-role">`)
 //line views/vworkspace/vwutil/Members.html:17
 	qw422016.E().S(string(m.Role))
 //line views/vworkspace/vwutil/Members.html:17

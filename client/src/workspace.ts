@@ -9,6 +9,7 @@ export type ChildAdd = {
   "id": string;
   "title": string;
   "path": string;
+  "icon": string;
 }
 
 export type ChildRemove = {
@@ -55,7 +56,15 @@ export function onChildAddModel(param: ChildAdd) {
 
   const a = document.createElement("a");
   a.href = param.path;
-  a.innerText = param.title;
+
+  const iconSpan = document.createElement("span");
+  iconSpan.innerHTML = svgRef(param.icon, 16, "icon");
+  a.appendChild(iconSpan);
+
+  const titleSpan = document.createElement("span");
+  titleSpan.innerText = param.title;
+  a.appendChild(titleSpan);
+
   td.appendChild(a);
   tr.appendChild(td);
   tbody.appendChild(tr);

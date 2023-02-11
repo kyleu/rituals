@@ -39,7 +39,7 @@ func (s *Service) ActionSprint(p *Params) (*FullSprint, string, string, error) {
 func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
 	tgt := fs.Sprint.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
-	if len(tgt.Title) == 0 {
+	if tgt.Title == "" {
 		return nil, "", "", errors.New("title may not be empty")
 	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
@@ -55,13 +55,13 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 	tgt.EndDate = util.TimeTruncate(tgt.EndDate)
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	if len(fs.Sprint.Diff(tgt)) == 0 {
-		return fs, "No changes needed", fs.Sprint.PublicWebPath(), nil
+		return fs, MsgNoChangesNeeded, fs.Sprint.PublicWebPath(), nil
 	}
 	model, err := p.Svc.SaveSprint(p.Ctx, tgt, fs.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateTeam("sprint", fs.Sprint.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fs.Self.UserID, p)
+	err = updateTeam("sprint", fs.Sprint.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fs.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -101,7 +101,7 @@ func sprintMemberUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string,
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fs, "Member updated", fs.Sprint.PublicWebPath(), nil
+	return fs, MsgMemberUpdated, fs.Sprint.PublicWebPath(), nil
 }
 
 func sprintMemberRemove(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
@@ -127,7 +127,7 @@ func sprintMemberRemove(p *Params, fs *FullSprint) (*FullSprint, string, string,
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fs, "Member removed", fs.Sprint.PublicWebPath(), nil
+	return fs, MsgMemberRemoved, fs.Sprint.PublicWebPath(), nil
 }
 
 func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
@@ -144,7 +144,7 @@ func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, e
 	if err != nil {
 		return nil, "", "", err
 	}
-	if choice == "global" {
+	if choice == KeyGlobal {
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fs.Self.UserID, "name": name}
@@ -152,7 +152,7 @@ func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, e
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fs, "Profile edited", fs.Sprint.PublicWebPath(), nil
+	return fs, MsgProfileEdited, fs.Sprint.PublicWebPath(), nil
 }
 
 func sprintComment(p *Params, fs *FullSprint) (*FullSprint, string, string, error) {
@@ -191,5 +191,5 @@ func sprintComment(p *Params, fs *FullSprint) (*FullSprint, string, string, erro
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fs, "Comment added", fs.Sprint.PublicWebPath() + u, nil
+	return fs, MsgCommentAdded, fs.Sprint.PublicWebPath() + u, nil
 }

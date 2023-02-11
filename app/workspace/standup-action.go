@@ -50,7 +50,7 @@ func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error)
 func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	tgt := fu.Standup.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
-	if len(tgt.Title) == 0 {
+	if tgt.Title == "" {
 		return nil, "", "", errors.New("title may not be empty")
 	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
@@ -63,17 +63,17 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
 	if len(fu.Standup.Diff(tgt)) == 0 {
-		return fu, "No changes needed", fu.Standup.PublicWebPath(), nil
+		return fu, MsgNoChangesNeeded, fu.Standup.PublicWebPath(), nil
 	}
 	model, err := p.Svc.SaveStandup(p.Ctx, tgt, fu.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateTeam("standup", fu.Standup.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fu.Self.UserID, p)
+	err = updateTeam("standup", fu.Standup.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateSprint("standup", fu.Standup.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), fu.Self.UserID, p)
+	err = updateSprint("standup", fu.Standup.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -129,7 +129,7 @@ func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	rpt.Content = p.Frm.GetStringOpt("content")
 	rpt.HTML = util.ToHTML(rpt.Content, true)
 	if len(curr.Diff(rpt)) == 0 {
-		return fu, "No changes needed", fu.Standup.PublicWebPath(), nil
+		return fu, MsgNoChangesNeeded, fu.Standup.PublicWebPath(), nil
 	}
 	err := p.Svc.rt.Update(p.Ctx, nil, rpt, p.Logger)
 	if err != nil {
@@ -190,7 +190,7 @@ func standupMemberUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fu, "Member updated", fu.Standup.PublicWebPath(), nil
+	return fu, MsgMemberUpdated, fu.Standup.PublicWebPath(), nil
 }
 
 func standupMemberRemove(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
@@ -216,7 +216,7 @@ func standupMemberRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fu, "Member removed", fu.Standup.PublicWebPath(), nil
+	return fu, MsgMemberRemoved, fu.Standup.PublicWebPath(), nil
 }
 
 func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
@@ -233,7 +233,7 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 	if err != nil {
 		return nil, "", "", err
 	}
-	if choice == "global" {
+	if choice == KeyGlobal {
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fu.Self.UserID, "name": name}
@@ -241,7 +241,7 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fu, "Profile edited", fu.Standup.PublicWebPath(), nil
+	return fu, MsgProfileEdited, fu.Standup.PublicWebPath(), nil
 }
 
 func standupComment(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
@@ -273,5 +273,5 @@ func standupComment(p *Params, fu *FullStandup) (*FullStandup, string, string, e
 		return nil, "", "", err
 	}
 
-	return fu, "Comment added", fu.Standup.PublicWebPath() + u, nil
+	return fu, MsgCommentAdded, fu.Standup.PublicWebPath() + u, nil
 }

@@ -29,33 +29,35 @@ insert into "team_member" (
   '10000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', 'Test User', 'https://google.com', 'owner', now(), null
 ), (
   '10000000-0000-0000-0000-000000000000', '90000001-0000-0000-0000-000000000000', 'Test User 2', 'https://google.com', 'member', now(), null
+), (
+  '10000001-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', 'Test User', 'https://google.com', 'owner', now(), null
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 }
 
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 func WriteTeamMemberSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	StreamTeamMemberSeedData(qw422016)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 }
 
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 func TeamMemberSeedData() string {
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	WriteTeamMemberSeedData(qb422016)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 	return qs422016
-//line queries/seeddata/seed_team_member.sql:9
+//line queries/seeddata/seed_team_member.sql:11
 }

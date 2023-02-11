@@ -4,13 +4,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
-	"github.com/kyleu/rituals/app/action"
-	"github.com/kyleu/rituals/app/sprint"
-	"github.com/kyleu/rituals/app/team"
-
 	"github.com/kyleu/rituals/app"
+	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/workspace"
 	"github.com/kyleu/rituals/views/vworkspace/vwretro"
 )

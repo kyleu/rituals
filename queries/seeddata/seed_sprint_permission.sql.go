@@ -27,33 +27,35 @@ insert into "sprint_permission" (
   "sprint_id", "key", "value", "access", "created"
 ) values (
   '20000000-0000-0000-0000-000000000000', 'github', 'kyleu.com', 'member', now()
+), (
+  '20000000-0000-0000-0000-000000000000', 'team', '10000000-0000-0000-0000-000000000000', 'member', now()
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 }
 
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 func WriteSprintPermissionSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	StreamSprintPermissionSeedData(qw422016)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 }
 
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 func SprintPermissionSeedData() string {
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	WriteSprintPermissionSeedData(qb422016)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 	return qs422016
-//line queries/seeddata/seed_sprint_permission.sql:7
+//line queries/seeddata/seed_sprint_permission.sql:9
 }

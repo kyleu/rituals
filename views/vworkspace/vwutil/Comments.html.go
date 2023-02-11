@@ -98,7 +98,15 @@ func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uui
 //line views/vworkspace/vwutil/Comments.html:27
 	qw422016.E().S(id.String())
 //line views/vworkspace/vwutil/Comments.html:27
-	qw422016.N().S(`" href="#modal-`)
+	qw422016.N().S(`" class="comment-link" data-key="`)
+//line views/vworkspace/vwutil/Comments.html:27
+	qw422016.E().S(string(svc))
+//line views/vworkspace/vwutil/Comments.html:27
+	qw422016.N().S(`-`)
+//line views/vworkspace/vwutil/Comments.html:27
+	qw422016.E().S(id.String())
+//line views/vworkspace/vwutil/Comments.html:27
+	qw422016.N().S(`"  href="#modal-`)
 //line views/vworkspace/vwutil/Comments.html:27
 	qw422016.E().S(string(svc))
 //line views/vworkspace/vwutil/Comments.html:27

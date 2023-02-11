@@ -24,7 +24,7 @@
       icon = "comment-alt"
     }
   -%}
-  <a id="comment-link-{%s string(svc) %}-{%s id.String() %}" href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
+  <a id="comment-link-{%s string(svc) %}-{%s id.String() %}" class="comment-link" data-key="{%s string(svc) %}-{%s id.String() %}"  href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
 {% endfunc %}
 
 {% func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) %}

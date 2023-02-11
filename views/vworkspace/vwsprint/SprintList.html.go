@@ -70,7 +70,7 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 		qw422016.E().S(s.TitleString())
 //line views/vworkspace/vwsprint/SprintList.html:27
 		qw422016.N().S(`</a></td>
-          <td style="text-align: right;">`)
+          <td class="text-align-right">`)
 //line views/vworkspace/vwsprint/SprintList.html:28
 		components.StreamDisplayTimestamp(qw422016, &s.Created)
 //line views/vworkspace/vwsprint/SprintList.html:28

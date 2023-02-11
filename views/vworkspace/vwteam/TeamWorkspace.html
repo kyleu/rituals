@@ -27,7 +27,7 @@
     t := w.Team
     self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
-  <div style="display: flex; flex-wrap: wrap;">
+  <div class="flex-wrap">
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
@@ -119,7 +119,9 @@
               {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps) %}
             </div>
             {%- endif -%}
-            <a href="{%s x.PublicWebPath() %}">{%s x.TitleString() %}</a>
+            <a href="{%s x.PublicWebPath() %}"><div>
+              <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
+            </div></a>
           </td>
         </tr>
         {%- endfor -%}

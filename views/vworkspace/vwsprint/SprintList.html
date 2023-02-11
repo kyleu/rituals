@@ -25,7 +25,7 @@
         {%- for _, s := range p.Sprints -%}
         <tr>
           <td><a href="{%s s.PublicWebPath() %}">{%s s.TitleString() %}</a></td>
-          <td style="text-align: right;">{%= components.DisplayTimestamp(&s.Created) %}</td>
+          <td class="text-align-right">{%= components.DisplayTimestamp(&s.Created) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>

@@ -15,14 +15,11 @@ export function handle(svc: string, m: Message) {
     case "comment":
       return commentAdd(m.param as Comment);
     case "online-update":
-      const ou = m.param as { userID: string; connected: boolean; }
-      return onlineUpdate(ou.userID, ou.connected);
+      return onlineUpdate(m.param as { userID: string; connected: boolean; });
     case "member-add":
-      const ma = m.param as { userID: string; name: string; role: string; }
-      return memberAdd(ma.userID, ma.name, ma.role);
+      return memberAdd(m.param as { userID: string; name: string; role: string; });
     case "member-update":
-      const mu = m.param as { userID: string; name: string; role: string; }
-      return memberUpdate(mu.userID, mu.name, mu.role);
+      return memberUpdate(m.param as { userID: string; name: string; role: string; });
     case "member-remove":
       return memberRemove(m.param as string);
   }

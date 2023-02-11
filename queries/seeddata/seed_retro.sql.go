@@ -27,33 +27,35 @@ insert into "retro" (
   "id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "categories", "created", "updated"
 ) values (
   '50000000-0000-0000-0000-000000000000', 'retro-1', 'Retro 1', 'star', 'active', '10000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', '["good","bad"]', now(), null
+), (
+  '50000001-0000-0000-0000-000000000000', 'retro-2', 'Retro 2', 'bolt', 'active', '10000001-0000-0000-0000-000000000000', '20000001-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', '["good","bad"]', now(), null
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 }
 
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 func WriteRetroSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	StreamRetroSeedData(qw422016)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 }
 
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 func RetroSeedData() string {
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	WriteRetroSeedData(qb422016)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 	return qs422016
-//line queries/seeddata/seed_retro.sql:7
+//line queries/seeddata/seed_retro.sql:9
 }

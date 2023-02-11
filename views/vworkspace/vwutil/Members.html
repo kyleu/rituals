@@ -10,11 +10,11 @@
   <tr id="member-{%s m.UserID.String() %}" class="member" data-id="{%s m.UserID.String() %}">
     <td>
       <a href="#modal-member-{%s m.UserID.String() %}">
-        <div class="left" style="padding-right: var(--padding-small);">{%= components.SVGRef(`profile`, 18, 18, ``, ps) %}</div>
+        <div class="left prs">{%= components.SVGRef(`profile`, 18, 18, ``, ps) %}</div>
         <span class="member-name">{%s m.Name %}</span>
       </a>
     </td>
-    <td class="shrink" style="text-align: right"><em class="member-role">{%s string(m.Role) %}</em></td>
+    <td class="shrink text-align-right"><em class="member-role">{%s string(m.Role) %}</em></td>
     <td class="shrink online-status" title="{% if m.Online %}online{% else %}offline{% endif %}">
       {%- if m.Online -%}
       {%= components.SVGRef(`check-circle`, 18, 18, `right`, ps) %}

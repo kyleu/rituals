@@ -27,33 +27,35 @@ insert into "team" (
   "id", "slug", "title", "icon", "status", "owner", "created", "updated"
 ) values (
   '10000000-0000-0000-0000-000000000000', 'rituals-team', 'Rituals Team', 'star', 'active', '90000000-0000-0000-0000-000000000000', now(), null
+), (
+  '10000001-0000-0000-0000-000000000000', 'team-2', 'Team 2', 'action', 'active', '90000000-0000-0000-0000-000000000000', now(), null
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 }
 
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 func WriteTeamSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	StreamTeamSeedData(qw422016)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 }
 
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 func TeamSeedData() string {
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	WriteTeamSeedData(qb422016)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 	return qs422016
-//line queries/seeddata/seed_team.sql:7
+//line queries/seeddata/seed_team.sql:9
 }

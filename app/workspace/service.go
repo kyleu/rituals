@@ -95,6 +95,7 @@ func (s *Service) RegisterSend(send action.SendFn, sendUser action.SendUserFn) {
 	s.send = send
 	s.sendUser = sendUser
 }
+
 func (s *Service) RegisterOnline(f func(key string) []uuid.UUID) {
 	s.online = f
 }

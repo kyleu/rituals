@@ -57,7 +57,7 @@ func (s *Service) ActionEstimate(p *Params) (*FullEstimate, string, string, erro
 func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
 	tgt := fe.Estimate.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
-	if len(tgt.Title) == 0 {
+	if tgt.Title == "" {
 		return nil, "", "", errors.New("title may not be empty")
 	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
@@ -71,17 +71,17 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
 	if len(fe.Estimate.Diff(tgt)) == 0 {
-		return fe, "No changes needed", fe.Estimate.PublicWebPath(), nil
+		return fe, MsgNoChangesNeeded, fe.Estimate.PublicWebPath(), nil
 	}
 	model, err := p.Svc.SaveEstimate(p.Ctx, tgt, fe.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateTeam("estimate", fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fe.Self.UserID, p)
+	err = updateTeam("estimate", fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateSprint("estimate", fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), fe.Self.UserID, p)
+	err = updateSprint("estimate", fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -127,7 +127,7 @@ func estimateStoryUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 		return nil, "", "", errors.New("must provide [title]")
 	}
 	if len(curr.Diff(st)) == 0 {
-		return fe, "No changes needed", st.PublicWebPath(fe.Estimate.Slug), nil
+		return fe, MsgNoChangesNeeded, st.PublicWebPath(fe.Estimate.Slug), nil
 	}
 	err := p.Svc.st.Update(p.Ctx, nil, st, p.Logger)
 	if err != nil {
@@ -252,7 +252,7 @@ func estimateMemberUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fe, "Member updated", fe.Estimate.PublicWebPath(), nil
+	return fe, MsgMemberUpdated, fe.Estimate.PublicWebPath(), nil
 }
 
 func estimateMemberRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
@@ -278,7 +278,7 @@ func estimateMemberRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fe, "Member removed", fe.Estimate.PublicWebPath(), nil
+	return fe, MsgMemberRemoved, fe.Estimate.PublicWebPath(), nil
 }
 
 func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
@@ -295,7 +295,7 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 	if err != nil {
 		return nil, "", "", err
 	}
-	if choice == "global" {
+	if choice == KeyGlobal {
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fe.Self.UserID, "name": name, "role": fe.Self.Role}
@@ -303,7 +303,7 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fe, "Profile edited", fe.Estimate.PublicWebPath(), nil
+	return fe, MsgProfileEdited, fe.Estimate.PublicWebPath(), nil
 }
 
 func estimateComment(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
@@ -334,5 +334,5 @@ func estimateComment(p *Params, fe *FullEstimate) (*FullEstimate, string, string
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fe, "Comment added", fe.Estimate.PublicWebPath() + u, nil
+	return fe, MsgCommentAdded, fe.Estimate.PublicWebPath() + u, nil
 }

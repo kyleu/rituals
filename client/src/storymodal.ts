@@ -50,7 +50,7 @@ function wireStoryModalFormToComplete(id: string, frm: HTMLFormElement) {
 
 function wireStoryModalFormVote(id: string, e: HTMLElement) {
   els(".vote-option", e).forEach((opt) => {
-    opt.onclick = function (evt) {
+    opt.onclick = function () {
       req<HTMLInputElement>("input[name=\"vote\"]", opt).checked = true;
       send("vote", {"storyID": id, "vote": opt.dataset["choice"]});
       return false;

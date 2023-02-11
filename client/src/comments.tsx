@@ -1,5 +1,5 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {Comment} from "./comment";
+import {Comment, initCommentsLink} from "./comment";
 import {relativeTime, utc} from "./time";
 import {svg} from "./util";
 
@@ -22,7 +22,9 @@ export function snippetComment(c: Comment, un: string) {
 export function snippetCommentsModalLink(svc: string, id: string) {
   const x = "comment-link-" + svc + "-" + id;
   const href = "#modal-" + svc + "-" + id + "-comments";
-  return <a id={x} href={href} title="0 comment" dangerouslySetInnerHTML={svg("comment-alt")}></a>
+  const a = <a id={x} class="comment-link" data-key={svc + "-" + id} href={href} title="0 comment" dangerouslySetInnerHTML={svg("comment-alt")}></a>;
+  initCommentsLink(a);
+  return a;
 }
 
 export function snippetCommentsModal(svc: string, id: string, title: string) {

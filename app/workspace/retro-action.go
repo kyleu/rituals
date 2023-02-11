@@ -51,7 +51,7 @@ func (s *Service) ActionRetro(p *Params) (*FullRetro, string, string, error) {
 func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	tgt := fr.Retro.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
-	if len(tgt.Title) == 0 {
+	if tgt.Title == "" {
 		return nil, "", "", errors.New("title may not be empty")
 	}
 	tgt.Slug = p.Frm.GetStringOpt("slug")
@@ -65,17 +65,17 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
 	if len(fr.Retro.Diff(tgt)) == 0 {
-		return fr, "No changes needed", fr.Retro.PublicWebPath(), nil
+		return fr, MsgNoChangesNeeded, fr.Retro.PublicWebPath(), nil
 	}
 	model, err := p.Svc.SaveRetro(p.Ctx, tgt, fr.Self.UserID, nil, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateTeam("retro", fr.Retro.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), fr.Self.UserID, p)
+	err = updateTeam("retro", fr.Retro.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateSprint("retro", fr.Retro.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), fr.Self.UserID, p)
+	err = updateSprint("retro", fr.Retro.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -122,7 +122,7 @@ func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	f.Content = p.Frm.GetStringOpt("content")
 	f.HTML = util.ToHTML(f.Content, true)
 	if len(curr.Diff(f)) == 0 {
-		return fr, "No changes needed", fr.Retro.PublicWebPath(), nil
+		return fr, MsgNoChangesNeeded, fr.Retro.PublicWebPath(), nil
 	}
 	err := p.Svc.f.Update(p.Ctx, nil, f, p.Logger)
 	if err != nil {
@@ -183,7 +183,7 @@ func retroMemberUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, er
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fr, "Member updated", fr.Retro.PublicWebPath(), nil
+	return fr, MsgMemberUpdated, fr.Retro.PublicWebPath(), nil
 }
 
 func retroMemberRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
@@ -209,7 +209,7 @@ func retroMemberRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, er
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fr, "Member removed", fr.Retro.PublicWebPath(), nil
+	return fr, MsgMemberRemoved, fr.Retro.PublicWebPath(), nil
 }
 
 func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
@@ -226,7 +226,7 @@ func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, erro
 	if err != nil {
 		return nil, "", "", err
 	}
-	if choice == "global" {
+	if choice == KeyGlobal {
 		return nil, "", "", errors.New("can't change global name yet")
 	}
 	arg := util.ValueMap{"userID": fr.Self.UserID, "name": name}
@@ -234,7 +234,7 @@ func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, erro
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fr, "Profile edited", fr.Retro.PublicWebPath(), nil
+	return fr, MsgProfileEdited, fr.Retro.PublicWebPath(), nil
 }
 
 func retroComment(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
@@ -265,5 +265,5 @@ func retroComment(p *Params, fr *FullRetro) (*FullRetro, string, string, error) 
 	if err != nil {
 		return nil, "", "", err
 	}
-	return fr, "Comment added", fr.Retro.PublicWebPath() + u, nil
+	return fr, MsgCommentAdded, fr.Retro.PublicWebPath() + u, nil
 }

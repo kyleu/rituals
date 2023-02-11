@@ -21,7 +21,7 @@
         {%- for _, t := range p.Teams -%}
         <tr>
           <td><a href="{%s t.PublicWebPath() %}">{%s t.TitleString() %}</a></td>
-          <td style="text-align: right;">{%s string(t.Status) %}</td>
+          <td class="text-align-right">{%s string(t.Status) %}</td>
           <td class="shrink">{%= components.DisplayTimestamp(&t.Created) %}</td>
         </tr>
         {%- endfor -%}

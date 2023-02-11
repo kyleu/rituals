@@ -27,33 +27,35 @@ insert into "sprint" (
   "id", "slug", "title", "icon", "status", "team_id", "owner", "start_date", "end_date", "created", "updated"
 ) values (
   '20000000-0000-0000-0000-000000000000', 'rituals-sprint-1', 'Rituals Sprint 1', 'star', 'active', '10000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', '2023-01-01', '2023-02-01', now(), null
+), (
+  '20000001-0000-0000-0000-000000000000', 'sprint-2', 'Sprint 2', 'star', 'active', '10000001-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', '2023-01-01', '2023-02-01', now(), null
 ) on conflict do nothing;
 -- `)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 }
 
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 func WriteSprintSeedData(qq422016 qtio422016.Writer) {
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	StreamSprintSeedData(qw422016)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	qt422016.ReleaseWriter(qw422016)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 }
 
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 func SprintSeedData() string {
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	WriteSprintSeedData(qb422016)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	qs422016 := string(qb422016.B)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 	return qs422016
-//line queries/seeddata/seed_sprint.sql:7
+//line queries/seeddata/seed_sprint.sql:9
 }

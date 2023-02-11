@@ -1,6 +1,7 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
 import {snippetMember, snippetMemberModal} from "./members.jsx";
+import {svgRef} from "./util";
 
 let selfID: string;
 let names: { [key: string]: string; };
@@ -18,10 +19,6 @@ export function username(id?: string) {
 
 export function getSelfID() {
   return selfID;
-}
-
-export function getSelfName() {
-  return username(selfID);
 }
 
 export function initMembers() {
@@ -90,10 +87,10 @@ export function refreshMembers() {
   }
 }
 
-export function memberAdd(userID: string, name: string, role: string) {
-  const panel = opt("#member-" + userID);
-  if (panel || userID === selfID) {
-    return memberUpdate(userID, name, role);
+export function memberAdd(param: { userID: string; name: string; role: string; }) {
+  const panel = opt("#member-" + param.userID);
+  if (panel || param.userID === selfID) {
+    return memberUpdate(param);
   }
 
   const tbl = req("#panel-members table tbody");
@@ -101,12 +98,12 @@ export function memberAdd(userID: string, name: string, role: string) {
   for (let i = 0; i < tbl.children.length; i++) {
     const n = tbl.children.item(i);
     const nm = req(".member-name", n as HTMLElement).innerText;
-    if (nm.localeCompare(name, undefined, { sensitivity: 'accent' }) > 0) {
+    if (nm.localeCompare(param.name, undefined, { sensitivity: 'accent' }) > 0) {
       idx = i;
       break;
     }
   }
-  const tr = snippetMember(userID, name, role);
+  const tr = snippetMember(param.userID, param.name, param.role);
   if (idx == -1) {
     tbl.appendChild(tr);
   } else {
@@ -114,27 +111,27 @@ export function memberAdd(userID: string, name: string, role: string) {
   }
 
   const modals = req("#member-modals");
-  const modal = snippetMemberModal(userID, name, role);
+  const modal = snippetMemberModal(param.userID, param.name, param.role);
   modals.appendChild(modal);
   wireMemberForm(modal);
 
-  names[userID] = name;
+  names[param.userID] = param.name;
 }
 
-export function memberUpdate(userID: string, name: string, role: string) {
-  if (userID === selfID) {
-    req("#self-name").innerText = name;
-    req("#self-role").innerText = role;
+export function memberUpdate(param: { userID: string; name: string; role: string; }) {
+  if (param.userID === selfID) {
+    req("#self-name").innerText = param.name;
+    req("#self-role").innerText = param.role;
   } else {
-    const panel = req("#member-" + userID);
-    req(".member-name", panel).innerText = name;
-    req(".member-role", panel).innerText = role;
+    const panel = req("#member-" + param.userID);
+    req(".member-name", panel).innerText = param.name;
+    req(".member-role", panel).innerText = param.role;
 
-    const modal = req("#modal-member-" + userID);
-    req<HTMLSelectElement>("select[name=\"role\"]", modal).value = role;
+    const modal = req("#modal-member-" + param.userID);
+    req<HTMLSelectElement>("select[name=\"role\"]", modal).value = param.role;
   }
-  if (names[userID] !== name) {
-    names[userID] = name;
+  if (names[param.userID] !== param.name) {
+    names[param.userID] = param.name;
 
     const tbl = req("#panel-members table tbody");
     const items = tbl.children;
@@ -159,15 +156,15 @@ export function memberRemove(userID: string) {
   refreshMembers();
 }
 
-export function onlineUpdate(userID: string, connected: boolean) {
-  if (userID === selfID) {
+export function onlineUpdate(param: { userID: string; connected: boolean; }) {
+  if (param.userID === selfID) {
     return;
   }
-  const mel = opt("#member-" + userID + " .online-status");
+  const mel = opt("#member-" + param.userID + " .online-status");
   if (!mel) {
-    throw "missing panel #member-" + userID;
+    throw "missing panel #member-" + param.userID;
   }
-  mel.title = connected ? "online" : "offline";
-  const svg = connected ? "check-circle" : "circle";
-  mel.innerHTML = `<svg style="width: 18px; height: 18px;" class="right"><use xlink:href="#svg-` + svg + `"></use></svg>`;
+  mel.title = param.connected ? "online" : "offline";
+  const svg = param.connected ? "check-circle" : "circle";
+  mel.innerHTML = svgRef(svg, 18, "right");
 }

@@ -66,7 +66,7 @@ func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 		qw422016.E().S(t.TitleString())
 //line views/vworkspace/vwteam/TeamList.html:23
 		qw422016.N().S(`</a></td>
-          <td style="text-align: right;">`)
+          <td class="text-align-right">`)
 //line views/vworkspace/vwteam/TeamList.html:24
 		qw422016.E().S(string(t.Status))
 //line views/vworkspace/vwteam/TeamList.html:24
