@@ -3,7 +3,6 @@ package workspace
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 
@@ -39,13 +38,15 @@ func FromAny(x any) (*Workspace, error) {
 type LoadParams struct {
 	Ctx      context.Context
 	Slug     string
-	UserID   uuid.UUID
-	Username string
+	Profile  *user.Profile
+	Accounts user.Accounts
 	Tx       *sqlx.Tx
 	Params   filter.ParamSet
 	Logger   util.Logger
 }
 
-func NewLoadParams(ctx context.Context, slug string, profile *user.Profile, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger) *LoadParams {
-	return &LoadParams{Ctx: ctx, Slug: slug, UserID: profile.ID, Username: profile.Name, Tx: tx, Params: params, Logger: logger}
+func NewLoadParams(
+	ctx context.Context, slug string, profile *user.Profile, accts user.Accounts, tx *sqlx.Tx, params filter.ParamSet, logger util.Logger,
+) *LoadParams {
+	return &LoadParams{Ctx: ctx, Slug: slug, Profile: profile, Accounts: accts, Tx: tx, Params: params, Logger: logger}
 }

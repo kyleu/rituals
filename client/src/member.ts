@@ -160,9 +160,12 @@ export function memberRemove(userID: string) {
 }
 
 export function onlineUpdate(userID: string, connected: boolean) {
+  if (userID === selfID) {
+    return;
+  }
   const mel = opt("#member-" + userID + " .online-status");
   if (!mel) {
-    throw "missing panel #member-" + userID
+    throw "missing panel #member-" + userID;
   }
   mel.title = connected ? "online" : "offline";
   const svg = connected ? "check-circle" : "circle";

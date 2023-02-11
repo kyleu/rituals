@@ -10,14 +10,14 @@
 ) %}
 
 {% func StandupWorkspaceReports(w *workspace.FullStandup, ps *cutil.PageState) %}
-  <ul class="accordion">
+  <ul id="report-groups" class="accordion">
     {%- for _, g := range w.Reports.Grouped() -%}
-    <li>
-      <input id="accordion-{%s util.TimeToYMD(&g.Day) %}" type="checkbox" hidden checked="checked" />
-      <label for="accordion-{%s util.TimeToYMD(&g.Day) %}">{%= components.ExpandCollapse(3, ps) %} {%s util.TimeToYMD(&g.Day) %}</label>
+    <li id="report-group-{%s g.DayString() %}">
+      <input id="accordion-{%s g.DayString() %}" type="checkbox" hidden checked="checked" />
+      <label for="accordion-{%s g.DayString() %}">{%= components.ExpandCollapse(3, ps) %} {%s g.DayString() %}</label>
       <div class="bd">
         {%- for _, r := range g.Reports -%}
-        <div class="report">
+        <div class="report" id="report-{%s r.ID.String() %}">
           <div>
             {%- code
               uname := "Former Guest"
@@ -27,8 +27,8 @@
               }
             -%}
             <div class="right">{%= vwutil.Comments(enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-            <a href="#modal-report-{%s r.ID.String() %}" class="clean">
-              <h4>{%s uname %}</h4>
+            <a href="#modal-report-{%s r.ID.String() %}" data-id="{%s r.ID.String() %}" class="clean modal-report-edit-link">
+              <h4 class="username">{%s uname %}</h4>
               <div class="pt">{%s= r.HTML %}</div>
             </a>
           </div>
@@ -38,6 +38,7 @@
     </li>
     {%- endfor -%}
   </ul>
+  <div id="report-modals">
   {%- for _, r := range w.Reports -%}
   {%- if ps.Profile.ID == r.UserID -%}
   {%= StandupWorkspaceReportModalEdit(r) %}
@@ -45,6 +46,7 @@
   {%= StandupWorkspaceReportModalView(r) %}
   {%- endif -%}
   {%- endfor -%}
+  </div>
 {% endfunc %}
 
 {% func StandupWorkspaceReportModalAdd() %}
@@ -58,13 +60,9 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="action" value="{%s string(action.ActChildAdd) %}" />
-          <table class="mt expanded">
-            <tbody>
-            {%= components.FormVerticalInputTimestampDay("day", "report-add-day", "Day", util.TimeToday(), 5, ) %}
-            {%= components.FormVerticalTextarea("content", "report-add-content", "Content", 8, "", 5, "HTML and Markdown supported") %}
-            <tr><td colspan="2"><button type="submit">Add Report</button></td></tr>
-            </tbody>
-          </table>
+          {%= components.FormVerticalInputTimestampDay("day", "report-add-day", "Day", util.TimeToday(), 5, ) %}
+          {%= components.FormVerticalTextarea("content", "report-add-content", "Content", 8, "", 5, "HTML and Markdown supported") %}
+          <div class="right"><button type="submit">Add Report</button></div>
         </form>
       </div>
     </div>
@@ -72,7 +70,7 @@
 {% endfunc %}
 
 {% func StandupWorkspaceReportModalEdit(r *report.Report) %}
-  <div id="modal-report-{%s r.ID.String() %}" class="modal" style="display: none;">
+  <div id="modal-report-{%s r.ID.String() %}" class="modal report-modal-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
@@ -82,16 +80,10 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="reportID" value="{%s r.ID.String() %}" />
-          <table class="mt expanded">
-            <tbody>
-            {%= components.FormVerticalInputTimestampDay("day", "", "Day", &r.Day, 5, ) %}
-            {%= components.FormVerticalTextarea("content", "", "Content", 8, r.Content, 5, "HTML and Markdown supported") %}
-            <tr><td colspan="2">
-              <div class="right"><button type="submit" name="action" value="{%s string(action.ActChildRemove) %}" onclick="return confirm('Are you sure you want to delete this report?');">Delete</button></div>
-              <button type="submit" name="action" value="{%s string(action.ActChildUpdate) %}">Save Changes</button>
-            </td></tr>
-            </tbody>
-          </table>
+          {%= components.FormVerticalInputTimestampDay("day", "", "Day", &r.Day, 5, ) %}
+          {%= components.FormVerticalTextarea("content", "input-content-"+r.ID.String(), "Content", 8, r.Content, 5, "HTML and Markdown supported") %}
+          <div class="right"><button class="report-edit-save" type="submit" name="action" value="{%s string(action.ActChildUpdate) %}">Save Changes</button></div>
+          <button class="report-edit-delete" type="submit" name="action" value="{%s string(action.ActChildRemove) %}" onclick="return confirm('Are you sure you want to delete this report?');">Delete</button>
         </form>
       </div>
     </div>
@@ -99,7 +91,7 @@
 {% endfunc %}
 
 {% func StandupWorkspaceReportModalView(r *report.Report) %}
-  <div id="modal-report-{%s r.ID.String() %}" class="modal" style="display: none;">
+  <div id="modal-report-{%s r.ID.String() %}" class="modal report-modal-view" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

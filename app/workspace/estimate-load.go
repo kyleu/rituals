@@ -33,7 +33,7 @@ type FullEstimate struct {
 	Actions     action.Actions                  `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadEstimate(p *LoadParams) (*FullEstimate, error) {
+func (s *Service) LoadEstimate(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullEstimate, error) {
 	e, err := s.e.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
 		if hist, _ := s.eh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
@@ -57,7 +57,9 @@ func (s *Service) LoadEstimate(p *LoadParams) (*FullEstimate, error) {
 	if err != nil {
 		return nil, err
 	}
-	// permissions check
+	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+		return nil, errors.New(msg)
+	}
 	return ret, nil
 }
 
@@ -138,13 +140,13 @@ func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(estimateID, p.UserID)
-	if self == nil && p.Username != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
+	self := members.Get(estimateID, p.Profile.ID)
+	if self == nil && p.Profile.Name != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.em.Register(p.Ctx, estimateID, p.UserID, p.Username, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
+		_, err = s.em.Register(p.Ctx, estimateID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -152,7 +154,7 @@ func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(estimateID, p.UserID)
+		self = members.Get(estimateID, p.Profile.ID)
 	}
 	return members, self, nil
 }

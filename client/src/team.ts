@@ -1,9 +1,8 @@
 import {Message} from "./socket";
-import {els, req} from "./dom";
+import {req} from "./dom";
 import {send} from "./app";
-import {svgRef} from "./util";
-import {flashCreate} from "./flash";
-import {ChildAdd, ChildRemove, modelBanner, onChildAddModel, onChildRemoveModel} from "./workspace";
+import {focusDelay} from "./util";
+import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
 
 export type Team = {
   id: string;
@@ -15,6 +14,9 @@ export type Team = {
 }
 
 export function initTeam() {
+  req("#modal-team-config-link").onclick = function() {
+    focusDelay(req("#modal-team-config form input[name=\"title\"]"));
+  }
   const frm = req<HTMLFormElement>("#modal-team-config form");
   frm.onsubmit = function () {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
@@ -40,14 +42,5 @@ export function handleTeam(m: Message) {
 
 function onUpdate(param: Team) {
   const frm = req<HTMLFormElement>("#modal-team-config form");
-  req<HTMLInputElement>("input[name=\"title\"]", frm).value = param.title;
-  for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {
-    r.checked = param.icon === r.value;
-  }
-
-  req("#model-title").innerText = param.title;
-  req("#model-icon").innerHTML = svgRef(param.icon, 20);
-  req("#model-banner").innerHTML = modelBanner("team", frm, "", "");
-
-  flashCreate("team", "success", "team updated");
+  setTeamSprint("team", frm, null, null, param.title, param.icon);
 }

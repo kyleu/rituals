@@ -4,11 +4,17 @@ import (
 	"time"
 
 	"golang.org/x/exp/slices"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Group struct {
 	Day     time.Time `json:"day"`
 	Reports Reports   `json:"reports"`
+}
+
+func (g *Group) DayString() string {
+	return util.TimeToYMD(&g.Day)
 }
 
 func (r Reports) Grouped() []*Group {

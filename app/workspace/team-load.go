@@ -58,13 +58,18 @@ func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
 	if err != nil {
 		return nil, err
 	}
-	// permissions check
+	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, func() (team.Teams, error) {
+		return nil, nil
+	}, func() (sprint.Sprints, error) {
+		return nil, nil
+	}); !ok {
+		return nil, errors.New(msg)
+	}
 	return ret, nil
 }
 
 func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 	ret := &FullTeam{Team: t}
-
 	funcs := []func() error{
 		func() error {
 			var err error
@@ -146,13 +151,13 @@ func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMemb
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(teamID, p.UserID)
-	if self == nil && p.Username != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
+	self := members.Get(teamID, p.Profile.ID)
+	if self == nil && p.Profile.Name != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.tm.Register(p.Ctx, teamID, p.UserID, p.Username, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
+		_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -160,7 +165,7 @@ func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMemb
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(teamID, p.UserID)
+		self = members.Get(teamID, p.Profile.ID)
 	}
 	return members, self, nil
 }

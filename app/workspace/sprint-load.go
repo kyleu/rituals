@@ -33,7 +33,7 @@ type FullSprint struct {
 	Actions     action.Actions                `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadSprint(p *LoadParams) (*FullSprint, error) {
+func (s *Service) LoadSprint(p *LoadParams, tf func() (team.Teams, error)) (*FullSprint, error) {
 	spr, err := s.s.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
 		if hist, _ := s.sh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
@@ -57,7 +57,9 @@ func (s *Service) LoadSprint(p *LoadParams) (*FullSprint, error) {
 	if err != nil {
 		return nil, err
 	}
-	// permissions check
+	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, func() (sprint.Sprints, error) { return nil, nil }); !ok {
+		return nil, errors.New(msg)
+	}
 	return ret, nil
 }
 
@@ -144,13 +146,13 @@ func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.Spri
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(sprintID, p.UserID)
-	if self == nil && p.Username != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
+	self := members.Get(sprintID, p.Profile.ID)
+	if self == nil && p.Profile.Name != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.sm.Register(p.Ctx, sprintID, p.UserID, p.Username, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
+		_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -158,7 +160,7 @@ func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.Spri
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(sprintID, p.UserID)
+		self = members.Get(sprintID, p.Profile.ID)
 	}
 	return members, self, nil
 }

@@ -70,7 +70,11 @@ func StreamEstimateWorkspaceStoryPanelNew(qw422016 *qt422016.Writer, w *workspac
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
 			qw422016.E().S(s.ID.String())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
-			qw422016.N().S(`-edit">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+			qw422016.N().S(`-edit" data-id="`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
+			qw422016.E().S(s.ID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
+			qw422016.N().S(`">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:19
 		} else {
@@ -249,7 +253,7 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 	qw422016.E().S(string(action.ActVote))
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:67
 	qw422016.N().S(`" />
-      <div class="story-votes">
+      <div class="story-vote-options">
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:69
 	if s != nil {
@@ -259,7 +263,11 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:71
 		for _, c := range w.Estimate.Choices {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:71
-			qw422016.N().S(`        <div class="vote">
+			qw422016.N().S(`        <div class="vote-option" data-choice="`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:72
+			qw422016.E().S(c)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:72
+			qw422016.N().S(`">
           <label>
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:74
@@ -297,7 +305,7 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 	}
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:83
 	qw422016.N().S(`      </div>
-      <div class="mt">
+      <div class="mt vote-submit-button">
         <div class="right"><button type="submit">Submit vote</button></div>
       </div>
       <div class="clear"></div>

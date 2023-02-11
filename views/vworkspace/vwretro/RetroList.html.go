@@ -69,6 +69,8 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vworkspace/vwretro/RetroList.html:29
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwretro/RetroList.html:29
+		components.StreamSVGRefIcon(qw422016, r.IconSafe(), ps)
+//line views/vworkspace/vwretro/RetroList.html:29
 		qw422016.E().S(r.TitleString())
 //line views/vworkspace/vwretro/RetroList.html:29
 		qw422016.N().S(`</a></td>

@@ -26,7 +26,7 @@ func StreamStandupPermissionSeedData(qw422016 *qt422016.Writer) {
 insert into "standup_permission" (
   "standup_id", "key", "value", "access", "created"
 ) values (
-  '40000000-0000-0000-0000-000000000000', 'key', 'value', 'access', now()
+  '40000000-0000-0000-0000-000000000000', 'github', 'kyleu.com', 'member', now()
 ) on conflict do nothing;
 -- `)
 //line queries/seeddata/seed_standup_permission.sql:7

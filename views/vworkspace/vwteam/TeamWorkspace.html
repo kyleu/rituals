@@ -31,7 +31,7 @@
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-        <h3><a href="#modal-team-config">
+        <h3><a href="#modal-team-config" id="modal-team-config-link">
           <span id="model-icon">{%= components.SVGRefIcon(t.IconSafe(), ps) %}</span>
           <span id="model-title">{%s t.TitleString() %}</span>
         </a></h3>

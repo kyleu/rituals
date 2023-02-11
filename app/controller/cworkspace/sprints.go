@@ -5,6 +5,7 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/action"
+	"github.com/kyleu/rituals/app/team"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -31,17 +32,19 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, nil, ps.Params, ps.Logger)
-		fs, err := as.Services.Workspace.LoadSprint(p)
+		w, err := workspace.FromAny(ps.Data)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		fs, err := as.Services.Workspace.LoadSprint(p, func() (team.Teams, error) {
+			return w.Teams, nil
+		})
 		if err != nil {
 			return "", err
 		}
 		if fs.Self == nil {
 			return "", errors.New("TODO: Register")
-		}
-		w, err := workspace.FromAny(ps.Data)
-		if err != nil {
-			return "", err
 		}
 		ps.Title = fs.Sprint.TitleString()
 		ps.Data = fs
@@ -74,7 +77,7 @@ func SprintAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		act := action.Act(frm.GetStringOpt("action"))
-		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile, as.Services.Workspace, ps.Logger)
+		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile, ps.Accounts, as.Services.Workspace, ps.Logger)
 		_, msg, u, err := as.Services.Workspace.ActionSprint(p)
 		if err != nil {
 			return "", err

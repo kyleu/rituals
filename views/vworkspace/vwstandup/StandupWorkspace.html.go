@@ -63,7 +63,7 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
 	vwutil.StreamComments(qw422016, enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:35
 	qw422016.N().S(`</div>
-        <h3><a href="#modal-standup-config">
+        <h3><a href="#modal-standup-config" id="modal-standup-config-link">
           <span id="model-icon">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:37
 	components.StreamSVGRefIcon(qw422016, u.IconSafe(), ps)

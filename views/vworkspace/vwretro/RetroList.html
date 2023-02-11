@@ -26,7 +26,7 @@
       <tbody>
         {%- for _, r := range p.Retros -%}
         <tr>
-          <td><a href="{%s r.PublicWebPath() %}">{%s r.TitleString() %}</a></td>
+          <td><a href="{%s r.PublicWebPath() %}">{%= components.SVGRefIcon(r.IconSafe(), ps) %}{%s r.TitleString() %}</a></td>
           <td style="text-align: right;">{%= components.DisplayTimestamp(&r.Created) %}</td>
         </tr>
         {%- endfor -%}

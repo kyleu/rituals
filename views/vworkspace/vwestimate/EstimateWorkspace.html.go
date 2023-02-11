@@ -63,7 +63,7 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
 	vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:35
 	qw422016.N().S(`</div>
-        <h3><a href="#modal-estimate-config">
+        <h3><a href="#modal-estimate-config" id="modal-estimate-config-link">
           <span id="model-icon">`)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:37
 	components.StreamSVGRefIcon(qw422016, e.IconSafe(), ps)
@@ -278,7 +278,7 @@ func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, e *estimate.Estimat
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:102
 	qw422016.N().S(`
           <hr />
-          <em>Permissions</em>
+          <em class="title">Permissions</em>
           <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this estimate's team</label></div>
           <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this estimate's sprint</label></div>
           <hr />

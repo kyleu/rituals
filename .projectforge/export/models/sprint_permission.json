@@ -62,9 +62,9 @@
   "seedData": [
     [
       "20000000-0000-0000-0000-000000000000",
-      "key",
-      "value",
-      "access",
+      "github",
+      "kyleu.com",
+      "member",
       "now()"
     ]
   ]

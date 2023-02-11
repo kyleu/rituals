@@ -2,6 +2,9 @@ import {els, req} from "./dom";
 import {send} from "./app";
 import {snippetStory} from "./stories";
 import {wireStoryModal} from "./storymodal";
+import {initCommentsModal} from "./comment";
+import {flashCreate} from "./flash";
+import {focusDelay} from "./util";
 
 export type Story = {
   id: string;
@@ -16,9 +19,8 @@ export type Story = {
 }
 
 export function initStories() {
-  els<HTMLAnchorElement>(".add-story-link").forEach((x) => x.onclick = function() {
-    setTimeout(() => req<HTMLInputElement>("#story-add-title").focus(), 100);
-    return true;
+  els<HTMLAnchorElement>(".add-story-link").forEach((x) => x.onclick = function () {
+    return focusDelay(req<HTMLInputElement>("#story-add-title"));
   });
 
   const storyAddModal = req("#modal-story--add");
@@ -28,6 +30,7 @@ export function initStories() {
     const title = input.value;
     input.value = "";
     send("child-add", {"title": title});
+    document.location.hash = "";
     return false;
   }
   els("#story-modals .modal-story").forEach(wireStoryModal)
@@ -46,7 +49,7 @@ export function storyAdd(s: Story) {
         idx = i;
         break;
       } else {
-        if (title.localeCompare(s.title, undefined, { sensitivity: 'accent' }) >= 0) {
+        if (title.localeCompare(s.title, undefined, {sensitivity: 'accent'}) >= 0) {
           idx = i;
           break;
         }
@@ -60,6 +63,8 @@ export function storyAdd(s: Story) {
     tbl.insertBefore(tr, tbl.children[idx]);
   }
 
+  initCommentsModal(req(".modal", tr));
+
   const prototype = req("#modal-story-new");
 
   const modal = prototype.cloneNode(true) as HTMLDivElement;
@@ -68,7 +73,23 @@ export function storyAdd(s: Story) {
   modal.dataset["status"] = s.status;
   modal.classList.add("modal-story");
   req("#story-modals").appendChild(modal);
-  if(document.location.hash === "modal-story--add" || document.location.hash === "") {
+  if (document.location.hash === "modal-story--add" || document.location.hash === "") {
     document.location.hash = "modal-story-" + s.id;
   }
 }
+
+export function storyStatus(s: Story) {
+  const modal = req("#modal-story-" + s.id);
+  req(".status-new", modal).style.display = (s.status === "new") ? "block" : "none";
+  req(".status-active", modal).style.display = (s.status === "active") ? "block" : "none";
+  req(".status-complete", modal).style.display = (s.status === "complete") ? "block" : "none";
+}
+
+export function storyRemove(id: string) {
+  const tr = req("#story-row-" + id);
+  const title = req(".story-title", tr).innerText;
+  flashCreate(id + "-removed", "success", `story [${title}] has been removed`);
+  tr.remove();
+  req("#modal-story-" + id).remove();
+}
+

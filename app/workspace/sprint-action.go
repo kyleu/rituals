@@ -5,12 +5,15 @@ import (
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 )
 
 func (s *Service) ActionSprint(p *Params) (*FullSprint, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
-	fs, err := p.Svc.LoadSprint(lp)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, p.Accounts, nil, nil, p.Logger)
+	fs, err := p.Svc.LoadSprint(lp, func() (team.Teams, error) {
+		return p.Svc.t.GetByMember(p.Ctx, nil, p.Profile.ID, nil, p.Logger)
+	})
 	if err != nil {
 		return nil, "", "", err
 	}

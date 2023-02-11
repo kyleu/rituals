@@ -1,8 +1,12 @@
-import {els, req} from "./dom";
+import {els, opt, req} from "./dom";
 import {send} from "./app";
-import {snippetFeedback} from "./feedbacks";
+import {snippetFeedback, snippetFeedbackContainer} from "./feedbacks";
+import {initCommentsModal} from "./comment";
+import {flashCreate} from "./flash";
+import {focusDelay} from "./util";
 
 export type Feedback = {
+  id: string;
   category: string;
   idx: number;
   userID: string;
@@ -11,27 +15,60 @@ export type Feedback = {
 }
 
 export function initFeedbacks() {
-  els<HTMLAnchorElement>(".add-feedback-link").forEach((x) => x.onclick = function() {
-    const category = x.dataset["category"];
-    setTimeout(() => req<HTMLInputElement>("#feedback-add-content-" + category).focus(), 100);
-    return true;
+  els<HTMLAnchorElement>(".add-feedback-link").forEach((x) => x.onclick = function () {
+    return focusDelay(req<HTMLInputElement>("#feedback-add-content-" + x.dataset["category"]));
   });
-  for(const feedbackAddModal of els(".modal-feedback")) {
-    const feedbackAddForm = req("form", feedbackAddModal);
-    feedbackAddForm.onsubmit = function () {
-      const category = req<HTMLInputElement>("select[name=\"category\"]", feedbackAddForm).value;
-      const input = req<HTMLInputElement>("textarea[name=\"content\"]", feedbackAddForm);
-      const content = input.value;
-      input.value = "";
-      send("child-add", {"category": category, "content": content});
+  els<HTMLAnchorElement>(".modal-feedback-edit-link").forEach((x) => x.onclick = function () {
+    return focusDelay(req<HTMLInputElement>("#input-content-" + x.dataset["id"]));
+  });
+  for (const feedbackAddModal of els(".modal-feedback-add")) {
+    initAddModal(feedbackAddModal);
+  }
+  els(".modal-feedback-edit").forEach(initEditModal);
+}
+
+function initAddModal(feedbackAddModal: HTMLElement) {
+  const feedbackAddForm = req("form", feedbackAddModal);
+  feedbackAddForm.onsubmit = function () {
+    const category = req<HTMLInputElement>("select[name=\"category\"]", feedbackAddForm).value;
+    const input = req<HTMLInputElement>("textarea[name=\"content\"]", feedbackAddForm);
+    const content = input.value;
+    input.value = "";
+    send("child-add", {"category": category, "content": content});
+    document.location.hash = "";
+    return false;
+  }
+}
+
+function initEditModal(feedbackEditModal: HTMLElement) {
+  const frm = req("form", feedbackEditModal);
+  const feedbackID = req<HTMLInputElement>("input[name=\"feedbackID\"]", frm).value;
+  req<HTMLElement>(".feedback-edit-delete", frm).onclick = function () {
+    if (confirm('Are you sure you want to delete this feedback?')) {
+      send("child-remove", {"feedbackID": feedbackID});
       document.location.hash = "";
-      return false;
     }
+    return false;
+  }
+  frm.onsubmit = function () {
+    const category = req<HTMLInputElement>("select[name=\"category\"]", frm).value;
+    const input = req<HTMLInputElement>("textarea[name=\"content\"]", frm);
+    const content = input.value;
+    send("child-update", {"feedbackID": feedbackID, "category": category, "content": content});
+    document.location.hash = "";
+    return false;
   }
 }
 
 export function feedbackAdd(f: Feedback) {
-  const list = req("#category-" + f.category + " .feedback-list");
+  let list = opt("#category-" + f.category + " .feedback-list");
+
+  if (!list) {
+    const x = snippetFeedbackContainer(f.category);
+    req("#category-list").appendChild(x);
+    list = req(".feedback-list", x);
+  }
+
   let idx = -1;
   for (let i = 0; i < list.children.length; i++) {
     const n = list.children.item(i) as HTMLElement;
@@ -43,7 +80,7 @@ export function feedbackAdd(f: Feedback) {
         idx = i;
         break;
       } else {
-        if (title.localeCompare(f.content, undefined, { sensitivity: 'accent' }) >= 0) {
+        if (title.localeCompare(f.content, undefined, {sensitivity: 'accent'}) >= 0) {
           idx = i;
           break;
         }
@@ -56,4 +93,12 @@ export function feedbackAdd(f: Feedback) {
   } else {
     list.insertBefore(tr, list.children[idx]);
   }
+  initCommentsModal(req(".modal", tr));
 }
+
+export function feedbackRemove(id: string) {
+  req("#feedback-" + id).remove();
+  flashCreate(id + "-removed", "success", `feedback has been removed`);
+  req("#modal-feedback-" + id).remove();
+}
+

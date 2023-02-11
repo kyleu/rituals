@@ -31,7 +31,7 @@ type FullStandup struct {
 	Actions     action.Actions                 `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadStandup(p *LoadParams) (*FullStandup, error) {
+func (s *Service) LoadStandup(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullStandup, error) {
 	u, err := s.u.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
 		if hist, _ := s.uh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
@@ -55,7 +55,9 @@ func (s *Service) LoadStandup(p *LoadParams) (*FullStandup, error) {
 	if err != nil {
 		return nil, err
 	}
-	// permissions check
+	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+		return nil, errors.New(msg)
+	}
 	return ret, nil
 }
 
@@ -130,13 +132,13 @@ func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.St
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(standupID, p.UserID)
-	if self == nil && p.Username != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
+	self := members.Get(standupID, p.Profile.ID)
+	if self == nil && p.Profile.Name != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.um.Register(p.Ctx, standupID, p.UserID, p.Username, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
+		_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -144,7 +146,7 @@ func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.St
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(standupID, p.UserID)
+		self = members.Get(standupID, p.Profile.ID)
 	}
 	return members, self, nil
 }

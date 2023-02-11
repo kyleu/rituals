@@ -33,7 +33,7 @@
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-        <h3><a href="#modal-retro-config">
+        <h3><a href="#modal-retro-config" id="modal-retro-config-link">
           <span id="model-icon">{%= components.SVGRefIcon(r.IconSafe(), ps) %}</span>
           <span id="model-title">{%s r.TitleString() %}</span>
         </a></h3>
@@ -99,7 +99,7 @@
           {%= components.FormVerticalSelect(util.KeyTeam, "", "Team", util.UUIDString(r.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
           {%= components.FormVerticalSelect(util.KeySprint, "", "Sprint", util.UUIDString(r.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
           <hr />
-          <em>Permissions</em>
+          <em class="title">Permissions</em>
           <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this retro's team</label></div>
           <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this retro's sprint</label></div>
           <hr />

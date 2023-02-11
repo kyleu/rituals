@@ -7,13 +7,19 @@ import (
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup/report"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 )
 
 func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
-	fu, err := p.Svc.LoadStandup(lp)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, p.Accounts, nil, nil, p.Logger)
+	fu, err := p.Svc.LoadStandup(lp, func() (team.Teams, error) {
+		return p.Svc.t.GetByMember(p.Ctx, nil, p.Profile.ID, nil, p.Logger)
+	}, func() (sprint.Sprints, error) {
+		return p.Svc.s.GetByMember(p.Ctx, nil, p.Profile.ID, nil, p.Logger)
+	})
 	if err != nil {
 		return nil, "", "", err
 	}

@@ -33,7 +33,7 @@
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-        <h3><a href="#modal-estimate-config">
+        <h3><a href="#modal-estimate-config" id="modal-estimate-config-link">
           <span id="model-icon">{%= components.SVGRefIcon(e.IconSafe(), ps) %}</span>
           <span id="model-title">{%s e.TitleString() %}</span>
         </a></h3>
@@ -101,7 +101,7 @@
           {%= components.FormVerticalSelect(util.KeyTeam, "", "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
           {%= components.FormVerticalSelect(util.KeySprint, "", "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
           <hr />
-          <em>Permissions</em>
+          <em class="title">Permissions</em>
           <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this estimate's team</label></div>
           <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this estimate's sprint</label></div>
           <hr />

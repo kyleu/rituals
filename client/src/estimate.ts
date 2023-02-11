@@ -1,11 +1,10 @@
-import {initStories, Story, storyAdd} from "./story";
+import {initStories, Story, storyAdd, storyRemove, storyStatus} from "./story";
 import {Message} from "./socket";
-import {els, req} from "./dom";
+import {req} from "./dom";
 import {send} from "./app";
-import {svgRef} from "./util";
-import {modelBanner} from "./workspace";
-import {flashCreate} from "./flash";
+import {setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
+import {focusDelay} from "./util";
 
 export type Estimate = {
   id: string;
@@ -20,6 +19,9 @@ export type Estimate = {
 }
 
 export function initEstimate() {
+  req("#modal-estimate-config-link").onclick = function() {
+    focusDelay(req("#modal-estimate-config form input[name=\"title\"]"));
+  }
   const frm = req<HTMLFormElement>("#modal-estimate-config form");
   frm.onsubmit = function() {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
@@ -40,6 +42,10 @@ export function handleEstimate(m: Message) {
       return onUpdate(m.param as Estimate);
     case "child-add":
       return storyAdd(m.param as Story);
+    case "child-status":
+      return storyStatus(m.param as Story);
+    case "child-remove":
+      return storyRemove(m.param as string);
     default:
       throw "invalid estimate command [" + m.cmd + "]"
   }
@@ -47,21 +53,10 @@ export function handleEstimate(m: Message) {
 
 function onUpdate(param: Estimate) {
   const frm = req<HTMLFormElement>("#modal-estimate-config form");
-  req<HTMLInputElement>("input[name=\"title\"]", frm).value = param.title;
-  for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {
-    r.checked = param.icon === r.value;
-  }
   const ch = req<HTMLInputElement>("input[name=\"choices\"]", frm)
   ch.value = param.choices;
   if(ch.parentElement) {
     tagsWire(ch.parentElement);
   }
-  req<HTMLInputElement>("select[name=\"team\"]", frm).value = param.teamID ? param.teamID : "";
-  req<HTMLInputElement>("select[name=\"sprint\"]", frm).value = param.sprintID ? param.sprintID : "";
-
-  req("#model-title").innerText = param.title;
-  req("#model-icon").innerHTML = svgRef(param.icon, 20);
-  req("#model-banner").innerHTML = modelBanner("estimate", frm, param.teamID, param.sprintID);
-
-  flashCreate("estimate", "success", "estimate updated");
+  setTeamSprint("estimate", frm, param.teamID, param.sprintID, param.title, param.icon);
 }

@@ -11,12 +11,18 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 )
 
 func (s *Service) ActionEstimate(p *Params) (*FullEstimate, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
-	fe, err := s.LoadEstimate(lp)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, p.Accounts, nil, nil, p.Logger)
+	fe, err := s.LoadEstimate(lp, func() (team.Teams, error) {
+		return p.Svc.t.GetByMember(p.Ctx, nil, p.Profile.ID, nil, p.Logger)
+	}, func() (sprint.Sprints, error) {
+		return p.Svc.s.GetByMember(p.Ctx, nil, p.Profile.ID, nil, p.Logger)
+	})
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -153,7 +159,7 @@ func estimateStoryStatus(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save new status for story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildStatus, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildStatus, st, &fe.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -211,7 +217,7 @@ func estimateStoryRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildRemove, id, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildRemove, id, &fe.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}

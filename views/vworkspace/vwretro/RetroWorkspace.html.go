@@ -63,7 +63,7 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
 	vwutil.StreamComments(qw422016, enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:35
 	qw422016.N().S(`</div>
-        <h3><a href="#modal-retro-config">
+        <h3><a href="#modal-retro-config" id="modal-retro-config-link">
           <span id="model-icon">`)
 //line views/vworkspace/vwretro/RetroWorkspace.html:37
 	components.StreamSVGRefIcon(qw422016, r.IconSafe(), ps)
@@ -268,7 +268,7 @@ func StreamRetroWorkspaceModal(qw422016 *qt422016.Writer, r *retro.Retro, teams 
 //line views/vworkspace/vwretro/RetroWorkspace.html:100
 	qw422016.N().S(`
           <hr />
-          <em>Permissions</em>
+          <em class="title">Permissions</em>
           <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this retro's team</label></div>
           <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this retro's sprint</label></div>
           <hr />

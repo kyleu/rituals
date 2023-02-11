@@ -1,17 +1,16 @@
 import {Message} from "./socket";
 import {els, req} from "./dom";
 import {send} from "./app";
-import {svgRef} from "./util";
-import {modelBanner} from "./workspace";
-import {flashCreate} from "./flash";
+import {setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
-import {Feedback, feedbackAdd, initFeedbacks} from "./feedback";
+import {Feedback, feedbackAdd, feedbackRemove, initFeedbacks} from "./feedback";
+import {focusDelay} from "./util";
 
 export type Retro = {
   id: string;
   slug: string;
   title: string;
-  categories: string;
+  categories: string[];
   icon: string;
   status: string;
   teamID: string;
@@ -20,6 +19,9 @@ export type Retro = {
 }
 
 export function initRetro() {
+  req("#modal-retro-config-link").onclick = function() {
+    focusDelay(req("#modal-retro-config form input[name=\"title\"]"));
+  }
   const frm = req<HTMLFormElement>("#modal-retro-config form");
   frm.onsubmit = function() {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
@@ -40,6 +42,11 @@ export function handleRetro(m: Message) {
       return onUpdate(m.param as Retro);
     case "child-add":
       return feedbackAdd(m.param as Feedback);
+    case "child-update":
+      return console.log("child-update!!!");
+      // return feedbackUpdate(m.param as string);
+    case "child-remove":
+      return feedbackRemove(m.param as string);
     default:
       throw "invalid retro command [" + m.cmd + "]"
   }
@@ -47,21 +54,15 @@ export function handleRetro(m: Message) {
 
 function onUpdate(param: Retro) {
   const frm = req<HTMLFormElement>("#modal-retro-config form");
-  req<HTMLInputElement>("input[name=\"title\"]", frm).value = param.title;
-  for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {
-    r.checked = param.icon === r.value;
-  }
   const cat = req<HTMLInputElement>("input[name=\"categories\"]", frm)
-  cat.value = param.categories;
+  cat.value = param.categories.join(",");
   if(cat.parentElement) {
     tagsWire(cat.parentElement);
   }
-  req<HTMLInputElement>("select[name=\"team\"]", frm).value = param.teamID ? param.teamID : "";
-  req<HTMLInputElement>("select[name=\"sprint\"]", frm).value = param.sprintID ? param.sprintID : "";
+  const listEl = req("#category-list");
+  for (const catEl of els(" .category", listEl)) {
 
-  req("#model-title").innerText = param.title;
-  req("#model-icon").innerHTML = svgRef(param.icon, 20);
-  req("#model-banner").innerHTML = modelBanner("retro", frm, param.teamID, param.sprintID);
+  }
 
-  flashCreate("retro", "success", "retro updated");
+  setTeamSprint("retro", frm, param.teamID, param.sprintID, param.title, param.icon);
 }

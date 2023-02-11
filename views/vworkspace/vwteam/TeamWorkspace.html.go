@@ -61,7 +61,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	vwutil.StreamComments(qw422016, enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps)
 //line views/vworkspace/vwteam/TeamWorkspace.html:33
 	qw422016.N().S(`</div>
-        <h3><a href="#modal-team-config">
+        <h3><a href="#modal-team-config" id="modal-team-config-link">
           <span id="model-icon">`)
 //line views/vworkspace/vwteam/TeamWorkspace.html:35
 	components.StreamSVGRefIcon(qw422016, t.IconSafe(), ps)

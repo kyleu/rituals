@@ -50,7 +50,7 @@
     <div id="panel-summary">
       <div class="card">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
-        <h3><a href="#modal-sprint-config">
+        <h3><a href="#modal-sprint-config" id="modal-sprint-config-link">
           <span id="model-icon">{%= components.SVGRefIcon(s.IconSafe(), ps) %}</span>
           <span id="model-title">{%s s.TitleString() %}</span>
         </a></h3>
@@ -110,13 +110,12 @@
       <div class="modal-body">
         <form action="{%s s.PublicWebPath() %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
-          <em></em><br />
           {%= components.FormVerticalInput("title", "", "Title", s.TitleString(), 5, "The name of your sprint") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", s.IconSafe(), ps, 5) %}
           {%= components.FormVerticalInputTimestampDay("startDate", "", "Start Date", s.StartDate, 5, "The day your sprint begins") %}
           {%= components.FormVerticalInputTimestampDay("endDate", "", "End Date", s.EndDate, 5, "The day your sprint ends") %}
           {%= components.FormVerticalSelect(util.KeyTeam, "", "Team", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
-          <em>Permissions</em>
+          <em class="title">Permissions</em>
           <div>
             <label><input type="checkbox" name="perm-team" value="true"> Must be a member of this sprint's team</label>
           </div>

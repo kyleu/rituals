@@ -10,7 +10,7 @@ export function snippetMember(userID: string, name: string, role: string): HTMLE
       </a>
     </td>
     <td class="shrink" style="text-align: right"><em class="member-status">{ role }</em></td>
-    <td class="shrink online-status" title="offline" dangerouslySetInnerHTML={svg("circle", "right")}></td>
+    <td class="shrink online-status" title="offline" dangerouslySetInnerHTML={svg("circle", 18, "right")}></td>
   </tr>;
 }
 

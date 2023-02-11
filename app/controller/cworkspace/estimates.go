@@ -5,6 +5,8 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/action"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -31,17 +33,21 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, nil, ps.Params, ps.Logger)
-		fe, err := as.Services.Workspace.LoadEstimate(p)
+		w, err := workspace.FromAny(ps.Data)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		fe, err := as.Services.Workspace.LoadEstimate(p, func() (team.Teams, error) {
+			return w.Teams, nil
+		}, func() (sprint.Sprints, error) {
+			return w.Sprints, nil
+		})
 		if err != nil {
 			return "", err
 		}
 		if fe.Self == nil {
 			return "", errors.New("TODO: Register")
-		}
-		w, err := workspace.FromAny(ps.Data)
-		if err != nil {
-			return "", err
 		}
 		ps.Title = fe.Estimate.TitleString()
 		ps.Data = fe
@@ -75,7 +81,7 @@ func EstimateAction(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		act := action.Act(frm.GetStringOpt("action"))
-		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile, as.Services.Workspace, ps.Logger)
+		p := workspace.NewParams(ps.Context, slug, act, frm, ps.Profile, ps.Accounts, as.Services.Workspace, ps.Logger)
 		_, msg, u, err := as.Services.Workspace.ActionEstimate(p)
 		if err != nil {
 			return "", err

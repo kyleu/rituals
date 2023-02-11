@@ -33,7 +33,7 @@ type FullRetro struct {
 	Actions     action.Actions               `json:"actions,omitempty"`
 }
 
-func (s *Service) LoadRetro(p *LoadParams) (*FullRetro, error) {
+func (s *Service) LoadRetro(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullRetro, error) {
 	r, err := s.r.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {
 		if hist, _ := s.rh.Get(p.Ctx, p.Tx, p.Slug, p.Logger); hist != nil {
@@ -57,7 +57,9 @@ func (s *Service) LoadRetro(p *LoadParams) (*FullRetro, error) {
 	if err != nil {
 		return nil, err
 	}
-	// permissions check
+	if ok, msg := CheckPermissions(ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+		return nil, errors.New(msg)
+	}
 	return ret, nil
 }
 
@@ -136,13 +138,13 @@ func (s *Service) membersRetro(p *LoadParams, retroID uuid.UUID) (rmember.RetroM
 	if err != nil {
 		return nil, nil, err
 	}
-	self := members.Get(retroID, p.UserID)
-	if self == nil && p.Username != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.UserID, p.Username, p.Tx, p.Logger)
+	self := members.Get(retroID, p.Profile.ID)
+	if self == nil && p.Profile.Name != "" {
+		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.rm.Register(p.Ctx, retroID, p.UserID, p.Username, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
+		_, err = s.rm.Register(p.Ctx, retroID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -150,7 +152,7 @@ func (s *Service) membersRetro(p *LoadParams, retroID uuid.UUID) (rmember.RetroM
 		if err != nil {
 			return nil, nil, err
 		}
-		self = members.Get(retroID, p.UserID)
+		self = members.Get(retroID, p.Profile.ID)
 	}
 	return members, self, nil
 }

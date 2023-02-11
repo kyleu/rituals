@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Service) ActionTeam(p *Params) (*FullTeam, string, string, error) {
-	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, nil, nil, p.Logger)
+	lp := NewLoadParams(p.Ctx, p.Slug, p.Profile, p.Accounts, nil, nil, p.Logger)
 	ft, err := p.Svc.LoadTeam(lp)
 	if err != nil {
 		return nil, "", "", err

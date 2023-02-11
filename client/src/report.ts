@@ -1,7 +1,13 @@
-import {els, req} from "./dom";
+import {els, opt, req} from "./dom";
 import {send} from "./app";
+import {snippetReport, snippetReportContainer} from "./reports";
+import {username} from "./member";
+import {initCommentsModal} from "./comment";
+import {flashCreate} from "./flash";
+import {focusDelay} from "./util";
 
 export type Report = {
+  id: string;
   day: string;
   userID: string;
   content: string;
@@ -9,9 +15,11 @@ export type Report = {
 }
 
 export function initReports() {
-  els<HTMLAnchorElement>(".add-report-link").forEach((x) => x.onclick = function() {
-    setTimeout(() => req<HTMLInputElement>("#report-add-content").focus(), 100);
-    return true;
+  els<HTMLAnchorElement>(".add-report-link").forEach((x) => x.onclick = function () {
+    return focusDelay(req<HTMLInputElement>("#report-add-content"))
+  });
+  els<HTMLAnchorElement>(".modal-report-edit-link").forEach((x) => x.onclick = function () {
+    return focusDelay(req<HTMLInputElement>("#input-content-"+x.dataset["id"]));
   });
 
   const reportAddModal = req("#modal-report--add");
@@ -25,8 +33,63 @@ export function initReports() {
     document.location.hash = "";
     return false;
   }
+
+  els(".report-modal-edit").forEach(initEditModal);
+}
+
+function initEditModal(modal: HTMLElement) {
+  const frm = req("form", modal);
+  const reportID = req<HTMLInputElement>("input[name=\"reportID\"]", frm).value;
+  req<HTMLElement>(".report-edit-delete", frm).onclick = function () {
+    if (confirm('Are you sure you want to delete this report?')) {
+      send("child-remove", {"reportID": reportID});
+      document.location.hash = "";
+    }
+    return false;
+  }
+  frm.onsubmit = function () {
+    const day = req<HTMLInputElement>("input[name=\"day\"]", frm).value;
+    const input = req<HTMLInputElement>("textarea[name=\"content\"]", frm);
+    const content = input.value;
+    send("child-update", {"reportID": reportID, "day": day, "content": content});
+    document.location.hash = "";
+    return false;
+  }
 }
 
 export function reportAdd(r: Report) {
-  console.log("TODO: reportAdd");
+  if (r.day.length > 10) {
+    r.day = r.day.substring(0, 10);
+  }
+  let list = opt("#report-group-" + r.day + " .bd");
+
+  if (!list) {
+    const x = snippetReportContainer(r.day);
+    req("#report-groups").appendChild(x);
+    list = req(".bd", x);
+  }
+
+  let idx = -1;
+  const u = username(r.userID);
+  for (let i = 0; i < list.children.length; i++) {
+    const n = list.children.item(i) as HTMLElement;
+    const tgt = req(".username", n).innerText;
+    if (tgt.localeCompare(u, undefined, {sensitivity: 'accent'}) >= 0) {
+      idx = i;
+      break;
+    }
+  }
+  const div = snippetReport(r);
+  if (idx == -1) {
+    list.appendChild(div);
+  } else {
+    list.insertBefore(div, list.children[idx]);
+  }
+  initCommentsModal(req(".modal", div));
+}
+
+export function reportRemove(id: string) {
+  req("#report-" + id).remove();
+  flashCreate(id + "-removed", "success", `report has been removed`);
+  req("#modal-report-" + id).remove();
 }

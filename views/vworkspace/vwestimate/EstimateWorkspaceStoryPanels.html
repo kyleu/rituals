@@ -15,7 +15,7 @@
       <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
       {%- if s != nil -%}
         {%- if ps.Profile.ID == s.UserID -%}
-        <div>Your story is available to <a class="link-edit" href="#modal-story-{%s s.ID.String() %}-edit">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+        <div>Your story is available to <a class="link-edit" href="#modal-story-{%s s.ID.String() %}-edit" data-id="{%s s.ID.String() %}">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
         {%- else -%}
           {%- if mem := w.Members.Get(s.EstimateID, s.UserID); mem == nil -%}
           <div>This story is ready to start voting</div>
@@ -65,11 +65,11 @@
     <form class="status-active-form-vote" action="" method="post">
       <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
       <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
-      <div class="story-votes">
+      <div class="story-vote-options">
         {%- if s != nil -%}
         {%- code selfVote := w.Votes.Get(s.ID, ps.Profile.ID) -%}
         {%- for _, c := range w.Estimate.Choices -%}
-        <div class="vote">
+        <div class="vote-option" data-choice="{%s c %}">
           <label>
             {%- if selfVote != nil && selfVote.Choice == c -%}
             <input type="radio" name="vote" value="{%s c %}" checked="checked" />
@@ -82,7 +82,7 @@
         {%- endfor -%}
         {%- endif -%}
       </div>
-      <div class="mt">
+      <div class="mt vote-submit-button">
         <div class="right"><button type="submit">Submit vote</button></div>
       </div>
       <div class="clear"></div>
