@@ -155,196 +155,189 @@ func StreamPermissionsForm(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:49
 	} else {
 //line views/vworkspace/vwutil/Permissions.html:50
-		for _, perm := range perms {
+		for _, perm := range perms.AuthPerms() {
 //line views/vworkspace/vwutil/Permissions.html:51
-			if perm.Key != util.KeyTeam && perm.Key != util.KeySprint {
+			if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil {
 //line views/vworkspace/vwutil/Permissions.html:51
 				qw422016.N().S(`
+      <div class="mt"><label>
 `)
-//line views/vworkspace/vwutil/Permissions.html:52
-				if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil {
-//line views/vworkspace/vwutil/Permissions.html:52
-					qw422016.N().S(`
-        <div class="mt"><label>
-`)
+//line views/vworkspace/vwutil/Permissions.html:53
+				if perms.Get(perm.Key, "*") != nil {
+//line views/vworkspace/vwutil/Permissions.html:53
+					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
 //line views/vworkspace/vwutil/Permissions.html:54
-					if perms.Get(perm.Key, "*") != nil {
+					qw422016.E().S(perm.Key)
 //line views/vworkspace/vwutil/Permissions.html:54
-						qw422016.N().S(`          <input class="perm-option" type="checkbox" name="perm-`)
+					qw422016.N().S(`" value="true" checked="checked">
+`)
 //line views/vworkspace/vwutil/Permissions.html:55
-						qw422016.E().S(perm.Key)
+				} else {
 //line views/vworkspace/vwutil/Permissions.html:55
-						qw422016.N().S(`" value="true" checked="checked">
-`)
+					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
 //line views/vworkspace/vwutil/Permissions.html:56
-					} else {
+					qw422016.E().S(perm.Key)
 //line views/vworkspace/vwutil/Permissions.html:56
-						qw422016.N().S(`          <input class="perm-option" type="checkbox" name="perm-`)
+					qw422016.N().S(`" value="true">
+`)
 //line views/vworkspace/vwutil/Permissions.html:57
-						qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:57
-						qw422016.N().S(`" value="true">
-`)
-//line views/vworkspace/vwutil/Permissions.html:58
-					}
-//line views/vworkspace/vwutil/Permissions.html:58
-					qw422016.N().S(`          Must be signed into [`)
-//line views/vworkspace/vwutil/Permissions.html:59
-					qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:59
-					qw422016.N().S(`]
-        </label></div>
-        <div class="mt"><label>
-`)
-//line views/vworkspace/vwutil/Permissions.html:62
-					if perms.Get(perm.Key, perm.Value) != nil {
-//line views/vworkspace/vwutil/Permissions.html:62
-						qw422016.N().S(`          <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:63
-						qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:63
-						qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Permissions.html:63
-						qw422016.E().S(perm.Value)
-//line views/vworkspace/vwutil/Permissions.html:63
-						qw422016.N().S(`" value="true" checked="checked">
-`)
-//line views/vworkspace/vwutil/Permissions.html:64
-					} else {
-//line views/vworkspace/vwutil/Permissions.html:64
-						qw422016.N().S(`          <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:65
-						qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:65
-						qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Permissions.html:65
-						qw422016.E().S(perm.Value)
-//line views/vworkspace/vwutil/Permissions.html:65
-						qw422016.N().S(`" value="true">
-`)
-//line views/vworkspace/vwutil/Permissions.html:66
-					}
-//line views/vworkspace/vwutil/Permissions.html:66
-					qw422016.N().S(`          Must be signed into [`)
-//line views/vworkspace/vwutil/Permissions.html:67
-					qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:67
-					qw422016.N().S(`] from [`)
-//line views/vworkspace/vwutil/Permissions.html:67
-					qw422016.E().S(perm.Value)
-//line views/vworkspace/vwutil/Permissions.html:67
-					qw422016.N().S(`]
-        </label></div>
-`)
-//line views/vworkspace/vwutil/Permissions.html:69
 				}
-//line views/vworkspace/vwutil/Permissions.html:70
+//line views/vworkspace/vwutil/Permissions.html:57
+				qw422016.N().S(`        Must be signed into [`)
+//line views/vworkspace/vwutil/Permissions.html:58
+				qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:58
+				qw422016.N().S(`]
+      </label></div>
+      <div class="mt"><label>
+`)
+//line views/vworkspace/vwutil/Permissions.html:61
+				if perms.Get(perm.Key, perm.Value) != nil {
+//line views/vworkspace/vwutil/Permissions.html:61
+					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
+//line views/vworkspace/vwutil/Permissions.html:62
+					qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:62
+					qw422016.N().S(`-`)
+//line views/vworkspace/vwutil/Permissions.html:62
+					qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:62
+					qw422016.N().S(`" value="true" checked="checked">
+`)
+//line views/vworkspace/vwutil/Permissions.html:63
+				} else {
+//line views/vworkspace/vwutil/Permissions.html:63
+					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
+//line views/vworkspace/vwutil/Permissions.html:64
+					qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:64
+					qw422016.N().S(`-`)
+//line views/vworkspace/vwutil/Permissions.html:64
+					qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:64
+					qw422016.N().S(`" value="true">
+`)
+//line views/vworkspace/vwutil/Permissions.html:65
+				}
+//line views/vworkspace/vwutil/Permissions.html:65
+				qw422016.N().S(`        Must be signed into [`)
+//line views/vworkspace/vwutil/Permissions.html:66
+				qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:66
+				qw422016.N().S(`] from [`)
+//line views/vworkspace/vwutil/Permissions.html:66
+				qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:66
+				qw422016.N().S(`]
+      </label></div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:68
 			}
-//line views/vworkspace/vwutil/Permissions.html:71
+//line views/vworkspace/vwutil/Permissions.html:69
 		}
-//line views/vworkspace/vwutil/Permissions.html:72
+//line views/vworkspace/vwutil/Permissions.html:70
 		for _, acct := range ps.Accounts {
-//line views/vworkspace/vwutil/Permissions.html:72
+//line views/vworkspace/vwutil/Permissions.html:70
 			qw422016.N().S(`    <div class="mt"><label>
 `)
-//line views/vworkspace/vwutil/Permissions.html:74
+//line views/vworkspace/vwutil/Permissions.html:72
 			if perms.Get(acct.Provider, "*") != nil {
-//line views/vworkspace/vwutil/Permissions.html:74
+//line views/vworkspace/vwutil/Permissions.html:72
 				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:75
+//line views/vworkspace/vwutil/Permissions.html:73
 				qw422016.E().S(acct.Provider)
-//line views/vworkspace/vwutil/Permissions.html:75
+//line views/vworkspace/vwutil/Permissions.html:73
 				qw422016.N().S(`" value="true" checked="checked">
 `)
-//line views/vworkspace/vwutil/Permissions.html:76
+//line views/vworkspace/vwutil/Permissions.html:74
 			} else {
-//line views/vworkspace/vwutil/Permissions.html:76
+//line views/vworkspace/vwutil/Permissions.html:74
 				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:77
+//line views/vworkspace/vwutil/Permissions.html:75
 				qw422016.E().S(acct.Provider)
-//line views/vworkspace/vwutil/Permissions.html:77
+//line views/vworkspace/vwutil/Permissions.html:75
 				qw422016.N().S(`" value="true">
 `)
-//line views/vworkspace/vwutil/Permissions.html:78
+//line views/vworkspace/vwutil/Permissions.html:76
 			}
-//line views/vworkspace/vwutil/Permissions.html:78
+//line views/vworkspace/vwutil/Permissions.html:76
 			qw422016.N().S(`      Must be signed into [`)
-//line views/vworkspace/vwutil/Permissions.html:79
+//line views/vworkspace/vwutil/Permissions.html:77
 			qw422016.E().S(acct.Provider)
-//line views/vworkspace/vwutil/Permissions.html:79
+//line views/vworkspace/vwutil/Permissions.html:77
 			qw422016.N().S(`]
     </label></div>
     <div class="mt"><label>
 `)
-//line views/vworkspace/vwutil/Permissions.html:82
+//line views/vworkspace/vwutil/Permissions.html:80
 			if perms.Get(acct.Provider, acct.Domain()) != nil {
-//line views/vworkspace/vwutil/Permissions.html:82
+//line views/vworkspace/vwutil/Permissions.html:80
 				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:83
+//line views/vworkspace/vwutil/Permissions.html:81
 				qw422016.E().S(acct.Provider)
-//line views/vworkspace/vwutil/Permissions.html:83
+//line views/vworkspace/vwutil/Permissions.html:81
 				qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Permissions.html:83
+//line views/vworkspace/vwutil/Permissions.html:81
 				qw422016.E().S(acct.Domain())
-//line views/vworkspace/vwutil/Permissions.html:83
+//line views/vworkspace/vwutil/Permissions.html:81
 				qw422016.N().S(`" value="true" checked="checked">
 `)
-//line views/vworkspace/vwutil/Permissions.html:84
+//line views/vworkspace/vwutil/Permissions.html:82
 			} else {
-//line views/vworkspace/vwutil/Permissions.html:84
+//line views/vworkspace/vwutil/Permissions.html:82
 				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:85
+//line views/vworkspace/vwutil/Permissions.html:83
 				qw422016.E().S(acct.Provider)
-//line views/vworkspace/vwutil/Permissions.html:85
+//line views/vworkspace/vwutil/Permissions.html:83
 				qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Permissions.html:85
+//line views/vworkspace/vwutil/Permissions.html:83
 				qw422016.E().S(acct.Domain())
-//line views/vworkspace/vwutil/Permissions.html:85
+//line views/vworkspace/vwutil/Permissions.html:83
 				qw422016.N().S(`" value="true">
 `)
-//line views/vworkspace/vwutil/Permissions.html:86
+//line views/vworkspace/vwutil/Permissions.html:84
 			}
-//line views/vworkspace/vwutil/Permissions.html:86
+//line views/vworkspace/vwutil/Permissions.html:84
 			qw422016.N().S(`      Must be signed into [`)
-//line views/vworkspace/vwutil/Permissions.html:87
+//line views/vworkspace/vwutil/Permissions.html:85
 			qw422016.E().S(acct.Provider)
-//line views/vworkspace/vwutil/Permissions.html:87
+//line views/vworkspace/vwutil/Permissions.html:85
 			qw422016.N().S(`] from [`)
-//line views/vworkspace/vwutil/Permissions.html:87
+//line views/vworkspace/vwutil/Permissions.html:85
 			qw422016.E().S(acct.Domain())
-//line views/vworkspace/vwutil/Permissions.html:87
+//line views/vworkspace/vwutil/Permissions.html:85
 			qw422016.N().S(`]
     </label></div>
 `)
-//line views/vworkspace/vwutil/Permissions.html:89
+//line views/vworkspace/vwutil/Permissions.html:87
 		}
-//line views/vworkspace/vwutil/Permissions.html:90
+//line views/vworkspace/vwutil/Permissions.html:88
 	}
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 }
 
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 func WritePermissionsForm(qq422016 qtio422016.Writer, key string, perms util.Permissions, showTeam bool, teams team.Teams, showSprint bool, sprints sprint.Sprints, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	StreamPermissionsForm(qw422016, key, perms, showTeam, teams, showSprint, sprints, ps)
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 }
 
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 func PermissionsForm(key string, perms util.Permissions, showTeam bool, teams team.Teams, showSprint bool, sprints sprint.Sprints, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	WritePermissionsForm(qb422016, key, perms, showTeam, teams, showSprint, sprints, ps)
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 	return qs422016
-//line views/vworkspace/vwutil/Permissions.html:91
+//line views/vworkspace/vwutil/Permissions.html:89
 }
