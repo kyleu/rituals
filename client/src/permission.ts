@@ -17,7 +17,6 @@ export function loadPermsForm(frm: HTMLFormElement) {
   type StrMap = { [key: string]: string };
   const ret: StrMap = {};
   for (const el of els<HTMLInputElement>(".perm-option", frm)) {
-    console.log(el);
     if (el.checked) {
       ret[el.name] = el.value;
     }

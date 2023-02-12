@@ -272,141 +272,142 @@ func StreamTeamWorkspaceModal(qw422016 *qt422016.Writer, t *team.Team, perms uti
 	qw422016.N().S(`
           <hr />
           <div class="right"><button type="submit">Save</button></div>
+          <div class="clear"></div>
         </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 func WriteTeamWorkspaceModal(qq422016 qtio422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	StreamTeamWorkspaceModal(qw422016, t, perms, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 func TeamWorkspaceModal(t *team.Team, perms util.Permissions, ps *cutil.PageState) string {
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	WriteTeamWorkspaceModal(qb422016, t, perms, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 	return qs422016
-//line views/vworkspace/vwteam/TeamWorkspace.html:106
+//line views/vworkspace/vwteam/TeamWorkspace.html:107
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:108
+//line views/vworkspace/vwteam/TeamWorkspace.html:109
 func StreamTeamWorkspaceList(qw422016 *qt422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamWorkspace.html:108
+//line views/vworkspace/vwteam/TeamWorkspace.html:109
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:110
+//line views/vworkspace/vwteam/TeamWorkspace.html:111
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyTeam, nil, nil, "New Team")
-//line views/vworkspace/vwteam/TeamWorkspace.html:110
+//line views/vworkspace/vwteam/TeamWorkspace.html:111
 	qw422016.N().S(`</div>
     <h3>`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:111
+//line views/vworkspace/vwteam/TeamWorkspace.html:112
 	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:111
+//line views/vworkspace/vwteam/TeamWorkspace.html:112
 	qw422016.N().S(`Teams</h3>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:112
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
 	if len(teams) == 0 {
-//line views/vworkspace/vwteam/TeamWorkspace.html:112
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
 		qw422016.N().S(`    <div class="mt"><em>no teams</em></div>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:114
+//line views/vworkspace/vwteam/TeamWorkspace.html:115
 	} else {
-//line views/vworkspace/vwteam/TeamWorkspace.html:114
+//line views/vworkspace/vwteam/TeamWorkspace.html:115
 		qw422016.N().S(`    <table class="mt expanded">
       <tbody>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:117
+//line views/vworkspace/vwteam/TeamWorkspace.html:118
 		for _, x := range teams {
-//line views/vworkspace/vwteam/TeamWorkspace.html:117
+//line views/vworkspace/vwteam/TeamWorkspace.html:118
 			qw422016.N().S(`        <tr>
           <td>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:120
+//line views/vworkspace/vwteam/TeamWorkspace.html:121
 			if showComments {
-//line views/vworkspace/vwteam/TeamWorkspace.html:120
+//line views/vworkspace/vwteam/TeamWorkspace.html:121
 				qw422016.N().S(`            <div class="right">
               `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:122
+//line views/vworkspace/vwteam/TeamWorkspace.html:123
 				vwutil.StreamComments(qw422016, enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:122
+//line views/vworkspace/vwteam/TeamWorkspace.html:123
 				qw422016.N().S(`
             </div>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:124
+//line views/vworkspace/vwteam/TeamWorkspace.html:125
 			}
-//line views/vworkspace/vwteam/TeamWorkspace.html:124
+//line views/vworkspace/vwteam/TeamWorkspace.html:125
 			qw422016.N().S(`            <a href="`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:125
+//line views/vworkspace/vwteam/TeamWorkspace.html:126
 			qw422016.E().S(x.PublicWebPath())
-//line views/vworkspace/vwteam/TeamWorkspace.html:125
+//line views/vworkspace/vwteam/TeamWorkspace.html:126
 			qw422016.N().S(`"><div>
               <span>`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:126
+//line views/vworkspace/vwteam/TeamWorkspace.html:127
 			components.StreamSVGRef(qw422016, x.IconSafe(), 16, 16, "icon", ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:126
+//line views/vworkspace/vwteam/TeamWorkspace.html:127
 			qw422016.N().S(`</span><span>`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:126
+//line views/vworkspace/vwteam/TeamWorkspace.html:127
 			qw422016.E().S(x.TitleString())
-//line views/vworkspace/vwteam/TeamWorkspace.html:126
+//line views/vworkspace/vwteam/TeamWorkspace.html:127
 			qw422016.N().S(`</span>
             </div></a>
           </td>
         </tr>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:130
+//line views/vworkspace/vwteam/TeamWorkspace.html:131
 		}
-//line views/vworkspace/vwteam/TeamWorkspace.html:130
+//line views/vworkspace/vwteam/TeamWorkspace.html:131
 		qw422016.N().S(`      </tbody>
     </table>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:133
+//line views/vworkspace/vwteam/TeamWorkspace.html:134
 	}
-//line views/vworkspace/vwteam/TeamWorkspace.html:133
+//line views/vworkspace/vwteam/TeamWorkspace.html:134
 	qw422016.N().S(`  </div>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 func WriteTeamWorkspaceList(qq422016 qtio422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	StreamTeamWorkspaceList(qw422016, teams, showComments, comments, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 func TeamWorkspaceList(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	WriteTeamWorkspaceList(qb422016, teams, showComments, comments, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 	return qs422016
-//line views/vworkspace/vwteam/TeamWorkspace.html:135
+//line views/vworkspace/vwteam/TeamWorkspace.html:136
 }

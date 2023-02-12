@@ -148,93 +148,93 @@ func StreamPermissionsForm(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:46
 	}
 //line views/vworkspace/vwutil/Permissions.html:47
+	for _, perm := range perms.AuthPerms() {
+//line views/vworkspace/vwutil/Permissions.html:48
+		if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil {
+//line views/vworkspace/vwutil/Permissions.html:48
+			qw422016.N().S(`
+    <div class="mt"><label>
+`)
+//line views/vworkspace/vwutil/Permissions.html:50
+			if perms.Get(perm.Key, "*") != nil {
+//line views/vworkspace/vwutil/Permissions.html:50
+				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
+//line views/vworkspace/vwutil/Permissions.html:51
+				qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:51
+				qw422016.N().S(`" value="true" checked="checked">
+`)
+//line views/vworkspace/vwutil/Permissions.html:52
+			} else {
+//line views/vworkspace/vwutil/Permissions.html:52
+				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
+//line views/vworkspace/vwutil/Permissions.html:53
+				qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:53
+				qw422016.N().S(`" value="true">
+`)
+//line views/vworkspace/vwutil/Permissions.html:54
+			}
+//line views/vworkspace/vwutil/Permissions.html:54
+			qw422016.N().S(`      Must be signed into [`)
+//line views/vworkspace/vwutil/Permissions.html:55
+			qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:55
+			qw422016.N().S(`]
+    </label></div>
+    <div class="mt"><label>
+`)
+//line views/vworkspace/vwutil/Permissions.html:58
+			if perms.Get(perm.Key, perm.Value) != nil {
+//line views/vworkspace/vwutil/Permissions.html:58
+				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
+//line views/vworkspace/vwutil/Permissions.html:59
+				qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:59
+				qw422016.N().S(`-`)
+//line views/vworkspace/vwutil/Permissions.html:59
+				qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:59
+				qw422016.N().S(`" value="true" checked="checked">
+`)
+//line views/vworkspace/vwutil/Permissions.html:60
+			} else {
+//line views/vworkspace/vwutil/Permissions.html:60
+				qw422016.N().S(`      <input class="perm-option" type="checkbox" name="perm-`)
+//line views/vworkspace/vwutil/Permissions.html:61
+				qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:61
+				qw422016.N().S(`-`)
+//line views/vworkspace/vwutil/Permissions.html:61
+				qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:61
+				qw422016.N().S(`" value="true">
+`)
+//line views/vworkspace/vwutil/Permissions.html:62
+			}
+//line views/vworkspace/vwutil/Permissions.html:62
+			qw422016.N().S(`      Must be signed into [`)
+//line views/vworkspace/vwutil/Permissions.html:63
+			qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:63
+			qw422016.N().S(`] from [`)
+//line views/vworkspace/vwutil/Permissions.html:63
+			qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:63
+			qw422016.N().S(`]
+    </label></div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:65
+		}
+//line views/vworkspace/vwutil/Permissions.html:66
+	}
+//line views/vworkspace/vwutil/Permissions.html:67
 	if len(ps.Accounts) == 0 {
-//line views/vworkspace/vwutil/Permissions.html:47
+//line views/vworkspace/vwutil/Permissions.html:67
 		qw422016.N().S(`    <div class="mt">Control access to this team by <a href="/profile">signing in</a></div>
 `)
-//line views/vworkspace/vwutil/Permissions.html:49
-	} else {
-//line views/vworkspace/vwutil/Permissions.html:50
-		for _, perm := range perms.AuthPerms() {
-//line views/vworkspace/vwutil/Permissions.html:51
-			if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil {
-//line views/vworkspace/vwutil/Permissions.html:51
-				qw422016.N().S(`
-      <div class="mt"><label>
-`)
-//line views/vworkspace/vwutil/Permissions.html:53
-				if perms.Get(perm.Key, "*") != nil {
-//line views/vworkspace/vwutil/Permissions.html:53
-					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:54
-					qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:54
-					qw422016.N().S(`" value="true" checked="checked">
-`)
-//line views/vworkspace/vwutil/Permissions.html:55
-				} else {
-//line views/vworkspace/vwutil/Permissions.html:55
-					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:56
-					qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:56
-					qw422016.N().S(`" value="true">
-`)
-//line views/vworkspace/vwutil/Permissions.html:57
-				}
-//line views/vworkspace/vwutil/Permissions.html:57
-				qw422016.N().S(`        Must be signed into [`)
-//line views/vworkspace/vwutil/Permissions.html:58
-				qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:58
-				qw422016.N().S(`]
-      </label></div>
-      <div class="mt"><label>
-`)
-//line views/vworkspace/vwutil/Permissions.html:61
-				if perms.Get(perm.Key, perm.Value) != nil {
-//line views/vworkspace/vwutil/Permissions.html:61
-					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:62
-					qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:62
-					qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Permissions.html:62
-					qw422016.E().S(perm.Value)
-//line views/vworkspace/vwutil/Permissions.html:62
-					qw422016.N().S(`" value="true" checked="checked">
-`)
-//line views/vworkspace/vwutil/Permissions.html:63
-				} else {
-//line views/vworkspace/vwutil/Permissions.html:63
-					qw422016.N().S(`        <input class="perm-option" type="checkbox" name="perm-`)
-//line views/vworkspace/vwutil/Permissions.html:64
-					qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:64
-					qw422016.N().S(`-`)
-//line views/vworkspace/vwutil/Permissions.html:64
-					qw422016.E().S(perm.Value)
-//line views/vworkspace/vwutil/Permissions.html:64
-					qw422016.N().S(`" value="true">
-`)
-//line views/vworkspace/vwutil/Permissions.html:65
-				}
-//line views/vworkspace/vwutil/Permissions.html:65
-				qw422016.N().S(`        Must be signed into [`)
-//line views/vworkspace/vwutil/Permissions.html:66
-				qw422016.E().S(perm.Key)
-//line views/vworkspace/vwutil/Permissions.html:66
-				qw422016.N().S(`] from [`)
-//line views/vworkspace/vwutil/Permissions.html:66
-				qw422016.E().S(perm.Value)
-//line views/vworkspace/vwutil/Permissions.html:66
-				qw422016.N().S(`]
-      </label></div>
-`)
-//line views/vworkspace/vwutil/Permissions.html:68
-			}
 //line views/vworkspace/vwutil/Permissions.html:69
-		}
+	} else {
 //line views/vworkspace/vwutil/Permissions.html:70
 		for _, acct := range ps.Accounts {
 //line views/vworkspace/vwutil/Permissions.html:70

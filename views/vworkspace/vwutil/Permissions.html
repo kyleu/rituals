@@ -44,29 +44,29 @@
       Must be a member of this {%s key %}'s sprint
     </label></div>
   {%- endif -%}
+  {%- for _, perm := range perms.AuthPerms() -%}
+    {%- if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil %}
+    <div class="mt"><label>
+      {%- if perms.Get(perm.Key, "*") != nil -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true" checked="checked">
+      {%- else -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true">
+      {%- endif -%}
+      Must be signed into [{%s perm.Key %}]
+    </label></div>
+    <div class="mt"><label>
+      {%- if perms.Get(perm.Key, perm.Value) != nil -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}-{%s perm.Value %}" value="true" checked="checked">
+      {%- else -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}-{%s perm.Value %}" value="true">
+      {%- endif -%}
+      Must be signed into [{%s perm.Key %}] from [{%s perm.Value %}]
+    </label></div>
+    {%- endif -%}
+  {%- endfor -%}
   {%- if len(ps.Accounts) == 0 -%}
     <div class="mt">Control access to this team by <a href="/profile">signing in</a></div>
   {%- else -%}
-    {%- for _, perm := range perms.AuthPerms() -%}
-      {%- if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil %}
-      <div class="mt"><label>
-        {%- if perms.Get(perm.Key, "*") != nil -%}
-        <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true" checked="checked">
-        {%- else -%}
-        <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true">
-        {%- endif -%}
-        Must be signed into [{%s perm.Key %}]
-      </label></div>
-      <div class="mt"><label>
-        {%- if perms.Get(perm.Key, perm.Value) != nil -%}
-        <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}-{%s perm.Value %}" value="true" checked="checked">
-        {%- else -%}
-        <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}-{%s perm.Value %}" value="true">
-        {%- endif -%}
-        Must be signed into [{%s perm.Key %}] from [{%s perm.Value %}]
-      </label></div>
-      {%- endif -%}
-    {%- endfor -%}
     {%- for _, acct := range ps.Accounts -%}
     <div class="mt"><label>
       {%- if perms.Get(acct.Provider, "*") != nil -%}
