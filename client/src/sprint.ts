@@ -2,7 +2,7 @@ import {Message} from "./socket";
 import {req} from "./dom";
 import {send} from "./app";
 import {focusDelay} from "./util";
-import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
+import {ChildAdd, ChildRemove, ChildUpdate, onChildAddModel, onChildRemoveModel, onChildUpdateModel, setTeamSprint} from "./workspace";
 import {loadPermsForm, Permission, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Sprint = {
@@ -44,6 +44,8 @@ export function handleSprint(m: Message) {
       return onUpdate(m.param as Sprint);
     case "child-add":
       return onChildAddModel(m.param as ChildAdd);
+    case "child-update":
+      return onChildUpdateModel(m.param as ChildUpdate);
     case "child-remove":
       return onChildRemoveModel(m.param as ChildRemove);
     case "permissions":

@@ -12,6 +12,11 @@ export type ChildAdd = {
   "icon": string;
 }
 
+export type ChildUpdate = {
+  "type": string;
+  "model": { id: string; "title": string; "icon": string };
+}
+
 export type ChildRemove = {
   "type": string;
   "id": string;
@@ -58,10 +63,12 @@ export function onChildAddModel(param: ChildAdd) {
   a.href = param.path;
 
   const iconSpan = document.createElement("span");
+  iconSpan.classList.add("model-span-icon")
   iconSpan.innerHTML = svgRef(param.icon, 16, "icon");
   a.appendChild(iconSpan);
 
   const titleSpan = document.createElement("span");
+  titleSpan.classList.add("model-span-title")
   titleSpan.innerText = param.title;
   a.appendChild(titleSpan);
 
@@ -69,6 +76,12 @@ export function onChildAddModel(param: ChildAdd) {
   tr.appendChild(td);
   tbody.appendChild(tr);
   initCommentsModal(req(".modal", commentsDiv));
+}
+
+export function onChildUpdateModel(param: ChildUpdate) {
+  const tr = req(`#${param.type}-list-${param.model.id}`);
+  req(".model-span-icon", tr).innerHTML = svgRef(param.model.icon);
+  req(".model-span-title", tr).innerText = param.model.title;
 }
 
 export function onChildRemoveModel(param: ChildRemove) {

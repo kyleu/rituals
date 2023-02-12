@@ -2,7 +2,7 @@ import {Message} from "./socket";
 import {req} from "./dom";
 import {send} from "./app";
 import {focusDelay} from "./util";
-import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
+import {ChildAdd, ChildRemove, ChildUpdate, onChildAddModel, onChildRemoveModel, onChildUpdateModel, setTeamSprint} from "./workspace";
 import {loadPermsForm, Permission, permissionsUpdate} from "./permission";
 
 export type Team = {
@@ -34,6 +34,8 @@ export function handleTeam(m: Message) {
       return onUpdate(m.param as Team);
     case "child-add":
       return onChildAddModel(m.param as ChildAdd);
+    case "child-update":
+      return onChildUpdateModel(m.param as ChildUpdate);
     case "child-remove":
       return onChildRemoveModel(m.param as ChildRemove);
     case "permissions":
