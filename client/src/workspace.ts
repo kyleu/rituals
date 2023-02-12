@@ -100,5 +100,5 @@ export function setTeamSprint(key: string, frm: HTMLFormElement, teamID: string 
   req("#model-title").innerText = title;
   req("#model-icon").innerHTML = svgRef(icon, 20);
   req("#model-banner").innerHTML = modelBanner(key, frm, teamID ? teamID : "", sprintID ? sprintID : "");
-  flashCreate(key, "success", key + " updated");
+  // flashCreate(key, "success", key + " updated");
 }

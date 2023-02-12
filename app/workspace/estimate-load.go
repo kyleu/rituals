@@ -72,7 +72,7 @@ func (s *Service) loadFullEstimate(
 	if er != nil {
 		return nil, er
 	}
-	if ok, msg := CheckPermissions(util.KeyEstimate, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+	if ok, msg := CheckPermissions(util.KeyEstimate, ret.Permissions.ToPermissions(), p.Accounts, e.TeamID, tf, e.SprintID, sf); !ok {
 		return nil, errors.New(msg)
 	}
 

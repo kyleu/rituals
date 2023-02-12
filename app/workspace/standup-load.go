@@ -62,7 +62,7 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup, tf func() (
 	if er != nil {
 		return nil, er
 	}
-	if ok, msg := CheckPermissions(util.KeyStandup, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+	if ok, msg := CheckPermissions(util.KeyStandup, ret.Permissions.ToPermissions(), p.Accounts, u.TeamID, tf, u.SprintID, sf); !ok {
 		return nil, errors.New(msg)
 	}
 

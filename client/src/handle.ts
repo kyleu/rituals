@@ -10,8 +10,8 @@ import {handleRetro} from "./retro";
 
 export function handle(svc: string, m: Message) {
   switch (m.cmd) {
-    case "error":
-      return onError((m.param as { message: string }).message);
+    case "message":
+      return onMessage(m.param as { level: "success" | "error", message: string });
     case "comment":
       return commentAdd(m.param as Comment);
     case "online-update":
@@ -39,6 +39,6 @@ export function handle(svc: string, m: Message) {
   }
 }
 
-function onError(log: string) {
-  flashCreate("error", "error", log);
+function onMessage(x: { level: "success" | "error", message: string }) {
+  flashCreate("adhoc-message", x.level, x.message);
 }

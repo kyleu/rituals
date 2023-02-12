@@ -3,6 +3,7 @@ import {req} from "./dom";
 import {send} from "./app";
 import {focusDelay} from "./util";
 import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
+import {loadPermsForm, permissionsTeamToggle} from "./permission";
 
 export type Sprint = {
   id: string;
@@ -21,13 +22,17 @@ export function initSprint() {
     focusDelay(req("#modal-sprint-config form input[name=\"title\"]"));
   }
   const frm = req<HTMLFormElement>("#modal-sprint-config form");
+  const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+  teamEl.onchange = function() {
+    permissionsTeamToggle(teamEl.value !== "");
+  }
+  permissionsTeamToggle(teamEl.value !== "");
   frm.onsubmit = function() {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
     const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
     const startDate = req<HTMLInputElement>("input[name=\"startDate\"]", frm).value;
     const endDate = req<HTMLInputElement>("input[name=\"endDate\"]", frm).value;
-    const team = req<HTMLInputElement>("select[name=\"team\"]", frm).value;
-    send("update", {"title": title, "icon": icon, "startDate": startDate, "endDate": endDate, "team": team});
+    send("update", {"title": title, "icon": icon, "startDate": startDate, "endDate": endDate, "team": teamEl.value, ...loadPermsForm(frm)});
     document.location.hash = "";
     return false;
   };

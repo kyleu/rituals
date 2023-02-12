@@ -54,13 +54,10 @@ func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
 		}
 	}
 
-	tf := func() (team.Teams, error) { return nil, nil }
-	sf := func() (sprint.Sprints, error) { return nil, nil }
-
-	return s.loadFullTeam(p, t, tf, sf)
+	return s.loadFullTeam(p, t)
 }
 
-func (s *Service) loadFullTeam(p *LoadParams, t *team.Team, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullTeam, error) {
+func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 	ret := &FullTeam{Team: t}
 
 	var er error
@@ -68,7 +65,7 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team, tf func() (team.Team
 	if er != nil {
 		return nil, er
 	}
-	if ok, msg := CheckPermissions(util.KeyTeam, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+	if ok, msg := CheckPermissions(util.KeyTeam, ret.Permissions.ToPermissions(), p.Accounts, nil, nil, nil, nil); !ok {
 		return nil, errors.New(msg)
 	}
 	funcs := []func() error{

@@ -1,0 +1,91 @@
+{% import (
+  "fmt"
+
+  "github.com/google/uuid"
+
+  "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
+	"github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
+) %}
+
+{% func PermissionsLink(svc enum.ModelService, id uuid.UUID, permissions util.Permissions, ps *cutil.PageState) %}
+  {%- code
+    title := fmt.Sprint(len(permissions)) + " " + util.StringPluralMaybe("permission", len(permissions))
+    icon := "lock"
+    if len(permissions) == 0 {
+      icon = "unlock"
+    }
+  -%}
+  <a class="permission-link" href="#modal-{%s string(svc) %}-config" title="{%s title %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
+{% endfunc %}
+
+{% func PermissionsForm(key string, perms util.Permissions, showTeam bool, teams team.Teams, showSprint bool, sprints sprint.Sprints, ps *cutil.PageState) %}
+  <em class="title">Permissions</em>
+  {%- if showTeam -%}
+    <div class="permission-config-team mt"><label>
+      {%- if perms.Get(util.KeyTeam, "true") != nil -%}
+      <input class="perm-option" type="checkbox" name="perm-team" value="true" checked="checked">
+      {%- else -%}
+      <input class="perm-option" type="checkbox" name="perm-team" value="true">
+      {%- endif -%}
+      Must be a member of this {%s key %}'s team
+    </label></div>
+  {%- endif -%}
+  {%- if showSprint -%}
+    <div class="permission-config-sprint mt"><label>
+      {%- if perms.Get(util.KeySprint, "true") != nil -%}
+      <input class="perm-option" type="checkbox" name="perm-sprint" value="true" checked="checked">
+      {%- else -%}
+      <input class="perm-option" type="checkbox" name="perm-sprint" value="true">
+      {%- endif -%}
+      Must be a member of this {%s key %}'s sprint
+    </label></div>
+  {%- endif -%}
+  {%- if len(ps.Accounts) == 0 -%}
+    <div class="mt">Control access to this team by <a href="/profile">signing in</a></div>
+  {%- else -%}
+    {%- for _, perm := range perms -%}
+      {%- if perm.Key != util.KeyTeam && perm.Key != util.KeySprint %}
+        {%- if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil %}
+        <div class="mt"><label>
+          {%- if perms.Get(perm.Key, "*") != nil -%}
+          <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true" checked="checked">
+          {%- else -%}
+          <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true">
+          {%- endif -%}
+          Must be signed into [{%s perm.Key %}]
+        </label></div>
+        <div class="mt"><label>
+          {%- if perms.Get(perm.Key, perm.Value) != nil -%}
+          <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}-{%s perm.Value %}" value="true" checked="checked">
+          {%- else -%}
+          <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}-{%s perm.Value %}" value="true">
+          {%- endif -%}
+          Must be signed into [{%s perm.Key %}] from [{%s perm.Value %}]
+        </label></div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- for _, acct := range ps.Accounts -%}
+    <div class="mt"><label>
+      {%- if perms.Get(acct.Provider, "*") != nil -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s acct.Provider %}" value="true" checked="checked">
+      {%- else -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s acct.Provider %}" value="true">
+      {%- endif -%}
+      Must be signed into [{%s acct.Provider %}]
+    </label></div>
+    <div class="mt"><label>
+      {%- if perms.Get(acct.Provider, acct.Domain()) != nil -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s acct.Provider %}-{%s acct.Domain() %}" value="true" checked="checked">
+      {%- else -%}
+      <input class="perm-option" type="checkbox" name="perm-{%s acct.Provider %}-{%s acct.Domain() %}" value="true">
+      {%- endif -%}
+      Must be signed into [{%s acct.Provider %}] from [{%s acct.Domain() %}]
+    </label></div>
+    {%- endfor -%}
+  {%- endif -%}
+{% endfunc %}

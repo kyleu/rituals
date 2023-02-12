@@ -31,29 +31,35 @@ func (s *Service) SocketHandler(
 	if err != nil {
 		return err
 	}
-
+	var msg string
 	p := NewParams(ctx, idStr, action.Act(cmd), frm, conn.Profile, conn.Accounts, s, logger, conn.ID)
 
 	service := enum.ModelService(svc)
 	switch service {
 	case enum.ModelServiceTeam:
-		_, _, _, err = s.ActionTeam(p)
+		_, msg, _, err = s.ActionTeam(p)
 	case enum.ModelServiceSprint:
-		_, _, _, err = s.ActionSprint(p)
+		_, msg, _, err = s.ActionSprint(p)
 	case enum.ModelServiceEstimate:
-		_, _, _, err = s.ActionEstimate(p)
+		_, msg, _, err = s.ActionEstimate(p)
 	case enum.ModelServiceStandup:
-		_, _, _, err = s.ActionStandup(p)
+		_, msg, _, err = s.ActionStandup(p)
 	case enum.ModelServiceRetro:
-		_, _, _, err = s.ActionRetro(p)
+		_, msg, _, err = s.ActionRetro(p)
 	default:
 		err = errors.Errorf("invalid service [%s]", svc)
 	}
 	if err != nil {
-		prm := map[string]any{"type": "error", "message": err.Error()}
-		err = s.sendUser(conn.ID, service, *id, action.ActError, prm, &conn.Profile.ID, logger)
+		prm := map[string]any{"level": "error", "message": err.Error()}
+		_ = s.sendUser(conn.ID, service, *id, action.ActMessage, prm, &conn.Profile.ID, logger)
+		return err
 	}
-	return err
+	if msg != "" {
+		prm := map[string]any{"level": "success", "message": msg}
+		err = s.sendUser(conn.ID, service, *id, action.ActMessage, prm, &conn.Profile.ID, logger)
+		return err
+	}
+	return nil
 }
 
 func (s *Service) SocketClose(sock *websocket.Service, conn *websocket.Connection, logger util.Logger) error {

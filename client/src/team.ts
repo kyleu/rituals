@@ -3,6 +3,7 @@ import {req} from "./dom";
 import {send} from "./app";
 import {focusDelay} from "./util";
 import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
+import {loadPermsForm} from "./permission";
 
 export type Team = {
   id: string;
@@ -21,7 +22,7 @@ export function initTeam() {
   frm.onsubmit = function () {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
     const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-    send("update", {"title": title, "icon": icon});
+    send("update", {"title": title, "icon": icon, ...loadPermsForm(frm)});
     document.location.hash = "";
     return false;
   };

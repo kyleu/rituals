@@ -32,13 +32,16 @@
   <div class="flex-wrap">
     <div id="panel-summary">
       <div class="card">
-        <div class="right">{%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
+        <div class="right">
+          {%= vwutil.PermissionsLink(enum.ModelServiceStandup, u.ID, w.Permissions.ToPermissions(), ps) %}
+          {%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, ps) %}
+        </div>
         <h3><a href="#modal-standup-config" id="modal-standup-config-link">
           <span id="model-icon">{%= components.SVGRefIcon(u.IconSafe(), ps) %}</span>
           <span id="model-title">{%s u.TitleString() %}</span>
         </a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
-        {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, ps) %}
+        {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
       </div>
     </div>
     <div id="panel-detail">
@@ -83,7 +86,7 @@
   </script>
 {% endfunc %}
 
-{% func StandupWorkspaceModal(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) %}
+{% func StandupWorkspaceModal(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-standup-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -96,11 +99,10 @@
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
           {%= components.FormVerticalInput("title", "", "Title", u.TitleString(), 5, "The name of your standup") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", u.IconSafe(), ps, 5) %}
-          {%= components.FormVerticalSelect(util.KeyTeam, "", "Team", util.UUIDString(u.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
-          {%= components.FormVerticalSelect(util.KeySprint, "", "Sprint", util.UUIDString(u.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
-          <em class="title">Permissions</em>
-          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this standup's team</label></div>
-          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this standup's sprint</label></div>
+          {%= components.FormVerticalSelect(util.KeyTeam, "config-team-input", "Team", util.UUIDString(u.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeySprint, "config-sprint-input", "Sprint", util.UUIDString(u.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          <hr />
+          {%= vwutil.PermissionsForm(util.KeyStandup, perms, true, teams, true, sprints, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
         </form>

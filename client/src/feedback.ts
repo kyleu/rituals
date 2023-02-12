@@ -31,8 +31,8 @@ export function initFeedbacks() {
 function initAddModal(feedbackAddModal: HTMLElement) {
   const feedbackAddForm = req("form", feedbackAddModal);
   feedbackAddForm.onsubmit = function () {
-    const category = req<HTMLInputElement>("select[name=\"category\"]", feedbackAddForm).value;
-    const input = req<HTMLInputElement>("textarea[name=\"content\"]", feedbackAddForm);
+    const category = req<HTMLSelectElement>("select[name=\"category\"]", feedbackAddForm).value;
+    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", feedbackAddForm);
     const content = input.value;
     input.value = "";
     send("child-add", {"category": category, "content": content});
@@ -52,8 +52,8 @@ function initEditModal(feedbackEditModal: HTMLElement) {
     return false;
   }
   frm.onsubmit = function () {
-    const category = req<HTMLInputElement>("select[name=\"category\"]", frm).value;
-    const input = req<HTMLInputElement>("textarea[name=\"content\"]", frm);
+    const category = req<HTMLSelectElement>("select[name=\"category\"]", frm).value;
+    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
     const content = input.value;
     send("child-update", {"feedbackID": feedbackID, "category": category, "content": content});
     document.location.hash = "";

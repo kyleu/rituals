@@ -4,6 +4,7 @@ import {send} from "./app";
 import {setTeamSprint} from "./workspace";
 import {initReports, Report, reportAdd, reportRemove} from "./report";
 import {focusDelay} from "./util";
+import {loadPermsForm, permissionsSprintToggle, permissionsTeamToggle} from "./permission";
 
 export type Standup = {
   id: string;
@@ -21,12 +22,20 @@ export function initStandup() {
     focusDelay(req("#modal-standup-config form input[name=\"title\"]"));
   }
   const frm = req<HTMLFormElement>("#modal-standup-config form");
+  const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+  teamEl.onchange = function() {
+    permissionsTeamToggle(teamEl.value !== "");
+  }
+  const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+  sprintEl.onchange = function() {
+    permissionsSprintToggle(sprintEl.value !== "");
+  }
+  permissionsTeamToggle(teamEl.value !== "");
+  permissionsSprintToggle(sprintEl.value !== "");
   frm.onsubmit = function () {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
     const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-    const team = req<HTMLInputElement>("select[name=\"team\"]", frm).value;
-    const sprint = req<HTMLInputElement>("select[name=\"sprint\"]", frm).value;
-    send("update", {"title": title, "icon": icon, "team": team, "sprint": sprint});
+    send("update", {"title": title, "icon": icon, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
     document.location.hash = "";
     return false;
   };

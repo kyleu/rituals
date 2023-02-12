@@ -32,13 +32,16 @@
   <div class="flex-wrap">
     <div id="panel-summary">
       <div class="card">
-        <div class="right">{%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
+        <div class="right">
+          {%= vwutil.PermissionsLink(enum.ModelServiceEstimate, e.ID, w.Permissions.ToPermissions(), ps) %}
+          {%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps) %}
+        </div>
         <h3><a href="#modal-estimate-config" id="modal-estimate-config-link">
           <span id="model-icon">{%= components.SVGRefIcon(e.IconSafe(), ps) %}</span>
           <span id="model-title">{%s e.TitleString() %}</span>
         </a></h3>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
-        {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, ps) %}
+        {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
       </div>
     </div>
     <div id="panel-detail">
@@ -84,7 +87,7 @@
   </script>
 {% endfunc %}
 
-{% func EstimateWorkspaceModal(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, ps *cutil.PageState) %}
+{% func EstimateWorkspaceModal(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-estimate-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -98,12 +101,10 @@
           {%= components.FormVerticalInput("title", "", "Title", e.TitleString(), 5, "The name of your estimate") %}
           {%= components.FormVerticalIconPicker("icon", "Icon", e.IconSafe(), ps, 5) %}
           {%= components.FormVerticalInputTags("choices", "", "Choices", e.Choices, ps, 5, "The available options for stories in this estimate") %}
-          {%= components.FormVerticalSelect(util.KeyTeam, "", "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
-          {%= components.FormVerticalSelect(util.KeySprint, "", "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeyTeam, "config-team-input", "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormVerticalSelect(util.KeySprint, "config-sprint-input", "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
           <hr />
-          <em class="title">Permissions</em>
-          <div><label><input type="checkbox" name="perm-team" value="true"> Must be a member of this estimate's team</label></div>
-          <div><label><input type="checkbox" name="perm-sprint" value="true"> Must be a member of this estimate's sprint</label></div>
+          {%= vwutil.PermissionsForm(util.KeyEstimate, perms, true, teams, true, sprints, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
         </form>

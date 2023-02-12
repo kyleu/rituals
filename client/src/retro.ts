@@ -5,6 +5,7 @@ import {setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
 import {Feedback, feedbackAdd, feedbackRemove, initFeedbacks} from "./feedback";
 import {focusDelay} from "./util";
+import {loadPermsForm, permissionsSprintToggle, permissionsTeamToggle} from "./permission";
 
 export type Retro = {
   id: string;
@@ -23,13 +24,21 @@ export function initRetro() {
     focusDelay(req("#modal-retro-config form input[name=\"title\"]"));
   }
   const frm = req<HTMLFormElement>("#modal-retro-config form");
+  const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+  teamEl.onchange = function() {
+    permissionsTeamToggle(teamEl.value !== "");
+  }
+  const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+  sprintEl.onchange = function() {
+    permissionsSprintToggle(sprintEl.value !== "");
+  }
+  permissionsTeamToggle(teamEl.value !== "");
+  permissionsSprintToggle(sprintEl.value !== "");
   frm.onsubmit = function() {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
     const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
     const categories = req<HTMLInputElement>("input[name=\"categories\"]", frm).value;
-    const team = req<HTMLInputElement>("select[name=\"team\"]", frm).value;
-    const sprint = req<HTMLInputElement>("select[name=\"sprint\"]", frm).value;
-    send("update", {"title": title, "icon": icon, "categories": categories, "team": team, "sprint": sprint});
+    send("update", {"title": title, "icon": icon, "categories": categories, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
     document.location.hash = "";
     return false;
   };

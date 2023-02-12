@@ -26,7 +26,7 @@ export function initReports() {
   const reportAddForm = req("form", reportAddModal);
   reportAddForm.onsubmit = function () {
     const day = req<HTMLInputElement>("input[name=\"day\"]", reportAddForm).value;
-    const input = req<HTMLInputElement>("textarea[name=\"content\"]", reportAddForm);
+    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", reportAddForm);
     const content = input.value;
     input.value = "";
     send("child-add", {"day": day, "content": content});
@@ -49,7 +49,7 @@ function initEditModal(modal: HTMLElement) {
   }
   frm.onsubmit = function () {
     const day = req<HTMLInputElement>("input[name=\"day\"]", frm).value;
-    const input = req<HTMLInputElement>("textarea[name=\"content\"]", frm);
+    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
     const content = input.value;
     send("child-update", {"reportID": reportID, "day": day, "content": content});
     document.location.hash = "";

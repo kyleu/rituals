@@ -9,6 +9,7 @@ import (
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
 	"github.com/kyleu/rituals/app/sprint"
@@ -64,33 +65,65 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
 	}
-	tgt.Slug = p.Svc.r.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.rh, nil, p.Logger)
+	tx, err := p.Svc.db.StartTransaction(p.Logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+	tgt.Slug = p.Svc.e.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.eh, tx, p.Logger)
 	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
 	tgt.Choices = util.StringSplitAndTrim(p.Frm.GetStringOpt("choices"), ",")
 	tgt.TeamID, _ = p.Frm.GetUUID(util.KeyTeam, true)
 	tgt.SprintID, _ = p.Frm.GetUUID(util.KeySprint, true)
-	if len(fe.Estimate.Diff(tgt)) == 0 {
+	perms := loadPermissionsForm(p.Frm)
+	modelChanged := len(fe.Estimate.Diff(tgt)) > 0
+	permsChanged := len(fe.Permissions.ToPermissions().Diff(perms)) > 0
+	if !modelChanged && !permsChanged {
 		return fe, MsgNoChangesNeeded, fe.Estimate.PublicWebPath(), nil
 	}
-	model, err := p.Svc.SaveEstimate(p.Ctx, tgt, fe.Self.UserID, nil, p.Logger)
+	if modelChanged {
+		model, err := p.Svc.SaveEstimate(p.Ctx, tgt, fe.Self.UserID, tx, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
+		err = updateTeam("estimate", fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
+		if err != nil {
+			return nil, "", "", err
+		}
+		err = updateSprint("estimate", fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
+		if err != nil {
+			return nil, "", "", err
+		}
+		fe.Estimate = model
+		err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActUpdate, model, &fe.Self.UserID, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
+	}
+	if permsChanged {
+		if err := p.Svc.ep.DeleteWhere(p.Ctx, tx, "estimate_id = $1", len(fe.Permissions), p.Logger, tgt.ID); err != nil {
+			return nil, "", "", err
+		}
+		newPerms := make(epermission.EstimatePermissions, 0, len(perms))
+		for _, x := range perms {
+			newPerms = append(newPerms, &epermission.EstimatePermission{EstimateID: tgt.ID, Key: x.Key, Value: x.Value})
+		}
+		if err = p.Svc.ep.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
+			return nil, "", "", err
+		}
+		err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActPermissions, perms, &fe.Self.UserID, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
+	}
+	err = tx.Commit()
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = updateTeam("estimate", fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
-	if err != nil {
-		return nil, "", "", err
-	}
-	err = updateSprint("estimate", fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
-	if err != nil {
-		return nil, "", "", err
-	}
-	fe.Estimate = model
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActUpdate, model, &fe.Self.UserID, p.Logger)
-	if err != nil {
-		return nil, "", "", err
-	}
-	return fe, "Estimate updated", model.PublicWebPath(), nil
+	return fe, "Estimate updated", fe.Estimate.PublicWebPath(), nil
 }
 
 func estimateStoryAdd(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {

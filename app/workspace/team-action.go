@@ -5,6 +5,7 @@ import (
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/team/tpermission"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -43,22 +44,54 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 	if tgt.Slug == "" {
 		tgt.Slug = util.Slugify(tgt.Title)
 	}
-	tgt.Slug = p.Svc.r.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.rh, nil, p.Logger)
+	tx, err := p.Svc.db.StartTransaction(p.Logger)
+	if err != nil {
+		return nil, "", "", err
+	}
+	defer func() {
+		_ = tx.Rollback()
+	}()
+	tgt.Slug = p.Svc.t.Slugify(p.Ctx, tgt.ID, tgt.Slug, p.Slug, p.Svc.th, tx, p.Logger)
 	tgt.Icon = p.Frm.GetStringOpt("icon")
 	tgt.Icon = tgt.IconSafe()
-	if len(ft.Team.Diff(tgt)) == 0 {
+	perms := loadPermissionsForm(p.Frm)
+	modelChanged := len(ft.Team.Diff(tgt)) > 0
+	permsChanged := len(ft.Permissions.ToPermissions().Diff(perms)) > 0
+	if !modelChanged && !permsChanged {
 		return ft, MsgNoChangesNeeded, ft.Team.PublicWebPath(), nil
 	}
-	model, err := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, nil, p.Logger)
+	if modelChanged {
+		model, err := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, tx, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
+		ft.Team = model
+		err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
+	}
+	if permsChanged {
+		if err := p.Svc.tp.DeleteWhere(p.Ctx, tx, "team_id = $1", len(ft.Permissions), p.Logger, tgt.ID); err != nil {
+			return nil, "", "", err
+		}
+		newPerms := make(tpermission.TeamPermissions, 0, len(perms))
+		for _, x := range perms {
+			newPerms = append(newPerms, &tpermission.TeamPermission{TeamID: tgt.ID, Key: x.Key, Value: x.Value})
+		}
+		if err = p.Svc.tp.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
+			return nil, "", "", err
+		}
+		err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActPermissions, perms, &ft.Self.UserID, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
+	}
+	err = tx.Commit()
 	if err != nil {
 		return nil, "", "", err
 	}
-	ft.Team = model
-	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, p.Logger)
-	if err != nil {
-		return nil, "", "", err
-	}
-	return ft, "Team updated", model.PublicWebPath(), nil
+	return ft, "Team updated", ft.Team.PublicWebPath(), nil
 }
 
 func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {

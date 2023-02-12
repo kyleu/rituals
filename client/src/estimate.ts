@@ -5,6 +5,7 @@ import {send} from "./app";
 import {setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
 import {focusDelay} from "./util";
+import {loadPermsForm, permissionsSprintToggle, permissionsTeamToggle} from "./permission";
 
 export type Estimate = {
   id: string;
@@ -23,13 +24,21 @@ export function initEstimate() {
     focusDelay(req("#modal-estimate-config form input[name=\"title\"]"));
   }
   const frm = req<HTMLFormElement>("#modal-estimate-config form");
+  const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+  teamEl.onchange = function() {
+    permissionsTeamToggle(teamEl.value !== "");
+  }
+  const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+  sprintEl.onchange = function() {
+    permissionsSprintToggle(sprintEl.value !== "");
+  }
+  permissionsTeamToggle(teamEl.value !== "");
+  permissionsSprintToggle(sprintEl.value !== "");
   frm.onsubmit = function() {
     const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
     const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
     const choices = req<HTMLInputElement>("input[name=\"choices\"]", frm).value;
-    const team = req<HTMLInputElement>("select[name=\"team\"]", frm).value;
-    const sprint = req<HTMLInputElement>("select[name=\"sprint\"]", frm).value;
-    send("update", {"title": title, "icon": icon, "choices": choices, "team": team, "sprint": sprint});
+    send("update", {"title": title, "icon": icon, "choices": choices, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
     document.location.hash = "";
     return false;
   };

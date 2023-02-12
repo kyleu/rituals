@@ -1,8 +1,17 @@
 package util
 
+import "fmt"
+
 type Permission struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
+}
+
+func (p Permission) String() string {
+	if p.Value == "" {
+		return p.Key
+	}
+	return p.Key + ":" + p.Value
 }
 
 type Permissions []*Permission
@@ -15,24 +24,22 @@ func (p Permissions) Values() []string {
 	return ret
 }
 
-func (p Permissions) TeamPerms() Permissions {
-	var ret Permissions
+func (p Permissions) TeamPerm() *Permission {
 	for _, x := range p {
 		if x.Key == KeyTeam {
-			ret = append(ret, x)
+			return x
 		}
 	}
-	return ret
+	return nil
 }
 
-func (p Permissions) SprintPerms() Permissions {
-	var ret Permissions
+func (p Permissions) SprintPerm() *Permission {
 	for _, x := range p {
 		if x.Key == KeySprint {
-			ret = append(ret, x)
+			return x
 		}
 	}
-	return ret
+	return nil
 }
 
 func (p Permissions) AuthPerms() Permissions {
@@ -43,4 +50,25 @@ func (p Permissions) AuthPerms() Permissions {
 		}
 	}
 	return ret
+}
+
+func (p Permissions) Diff(tgt Permissions) Diffs {
+	if len(p) != len(tgt) {
+		return Diffs{{Path: "length", Old: fmt.Sprint(len(p)), New: fmt.Sprint(len(tgt))}}
+	}
+	for _, s := range p {
+		if t := tgt.Get(s.Key, s.Value); t == nil {
+			return Diffs{{Path: "missing", Old: s.String(), New: ""}}
+		}
+	}
+	return nil
+}
+
+func (p Permissions) Get(key string, value string) *Permission {
+	for _, x := range p {
+		if x.Key == key && x.Value == value {
+			return x
+		}
+	}
+	return nil
 }

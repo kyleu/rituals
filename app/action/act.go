@@ -3,8 +3,8 @@ package action
 type Act string
 
 const (
-	ActError  Act = "error"
-	ActCreate Act = "create"
+	ActMessage Act = "message"
+	ActCreate  Act = "create"
 
 	ActUpdate      Act = "update"
 	ActPermissions Act = "permissions"

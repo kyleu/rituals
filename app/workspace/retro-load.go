@@ -64,7 +64,7 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.T
 	if er != nil {
 		return nil, er
 	}
-	if ok, msg := CheckPermissions(util.KeyRetro, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+	if ok, msg := CheckPermissions(util.KeyRetro, ret.Permissions.ToPermissions(), p.Accounts, r.TeamID, tf, r.SprintID, sf); !ok {
 		return nil, errors.New(msg)
 	}
 
