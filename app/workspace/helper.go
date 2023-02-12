@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
+	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -31,4 +32,22 @@ func commentFromForm(frm util.ValueMap, userID uuid.UUID) (*comment.Comment, str
 	u := fmt.Sprintf("#modal-%s-%s-comments", c.Svc, c.ModelID.String())
 
 	return c, u, nil
+}
+
+func sendTeamSprintUpdates(key string, teamID *uuid.UUID, sprintID *uuid.UUID, model any, userID *uuid.UUID, svc *Service, logger util.Logger) error {
+	msg := map[string]any{"type": key, key: model}
+	if teamID != nil {
+		err := svc.send(enum.ModelServiceTeam, *teamID, action.ActChildUpdate, msg, userID, logger)
+		if err != nil {
+			return err
+		}
+	}
+	if sprintID != nil {
+		msg := map[string]any{"type": util.KeyRetro, util.KeyRetro: model}
+		err := svc.send(enum.ModelServiceSprint, *sprintID, action.ActChildUpdate, msg, userID, logger)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

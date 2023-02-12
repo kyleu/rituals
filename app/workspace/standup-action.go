@@ -94,6 +94,10 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		if err != nil {
 			return nil, "", "", err
 		}
+		err = sendTeamSprintUpdates(util.KeyStandup, model.TeamID, model.SprintID, model, &fu.Self.UserID, p.Svc, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
 	if permsChanged {
 		if err := p.Svc.up.DeleteWhere(p.Ctx, tx, "standup_id = $1", len(fu.Permissions), p.Logger, tgt.ID); err != nil {

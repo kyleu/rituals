@@ -102,6 +102,10 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 		if err != nil {
 			return nil, "", "", err
 		}
+		err = sendTeamSprintUpdates(util.KeyEstimate, model.TeamID, model.SprintID, model, &fe.Self.UserID, p.Svc, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
 	if permsChanged {
 		if err := p.Svc.ep.DeleteWhere(p.Ctx, tx, "estimate_id = $1", len(fe.Permissions), p.Logger, tgt.ID); err != nil {

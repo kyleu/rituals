@@ -5,7 +5,7 @@ import {send} from "./app";
 import {setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
 import {focusDelay} from "./util";
-import {loadPermsForm, permissionsSprintToggle, permissionsTeamToggle} from "./permission";
+import {loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Estimate = {
   id: string;
@@ -55,6 +55,8 @@ export function handleEstimate(m: Message) {
       return storyStatus(m.param as Story);
     case "child-remove":
       return storyRemove(m.param as string);
+    case "permissions":
+      return permissionsUpdate(m.param as Permission[]);
     default:
       throw "invalid estimate command [" + m.cmd + "]"
   }

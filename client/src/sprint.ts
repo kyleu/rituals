@@ -3,7 +3,7 @@ import {req} from "./dom";
 import {send} from "./app";
 import {focusDelay} from "./util";
 import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
-import {loadPermsForm, permissionsTeamToggle} from "./permission";
+import {loadPermsForm, Permission, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Sprint = {
   id: string;
@@ -46,6 +46,8 @@ export function handleSprint(m: Message) {
       return onChildAddModel(m.param as ChildAdd);
     case "child-remove":
       return onChildRemoveModel(m.param as ChildRemove);
+    case "permissions":
+      return permissionsUpdate(m.param as Permission[]);
     default:
       throw "invalid sprint command [" + m.cmd + "]"
   }

@@ -5,7 +5,7 @@ import {setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
 import {Feedback, feedbackAdd, feedbackRemove, initFeedbacks} from "./feedback";
 import {focusDelay} from "./util";
-import {loadPermsForm, permissionsSprintToggle, permissionsTeamToggle} from "./permission";
+import {loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Retro = {
   id: string;
@@ -56,6 +56,8 @@ export function handleRetro(m: Message) {
       // return feedbackUpdate(m.param as Feedback);
     case "child-remove":
       return feedbackRemove(m.param as string);
+    case "permissions":
+      return permissionsUpdate(m.param as Permission[]);
     default:
       throw "invalid retro command [" + m.cmd + "]"
   }

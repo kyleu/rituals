@@ -99,6 +99,10 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		if err != nil {
 			return nil, "", "", err
 		}
+		err = sendTeamSprintUpdates(util.KeyRetro, model.TeamID, model.SprintID, model, &fr.Self.UserID, p.Svc, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
 	if permsChanged {
 		if err := p.Svc.rp.DeleteWhere(p.Ctx, tx, "retro_id = $1", len(fr.Permissions), p.Logger, tgt.ID); err != nil {

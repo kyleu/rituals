@@ -3,7 +3,7 @@ import {req} from "./dom";
 import {send} from "./app";
 import {focusDelay} from "./util";
 import {ChildAdd, ChildRemove, onChildAddModel, onChildRemoveModel, setTeamSprint} from "./workspace";
-import {loadPermsForm} from "./permission";
+import {loadPermsForm, Permission, permissionsUpdate} from "./permission";
 
 export type Team = {
   id: string;
@@ -36,6 +36,8 @@ export function handleTeam(m: Message) {
       return onChildAddModel(m.param as ChildAdd);
     case "child-remove":
       return onChildRemoveModel(m.param as ChildRemove);
+    case "permissions":
+      return permissionsUpdate(m.param as Permission[]);
     default:
       throw "invalid team command [" + m.cmd + "]"
   }

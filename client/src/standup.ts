@@ -4,7 +4,7 @@ import {send} from "./app";
 import {setTeamSprint} from "./workspace";
 import {initReports, Report, reportAdd, reportRemove} from "./report";
 import {focusDelay} from "./util";
-import {loadPermsForm, permissionsSprintToggle, permissionsTeamToggle} from "./permission";
+import {loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Standup = {
   id: string;
@@ -54,6 +54,8 @@ export function handleStandup(m: Message) {
       // return reportUpdate(m.param as Report);
     case "child-remove":
       return reportRemove(m.param as string);
+    case "permissions":
+      return permissionsUpdate(m.param as Permission[]);
     default:
       throw "invalid standup command [" + m.cmd + "]"
   }
