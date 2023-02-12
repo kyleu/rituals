@@ -26,7 +26,7 @@ export function snippetReport(r: Report): HTMLElement {
 }
 
 export function snippetReportModalView(r: Report): HTMLElement {
-  return <div id={"modal-report-" + r.id} class="modal report-modal-view" style="display: none;">
+  return <div id={"modal-report-" + r.id} class="modal modal-report-view" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
@@ -39,7 +39,7 @@ export function snippetReportModalView(r: Report): HTMLElement {
 }
 
 export function snippetReportModalEdit(r: Report): HTMLElement {
-  return <div id={"modal-report-" + r.id} class="modal report-modal-edit" style="display: none;">
+  return <div id={"modal-report-" + r.id} class="modal modal-report-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

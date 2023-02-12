@@ -2,6 +2,7 @@ import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-v
 import {Feedback} from "./feedback";
 import {username} from "./member";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
+import {Report} from "./report";
 
 export function snippetFeedbackContainer(cat: string) {
   return <div id={"category-" + cat} data-category={cat} class="category">
@@ -50,5 +51,45 @@ export function snippetFeedback(f: Feedback) {
       <div>{username(f.userID)}</div>
       <div class="pt feedback-content">{f.html}</div>
     </a>
+  </div>;
+}
+
+export function snippetFeedbackModalView(r: Feedback): HTMLElement {
+  return <div id={"modal-feedback-" + r.id} class="modal modal-feedback-view" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{r.category + " :: " + username(r.userID)}</h2>
+      </div>
+      <div class="modal-body" dangerouslySetInnerHTML={r.html}></div>
+    </div>
+  </div>;
+}
+
+export function snippetFeedbackModalEdit(r: Feedback): HTMLElement {
+  return <div id={"modal-feedback-" + r.id} class="modal modal-feedback-edit" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>{r.category + " :: " + username(r.userID)}</h2>
+      </div>
+      <div class="modal-body">
+        <form action="#" method="post">
+          <input type="hidden" name="feedbackID" value={ r.id } />
+          <div class="mb expanded">
+            <label for={"input-category-" + r.id}><em class="title">Category</em></label>
+            <div><input type="date" id={"input-category-" + r.id} name="category" value={r.category} /></div>
+          </div>
+          <div class="mb expanded">
+            <label for={"input-content-" + r.id}><em class="title">Content</em></label>
+            <div><textarea id={"input-content-" + r.id} name="content">{ r.content }</textarea></div>
+          </div>
+          <div class="right"><button class="feedback-edit-save" type="submit" name="action" value="child-update">Save Changes</button></div>
+          <button class="feedback-edit-delete" type="submit" name="action" value="child-remove" onclick="return confirm('Are you sure you want to delete this feedback?');">Delete</button>
+        </form>
+      </div>
+    </div>
   </div>;
 }

@@ -248,7 +248,7 @@ func StreamStandupWorkspaceReportModalEdit(qw422016 *qt422016.Writer, r *report.
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:73
 	qw422016.E().S(r.ID.String())
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:73
-	qw422016.N().S(`" class="modal report-modal-edit" style="display: none;">
+	qw422016.N().S(`" class="modal modal-report-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
@@ -328,7 +328,7 @@ func StreamStandupWorkspaceReportModalView(qw422016 *qt422016.Writer, r *report.
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:94
 	qw422016.E().S(r.ID.String())
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:94
-	qw422016.N().S(`" class="modal report-modal-view" style="display: none;">
+	qw422016.N().S(`" class="modal modal-report-view" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

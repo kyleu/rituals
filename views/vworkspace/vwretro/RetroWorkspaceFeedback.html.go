@@ -129,81 +129,85 @@ func StreamRetroWorkspaceFeedbacks(qw422016 *qt422016.Writer, userID uuid.UUID, 
 	}
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:43
 	qw422016.N().S(`  </div>
+  <div id="feedback-modals">
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:45
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:46
 	for _, f := range w.Feedbacks {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:46
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:47
 		if userID == f.UserID {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:46
-			qw422016.N().S(`  `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:47
+			qw422016.N().S(`  `)
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:48
 			StreamRetroWorkspaceFeedbackModalEdit(qw422016, f, w.Retro.Categories, username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:47
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:48
 			qw422016.N().S(`
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:48
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:49
 		} else {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:48
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:49
 			qw422016.N().S(`  `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:49
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:50
 			StreamRetroWorkspaceFeedbackModalView(qw422016, f, username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:49
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:50
 			qw422016.N().S(`
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:50
-		}
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:51
+		}
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
 	}
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+	qw422016.N().S(`  </div>
+`)
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 func WriteRetroWorkspaceFeedbacks(qq422016 qtio422016.Writer, userID uuid.UUID, username string, w *workspace.FullRetro, ps *cutil.PageState) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	StreamRetroWorkspaceFeedbacks(qw422016, userID, username, w, ps)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 func RetroWorkspaceFeedbacks(userID uuid.UUID, username string, w *workspace.FullRetro, ps *cutil.PageState) string {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	WriteRetroWorkspaceFeedbacks(qb422016, userID, username, w, ps)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 	return qs422016
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:52
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:56
 func StreamRetroWorkspaceFeedbackModalAdd(qw422016 *qt422016.Writer, categories []string, category string) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:54
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:56
 	qw422016.N().S(`
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:55
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:57
 	if !slices.Contains(categories, category) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:56
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:58
 		categories = append(categories, category)
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:57
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:59
 	}
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:57
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:59
 	qw422016.N().S(`  <div id="modal-feedback--add-`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:58
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:60
 	qw422016.E().S(category)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:58
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:60
 	qw422016.N().S(`" class="modal modal-feedback-add" data-category="`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:58
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:60
 	qw422016.E().S(category)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:58
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:60
 	qw422016.N().S(`" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -214,19 +218,19 @@ func StreamRetroWorkspaceFeedbackModalAdd(qw422016 *qt422016.Writer, categories 
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:67
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:69
 	qw422016.E().S(string(action.ActChildAdd))
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:67
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:69
 	qw422016.N().S(`" />
           `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:68
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:70
 	components.StreamFormVerticalSelect(qw422016, "category", "", "Category", category, categories, categories, 5)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:68
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:70
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:69
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:71
 	components.StreamFormVerticalTextarea(qw422016, "content", "feedback-add-content-"+category, "Content", 8, "", 5, "HTML and Markdown supported")
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:69
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:71
 	qw422016.N().S(`
           <div class="right"><button type="submit">Add Feedback</button></div>
         </form>
@@ -234,96 +238,96 @@ func StreamRetroWorkspaceFeedbackModalAdd(qw422016 *qt422016.Writer, categories 
     </div>
   </div>
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 func WriteRetroWorkspaceFeedbackModalAdd(qq422016 qtio422016.Writer, categories []string, category string) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	StreamRetroWorkspaceFeedbackModalAdd(qw422016, categories, category)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 func RetroWorkspaceFeedbackModalAdd(categories []string, category string) string {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	WriteRetroWorkspaceFeedbackModalAdd(qb422016, categories, category)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 	return qs422016
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:75
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:79
 func StreamRetroWorkspaceFeedbackModalEdit(qw422016 *qt422016.Writer, f *feedback.Feedback, categories []string, username string) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:77
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:79
 	qw422016.N().S(`
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:78
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:80
 	if !slices.Contains(categories, f.Category) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:79
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
 		categories = append(categories, f.Category)
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:80
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:82
 	}
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:80
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:82
 	qw422016.N().S(`  <div id="modal-feedback-`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:83
 	qw422016.E().S(f.ID.String())
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:83
 	qw422016.N().S(`" class="modal modal-feedback-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:86
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:88
 	qw422016.E().S(f.Category)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:86
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:88
 	qw422016.N().S(` :: `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:86
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:88
 	qw422016.E().S(username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:86
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:88
 	qw422016.N().S(`</h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="feedbackID" value="`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:90
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:92
 	qw422016.E().S(f.ID.String())
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:90
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:92
 	qw422016.N().S(`" />
           <table class="mt expanded">
             <tbody>
               `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:93
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:95
 	components.StreamFormVerticalSelect(qw422016, "category", "", "Category", string(f.Category), categories, categories, 5)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:93
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:95
 	qw422016.N().S(`
               `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:94
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:96
 	components.StreamFormVerticalTextarea(qw422016, "content", "input-content-"+f.ID.String(), "Content", 8, f.Content, 5, "HTML and Markdown supported")
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:94
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:96
 	qw422016.N().S(`
               <tr><td colspan="2">
-                <div class="right"><button type="submit" name="action" value="`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:96
+                <div class="right"><button class="feedback-edit-save" type="submit" name="action" value="`)
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:98
 	qw422016.E().S(string(action.ActChildUpdate))
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:96
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:98
 	qw422016.N().S(`">Save Changes</button></div>
                 <button class="feedback-edit-delete" type="submit" name="action" value="`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:97
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:99
 	qw422016.E().S(string(action.ActChildRemove))
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:97
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:99
 	qw422016.N().S(`" onclick="return confirm('Are you sure you want to delete this feedback?');">Delete</button>
               </td></tr>
             </tbody>
@@ -333,93 +337,93 @@ func StreamRetroWorkspaceFeedbackModalEdit(qw422016 *qt422016.Writer, f *feedbac
     </div>
   </div>
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 func WriteRetroWorkspaceFeedbackModalEdit(qq422016 qtio422016.Writer, f *feedback.Feedback, categories []string, username string) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	StreamRetroWorkspaceFeedbackModalEdit(qw422016, f, categories, username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 func RetroWorkspaceFeedbackModalEdit(f *feedback.Feedback, categories []string, username string) string {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	WriteRetroWorkspaceFeedbackModalEdit(qb422016, f, categories, username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 	return qs422016
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:105
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:109
 func StreamRetroWorkspaceFeedbackModalView(qw422016 *qt422016.Writer, f *feedback.Feedback, username string) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:107
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:109
 	qw422016.N().S(`
 <div id="modal-feedback-`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:110
 	qw422016.E().S(f.ID.String())
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:110
 	qw422016.N().S(`" class="modal" style="display: none;">
   <a class="backdrop" href="#"></a>
   <div class="modal-content">
     <div class="modal-header">
       <a href="#" class="modal-close">×</a>
       <h2>`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:113
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:115
 	qw422016.E().S(f.Category)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:113
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:115
 	qw422016.N().S(` :: `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:113
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:115
 	qw422016.E().S(username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:113
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:115
 	qw422016.N().S(`</h2>
     </div>
     <div class="modal-body">
       <div>`)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:116
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:118
 	qw422016.N().S(f.HTML)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:116
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:118
 	qw422016.N().S(`</div>
     </div>
   </div>
 </div>
 `)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 func WriteRetroWorkspaceFeedbackModalView(qq422016 qtio422016.Writer, f *feedback.Feedback, username string) {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	StreamRetroWorkspaceFeedbackModalView(qw422016, f, username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 }
 
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 func RetroWorkspaceFeedbackModalView(f *feedback.Feedback, username string) string {
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	WriteRetroWorkspaceFeedbackModalView(qb422016, f, username)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 	return qs422016
-//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:120
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:122
 }

@@ -1,9 +1,10 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
-import {snippetFeedback, snippetFeedbackContainer} from "./feedbacks";
+import {snippetFeedback, snippetFeedbackContainer, snippetFeedbackModalEdit, snippetFeedbackModalView} from "./feedbacks";
 import {initCommentsModal} from "./comment";
 import {flashCreate} from "./flash";
 import {focusDelay} from "./util";
+import {getSelfID} from "./member";
 
 export type Feedback = {
   id: string;
@@ -93,6 +94,14 @@ export function feedbackAdd(f: Feedback) {
   } else {
     list.insertBefore(tr, list.children[idx]);
   }
+  if (getSelfID() === f.userID) {
+    const modal = snippetFeedbackModalEdit(f);
+    initEditModal(modal);
+    req("#feedback-modals").appendChild(modal);
+  } else {
+    req("#feedback-modals").appendChild(snippetFeedbackModalView(f));
+  }
+
   initCommentsModal(req(".modal", tr));
 }
 
@@ -101,4 +110,3 @@ export function feedbackRemove(id: string) {
   flashCreate(id + "-removed", "success", `feedback has been removed`);
   req("#modal-feedback-" + id).remove();
 }
-

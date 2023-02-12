@@ -19,7 +19,7 @@ export function initReports() {
     return focusDelay(req<HTMLInputElement>("#report-add-content"))
   });
   els<HTMLAnchorElement>(".modal-report-edit-link").forEach((x) => x.onclick = function () {
-    return focusDelay(req<HTMLInputElement>("#input-content-"+x.dataset["id"]));
+    return focusDelay(req<HTMLInputElement>("#input-content-" + x.dataset["id"]));
   });
 
   const reportAddModal = req("#modal-report--add");
@@ -34,7 +34,7 @@ export function initReports() {
     return false;
   }
 
-  els(".report-modal-edit").forEach(initEditModal);
+  els(".modal-report-edit").forEach(initEditModal);
 }
 
 function initEditModal(modal: HTMLElement) {
@@ -85,7 +85,7 @@ export function reportAdd(r: Report) {
   } else {
     list.insertBefore(div, list.children[idx]);
   }
-  if( getSelfID() === r.userID) {
+  if (getSelfID() === r.userID) {
     const modal = snippetReportModalEdit(r);
     initEditModal(modal);
     req("#report-modals").appendChild(modal);
