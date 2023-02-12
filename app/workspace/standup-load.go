@@ -51,18 +51,20 @@ func (s *Service) LoadStandup(p *LoadParams, tf func() (team.Teams, error), sf f
 			return nil, errors.Errorf("no standup found with id [%s]", p.Slug)
 		}
 	}
-	ret, err := s.loadFullStandup(p, u)
-	if err != nil {
-		return nil, err
+	return s.loadFullStandup(p, u, tf, sf)
+}
+
+func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullStandup, error) {
+	ret := &FullStandup{Standup: u}
+
+	var er error
+	ret.Permissions, er = s.up.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("upermission", nil, p.Logger), p.Logger)
+	if er != nil {
+		return nil, er
 	}
 	if ok, msg := CheckPermissions(util.KeyStandup, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
 		return nil, errors.New(msg)
 	}
-	return ret, nil
-}
-
-func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup) (*FullStandup, error) {
-	ret := &FullStandup{Standup: u}
 
 	funcs := []func() error{
 		func() error {
@@ -75,11 +77,6 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup) (*FullStand
 			ret.Members, ret.Self, err = s.membersStandup(p, u.ID)
 			online := s.online(util.KeyStandup + ":" + u.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
-			return err
-		},
-		func() error {
-			var err error
-			ret.Permissions, err = s.up.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("upermission", nil, p.Logger), p.Logger)
 			return err
 		},
 		func() error {

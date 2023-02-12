@@ -53,18 +53,21 @@ func (s *Service) LoadSprint(p *LoadParams, tf func() (team.Teams, error)) (*Ful
 			return nil, errors.Errorf("no sprint found with id [%s]", p.Slug)
 		}
 	}
-	ret, err := s.loadFullSprint(p, spr)
-	if err != nil {
-		return nil, err
-	}
-	if ok, msg := CheckPermissions(util.KeySprint, ret.Permissions.ToPermissions(), p.Accounts, tf, func() (sprint.Sprints, error) { return nil, nil }); !ok {
-		return nil, errors.New(msg)
-	}
-	return ret, nil
+	sf := func() (sprint.Sprints, error) { return nil, nil }
+	return s.loadFullSprint(p, spr, tf, sf)
 }
 
-func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint) (*FullSprint, error) {
+func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullSprint, error) {
 	ret := &FullSprint{Sprint: spr}
+
+	var er error
+	ret.Permissions, er = s.sp.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("spermission", nil, p.Logger), p.Logger)
+	if er != nil {
+		return nil, er
+	}
+	if ok, msg := CheckPermissions(util.KeySprint, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+		return nil, errors.New(msg)
+	}
 
 	funcs := []func() error{
 		func() error {
@@ -77,11 +80,6 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint) (*FullSprint
 			ret.Members, ret.Self, err = s.membersSprint(p, spr.ID)
 			online := s.online(util.KeySprint + ":" + spr.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
-			return err
-		},
-		func() error {
-			var err error
-			ret.Permissions, err = s.sp.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("spermission", nil, p.Logger), p.Logger)
 			return err
 		},
 		func() error {

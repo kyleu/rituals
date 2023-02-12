@@ -54,22 +54,23 @@ func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
 		}
 	}
 
-	ret, err := s.loadFullTeam(p, t)
-	if err != nil {
-		return nil, err
-	}
-	if ok, msg := CheckPermissions(util.KeyTeam, ret.Permissions.ToPermissions(), p.Accounts, func() (team.Teams, error) {
-		return nil, nil
-	}, func() (sprint.Sprints, error) {
-		return nil, nil
-	}); !ok {
-		return nil, errors.New(msg)
-	}
-	return ret, nil
+	tf := func() (team.Teams, error) { return nil, nil }
+	sf := func() (sprint.Sprints, error) { return nil, nil }
+
+	return s.loadFullTeam(p, t, tf, sf)
 }
 
-func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
+func (s *Service) loadFullTeam(p *LoadParams, t *team.Team, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullTeam, error) {
 	ret := &FullTeam{Team: t}
+
+	var er error
+	ret.Permissions, er = s.tp.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("tpermission", nil, p.Logger), p.Logger)
+	if er != nil {
+		return nil, er
+	}
+	if ok, msg := CheckPermissions(util.KeyTeam, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+		return nil, errors.New(msg)
+	}
 	funcs := []func() error{
 		func() error {
 			var err error
@@ -81,11 +82,6 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 			ret.Members, ret.Self, err = s.membersTeam(p, t.ID)
 			online := s.online(util.KeyTeam + ":" + t.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
-			return err
-		},
-		func() error {
-			var err error
-			ret.Permissions, err = s.tp.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("tpermission", nil, p.Logger), p.Logger)
 			return err
 		},
 		func() error {

@@ -43,8 +43,8 @@ export function handleRetro(m: Message) {
     case "child-add":
       return feedbackAdd(m.param as Feedback);
     case "child-update":
-      return console.log("child-update!!!");
-      // return feedbackUpdate(m.param as string);
+      return console.log("TODO: child-update");
+      // return feedbackUpdate(m.param as Feedback);
     case "child-remove":
       return feedbackRemove(m.param as string);
     default:

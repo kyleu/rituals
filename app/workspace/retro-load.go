@@ -53,18 +53,20 @@ func (s *Service) LoadRetro(p *LoadParams, tf func() (team.Teams, error), sf fun
 			return nil, errors.Errorf("no retro found with id [%s]", p.Slug)
 		}
 	}
-	ret, err := s.loadFullRetro(p, r)
-	if err != nil {
-		return nil, err
+	return s.loadFullRetro(p, r, tf, sf)
+}
+
+func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullRetro, error) {
+	ret := &FullRetro{Retro: r}
+
+	var er error
+	ret.Permissions, er = s.rp.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rpermission", nil, p.Logger), p.Logger)
+	if er != nil {
+		return nil, er
 	}
 	if ok, msg := CheckPermissions(util.KeyRetro, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
 		return nil, errors.New(msg)
 	}
-	return ret, nil
-}
-
-func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro) (*FullRetro, error) {
-	ret := &FullRetro{Retro: r}
 
 	funcs := []func() error{
 		func() error {
@@ -77,11 +79,6 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro) (*FullRetro, erro
 			ret.Members, ret.Self, err = s.membersRetro(p, r.ID)
 			online := s.online(util.KeyRetro + ":" + r.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
-			return err
-		},
-		func() error {
-			var err error
-			ret.Permissions, err = s.rp.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rpermission", nil, p.Logger), p.Logger)
 			return err
 		},
 		func() error {

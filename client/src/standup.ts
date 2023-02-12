@@ -40,6 +40,9 @@ export function handleStandup(m: Message) {
       return onUpdate(m.param as Standup);
     case "child-add":
       return reportAdd(m.param as Report);
+    case "child-update":
+      return console.log("TODO: child-update");
+      // return reportUpdate(m.param as Report);
     case "child-remove":
       return reportRemove(m.param as string);
     default:

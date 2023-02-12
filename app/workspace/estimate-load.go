@@ -53,24 +53,29 @@ func (s *Service) LoadEstimate(p *LoadParams, tf func() (team.Teams, error), sf 
 			return nil, errors.Errorf("no estimate found with id [%s]", p.Slug)
 		}
 	}
-	ret, err := s.loadFullEstimate(p, e)
-	if err != nil {
-		return nil, err
-	}
-	if ok, msg := CheckPermissions(util.KeyEstimate, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
-		return nil, errors.New(msg)
-	}
-	return ret, nil
+	return s.loadFullEstimate(p, e, tf, sf)
 }
 
-func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEstimate, error) {
+func (s *Service) loadFullEstimate(
+	p *LoadParams, e *estimate.Estimate, tf func() (team.Teams, error), sf func() (sprint.Sprints, error),
+) (*FullEstimate, error) {
 	ret := &FullEstimate{Estimate: e}
+
 	var er error
 	ret.Stories, er = s.st.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get(util.KeyStory, nil, p.Logger), p.Logger)
 	if er != nil {
 		return nil, er
 	}
 	ret.Stories.Sort()
+
+	ret.Permissions, er = s.ep.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("epermission", nil, p.Logger), p.Logger)
+	if er != nil {
+		return nil, er
+	}
+	if ok, msg := CheckPermissions(util.KeyEstimate, ret.Permissions.ToPermissions(), p.Accounts, tf, sf); !ok {
+		return nil, errors.New(msg)
+	}
+
 	funcs := []func() error{
 		func() error {
 			var err error
@@ -78,16 +83,10 @@ func (s *Service) loadFullEstimate(p *LoadParams, e *estimate.Estimate) (*FullEs
 			return err
 		},
 		func() error {
-			var err error
-			ret.Members, ret.Self, err = s.membersEstimate(p, e.ID)
+			ret.Members, ret.Self, er = s.membersEstimate(p, e.ID)
 			online := s.online(util.KeyEstimate + ":" + e.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
-			return err
-		},
-		func() error {
-			var err error
-			ret.Permissions, err = s.ep.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("epermission", nil, p.Logger), p.Logger)
-			return err
+			return er
 		},
 		func() error {
 			var err error

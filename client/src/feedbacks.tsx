@@ -2,7 +2,7 @@ import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-v
 import {Feedback} from "./feedback";
 import {username} from "./member";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
-import {Report} from "./report";
+import {els} from "./dom";
 
 export function snippetFeedbackContainer(cat: string) {
   return <div id={"category-" + cat} data-category={cat} class="category">
@@ -67,6 +67,8 @@ export function snippetFeedbackModalView(r: Feedback): HTMLElement {
   </div>;
 }
 
+const oc = "return confirm('Are you sure you want to delete this feedback?');";
+
 export function snippetFeedbackModalEdit(r: Feedback): HTMLElement {
   return <div id={"modal-feedback-" + r.id} class="modal modal-feedback-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -80,16 +82,28 @@ export function snippetFeedbackModalEdit(r: Feedback): HTMLElement {
           <input type="hidden" name="feedbackID" value={ r.id } />
           <div class="mb expanded">
             <label for={"input-category-" + r.id}><em class="title">Category</em></label>
-            <div><input type="date" id={"input-category-" + r.id} name="category" value={r.category} /></div>
+            <div><select id={"input-category-" + r.id} name="category">
+              { categoryOptions(r.category) }
+            </select></div>
           </div>
           <div class="mb expanded">
             <label for={"input-content-" + r.id}><em class="title">Content</em></label>
             <div><textarea id={"input-content-" + r.id} name="content">{ r.content }</textarea></div>
           </div>
           <div class="right"><button class="feedback-edit-save" type="submit" name="action" value="child-update">Save Changes</button></div>
-          <button class="feedback-edit-delete" type="submit" name="action" value="child-remove" onclick="return confirm('Are you sure you want to delete this feedback?');">Delete</button>
+          <button class="feedback-edit-delete" type="submit" name="action" value="child-remove" onclick={oc}>Delete</button>
         </form>
       </div>
     </div>
   </div>;
+}
+
+function categoryOptions(selected: string) {
+  return els(".category").map(x => x.dataset["category"]).map(x => {
+    if (x === selected) {
+      return <option value={x} selected="selected">{x}</option>;
+    } else {
+      return <option value={x}>{x}</option>;
+    }
+  });
 }
