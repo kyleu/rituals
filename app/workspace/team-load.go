@@ -61,7 +61,7 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 	ret := &FullTeam{Team: t}
 
 	var er error
-	ret.Permissions, er = s.tp.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("tpermission", nil, p.Logger), p.Logger)
+	ret.Permissions, er = s.tp.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("tpermission", nil, p.Logger).Sanitize("tpermission"), p.Logger)
 	if er != nil {
 		return nil, er
 	}
@@ -71,7 +71,7 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 	funcs := []func() error{
 		func() error {
 			var err error
-			ret.Histories, err = s.th.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("thistory", nil, p.Logger), p.Logger)
+			ret.Histories, err = s.th.GetByTeamID(p.Ctx, p.Tx, t.ID, p.Params.Get("thistory", nil, p.Logger).Sanitize("thistory"), p.Logger)
 			return err
 		},
 		func() error {
@@ -83,22 +83,22 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 		},
 		func() error {
 			var err error
-			ret.Sprints, err = s.s.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeySprint, nil, p.Logger), p.Logger)
+			ret.Sprints, err = s.s.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeySprint, nil, p.Logger).Sanitize(util.KeySprint), p.Logger)
 			return err
 		},
 		func() error {
 			var err error
-			ret.Estimates, err = s.e.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyEstimate, nil, p.Logger), p.Logger)
+			ret.Estimates, err = s.e.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyEstimate, nil, p.Logger).Sanitize(util.KeyEstimate), p.Logger)
 			return err
 		},
 		func() error {
 			var err error
-			ret.Standups, err = s.u.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyStandup, nil, p.Logger), p.Logger)
+			ret.Standups, err = s.u.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyStandup, nil, p.Logger).Sanitize(util.KeyStandup), p.Logger)
 			return err
 		},
 		func() error {
 			var err error
-			ret.Retros, err = s.r.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyRetro, nil, p.Logger), p.Logger)
+			ret.Retros, err = s.r.GetByTeamID(p.Ctx, p.Tx, &t.ID, p.Params.Get(util.KeyRetro, nil, p.Logger).Sanitize(util.KeyRetro), p.Logger)
 			return err
 		},
 		func() error {
@@ -139,7 +139,7 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 }
 
 func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMembers, *tmember.TeamMember, error) {
-	params := p.Params.Get("tmember", nil, p.Logger)
+	params := p.Params.Get("tmember", nil, p.Logger).Sanitize("tmember")
 	members, err := s.tm.GetByTeamID(p.Ctx, p.Tx, teamID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err

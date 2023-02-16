@@ -27,9 +27,9 @@
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= components.TableInputUUID("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
-          {%= components.TableInputUUID("estimateID", "", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
+          {%= components.TableInputUUID("estimateID", "input-estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
           {%= components.TableInputNumber("idx", "", "Idx", p.Model.Idx, 5, "Integer") %}
-          {%= components.TableInputUUID("userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
+          {%= components.TableInputUUID("userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
           {%= components.TableInput("title", "", "Title", p.Model.Title, 5, "String text") %}
           {%= components.TableSelect("status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]") %}
           {%= components.TableInput("finalVote", "", "Final Vote", p.Model.FinalVote, 5, "String text") %}

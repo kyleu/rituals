@@ -367,7 +367,7 @@ func estimateComment(p *Params, fe *FullEstimate) (*FullEstimate, string, string
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActComment, c, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = sendComment(enum.ModelServiceEstimate, fe.Estimate.ID, c, &fe.Self.UserID, fe.Estimate.TeamID, fe.Estimate.SprintID, p.Svc.send, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

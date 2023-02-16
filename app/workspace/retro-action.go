@@ -301,7 +301,7 @@ func retroComment(p *Params, fr *FullRetro) (*FullRetro, string, string, error) 
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActComment, c, &fr.Self.UserID, p.Logger, p.ConnIDs...)
+	err = sendComment(enum.ModelServiceRetro, fr.Retro.ID, c, &fr.Self.UserID, fr.Retro.TeamID, fr.Retro.SprintID, p.Svc.send, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

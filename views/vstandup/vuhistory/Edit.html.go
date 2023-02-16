@@ -91,7 +91,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vstandup/vuhistory/Edit.html:30
-	components.StreamTableInputUUID(qw422016, "standupID", "", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "standupID", "input-standupID", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vstandup/vuhistory/Edit.html:30
 	qw422016.N().S(`
           `)

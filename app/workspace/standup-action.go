@@ -305,10 +305,9 @@ func standupComment(p *Params, fu *FullStandup) (*FullStandup, string, string, e
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActComment, c, &fu.Self.UserID, p.Logger, p.ConnIDs...)
+	err = sendComment(enum.ModelServiceStandup, fu.Standup.ID, c, &fu.Self.UserID, fu.Standup.TeamID, fu.Standup.SprintID, p.Svc.send, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}
-
 	return fu, MsgCommentAdded, fu.Standup.PublicWebPath() + u, nil
 }

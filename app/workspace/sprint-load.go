@@ -60,7 +60,7 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (t
 	ret := &FullSprint{Sprint: spr}
 
 	var er error
-	ret.Permissions, er = s.sp.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("spermission", nil, p.Logger), p.Logger)
+	ret.Permissions, er = s.sp.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("spermission", nil, p.Logger).Sanitize("spermission"), p.Logger)
 	if er != nil {
 		return nil, er
 	}
@@ -71,7 +71,7 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (t
 	funcs := []func() error{
 		func() error {
 			var err error
-			ret.Histories, err = s.sh.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("shistory", nil, p.Logger), p.Logger)
+			ret.Histories, err = s.sh.GetBySprintID(p.Ctx, p.Tx, spr.ID, p.Params.Get("shistory", nil, p.Logger).Sanitize("shistory"), p.Logger)
 			return err
 		},
 		func() error {
@@ -90,17 +90,20 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (t
 		},
 		func() error {
 			var err error
-			ret.Estimates, err = s.e.GetBySprintID(p.Ctx, p.Tx, &spr.ID, p.Params.Get(util.KeyEstimate, nil, p.Logger), p.Logger)
+			prm := p.Params.Get(util.KeyEstimate, nil, p.Logger).Sanitize(util.KeyEstimate)
+			ret.Estimates, err = s.e.GetBySprintID(p.Ctx, p.Tx, &spr.ID, prm, p.Logger)
 			return err
 		},
 		func() error {
 			var err error
-			ret.Standups, err = s.u.GetBySprintID(p.Ctx, p.Tx, &spr.ID, p.Params.Get(util.KeyStandup, nil, p.Logger), p.Logger)
+			prm := p.Params.Get(util.KeyStandup, nil, p.Logger).Sanitize(util.KeyStandup)
+			ret.Standups, err = s.u.GetBySprintID(p.Ctx, p.Tx, &spr.ID, prm, p.Logger)
 			return err
 		},
 		func() error {
 			var err error
-			ret.Retros, err = s.r.GetBySprintID(p.Ctx, p.Tx, &spr.ID, p.Params.Get(util.KeyRetro, nil, p.Logger), p.Logger)
+			prm := p.Params.Get(util.KeyRetro, nil, p.Logger).Sanitize(util.KeyRetro)
+			ret.Retros, err = s.r.GetBySprintID(p.Ctx, p.Tx, &spr.ID, prm, p.Logger)
 			return err
 		},
 		func() error {
@@ -138,7 +141,7 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (t
 }
 
 func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.SprintMembers, *smember.SprintMember, error) {
-	params := p.Params.Get("smember", nil, p.Logger)
+	params := p.Params.Get("smember", nil, p.Logger).Sanitize("smember")
 	members, err := s.sm.GetBySprintID(p.Ctx, p.Tx, sprintID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err

@@ -58,7 +58,7 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup, tf func() (
 	ret := &FullStandup{Standup: u}
 
 	var er error
-	ret.Permissions, er = s.up.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("upermission", nil, p.Logger), p.Logger)
+	ret.Permissions, er = s.up.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("upermission", nil, p.Logger).Sanitize("upermission"), p.Logger)
 	if er != nil {
 		return nil, er
 	}
@@ -69,7 +69,7 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup, tf func() (
 	funcs := []func() error{
 		func() error {
 			var err error
-			ret.Histories, err = s.uh.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("uhistory", nil, p.Logger), p.Logger)
+			ret.Histories, err = s.uh.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("uhistory", nil, p.Logger).Sanitize("uhistory"), p.Logger)
 			return err
 		},
 		func() error {
@@ -95,7 +95,7 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup, tf func() (
 		},
 		func() error {
 			var err error
-			ret.Reports, err = s.rt.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get("report", nil, p.Logger), p.Logger)
+			ret.Reports, err = s.rt.GetByStandupID(p.Ctx, p.Tx, u.ID, p.Params.Get(util.KeyReport, nil, p.Logger).Sanitize(util.KeyReport), p.Logger)
 			if err != nil {
 				return err
 			}
@@ -124,7 +124,7 @@ func (s *Service) loadFullStandup(p *LoadParams, u *standup.Standup, tf func() (
 }
 
 func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.StandupMembers, *umember.StandupMember, error) {
-	params := p.Params.Get("umember", nil, p.Logger)
+	params := p.Params.Get("umember", nil, p.Logger).Sanitize("umember")
 	members, err := s.um.GetByStandupID(p.Ctx, p.Tx, standupID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err

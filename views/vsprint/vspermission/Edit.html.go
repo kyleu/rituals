@@ -84,7 +84,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vsprint/vspermission/Edit.html:29
 	if p.IsNew {
 //line views/vsprint/vspermission/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "sprintID", "", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "sprintID", "input-sprintID", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vsprint/vspermission/Edit.html:29
 	}
 //line views/vsprint/vspermission/Edit.html:29

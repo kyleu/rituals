@@ -111,12 +111,12 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vsprint/Edit.html:34
-	components.StreamTableInputUUID(qw422016, "teamID", "", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableInputUUID(qw422016, "teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vsprint/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vsprint/Edit.html:35
-	components.StreamTableInputUUID(qw422016, "owner", "", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "owner", "input-owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vsprint/Edit.html:35
 	qw422016.N().S(`
           `)

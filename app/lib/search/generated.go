@@ -16,7 +16,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.Estimate.Search(ctx, params.Q, nil, params.PS.Get("estimate", nil, logger), logger)
+		prm := params.PS.Get("estimate", nil, logger).Sanitize("estimate")
+		models, err := as.Services.Estimate.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -30,7 +31,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.Retro.Search(ctx, params.Q, nil, params.PS.Get("retro", nil, logger), logger)
+		prm := params.PS.Get("retro", nil, logger).Sanitize("retro")
+		models, err := as.Services.Retro.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -44,7 +46,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.Sprint.Search(ctx, params.Q, nil, params.PS.Get("sprint", nil, logger), logger)
+		prm := params.PS.Get("sprint", nil, logger).Sanitize("sprint")
+		models, err := as.Services.Sprint.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +61,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.Standup.Search(ctx, params.Q, nil, params.PS.Get("standup", nil, logger), logger)
+		prm := params.PS.Get("standup", nil, logger).Sanitize("standup")
+		models, err := as.Services.Standup.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -72,7 +76,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.Story.Search(ctx, params.Q, nil, params.PS.Get("story", nil, logger), logger)
+		prm := params.PS.Get("story", nil, logger).Sanitize("story")
+		models, err := as.Services.Story.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -86,7 +91,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.Team.Search(ctx, params.Q, nil, params.PS.Get("team", nil, logger), logger)
+		prm := params.PS.Get("team", nil, logger).Sanitize("team")
+		models, err := as.Services.Team.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}
@@ -100,7 +106,8 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		models, err := as.Services.User.Search(ctx, params.Q, nil, params.PS.Get("user", nil, logger), logger)
+		prm := params.PS.Get("user", nil, logger).Sanitize("user")
+		models, err := as.Services.User.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
 		}

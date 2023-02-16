@@ -1,4 +1,3 @@
-// Package sandbox - $PF_IGNORE$
 package sandbox
 
 import (

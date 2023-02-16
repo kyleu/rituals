@@ -1,4 +1,3 @@
--- $PF_IGNORE$
 -- {% import "github.com/kyleu/rituals/queries/ddl" %}
 -- {% import "github.com/kyleu/rituals/queries/seeddata" %}
 

@@ -26,8 +26,8 @@
     {%- endif -%}
       <table class="mt expanded">
         <tbody>
-          {% if p.IsNew %}{%= components.TableInputUUID("estimateID", "", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
-          {% if p.IsNew %}{%= components.TableInputUUID("userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {% if p.IsNew %}{%= components.TableInputUUID("estimateID", "input-estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {% if p.IsNew %}{%= components.TableInputUUID("userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {%= components.TableInput("name", "", "Name", p.Model.Name, 5, "String text") %}
           {%= components.TableInput("picture", "", "Picture", p.Model.Picture, 5, "URL in string form") %}
           {%= components.TableSelect("role", "", "Role", string(p.Model.Role), []string{"owner", "member", "observer"}, []string{"owner", "member", "observer"}, 5, "Available options: [owner, member, observer]") %}

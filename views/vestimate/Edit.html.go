@@ -112,17 +112,17 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:35
-	components.StreamTableInputUUID(qw422016, "teamID", "", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableInputUUID(qw422016, "teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vestimate/Edit.html:35
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:36
-	components.StreamTableInputUUID(qw422016, "sprintID", "", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	components.StreamTableInputUUID(qw422016, "sprintID", "input-sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vestimate/Edit.html:36
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:37
-	components.StreamTableInputUUID(qw422016, "owner", "", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+	components.StreamTableInputUUID(qw422016, "owner", "input-owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/Edit.html:37
 	qw422016.N().S(`
           `)

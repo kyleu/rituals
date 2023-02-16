@@ -1,4 +1,3 @@
-// $PF_IGNORE$
 import {initComments} from "./comment";
 import {handle} from "./handle";
 import {initMembers} from "./member";

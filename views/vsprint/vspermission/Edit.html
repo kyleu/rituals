@@ -26,7 +26,7 @@
     {%- endif -%}
       <table class="mt expanded">
         <tbody>
-          {% if p.IsNew %}{%= components.TableInputUUID("sprintID", "", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {% if p.IsNew %}{%= components.TableInputUUID("sprintID", "input-sprintID", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {% if p.IsNew %}{%= components.TableInput("key", "", "Key", p.Model.Key, 5, "String text") %}{% endif %}
           {% if p.IsNew %}{%= components.TableInput("value", "", "Value", p.Model.Value, 5, "String text") %}{% endif %}
           {%= components.TableInput("access", "", "Access", p.Model.Access, 5, "String text") %}

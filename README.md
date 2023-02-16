@@ -1,4 +1,3 @@
-<!--- $PF_IGNORE$ -->
 # rituals.dev
 ![app logo](./assets/favicon.png)
 

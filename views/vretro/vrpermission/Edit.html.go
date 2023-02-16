@@ -84,7 +84,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/vrpermission/Edit.html:29
 	if p.IsNew {
 //line views/vretro/vrpermission/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "retroID", "", "Retro ID", &p.Model.RetroID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "retroID", "input-retroID", "Retro ID", &p.Model.RetroID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vretro/vrpermission/Edit.html:29
 	}
 //line views/vretro/vrpermission/Edit.html:29

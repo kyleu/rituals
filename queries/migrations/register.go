@@ -1,4 +1,3 @@
-// $PF_IGNORE$
 package migrations
 
 import (

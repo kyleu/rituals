@@ -62,13 +62,13 @@ func (s *Service) loadFullEstimate(
 	ret := &FullEstimate{Estimate: e}
 
 	var er error
-	ret.Stories, er = s.st.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get(util.KeyStory, nil, p.Logger), p.Logger)
+	ret.Stories, er = s.st.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get(util.KeyStory, nil, p.Logger).Sanitize(util.KeyStory), p.Logger)
 	if er != nil {
 		return nil, er
 	}
 	ret.Stories.Sort()
 
-	ret.Permissions, er = s.ep.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("epermission", nil, p.Logger), p.Logger)
+	ret.Permissions, er = s.ep.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("epermission", nil, p.Logger).Sanitize("epermission"), p.Logger)
 	if er != nil {
 		return nil, er
 	}
@@ -79,7 +79,7 @@ func (s *Service) loadFullEstimate(
 	funcs := []func() error{
 		func() error {
 			var err error
-			ret.Histories, err = s.eh.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("ehistory", nil, p.Logger), p.Logger)
+			ret.Histories, err = s.eh.GetByEstimateID(p.Ctx, p.Tx, e.ID, p.Params.Get("ehistory", nil, p.Logger).Sanitize("ehistory"), p.Logger)
 			return err
 		},
 		func() error {
@@ -114,7 +114,8 @@ func (s *Service) loadFullEstimate(
 		},
 		func() error {
 			var err error
-			ret.Votes, err = s.v.GetByStoryIDs(p.Ctx, p.Tx, p.Params.Get(util.KeyVote, nil, p.Logger), p.Logger, ret.Stories.IDStrings(false)...)
+			prm := p.Params.Get(util.KeyVote, nil, p.Logger).Sanitize(util.KeyVote)
+			ret.Votes, err = s.v.GetByStoryIDs(p.Ctx, p.Tx, prm, p.Logger, ret.Stories.IDStrings(false)...)
 			return err
 		},
 		func() error {
@@ -134,7 +135,7 @@ func (s *Service) loadFullEstimate(
 }
 
 func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.EstimateMembers, *emember.EstimateMember, error) {
-	params := p.Params.Get("emember", nil, p.Logger)
+	params := p.Params.Get("emember", nil, p.Logger).Sanitize("emember")
 	members, err := s.em.GetByEstimateID(p.Ctx, p.Tx, estimateID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err

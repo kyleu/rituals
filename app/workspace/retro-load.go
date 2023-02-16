@@ -60,7 +60,7 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.T
 	ret := &FullRetro{Retro: r}
 
 	var er error
-	ret.Permissions, er = s.rp.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rpermission", nil, p.Logger), p.Logger)
+	ret.Permissions, er = s.rp.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rpermission", nil, p.Logger).Sanitize("rpermission"), p.Logger)
 	if er != nil {
 		return nil, er
 	}
@@ -71,7 +71,7 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.T
 	funcs := []func() error{
 		func() error {
 			var err error
-			ret.Histories, err = s.rh.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rhistory", nil, p.Logger), p.Logger)
+			ret.Histories, err = s.rh.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("rhistory", nil, p.Logger).Sanitize("rhistory"), p.Logger)
 			return err
 		},
 		func() error {
@@ -97,7 +97,7 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.T
 		},
 		func() error {
 			var err error
-			ret.Feedbacks, err = s.f.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("feedback", nil, p.Logger), p.Logger)
+			ret.Feedbacks, err = s.f.GetByRetroID(p.Ctx, p.Tx, r.ID, p.Params.Get("feedback", nil, p.Logger).Sanitize("feedback"), p.Logger)
 			if err != nil {
 				return err
 			}
@@ -130,7 +130,7 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.T
 }
 
 func (s *Service) membersRetro(p *LoadParams, retroID uuid.UUID) (rmember.RetroMembers, *rmember.RetroMember, error) {
-	params := p.Params.Get("rmember", nil, p.Logger)
+	params := p.Params.Get("rmember", nil, p.Logger).Sanitize("rmember")
 	members, err := s.rm.GetByRetroID(p.Ctx, p.Tx, retroID, params, p.Logger)
 	if err != nil {
 		return nil, nil, err

@@ -224,7 +224,7 @@ func sprintComment(p *Params, fs *FullSprint) (*FullSprint, string, string, erro
 	if err != nil {
 		return nil, "", "", err
 	}
-	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActComment, c, &fs.Self.UserID, p.Logger, p.ConnIDs...)
+	err = sendComment(enum.ModelServiceSprint, fs.Sprint.ID, c, &fs.Self.UserID, fs.Sprint.TeamID, nil, p.Svc.send, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err
 	}

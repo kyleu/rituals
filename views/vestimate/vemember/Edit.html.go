@@ -84,7 +84,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vemember/Edit.html:29
 	if p.IsNew {
 //line views/vestimate/vemember/Edit.html:29
-		components.StreamTableInputUUID(qw422016, "estimateID", "", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "estimateID", "input-estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vemember/Edit.html:29
 	}
 //line views/vestimate/vemember/Edit.html:29
@@ -93,7 +93,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vemember/Edit.html:30
 	if p.IsNew {
 //line views/vestimate/vemember/Edit.html:30
-		components.StreamTableInputUUID(qw422016, "userID", "", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		components.StreamTableInputUUID(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vestimate/vemember/Edit.html:30
 	}
 //line views/vestimate/vemember/Edit.html:30
