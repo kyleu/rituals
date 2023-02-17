@@ -86,11 +86,15 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateTeam("retro", fr.Retro.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p)
+		err = updateTeam(
+			util.KeyRetro, fr.Retro.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateSprint("retro", fr.Retro.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p)
+		err = updateSprint(
+			util.KeyRetro, fr.Retro.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}

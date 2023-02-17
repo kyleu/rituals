@@ -4,6 +4,7 @@
 
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/lib/user"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/layout"
 ) %}
@@ -40,10 +41,12 @@
   <div class="card">
     <h3>{%s ed.Message %}</h3>
     <em>Internal Server Error</em>
+    {%- if user.IsAdmin(ps.Accounts) -%}
     {%= errorStack(ed) %} {% code cause := ed.Cause %}
     {%- for cause != nil -%}
     <h3>Caused by</h3>
     <div>{%s cause.Message %}</div>{%= errorStack(cause) %}{% code cause = cause.Cause %}
     {%- endfor -%}
+    {%- endif -%}
   </div>
 {% endfunc %}

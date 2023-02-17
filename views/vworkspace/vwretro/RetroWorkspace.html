@@ -117,7 +117,7 @@
     <div class="right">
       {%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}
     </div>
-    <h3>{%= components.SVGRefIcon(`retro`, ps) %}Retros</h3>
+    <h3 title="Discover improvements and praise for your work">{%= components.SVGRefIcon(util.KeyRetro, ps) %}Retros</h3>
     <table id="retro-list" class="mt expanded">
       <tbody>
         {%- if len(retros) == 0 -%}

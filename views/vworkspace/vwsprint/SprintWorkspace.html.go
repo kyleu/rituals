@@ -419,7 +419,7 @@ func StreamSprintWorkspaceList(qw422016 *qt422016.Writer, sprints sprint.Sprints
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeySprint, teamID, nil, "New Sprint")
 //line views/vworkspace/vwsprint/SprintWorkspace.html:134
 	qw422016.N().S(`</div>
-    <h3>`)
+    <h3 title="Plan your time and direct your efforts">`)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:135
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:135

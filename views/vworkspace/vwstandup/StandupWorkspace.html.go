@@ -327,7 +327,7 @@ func StreamStandupWorkspaceList(qw422016 *qt422016.Writer, standups standup.Stan
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyStandup, teamID, sprintID, "New Standup")
 //line views/vworkspace/vwstandup/StandupWorkspace.html:117
 	qw422016.N().S(`</div>
-    <h3>`)
+    <h3 title="Share your progress with your team">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:118
 	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:118

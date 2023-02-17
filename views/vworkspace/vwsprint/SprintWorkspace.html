@@ -132,7 +132,7 @@
 {% func SprintWorkspaceList(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
-    <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
+    <h3 title="Plan your time and direct your efforts">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
     <table id="sprint-list" class="mt expanded">
       <tbody>
         {%- if len(sprints) == 0 -%}

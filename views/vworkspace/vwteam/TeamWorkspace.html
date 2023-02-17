@@ -109,7 +109,7 @@
 {% func TeamWorkspaceList(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
-    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
+    <h3 title="Join your friends and work towards a common goal">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
     {%- if len(teams) == 0 -%}
     <div class="mt"><em>no teams</em></div>
     {%- else -%}

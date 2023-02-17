@@ -337,7 +337,7 @@ func StreamEstimateWorkspaceList(qw422016 *qt422016.Writer, estimates estimate.E
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyEstimate, teamID, sprintID, "New Estimate")
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:119
 	qw422016.N().S(`</div>
-    <h3>`)
+    <h3 title="Planning poker for any stories you need to work on">`)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:120
 	components.StreamSVGRefIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:120

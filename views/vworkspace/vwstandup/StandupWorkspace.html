@@ -115,7 +115,7 @@
 {% func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
-    <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
+    <h3 title="Share your progress with your team">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
     <table id="standup-list" class="mt expanded">
       <tbody>
         {%- if len(standups) == 0 -%}

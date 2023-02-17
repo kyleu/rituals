@@ -36,6 +36,7 @@ export function initCommentsModal(modal: HTMLElement) {
     c.userID = getSelfID();
     send("comment", c);
     commentAdd(c);
+    ta.value = "";
     return false;
   }
 }
@@ -46,7 +47,7 @@ export function commentAdd(c: Comment) {
   const li = snippetComment(c, un);
   ul.appendChild(li);
 
-  const count = ul.childNodes.length - 1;
+  const count = ul.children.length;
   const link = req("#comment-link-" + c.svc + "-" + c.modelID);
   link.title = count + (count == 1 ? " comment" : " comments");
   if (link.innerHTML.indexOf("comment-dots") == -1) {

@@ -329,9 +329,9 @@ func StreamRetroWorkspaceList(qw422016 *qt422016.Writer, retros retro.Retros, te
 //line views/vworkspace/vwretro/RetroWorkspace.html:118
 	qw422016.N().S(`
     </div>
-    <h3>`)
+    <h3 title="Discover improvements and praise for your work">`)
 //line views/vworkspace/vwretro/RetroWorkspace.html:120
-	components.StreamSVGRefIcon(qw422016, `retro`, ps)
+	components.StreamSVGRefIcon(qw422016, util.KeyRetro, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:120
 	qw422016.N().S(`Retros</h3>
     <table id="retro-list" class="mt expanded">

@@ -317,7 +317,7 @@ func StreamTeamWorkspaceList(qw422016 *qt422016.Writer, teams team.Teams, showCo
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyTeam, nil, nil, "New Team")
 //line views/vworkspace/vwteam/TeamWorkspace.html:111
 	qw422016.N().S(`</div>
-    <h3>`)
+    <h3 title="Join your friends and work towards a common goal">`)
 //line views/vworkspace/vwteam/TeamWorkspace.html:112
 	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
 //line views/vworkspace/vwteam/TeamWorkspace.html:112

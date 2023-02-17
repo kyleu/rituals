@@ -73,7 +73,9 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateTeam("sprint", fs.Sprint.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fs.Self.UserID, p)
+		err = updateTeam(
+			util.KeySprint, fs.Sprint.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fs.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}

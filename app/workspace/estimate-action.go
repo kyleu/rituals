@@ -89,11 +89,15 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateTeam("estimate", fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
+		err = updateTeam(
+			util.KeyEstimate, fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateSprint("estimate", fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p)
+		err = updateSprint(
+			util.KeyEstimate, fe.Estimate.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}

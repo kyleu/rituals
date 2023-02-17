@@ -81,11 +81,15 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateTeam("standup", fu.Standup.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p)
+		err = updateTeam(
+			util.KeyStandup, fu.Standup.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = updateSprint("standup", fu.Standup.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p)
+		err = updateSprint(
+			util.KeyStandup, fu.Standup.SprintID, model.SprintID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p,
+		)
 		if err != nil {
 			return nil, "", "", err
 		}
