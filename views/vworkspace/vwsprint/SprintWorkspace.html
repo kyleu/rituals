@@ -1,9 +1,6 @@
 {% import (
-  "github.com/google/uuid"
-
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
-  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
@@ -44,7 +41,6 @@
   {%- code
     w := p.FullSprint
     s := w.Sprint
-    self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
   <div class="flex-wrap">
     <div id="panel-summary">
@@ -60,36 +56,16 @@
         <div class="clear"></div>
         <div class="right" id="model-summary">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
         {%= vwutil.Banner(w.Team, nil, util.KeySprint) %}
+        <span id="owner-id" style="display: none;">{%s s.Owner.String() %}</span>
         {%= SprintWorkspaceModal(s, p.Teams, w.Permissions.ToPermissions(), ps) %}
       </div>
     </div>
     <div id="panel-detail">
-      {%= vwestimate.EstimateWorkspaceList(w.Estimates, s.TeamID, &s.ID, true, w.Comments, ps) %}
-      {%= vwstandup.StandupWorkspaceList(w.Standups, s.TeamID, &s.ID, true, w.Comments, ps) %}
-      {%= vwretro.RetroWorkspaceList(w.Retros, s.TeamID, &s.ID, true, w.Comments, ps) %}
+      {%= vwestimate.EstimateListTable(w.Estimates, s.TeamID, &s.ID, true, w.Comments, ps) %}
+      {%= vwstandup.StandupListTable(w.Standups, s.TeamID, &s.ID, true, w.Comments, ps) %}
+      {%= vwretro.RetroListTable(w.Retros, s.TeamID, &s.ID, true, w.Comments, ps) %}
     </div>
-    <div id="panel-self">
-      <div class="card">{%= vwutil.SelfLink(self, ps) %}</div>
-      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, s.PublicWebPath(), ps) %}
-    </div>
-    <div id="panel-members">
-      <div class="card">
-        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
-        <table class="mt expanded">
-          <tbody>
-            {%- for _, m := range others -%}
-            {%= vwutil.MemberRow(m, ps) %}
-            {%- endfor -%}
-          </tbody>
-        </table>
-        <div id="member-modals">
-        {%- for _, m := range others -%}
-          {%= vwutil.MemberModal(m, s.PublicWebPath(), ps) %}
-        {%- endfor -%}
-        </div>
-      </div>
-    </div>
-    {%= vwutil.InviteModal() %}
+    {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), s.PublicWebPath(), ps) %}
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -122,34 +98,5 @@
         </form>
       </div>
     </div>
-  </div>
-{% endfunc %}
-
-{% func SprintWorkspaceList(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
-  <div class="card">
-    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
-    <h3 title="Plan your time and direct your efforts">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
-    <table id="sprint-list" class="mt expanded">
-      <tbody>
-        {%- if len(sprints) == 0 -%}
-          <tr class="empty"><td><em>no sprints</em></td></tr>
-        {%- else -%}
-          {%- for _, x := range sprints -%}
-          <tr id="sprint-list-{%s x.ID.String() %}">
-            <td>
-              {%- if showComments -%}
-              <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps) %}
-              </div>
-              {%- endif -%}
-              <a href="{%s x.PublicWebPath() %}"><div>
-                <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
-              </div></a>
-            </td>
-          </tr>
-          {%- endfor -%}
-        {%- endif -%}
-      </tbody>
-    </table>
   </div>
 {% endfunc %}

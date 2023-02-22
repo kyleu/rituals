@@ -1,10 +1,13 @@
 {% import (
   "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
 {% code type TeamList struct {
@@ -44,4 +47,33 @@
       </tbody>
     </table>
   </form>
+{% endfunc %}
+
+{% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
+    <h3 title="Join your friends and work towards a common goal">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
+    {%- if len(teams) == 0 -%}
+    <div class="mt"><em>no teams</em></div>
+    {%- else -%}
+    <table class="mt expanded">
+      <tbody>
+        {%- for _, x := range teams -%}
+        <tr>
+          <td>
+            {%- if showComments -%}
+            <div class="right">
+              {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps) %}
+            </div>
+            {%- endif -%}
+            <a href="{%s x.PublicWebPath() %}"><div>
+              <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
+            </div></a>
+          </td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+    {%- endif -%}
+  </div>
 {% endfunc %}

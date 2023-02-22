@@ -5,6 +5,36 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
+{% func MemberPanels(ms util.Members, admin bool, path string, ps *cutil.PageState) %}
+  {%- code self, others, _ := ms.Split(ps.Profile.ID) -%}
+  <div id="panel-self">
+    <div class="card">{%= SelfLink(self, ps) %}</div>
+    {%= SelfModal(self.Name, self.Picture, self.Role, path, ps) %}
+  </div>
+  <div id="panel-members">
+    <div class="card">
+      <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
+      <table class="mt expanded">
+        <tbody>
+          {%- for _, m := range others -%}
+          {%= MemberRow(m, ps) %}
+          {%- endfor -%}
+        </tbody>
+      </table>
+      <div id="member-modals">
+        {%- for _, m := range others -%}
+        {%- if admin -%}
+        {%= MemberModalEdit(m, path, ps) %}
+        {%- else -%}
+        {%= MemberModalView(m, path, ps) %}
+        {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    {%= InviteModal() %}
+  </div>
+{% endfunc %}
+
 {% func MemberRow(m *util.Member, ps *cutil.PageState) %}
   {%- code ps.AddIcon("circle", "check-circle") -%}
   <tr id="member-{%s m.UserID.String() %}" class="member" data-id="{%s m.UserID.String() %}">
@@ -46,7 +76,7 @@
   </div>
 {% endfunc %}
 
-{% func MemberModal(m *util.Member, url string, ps *cutil.PageState) %}
+{% func MemberModalEdit(m *util.Member, url string, ps *cutil.PageState) %}
   <div id="modal-member-{%s m.UserID.String() %}" data-id="{%s m.UserID.String() %}" class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -70,6 +100,29 @@
           <div class="right"><button class="member-update" type="submit" name="action" value="{%s string(action.ActMemberUpdate) %}">Save</button></div>
           <button type="submit" class="member-remove" name="action" value="{%s string(action.ActMemberRemove) %}" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
         </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func MemberModalView(m *util.Member, url string, ps *cutil.PageState) %}
+  <div id="modal-member-{%s m.UserID.String() %}" data-id="{%s m.UserID.String() %}" class="modal modal-member" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          {%- if m.Picture == "" -%}
+          {%= components.SVGRef(`profile`, 24, 24, `icon`, ps) %}
+          {%- else -%}
+          <img class="icon" style="width: 24px; height: 24px;" src="{%s m.Picture %}" />
+          {%- endif -%}
+          {%s m.Name %}
+        </h2>
+      </div>
+      <div class="modal-body">
+        <em>Role</em><br />
+        {%s string(m.Role) %}
       </div>
     </div>
   </div>

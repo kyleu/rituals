@@ -31,6 +31,10 @@ type FullStandup struct {
 	Actions     action.Actions                 `json:"actions,omitempty"`
 }
 
+func (f *FullStandup) Admin() bool {
+	return f.Standup.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+}
+
 func (s *Service) LoadStandup(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullStandup, error) {
 	u, err := s.u.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {

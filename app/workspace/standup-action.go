@@ -282,7 +282,7 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		err = p.Svc.SetName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
 		if err != nil {
 			return nil, "", "", err
 		}

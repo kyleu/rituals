@@ -77,7 +77,6 @@ type Service struct {
 	send     action.SendFn
 	sendUser action.SendUserFn
 	online   func(key string) []uuid.UUID
-	setName  func(ctx context.Context, id uuid.UUID, name string, picture string, logger util.Logger) error
 }
 
 func NewService(
@@ -107,6 +106,15 @@ func (s *Service) RegisterOnline(f func(key string) []uuid.UUID) {
 	s.online = f
 }
 
-func (s *Service) RegisterSetName(f func(ctx context.Context, id uuid.UUID, name string, picture string, logger util.Logger) error) {
-	s.setName = f
+func (s *Service) SetName(ctx context.Context, id uuid.UUID, name string, picture string, logger util.Logger) error {
+	curr, e := s.us.Get(ctx, nil, id, logger)
+	if e != nil {
+		return e
+	}
+	if curr != nil {
+		curr.Name = name
+		curr.Picture = picture
+		return s.us.Update(ctx, nil, curr, logger)
+	}
+	return nil
 }

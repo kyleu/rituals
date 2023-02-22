@@ -7,172 +7,280 @@ package vwteam
 //line views/vworkspace/vwteam/TeamList.html:1
 import (
 	"github.com/kyleu/rituals/app"
+	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
+	"github.com/kyleu/rituals/views/vworkspace/vwutil"
 )
 
-//line views/vworkspace/vwteam/TeamList.html:10
+//line views/vworkspace/vwteam/TeamList.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/vwteam/TeamList.html:10
+//line views/vworkspace/vwteam/TeamList.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/vwteam/TeamList.html:10
+//line views/vworkspace/vwteam/TeamList.html:13
 type TeamList struct {
 	layout.Basic
 	Teams team.Teams
 }
 
-//line views/vworkspace/vwteam/TeamList.html:15
+//line views/vworkspace/vwteam/TeamList.html:18
 func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamList.html:15
+//line views/vworkspace/vwteam/TeamList.html:18
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vworkspace/vwteam/TeamList.html:17
+//line views/vworkspace/vwteam/TeamList.html:20
 	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
-//line views/vworkspace/vwteam/TeamList.html:17
+//line views/vworkspace/vwteam/TeamList.html:20
 	qw422016.N().D(len(p.Teams))
-//line views/vworkspace/vwteam/TeamList.html:17
+//line views/vworkspace/vwteam/TeamList.html:20
 	qw422016.N().S(` `)
-//line views/vworkspace/vwteam/TeamList.html:17
+//line views/vworkspace/vwteam/TeamList.html:20
 	qw422016.E().S(util.StringPluralMaybe("Team", len(p.Teams)))
-//line views/vworkspace/vwteam/TeamList.html:17
+//line views/vworkspace/vwteam/TeamList.html:20
 	qw422016.N().S(`</h3>
     <em>Join your friends and colleagues, working towards a common goal</em>
     <table class="mt expanded">
       <tbody>
 `)
-//line views/vworkspace/vwteam/TeamList.html:21
+//line views/vworkspace/vwteam/TeamList.html:24
 	for _, t := range p.Teams {
-//line views/vworkspace/vwteam/TeamList.html:21
+//line views/vworkspace/vwteam/TeamList.html:24
 		qw422016.N().S(`        <tr>
           <td><a href="`)
-//line views/vworkspace/vwteam/TeamList.html:23
+//line views/vworkspace/vwteam/TeamList.html:26
 		qw422016.E().S(t.PublicWebPath())
-//line views/vworkspace/vwteam/TeamList.html:23
+//line views/vworkspace/vwteam/TeamList.html:26
 		qw422016.N().S(`">`)
-//line views/vworkspace/vwteam/TeamList.html:23
+//line views/vworkspace/vwteam/TeamList.html:26
 		qw422016.E().S(t.TitleString())
-//line views/vworkspace/vwteam/TeamList.html:23
+//line views/vworkspace/vwteam/TeamList.html:26
 		qw422016.N().S(`</a></td>
           <td class="text-align-right">`)
-//line views/vworkspace/vwteam/TeamList.html:24
+//line views/vworkspace/vwteam/TeamList.html:27
 		qw422016.E().S(string(t.Status))
-//line views/vworkspace/vwteam/TeamList.html:24
+//line views/vworkspace/vwteam/TeamList.html:27
 		qw422016.N().S(`</td>
           <td class="shrink">`)
-//line views/vworkspace/vwteam/TeamList.html:25
+//line views/vworkspace/vwteam/TeamList.html:28
 		components.StreamDisplayTimestamp(qw422016, &t.Created)
-//line views/vworkspace/vwteam/TeamList.html:25
+//line views/vworkspace/vwteam/TeamList.html:28
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vworkspace/vwteam/TeamList.html:27
+//line views/vworkspace/vwteam/TeamList.html:30
 	}
-//line views/vworkspace/vwteam/TeamList.html:27
+//line views/vworkspace/vwteam/TeamList.html:30
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
   <div class="card">
     <h3>`)
-//line views/vworkspace/vwteam/TeamList.html:32
+//line views/vworkspace/vwteam/TeamList.html:35
 	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
-//line views/vworkspace/vwteam/TeamList.html:32
+//line views/vworkspace/vwteam/TeamList.html:35
 	qw422016.N().S(`New Team</h3>
     `)
-//line views/vworkspace/vwteam/TeamList.html:33
+//line views/vworkspace/vwteam/TeamList.html:36
 	StreamTeamForm(qw422016, &team.Team{}, as, ps)
-//line views/vworkspace/vwteam/TeamList.html:33
+//line views/vworkspace/vwteam/TeamList.html:36
 	qw422016.N().S(`
   </div>
 `)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 }
 
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 func (p *TeamList) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 }
 
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 func (p *TeamList) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 	return qs422016
-//line views/vworkspace/vwteam/TeamList.html:35
+//line views/vworkspace/vwteam/TeamList.html:38
 }
 
-//line views/vworkspace/vwteam/TeamList.html:37
+//line views/vworkspace/vwteam/TeamList.html:40
 func StreamTeamForm(qw422016 *qt422016.Writer, m *team.Team, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamList.html:37
+//line views/vworkspace/vwteam/TeamList.html:40
 	qw422016.N().S(`
   <form action="" method="post">
     <table class="mt expanded">
       <tbody>
         `)
-//line views/vworkspace/vwteam/TeamList.html:41
+//line views/vworkspace/vwteam/TeamList.html:44
 	components.StreamTableInput(qw422016, "title", "", "Team Title", m.Title, 5, "The name of your team")
-//line views/vworkspace/vwteam/TeamList.html:41
+//line views/vworkspace/vwteam/TeamList.html:44
 	qw422016.N().S(`
         `)
-//line views/vworkspace/vwteam/TeamList.html:42
+//line views/vworkspace/vwteam/TeamList.html:45
 	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called")
-//line views/vworkspace/vwteam/TeamList.html:42
+//line views/vworkspace/vwteam/TeamList.html:45
 	qw422016.N().S(`
         <tr><td colspan="2"><button type="submit">Add Team</button></td></tr>
       </tbody>
     </table>
   </form>
 `)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 }
 
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 func WriteTeamForm(qq422016 qtio422016.Writer, m *team.Team, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	StreamTeamForm(qw422016, m, as, ps)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 }
 
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 func TeamForm(m *team.Team, as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	WriteTeamForm(qb422016, m, as, ps)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
 	return qs422016
-//line views/vworkspace/vwteam/TeamList.html:47
+//line views/vworkspace/vwteam/TeamList.html:50
+}
+
+//line views/vworkspace/vwteam/TeamList.html:52
+func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+//line views/vworkspace/vwteam/TeamList.html:52
+	qw422016.N().S(`
+  <div class="card">
+    <div class="right">`)
+//line views/vworkspace/vwteam/TeamList.html:54
+	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyTeam, nil, nil, "New Team")
+//line views/vworkspace/vwteam/TeamList.html:54
+	qw422016.N().S(`</div>
+    <h3 title="Join your friends and work towards a common goal">`)
+//line views/vworkspace/vwteam/TeamList.html:55
+	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
+//line views/vworkspace/vwteam/TeamList.html:55
+	qw422016.N().S(`Teams</h3>
+`)
+//line views/vworkspace/vwteam/TeamList.html:56
+	if len(teams) == 0 {
+//line views/vworkspace/vwteam/TeamList.html:56
+		qw422016.N().S(`    <div class="mt"><em>no teams</em></div>
+`)
+//line views/vworkspace/vwteam/TeamList.html:58
+	} else {
+//line views/vworkspace/vwteam/TeamList.html:58
+		qw422016.N().S(`    <table class="mt expanded">
+      <tbody>
+`)
+//line views/vworkspace/vwteam/TeamList.html:61
+		for _, x := range teams {
+//line views/vworkspace/vwteam/TeamList.html:61
+			qw422016.N().S(`        <tr>
+          <td>
+`)
+//line views/vworkspace/vwteam/TeamList.html:64
+			if showComments {
+//line views/vworkspace/vwteam/TeamList.html:64
+				qw422016.N().S(`            <div class="right">
+              `)
+//line views/vworkspace/vwteam/TeamList.html:66
+				vwutil.StreamComments(qw422016, enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps)
+//line views/vworkspace/vwteam/TeamList.html:66
+				qw422016.N().S(`
+            </div>
+`)
+//line views/vworkspace/vwteam/TeamList.html:68
+			}
+//line views/vworkspace/vwteam/TeamList.html:68
+			qw422016.N().S(`            <a href="`)
+//line views/vworkspace/vwteam/TeamList.html:69
+			qw422016.E().S(x.PublicWebPath())
+//line views/vworkspace/vwteam/TeamList.html:69
+			qw422016.N().S(`"><div>
+              <span>`)
+//line views/vworkspace/vwteam/TeamList.html:70
+			components.StreamSVGRef(qw422016, x.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwteam/TeamList.html:70
+			qw422016.N().S(`</span><span>`)
+//line views/vworkspace/vwteam/TeamList.html:70
+			qw422016.E().S(x.TitleString())
+//line views/vworkspace/vwteam/TeamList.html:70
+			qw422016.N().S(`</span>
+            </div></a>
+          </td>
+        </tr>
+`)
+//line views/vworkspace/vwteam/TeamList.html:74
+		}
+//line views/vworkspace/vwteam/TeamList.html:74
+		qw422016.N().S(`      </tbody>
+    </table>
+`)
+//line views/vworkspace/vwteam/TeamList.html:77
+	}
+//line views/vworkspace/vwteam/TeamList.html:77
+	qw422016.N().S(`  </div>
+`)
+//line views/vworkspace/vwteam/TeamList.html:79
+}
+
+//line views/vworkspace/vwteam/TeamList.html:79
+func WriteTeamListTable(qq422016 qtio422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+//line views/vworkspace/vwteam/TeamList.html:79
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwteam/TeamList.html:79
+	StreamTeamListTable(qw422016, teams, showComments, comments, ps)
+//line views/vworkspace/vwteam/TeamList.html:79
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwteam/TeamList.html:79
+}
+
+//line views/vworkspace/vwteam/TeamList.html:79
+func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
+//line views/vworkspace/vwteam/TeamList.html:79
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwteam/TeamList.html:79
+	WriteTeamListTable(qb422016, teams, showComments, comments, ps)
+//line views/vworkspace/vwteam/TeamList.html:79
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwteam/TeamList.html:79
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwteam/TeamList.html:79
+	return qs422016
+//line views/vworkspace/vwteam/TeamList.html:79
 }

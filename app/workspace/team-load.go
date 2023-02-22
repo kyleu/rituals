@@ -33,6 +33,10 @@ type FullTeam struct {
 	Actions     action.Actions              `json:"actions,omitempty"`
 }
 
+func (f *FullTeam) Admin() bool {
+	return f.Team.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+}
+
 func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
 	t, err := s.t.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {

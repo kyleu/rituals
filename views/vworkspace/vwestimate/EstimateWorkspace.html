@@ -1,9 +1,6 @@
 {% import (
-  "github.com/google/uuid"
-
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
-  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
@@ -27,7 +24,6 @@
   {%- code
     w := p.FullEstimate
     e := w.Estimate
-    self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
   <div class="flex-wrap">
     <div id="panel-summary">
@@ -41,6 +37,7 @@
           <span id="model-title">{%s e.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
+        <span id="owner-id" style="display: none;">{%s e.Owner.String() %}</span>
         {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
       </div>
     </div>
@@ -53,28 +50,7 @@
         {%= EstimateWorkspaceStoryModalEmpty(ps) %}
       </div>
     </div>
-    <div id="panel-self">
-      <div class="card">{%= vwutil.SelfLink(self, ps) %}</div>
-      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, e.PublicWebPath(), ps) %}
-    </div>
-    <div id="panel-members">
-      <div class="card">
-        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
-        <table class="mt expanded">
-          <tbody>
-            {%- for _, m := range others -%}
-            {%= vwutil.MemberRow(m, ps) %}
-            {%- endfor -%}
-          </tbody>
-        </table>
-        <div id="member-modals">
-        {%- for _, m := range others -%}
-          {%= vwutil.MemberModal(m, e.PublicWebPath(), ps) %}
-        {%- endfor -%}
-        </div>
-      </div>
-    </div>
-    {%= vwutil.InviteModal() %}
+    {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), e.PublicWebPath(), ps) %}
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -107,34 +83,5 @@
         </form>
       </div>
     </div>
-  </div>
-{% endfunc %}
-
-{% func EstimateWorkspaceList(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
-  <div class="card">
-    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyEstimate, teamID, sprintID, "New Estimate") %}</div>
-    <h3 title="Planning poker for any stories you need to work on">{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
-    <table id="estimate-list" class="mt expanded">
-      <tbody>
-        {%- if len(estimates) == 0 -%}
-          <tr class="empty"><td><em>no estimates</em></td></tr>
-        {%- else -%}
-          {%- for _, x := range estimates -%}
-          <tr id="estimate-list-{%s x.ID.String() %}">
-            <td>
-              {%- if showComments -%}
-              <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps) %}
-              </div>
-              {%- endif -%}
-              <a href="{%s x.PublicWebPath() %}"><div>
-                <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
-              </div></a>
-            </td>
-          </tr>
-          {%- endfor -%}
-        {%- endif -%}
-      </tbody>
-    </table>
   </div>
 {% endfunc %}

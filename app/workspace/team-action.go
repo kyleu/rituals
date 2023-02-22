@@ -173,7 +173,7 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		err = p.Svc.SetName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
 		if err != nil {
 			return nil, "", "", err
 		}

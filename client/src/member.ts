@@ -1,6 +1,6 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
-import {snippetMember, snippetMemberModal} from "./members.jsx";
+import {memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView} from "./members.jsx";
 import {svgRef} from "./util";
 
 let selfID: string;
@@ -21,6 +21,10 @@ export function getSelfID() {
   return selfID;
 }
 
+function isAdmin() {
+  return req("#self-role").innerText === "owner" || req("#owner-id").innerText === selfID;
+}
+
 export function initMembers() {
   wireSelfForm();
   wireMemberForms();
@@ -29,23 +33,25 @@ export function initMembers() {
 
 function wireSelfForm() {
   const selfModal = req("#modal-self");
-  const selfForm = req<HTMLFormElement>("form", selfModal);
-  selfForm.onsubmit = function () {
-    const nameInput = req<HTMLInputElement>("input[name=\"name\"]", selfForm);
-    const choiceInput = req<HTMLInputElement>("input[name=\"choice\"]:checked", selfForm);
-    const pictureInput = opt<HTMLInputElement>("input[name=\"picture\"]:checked", selfForm);
+  const selfForm = opt<HTMLFormElement>("form", selfModal);
+  if (selfForm) {
+    selfForm.onsubmit = function () {
+      const nameInput = req<HTMLInputElement>("input[name=\"name\"]", selfForm);
+      const choiceInput = req<HTMLInputElement>("input[name=\"choice\"]:checked", selfForm);
+      const pictureInput = opt<HTMLInputElement>("input[name=\"picture\"]:checked", selfForm);
 
-    const msg: { name: string, choice: string, picture?: string } = {"name": nameInput.value, "choice": choiceInput.value}
-    if (pictureInput) {
-      msg.picture = pictureInput.value;
-    }
-    send("self", msg);
+      const msg: { name: string, choice: string, picture?: string } = {"name": nameInput.value, "choice": choiceInput.value}
+      if (pictureInput) {
+        msg.picture = pictureInput.value;
+      }
+      send("self", msg);
 
-    req("#self-name").innerText = nameInput.value;
-    req("#self-picture").innerHTML = memberPictureFor(pictureInput ? pictureInput.value : "", 20, "icon");
-    document.location.hash = "";
-    return false;
-  };
+      req("#self-name").innerText = nameInput.value;
+      req("#self-picture").innerHTML = memberPictureFor(pictureInput ? pictureInput.value : "", 20, "icon");
+      document.location.hash = "";
+      return false;
+    };
+  }
 }
 
 function wireMemberForms() {
@@ -56,7 +62,10 @@ function wireMemberForms() {
 }
 
 function wireMemberForm(modal: HTMLElement) {
-  const form = req<HTMLFormElement>("form", modal);
+  const form = opt<HTMLFormElement>("form", modal);
+  if (!form) {
+    return;
+  }
   const f = function (cmd: string) {
     const userID = req<HTMLInputElement>("input[name=\"userID\"]", form).value;
     const role = req<HTMLSelectElement>("select[name=\"role\"]", form).value;
@@ -126,10 +135,15 @@ export function memberAdd(param: MemberMessage) {
   }
 
   const modals = req("#member-modals");
-  const modal = snippetMemberModal(param.userID, param.name, param.role, param.picture ? param.picture: "");
+  let modal: HTMLElement;
+  if (isAdmin()) {
+    modal = snippetMemberModalEdit(param.userID, param.name, param.role, param.picture ? param.picture : "");
+  } else {
+    modal = snippetMemberModalView(param.userID, param.name, param.role, param.picture ? param.picture : "");
+  }
   modals.appendChild(modal);
+  req(".member-picture", modal).innerHTML = memberPictureFor(param.picture ? param.picture : "", 24, "icon");
   wireMemberForm(modal);
-
   names[param.userID] = param.name;
 }
 
@@ -184,11 +198,4 @@ export function onlineUpdate(param: { userID: string; connected: boolean; }) {
   mel.title = param.connected ? "online" : "offline";
   const svg = param.connected ? "check-circle" : "circle";
   mel.innerHTML = svgRef(svg, 18, "right");
-}
-
-function memberPictureFor(picture: string, size: number, cls: string) {
-  if (picture === "") {
-    return svgRef("profile", size, cls);
-  }
-  return `<img class="${cls}" style="width: ${size}px; height: ${size}px;" src="${picture}" />`;
 }

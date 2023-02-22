@@ -56,6 +56,7 @@ export function handleSprint(m: Message) {
 }
 
 function onUpdate(param: Sprint) {
+  req("owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-sprint-config form");
   req<HTMLInputElement>("input[name=\"startDate\"]", frm).value = ds(param.startDate);
   req<HTMLInputElement>("input[name=\"endDate\"]", frm).value = ds(param.endDate);

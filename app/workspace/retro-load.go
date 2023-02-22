@@ -33,6 +33,10 @@ type FullRetro struct {
 	Actions     action.Actions               `json:"actions,omitempty"`
 }
 
+func (f *FullRetro) Admin() bool {
+	return f.Retro.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+}
+
 func (s *Service) LoadRetro(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullRetro, error) {
 	r, err := s.r.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {

@@ -1,5 +1,5 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {svg} from "./util";
+import {svg, svgRef} from "./util";
 
 export function snippetMember(userID: string, name: string, role: string, picture: string): HTMLElement {
   return <tr id={ "member-" + userID } class="member" data-id={ userID }>
@@ -14,14 +14,30 @@ export function snippetMember(userID: string, name: string, role: string, pictur
   </tr>;
 }
 
-export function snippetMemberModal(userID: string, name: string, role: string, picture: string): HTMLElement {
+export function snippetMemberModalView(userID: string, name: string, role: string, picture: string): HTMLElement {
+  return <div id={ "modal-member-" + userID } data-id={ userID } class="modal modal-member" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2><span class="member-picture"></span>{ name }</h2>
+      </div>
+      <div class="modal-body">
+        <em>Role</em><br/>
+        { role }
+      </div>
+    </div>
+  </div>
+}
+
+export function snippetMemberModalEdit(userID: string, name: string, role: string, picture: string): HTMLElement {
   const roles = [["owner", "Owner"], ["member", "Member"], ["observer", "Observer"]]
   return <div id={ "modal-member-" + userID } data-id={ userID } class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{ name }</h2>
+        <h2><span class="member-picture"></span>{ name }</h2>
       </div>
       <div class="modal-body">
         <form action={ document.location.pathname } method="post" class="expanded">
@@ -45,4 +61,11 @@ export function snippetMemberModal(userID: string, name: string, role: string, p
       </div>
     </div>
   </div>
+}
+
+export function memberPictureFor(picture: string, size: number, cls: string) {
+  if (!picture) {
+    return svgRef("profile", size, cls);
+  }
+  return `<img class="${cls}" style="width: ${size + "px"}; height: ${size + "px"};" src="${picture}" />`;
 }

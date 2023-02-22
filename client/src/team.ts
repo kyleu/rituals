@@ -46,6 +46,7 @@ export function handleTeam(m: Message) {
 }
 
 function onUpdate(param: Team) {
+  req("owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-team-config form");
   setTeamSprint("team", frm, null, null, param.title, param.icon);
 }

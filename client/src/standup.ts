@@ -62,6 +62,7 @@ export function handleStandup(m: Message) {
 }
 
 function onUpdate(param: Standup) {
+  req("owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-standup-config form");
   setTeamSprint("standup", frm, param.teamID, param.sprintID, param.title, param.icon);
 }

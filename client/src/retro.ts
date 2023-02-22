@@ -64,6 +64,7 @@ export function handleRetro(m: Message) {
 }
 
 function onUpdate(param: Retro) {
+  req("owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-retro-config form");
   const cat = req<HTMLInputElement>("input[name=\"categories\"]", frm)
   cat.value = param.categories.join(",");

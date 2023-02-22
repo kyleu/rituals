@@ -27,7 +27,6 @@
   {%- code
     w := p.FullStandup
     u := w.Standup
-    self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
   <div class="flex-wrap">
     <div id="panel-summary">
@@ -41,6 +40,7 @@
           <span id="model-title">{%s u.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
+        <span id="owner-id" style="display: none;">{%s u.Owner.String() %}</span>
         {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
       </div>
     </div>
@@ -52,28 +52,7 @@
         {%= StandupWorkspaceReportModalAdd() %}
       </div>
     </div>
-    <div id="panel-self">
-      <div class="card">{%= vwutil.SelfLink(self, ps) %}</div>
-      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, u.PublicWebPath(), ps) %}
-    </div>
-    <div id="panel-members">
-      <div class="card">
-        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
-        <table class="mt expanded">
-          <tbody>
-            {%- for _, m := range others -%}
-            {%= vwutil.MemberRow(m, ps) %}
-            {%- endfor -%}
-          </tbody>
-        </table>
-        <div id="member-modals">
-        {%- for _, m := range others -%}
-          {%= vwutil.MemberModal(m, u.PublicWebPath(), ps) %}
-        {%- endfor -%}
-        </div>
-      </div>
-      {%= vwutil.InviteModal() %}
-    </div>
+    {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), u.PublicWebPath(), ps) %}
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -108,7 +87,7 @@
   </div>
 {% endfunc %}
 
-{% func StandupWorkspaceList(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+{% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
     <h3 title="Share your progress with your team">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>

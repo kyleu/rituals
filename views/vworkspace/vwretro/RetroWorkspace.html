@@ -1,9 +1,6 @@
 {% import (
-  "github.com/google/uuid"
-
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
-  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/retro"
@@ -27,7 +24,6 @@
   {%- code
     w := p.FullRetro
     r := w.Retro
-    self, others, _ := w.UtilMembers.Split(ps.Profile.ID)
   -%}
   <div class="flex-wrap">
     <div id="panel-summary">
@@ -41,6 +37,7 @@
           <span id="model-title">{%s r.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
+        <span id="owner-id" style="display: none;">{%s r.Owner.String() %}</span>
         {%= RetroWorkspaceModal(r, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
       </div>
     </div>
@@ -51,28 +48,7 @@
         {%= RetroWorkspaceFeedbacks(ps.Profile.ID, ps.Username(), w, ps) %}
       </div>
     </div>
-    <div id="panel-self">
-      <div class="card">{%= vwutil.SelfLink(self, ps) %}</div>
-      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, r.PublicWebPath(), ps) %}
-    </div>
-    <div id="panel-members">
-      <div class="card">
-        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
-        <table class="mt expanded">
-          <tbody>
-            {%- for _, m := range others -%}
-            {%= vwutil.MemberRow(m, ps) %}
-            {%- endfor -%}
-          </tbody>
-        </table>
-        <div id="member-modals">
-        {%- for _, m := range others -%}
-          {%= vwutil.MemberModal(m, r.PublicWebPath(), ps) %}
-        {%- endfor -%}
-        </div>
-      </div>
-      {%= vwutil.InviteModal() %}
-    </div>
+    {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), r.PublicWebPath(), ps) %}
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -105,36 +81,5 @@
         </form>
       </div>
     </div>
-  </div>
-{% endfunc %}
-
-{% func RetroWorkspaceList(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
-  <div class="card">
-    <div class="right">
-      {%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}
-    </div>
-    <h3 title="Discover improvements and praise for your work">{%= components.SVGRefIcon(util.KeyRetro, ps) %}Retros</h3>
-    <table id="retro-list" class="mt expanded">
-      <tbody>
-        {%- if len(retros) == 0 -%}
-          <tr class="empty"><td><em>no retros</em></td></tr>
-        {%- else -%}
-          {%- for _, x := range retros -%}
-          <tr id="retro-list-{%s x.ID.String() %}">
-            <td>
-              {%- if showComments -%}
-              <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps) %}
-              </div>
-              {%- endif -%}
-              <a href="{%s x.PublicWebPath() %}"><div>
-                <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
-              </div></a>
-            </td>
-          </tr>
-          {%- endfor -%}
-        {%- endif -%}
-      </tbody>
-    </table>
   </div>
 {% endfunc %}

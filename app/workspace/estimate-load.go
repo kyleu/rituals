@@ -33,6 +33,10 @@ type FullEstimate struct {
 	Actions     action.Actions                  `json:"actions,omitempty"`
 }
 
+func (f *FullEstimate) Admin() bool {
+	return f.Estimate.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+}
+
 func (s *Service) LoadEstimate(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullEstimate, error) {
 	e, err := s.e.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {

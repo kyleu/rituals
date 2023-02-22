@@ -33,6 +33,10 @@ type FullSprint struct {
 	Actions     action.Actions                `json:"actions,omitempty"`
 }
 
+func (f *FullSprint) Admin() bool {
+	return f.Sprint.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+}
+
 func (s *Service) LoadSprint(p *LoadParams, tf func() (team.Teams, error)) (*FullSprint, error) {
 	spr, err := s.s.GetBySlug(p.Ctx, p.Tx, p.Slug, p.Logger)
 	if err != nil {

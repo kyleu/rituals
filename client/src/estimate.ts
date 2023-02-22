@@ -63,6 +63,7 @@ export function handleEstimate(m: Message) {
 }
 
 function onUpdate(param: Estimate) {
+  req("owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-estimate-config form");
   const ch = req<HTMLInputElement>("input[name=\"choices\"]", frm)
   ch.value = param.choices;

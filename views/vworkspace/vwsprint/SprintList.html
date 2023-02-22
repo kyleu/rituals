@@ -1,13 +1,18 @@
 {% import (
   "fmt"
 
+  "github.com/google/uuid"
+
   "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
 {% code type SprintList struct {
@@ -48,4 +53,33 @@
       </tbody>
     </table>
   </form>
+{% endfunc %}
+
+{% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
+    <h3 title="Plan your time and direct your efforts">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
+    <table id="sprint-list" class="mt expanded">
+      <tbody>
+        {%- if len(sprints) == 0 -%}
+          <tr class="empty"><td><em>no sprints</em></td></tr>
+        {%- else -%}
+          {%- for _, x := range sprints -%}
+          <tr id="sprint-list-{%s x.ID.String() %}">
+            <td>
+              {%- if showComments -%}
+              <div class="right">
+                {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps) %}
+              </div>
+              {%- endif -%}
+              <a href="{%s x.PublicWebPath() %}"><div>
+                <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
+              </div></a>
+            </td>
+          </tr>
+          {%- endfor -%}
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}
