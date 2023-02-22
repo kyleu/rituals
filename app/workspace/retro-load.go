@@ -141,7 +141,7 @@ func (s *Service) membersRetro(p *LoadParams, retroID uuid.UUID) (rmember.RetroM
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.rm.Register(p.Ctx, retroID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
+		_, err = s.rm.Register(p.Ctx, retroID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

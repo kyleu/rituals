@@ -17,7 +17,7 @@ import (
 )
 
 func (s *Service) CreateStandup(
-	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
+	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
 ) (*standup.Standup, *umember.StandupMember, error) {
 	slug := s.u.Slugify(ctx, id, title, "", s.uh, nil, logger)
 	model := &standup.Standup{
@@ -33,7 +33,7 @@ func (s *Service) CreateStandup(
 		return nil, nil, errors.Wrap(err, "unable to save standup activity")
 	}
 
-	member, err := s.um.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, s.send, logger)
+	member, err := s.um.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save standup owner")
 	}

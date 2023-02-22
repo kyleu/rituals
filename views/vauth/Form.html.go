@@ -91,63 +91,79 @@ func StreamSigninTable(qw422016 *qt422016.Writer, prvs auth.Providers, referrer 
 //line views/vauth/Form.html:24
 				for _, a := range as {
 //line views/vauth/Form.html:24
-					qw422016.N().S(`          <li>`)
-//line views/vauth/Form.html:25
-					qw422016.E().S(a.Email)
-//line views/vauth/Form.html:25
-					qw422016.N().S(` (<a href="/auth/logout/`)
-//line views/vauth/Form.html:25
-					qw422016.N().U(a.Provider)
-//line views/vauth/Form.html:25
-					qw422016.N().S(`?email=`)
-//line views/vauth/Form.html:25
-					qw422016.N().U(a.Email)
-//line views/vauth/Form.html:25
-					qw422016.N().S(`">sign out</a>)</li>
+					qw422016.N().S(`          <li>
 `)
 //line views/vauth/Form.html:26
-				}
+					if a.Picture != "" {
 //line views/vauth/Form.html:26
+						qw422016.N().S(`            <img style="width: 16px; height: 16px; margin-bottom: -2px;" src="`)
+//line views/vauth/Form.html:27
+						qw422016.E().S(a.Picture)
+//line views/vauth/Form.html:27
+						qw422016.N().S(`" />
+`)
+//line views/vauth/Form.html:28
+					}
+//line views/vauth/Form.html:28
+					qw422016.N().S(`            `)
+//line views/vauth/Form.html:29
+					qw422016.E().S(a.Email)
+//line views/vauth/Form.html:29
+					qw422016.N().S(`
+            (<a href="/auth/logout/`)
+//line views/vauth/Form.html:30
+					qw422016.N().U(a.Provider)
+//line views/vauth/Form.html:30
+					qw422016.N().S(`?email=`)
+//line views/vauth/Form.html:30
+					qw422016.N().U(a.Email)
+//line views/vauth/Form.html:30
+					qw422016.N().S(`">sign out</a>)
+          </li>
+`)
+//line views/vauth/Form.html:32
+				}
+//line views/vauth/Form.html:32
 				qw422016.N().S(`        </ul>
 `)
-//line views/vauth/Form.html:28
+//line views/vauth/Form.html:34
 			}
-//line views/vauth/Form.html:28
+//line views/vauth/Form.html:34
 			qw422016.N().S(`      </li>
 `)
-//line views/vauth/Form.html:30
+//line views/vauth/Form.html:36
 		}
-//line views/vauth/Form.html:30
+//line views/vauth/Form.html:36
 		qw422016.N().S(`    </ul>
   </div>
 `)
-//line views/vauth/Form.html:33
+//line views/vauth/Form.html:39
 	}
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 }
 
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 func WriteSigninTable(qq422016 qtio422016.Writer, prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) {
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	StreamSigninTable(qw422016, prvs, referrer, as, ps)
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 }
 
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) string {
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	WriteSigninTable(qb422016, prvs, referrer, as, ps)
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	qs422016 := string(qb422016.B)
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 	return qs422016
-//line views/vauth/Form.html:34
+//line views/vauth/Form.html:40
 }

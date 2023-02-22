@@ -38,6 +38,6 @@ func parseRequestForm(rc *fasthttp.RequestCtx, defaultName string) (*requestForm
 		name = defaultName
 	}
 	teamID, _ := frm.GetUUID(util.KeyTeam, false)
-	sprintID, _ := frm.GetUUID(util.KeyTeam, false)
+	sprintID, _ := frm.GetUUID(util.KeySprint, false)
 	return &requestForm{Form: frm, ID: *id, Title: title, Name: name, Team: teamID, Sprint: sprintID}, nil
 }

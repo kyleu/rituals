@@ -136,12 +136,12 @@ func StreamStandupForm(qw422016 *qt422016.Writer, s *standup.Standup, teams team
       <tbody>
         `)
 //line views/vworkspace/vwstandup/StandupList.html:46
-	components.StreamTableInput(qw422016, "title", "", "Team Title", s.Title, 5, "The name of your standup")
+	components.StreamTableInput(qw422016, "title", "", "Standup Title", s.Title, 5, "The name of your standup")
 //line views/vworkspace/vwstandup/StandupList.html:46
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwstandup/StandupList.html:47
-	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
+	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called")
 //line views/vworkspace/vwstandup/StandupList.html:47
 	qw422016.N().S(`
         `)

@@ -173,20 +173,33 @@ func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, e
 	if fs.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this sprint")
 	}
-	choice := p.Frm.GetStringOpt("choice")
 	name := p.Frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	picture := p.Frm.GetStringOpt("picture")
+
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
+	if name == fs.Self.Name && picture == fs.Self.Picture {
+		return fs, MsgNoChangesNeeded, fs.Sprint.PublicWebPath(), nil
+	}
+
+	fs.Self.Picture = picture
 	fs.Self.Name = name
 	err := p.Svc.sm.Update(p.Ctx, nil, fs.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		return nil, "", "", errors.New("can't change global name yet")
+		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
-	arg := util.ValueMap{"userID": fs.Self.UserID, "name": name}
+	arg := util.ValueMap{"userID": fs.Self.UserID, "name": name, "role": fs.Self.Role}
+	if picture != "" {
+		arg["picture"] = picture
+	}
 	err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActMemberUpdate, arg, &fs.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err

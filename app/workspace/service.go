@@ -1,6 +1,8 @@
 package workspace
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 
 	"github.com/kyleu/rituals/app/action"
@@ -32,6 +34,7 @@ import (
 	"github.com/kyleu/rituals/app/team/tmember"
 	"github.com/kyleu/rituals/app/team/tpermission"
 	"github.com/kyleu/rituals/app/user"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Service struct {
@@ -74,6 +77,7 @@ type Service struct {
 	send     action.SendFn
 	sendUser action.SendUserFn
 	online   func(key string) []uuid.UUID
+	setName  func(ctx context.Context, id uuid.UUID, name string, picture string, logger util.Logger) error
 }
 
 func NewService(
@@ -101,4 +105,8 @@ func (s *Service) RegisterSend(send action.SendFn, sendUser action.SendUserFn) {
 
 func (s *Service) RegisterOnline(f func(key string) []uuid.UUID) {
 	s.online = f
+}
+
+func (s *Service) RegisterSetName(f func(ctx context.Context, id uuid.UUID, name string, picture string, logger util.Logger) error) {
+	s.setName = f
 }

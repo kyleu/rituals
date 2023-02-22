@@ -49,93 +49,112 @@ func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageSt
 	qw422016.E().S(m.UserID.String())
 //line views/vworkspace/vwutil/Members.html:12
 	qw422016.N().S(`">
-        <div class="left prs">`)
-//line views/vworkspace/vwutil/Members.html:13
-	components.StreamSVGRef(qw422016, `profile`, 18, 18, ``, ps)
-//line views/vworkspace/vwutil/Members.html:13
-	qw422016.N().S(`</div>
+        <div class="left prs member-picture">
+`)
+//line views/vworkspace/vwutil/Members.html:14
+	if m.Picture == "" {
+//line views/vworkspace/vwutil/Members.html:14
+		qw422016.N().S(`          `)
+//line views/vworkspace/vwutil/Members.html:15
+		components.StreamSVGRef(qw422016, `profile`, 18, 18, ``, ps)
+//line views/vworkspace/vwutil/Members.html:15
+		qw422016.N().S(`
+`)
+//line views/vworkspace/vwutil/Members.html:16
+	} else {
+//line views/vworkspace/vwutil/Members.html:16
+		qw422016.N().S(`          <img style="width: 18px; height: 18px;" src="`)
+//line views/vworkspace/vwutil/Members.html:17
+		qw422016.E().S(m.Picture)
+//line views/vworkspace/vwutil/Members.html:17
+		qw422016.N().S(`" />
+`)
+//line views/vworkspace/vwutil/Members.html:18
+	}
+//line views/vworkspace/vwutil/Members.html:18
+	qw422016.N().S(`        </div>
         <span class="member-name">`)
-//line views/vworkspace/vwutil/Members.html:14
+//line views/vworkspace/vwutil/Members.html:20
 	qw422016.E().S(m.Name)
-//line views/vworkspace/vwutil/Members.html:14
+//line views/vworkspace/vwutil/Members.html:20
 	qw422016.N().S(`</span>
       </a>
     </td>
     <td class="shrink text-align-right"><em class="member-role">`)
-//line views/vworkspace/vwutil/Members.html:17
+//line views/vworkspace/vwutil/Members.html:23
 	qw422016.E().S(string(m.Role))
-//line views/vworkspace/vwutil/Members.html:17
+//line views/vworkspace/vwutil/Members.html:23
 	qw422016.N().S(`</em></td>
     <td class="shrink online-status" title="`)
-//line views/vworkspace/vwutil/Members.html:18
+//line views/vworkspace/vwutil/Members.html:24
 	if m.Online {
-//line views/vworkspace/vwutil/Members.html:18
+//line views/vworkspace/vwutil/Members.html:24
 		qw422016.N().S(`online`)
-//line views/vworkspace/vwutil/Members.html:18
+//line views/vworkspace/vwutil/Members.html:24
 	} else {
-//line views/vworkspace/vwutil/Members.html:18
+//line views/vworkspace/vwutil/Members.html:24
 		qw422016.N().S(`offline`)
-//line views/vworkspace/vwutil/Members.html:18
+//line views/vworkspace/vwutil/Members.html:24
 	}
-//line views/vworkspace/vwutil/Members.html:18
+//line views/vworkspace/vwutil/Members.html:24
 	qw422016.N().S(`">
 `)
-//line views/vworkspace/vwutil/Members.html:19
+//line views/vworkspace/vwutil/Members.html:25
 	if m.Online {
-//line views/vworkspace/vwutil/Members.html:19
+//line views/vworkspace/vwutil/Members.html:25
 		qw422016.N().S(`      `)
-//line views/vworkspace/vwutil/Members.html:20
+//line views/vworkspace/vwutil/Members.html:26
 		components.StreamSVGRef(qw422016, `check-circle`, 18, 18, `right`, ps)
-//line views/vworkspace/vwutil/Members.html:20
+//line views/vworkspace/vwutil/Members.html:26
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:27
 	} else {
-//line views/vworkspace/vwutil/Members.html:21
+//line views/vworkspace/vwutil/Members.html:27
 		qw422016.N().S(`      `)
-//line views/vworkspace/vwutil/Members.html:22
+//line views/vworkspace/vwutil/Members.html:28
 		components.StreamSVGRef(qw422016, `circle`, 18, 18, `right`, ps)
-//line views/vworkspace/vwutil/Members.html:22
+//line views/vworkspace/vwutil/Members.html:28
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwutil/Members.html:23
+//line views/vworkspace/vwutil/Members.html:29
 	}
-//line views/vworkspace/vwutil/Members.html:23
+//line views/vworkspace/vwutil/Members.html:29
 	qw422016.N().S(`    </td>
   </tr>
 `)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 }
 
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 func WriteMemberRow(qq422016 qtio422016.Writer, m *util.Member, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	StreamMemberRow(qw422016, m, ps)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 }
 
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 func MemberRow(m *util.Member, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	WriteMemberRow(qb422016, m, ps)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 	return qs422016
-//line views/vworkspace/vwutil/Members.html:26
+//line views/vworkspace/vwutil/Members.html:32
 }
 
-//line views/vworkspace/vwutil/Members.html:28
+//line views/vworkspace/vwutil/Members.html:34
 func StreamInviteModal(qw422016 *qt422016.Writer) {
-//line views/vworkspace/vwutil/Members.html:28
+//line views/vworkspace/vwutil/Members.html:34
 	qw422016.N().S(`
   <div id="modal-invite" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -150,116 +169,140 @@ func StreamInviteModal(qw422016 *qt422016.Writer) {
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 }
 
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 func WriteInviteModal(qq422016 qtio422016.Writer) {
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	StreamInviteModal(qw422016)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 }
 
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 func InviteModal() string {
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	WriteInviteModal(qb422016)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 	return qs422016
-//line views/vworkspace/vwutil/Members.html:41
+//line views/vworkspace/vwutil/Members.html:47
 }
 
-//line views/vworkspace/vwutil/Members.html:43
-func StreamMemberModal(qw422016 *qt422016.Writer, m *util.Member, url string) {
-//line views/vworkspace/vwutil/Members.html:43
+//line views/vworkspace/vwutil/Members.html:49
+func StreamMemberModal(qw422016 *qt422016.Writer, m *util.Member, url string, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Members.html:49
 	qw422016.N().S(`
   <div id="modal-member-`)
-//line views/vworkspace/vwutil/Members.html:44
+//line views/vworkspace/vwutil/Members.html:50
 	qw422016.E().S(m.UserID.String())
-//line views/vworkspace/vwutil/Members.html:44
+//line views/vworkspace/vwutil/Members.html:50
 	qw422016.N().S(`" data-id="`)
-//line views/vworkspace/vwutil/Members.html:44
+//line views/vworkspace/vwutil/Members.html:50
 	qw422016.E().S(m.UserID.String())
-//line views/vworkspace/vwutil/Members.html:44
+//line views/vworkspace/vwutil/Members.html:50
 	qw422016.N().S(`" class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>`)
-//line views/vworkspace/vwutil/Members.html:49
+        <h2>
+`)
+//line views/vworkspace/vwutil/Members.html:56
+	if m.Picture == "" {
+//line views/vworkspace/vwutil/Members.html:56
+		qw422016.N().S(`          `)
+//line views/vworkspace/vwutil/Members.html:57
+		components.StreamSVGRef(qw422016, `profile`, 24, 24, `icon`, ps)
+//line views/vworkspace/vwutil/Members.html:57
+		qw422016.N().S(`
+`)
+//line views/vworkspace/vwutil/Members.html:58
+	} else {
+//line views/vworkspace/vwutil/Members.html:58
+		qw422016.N().S(`          <img class="icon" style="width: 24px; height: 24px;" src="`)
+//line views/vworkspace/vwutil/Members.html:59
+		qw422016.E().S(m.Picture)
+//line views/vworkspace/vwutil/Members.html:59
+		qw422016.N().S(`" />
+`)
+//line views/vworkspace/vwutil/Members.html:60
+	}
+//line views/vworkspace/vwutil/Members.html:60
+	qw422016.N().S(`          `)
+//line views/vworkspace/vwutil/Members.html:61
 	qw422016.E().S(m.Name)
-//line views/vworkspace/vwutil/Members.html:49
-	qw422016.N().S(`</h2>
+//line views/vworkspace/vwutil/Members.html:61
+	qw422016.N().S(`
+        </h2>
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwutil/Members.html:52
+//line views/vworkspace/vwutil/Members.html:65
 	qw422016.E().S(url)
-//line views/vworkspace/vwutil/Members.html:52
+//line views/vworkspace/vwutil/Members.html:65
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="userID" value="`)
-//line views/vworkspace/vwutil/Members.html:53
+//line views/vworkspace/vwutil/Members.html:66
 	qw422016.E().S(m.UserID.String())
-//line views/vworkspace/vwutil/Members.html:53
+//line views/vworkspace/vwutil/Members.html:66
 	qw422016.N().S(`" />
           <em>Role</em><br />
           `)
-//line views/vworkspace/vwutil/Members.html:55
+//line views/vworkspace/vwutil/Members.html:68
 	components.StreamFormSelect(qw422016, "role", "", string(m.Role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5)
-//line views/vworkspace/vwutil/Members.html:55
+//line views/vworkspace/vwutil/Members.html:68
 	qw422016.N().S(`
           <hr />
           <div class="right"><button class="member-update" type="submit" name="action" value="`)
-//line views/vworkspace/vwutil/Members.html:57
+//line views/vworkspace/vwutil/Members.html:70
 	qw422016.E().S(string(action.ActMemberUpdate))
-//line views/vworkspace/vwutil/Members.html:57
+//line views/vworkspace/vwutil/Members.html:70
 	qw422016.N().S(`">Save</button></div>
           <button type="submit" class="member-remove" name="action" value="`)
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:71
 	qw422016.E().S(string(action.ActMemberRemove))
-//line views/vworkspace/vwutil/Members.html:58
+//line views/vworkspace/vwutil/Members.html:71
 	qw422016.N().S(`" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
         </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
 }
 
-//line views/vworkspace/vwutil/Members.html:63
-func WriteMemberModal(qq422016 qtio422016.Writer, m *util.Member, url string) {
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
+func WriteMemberModal(qq422016 qtio422016.Writer, m *util.Member, url string, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Members.html:76
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Members.html:63
-	StreamMemberModal(qw422016, m, url)
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
+	StreamMemberModal(qw422016, m, url, ps)
+//line views/vworkspace/vwutil/Members.html:76
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
 }
 
-//line views/vworkspace/vwutil/Members.html:63
-func MemberModal(m *util.Member, url string) string {
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
+func MemberModal(m *util.Member, url string, ps *cutil.PageState) string {
+//line views/vworkspace/vwutil/Members.html:76
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Members.html:63
-	WriteMemberModal(qb422016, m, url)
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
+	WriteMemberModal(qb422016, m, url, ps)
+//line views/vworkspace/vwutil/Members.html:76
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
 	return qs422016
-//line views/vworkspace/vwutil/Members.html:63
+//line views/vworkspace/vwutil/Members.html:76
 }

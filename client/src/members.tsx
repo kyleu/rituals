@@ -1,7 +1,7 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import {svg} from "./util";
 
-export function snippetMember(userID: string, name: string, role: string): HTMLElement {
+export function snippetMember(userID: string, name: string, role: string, picture: string): HTMLElement {
   return <tr id={ "member-" + userID } class="member" data-id={ userID }>
     <td>
       <a href={ "#modal-member-" + userID }>
@@ -14,7 +14,7 @@ export function snippetMember(userID: string, name: string, role: string): HTMLE
   </tr>;
 }
 
-export function snippetMemberModal(userID: string, name: string, role: string): HTMLElement {
+export function snippetMemberModal(userID: string, name: string, role: string, picture: string): HTMLElement {
   const roles = [["owner", "Owner"], ["member", "Member"], ["observer", "Observer"]]
   return <div id={ "modal-member-" + userID } data-id={ userID } class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>

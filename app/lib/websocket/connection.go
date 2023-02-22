@@ -10,12 +10,14 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/kyleu/rituals/app/lib/user"
+	dbuser "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
 // Represents a user's WebSocket session.
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`
+	User     *dbuser.User  `json:"user,omitempty"`
 	Profile  *user.Profile `json:"profile,omitempty"`
 	Accounts user.Accounts `json:"accounts,omitempty"`
 	Svc      string        `json:"svc,omitempty"`
@@ -26,8 +28,8 @@ type Connection struct {
 }
 
 // Creates a new Connection.
-func NewConnection(svc string, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(), Profile: profile, Accounts: accounts, Svc: svc, socket: socket}
+func NewConnection(svc string, user *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
+	return &Connection{ID: util.UUID(), User: user, Profile: profile, Accounts: accounts, Svc: svc, socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.
@@ -36,6 +38,13 @@ func (c *Connection) ToStatus() *Status {
 		return &Status{ID: c.ID, Username: c.Profile.Name, Channels: nil}
 	}
 	return &Status{ID: c.ID, Username: c.Profile.Name, Channels: c.Channels}
+}
+
+func (c *Connection) Username() string {
+	if c.User != nil {
+		return c.User.Name
+	}
+	return c.Profile.Name
 }
 
 // Writes bytes to this Connection, you should probably use a helper method.

@@ -12,28 +12,37 @@ import (
 type Account struct {
 	Provider string `json:"provider"`
 	Email    string `json:"email"`
+	Picture  string `json:"picture"`
 	Token    string `json:"-"`
 }
 
 func accountFromString(s string) *Account {
 	p, e := util.StringSplit(s, ':', true)
-	var t string
+	var t, pic string
 	if strings.Contains(e, "|") {
 		e, t = util.StringSplit(e, '|', true)
 		if decr, err := util.DecryptMessage(nil, t, nil); err == nil {
 			t = decr
+			if idx := strings.LastIndex(t, "@@"); idx > -1 {
+				pic = t[idx+2:]
+				t = t[:idx]
+			}
 		}
 	}
-	return &Account{Provider: p, Email: e, Token: t}
+	return &Account{Provider: p, Email: e, Picture: pic, Token: t}
 }
 
 func (a Account) String() string {
 	ret := a.Provider + ":" + a.Email
 	if a.Token != "" {
-		if enc, err := util.EncryptMessage(nil, a.Token, nil); err == nil {
+		msg := a.Token
+		if a.Picture != "" {
+			msg += "@@" + a.Picture
+		}
+		if enc, err := util.EncryptMessage(nil, msg, nil); err == nil {
 			ret += "|" + enc
 		} else {
-			ret += "|" + a.Token
+			ret += "|" + msg
 		}
 	}
 	return ret
@@ -67,6 +76,23 @@ func (a Accounts) TitleString() string {
 		ret = append(ret, x.TitleString())
 	}
 	return strings.Join(ret, ",")
+}
+
+func (a Accounts) Images() []string {
+	ret := make(util.KeyVals[string], 0, len(a))
+	for _, x := range a {
+		if x.Picture != "" {
+			ret = append(ret, &util.KeyVal[string]{Key: x.Provider, Val: x.Picture})
+		}
+	}
+	return ret.Values()
+}
+
+func (a Accounts) Image() string {
+	if is := a.Images(); len(a) > 0 {
+		return is[0]
+	}
+	return ""
 }
 
 func (a Accounts) Sort() {

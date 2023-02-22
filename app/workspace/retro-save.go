@@ -17,7 +17,7 @@ import (
 )
 
 func (s *Service) CreateRetro(
-	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
+	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
 ) (*retro.Retro, *rmember.RetroMember, error) {
 	slug := s.r.Slugify(ctx, id, title, "", s.rh, nil, logger)
 	model := &retro.Retro{
@@ -33,7 +33,7 @@ func (s *Service) CreateRetro(
 		return nil, nil, errors.Wrap(err, "unable to save retro activity")
 	}
 
-	member, err := s.rm.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, s.send, logger)
+	member, err := s.rm.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save retro owner")
 	}

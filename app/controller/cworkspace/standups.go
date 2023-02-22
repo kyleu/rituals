@@ -56,11 +56,13 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 
 func StandupCreate(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.standup.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Profile.Name)
+		frm, err := parseRequestForm(rc, ps.Username())
 		if err != nil {
 			return "", err
 		}
-		model, _, err := as.Services.Workspace.CreateStandup(ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, frm.Team, frm.Sprint, ps.Logger)
+		model, _, err := as.Services.Workspace.CreateStandup(
+			ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, ps.Accounts.Image(), frm.Team, frm.Sprint, ps.Logger,
+		)
 		if err != nil {
 			return "", err
 		}

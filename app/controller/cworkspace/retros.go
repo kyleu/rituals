@@ -57,11 +57,13 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 
 func RetroCreate(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.retro.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Profile.Name)
+		frm, err := parseRequestForm(rc, ps.Username())
 		if err != nil {
 			return "", err
 		}
-		model, _, err := as.Services.Workspace.CreateRetro(ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, frm.Team, frm.Sprint, ps.Logger)
+		model, _, err := as.Services.Workspace.CreateRetro(
+			ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, ps.Accounts.Image(), frm.Team, frm.Sprint, ps.Logger,
+		)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save retro")
 		}

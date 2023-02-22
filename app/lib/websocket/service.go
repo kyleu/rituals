@@ -16,6 +16,7 @@ import (
 
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/lib/user"
+	dbuser "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -124,9 +125,9 @@ func (s *Service) Close() {
 
 var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
 
-func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, profile *user.Profile, accts user.Accounts, logger util.Logger) error {
+func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger) error {
 	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
-		cx, err := s.Register(profile, accts, conn, logger)
+		cx, err := s.Register(u, profile, accts, conn, logger)
 		if err != nil {
 			logger.Warn("unable to register websocket connection")
 			return

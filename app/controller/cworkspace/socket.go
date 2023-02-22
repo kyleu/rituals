@@ -44,7 +44,7 @@ func Socket(rc *fasthttp.RequestCtx, svc string, as *app.State, ps *cutil.PageSt
 	if err != nil {
 		return "", err
 	}
-	err = as.Services.Socket.Upgrade(rc, svc+":"+id.String(), ps.Profile, ps.Accounts, ps.Logger)
+	err = as.Services.Socket.Upgrade(rc, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, ps.Logger)
 	if err != nil {
 		ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
 		return "", err

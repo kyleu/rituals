@@ -396,7 +396,7 @@ func StreamConnectionCard(qw422016 *qt422016.Writer, c *websocket.Connection, as
 //line views/vadmin/Sockets.html:132
 	qw422016.N().S(` (`)
 //line views/vadmin/Sockets.html:132
-	qw422016.E().S(c.Profile.Name)
+	qw422016.E().S(c.Username())
 //line views/vadmin/Sockets.html:132
 	qw422016.N().S(`)</h3>
     <table class="mt expanded">
@@ -425,7 +425,7 @@ func StreamConnectionCard(qw422016 *qt422016.Writer, c *websocket.Connection, as
           <th>Name</th>
           <td>`)
 //line views/vadmin/Sockets.html:145
-	qw422016.E().S(c.Profile.Name)
+	qw422016.E().S(c.Username())
 //line views/vadmin/Sockets.html:145
 	qw422016.N().S(`</td>
         </tr>

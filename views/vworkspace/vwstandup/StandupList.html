@@ -43,8 +43,8 @@
   <form action="" method="post">
     <table class="mt expanded">
       <tbody>
-        {%= components.TableInput("title", "", "Team Title", s.Title, 5, "The name of your standup") %}
-        {%= components.TableInput("name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called") %}
+        {%= components.TableInput("title", "", "Standup Title", s.Title, 5, "The name of your standup") %}
+        {%= components.TableInput("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
         {%= components.TableSelect(util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this standup") %}
         {%= components.TableSelect(util.KeySprint, "", "Sprint", fmt.Sprint(s.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this standup") %}
         <tr><td colspan="2"><button type="submit">Add Standup</button></td></tr>

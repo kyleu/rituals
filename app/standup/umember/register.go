@@ -13,10 +13,10 @@ import (
 )
 
 func (s *Service) Register(
-	ctx context.Context, u uuid.UUID, userID uuid.UUID, name string, role enum.MemberStatus, tx *sqlx.Tx,
+	ctx context.Context, u uuid.UUID, userID uuid.UUID, name string, picture string, role enum.MemberStatus, tx *sqlx.Tx,
 	actSvc *action.Service, send action.SendFn, logger util.Logger,
 ) (*StandupMember, error) {
-	m := &StandupMember{StandupID: u, UserID: userID, Name: name, Role: role, Created: time.Now()}
+	m := &StandupMember{StandupID: u, UserID: userID, Name: name, Picture: picture, Role: role, Created: time.Now()}
 	err := s.Save(ctx, tx, logger, m)
 	if err != nil {
 		return nil, err

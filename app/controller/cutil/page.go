@@ -14,6 +14,7 @@ import (
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/theme"
 	"github.com/kyleu/rituals/app/lib/user"
+	dbuser "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -42,6 +43,7 @@ type PageState struct {
 	Breadcrumbs   cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
 	Flashes       []string          `json:"flashes,omitempty"`
 	Session       util.ValueMap     `json:"-"`
+	User          *dbuser.User      `json:"user,omitempty"`
 	Profile       *user.Profile     `json:"profile,omitempty"`
 	Accounts      user.Accounts     `json:"accounts,omitempty"`
 	Authed        bool              `json:"authed,omitempty"`
@@ -85,11 +87,26 @@ func (p *PageState) TitleString() string {
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
 }
 
-func (p *PageState) User() string {
-	if len(p.Accounts) == 0 {
-		return "anonymous"
+func (p *PageState) Username() string {
+	if p.User != nil {
+		return p.User.Name
 	}
-	return p.Accounts[0].Email
+	return p.Profile.Name
+}
+
+func (p *PageState) AuthString() string {
+	n := p.Profile.String()
+	if p.User != nil {
+		n = p.User.Name
+	}
+	msg := fmt.Sprintf("signed in as %s", n)
+	if len(p.Accounts) == 0 {
+		if n == user.DefaultProfile.Name {
+			return "click to sign in"
+		}
+		return msg
+	}
+	return fmt.Sprintf("%s using [%s]", msg, p.Accounts.TitleString())
 }
 
 func (p *PageState) Clean(rc *fasthttp.RequestCtx, as *app.State) error {

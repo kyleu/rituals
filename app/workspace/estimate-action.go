@@ -326,20 +326,34 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 	if fe.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this estimate")
 	}
-	choice := p.Frm.GetStringOpt("choice")
+
 	name := p.Frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	picture := p.Frm.GetStringOpt("picture")
+
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
+	if name == fe.Self.Name && picture == fe.Self.Picture {
+		return fe, MsgNoChangesNeeded, fe.Estimate.PublicWebPath(), nil
+	}
+
+	fe.Self.Picture = picture
 	fe.Self.Name = name
 	err := p.Svc.em.Update(p.Ctx, nil, fe.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		return nil, "", "", errors.New("can't change global name yet")
+		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
 	arg := util.ValueMap{"userID": fe.Self.UserID, "name": name, "role": fe.Self.Role}
+	if picture != "" {
+		arg["picture"] = picture
+	}
 	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActMemberUpdate, arg, &fe.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err

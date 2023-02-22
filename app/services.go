@@ -138,6 +138,19 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		return ws.WriteMessage(connID, msg, logger)
 	})
 	w.RegisterOnline(ws.GetOnline)
+	w.RegisterSetName(func(ctx context.Context, id uuid.UUID, name string, picture string, logger util.Logger) error {
+		curr, e := us.Get(ctx, nil, id, logger)
+		if e != nil {
+			return e
+		}
+
+		if curr != nil {
+			curr.Name = name
+			curr.Picture = picture
+			return us.Update(ctx, nil, curr, logger)
+		}
+		return nil
+	})
 	return &Services{
 		Team: t, TeamMember: tm, TeamHistory: th, TeamPermission: tp,
 		Sprint: s, SprintMember: sm, SprintHistory: sh, SprintPermission: sp,

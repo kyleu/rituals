@@ -260,20 +260,33 @@ func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, erro
 	if fr.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this retro")
 	}
-	choice := p.Frm.GetStringOpt("choice")
 	name := p.Frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	picture := p.Frm.GetStringOpt("picture")
+
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
+	if name == fr.Self.Name && picture == fr.Self.Picture {
+		return fr, MsgNoChangesNeeded, fr.Retro.PublicWebPath(), nil
+	}
+
+	fr.Self.Picture = picture
 	fr.Self.Name = name
 	err := p.Svc.rm.Update(p.Ctx, nil, fr.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		return nil, "", "", errors.New("can't change global name yet")
+		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
-	arg := util.ValueMap{"userID": fr.Self.UserID, "name": name}
+	arg := util.ValueMap{"userID": fr.Self.UserID, "name": name, "role": fr.Self.Role}
+	if picture != "" {
+		arg["picture"] = picture
+	}
 	err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActMemberUpdate, arg, &fr.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err

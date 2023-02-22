@@ -152,7 +152,7 @@ func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.Spri
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
+		_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

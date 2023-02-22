@@ -1,6 +1,6 @@
 import {Message} from "./socket";
 import {commentAdd, Comment} from "./comment";
-import {memberAdd, memberRemove, memberUpdate, onlineUpdate} from "./member";
+import {memberAdd, MemberMessage, memberRemove, memberUpdate, onlineUpdate} from "./member";
 import {flashCreate} from "./flash";
 import {handleTeam} from "./team";
 import {handleSprint} from "./sprint";
@@ -17,9 +17,9 @@ export function handle(svc: string, m: Message) {
     case "online-update":
       return onlineUpdate(m.param as { userID: string; connected: boolean; });
     case "member-add":
-      return memberAdd(m.param as { userID: string; name: string; role: string; });
+      return memberAdd(m.param as MemberMessage);
     case "member-update":
-      return memberUpdate(m.param as { userID: string; name: string; role: string; });
+      return memberUpdate(m.param as MemberMessage);
     case "member-remove":
       return memberRemove(m.param as string);
   }

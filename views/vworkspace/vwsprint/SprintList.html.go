@@ -134,12 +134,12 @@ func StreamSprintForm(qw422016 *qt422016.Writer, s *sprint.Sprint, teams team.Te
       <tbody>
         `)
 //line views/vworkspace/vwsprint/SprintList.html:44
-	components.StreamTableInput(qw422016, "title", "", "Team Title", s.Title, 5, "The name of your sprint")
+	components.StreamTableInput(qw422016, "title", "", "Sprint Title", s.Title, 5, "The name of your sprint")
 //line views/vworkspace/vwsprint/SprintList.html:44
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwsprint/SprintList.html:45
-	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
+	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called")
 //line views/vworkspace/vwsprint/SprintList.html:45
 	qw422016.N().S(`
         `)

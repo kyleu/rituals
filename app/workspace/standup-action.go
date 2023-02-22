@@ -264,20 +264,33 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 	if fu.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this standup")
 	}
-	choice := p.Frm.GetStringOpt("choice")
 	name := p.Frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	picture := p.Frm.GetStringOpt("picture")
+
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
+	if name == fu.Self.Name && picture == fu.Self.Picture {
+		return fu, MsgNoChangesNeeded, fu.Standup.PublicWebPath(), nil
+	}
+
+	fu.Self.Picture = picture
 	fu.Self.Name = name
 	err := p.Svc.um.Update(p.Ctx, nil, fu.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		return nil, "", "", errors.New("can't change global name yet")
+		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
-	arg := util.ValueMap{"userID": fu.Self.UserID, "name": name}
+	arg := util.ValueMap{"userID": fu.Self.UserID, "name": name, "role": fu.Self.Role}
+	if picture != "" {
+		arg["picture"] = picture
+	}
 	err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActMemberUpdate, arg, &fu.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err

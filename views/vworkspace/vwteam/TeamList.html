@@ -39,7 +39,7 @@
     <table class="mt expanded">
       <tbody>
         {%= components.TableInput("title", "", "Team Title", m.Title, 5, "The name of your team") %}
-        {%= components.TableInput("name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called") %}
+        {%= components.TableInput("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
         <tr><td colspan="2"><button type="submit">Add Team</button></td></tr>
       </tbody>
     </table>

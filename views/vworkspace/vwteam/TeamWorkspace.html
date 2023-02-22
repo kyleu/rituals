@@ -34,10 +34,10 @@
           {%= vwutil.PermissionsLink(enum.ModelServiceTeam, t.ID, w.Permissions.ToPermissions(), ps) %}
           {%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps) %}
         </div>
-        <h3><a href="#modal-team-config" id="modal-team-config-link">
+        <a href="#modal-team-config" id="modal-team-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(t.IconSafe(), ps) %}</span>
           <span id="model-title">{%s t.TitleString() %}</span>
-        </a></h3>
+        </h3></a>
         {%= vwutil.Banner(nil, nil, util.KeyTeam) %}
         {%= TeamWorkspaceModal(t, w.Permissions.ToPermissions(), ps) %}
       </div>
@@ -49,16 +49,12 @@
       {%= vwretro.RetroWorkspaceList(w.Retros, &t.ID, nil, true, w.Comments, ps) %}
     </div>
     <div id="panel-self">
-      <div class="card">
-        <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
-        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}<span id="self-name">{%s self.Name %}</span></a></h3>
-        <em id="self-role">{%s string(self.Role) %}</em>
-      </div>
-      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, t.PublicWebPath()) %}
+      <div class="card">{%= vwutil.SelfLink(self, ps) %}</div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, t.PublicWebPath(), ps) %}
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
@@ -68,7 +64,7 @@
         </table>
         <div id="member-modals">
         {%- for _, m := range others -%}
-          {%= vwutil.MemberModal(m, t.PublicWebPath()) %}
+          {%= vwutil.MemberModal(m, t.PublicWebPath(), ps) %}
         {%- endfor -%}
         </div>
       </div>

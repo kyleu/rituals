@@ -10,7 +10,13 @@
   <tr id="member-{%s m.UserID.String() %}" class="member" data-id="{%s m.UserID.String() %}">
     <td>
       <a href="#modal-member-{%s m.UserID.String() %}">
-        <div class="left prs">{%= components.SVGRef(`profile`, 18, 18, ``, ps) %}</div>
+        <div class="left prs member-picture">
+          {%- if m.Picture == "" -%}
+          {%= components.SVGRef(`profile`, 18, 18, ``, ps) %}
+          {%- else -%}
+          <img style="width: 18px; height: 18px;" src="{%s m.Picture %}" />
+          {%- endif -%}
+        </div>
         <span class="member-name">{%s m.Name %}</span>
       </a>
     </td>
@@ -40,13 +46,20 @@
   </div>
 {% endfunc %}
 
-{% func MemberModal(m *util.Member, url string) %}
+{% func MemberModal(m *util.Member, url string, ps *cutil.PageState) %}
   <div id="modal-member-{%s m.UserID.String() %}" data-id="{%s m.UserID.String() %}" class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s m.Name %}</h2>
+        <h2>
+          {%- if m.Picture == "" -%}
+          {%= components.SVGRef(`profile`, 24, 24, `icon`, ps) %}
+          {%- else -%}
+          <img class="icon" style="width: 24px; height: 24px;" src="{%s m.Picture %}" />
+          {%- endif -%}
+          {%s m.Name %}
+        </h2>
       </div>
       <div class="modal-body">
         <form action="{%s url %}" method="post" class="expanded">

@@ -17,7 +17,7 @@ import (
 )
 
 func (s *Service) CreateTeam(
-	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, logger util.Logger,
+	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, logger util.Logger,
 ) (*team.Team, *tmember.TeamMember, error) {
 	slug := s.e.Slugify(ctx, id, title, "", s.eh, nil, logger)
 	model := &team.Team{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Owner: user, Created: time.Now()}
@@ -31,7 +31,7 @@ func (s *Service) CreateTeam(
 		return nil, nil, errors.Wrap(err, "unable to save team activity")
 	}
 
-	member, err := s.tm.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, s.send, logger)
+	member, err := s.tm.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save team owner")
 	}

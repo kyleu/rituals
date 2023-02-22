@@ -66,7 +66,7 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <tbody>
           `)
 //line views/vprofile/Profile.html:34
-	components.StreamTableInput(qw422016, "name", "", "Name", p.Profile.Name, 5)
+	components.StreamTableInput(qw422016, "name", "", "Name", ps.Username(), 5)
 //line views/vprofile/Profile.html:34
 	qw422016.N().S(`
           <tr>

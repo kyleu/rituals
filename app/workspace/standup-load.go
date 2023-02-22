@@ -135,7 +135,7 @@ func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.St
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
+		_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

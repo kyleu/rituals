@@ -19,7 +19,7 @@ import (
 var DefaultEstimateChoices = []string{"0", "1", "2", "3", "5", "8", "13", "100"}
 
 func (s *Service) CreateEstimate(
-	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
+	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
 ) (*estimate.Estimate, *emember.EstimateMember, error) {
 	slug := s.t.Slugify(ctx, id, title, "", s.th, nil, logger)
 	model := &estimate.Estimate{
@@ -35,7 +35,7 @@ func (s *Service) CreateEstimate(
 		return nil, nil, errors.Wrap(err, "unable to save estimate activity")
 	}
 
-	member, err := s.em.Register(ctx, model.ID, user, name, enum.MemberStatusOwner, nil, s.a, s.send, logger)
+	member, err := s.em.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate owner")
 	}

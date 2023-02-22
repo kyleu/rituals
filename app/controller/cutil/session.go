@@ -30,9 +30,11 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts)
 
+	u, _ := as.Services.User.Get(ctx, nil, prof.ID, logger)
+
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
-		Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
+		User: u, Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
 		Icons: initialIcons, Context: traceCtx, Span: span, Logger: logger,
 	}
 }
@@ -65,9 +67,18 @@ func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, lo
 		logger.Warnf("can't load profile: %+v", err)
 	}
 
+	var accts user.Accounts
+	authX, ok := session[csession.WebAuthKey]
+	if ok {
+		authS, ok := authX.(string)
+		if ok {
+			accts = user.AccountsFromString(authS)
+		}
+	}
+
 	if prof.ID == util.UUIDDefault {
 		prof.ID = util.UUID()
-		u := &usr.User{ID: prof.ID, Name: prof.Name, Created: time.Now()}
+		u := &usr.User{ID: prof.ID, Name: prof.Name, Picture: accts.Image(), Created: time.Now()}
 		err = as.Services.User.Save(ctx, nil, logger, u)
 		if err != nil {
 			logger.Warnf("unable to save user [%s]", prof.ID.String())
@@ -78,15 +89,6 @@ func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, lo
 		if err != nil {
 			logger.Warnf("unable to save session for user [%s]", prof.ID.String())
 			return nil, nil, prof, nil
-		}
-	}
-
-	var accts user.Accounts
-	authX, ok := session[csession.WebAuthKey]
-	if ok {
-		authS, ok := authX.(string)
-		if ok {
-			accts = user.AccountsFromString(authS)
 		}
 	}
 

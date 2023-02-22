@@ -53,11 +53,13 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 
 func SprintCreate(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.sprint.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Profile.Name)
+		frm, err := parseRequestForm(rc, ps.Username())
 		if err != nil {
 			return "", err
 		}
-		model, _, err := as.Services.Workspace.CreateSprint(ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, frm.Team, ps.Logger)
+		model, _, err := as.Services.Workspace.CreateSprint(
+			ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, ps.Accounts.Image(), frm.Team, ps.Logger,
+		)
 		if err != nil {
 			return "", err
 		}

@@ -36,10 +36,10 @@
           {%= vwutil.PermissionsLink(enum.ModelServiceEstimate, e.ID, w.Permissions.ToPermissions(), ps) %}
           {%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps) %}
         </div>
-        <h3><a href="#modal-estimate-config" id="modal-estimate-config-link">
+        <a href="#modal-estimate-config" id="modal-estimate-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(e.IconSafe(), ps) %}</span>
           <span id="model-title">{%s e.TitleString() %}</span>
-        </a></h3>
+        </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
         {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
       </div>
@@ -47,23 +47,19 @@
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a class="add-story-link" href="#modal-story--add"><button>Add Story</button></a></div>
-        <h3><a class="add-story-link" href="#modal-story--add">{%= components.SVGRefIcon(util.KeyStory, ps) %}Stories</a></h3>
+        <a class="add-story-link" href="#modal-story--add"><h3>{%= components.SVGRefIcon(util.KeyStory, ps) %}Stories</h3></a>
         {%= EstimateWorkspaceStories(w, ps) %}
         {%= EstimateWorkspaceStoryModalAdd() %}
         {%= EstimateWorkspaceStoryModalEmpty(ps) %}
       </div>
     </div>
     <div id="panel-self">
-      <div class="card">
-        <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
-        <h3><a href="#modal-self">{%= components.SVGRefIcon(`profile`, ps) %}<span id="self-name">{%s self.Name %}</span></a></h3>
-        <em id="self-role">{%s string(self.Role) %}</em>
-      </div>
-      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, e.PublicWebPath()) %}
+      <div class="card">{%= vwutil.SelfLink(self, ps) %}</div>
+      {%= vwutil.SelfModal(self.Name, self.Picture, self.Role, e.PublicWebPath(), ps) %}
     </div>
     <div id="panel-members">
       <div class="card">
-        <h3><a href="#modal-invite">{%= components.SVGRefIcon(`users`, ps) %}Members</a></h3>
+        <a href="#modal-invite"><h3>{%= components.SVGRefIcon(`users`, ps) %}Members</h3></a>
         <table class="mt expanded">
           <tbody>
             {%- for _, m := range others -%}
@@ -73,7 +69,7 @@
         </table>
         <div id="member-modals">
         {%- for _, m := range others -%}
-          {%= vwutil.MemberModal(m, e.PublicWebPath()) %}
+          {%= vwutil.MemberModal(m, e.PublicWebPath(), ps) %}
         {%- endfor -%}
         </div>
       </div>

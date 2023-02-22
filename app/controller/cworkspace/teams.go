@@ -46,11 +46,13 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 
 func TeamCreate(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.team.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Profile.Name)
+		frm, err := parseRequestForm(rc, ps.Username())
 		if err != nil {
 			return "", err
 		}
-		model, _, err := as.Services.Workspace.CreateTeam(ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, ps.Logger)
+		model, _, err := as.Services.Workspace.CreateTeam(
+			ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, ps.Accounts.Image(), ps.Logger,
+		)
 		if err != nil {
 			return "", err
 		}

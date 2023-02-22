@@ -150,7 +150,7 @@ func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMemb
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
+		_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

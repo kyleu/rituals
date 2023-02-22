@@ -140,7 +140,7 @@ func StreamTeamForm(qw422016 *qt422016.Writer, m *team.Team, as *app.State, ps *
 	qw422016.N().S(`
         `)
 //line views/vworkspace/vwteam/TeamList.html:42
-	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Profile.Name, 5, "Whatever you prefer to be called")
+	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called")
 //line views/vworkspace/vwteam/TeamList.html:42
 	qw422016.N().S(`
         <tr><td colspan="2"><button type="submit">Add Team</button></td></tr>

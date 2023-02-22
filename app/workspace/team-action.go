@@ -155,20 +155,33 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 	if ft.Self == nil {
 		return nil, "", "", errors.New("you are not a member of this team")
 	}
-	choice := p.Frm.GetStringOpt("choice")
 	name := p.Frm.GetStringOpt("name")
+	choice := p.Frm.GetStringOpt("choice")
+	picture := p.Frm.GetStringOpt("picture")
+
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
+	if name == ft.Self.Name && picture == ft.Self.Picture {
+		return ft, MsgNoChangesNeeded, ft.Team.PublicWebPath(), nil
+	}
+
+	ft.Self.Picture = picture
 	ft.Self.Name = name
 	err := p.Svc.tm.Update(p.Ctx, nil, ft.Self, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
 	if choice == KeyGlobal {
-		return nil, "", "", errors.New("can't change global name yet")
+		err = p.Svc.setName(p.Ctx, p.Profile.ID, name, picture, p.Logger)
+		if err != nil {
+			return nil, "", "", err
+		}
 	}
-	arg := util.ValueMap{"userID": ft.Self.UserID, "name": name}
+	arg := util.ValueMap{"userID": ft.Self.UserID, "name": name, "role": ft.Self.Role}
+	if picture != "" {
+		arg["picture"] = picture
+	}
 	err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActMemberUpdate, arg, &ft.Self.UserID, p.Logger, p.ConnIDs...)
 	if err != nil {
 		return nil, "", "", err

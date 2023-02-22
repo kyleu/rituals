@@ -2,7 +2,6 @@ import {els, opt, req} from "./dom";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 import {initCommentsModal} from "./comment";
 import {svgRef} from "./util";
-import {flashCreate} from "./flash";
 
 export type ChildAdd = {
   "type": string;
@@ -14,7 +13,7 @@ export type ChildAdd = {
 
 export type ChildUpdate = {
   "type": string;
-  "model": { id: string; "title": string; "icon": string };
+  "model": { id: string; title: string; icon: string };
 }
 
 export type ChildRemove = {
