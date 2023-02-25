@@ -33,8 +33,8 @@ func (s *Service) Register(u *dbuser.User, profile *user.Profile, accts user.Acc
 }
 
 // Sends a message to a provided Connection ID.
-func OnMessage(s *Service, connID uuid.UUID, message *Message, logger util.Logger) error {
-	ctx, span, logger := telemetry.StartSpan(context.Background(), "message::"+message.Cmd, logger)
+func OnMessage(ctx context.Context, s *Service, connID uuid.UUID, message *Message, logger util.Logger) error {
+	ctx, span, logger := telemetry.StartSpan(ctx, "message::"+message.Cmd, logger)
 	defer span.Complete()
 
 	if connID == systemID {

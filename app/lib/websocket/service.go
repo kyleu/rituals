@@ -125,7 +125,7 @@ func (s *Service) Close() {
 
 var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
 
-func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger) error {
+func (s *Service) Upgrade(ctx context.Context, rc *fasthttp.RequestCtx, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger) error {
 	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
 		cx, err := s.Register(u, profile, accts, conn, logger)
 		if err != nil {
@@ -137,7 +137,7 @@ func (s *Service) Upgrade(rc *fasthttp.RequestCtx, channel string, u *dbuser.Use
 			logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
 			return
 		}
-		err = s.ReadLoop(cx.ID, logger)
+		err = s.ReadLoop(ctx, cx.ID, logger)
 		if err != nil {
 			if !strings.Contains(err.Error(), "1001") {
 				logger.Error(fmt.Sprintf("error processing socket read loop for connection [%s]: %+v", cx.ID.String(), err))
