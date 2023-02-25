@@ -70,3 +70,75 @@ func (s *Service) SaveSprint(ctx context.Context, spr *sprint.Sprint, user uuid.
 
 	return spr, nil
 }
+
+func (s *Service) DeleteSprint(ctx context.Context, fs *FullSprint, logger util.Logger) error {
+	tx, err := s.db.StartTransaction(logger)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	for _, e := range fs.Estimates {
+		e.SprintID = nil
+		err = s.e.Update(ctx, tx, e, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, u := range fs.Standups {
+		u.SprintID = nil
+		err = s.u.Update(ctx, tx, u, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, r := range fs.Retros {
+		r.SprintID = nil
+		err = s.r.Update(ctx, tx, r, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, h := range fs.Histories {
+		err = s.sh.Delete(ctx, tx, h.Slug, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, c := range fs.Comments.GetByModel(enum.ModelServiceSprint, fs.Sprint.ID) {
+		err = s.c.Delete(ctx, tx, c.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, p := range fs.Permissions {
+		err = s.sp.Delete(ctx, tx, p.SprintID, p.Key, p.Value, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, m := range fs.Members {
+		err = s.sm.Delete(ctx, tx, m.SprintID, m.UserID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = s.s.Delete(ctx, tx, fs.Sprint.ID, logger)
+	if err != nil {
+		return err
+	}
+
+	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActReset, nil, nil, logger)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

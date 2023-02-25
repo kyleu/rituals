@@ -55,7 +55,7 @@
   </form>
 {% endfunc %}
 
-{% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+{% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
     <h3 title="Plan your time and direct your efforts">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
@@ -69,7 +69,7 @@
             <td>
               {%- if showComments -%}
               <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps) %}
+                {%= vwutil.Comments(enum.ModelServiceSprint, x.ID, x.TitleString(), comments, members, "member-icon", ps) %}
               </div>
               {%- endif -%}
               <a href="{%s x.PublicWebPath() %}"><div>

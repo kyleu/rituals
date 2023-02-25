@@ -187,7 +187,7 @@ func SprintForm(s *sprint.Sprint, teams team.Teams, as *app.State, ps *cutil.Pag
 }
 
 //line views/vworkspace/vwsprint/SprintList.html:58
-func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwsprint/SprintList.html:58
 	qw422016.N().S(`
   <div class="card">
@@ -227,7 +227,7 @@ func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, te
 				qw422016.N().S(`              <div class="right">
                 `)
 //line views/vworkspace/vwsprint/SprintList.html:72
-				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, nil, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, members, "member-icon", ps)
 //line views/vworkspace/vwsprint/SprintList.html:72
 				qw422016.N().S(`
               </div>
@@ -266,22 +266,22 @@ func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, te
 }
 
 //line views/vworkspace/vwsprint/SprintList.html:85
-func WriteSprintListTable(qq422016 qtio422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func WriteSprintListTable(qq422016 qtio422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwsprint/SprintList.html:85
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwsprint/SprintList.html:85
-	StreamSprintListTable(qw422016, sprints, teamID, showComments, comments, ps)
+	StreamSprintListTable(qw422016, sprints, teamID, showComments, comments, members, ps)
 //line views/vworkspace/vwsprint/SprintList.html:85
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/vwsprint/SprintList.html:85
 }
 
 //line views/vworkspace/vwsprint/SprintList.html:85
-func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
+func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) string {
 //line views/vworkspace/vwsprint/SprintList.html:85
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwsprint/SprintList.html:85
-	WriteSprintListTable(qb422016, sprints, teamID, showComments, comments, ps)
+	WriteSprintListTable(qb422016, sprints, teamID, showComments, comments, members, ps)
 //line views/vworkspace/vwsprint/SprintList.html:85
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/vwsprint/SprintList.html:85

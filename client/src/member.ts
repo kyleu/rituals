@@ -25,22 +25,16 @@ function isAdmin() {
   return req("#self-role").innerText === "owner" || req("#owner-id").innerText === selfID;
 }
 
-export function initMembers() {
-  wireSelfForm();
-  wireMemberForms();
-  refreshMembers();
-}
-
 function wireSelfForm() {
   const selfModal = req("#modal-self");
   const selfForm = opt<HTMLFormElement>("form", selfModal);
   if (selfForm) {
-    selfForm.onsubmit = function () {
+    selfForm.onsubmit = () => {
       const nameInput = req<HTMLInputElement>("input[name=\"name\"]", selfForm);
       const choiceInput = req<HTMLInputElement>("input[name=\"choice\"]:checked", selfForm);
       const pictureInput = opt<HTMLInputElement>("input[name=\"picture\"]:checked", selfForm);
 
-      const msg: { name: string, choice: string, picture?: string } = {"name": nameInput.value, "choice": choiceInput.value}
+      const msg: { name: string, choice: string, picture?: string } = {"name": nameInput.value, "choice": choiceInput.value};
       if (pictureInput) {
         msg.picture = pictureInput.value;
       }
@@ -54,10 +48,18 @@ function wireSelfForm() {
   }
 }
 
-function wireMemberForms() {
-  const modals = els(".modal-member");
-  for (const modal of modals) {
-    wireMemberForm(modal);
+export function refreshMembers() {
+  names = {};
+  selfID = req("#self-id").innerText;
+  names[selfID] = req("#self-name").innerText;
+
+  const panel = req("#panel-members");
+  const members = els(".member", panel);
+  for (const m of members) {
+    const id = m.dataset.id;
+    if (id) {
+      names[id] = req(".member-name", m).innerText;
+    }
   }
 }
 
@@ -66,7 +68,7 @@ function wireMemberForm(modal: HTMLElement) {
   if (!form) {
     return;
   }
-  const f = function (cmd: string) {
+  const f = (cmd: string) => {
     const userID = req<HTMLInputElement>("input[name=\"userID\"]", form).value;
     const role = req<HTMLSelectElement>("select[name=\"role\"]", form).value;
     send(cmd, {"userID": userID, "role": role});
@@ -82,25 +84,17 @@ function wireMemberForm(modal: HTMLElement) {
   };
   req<HTMLButtonElement>(".member-update", form).onclick = () => f("member-update");
   req<HTMLButtonElement>(".member-remove", form).onclick = () => {
-    if (confirm('Are you sure you wish to remove this user?')) {
+    if (confirm("Are you sure you wish to remove this user?")) {
       return f("member-remove");
     }
     return false;
-  }
+  };
 }
 
-export function refreshMembers() {
-  names = {};
-  selfID = req("#self-id").innerText;
-  names[selfID] = req("#self-name").innerText;
-
-  const panel = req("#panel-members");
-  const members = els(".member", panel);
-  for (const m of members) {
-    const id = m.dataset["id"];
-    if (id) {
-      names[id] = req(".member-name", m).innerText;
-    }
+function wireMemberForms() {
+  const modals = els(".modal-member");
+  for (const modal of modals) {
+    wireMemberForm(modal);
   }
 }
 
@@ -109,6 +103,44 @@ export type MemberMessage = {
   name: string;
   role: string;
   picture?: string;
+}
+
+export function memberUpdate(param: MemberMessage) {
+  if (param.userID === selfID) {
+    req("#self-name").innerText = param.name;
+    req("#self-role").innerText = param.role;
+    req("#self-picture").innerHTML = memberPictureFor(param.picture ? param.picture : "", 20, "icon");
+  } else {
+    const panel = req("#member-" + param.userID);
+    req(".member-name", panel).innerText = param.name;
+    req(".member-role", panel).innerText = param.role;
+    req(".member-picture", panel).innerHTML = memberPictureFor(param.picture ? param.picture : "", 18, "");
+
+    const modal = req("#modal-member-" + param.userID);
+    req(".member-name", modal).innerText = param.name;
+    const rd = opt(".member-role", modal);
+    if (rd) {
+      rd.innerText = param.role;
+    }
+    const rs = opt<HTMLSelectElement>("select[name=\"role\"]", modal);
+    if (rs) {
+      rs.value = param.role;
+    }
+    req(".member-picture", modal).innerHTML = memberPictureFor(param.picture ? param.picture : "", 18, "");
+  }
+  if (names[param.userID] !== param.name) {
+    names[param.userID] = param.name;
+
+    const tbl = req("#panel-members table tbody");
+    const items = tbl.children;
+    const itemsArr: Element[] = [...items];
+    itemsArr.sort((l, r) => {
+      const ln = req(".member-name", l).innerText;
+      const rn = req(".member-name", r).innerText;
+      return ln.localeCompare(rn, undefined, {sensitivity: "accent"});
+    });
+    tbl.replaceChildren(...itemsArr);
+  }
 }
 
 export function memberAdd(param: MemberMessage) {
@@ -122,13 +154,13 @@ export function memberAdd(param: MemberMessage) {
   for (let i = 0; i < tbl.children.length; i++) {
     const n = tbl.children.item(i);
     const nm = req(".member-name", n as HTMLElement).innerText;
-    if (nm.localeCompare(param.name, undefined, {sensitivity: 'accent'}) > 0) {
+    if (nm.localeCompare(param.name, undefined, {sensitivity: "accent"}) > 0) {
       idx = i;
       break;
     }
   }
   const tr = snippetMember(param.userID, param.name, param.role, param.picture ? param.picture : "");
-  if (idx == -1) {
+  if (idx === -1) {
     tbl.appendChild(tr);
   } else {
     tbl.insertBefore(tr, tbl.children[idx]);
@@ -147,40 +179,6 @@ export function memberAdd(param: MemberMessage) {
   names[param.userID] = param.name;
 }
 
-export function memberUpdate(param: MemberMessage) {
-  if (param.userID === selfID) {
-    req("#self-name").innerText = param.name;
-    req("#self-role").innerText = param.role;
-    req("#self-picture").innerHTML = memberPictureFor(param.picture ? param.picture: "", 20, "icon");
-  } else {
-    const panel = req("#member-" + param.userID);
-    req(".member-name", panel).innerText = param.name;
-    req(".member-role", panel).innerText = param.role;
-    req(".member-picture").innerHTML = memberPictureFor(param.picture ? param.picture: "", 18, "");
-
-    const modal = req("#modal-member-" + param.userID);
-    req<HTMLSelectElement>("select[name=\"role\"]", modal).value = param.role;
-  }
-  if (names[param.userID] !== param.name) {
-    names[param.userID] = param.name;
-
-    const tbl = req("#panel-members table tbody");
-    const items = tbl.children;
-    const itemsArr: Element[] = [];
-    for (const i in items) {
-      if (items[i].nodeType == 1) { // get rid of the whitespace text nodes
-        itemsArr.push(items[i]);
-      }
-    }
-    itemsArr.sort((l, r) => {
-      const ln = req(".member-name", l).innerText;
-      const rn = req(".member-name", r).innerText;
-      return ln.localeCompare(rn, undefined, {sensitivity: 'accent'});
-    });
-    tbl.replaceChildren(...itemsArr);
-  }
-}
-
 export function memberRemove(userID: string) {
   const panel = req("#member-" + userID);
   panel.remove();
@@ -193,9 +191,15 @@ export function onlineUpdate(param: { userID: string; connected: boolean; }) {
   }
   const mel = opt("#member-" + param.userID + " .online-status");
   if (!mel) {
-    throw "missing panel #member-" + param.userID;
+    throw new Error("missing panel #member-" + param.userID);
   }
   mel.title = param.connected ? "online" : "offline";
   const svg = param.connected ? "check-circle" : "circle";
   mel.innerHTML = svgRef(svg, 18, "right");
+}
+
+export function initMembers() {
+  wireSelfForm();
+  wireMemberForms();
+  refreshMembers();
 }

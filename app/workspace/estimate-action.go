@@ -56,6 +56,9 @@ func (s *Service) ActionEstimate(p *Params) (*FullEstimate, string, string, erro
 }
 
 func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
+	if !fe.Admin() {
+		return nil, "", "", errors.New("you do not have permission to edit this estimate")
+	}
 	tgt := fe.Estimate.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
 	if tgt.Title == "" {
@@ -162,6 +165,9 @@ func estimateStoryUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no story found with id [%s]", id.String())
 	}
+	if curr.UserID != fe.Self.UserID && (!fe.Admin()) {
+		return nil, "", "", errors.New("you do not have permission to edit this story")
+	}
 	st := curr.Clone()
 	st.Title = strings.TrimSpace(p.Frm.GetStringOpt("title"))
 	if st.Title == "" {
@@ -244,15 +250,18 @@ func estimateStoryRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if id == nil {
 		return nil, "", "", errors.New("must provide [id]")
 	}
+	curr := fe.Stories.Get(*id)
+	if curr == nil {
+		return nil, "", "", errors.Errorf("no story found with id [%s]", id.String())
+	}
+	if curr.UserID != fe.Self.UserID && (!fe.Admin()) {
+		return nil, "", "", errors.New("you do not have permission to remove this story")
+	}
 	for _, v := range fe.Votes.GetByStoryIDs(*id) {
 		err := p.Svc.v.Delete(p.Ctx, nil, v.StoryID, v.UserID, p.Logger)
 		if err != nil {
 			return nil, "", "", errors.Wrap(err, "unable to delete vote")
 		}
-	}
-	curr := fe.Stories.Get(*id)
-	if curr == nil {
-		return nil, "", "", errors.Errorf("no story found with id [%s]", id.String())
 	}
 	err := p.Svc.st.Delete(p.Ctx, nil, *id, p.Logger)
 	if err != nil {
@@ -266,11 +275,8 @@ func estimateStoryRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 }
 
 func estimateMemberUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
-	if fe.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this estimate")
-	}
-	if fe.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this estimate")
+	if !fe.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
@@ -297,15 +303,15 @@ func estimateMemberUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 }
 
 func estimateMemberRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
-	if fe.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this estimate")
-	}
-	if fe.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this estimate")
+	if !fe.Admin() {
+		return nil, "", "", errors.New("you do not have permission to remove this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
+	}
+	if *userID == fe.Self.UserID {
+		return nil, "", "", errors.New("you can't remove yourself")
 	}
 	curr := fe.Members.Get(fe.Estimate.ID, *userID)
 	if curr == nil {
@@ -323,10 +329,6 @@ func estimateMemberRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 }
 
 func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
-	if fe.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this estimate")
-	}
-
 	name := p.Frm.GetStringOpt("name")
 	choice := p.Frm.GetStringOpt("choice")
 	picture := p.Frm.GetStringOpt("picture")
@@ -362,9 +364,6 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 }
 
 func estimateComment(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
-	if fe.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this estimate")
-	}
 	c, u, err := commentFromForm(p.Frm, fe.Self.UserID)
 	if err != nil {
 		return nil, "", "", err

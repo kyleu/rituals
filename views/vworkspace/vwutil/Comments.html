@@ -9,22 +9,22 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) %}
+{% func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, cls string, ps *cutil.PageState) %}
   {%- code
     comments := allComments.GetByModel(svc, id)
   -%}
-  {%= CommentsLink(svc, id, title, comments, ps) %}
+  {%= CommentsLink(svc, id, title, comments, cls, ps) %}
   {%= CommentsModal(svc, id, title, comments, members, ps) %}
 {% endfunc %}
 
-{% func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) %}
+{% func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, cls string, ps *cutil.PageState) %}
   {%- code
     icon := "comment-dots"
     if len(comments) == 0 {
       icon = "comment-alt"
     }
   -%}
-  <a id="comment-link-{%s string(svc) %}-{%s id.String() %}" class="comment-link" data-key="{%s string(svc) %}-{%s id.String() %}"  href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
+  <a id="comment-link-{%s string(svc) %}-{%s id.String() %}" class="comment-link" data-key="{%s string(svc) %}-{%s id.String() %}"  href="#modal-{%s string(svc) %}-{%s id.String() %}-comments" title="{%d len(comments) %} {%s util.StringPluralMaybe(`comment`, len(comments)) %}">{%= components.SVGRef(icon, 18, 18, cls, ps) %}</a>
 {% endfunc %}
 
 {% func CommentsModal(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, members util.Members, ps *cutil.PageState) %}

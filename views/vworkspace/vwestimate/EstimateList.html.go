@@ -194,7 +194,7 @@ func EstimateForm(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints
 }
 
 //line views/vworkspace/vwestimate/EstimateList.html:61
-func StreamEstimateListTable(qw422016 *qt422016.Writer, estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func StreamEstimateListTable(qw422016 *qt422016.Writer, estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwestimate/EstimateList.html:61
 	qw422016.N().S(`
   <div class="card">
@@ -234,7 +234,7 @@ func StreamEstimateListTable(qw422016 *qt422016.Writer, estimates estimate.Estim
 				qw422016.N().S(`              <div class="right">
                 `)
 //line views/vworkspace/vwestimate/EstimateList.html:75
-				vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, members, "member-icon", ps)
 //line views/vworkspace/vwestimate/EstimateList.html:75
 				qw422016.N().S(`
               </div>
@@ -273,22 +273,22 @@ func StreamEstimateListTable(qw422016 *qt422016.Writer, estimates estimate.Estim
 }
 
 //line views/vworkspace/vwestimate/EstimateList.html:88
-func WriteEstimateListTable(qq422016 qtio422016.Writer, estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func WriteEstimateListTable(qq422016 qtio422016.Writer, estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwestimate/EstimateList.html:88
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwestimate/EstimateList.html:88
-	StreamEstimateListTable(qw422016, estimates, teamID, sprintID, showComments, comments, ps)
+	StreamEstimateListTable(qw422016, estimates, teamID, sprintID, showComments, comments, members, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:88
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/vwestimate/EstimateList.html:88
 }
 
 //line views/vworkspace/vwestimate/EstimateList.html:88
-func EstimateListTable(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
+func EstimateListTable(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) string {
 //line views/vworkspace/vwestimate/EstimateList.html:88
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwestimate/EstimateList.html:88
-	WriteEstimateListTable(qb422016, estimates, teamID, sprintID, showComments, comments, ps)
+	WriteEstimateListTable(qb422016, estimates, teamID, sprintID, showComments, comments, members, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:88
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/vwestimate/EstimateList.html:88

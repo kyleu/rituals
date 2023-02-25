@@ -49,6 +49,9 @@ func (s *Service) ActionStandup(p *Params) (*FullStandup, string, string, error)
 }
 
 func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
+	if !fu.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this standup")
+	}
 	tgt := fu.Standup.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
 	if tgt.Title == "" {
@@ -160,6 +163,9 @@ func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no report found with id [%s]", id.String())
 	}
+	if curr.UserID != fu.Self.UserID && (!fu.Admin()) {
+		return nil, "", "", errors.New("you do not have permission to update this report")
+	}
 	rpt := curr.Clone()
 	day, _ := p.Frm.GetTime("day", false)
 	if day == nil {
@@ -192,6 +198,9 @@ func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no report found with id [%s]", id.String())
 	}
+	if curr.UserID != fu.Self.UserID && (!fu.Admin()) {
+		return nil, "", "", errors.New("you do not have permission to remove this report")
+	}
 	err := p.Svc.rt.Delete(p.Ctx, nil, *id, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete report")
@@ -204,11 +213,8 @@ func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 }
 
 func standupMemberUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
-	if fu.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this standup")
-	}
-	if fu.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this standup")
+	if !fu.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
@@ -235,15 +241,15 @@ func standupMemberUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 }
 
 func standupMemberRemove(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
-	if fu.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this standup")
-	}
-	if fu.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this standup")
+	if !fu.Admin() {
+		return nil, "", "", errors.New("you do not have permission to remove this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
+	}
+	if *userID == fu.Self.UserID {
+		return nil, "", "", errors.New("you can't remove yourself")
 	}
 	curr := fu.Members.Get(fu.Standup.ID, *userID)
 	if curr == nil {
@@ -261,9 +267,6 @@ func standupMemberRemove(p *Params, fu *FullStandup) (*FullStandup, string, stri
 }
 
 func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
-	if fu.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this standup")
-	}
 	name := p.Frm.GetStringOpt("name")
 	choice := p.Frm.GetStringOpt("choice")
 	picture := p.Frm.GetStringOpt("picture")
@@ -299,9 +302,6 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 }
 
 func standupComment(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
-	if fu.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this standup")
-	}
 	c, u, err := commentFromForm(p.Frm, fu.Self.UserID)
 	if err != nil {
 		return nil, "", "", err

@@ -58,7 +58,7 @@
   </form>
 {% endfunc %}
 
-{% func EstimateListTable(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+{% func EstimateListTable(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyEstimate, teamID, sprintID, "New Estimate") %}</div>
     <h3 title="Planning poker for any stories you need to work on">{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
@@ -72,7 +72,7 @@
             <td>
               {%- if showComments -%}
               <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, nil, ps) %}
+                {%= vwutil.Comments(enum.ModelServiceEstimate, x.ID, x.TitleString(), comments, members, "member-icon", ps) %}
               </div>
               {%- endif -%}
               <a href="{%s x.PublicWebPath() %}"><div>

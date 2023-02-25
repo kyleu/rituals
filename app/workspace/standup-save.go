@@ -72,3 +72,58 @@ func (s *Service) SaveStandup(ctx context.Context, u *standup.Standup, user uuid
 
 	return u, nil
 }
+
+func (s *Service) DeleteStandup(ctx context.Context, fu *FullStandup, logger util.Logger) error {
+	tx, err := s.db.StartTransaction(logger)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	for _, r := range fu.Reports {
+		err = s.rt.Delete(ctx, tx, r.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, h := range fu.Histories {
+		err = s.uh.Delete(ctx, tx, h.Slug, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, c := range fu.Comments {
+		err = s.c.Delete(ctx, tx, c.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, p := range fu.Permissions {
+		err = s.up.Delete(ctx, tx, p.StandupID, p.Key, p.Value, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, m := range fu.Members {
+		err = s.um.Delete(ctx, tx, m.StandupID, m.UserID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = s.u.Delete(ctx, tx, fu.Standup.ID, logger)
+	if err != nil {
+		return err
+	}
+
+	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReset, nil, nil, logger)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

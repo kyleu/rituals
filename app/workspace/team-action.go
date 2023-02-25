@@ -35,6 +35,9 @@ func (s *Service) ActionTeam(p *Params) (*FullTeam, string, string, error) {
 }
 
 func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
+	if !ft.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this team")
+	}
 	tgt := ft.Team.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
 	if tgt.Title == "" {
@@ -95,11 +98,8 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 }
 
 func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
-	if ft.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this team")
-	}
-	if ft.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this team")
+	if !ft.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
@@ -126,15 +126,15 @@ func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 }
 
 func teamMemberRemove(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
-	if ft.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this team")
-	}
-	if ft.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this team")
+	if !ft.Admin() {
+		return nil, "", "", errors.New("you do not have permission to remove this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
+	}
+	if *userID == ft.Self.UserID {
+		return nil, "", "", errors.New("you can't remove yourself")
 	}
 	curr := ft.Members.Get(ft.Team.ID, *userID)
 	if curr == nil {
@@ -152,9 +152,6 @@ func teamMemberRemove(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 }
 
 func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
-	if ft.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this team")
-	}
 	name := p.Frm.GetStringOpt("name")
 	choice := p.Frm.GetStringOpt("choice")
 	picture := p.Frm.GetStringOpt("picture")
@@ -190,9 +187,6 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 }
 
 func teamComment(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
-	if ft.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this team")
-	}
 	c, u, err := commentFromForm(p.Frm, ft.Self.UserID)
 	if err != nil {
 		return nil, "", "", err

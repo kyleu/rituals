@@ -60,6 +60,25 @@ func TeamCreate(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func TeamDelete(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.team.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(rc, "slug", false)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		ft, err := as.Services.Workspace.LoadTeam(p)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Workspace.DeleteTeam(ps.Context, ft, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Team deleted", "/", rc, ps)
+	})
+}
+
 func TeamAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.team.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)

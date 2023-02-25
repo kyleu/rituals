@@ -24,7 +24,7 @@
         <td><a href="#modal-story-{%s s.ID.String() %}" class="story-title"><div>{%s s.TitleString() %}</div></a></td>
         <td>{%s string(s.Status) %}</td>
         <td>{%s s.FinalVoteSafe() %}</td>
-        <td>{%= vwutil.Comments(enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps) %}</td>
+        <td>{%= vwutil.Comments(enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps) %}</td>
       </tr>
       {%- endfor -%}
     </tbody>

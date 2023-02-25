@@ -50,6 +50,9 @@ func (s *Service) ActionRetro(p *Params) (*FullRetro, string, string, error) {
 }
 
 func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
+	if !fr.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this retro")
+	}
 	tgt := fr.Retro.Clone()
 	tgt.Title = p.Frm.GetStringOpt("title")
 	if tgt.Title == "" {
@@ -161,6 +164,9 @@ func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no feedback found with id [%s]", id.String())
 	}
+	if curr.UserID != fr.Self.UserID && (!fr.Admin()) {
+		return nil, "", "", errors.New("you do not have permission to update this feedback")
+	}
 	f := curr.Clone()
 	f.Category = p.Frm.GetStringOpt("category")
 	f.Content = p.Frm.GetStringOpt("content")
@@ -188,6 +194,9 @@ func retroFeedbackRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 	if curr == nil {
 		return nil, "", "", errors.Errorf("no feedback found with id [%s]", id.String())
 	}
+	if curr.UserID != fr.Self.UserID && (!fr.Admin()) {
+		return nil, "", "", errors.New("you do not have permission to remove this feedback")
+	}
 	err := p.Svc.f.Delete(p.Ctx, nil, *id, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to delete feedback")
@@ -200,11 +209,8 @@ func retroFeedbackRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 }
 
 func retroMemberUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
-	if fr.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this retro")
-	}
-	if fr.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this retro")
+	if !fr.Admin() {
+		return nil, "", "", errors.New("you do not have permission to update this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
@@ -231,15 +237,15 @@ func retroMemberUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, er
 }
 
 func retroMemberRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
-	if fr.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this retro")
-	}
-	if fr.Self.Role != enum.MemberStatusOwner {
-		return nil, "", "", errors.New("you are not the owner of this retro")
+	if !fr.Admin() {
+		return nil, "", "", errors.New("you do not have permission to remove this member")
 	}
 	userID, _ := p.Frm.GetUUID("userID", false)
 	if userID == nil {
 		return nil, "", "", errors.New("must provide [userID]")
+	}
+	if *userID == fr.Self.UserID {
+		return nil, "", "", errors.New("you can't remove yourself")
 	}
 	curr := fr.Members.Get(fr.Retro.ID, *userID)
 	if curr == nil {
@@ -257,9 +263,6 @@ func retroMemberRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, er
 }
 
 func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
-	if fr.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this retro")
-	}
 	name := p.Frm.GetStringOpt("name")
 	choice := p.Frm.GetStringOpt("choice")
 	picture := p.Frm.GetStringOpt("picture")
@@ -295,9 +298,6 @@ func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, erro
 }
 
 func retroComment(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
-	if fr.Self == nil {
-		return nil, "", "", errors.New("you are not a member of this retro")
-	}
 	c, u, err := commentFromForm(p.Frm, fr.Self.UserID)
 	if err != nil {
 		return nil, "", "", err

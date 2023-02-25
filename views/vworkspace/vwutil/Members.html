@@ -83,12 +83,14 @@
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>
-          {%- if m.Picture == "" -%}
-          {%= components.SVGRef(`profile`, 24, 24, `icon`, ps) %}
-          {%- else -%}
-          <img class="icon" style="width: 24px; height: 24px;" src="{%s m.Picture %}" />
-          {%- endif -%}
-          {%s m.Name %}
+          <span class="member-picture">
+            {%- if m.Picture == "" -%}
+            {%= components.SVGRef(`profile`, 24, 24, `icon`, ps) %}
+            {%- else -%}
+            <img class="icon" style="width: 24px; height: 24px;" src="{%s m.Picture %}" />
+            {%- endif -%}
+          </span>
+          <span class="member-name">{%s m.Name %}</span>
         </h2>
       </div>
       <div class="modal-body">
@@ -112,17 +114,19 @@
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>
-          {%- if m.Picture == "" -%}
-          {%= components.SVGRef(`profile`, 24, 24, `icon`, ps) %}
-          {%- else -%}
-          <img class="icon" style="width: 24px; height: 24px;" src="{%s m.Picture %}" />
-          {%- endif -%}
-          {%s m.Name %}
+          <span class="member-picture">
+            {%- if m.Picture == "" -%}
+            {%= components.SVGRef(`profile`, 24, 24, `icon`, ps) %}
+            {%- else -%}
+            <img class="icon" style="width: 24px; height: 24px;" src="{%s m.Picture %}" />
+            {%- endif -%}
+          </span>
+          <span class="member-name">{%s m.Name %}</span>
         </h2>
       </div>
       <div class="modal-body">
         <em>Role</em><br />
-        {%s string(m.Role) %}
+        <span class="member-role">{%s string(m.Role) %}</span>
       </div>
     </div>
   </div>

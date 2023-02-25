@@ -87,3 +87,23 @@
     {%- endfor -%}
   {%- endif -%}
 {% endfunc %}
+
+{% func PermissionsList(key string, perms util.Permissions, ps *cutil.PageState) %}
+  {%- if len(perms) == 0 -%}
+    <div>Open</div>
+  {%- endif -%}
+  {%- if perms.Get(util.KeyTeam, "true") != nil -%}
+    <div class="permission-config-team mb">Must be a member of this {%s key %}'s team</div>
+  {%- endif -%}
+  {%- if perms.Get(util.KeySprint, "true") != nil -%}
+    <div class="permission-config-sprint mb">Must be a member of this {%s key %}'s sprint</div>
+  {%- endif -%}
+  {%- for _, perm := range perms.AuthPerms() -%}
+    {%- if perms.Get(perm.Key, "*") != nil -%}
+      <div class="mb">Must be signed into [{%s perm.Key %}]</div>
+    {%- endif -%}
+    {%- if perms.Get(perm.Key, perm.Value) != nil -%}
+      <div class="mb">Must be signed into [{%s perm.Key %}] from [{%s perm.Value %}]</div>
+    {%- endif -%}
+  {%- endfor -%}
+{% endfunc %}

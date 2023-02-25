@@ -70,6 +70,25 @@ func StandupCreate(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func StandupDelete(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.standup.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(rc, "slug", false)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		fu, err := as.Services.Workspace.LoadStandup(p, nil, nil)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Workspace.DeleteStandup(ps.Context, fu, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Standup deleted", "/", rc, ps)
+	})
+}
+
 func StandupAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.standup.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)

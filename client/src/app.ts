@@ -8,9 +8,9 @@ import {initSprint} from "./sprint";
 import {initStandup} from "./standup";
 import {initRetro} from "./retro";
 
-let sock: Socket
-let svc: string
-let id: string
+let sock: Socket;
+let svc: string;
+let id: string;
 
 function open() {
   console.log("[socket]: open");
@@ -27,7 +27,7 @@ function recv(m: Message) {
 }
 
 function err(e: unknown) {
-  console.log("[socket error]: " + e);
+  console.log(`[socket error]: ${e}`);
 }
 
 export function initWorkspace(t: string, idStr: string) {
@@ -35,7 +35,7 @@ export function initWorkspace(t: string, idStr: string) {
   id = idStr;
   initComments();
   initMembers();
-  switch(svc) {
+  switch (svc) {
     case "team":
       initTeam();
       break;
@@ -57,7 +57,7 @@ export function initWorkspace(t: string, idStr: string) {
 }
 
 export function send(cmd: string, param: unknown) {
-  sock.send({channel: svc + ":" + id, cmd: cmd, param: param})
+  sock.send({channel: svc + ":" + id, cmd: cmd, param: param});
 }
 
 declare global {

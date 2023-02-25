@@ -62,7 +62,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	qw422016.N().S(`
           `)
 //line views/vworkspace/vwteam/TeamWorkspace.html:33
-	vwutil.StreamComments(qw422016, enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps)
+	vwutil.StreamComments(qw422016, enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, "", ps)
 //line views/vworkspace/vwteam/TeamWorkspace.html:33
 	qw422016.N().S(`
         </div>
@@ -88,155 +88,255 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
 	qw422016.E().S(t.Owner.String())
 //line views/vworkspace/vwteam/TeamWorkspace.html:40
 	qw422016.N().S(`</span>
-        `)
+`)
 //line views/vworkspace/vwteam/TeamWorkspace.html:41
-	StreamTeamWorkspaceModal(qw422016, t, w.Permissions.ToPermissions(), ps)
+	if w.Admin() {
 //line views/vworkspace/vwteam/TeamWorkspace.html:41
-	qw422016.N().S(`
-      </div>
+		qw422016.N().S(`        `)
+//line views/vworkspace/vwteam/TeamWorkspace.html:42
+		StreamTeamWorkspaceModalEdit(qw422016, t, w.Permissions.ToPermissions(), ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:42
+		qw422016.N().S(`
+`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:43
+	} else {
+//line views/vworkspace/vwteam/TeamWorkspace.html:43
+		qw422016.N().S(`        `)
+//line views/vworkspace/vwteam/TeamWorkspace.html:44
+		StreamTeamWorkspaceModalView(qw422016, t, w.Permissions.ToPermissions(), ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:44
+		qw422016.N().S(`
+`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:45
+	}
+//line views/vworkspace/vwteam/TeamWorkspace.html:45
+	qw422016.N().S(`      </div>
     </div>
     <div id="panel-detail">
       `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:45
-	vwsprint.StreamSprintListTable(qw422016, w.Sprints, &t.ID, true, w.Comments, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:45
+//line views/vworkspace/vwteam/TeamWorkspace.html:49
+	vwsprint.StreamSprintListTable(qw422016, w.Sprints, &t.ID, true, w.Comments, w.UtilMembers, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:49
 	qw422016.N().S(`
       `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:46
-	vwestimate.StreamEstimateListTable(qw422016, w.Estimates, &t.ID, nil, true, w.Comments, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:46
+//line views/vworkspace/vwteam/TeamWorkspace.html:50
+	vwestimate.StreamEstimateListTable(qw422016, w.Estimates, &t.ID, nil, true, w.Comments, w.UtilMembers, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:50
 	qw422016.N().S(`
       `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:47
-	vwstandup.StreamStandupListTable(qw422016, w.Standups, &t.ID, nil, true, w.Comments, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:47
+//line views/vworkspace/vwteam/TeamWorkspace.html:51
+	vwstandup.StreamStandupListTable(qw422016, w.Standups, &t.ID, nil, true, w.Comments, w.UtilMembers, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:51
 	qw422016.N().S(`
       `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:48
-	vwretro.StreamRetroListTable(qw422016, w.Retros, &t.ID, nil, true, w.Comments, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:48
+//line views/vworkspace/vwteam/TeamWorkspace.html:52
+	vwretro.StreamRetroListTable(qw422016, w.Retros, &t.ID, nil, true, w.Comments, w.UtilMembers, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:52
 	qw422016.N().S(`
     </div>
     `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:50
+//line views/vworkspace/vwteam/TeamWorkspace.html:54
 	vwutil.StreamMemberPanels(qw422016, w.UtilMembers, w.Admin(), t.PublicWebPath(), ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:50
+//line views/vworkspace/vwteam/TeamWorkspace.html:54
 	qw422016.N().S(`
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       initWorkspace("`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:54
+//line views/vworkspace/vwteam/TeamWorkspace.html:58
 	qw422016.E().S(util.KeyTeam)
-//line views/vworkspace/vwteam/TeamWorkspace.html:54
+//line views/vworkspace/vwteam/TeamWorkspace.html:58
 	qw422016.N().S(`", "`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:54
+//line views/vworkspace/vwteam/TeamWorkspace.html:58
 	qw422016.E().S(t.ID.String())
-//line views/vworkspace/vwteam/TeamWorkspace.html:54
+//line views/vworkspace/vwteam/TeamWorkspace.html:58
 	qw422016.N().S(`");
     });
   </script>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 func (p *TeamWorkspace) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 func (p *TeamWorkspace) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 	return qs422016
-//line views/vworkspace/vwteam/TeamWorkspace.html:57
+//line views/vworkspace/vwteam/TeamWorkspace.html:61
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:59
-func StreamTeamWorkspaceModal(qw422016 *qt422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamWorkspace.html:59
+//line views/vworkspace/vwteam/TeamWorkspace.html:63
+func StreamTeamWorkspaceModalEdit(qw422016 *qt422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwteam/TeamWorkspace.html:63
 	qw422016.N().S(`
   <div id="modal-team-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Team</h2>
+        <h2>`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:69
+	components.StreamSVGRef(qw422016, util.KeyTeam, 24, 24, "icon", ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:69
+	qw422016.N().S(` Team</h2>
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:68
+//line views/vworkspace/vwteam/TeamWorkspace.html:72
 	qw422016.E().S(t.PublicWebPath())
-//line views/vworkspace/vwteam/TeamWorkspace.html:68
+//line views/vworkspace/vwteam/TeamWorkspace.html:72
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwteam/TeamWorkspace.html:69
+//line views/vworkspace/vwteam/TeamWorkspace.html:73
 	qw422016.E().S(string(action.ActUpdate))
-//line views/vworkspace/vwteam/TeamWorkspace.html:69
+//line views/vworkspace/vwteam/TeamWorkspace.html:73
 	qw422016.N().S(`" />
           `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:70
+//line views/vworkspace/vwteam/TeamWorkspace.html:74
 	components.StreamFormVerticalInput(qw422016, "title", "", "Title", t.TitleString(), 5, "The name of your team")
-//line views/vworkspace/vwteam/TeamWorkspace.html:70
+//line views/vworkspace/vwteam/TeamWorkspace.html:74
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:71
+//line views/vworkspace/vwteam/TeamWorkspace.html:75
 	components.StreamFormVerticalIconPicker(qw422016, "icon", "Icon", t.IconSafe(), ps, 5)
-//line views/vworkspace/vwteam/TeamWorkspace.html:71
+//line views/vworkspace/vwteam/TeamWorkspace.html:75
 	qw422016.N().S(`
           <hr />
           `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:73
+//line views/vworkspace/vwteam/TeamWorkspace.html:77
 	vwutil.StreamPermissionsForm(qw422016, util.KeyTeam, perms, false, nil, false, nil, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:73
+//line views/vworkspace/vwteam/TeamWorkspace.html:77
 	qw422016.N().S(`
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:80
+	qw422016.E().S(t.PublicWebPath())
+//line views/vworkspace/vwteam/TeamWorkspace.html:80
+	qw422016.N().S(`/delete" onclick="return confirm('are you sure you wish to delete this team?')"><button type="button">Delete</button></a>
         </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
-func WriteTeamWorkspaceModal(qq422016 qtio422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
+func WriteTeamWorkspaceModalEdit(qq422016 qtio422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
-	StreamTeamWorkspaceModal(qw422016, t, perms, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
+	StreamTeamWorkspaceModalEdit(qw422016, t, perms, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 }
 
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
-func TeamWorkspaceModal(t *team.Team, perms util.Permissions, ps *cutil.PageState) string {
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
+func TeamWorkspaceModalEdit(t *team.Team, perms util.Permissions, ps *cutil.PageState) string {
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
-	WriteTeamWorkspaceModal(qb422016, t, perms, ps)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
+	WriteTeamWorkspaceModalEdit(qb422016, t, perms, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
 	return qs422016
-//line views/vworkspace/vwteam/TeamWorkspace.html:81
+//line views/vworkspace/vwteam/TeamWorkspace.html:85
+}
+
+//line views/vworkspace/vwteam/TeamWorkspace.html:87
+func StreamTeamWorkspaceModalView(qw422016 *qt422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwteam/TeamWorkspace.html:87
+	qw422016.N().S(`
+  <div id="modal-team-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:94
+	components.StreamSVGRef(qw422016, t.IconSafe(), 24, 24, "icon", ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:94
+	qw422016.N().S(`</span>
+          <span class="view-title">`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:95
+	qw422016.E().S(t.TitleString())
+//line views/vworkspace/vwteam/TeamWorkspace.html:95
+	qw422016.N().S(`</span>
+        </h2>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          `)
+//line views/vworkspace/vwteam/TeamWorkspace.html:100
+	components.StreamIconPicker(qw422016, "icon", t.IconSafe(), ps, 5)
+//line views/vworkspace/vwteam/TeamWorkspace.html:100
+	qw422016.N().S(`
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th class="shrink">Permissions</th>
+              <td class="config-panel-perms">`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:106
+	vwutil.StreamPermissionsList(qw422016, util.KeyRetro, perms, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:106
+	qw422016.N().S(`</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+`)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+}
+
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+func WriteTeamWorkspaceModalView(qq422016 qtio422016.Writer, t *team.Team, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	StreamTeamWorkspaceModalView(qw422016, t, perms, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+}
+
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+func TeamWorkspaceModalView(t *team.Team, perms util.Permissions, ps *cutil.PageState) string {
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	WriteTeamWorkspaceModalView(qb422016, t, perms, ps)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
+	return qs422016
+//line views/vworkspace/vwteam/TeamWorkspace.html:113
 }

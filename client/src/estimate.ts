@@ -1,17 +1,16 @@
 import {initStories, Story, storyAdd, storyRemove, storyStatus} from "./story";
-import {Message} from "./socket";
-import {req} from "./dom";
+import type {Message} from "./socket";
+import {opt, req} from "./dom";
 import {send} from "./app";
-import {setTeamSprint} from "./workspace";
+import {configFocus, setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
-import {focusDelay} from "./util";
 import {loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Estimate = {
   id: string;
   slug: string;
   title: string;
-  choices: string;
+  choices: string[];
   icon: string;
   status: string;
   teamID: string;
@@ -20,29 +19,45 @@ export type Estimate = {
 }
 
 export function initEstimate() {
-  req("#modal-estimate-config-link").onclick = function() {
-    focusDelay(req("#modal-estimate-config form input[name=\"title\"]"));
-  }
-  const frm = req<HTMLFormElement>("#modal-estimate-config form");
-  const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
-  teamEl.onchange = function() {
+  configFocus("estimate");
+  const frm = opt<HTMLFormElement>("#modal-estimate-config form");
+  if (frm) {
+    const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+    teamEl.onchange = () => {
+      permissionsTeamToggle(teamEl.value !== "");
+    };
+    const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+    sprintEl.onchange = () => {
+      permissionsSprintToggle(sprintEl.value !== "");
+    };
     permissionsTeamToggle(teamEl.value !== "");
-  }
-  const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
-  sprintEl.onchange = function() {
     permissionsSprintToggle(sprintEl.value !== "");
+    frm.onsubmit = () => {
+      const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
+      const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
+      const choices = req<HTMLInputElement>("input[name=\"choices\"]", frm).value;
+      send("update", {"title": title, "icon": icon, "choices": choices, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
+      document.location.hash = "";
+      return false;
+    };
   }
-  permissionsTeamToggle(teamEl.value !== "");
-  permissionsSprintToggle(sprintEl.value !== "");
-  frm.onsubmit = function() {
-    const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-    const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-    const choices = req<HTMLInputElement>("input[name=\"choices\"]", frm).value;
-    send("update", {"title": title, "icon": icon, "choices": choices, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
-    document.location.hash = "";
-    return false;
-  };
   initStories();
+}
+
+function onUpdate(param: Estimate) {
+  req("#owner-id").innerText = param.owner;
+  const panel = req<HTMLElement>("#modal-estimate-config");
+  const frm = opt<HTMLFormElement>("form", panel);
+  if (frm) {
+    const ch = req<HTMLInputElement>("input[name=\"choices\"]", frm);
+    ch.value = param.choices.join(",");
+    if (ch.parentElement) {
+      tagsWire(ch.parentElement);
+    }
+  } else {
+    req(".config-panel-choices", panel).innerText = param.choices.join(", ");
+  }
+  setTeamSprint("estimate", panel, param.teamID, param.sprintID, param.title, param.icon);
 }
 
 export function handleEstimate(m: Message) {
@@ -58,17 +73,6 @@ export function handleEstimate(m: Message) {
     case "permissions":
       return permissionsUpdate(m.param as Permission[]);
     default:
-      throw "invalid estimate command [" + m.cmd + "]"
+      throw new Error("invalid estimate command [" + m.cmd + "]");
   }
-}
-
-function onUpdate(param: Estimate) {
-  req("owner-id").innerText = param.owner;
-  const frm = req<HTMLFormElement>("#modal-estimate-config form");
-  const ch = req<HTMLInputElement>("input[name=\"choices\"]", frm)
-  ch.value = param.choices;
-  if(ch.parentElement) {
-    tagsWire(ch.parentElement);
-  }
-  setTeamSprint("estimate", frm, param.teamID, param.sprintID, param.title, param.icon);
 }

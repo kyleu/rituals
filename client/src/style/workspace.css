@@ -46,3 +46,7 @@
     flex: 100%;
   }
 }
+
+.member-icon {
+  margin-bottom: -4px;
+}

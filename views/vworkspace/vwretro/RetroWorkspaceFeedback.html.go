@@ -89,7 +89,7 @@ func StreamRetroWorkspaceFeedbacks(qw422016 *qt422016.Writer, userID uuid.UUID, 
 			qw422016.N().S(`" class="feedback mt clear">
         <div class="right">`)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:33
-			vwutil.StreamComments(qw422016, enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, w.UtilMembers, ps)
+			vwutil.StreamComments(qw422016, enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:33
 			qw422016.N().S(`</div>
         <a href="#modal-feedback-`)

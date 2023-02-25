@@ -1,8 +1,7 @@
-import {Message} from "./socket";
-import {req} from "./dom";
+import type {Message} from "./socket";
+import {opt, req} from "./dom";
 import {send} from "./app";
-import {focusDelay} from "./util";
-import {ChildAdd, ChildRemove, ChildUpdate, onChildAddModel, onChildRemoveModel, onChildUpdateModel, setTeamSprint} from "./workspace";
+import {ChildAdd, ChildRemove, ChildUpdate, configFocus, onChildAddModel, onChildRemoveModel, onChildUpdateModel, setTeamSprint} from "./workspace";
 import {loadPermsForm, Permission, permissionsUpdate} from "./permission";
 
 export type Team = {
@@ -15,17 +14,23 @@ export type Team = {
 }
 
 export function initTeam() {
-  req("#modal-team-config-link").onclick = function() {
-    focusDelay(req("#modal-team-config form input[name=\"title\"]"));
+  configFocus("team");
+  const frm = opt<HTMLFormElement>("#modal-team-config form");
+  if (frm) {
+    frm.onsubmit = () => {
+      const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
+      const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
+      send("update", {"title": title, "icon": icon, ...loadPermsForm(frm)});
+      document.location.hash = "";
+      return false;
+    };
   }
-  const frm = req<HTMLFormElement>("#modal-team-config form");
-  frm.onsubmit = function () {
-    const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-    const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-    send("update", {"title": title, "icon": icon, ...loadPermsForm(frm)});
-    document.location.hash = "";
-    return false;
-  };
+}
+
+function onUpdate(param: Team) {
+  req("#owner-id").innerText = param.owner;
+  const frm = req<HTMLFormElement>("#modal-team-config");
+  setTeamSprint("team", frm, null, null, param.title, param.icon);
 }
 
 export function handleTeam(m: Message) {
@@ -41,12 +46,6 @@ export function handleTeam(m: Message) {
     case "permissions":
       return permissionsUpdate(m.param as Permission[]);
     default:
-      throw "invalid team command [" + m.cmd + "]"
+      throw new Error("invalid team command [" + m.cmd + "]");
   }
-}
-
-function onUpdate(param: Team) {
-  req("owner-id").innerText = param.owner;
-  const frm = req<HTMLFormElement>("#modal-team-config form");
-  setTeamSprint("team", frm, null, null, param.title, param.icon);
 }

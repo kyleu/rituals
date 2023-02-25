@@ -1,14 +1,19 @@
 {% import (
   "fmt"
 
+  "github.com/google/uuid"
+
   "github.com/kyleu/rituals/app"
+  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
+  "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
 {% code type StandupList struct {
@@ -51,4 +56,33 @@
       </tbody>
     </table>
   </form>
+{% endfunc %}
+
+{% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
+    <h3 title="Share your progress with your team">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
+    <table id="standup-list" class="mt expanded">
+      <tbody>
+        {%- if len(standups) == 0 -%}
+          <tr class="empty"><td><em>no standups</em></td></tr>
+        {%- else -%}
+          {%- for _, x := range standups -%}
+          <tr id="standup-list-{%s x.ID.String() %}">
+            <td>
+              {%- if showComments -%}
+              <div class="right">
+                {%= vwutil.Comments(enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, "member-icon", ps) %}
+              </div>
+              {%- endif -%}
+              <a href="{%s x.PublicWebPath() %}"><div>
+                <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
+              </div></a>
+            </td>
+          </tr>
+          {%- endfor -%}
+        {%- endif -%}
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

@@ -71,6 +71,25 @@ func RetroCreate(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func RetroDelete(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.retro.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(rc, "slug", false)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		fr, err := as.Services.Workspace.LoadRetro(p, nil, nil)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Workspace.DeleteRetro(ps.Context, fr, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Retrospective deleted", "/", rc, ps)
+	})
+}
+
 func RetroAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.retro.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)

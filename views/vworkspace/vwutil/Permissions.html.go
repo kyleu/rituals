@@ -341,3 +341,96 @@ func PermissionsForm(key string, perms util.Permissions, showTeam bool, teams te
 	return qs422016
 //line views/vworkspace/vwutil/Permissions.html:89
 }
+
+//line views/vworkspace/vwutil/Permissions.html:91
+func StreamPermissionsList(qw422016 *qt422016.Writer, key string, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Permissions.html:91
+	qw422016.N().S(`
+`)
+//line views/vworkspace/vwutil/Permissions.html:92
+	if len(perms) == 0 {
+//line views/vworkspace/vwutil/Permissions.html:92
+		qw422016.N().S(`    <div>Open</div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:94
+	}
+//line views/vworkspace/vwutil/Permissions.html:95
+	if perms.Get(util.KeyTeam, "true") != nil {
+//line views/vworkspace/vwutil/Permissions.html:95
+		qw422016.N().S(`    <div class="permission-config-team mb">Must be a member of this `)
+//line views/vworkspace/vwutil/Permissions.html:96
+		qw422016.E().S(key)
+//line views/vworkspace/vwutil/Permissions.html:96
+		qw422016.N().S(`'s team</div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:97
+	}
+//line views/vworkspace/vwutil/Permissions.html:98
+	if perms.Get(util.KeySprint, "true") != nil {
+//line views/vworkspace/vwutil/Permissions.html:98
+		qw422016.N().S(`    <div class="permission-config-sprint mb">Must be a member of this `)
+//line views/vworkspace/vwutil/Permissions.html:99
+		qw422016.E().S(key)
+//line views/vworkspace/vwutil/Permissions.html:99
+		qw422016.N().S(`'s sprint</div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:100
+	}
+//line views/vworkspace/vwutil/Permissions.html:101
+	for _, perm := range perms.AuthPerms() {
+//line views/vworkspace/vwutil/Permissions.html:102
+		if perms.Get(perm.Key, "*") != nil {
+//line views/vworkspace/vwutil/Permissions.html:102
+			qw422016.N().S(`      <div class="mb">Must be signed into [`)
+//line views/vworkspace/vwutil/Permissions.html:103
+			qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:103
+			qw422016.N().S(`]</div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:104
+		}
+//line views/vworkspace/vwutil/Permissions.html:105
+		if perms.Get(perm.Key, perm.Value) != nil {
+//line views/vworkspace/vwutil/Permissions.html:105
+			qw422016.N().S(`      <div class="mb">Must be signed into [`)
+//line views/vworkspace/vwutil/Permissions.html:106
+			qw422016.E().S(perm.Key)
+//line views/vworkspace/vwutil/Permissions.html:106
+			qw422016.N().S(`] from [`)
+//line views/vworkspace/vwutil/Permissions.html:106
+			qw422016.E().S(perm.Value)
+//line views/vworkspace/vwutil/Permissions.html:106
+			qw422016.N().S(`]</div>
+`)
+//line views/vworkspace/vwutil/Permissions.html:107
+		}
+//line views/vworkspace/vwutil/Permissions.html:108
+	}
+//line views/vworkspace/vwutil/Permissions.html:109
+}
+
+//line views/vworkspace/vwutil/Permissions.html:109
+func WritePermissionsList(qq422016 qtio422016.Writer, key string, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwutil/Permissions.html:109
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwutil/Permissions.html:109
+	StreamPermissionsList(qw422016, key, perms, ps)
+//line views/vworkspace/vwutil/Permissions.html:109
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwutil/Permissions.html:109
+}
+
+//line views/vworkspace/vwutil/Permissions.html:109
+func PermissionsList(key string, perms util.Permissions, ps *cutil.PageState) string {
+//line views/vworkspace/vwutil/Permissions.html:109
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwutil/Permissions.html:109
+	WritePermissionsList(qb422016, key, perms, ps)
+//line views/vworkspace/vwutil/Permissions.html:109
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwutil/Permissions.html:109
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwutil/Permissions.html:109
+	return qs422016
+//line views/vworkspace/vwutil/Permissions.html:109
+}

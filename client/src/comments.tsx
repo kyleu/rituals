@@ -22,7 +22,7 @@ export function snippetComment(c: Comment, un: string) {
 export function snippetCommentsModalLink(svc: string, id: string) {
   const x = "comment-link-" + svc + "-" + id;
   const href = "#modal-" + svc + "-" + id + "-comments";
-  const a = <a id={x} class="comment-link" data-key={svc + "-" + id} href={href} title="0 comments" dangerouslySetInnerHTML={svg("comment-alt", 18, "")}></a>;
+  const a = <a id={x} class="comment-link" data-key={svc + "-" + id} href={href} title="0 comments" dangerouslySetInnerHTML={svg("comment-alt", 18, "member-icon")}></a>;
   initCommentsLink(a);
   return a;
 }
@@ -49,5 +49,5 @@ export function snippetCommentsModal(svc: string, id: string, title: string) {
         </form>
       </div>
     </div>
-  </div>
+  </div>;
 }

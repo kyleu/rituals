@@ -71,6 +71,25 @@ func EstimateCreate(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func EstimateDelete(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.estimate.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(rc, "slug", false)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		fe, err := as.Services.Workspace.LoadEstimate(p, nil, nil)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Workspace.DeleteEstimate(ps.Context, fe, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Estimate deleted", "/", rc, ps)
+	})
+}
+
 func EstimateAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.estimate.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)

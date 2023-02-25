@@ -72,7 +72,7 @@ func StreamEstimateWorkspaceStories(qw422016 *qt422016.Writer, w *workspace.Full
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:27
-		vwutil.StreamComments(qw422016, enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps)
+		vwutil.StreamComments(qw422016, enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:27
 		qw422016.N().S(`</td>
       </tr>

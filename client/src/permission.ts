@@ -1,13 +1,8 @@
 import {els, req} from "./dom";
 
-export interface Permission {
+export type Permission = {
   key: string;
   value: string;
-}
-
-export function initPermissions(t: HTMLSelectElement, s: HTMLSelectElement) {
-  permissionsTeamToggle(t.value !== "");
-  permissionsSprintToggle(s.value !== "");
 }
 
 export function permissionsUpdate(perms: Permission[]) {
@@ -31,4 +26,9 @@ export function loadPermsForm(frm: HTMLFormElement) {
     }
   }
   return ret;
+}
+
+export function initPermissions(t: HTMLSelectElement, s: HTMLSelectElement) {
+  permissionsTeamToggle(t.value !== "");
+  permissionsSprintToggle(s.value !== "");
 }

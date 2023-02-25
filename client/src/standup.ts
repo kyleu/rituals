@@ -1,9 +1,8 @@
-import {Message} from "./socket";
-import {req} from "./dom";
+import type {Message} from "./socket";
+import {opt, req} from "./dom";
 import {send} from "./app";
-import {setTeamSprint} from "./workspace";
+import {configFocus, setTeamSprint} from "./workspace";
 import {initReports, Report, reportAdd, reportRemove} from "./report";
-import {focusDelay} from "./util";
 import {loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Standup = {
@@ -18,29 +17,34 @@ export type Standup = {
 }
 
 export function initStandup() {
-  req("#modal-standup-config-link").onclick = function() {
-    focusDelay(req("#modal-standup-config form input[name=\"title\"]"));
-  }
-  const frm = req<HTMLFormElement>("#modal-standup-config form");
-  const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
-  teamEl.onchange = function() {
+  configFocus("standup");
+  const frm = opt<HTMLFormElement>("#modal-standup-config form");
+  if (frm) {
+    const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+    teamEl.onchange = () => {
+      permissionsTeamToggle(teamEl.value !== "");
+    };
+    const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+    sprintEl.onchange = () => {
+      permissionsSprintToggle(sprintEl.value !== "");
+    };
     permissionsTeamToggle(teamEl.value !== "");
-  }
-  const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
-  sprintEl.onchange = function() {
     permissionsSprintToggle(sprintEl.value !== "");
+    frm.onsubmit = () => {
+      const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
+      const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
+      send("update", {"title": title, "icon": icon, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
+      document.location.hash = "";
+      return false;
+    };
   }
-  permissionsTeamToggle(teamEl.value !== "");
-  permissionsSprintToggle(sprintEl.value !== "");
-  frm.onsubmit = function () {
-    const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-    const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-    send("update", {"title": title, "icon": icon, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
-    document.location.hash = "";
-    return false;
-  };
-
   initReports();
+}
+
+function onUpdate(param: Standup) {
+  req("#owner-id").innerText = param.owner;
+  const frm = req<HTMLFormElement>("#modal-standup-config");
+  setTeamSprint("standup", frm, param.teamID, param.sprintID, param.title, param.icon);
 }
 
 export function handleStandup(m: Message) {
@@ -57,12 +61,6 @@ export function handleStandup(m: Message) {
     case "permissions":
       return permissionsUpdate(m.param as Permission[]);
     default:
-      throw "invalid standup command [" + m.cmd + "]"
+      throw new Error("invalid standup command [" + m.cmd + "]");
   }
-}
-
-function onUpdate(param: Standup) {
-  req("owner-id").innerText = param.owner;
-  const frm = req<HTMLFormElement>("#modal-standup-config form");
-  setTeamSprint("standup", frm, param.teamID, param.sprintID, param.title, param.icon);
 }

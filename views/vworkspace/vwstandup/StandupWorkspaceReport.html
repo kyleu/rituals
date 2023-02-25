@@ -26,7 +26,7 @@
                 uname = curr.Name
               }
             -%}
-            <div class="right">{%= vwutil.Comments(enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
+            <div class="right">{%= vwutil.Comments(enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, w.UtilMembers, "", ps) %}</div>
             <a href="#modal-report-{%s r.ID.String() %}" data-id="{%s r.ID.String() %}" class="clean modal-report-edit-link">
               <h4 class="username">{%s uname %}</h4>
               <div class="pt">{%s= r.HTML %}</div>

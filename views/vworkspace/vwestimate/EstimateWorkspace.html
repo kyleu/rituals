@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
@@ -30,7 +32,7 @@
       <div class="card">
         <div class="right">
           {%= vwutil.PermissionsLink(enum.ModelServiceEstimate, e.ID, w.Permissions.ToPermissions(), ps) %}
-          {%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps) %}
+          {%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-estimate-config" id="modal-estimate-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(e.IconSafe(), ps) %}</span>
@@ -38,7 +40,11 @@
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
         <span id="owner-id" style="display: none;">{%s e.Owner.String() %}</span>
-        {%= EstimateWorkspaceModal(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- if w.Admin() -%}
+        {%= EstimateWorkspaceModalEdit(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- else -%}
+        {%= EstimateWorkspaceModalView(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- endif -%}
       </div>
     </div>
     <div id="panel-detail">
@@ -59,13 +65,13 @@
   </script>
 {% endfunc %}
 
-{% func EstimateWorkspaceModal(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
+{% func EstimateWorkspaceModalEdit(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-estimate-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Estimate</h2>
+        <h2>{%= components.SVGRef(util.KeyEstimate, 24, 24, "icon", ps) %} Estimate</h2>
       </div>
       <div class="modal-body">
         <form action="{%s e.PublicWebPath() %}" method="post" class="expanded">
@@ -79,8 +85,51 @@
           {%= vwutil.PermissionsForm(util.KeyEstimate, perms, true, teams, true, sprints, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="{%s e.PublicWebPath() %}/delete" onclick="return confirm('are you sure you wish to delete this estimate?')"><button type="button">Delete</button></a>
         </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func EstimateWorkspaceModalView(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
+  <div id="modal-estimate-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">{%= components.SVGRef(e.IconSafe(), 24, 24, "icon", ps) %}</span>
+          <span class="view-title">{%s e.TitleString() %}</span>
+        </h2>
+        <em>{%s util.KeyEstimate %}</em>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          {%= components.IconPicker("icon", e.IconSafe(), ps, 5) %}
+          {%= components.FormSelect(util.KeyTeam, "config-team-input", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormSelect(util.KeySprint, "config-sprint-input", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+        </div>
+        <table>
+          <tbody>
+          <tr>
+            <th class="shrink">Choices</th>
+            <td class="config-panel-choices">{%s strings.Join(e.Choices, ", ") %}</td>
+          </tr>
+          <tr>
+            <th>Team</th>
+            <td class="config-panel-team">{% if e.TeamID == nil %}-{% else %}<a href="/team/{%s e.TeamID.String() %}">{%s teams.TitleFor(e.TeamID) %}</a>{% endif %}</td>
+          </tr>
+          <tr>
+            <th>Sprint</th>
+            <td class="config-panel-sprint">{% if e.SprintID == nil %}-{% else %}<a href="/sprint/{%s e.SprintID.String() %}">{%s sprints.TitleFor(e.SprintID) %}</a>{% endif %}</td>
+          </tr>
+          <tr>
+            <th>Permissions</th>
+            <td class="config-panel-perms">{%= vwutil.PermissionsList(util.KeyEstimate, perms, ps) %}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

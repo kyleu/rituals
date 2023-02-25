@@ -1,4 +1,6 @@
 {% import (
+  "strings"
+
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
@@ -30,7 +32,7 @@
       <div class="card">
         <div class="right">
           {%= vwutil.PermissionsLink(enum.ModelServiceRetro, r.ID, w.Permissions.ToPermissions(), ps) %}
-          {%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, ps) %}
+          {%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-retro-config" id="modal-retro-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(r.IconSafe(), ps) %}</span>
@@ -38,7 +40,11 @@
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
         <span id="owner-id" style="display: none;">{%s r.Owner.String() %}</span>
-        {%= RetroWorkspaceModal(r, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- if w.Admin() -%}
+        {%= RetroWorkspaceModalEdit(r, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- else -%}
+        {%= RetroWorkspaceModalView(r, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- endif -%}
       </div>
     </div>
     <div id="panel-detail">
@@ -57,13 +63,13 @@
   </script>
 {% endfunc %}
 
-{% func RetroWorkspaceModal(r *retro.Retro, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
+{% func RetroWorkspaceModalEdit(r *retro.Retro, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-retro-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Retro</h2>
+        <h2>{%= components.SVGRef(util.KeyRetro, 24, 24, "icon", ps) %} Retro</h2>
       </div>
       <div class="modal-body">
         <form action="{%s r.PublicWebPath() %}" method="post" class="expanded">
@@ -77,8 +83,51 @@
           {%= vwutil.PermissionsForm(util.KeyRetro, perms, true, teams, true, sprints, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="{%s r.PublicWebPath() %}/delete" onclick="return confirm('are you sure you wish to delete this retro?')"><button type="button">Delete</button></a>
         </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func RetroWorkspaceModalView(r *retro.Retro, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
+  <div id="modal-retro-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">{%= components.SVGRef(r.IconSafe(), 24, 24, "icon", ps) %}</span>
+          <span class="view-title">{%s r.TitleString() %}</span>
+        </h2>
+        <em>{%s util.KeyRetro %}</em>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          {%= components.IconPicker("icon", r.IconSafe(), ps, 5) %}
+          {%= components.FormSelect(util.KeyTeam, "config-team-input", util.UUIDString(r.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormSelect(util.KeySprint, "config-sprint-input", util.UUIDString(r.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+        </div>
+        <table>
+          <tbody>
+          <tr>
+            <th class="shrink">Categories</th>
+            <td class="config-panel-categories">{%s strings.Join(r.Categories, ", ") %}</td>
+          </tr>
+          <tr>
+            <th>Team</th>
+            <td class="config-panel-team">{% if r.TeamID == nil %}-{% else %}<a href="/team/{%s r.TeamID.String() %}">{%s teams.TitleFor(r.TeamID) %}</a>{% endif %}</td>
+          </tr>
+          <tr>
+            <th>Sprint</th>
+            <td class="config-panel-sprint">{% if r.SprintID == nil %}-{% else %}<a href="/sprint/{%s r.SprintID.String() %}">{%s sprints.TitleFor(r.SprintID) %}</a>{% endif %}</td>
+          </tr>
+          <tr>
+            <th>Permissions</th>
+            <td class="config-panel-perms">{%= vwutil.PermissionsList(util.KeyRetro, perms, ps) %}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

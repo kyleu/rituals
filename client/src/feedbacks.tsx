@@ -1,5 +1,5 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {Feedback} from "./feedback";
+import type {Feedback} from "./feedback";
 import {username} from "./member";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 import {els} from "./dom";
@@ -69,6 +69,15 @@ export function snippetFeedbackModalView(r: Feedback): HTMLElement {
 
 const oc = "return confirm('Are you sure you want to delete this feedback?');";
 
+function categoryOptions(selected: string) {
+  return els(".category").map((x) => x.dataset.category).map((x) => {
+    if (x === selected) {
+      return <option value={x} selected="selected">{x}</option>;
+    }
+    return <option value={x}>{x}</option>;
+  });
+}
+
 export function snippetFeedbackModalEdit(r: Feedback): HTMLElement {
   return <div id={"modal-feedback-" + r.id} class="modal modal-feedback-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -96,14 +105,4 @@ export function snippetFeedbackModalEdit(r: Feedback): HTMLElement {
       </div>
     </div>
   </div>;
-}
-
-function categoryOptions(selected: string) {
-  return els(".category").map(x => x.dataset["category"]).map(x => {
-    if (x === selected) {
-      return <option value={x} selected="selected">{x}</option>;
-    } else {
-      return <option value={x}>{x}</option>;
-    }
-  });
 }

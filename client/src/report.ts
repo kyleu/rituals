@@ -14,17 +14,41 @@ export type Report = {
   html?: string
 }
 
+function initEditModal(modal: HTMLElement) {
+  const frm = req("form", modal);
+  const reportID = req<HTMLInputElement>("input[name=\"reportID\"]", frm).value;
+  req<HTMLElement>(".report-edit-delete", frm).onclick = () => {
+    if (confirm("Are you sure you want to delete this report?")) {
+      send("child-remove", {"reportID": reportID});
+      document.location.hash = "";
+    }
+    return false;
+  };
+  frm.onsubmit = () => {
+    const day = req<HTMLInputElement>("input[name=\"day\"]", frm).value;
+    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
+    const content = input.value;
+    send("child-update", {"reportID": reportID, "day": day, "content": content});
+    document.location.hash = "";
+    return false;
+  };
+}
+
 export function initReports() {
-  els<HTMLAnchorElement>(".add-report-link").forEach((x) => x.onclick = function () {
-    return focusDelay(req<HTMLInputElement>("#report-add-content"))
+  els<HTMLAnchorElement>(".add-report-link").forEach((x) => {
+    x.onclick = () => {
+      return focusDelay(req<HTMLInputElement>("#report-add-content"));
+    };
   });
-  els<HTMLAnchorElement>(".modal-report-edit-link").forEach((x) => x.onclick = function () {
-    return focusDelay(req<HTMLInputElement>("#input-content-" + x.dataset["id"]));
+  els<HTMLAnchorElement>(".modal-report-edit-link").forEach((x) => {
+    x.onclick = () => {
+      return focusDelay(req<HTMLInputElement>("#input-content-" + x.dataset.id));
+    };
   });
 
   const reportAddModal = req("#modal-report--add");
   const reportAddForm = req("form", reportAddModal);
-  reportAddForm.onsubmit = function () {
+  reportAddForm.onsubmit = () => {
     const day = req<HTMLInputElement>("input[name=\"day\"]", reportAddForm).value;
     const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", reportAddForm);
     const content = input.value;
@@ -32,29 +56,9 @@ export function initReports() {
     send("child-add", {"day": day, "content": content});
     document.location.hash = "";
     return false;
-  }
+  };
 
   els(".modal-report-edit").forEach(initEditModal);
-}
-
-function initEditModal(modal: HTMLElement) {
-  const frm = req("form", modal);
-  const reportID = req<HTMLInputElement>("input[name=\"reportID\"]", frm).value;
-  req<HTMLElement>(".report-edit-delete", frm).onclick = function () {
-    if (confirm('Are you sure you want to delete this report?')) {
-      send("child-remove", {"reportID": reportID});
-      document.location.hash = "";
-    }
-    return false;
-  }
-  frm.onsubmit = function () {
-    const day = req<HTMLInputElement>("input[name=\"day\"]", frm).value;
-    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
-    const content = input.value;
-    send("child-update", {"reportID": reportID, "day": day, "content": content});
-    document.location.hash = "";
-    return false;
-  }
 }
 
 export function reportAdd(r: Report) {
@@ -74,13 +78,13 @@ export function reportAdd(r: Report) {
   for (let i = 0; i < list.children.length; i++) {
     const n = list.children.item(i) as HTMLElement;
     const tgt = req(".username", n).innerText;
-    if (tgt.localeCompare(u, undefined, {sensitivity: 'accent'}) >= 0) {
+    if (tgt.localeCompare(u, undefined, {sensitivity: "accent"}) >= 0) {
       idx = i;
       break;
     }
   }
   const div = snippetReport(r);
-  if (idx == -1) {
+  if (idx === -1) {
     list.appendChild(div);
   } else {
     list.insertBefore(div, list.children[idx]);

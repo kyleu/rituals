@@ -1,5 +1,5 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {Story} from "./story";
+import type {Story} from "./story";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 
 export function snippetStory(s: Story): HTMLElement {

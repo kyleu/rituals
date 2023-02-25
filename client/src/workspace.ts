@@ -1,7 +1,7 @@
 import {els, opt, req} from "./dom";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 import {initCommentsModal} from "./comment";
-import {svgRef} from "./util";
+import {focusDelay, svgRef} from "./util";
 
 export type ChildAdd = {
   "type": string;
@@ -21,22 +21,24 @@ export type ChildRemove = {
   "id": string;
 }
 
-export function modelBanner(key: string, frm: HTMLFormElement, teamID: string, sprintID: string) {
-  let ret = "";
-  if (sprintID) {
-    const el = opt<HTMLInputElement>(`select[name="sprint"] option[value="${sprintID}"]`, frm);
+export function getSelectName(key: string, panel: HTMLElement, id: string | null) {
+  if (id) {
+    const el = opt<HTMLSelectElement>(`select[name="${key}"] option[value="${id}"]`, panel);
     if (el) {
       const s = el.innerText;
-      ret += `<a href="/sprint/${sprintID}">${s}</a> `;
+      return `<a href="/${key}/${id}">${s}</a> `;
     }
+    return `<a href="/${key}/${id}">${id}</a> `;
   }
-  ret += (key === "retro" ? "retrospective" : key);
+  return "";
+}
+
+export function modelBanner(key: string, panel: HTMLElement, teamID: string, sprintID: string) {
+  let ret = "";
+  ret += getSelectName("sprint", panel, sprintID);
+  ret += key === "retro" ? "retrospective" : key;
   if (teamID) {
-    const el = opt<HTMLInputElement>(`select[name="team"] option[value="${teamID}"]`, frm);
-    if (el) {
-      const t = el.innerText;
-      ret += ` in <a href="/team/${teamID}">${t}</a>`;
-    }
+    ret += " in " + getSelectName("team", panel, teamID);
   }
   return ret;
 }
@@ -62,12 +64,12 @@ export function onChildAddModel(param: ChildAdd) {
   a.href = param.path;
 
   const iconSpan = document.createElement("span");
-  iconSpan.classList.add("model-span-icon")
+  iconSpan.classList.add("model-span-icon");
   iconSpan.innerHTML = svgRef(param.icon, 16, "icon");
   a.appendChild(iconSpan);
 
   const titleSpan = document.createElement("span");
-  titleSpan.classList.add("model-span-title")
+  titleSpan.classList.add("model-span-title");
   titleSpan.innerText = param.title;
   a.appendChild(titleSpan);
 
@@ -96,21 +98,45 @@ export function onChildRemoveModel(param: ChildRemove) {
   }
 }
 
-export function setTeamSprint(key: string, frm: HTMLFormElement, teamID: string | null, sprintID: string | null, title: string, icon: string) {
-  req<HTMLInputElement>("input[name=\"title\"]", frm).value = title;
-  for (const r of els<HTMLInputElement>("input[name=\"icon\"]", frm)) {
+export function setTeamSprint(key: string, panel: HTMLElement, teamID: string | null, sprintID: string | null, title: string, icon: string) {
+  const tEl = opt<HTMLInputElement>("input[name=\"title\"]", panel);
+  if (tEl) {
+    tEl.value = title;
+  }
+  for (const pt of els(".config-panel-team", panel)) {
+    pt.innerHTML = getSelectName("team", panel, teamID);
+  }
+  for (const ps of els(".config-panel-sprint", panel)) {
+    ps.innerHTML = getSelectName("sprint", panel, sprintID);
+  }
+  for (const vi of els(".view-icon", panel)) {
+    vi.innerHTML = svgRef(icon, 24, "icon");
+  }
+  for (const vt of els(".view-title", panel)) {
+    vt.innerText = title;
+  }
+  for (const r of els<HTMLInputElement>("input[name=\"icon\"]", panel)) {
     r.checked = icon === r.value;
   }
-  const t = opt<HTMLSelectElement>("select[name=\"team\"]", frm)
+  const t = opt<HTMLSelectElement>("select[name=\"team\"]", panel);
   if (t !== null && t !== undefined) {
     t.value = teamID ? teamID : "";
   }
-  const s = opt<HTMLSelectElement>("select[name=\"sprint\"]", frm)
+  const s = opt<HTMLSelectElement>("select[name=\"sprint\"]", panel);
   if (s !== null && s !== undefined) {
     s.value = sprintID ? sprintID : "";
   }
   req("#model-title").innerText = title;
   req("#model-icon").innerHTML = svgRef(icon, 20);
-  req("#model-banner").innerHTML = modelBanner(key, frm, teamID ? teamID : "", sprintID ? sprintID : "");
+  req("#model-banner").innerHTML = modelBanner(key, panel, teamID ? teamID : "", sprintID ? sprintID : "");
   // flashCreate(key, "success", key + " updated");
+}
+
+export function configFocus(k: string) {
+  req(`#modal-${k}-config-link`).onclick = () => {
+    const i = opt<HTMLInputElement>(`#modal-${k}-config form input[name="title"]`);
+    if (i) {
+      focusDelay(i);
+    }
+  };
 }

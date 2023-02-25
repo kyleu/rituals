@@ -196,7 +196,7 @@ func RetroForm(s *retro.Retro, teams team.Teams, sprints sprint.Sprints, as *app
 }
 
 //line views/vworkspace/vwretro/RetroList.html:61
-func StreamRetroListTable(qw422016 *qt422016.Writer, retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func StreamRetroListTable(qw422016 *qt422016.Writer, retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwretro/RetroList.html:61
 	qw422016.N().S(`
   <div class="card">
@@ -238,7 +238,7 @@ func StreamRetroListTable(qw422016 *qt422016.Writer, retros retro.Retros, teamID
 				qw422016.N().S(`              <div class="right">
                 `)
 //line views/vworkspace/vwretro/RetroList.html:77
-				vwutil.StreamComments(qw422016, enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceRetro, x.ID, x.TitleString(), comments, members, "member-icon", ps)
 //line views/vworkspace/vwretro/RetroList.html:77
 				qw422016.N().S(`
               </div>
@@ -277,22 +277,22 @@ func StreamRetroListTable(qw422016 *qt422016.Writer, retros retro.Retros, teamID
 }
 
 //line views/vworkspace/vwretro/RetroList.html:90
-func WriteRetroListTable(qq422016 qtio422016.Writer, retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func WriteRetroListTable(qq422016 qtio422016.Writer, retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwretro/RetroList.html:90
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwretro/RetroList.html:90
-	StreamRetroListTable(qw422016, retros, teamID, sprintID, showComments, comments, ps)
+	StreamRetroListTable(qw422016, retros, teamID, sprintID, showComments, comments, members, ps)
 //line views/vworkspace/vwretro/RetroList.html:90
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/vwretro/RetroList.html:90
 }
 
 //line views/vworkspace/vwretro/RetroList.html:90
-func RetroListTable(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
+func RetroListTable(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) string {
 //line views/vworkspace/vwretro/RetroList.html:90
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwretro/RetroList.html:90
-	WriteRetroListTable(qb422016, retros, teamID, sprintID, showComments, comments, ps)
+	WriteRetroListTable(qb422016, retros, teamID, sprintID, showComments, comments, members, ps)
 //line views/vworkspace/vwretro/RetroList.html:90
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/vwretro/RetroList.html:90

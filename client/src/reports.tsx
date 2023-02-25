@@ -1,5 +1,5 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-import {Report} from "./report";
+import type {Report} from "./report";
 import {username} from "./member";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 import {expandCollapse} from "./util";

@@ -6,6 +6,8 @@ package vwestimate
 
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:1
 import (
+	"strings"
+
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -20,20 +22,20 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwutil"
 )
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:16
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:18
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:16
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:18
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:16
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:18
 type EstimateWorkspace struct {
 	layout.Basic
 	FullEstimate *workspace.FullEstimate
@@ -41,220 +43,391 @@ type EstimateWorkspace struct {
 	Sprints      sprint.Sprints
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:23
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:25
 func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:23
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:25
 	qw422016.N().S(`
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:25
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:27
 	w := p.FullEstimate
 	e := w.Estimate
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:27
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:29
 	qw422016.N().S(`  <div class="flex-wrap">
     <div id="panel-summary">
       <div class="card">
         <div class="right">
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:32
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:34
 	vwutil.StreamPermissionsLink(qw422016, enum.ModelServiceEstimate, e.ID, w.Permissions.ToPermissions(), ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:32
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:34
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:33
-	vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:33
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:35
+	vwutil.StreamComments(qw422016, enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, "", ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:35
 	qw422016.N().S(`
         </div>
         <a href="#modal-estimate-config" id="modal-estimate-config-link"><h3>
           <span id="model-icon">`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:36
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:38
 	components.StreamSVGRefIcon(qw422016, e.IconSafe(), ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:36
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:38
 	qw422016.N().S(`</span>
           <span id="model-title">`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:37
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:39
 	qw422016.E().S(e.TitleString())
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:37
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:39
 	qw422016.N().S(`</span>
         </h3></a>
         `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:39
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:41
 	vwutil.StreamBanner(qw422016, w.Team, w.Sprint, util.KeyEstimate)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:39
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:41
 	qw422016.N().S(`
         <span id="owner-id" style="display: none;">`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:40
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:42
 	qw422016.E().S(e.Owner.String())
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:40
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:42
 	qw422016.N().S(`</span>
-        `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:41
-	StreamEstimateWorkspaceModal(qw422016, e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:41
-	qw422016.N().S(`
-      </div>
+`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:43
+	if w.Admin() {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:43
+		qw422016.N().S(`        `)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:44
+		StreamEstimateWorkspaceModalEdit(qw422016, e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:44
+		qw422016.N().S(`
+`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:45
+	} else {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:45
+		qw422016.N().S(`        `)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:46
+		StreamEstimateWorkspaceModalView(qw422016, e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:46
+		qw422016.N().S(`
+`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:47
+	}
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:47
+	qw422016.N().S(`      </div>
     </div>
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a class="add-story-link" href="#modal-story--add"><button>Add Story</button></a></div>
         <a class="add-story-link" href="#modal-story--add"><h3>`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:47
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:53
 	components.StreamSVGRefIcon(qw422016, util.KeyStory, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:47
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:53
 	qw422016.N().S(`Stories</h3></a>
         `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:48
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:54
 	StreamEstimateWorkspaceStories(qw422016, w, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:48
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:54
 	qw422016.N().S(`
         `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:49
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:55
 	StreamEstimateWorkspaceStoryModalAdd(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:49
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:55
 	qw422016.N().S(`
         `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:50
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:56
 	StreamEstimateWorkspaceStoryModalEmpty(qw422016, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:50
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:56
 	qw422016.N().S(`
       </div>
     </div>
     `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:53
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:59
 	vwutil.StreamMemberPanels(qw422016, w.UtilMembers, w.Admin(), e.PublicWebPath(), ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:53
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:59
 	qw422016.N().S(`
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       initWorkspace("`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:57
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:63
 	qw422016.E().S(util.KeyEstimate)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:57
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:63
 	qw422016.N().S(`", "`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:57
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:63
 	qw422016.E().S(e.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:57
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:63
 	qw422016.N().S(`");
     });
   </script>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 func (p *EstimateWorkspace) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 func (p *EstimateWorkspace) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:66
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:62
-func StreamEstimateWorkspaceModal(qw422016 *qt422016.Writer, e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:62
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:68
+func StreamEstimateWorkspaceModalEdit(qw422016 *qt422016.Writer, e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:68
 	qw422016.N().S(`
   <div id="modal-estimate-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Estimate</h2>
+        <h2>`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:74
+	components.StreamSVGRef(qw422016, util.KeyEstimate, 24, 24, "icon", ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:74
+	qw422016.N().S(` Estimate</h2>
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:71
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:77
 	qw422016.E().S(e.PublicWebPath())
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:71
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:77
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:72
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:78
 	qw422016.E().S(string(action.ActUpdate))
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:72
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:78
 	qw422016.N().S(`" />
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:73
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:79
 	components.StreamFormVerticalInput(qw422016, "title", "", "Title", e.TitleString(), 5, "The name of your estimate")
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:73
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:79
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:74
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:80
 	components.StreamFormVerticalIconPicker(qw422016, "icon", "Icon", e.IconSafe(), ps, 5)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:74
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:80
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:75
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:81
 	components.StreamFormVerticalInputTags(qw422016, "choices", "", "Choices", e.Choices, ps, 5, "The available options for stories in this estimate")
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:75
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:81
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:76
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:82
 	components.StreamFormVerticalSelect(qw422016, util.KeyTeam, "config-team-input", "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:76
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:82
 	qw422016.N().S(`
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:77
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:83
 	components.StreamFormVerticalSelect(qw422016, util.KeySprint, "config-sprint-input", "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:77
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:83
 	qw422016.N().S(`
           <hr />
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:79
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:85
 	vwutil.StreamPermissionsForm(qw422016, util.KeyEstimate, perms, true, teams, true, sprints, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:79
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:85
 	qw422016.N().S(`
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:88
+	qw422016.E().S(e.PublicWebPath())
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:88
+	qw422016.N().S(`/delete" onclick="return confirm('are you sure you wish to delete this estimate?')"><button type="button">Delete</button></a>
         </form>
       </div>
     </div>
   </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
-func WriteEstimateWorkspaceModal(qq422016 qtio422016.Writer, e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
+func WriteEstimateWorkspaceModalEdit(qq422016 qtio422016.Writer, e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
-	StreamEstimateWorkspaceModal(qw422016, e, teams, sprints, perms, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
+	StreamEstimateWorkspaceModalEdit(qw422016, e, teams, sprints, perms, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
-func EstimateWorkspaceModal(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
+func EstimateWorkspaceModalEdit(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) string {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
-	WriteEstimateWorkspaceModal(qb422016, e, teams, sprints, perms, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
+	WriteEstimateWorkspaceModalEdit(qb422016, e, teams, sprints, perms, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspace.html:87
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:93
+}
+
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:95
+func StreamEstimateWorkspaceModalView(qw422016 *qt422016.Writer, e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:95
+	qw422016.N().S(`
+  <div id="modal-estimate-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:102
+	components.StreamSVGRef(qw422016, e.IconSafe(), 24, 24, "icon", ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:102
+	qw422016.N().S(`</span>
+          <span class="view-title">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:103
+	qw422016.E().S(e.TitleString())
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:103
+	qw422016.N().S(`</span>
+        </h2>
+        <em>`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:105
+	qw422016.E().S(util.KeyEstimate)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:105
+	qw422016.N().S(`</em>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          `)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:109
+	components.StreamIconPicker(qw422016, "icon", e.IconSafe(), ps, 5)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:109
+	qw422016.N().S(`
+          `)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:110
+	components.StreamFormSelect(qw422016, util.KeyTeam, "config-team-input", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:110
+	qw422016.N().S(`
+          `)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:111
+	components.StreamFormSelect(qw422016, util.KeySprint, "config-sprint-input", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:111
+	qw422016.N().S(`
+        </div>
+        <table>
+          <tbody>
+          <tr>
+            <th class="shrink">Choices</th>
+            <td class="config-panel-choices">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:117
+	qw422016.E().S(strings.Join(e.Choices, ", "))
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:117
+	qw422016.N().S(`</td>
+          </tr>
+          <tr>
+            <th>Team</th>
+            <td class="config-panel-team">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+	if e.TeamID == nil {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+		qw422016.N().S(`-`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+	} else {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+		qw422016.N().S(`<a href="/team/`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+		qw422016.E().S(e.TeamID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+		qw422016.N().S(`">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+		qw422016.E().S(teams.TitleFor(e.TeamID))
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+		qw422016.N().S(`</a>`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+	}
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:121
+	qw422016.N().S(`</td>
+          </tr>
+          <tr>
+            <th>Sprint</th>
+            <td class="config-panel-sprint">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+	if e.SprintID == nil {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+		qw422016.N().S(`-`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+	} else {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+		qw422016.N().S(`<a href="/sprint/`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+		qw422016.E().S(e.SprintID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+		qw422016.N().S(`">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+		qw422016.E().S(sprints.TitleFor(e.SprintID))
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+		qw422016.N().S(`</a>`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+	}
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:125
+	qw422016.N().S(`</td>
+          </tr>
+          <tr>
+            <th>Permissions</th>
+            <td class="config-panel-perms">`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:129
+	vwutil.StreamPermissionsList(qw422016, util.KeyEstimate, perms, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:129
+	qw422016.N().S(`</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+`)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+}
+
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+func WriteEstimateWorkspaceModalView(qq422016 qtio422016.Writer, e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	StreamEstimateWorkspaceModalView(qw422016, e, teams, sprints, perms, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+}
+
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+func EstimateWorkspaceModalView(e *estimate.Estimate, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) string {
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	WriteEstimateWorkspaceModalView(qb422016, e, teams, sprints, perms, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
+	return qs422016
+//line views/vworkspace/vwestimate/EstimateWorkspace.html:136
 }

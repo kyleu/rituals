@@ -1,5 +1,5 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-import "./client.css"
+import "./client.css";
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";

@@ -19,21 +19,23 @@ export type Story = {
 }
 
 export function initStories() {
-  els<HTMLAnchorElement>(".add-story-link").forEach((x) => x.onclick = function () {
-    return focusDelay(req<HTMLInputElement>("#story-add-title"));
+  els<HTMLAnchorElement>(".add-story-link").forEach((x) => {
+    x.onclick = () => {
+      return focusDelay(req<HTMLInputElement>("#story-add-title"));
+    };
   });
 
   const storyAddModal = req("#modal-story--add");
   const storyAddForm = req("form", storyAddModal);
-  storyAddForm.onsubmit = function () {
+  storyAddForm.onsubmit = () => {
     const input = req<HTMLInputElement>("input[name=\"title\"]", storyAddForm);
     const title = input.value;
     input.value = "";
     send("child-add", {"title": title});
     document.location.hash = "";
     return false;
-  }
-  els("#story-modals .modal-story").forEach(wireStoryModal)
+  };
+  els("#story-modals .modal-story").forEach(wireStoryModal);
 }
 
 export function storyAdd(s: Story) {
@@ -42,22 +44,20 @@ export function storyAdd(s: Story) {
   for (let i = 0; i < tbl.children.length; i++) {
     const n = tbl.children.item(i) as HTMLElement;
     const title = req(".story-title", n).innerText;
-    const currIdxStr = n.dataset["index"];
+    const currIdxStr = n.dataset.index;
     if (currIdxStr) {
       const currIdx = parseInt(currIdxStr, 10);
       if (currIdx >= s.idx) {
         idx = i;
         break;
-      } else {
-        if (title.localeCompare(s.title, undefined, {sensitivity: 'accent'}) >= 0) {
-          idx = i;
-          break;
-        }
+      } else if (title.localeCompare(s.title, undefined, {sensitivity: "accent"}) >= 0) {
+        idx = i;
+        break;
       }
     }
   }
   const tr = snippetStory(s);
-  if (idx == -1) {
+  if (idx === -1) {
     tbl.appendChild(tr);
   } else {
     tbl.insertBefore(tr, tbl.children[idx]);
@@ -69,8 +69,8 @@ export function storyAdd(s: Story) {
 
   const modal = prototype.cloneNode(true) as HTMLDivElement;
   modal.id = "modal-story-" + s.id;
-  modal.dataset["id"] = s.id;
-  modal.dataset["status"] = s.status;
+  modal.dataset.id = s.id;
+  modal.dataset.status = s.status;
   modal.classList.add("modal-story");
   req("#story-modals").appendChild(modal);
   if (document.location.hash === "modal-story--add" || document.location.hash === "") {
@@ -80,9 +80,9 @@ export function storyAdd(s: Story) {
 
 export function storyStatus(s: Story) {
   const modal = req("#modal-story-" + s.id);
-  req(".status-new", modal).style.display = (s.status === "new") ? "block" : "none";
-  req(".status-active", modal).style.display = (s.status === "active") ? "block" : "none";
-  req(".status-complete", modal).style.display = (s.status === "complete") ? "block" : "none";
+  req(".status-new", modal).style.display = s.status === "new" ? "block" : "none";
+  req(".status-active", modal).style.display = s.status === "active" ? "block" : "none";
+  req(".status-complete", modal).style.display = s.status === "complete" ? "block" : "none";
 }
 
 export function storyRemove(id: string) {

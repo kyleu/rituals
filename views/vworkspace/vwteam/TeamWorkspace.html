@@ -30,7 +30,7 @@
       <div class="card">
         <div class="right">
           {%= vwutil.PermissionsLink(enum.ModelServiceTeam, t.ID, w.Permissions.ToPermissions(), ps) %}
-          {%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, ps) %}
+          {%= vwutil.Comments(enum.ModelServiceTeam, t.ID, t.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-team-config" id="modal-team-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(t.IconSafe(), ps) %}</span>
@@ -38,14 +38,18 @@
         </h3></a>
         {%= vwutil.Banner(nil, nil, util.KeyTeam) %}
         <span id="owner-id" style="display: none;">{%s t.Owner.String() %}</span>
-        {%= TeamWorkspaceModal(t, w.Permissions.ToPermissions(), ps) %}
+        {%- if w.Admin() -%}
+        {%= TeamWorkspaceModalEdit(t, w.Permissions.ToPermissions(), ps) %}
+        {%- else -%}
+        {%= TeamWorkspaceModalView(t, w.Permissions.ToPermissions(), ps) %}
+        {%- endif -%}
       </div>
     </div>
     <div id="panel-detail">
-      {%= vwsprint.SprintListTable(w.Sprints, &t.ID, true, w.Comments, ps) %}
-      {%= vwestimate.EstimateListTable(w.Estimates, &t.ID, nil, true, w.Comments, ps) %}
-      {%= vwstandup.StandupListTable(w.Standups, &t.ID, nil, true, w.Comments, ps) %}
-      {%= vwretro.RetroListTable(w.Retros, &t.ID, nil, true, w.Comments, ps) %}
+      {%= vwsprint.SprintListTable(w.Sprints, &t.ID, true, w.Comments, w.UtilMembers, ps) %}
+      {%= vwestimate.EstimateListTable(w.Estimates, &t.ID, nil, true, w.Comments, w.UtilMembers, ps) %}
+      {%= vwstandup.StandupListTable(w.Standups, &t.ID, nil, true, w.Comments, w.UtilMembers, ps) %}
+      {%= vwretro.RetroListTable(w.Retros, &t.ID, nil, true, w.Comments, w.UtilMembers, ps) %}
     </div>
     {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), t.PublicWebPath(), ps) %}
   </div>
@@ -56,13 +60,13 @@
   </script>
 {% endfunc %}
 
-{% func TeamWorkspaceModal(t *team.Team, perms util.Permissions, ps *cutil.PageState) %}
+{% func TeamWorkspaceModalEdit(t *team.Team, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-team-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Team</h2>
+        <h2>{%= components.SVGRef(util.KeyTeam, 24, 24, "icon", ps) %} Team</h2>
       </div>
       <div class="modal-body">
         <form action="{%s t.PublicWebPath() %}" method="post" class="expanded">
@@ -73,8 +77,36 @@
           {%= vwutil.PermissionsForm(util.KeyTeam, perms, false, nil, false, nil, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="{%s t.PublicWebPath() %}/delete" onclick="return confirm('are you sure you wish to delete this team?')"><button type="button">Delete</button></a>
         </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func TeamWorkspaceModalView(t *team.Team, perms util.Permissions, ps *cutil.PageState) %}
+  <div id="modal-team-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">{%= components.SVGRef(t.IconSafe(), 24, 24, "icon", ps) %}</span>
+          <span class="view-title">{%s t.TitleString() %}</span>
+        </h2>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          {%= components.IconPicker("icon", t.IconSafe(), ps, 5) %}
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th class="shrink">Permissions</th>
+              <td class="config-panel-perms">{%= vwutil.PermissionsList(util.KeyRetro, perms, ps) %}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

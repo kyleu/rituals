@@ -1,4 +1,4 @@
-import {Message} from "./socket";
+import type {Message} from "./socket";
 import {commentAdd, Comment} from "./comment";
 import {memberAdd, MemberMessage, memberRemove, memberUpdate, onlineUpdate} from "./member";
 import {flashCreate} from "./flash";
@@ -8,8 +8,15 @@ import {handleEstimate} from "./estimate";
 import {handleStandup} from "./standup";
 import {handleRetro} from "./retro";
 
+function onMessage(x: { level: "success" | "error", message: string }) {
+  flashCreate("adhoc-message", x.level, x.message);
+}
+
 export function handle(svc: string, m: Message) {
   switch (m.cmd) {
+    case "reset":
+      document.location.href = "/";
+      return;
     case "message":
       return onMessage(m.param as { level: "success" | "error", message: string });
     case "comment":
@@ -35,10 +42,6 @@ export function handle(svc: string, m: Message) {
     case "retro":
       return handleRetro(m);
     default:
-      throw "invalid service [" + svc + "]";
+      throw new Error("invalid service [" + svc + "]");
   }
-}
-
-function onMessage(x: { level: "success" | "error", message: string }) {
-  flashCreate("adhoc-message", x.level, x.message);
 }

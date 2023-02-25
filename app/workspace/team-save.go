@@ -70,3 +70,83 @@ func (s *Service) SaveTeam(ctx context.Context, t *team.Team, user uuid.UUID, tx
 
 	return t, nil
 }
+
+func (s *Service) DeleteTeam(ctx context.Context, ft *FullTeam, logger util.Logger) error {
+	tx, err := s.db.StartTransaction(logger)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	for _, spr := range ft.Sprints {
+		spr.TeamID = nil
+		err = s.s.Update(ctx, tx, spr, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, e := range ft.Estimates {
+		e.TeamID = nil
+		err = s.e.Update(ctx, tx, e, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, u := range ft.Standups {
+		u.TeamID = nil
+		err = s.u.Update(ctx, tx, u, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, r := range ft.Retros {
+		r.TeamID = nil
+		err = s.r.Update(ctx, tx, r, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, h := range ft.Histories {
+		err = s.th.Delete(ctx, tx, h.Slug, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, c := range ft.Comments.GetByModel(enum.ModelServiceTeam, ft.Team.ID) {
+		err = s.c.Delete(ctx, tx, c.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, p := range ft.Permissions {
+		err = s.tp.Delete(ctx, tx, p.TeamID, p.Key, p.Value, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, m := range ft.Members {
+		err = s.tm.Delete(ctx, tx, m.TeamID, m.UserID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = s.t.Delete(ctx, tx, ft.Team.ID, logger)
+	if err != nil {
+		return err
+	}
+
+	err = s.send(enum.ModelServiceTeam, ft.Team.ID, action.ActReset, nil, nil, logger)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

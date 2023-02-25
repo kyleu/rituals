@@ -1,9 +1,6 @@
 {% import (
-  "github.com/google/uuid"
-
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/action"
-  "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
@@ -33,7 +30,7 @@
       <div class="card">
         <div class="right">
           {%= vwutil.PermissionsLink(enum.ModelServiceStandup, u.ID, w.Permissions.ToPermissions(), ps) %}
-          {%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, ps) %}
+          {%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-standup-config" id="modal-standup-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(u.IconSafe(), ps) %}</span>
@@ -41,7 +38,11 @@
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
         <span id="owner-id" style="display: none;">{%s u.Owner.String() %}</span>
-        {%= StandupWorkspaceModal(u, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- if w.Admin() -%}
+        {%= StandupWorkspaceModalEdit(u, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- else -%}
+        {%= StandupWorkspaceModalView(u, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
+        {%- endif -%}
       </div>
     </div>
     <div id="panel-detail">
@@ -61,13 +62,13 @@
   </script>
 {% endfunc %}
 
-{% func StandupWorkspaceModal(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
+{% func StandupWorkspaceModalEdit(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-standup-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Standup</h2>
+        <h2>{%= components.SVGRef(util.KeyStandup, 24, 24, "icon", ps) %} Standup</h2>
       </div>
       <div class="modal-body">
         <form action="{%s u.PublicWebPath() %}" method="post" class="expanded">
@@ -80,38 +81,47 @@
           {%= vwutil.PermissionsForm(util.KeyStandup, perms, true, teams, true, sprints, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="{%s u.PublicWebPath() %}/delete" onclick="return confirm('are you sure you wish to delete this standup?')"><button type="button">Delete</button></a>
         </form>
       </div>
     </div>
   </div>
 {% endfunc %}
 
-{% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
-  <div class="card">
-    <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
-    <h3 title="Share your progress with your team">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
-    <table id="standup-list" class="mt expanded">
-      <tbody>
-        {%- if len(standups) == 0 -%}
-          <tr class="empty"><td><em>no standups</em></td></tr>
-        {%- else -%}
-          {%- for _, x := range standups -%}
-          <tr id="standup-list-{%s x.ID.String() %}">
-            <td>
-              {%- if showComments -%}
-              <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceStandup, x.ID, x.TitleString(), comments, nil, ps) %}
-              </div>
-              {%- endif -%}
-              <a href="{%s x.PublicWebPath() %}"><div>
-                <span>{%= components.SVGRef(x.IconSafe(), 16, 16, "icon", ps) %}</span><span>{%s x.TitleString() %}</span>
-              </div></a>
-            </td>
-          </tr>
-          {%- endfor -%}
-        {%- endif -%}
-      </tbody>
-    </table>
+{% func StandupWorkspaceModalView(u *standup.Standup, teams team.Teams, sprints sprint.Sprints, perms util.Permissions, ps *cutil.PageState) %}
+  <div id="modal-standup-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">{%= components.SVGRef(u.IconSafe(), 24, 24, "icon", ps) %}</span>
+          <span class="view-title">{%s u.TitleString() %}</span>
+        </h2>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          {%= components.IconPicker("icon", u.IconSafe(), ps, 5) %}
+          {%= components.FormSelect(util.KeyTeam, "config-team-input", util.UUIDString(u.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= components.FormSelect(util.KeySprint, "config-sprint-input", util.UUIDString(u.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th class="shrink">Team</th>
+              <td class="config-panel-team">{% if u.TeamID == nil %}-{% else %}<a href="/team/{%s u.TeamID.String() %}">{%s teams.TitleFor(u.TeamID) %}</a>{% endif %}</td>
+            </tr>
+            <tr>
+              <th>Sprint</th>
+              <td class="config-panel-sprint">{% if u.SprintID == nil %}-{% else %}<a href="/sprint/{%s u.SprintID.String() %}">{%s sprints.TitleFor(u.SprintID) %}</a>{% endif %}</td>
+            </tr>
+            <tr>
+              <th>Permissions</th>
+              <td class="config-panel-perms">{%= vwutil.PermissionsList(util.KeyRetro, perms, ps) %}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 {% endfunc %}

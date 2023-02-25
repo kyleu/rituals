@@ -15,22 +15,9 @@ export type Feedback = {
   html?: string
 }
 
-export function initFeedbacks() {
-  els<HTMLAnchorElement>(".add-feedback-link").forEach((x) => x.onclick = function () {
-    return focusDelay(req<HTMLInputElement>("#feedback-add-content-" + x.dataset["category"]));
-  });
-  els<HTMLAnchorElement>(".modal-feedback-edit-link").forEach((x) => x.onclick = function () {
-    return focusDelay(req<HTMLInputElement>("#input-content-" + x.dataset["id"]));
-  });
-  for (const feedbackAddModal of els(".modal-feedback-add")) {
-    initAddModal(feedbackAddModal);
-  }
-  els(".modal-feedback-edit").forEach(initEditModal);
-}
-
 function initAddModal(feedbackAddModal: HTMLElement) {
   const feedbackAddForm = req("form", feedbackAddModal);
-  feedbackAddForm.onsubmit = function () {
+  feedbackAddForm.onsubmit = () => {
     const category = req<HTMLSelectElement>("select[name=\"category\"]", feedbackAddForm).value;
     const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", feedbackAddForm);
     const content = input.value;
@@ -38,27 +25,44 @@ function initAddModal(feedbackAddModal: HTMLElement) {
     send("child-add", {"category": category, "content": content});
     document.location.hash = "";
     return false;
-  }
+  };
 }
 
 function initEditModal(feedbackEditModal: HTMLElement) {
   const frm = req("form", feedbackEditModal);
   const feedbackID = req<HTMLInputElement>("input[name=\"feedbackID\"]", frm).value;
-  req<HTMLElement>(".feedback-edit-delete", frm).onclick = function () {
-    if (confirm('Are you sure you want to delete this feedback?')) {
+  req<HTMLElement>(".feedback-edit-delete", frm).onclick = () => {
+    if (confirm("Are you sure you want to delete this feedback?")) {
       send("child-remove", {"feedbackID": feedbackID});
       document.location.hash = "";
     }
     return false;
-  }
-  frm.onsubmit = function () {
+  };
+  frm.onsubmit = () => {
     const category = req<HTMLSelectElement>("select[name=\"category\"]", frm).value;
     const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
     const content = input.value;
     send("child-update", {"feedbackID": feedbackID, "category": category, "content": content});
     document.location.hash = "";
     return false;
+  };
+}
+
+export function initFeedbacks() {
+  els<HTMLAnchorElement>(".add-feedback-link").forEach((x) => {
+    x.onclick = () => {
+      return focusDelay(req<HTMLInputElement>("#feedback-add-content-" + x.dataset.category));
+    };
+  });
+  els<HTMLAnchorElement>(".modal-feedback-edit-link").forEach((x) => {
+    x.onclick = () => {
+      return focusDelay(req<HTMLInputElement>("#input-content-" + x.dataset.id));
+    };
+  });
+  for (const feedbackAddModal of els(".modal-feedback-add")) {
+    initAddModal(feedbackAddModal);
   }
+  els(".modal-feedback-edit").forEach(initEditModal);
 }
 
 export function feedbackAdd(f: Feedback) {
@@ -74,22 +78,20 @@ export function feedbackAdd(f: Feedback) {
   for (let i = 0; i < list.children.length; i++) {
     const n = list.children.item(i) as HTMLElement;
     const title = req(".feedback-content", n).innerText;
-    const currIdxStr = n.dataset["index"];
+    const currIdxStr = n.dataset.index;
     if (currIdxStr) {
       const currIdx = parseInt(currIdxStr, 10);
       if (currIdx >= f.idx) {
         idx = i;
         break;
-      } else {
-        if (title.localeCompare(f.content, undefined, {sensitivity: 'accent'}) >= 0) {
-          idx = i;
-          break;
-        }
+      } else if (title.localeCompare(f.content, undefined, {sensitivity: "accent"}) >= 0) {
+        idx = i;
+        break;
       }
     }
   }
   const tr = snippetFeedback(f);
-  if (idx == -1) {
+  if (idx === -1) {
     list.appendChild(tr);
   } else {
     list.insertBefore(tr, list.children[idx]);

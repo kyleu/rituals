@@ -47,7 +47,7 @@
       <div class="card">
         <div class="right">
           {%= vwutil.PermissionsLink(enum.ModelServiceSprint, s.ID, w.Permissions.ToPermissions(), ps) %}
-          {%= vwutil.Comments(enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, ps) %}
+          {%= vwutil.Comments(enum.ModelServiceSprint, s.ID, s.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-sprint-config" id="modal-sprint-config-link"><h3>
           <span id="model-icon">{%= components.SVGRefIcon(s.IconSafe(), ps) %}</span>
@@ -57,13 +57,17 @@
         <div class="right" id="model-summary">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
         {%= vwutil.Banner(w.Team, nil, util.KeySprint) %}
         <span id="owner-id" style="display: none;">{%s s.Owner.String() %}</span>
-        {%= SprintWorkspaceModal(s, p.Teams, w.Permissions.ToPermissions(), ps) %}
+        {%- if w.Admin() -%}
+        {%= SprintWorkspaceModalEdit(s, p.Teams, w.Permissions.ToPermissions(), ps) %}
+        {%- else -%}
+        {%= SprintWorkspaceModalView(s, p.Teams, w.Permissions.ToPermissions(), ps) %}
+        {%- endif -%}
       </div>
     </div>
     <div id="panel-detail">
-      {%= vwestimate.EstimateListTable(w.Estimates, s.TeamID, &s.ID, true, w.Comments, ps) %}
-      {%= vwstandup.StandupListTable(w.Standups, s.TeamID, &s.ID, true, w.Comments, ps) %}
-      {%= vwretro.RetroListTable(w.Retros, s.TeamID, &s.ID, true, w.Comments, ps) %}
+      {%= vwestimate.EstimateListTable(w.Estimates, s.TeamID, &s.ID, true, w.Comments, w.UtilMembers, ps) %}
+      {%= vwstandup.StandupListTable(w.Standups, s.TeamID, &s.ID, true, w.Comments, w.UtilMembers, ps) %}
+      {%= vwretro.RetroListTable(w.Retros, s.TeamID, &s.ID, true, w.Comments, w.UtilMembers, ps) %}
     </div>
     {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), s.PublicWebPath(), ps) %}
   </div>
@@ -74,13 +78,13 @@
   </script>
 {% endfunc %}
 
-{% func SprintWorkspaceModal(s *sprint.Sprint, teams team.Teams, perms util.Permissions, ps *cutil.PageState) %}
+{% func SprintWorkspaceModalEdit(s *sprint.Sprint, teams team.Teams, perms util.Permissions, ps *cutil.PageState) %}
   <div id="modal-sprint-config" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>Sprint</h2>
+        <h2>{%= components.SVGRef(util.KeySprint, 24, 24, "icon", ps) %} Sprint</h2>
       </div>
       <div class="modal-body">
         <form action="{%s s.PublicWebPath() %}" method="post" class="expanded">
@@ -94,8 +98,49 @@
           {%= vwutil.PermissionsForm(util.KeySprint, perms, true, teams, false, nil, ps) %}
           <hr />
           <div class="right"><button type="submit">Save</button></div>
-          <div class="clear"></div>
+          <a href="{%s s.PublicWebPath() %}/delete" onclick="return confirm('are you sure you wish to delete this sprint?')"><button type="button">Delete</button></a>
         </form>
+      </div>
+    </div>
+  </div>
+{% endfunc %}
+
+{% func SprintWorkspaceModalView(s *sprint.Sprint, teams team.Teams, perms util.Permissions, ps *cutil.PageState) %}
+  <div id="modal-sprint-config" class="modal" style="display: none;">
+    <a class="backdrop" href="#"></a>
+    <div class="modal-content">
+      <div class="modal-header">
+        <a href="#" class="modal-close">×</a>
+        <h2>
+          <span class="view-icon">{%= components.SVGRef(s.IconSafe(), 24, 24, "icon", ps) %}</span>
+          <span class="view-title">{%s s.TitleString() %}</span>
+        </h2>
+      </div>
+      <div class="modal-body">
+        <div style="display: none;">
+          {%= components.IconPicker("icon", s.IconSafe(), ps, 5) %}
+          {%= components.FormSelect(util.KeyTeam, "config-team-input", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th class="shrink">Start Date</th>
+              <td class="config-panel-startDate">{%s util.TimeToYMD(s.StartDate) %}</td>
+            </tr>
+            <tr>
+              <th class="shrink">End Date</th>
+              <td class="config-panel-endDate">{%s util.TimeToYMD(s.EndDate) %}</td>
+            </tr>
+            <tr>
+              <th>Team</th>
+              <td class="config-panel-team">{% if s.TeamID == nil %}-{% else %}<a href="/team/{%s s.TeamID.String() %}">{%s teams.TitleFor(s.TeamID) %}</a>{% endif %}</td>
+            </tr>
+            <tr>
+              <th>Permissions</th>
+              <td class="config-panel-perms">{%= vwutil.PermissionsList(util.KeySprint, perms, ps) %}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

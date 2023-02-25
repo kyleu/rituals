@@ -181,7 +181,7 @@ func TeamForm(m *team.Team, as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vworkspace/vwteam/TeamList.html:52
-func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwteam/TeamList.html:52
 	qw422016.N().S(`
   <div class="card">
@@ -219,7 +219,7 @@ func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showCommen
 				qw422016.N().S(`            <div class="right">
               `)
 //line views/vworkspace/vwteam/TeamList.html:66
-				vwutil.StreamComments(qw422016, enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps)
+				vwutil.StreamComments(qw422016, enum.ModelServiceTeam, x.ID, x.TitleString(), comments, members, "member-icon", ps)
 //line views/vworkspace/vwteam/TeamList.html:66
 				qw422016.N().S(`
             </div>
@@ -260,22 +260,22 @@ func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showCommen
 }
 
 //line views/vworkspace/vwteam/TeamList.html:79
-func WriteTeamListTable(qq422016 qtio422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) {
+func WriteTeamListTable(qq422016 qtio422016.Writer, teams team.Teams, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
 //line views/vworkspace/vwteam/TeamList.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwteam/TeamList.html:79
-	StreamTeamListTable(qw422016, teams, showComments, comments, ps)
+	StreamTeamListTable(qw422016, teams, showComments, comments, members, ps)
 //line views/vworkspace/vwteam/TeamList.html:79
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/vwteam/TeamList.html:79
 }
 
 //line views/vworkspace/vwteam/TeamList.html:79
-func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) string {
+func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) string {
 //line views/vworkspace/vwteam/TeamList.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwteam/TeamList.html:79
-	WriteTeamListTable(qb422016, teams, showComments, comments, ps)
+	WriteTeamListTable(qb422016, teams, showComments, comments, members, ps)
 //line views/vworkspace/vwteam/TeamList.html:79
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/vwteam/TeamList.html:79

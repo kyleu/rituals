@@ -67,6 +67,25 @@ func SprintCreate(rc *fasthttp.RequestCtx) {
 	})
 }
 
+func SprintDelete(rc *fasthttp.RequestCtx) {
+	controller.Act("workspace.sprint.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(rc, "slug", false)
+		if err != nil {
+			return "", err
+		}
+		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
+		fs, err := as.Services.Workspace.LoadSprint(p, nil)
+		if err != nil {
+			return "", err
+		}
+		err = as.Services.Workspace.DeleteSprint(ps.Context, fs, ps.Logger)
+		if err != nil {
+			return "", err
+		}
+		return controller.FlashAndRedir(true, "Sprint deleted", "/", rc, ps)
+	})
+}
+
 func SprintAction(rc *fasthttp.RequestCtx) {
 	controller.Act("workspace.sprint.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		slug, err := cutil.RCRequiredString(rc, "slug", false)

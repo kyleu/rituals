@@ -76,3 +76,58 @@ func (s *Service) SaveRetro(ctx context.Context, r *retro.Retro, user uuid.UUID,
 
 	return r, nil
 }
+
+func (s *Service) DeleteRetro(ctx context.Context, fr *FullRetro, logger util.Logger) error {
+	tx, err := s.db.StartTransaction(logger)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	for _, f := range fr.Feedbacks {
+		err = s.f.Delete(ctx, tx, f.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, h := range fr.Histories {
+		err = s.rh.Delete(ctx, tx, h.Slug, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, c := range fr.Comments {
+		err = s.c.Delete(ctx, tx, c.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, p := range fr.Permissions {
+		err = s.rp.Delete(ctx, tx, p.RetroID, p.Key, p.Value, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, m := range fr.Members {
+		err = s.rm.Delete(ctx, tx, m.RetroID, m.UserID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = s.r.Delete(ctx, tx, fr.Retro.ID, logger)
+	if err != nil {
+		return err
+	}
+
+	err = s.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActReset, nil, nil, logger)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

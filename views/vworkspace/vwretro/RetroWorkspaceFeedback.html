@@ -30,7 +30,7 @@
         }
       -%}
       <div id="feedback-{%s f.ID.String() %}" class="feedback mt clear">
-        <div class="right">{%= vwutil.Comments(enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, w.UtilMembers, ps) %}</div>
+        <div class="right">{%= vwutil.Comments(enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps) %}</div>
         <a href="#modal-feedback-{%s f.ID.String() %}" class="clean modal-feedback-edit-link" data-id="{%s f.ID.String() %}">
           <div>{%s uname %}</div>
           <div class="pt feedback-content">{%s= f.HTML %}</div>

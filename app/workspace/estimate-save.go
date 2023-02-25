@@ -78,3 +78,65 @@ func (s *Service) SaveEstimate(ctx context.Context, e *estimate.Estimate, user u
 
 	return e, nil
 }
+
+func (s *Service) DeleteEstimate(ctx context.Context, fe *FullEstimate, logger util.Logger) error {
+	tx, err := s.db.StartTransaction(logger)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback() }()
+
+	for _, v := range fe.Votes {
+		err = s.v.Delete(ctx, tx, v.StoryID, v.UserID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, st := range fe.Stories {
+		err = s.st.Delete(ctx, tx, st.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, h := range fe.Histories {
+		err = s.eh.Delete(ctx, tx, h.Slug, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, c := range fe.Comments {
+		err = s.c.Delete(ctx, tx, c.ID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, p := range fe.Permissions {
+		err = s.ep.Delete(ctx, tx, p.EstimateID, p.Key, p.Value, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, m := range fe.Members {
+		err = s.em.Delete(ctx, tx, m.EstimateID, m.UserID, logger)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = s.e.Delete(ctx, tx, fe.Estimate.ID, logger)
+	if err != nil {
+		return err
+	}
+
+	err = s.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActReset, nil, nil, logger)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}

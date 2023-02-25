@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vworkspace/vwutil/Comments.html:12
-func StreamComments(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) {
+func StreamComments(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, cls string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Comments.html:12
 	qw422016.N().S(`
 `)
@@ -40,7 +40,7 @@ func StreamComments(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UU
 //line views/vworkspace/vwutil/Comments.html:15
 	qw422016.N().S(`  `)
 //line views/vworkspace/vwutil/Comments.html:16
-	StreamCommentsLink(qw422016, svc, id, title, comments, ps)
+	StreamCommentsLink(qw422016, svc, id, title, comments, cls, ps)
 //line views/vworkspace/vwutil/Comments.html:16
 	qw422016.N().S(`
   `)
@@ -53,22 +53,22 @@ func StreamComments(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UU
 }
 
 //line views/vworkspace/vwutil/Comments.html:18
-func WriteComments(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) {
+func WriteComments(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, cls string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Comments.html:18
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Comments.html:18
-	StreamComments(qw422016, svc, id, title, allComments, members, ps)
+	StreamComments(qw422016, svc, id, title, allComments, members, cls, ps)
 //line views/vworkspace/vwutil/Comments.html:18
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/vwutil/Comments.html:18
 }
 
 //line views/vworkspace/vwutil/Comments.html:18
-func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, ps *cutil.PageState) string {
+func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments comment.Comments, members util.Members, cls string, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Comments.html:18
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Comments.html:18
-	WriteComments(qb422016, svc, id, title, allComments, members, ps)
+	WriteComments(qb422016, svc, id, title, allComments, members, cls, ps)
 //line views/vworkspace/vwutil/Comments.html:18
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/vwutil/Comments.html:18
@@ -79,7 +79,7 @@ func Comments(svc enum.ModelService, id uuid.UUID, title string, allComments com
 }
 
 //line views/vworkspace/vwutil/Comments.html:20
-func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) {
+func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, cls string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Comments.html:20
 	qw422016.N().S(`
 `)
@@ -124,7 +124,7 @@ func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uui
 //line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwutil/Comments.html:27
-	components.StreamSVGRef(qw422016, icon, 18, 18, "", ps)
+	components.StreamSVGRef(qw422016, icon, 18, 18, cls, ps)
 //line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`</a>
 `)
@@ -132,22 +132,22 @@ func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uui
 }
 
 //line views/vworkspace/vwutil/Comments.html:28
-func WriteCommentsLink(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) {
+func WriteCommentsLink(qq422016 qtio422016.Writer, svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, cls string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Comments.html:28
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Comments.html:28
-	StreamCommentsLink(qw422016, svc, id, title, comments, ps)
+	StreamCommentsLink(qw422016, svc, id, title, comments, cls, ps)
 //line views/vworkspace/vwutil/Comments.html:28
 	qt422016.ReleaseWriter(qw422016)
 //line views/vworkspace/vwutil/Comments.html:28
 }
 
 //line views/vworkspace/vwutil/Comments.html:28
-func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, ps *cutil.PageState) string {
+func CommentsLink(svc enum.ModelService, id uuid.UUID, title string, comments comment.Comments, cls string, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Comments.html:28
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Comments.html:28
-	WriteCommentsLink(qb422016, svc, id, title, comments, ps)
+	WriteCommentsLink(qb422016, svc, id, title, comments, cls, ps)
 //line views/vworkspace/vwutil/Comments.html:28
 	qs422016 := string(qb422016.B)
 //line views/vworkspace/vwutil/Comments.html:28

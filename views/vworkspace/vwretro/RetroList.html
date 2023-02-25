@@ -58,7 +58,7 @@
   </form>
 {% endfunc %}
 
-{% func RetroListTable(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+{% func RetroListTable(retros retro.Retros, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       {%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}
@@ -74,7 +74,7 @@
             <td>
               {%- if showComments -%}
               <div class="right">
-                {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, nil, ps) %}
+                {%= vwutil.Comments(enum.ModelServiceRetro, x.ID, x.TitleString(), comments, members, "member-icon", ps) %}
               </div>
               {%- endif -%}
               <a href="{%s x.PublicWebPath() %}"><div>

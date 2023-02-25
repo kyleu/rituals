@@ -49,7 +49,7 @@
   </form>
 {% endfunc %}
 
-{% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, ps *cutil.PageState) %}
+{% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
     <h3 title="Join your friends and work towards a common goal">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
@@ -63,7 +63,7 @@
           <td>
             {%- if showComments -%}
             <div class="right">
-              {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, nil, ps) %}
+              {%= vwutil.Comments(enum.ModelServiceTeam, x.ID, x.TitleString(), comments, members, "member-icon", ps) %}
             </div>
             {%- endif -%}
             <a href="{%s x.PublicWebPath() %}"><div>
