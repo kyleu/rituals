@@ -18,12 +18,12 @@
 {% func (p *TeamList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%d len(p.Teams) %} {%s util.StringPluralMaybe("Team", len(p.Teams)) %}</h3>
-    <em>Join your friends and colleagues, working towards a common goal</em>
+    <em>{%s util.KeyTeamDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, t := range p.Teams -%}
         <tr>
-          <td><a href="{%s t.PublicWebPath() %}">{%s t.TitleString() %}</a></td>
+          <td><a href="{%s t.PublicWebPath() %}">{%= components.SVGRef(t.IconSafe(), 16, 16, "icon", ps) %}{%s t.TitleString() %}</a></td>
           <td class="text-align-right">{%s string(t.Status) %}</td>
           <td class="shrink">{%= components.DisplayTimestamp(&t.Created) %}</td>
         </tr>
@@ -52,7 +52,7 @@
 {% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
-    <h3 title="Join your friends and work towards a common goal">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
+    <h3 title="{%s util.KeyTeamDesc %}">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
     {%- if len(teams) == 0 -%}
     <div class="mt"><em>no teams</em></div>
     {%- else -%}

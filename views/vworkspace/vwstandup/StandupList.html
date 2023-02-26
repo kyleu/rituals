@@ -26,12 +26,12 @@
 {% func (p *StandupList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}{%d len(p.Standups) %} {%s util.StringPluralMaybe("Standup", len(p.Standups)) %}</h3>
-    <em>Share your progress with your team</em>
+    <em>{%s util.KeyStandupDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, u := range p.Standups -%}
         <tr>
-          <td><a href="{%s u.PublicWebPath() %}">{%s u.TitleString() %}</a></td>
+          <td><a href="{%s u.PublicWebPath() %}">{%= components.SVGRef(u.IconSafe(), 16, 16, "icon", ps) %}{%s u.TitleString() %}</a></td>
           <td class="text-align-right">{%= components.DisplayTimestamp(&u.Created) %}</td>
         </tr>
         {%- endfor -%}
@@ -61,7 +61,7 @@
 {% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
-    <h3 title="Share your progress with your team">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
+    <h3 title="{%s util.KeyStandupDesc %}">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
     <table id="standup-list" class="mt expanded">
       <tbody>
         {%- if len(standups) == 0 -%}

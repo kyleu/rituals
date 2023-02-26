@@ -60,7 +60,11 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 	qw422016.E().S(util.StringPluralMaybe("Estimate", len(p.Estimates)))
 //line views/vworkspace/vwestimate/EstimateList.html:28
 	qw422016.N().S(`</h3>
-    <em>Planning poker for any stories you need to work on</em>
+    <em>`)
+//line views/vworkspace/vwestimate/EstimateList.html:29
+	qw422016.E().S(util.KeyEstimateDesc)
+//line views/vworkspace/vwestimate/EstimateList.html:29
+	qw422016.N().S(`</em>
     <table class="mt expanded">
       <tbody>
 `)
@@ -74,7 +78,9 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vworkspace/vwestimate/EstimateList.html:34
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwestimate/EstimateList.html:34
-		qw422016.E().S(e.Title)
+		components.StreamSVGRef(qw422016, e.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwestimate/EstimateList.html:34
+		qw422016.E().S(e.TitleString())
 //line views/vworkspace/vwestimate/EstimateList.html:34
 		qw422016.N().S(`</a></td>
           <td class="text-align-right">`)
@@ -203,7 +209,11 @@ func StreamEstimateListTable(qw422016 *qt422016.Writer, estimates estimate.Estim
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyEstimate, teamID, sprintID, "New Estimate")
 //line views/vworkspace/vwestimate/EstimateList.html:63
 	qw422016.N().S(`</div>
-    <h3 title="Planning poker for any stories you need to work on">`)
+    <h3 title="`)
+//line views/vworkspace/vwestimate/EstimateList.html:64
+	qw422016.E().S(util.KeyEstimateDesc)
+//line views/vworkspace/vwestimate/EstimateList.html:64
+	qw422016.N().S(`">`)
 //line views/vworkspace/vwestimate/EstimateList.html:64
 	components.StreamSVGRefIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:64

@@ -60,7 +60,11 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 	qw422016.E().S(util.StringPluralMaybe("Standup", len(p.Standups)))
 //line views/vworkspace/vwstandup/StandupList.html:28
 	qw422016.N().S(`</h3>
-    <em>Share your progress with your team</em>
+    <em>`)
+//line views/vworkspace/vwstandup/StandupList.html:29
+	qw422016.E().S(util.KeyStandupDesc)
+//line views/vworkspace/vwstandup/StandupList.html:29
+	qw422016.N().S(`</em>
     <table class="mt expanded">
       <tbody>
 `)
@@ -73,6 +77,8 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.E().S(u.PublicWebPath())
 //line views/vworkspace/vwstandup/StandupList.html:34
 		qw422016.N().S(`">`)
+//line views/vworkspace/vwstandup/StandupList.html:34
+		components.StreamSVGRef(qw422016, u.IconSafe(), 16, 16, "icon", ps)
 //line views/vworkspace/vwstandup/StandupList.html:34
 		qw422016.E().S(u.TitleString())
 //line views/vworkspace/vwstandup/StandupList.html:34
@@ -203,7 +209,11 @@ func StreamStandupListTable(qw422016 *qt422016.Writer, standups standup.Standups
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyStandup, teamID, sprintID, "New Standup")
 //line views/vworkspace/vwstandup/StandupList.html:63
 	qw422016.N().S(`</div>
-    <h3 title="Share your progress with your team">`)
+    <h3 title="`)
+//line views/vworkspace/vwstandup/StandupList.html:64
+	qw422016.E().S(util.KeyStandupDesc)
+//line views/vworkspace/vwstandup/StandupList.html:64
+	qw422016.N().S(`">`)
 //line views/vworkspace/vwstandup/StandupList.html:64
 	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupList.html:64

@@ -26,12 +26,12 @@
 {% func (p *RetroList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`retro`, ps) %}{%d len(p.Retros) %} {%s util.StringPluralMaybe("Retro", len(p.Retros)) %}</h3>
-    <em>Discover improvements and praise for your work</em>
+    <em>{%s util.KeyRetroDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, r := range p.Retros -%}
         <tr>
-          <td><a href="{%s r.PublicWebPath() %}">{%= components.SVGRefIcon(r.IconSafe(), ps) %}{%s r.TitleString() %}</a></td>
+          <td><a href="{%s r.PublicWebPath() %}">{%= components.SVGRef(r.IconSafe(), 16, 16, "icon", ps) %}{%s r.TitleString() %}</a></td>
           <td class="text-align-right">{%= components.DisplayTimestamp(&r.Created) %}</td>
         </tr>
         {%- endfor -%}
@@ -63,7 +63,7 @@
     <div class="right">
       {%= vwutil.EditWorkspaceForm(util.KeyRetro, teamID, sprintID, "New Retro") %}
     </div>
-    <h3 title="Discover improvements and praise for your work">{%= components.SVGRefIcon(util.KeyRetro, ps) %}Retros</h3>
+    <h3 title="{%s util.KeyRetroDesc %}">{%= components.SVGRefIcon(util.KeyRetro, ps) %}Retros</h3>
     <table id="retro-list" class="mt expanded">
       <tbody>
         {%- if len(retros) == 0 -%}

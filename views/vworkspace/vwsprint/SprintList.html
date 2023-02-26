@@ -24,12 +24,12 @@
 {% func (p *SprintList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}{%d len(p.Sprints) %} {%s util.StringPluralMaybe("Sprint", len(p.Sprints)) %}</h3>
-    <em>Plan your time and direct your efforts</em>
+    <em>{%s util.KeySprintDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, s := range p.Sprints -%}
         <tr>
-          <td><a href="{%s s.PublicWebPath() %}">{%s s.TitleString() %}</a></td>
+          <td><a href="{%s s.PublicWebPath() %}">{%= components.SVGRef(s.IconSafe(), 16, 16, "icon", ps) %}{%s s.TitleString() %}</a></td>
           <td class="text-align-right">{%= components.DisplayTimestamp(&s.Created) %}</td>
         </tr>
         {%- endfor -%}
@@ -58,7 +58,7 @@
 {% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
-    <h3 title="Plan your time and direct your efforts">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
+    <h3 title="{%s util.KeySprintDesc %}">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
     <table id="sprint-list" class="mt expanded">
       <tbody>
         {%- if len(sprints) == 0 -%}

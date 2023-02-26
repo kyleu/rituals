@@ -52,7 +52,11 @@ func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.E().S(util.StringPluralMaybe("Team", len(p.Teams)))
 //line views/vworkspace/vwteam/TeamList.html:20
 	qw422016.N().S(`</h3>
-    <em>Join your friends and colleagues, working towards a common goal</em>
+    <em>`)
+//line views/vworkspace/vwteam/TeamList.html:21
+	qw422016.E().S(util.KeyTeamDesc)
+//line views/vworkspace/vwteam/TeamList.html:21
+	qw422016.N().S(`</em>
     <table class="mt expanded">
       <tbody>
 `)
@@ -65,6 +69,8 @@ func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 		qw422016.E().S(t.PublicWebPath())
 //line views/vworkspace/vwteam/TeamList.html:26
 		qw422016.N().S(`">`)
+//line views/vworkspace/vwteam/TeamList.html:26
+		components.StreamSVGRef(qw422016, t.IconSafe(), 16, 16, "icon", ps)
 //line views/vworkspace/vwteam/TeamList.html:26
 		qw422016.E().S(t.TitleString())
 //line views/vworkspace/vwteam/TeamList.html:26
@@ -190,7 +196,11 @@ func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showCommen
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeyTeam, nil, nil, "New Team")
 //line views/vworkspace/vwteam/TeamList.html:54
 	qw422016.N().S(`</div>
-    <h3 title="Join your friends and work towards a common goal">`)
+    <h3 title="`)
+//line views/vworkspace/vwteam/TeamList.html:55
+	qw422016.E().S(util.KeyTeamDesc)
+//line views/vworkspace/vwteam/TeamList.html:55
+	qw422016.N().S(`">`)
 //line views/vworkspace/vwteam/TeamList.html:55
 	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
 //line views/vworkspace/vwteam/TeamList.html:55

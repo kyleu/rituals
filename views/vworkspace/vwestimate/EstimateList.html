@@ -26,12 +26,12 @@
 {% func (p *EstimateList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}{%d len(p.Estimates) %} {%s util.StringPluralMaybe("Estimate", len(p.Estimates)) %}</h3>
-    <em>Planning poker for any stories you need to work on</em>
+    <em>{%s util.KeyEstimateDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, e := range p.Estimates -%}
         <tr>
-          <td><a href="{%s e.PublicWebPath() %}">{%s e.Title %}</a></td>
+          <td><a href="{%s e.PublicWebPath() %}">{%= components.SVGRef(e.IconSafe(), 16, 16, "icon", ps) %}{%s e.TitleString() %}</a></td>
           <td class="text-align-right">{%= components.DisplayTimestamp(&e.Created) %}</td>
         </tr>
         {%- endfor -%}
@@ -61,7 +61,7 @@
 {% func EstimateListTable(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyEstimate, teamID, sprintID, "New Estimate") %}</div>
-    <h3 title="Planning poker for any stories you need to work on">{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
+    <h3 title="{%s util.KeyEstimateDesc %}">{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
     <table id="estimate-list" class="mt expanded">
       <tbody>
         {%- if len(estimates) == 0 -%}

@@ -58,7 +58,11 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	qw422016.E().S(util.StringPluralMaybe("Sprint", len(p.Sprints)))
 //line views/vworkspace/vwsprint/SprintList.html:26
 	qw422016.N().S(`</h3>
-    <em>Plan your time and direct your efforts</em>
+    <em>`)
+//line views/vworkspace/vwsprint/SprintList.html:27
+	qw422016.E().S(util.KeySprintDesc)
+//line views/vworkspace/vwsprint/SprintList.html:27
+	qw422016.N().S(`</em>
     <table class="mt expanded">
       <tbody>
 `)
@@ -71,6 +75,8 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 		qw422016.E().S(s.PublicWebPath())
 //line views/vworkspace/vwsprint/SprintList.html:32
 		qw422016.N().S(`">`)
+//line views/vworkspace/vwsprint/SprintList.html:32
+		components.StreamSVGRef(qw422016, s.IconSafe(), 16, 16, "icon", ps)
 //line views/vworkspace/vwsprint/SprintList.html:32
 		qw422016.E().S(s.TitleString())
 //line views/vworkspace/vwsprint/SprintList.html:32
@@ -196,7 +202,11 @@ func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, te
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeySprint, teamID, nil, "New Sprint")
 //line views/vworkspace/vwsprint/SprintList.html:60
 	qw422016.N().S(`</div>
-    <h3 title="Plan your time and direct your efforts">`)
+    <h3 title="`)
+//line views/vworkspace/vwsprint/SprintList.html:61
+	qw422016.E().S(util.KeySprintDesc)
+//line views/vworkspace/vwsprint/SprintList.html:61
+	qw422016.N().S(`">`)
 //line views/vworkspace/vwsprint/SprintList.html:61
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintList.html:61

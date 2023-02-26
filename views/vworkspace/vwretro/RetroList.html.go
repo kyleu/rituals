@@ -60,7 +60,11 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	qw422016.E().S(util.StringPluralMaybe("Retro", len(p.Retros)))
 //line views/vworkspace/vwretro/RetroList.html:28
 	qw422016.N().S(`</h3>
-    <em>Discover improvements and praise for your work</em>
+    <em>`)
+//line views/vworkspace/vwretro/RetroList.html:29
+	qw422016.E().S(util.KeyRetroDesc)
+//line views/vworkspace/vwretro/RetroList.html:29
+	qw422016.N().S(`</em>
     <table class="mt expanded">
       <tbody>
 `)
@@ -74,7 +78,7 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vworkspace/vwretro/RetroList.html:34
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwretro/RetroList.html:34
-		components.StreamSVGRefIcon(qw422016, r.IconSafe(), ps)
+		components.StreamSVGRef(qw422016, r.IconSafe(), 16, 16, "icon", ps)
 //line views/vworkspace/vwretro/RetroList.html:34
 		qw422016.E().S(r.TitleString())
 //line views/vworkspace/vwretro/RetroList.html:34
@@ -207,7 +211,11 @@ func StreamRetroListTable(qw422016 *qt422016.Writer, retros retro.Retros, teamID
 //line views/vworkspace/vwretro/RetroList.html:64
 	qw422016.N().S(`
     </div>
-    <h3 title="Discover improvements and praise for your work">`)
+    <h3 title="`)
+//line views/vworkspace/vwretro/RetroList.html:66
+	qw422016.E().S(util.KeyRetroDesc)
+//line views/vworkspace/vwretro/RetroList.html:66
+	qw422016.N().S(`">`)
 //line views/vworkspace/vwretro/RetroList.html:66
 	components.StreamSVGRefIcon(qw422016, util.KeyRetro, ps)
 //line views/vworkspace/vwretro/RetroList.html:66
