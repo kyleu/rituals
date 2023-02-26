@@ -17,7 +17,6 @@ import (
 	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
-	"github.com/kyleu/rituals/app/gql"
 	"github.com/kyleu/rituals/app/lib/database/migrate"
 	"github.com/kyleu/rituals/app/lib/websocket"
 	"github.com/kyleu/rituals/app/retro"
@@ -80,7 +79,6 @@ type Services struct {
 	Email   *email.Service
 
 	Workspace *workspace.Service
-	GQL       *gql.Schema
 	Socket    *websocket.Service
 }
 
@@ -125,7 +123,6 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 	c := comment.NewService(st.DB)
 	el := email.NewService(st.DB)
 
-	g := gql.NewSchema(st.GraphQL)
 	w := workspace.NewService(t, th, tm, tp, s, sh, sm, sp, e, eh, em, ep, sy, v, u, uh, um, up, rt, r, rh, rm, rp, f, us, a, c, el, st.DB)
 	ws := websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose)
 	w.RegisterSend(func(svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error {
@@ -144,7 +141,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		Estimate: e, EstimateMember: em, EstimateHistory: eh, EstimatePermission: ep, Story: sy, Vote: v,
 		Standup: u, StandupMember: um, StandupHistory: uh, StandupPermission: up, Report: rt,
 		Retro: r, RetroMember: rm, RetroHistory: rh, RetroPermission: rp, Feedback: f,
-		User: us, Action: a, Comment: c, Email: el, Workspace: w, GQL: g, Socket: ws,
+		User: us, Action: a, Comment: c, Email: el, Workspace: w, Socket: ws,
 	}, nil
 }
 

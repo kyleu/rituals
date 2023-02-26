@@ -41,9 +41,9 @@
     {
       "name": "html",
       "type": "string",
+      "search": true,
       "display": "detail",
-      "format": "html",
-      "search": true
+      "format": "html"
     },
     {
       "name": "created",

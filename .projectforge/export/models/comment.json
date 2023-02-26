@@ -42,9 +42,9 @@
     {
       "name": "html",
       "type": "string",
+      "search": true,
       "display": "detail",
-      "format": "html",
-      "search": true
+      "format": "html"
     },
     {
       "name": "created",
@@ -53,12 +53,6 @@
       "tags": [
         "created"
       ]
-    }
-  ],
-  "indexes": [
-    {
-      "name": "comment__svc_model_id_idx",
-      "decl": "\"comment\" (\"svc\", \"model_id\")"
     }
   ],
   "relations": [
@@ -71,6 +65,12 @@
       "tgt": [
         "id"
       ]
+    }
+  ],
+  "indexes": [
+    {
+      "name": "comment__svc_model_id_idx",
+      "decl": "\"comment\" (\"svc\", \"model_id\")"
     }
   ],
   "seedData": [

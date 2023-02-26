@@ -12,10 +12,10 @@
       "asc": false
     }
   ],
-  "title": "Story",
   "tags": [
     "search"
   ],
+  "title": "Story",
   "route": "admin/db/estimate/story",
   "columns": [
     {

@@ -36,10 +36,6 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	workspaceRoutes(r)
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/graphql", controller.GraphQLIndex)
-	r.GET("/graphql/{key}", controller.GraphQLDetail)
-	r.POST("/graphql/{key}", controller.GraphQLRun)
-
 	r.GET("/admin", clib.Admin)
 	r.GET("/admin/database", clib.DatabaseList)
 	r.GET("/admin/database/{key}", clib.DatabaseDetail)

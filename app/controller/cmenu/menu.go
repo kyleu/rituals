@@ -24,8 +24,6 @@ func MenuFor(
 	}
 
 	ret = append(ret, ws...)
-	ret = append(ret, menu.Separator, graphQLMenu(ctx, as.GraphQL))
-
 	if isAdmin {
 		ret = append(ret, menu.Separator)
 	}
