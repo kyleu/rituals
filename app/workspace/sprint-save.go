@@ -25,17 +25,17 @@ func (s *Service) CreateSprint(
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save sprint")
 	}
-
-	err = s.a.Post(ctx, util.KeySprint, model.ID, user, action.ActCreate, util.ValueMap{"payload": model}, nil, logger)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "unable to save sprint activity")
-	}
-
 	member, err := s.sm.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save sprint owner")
 	}
-
+	if teamID != nil {
+		msg := map[string]any{"type": enum.ModelServiceSprint, "id": model.ID, "title": model.Title, "path": model.PublicWebPath(), "icon": model.IconSafe()}
+		err = s.send(enum.ModelServiceTeam, *teamID, action.ActChildAdd, msg, &user, logger)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to notify team")
+		}
+	}
 	return model, member, nil
 }
 

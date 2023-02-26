@@ -31,6 +31,7 @@ type FullEstimate struct {
 	Votes       vote.Votes                      `json:"votes,omitempty"`
 	Comments    comment.Comments                `json:"comments,omitempty"`
 	Actions     action.Actions                  `json:"actions,omitempty"`
+	Registered  bool                            `json:"registered,omitempty"`
 }
 
 func (f *FullEstimate) Admin() bool {
@@ -87,7 +88,7 @@ func (s *Service) loadFullEstimate(
 			return err
 		},
 		func() error {
-			ret.Members, ret.Self, er = s.membersEstimate(p, e.ID)
+			ret.Members, ret.Self, ret.Registered, er = s.membersEstimate(p, e.ID)
 			online := s.online(util.KeyEstimate + ":" + e.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
 			return er
@@ -138,31 +139,30 @@ func (s *Service) loadFullEstimate(
 	return ret, nil
 }
 
-func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.EstimateMembers, *emember.EstimateMember, error) {
+func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.EstimateMembers, *emember.EstimateMember, bool, error) {
 	params := p.Params.Get("emember", nil, p.Logger).Sanitize("emember")
 	members, err := s.em.GetByEstimateID(p.Ctx, p.Tx, estimateID, params, p.Logger)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, false, err
 	}
-	self := members.Get(estimateID, p.Profile.ID)
-	if self == nil && p.Profile.Name != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		role := enum.MemberStatusMember
-		if len(members) == 0 {
-			role = enum.MemberStatusOwner
-		}
-		_, err = s.em.Register(p.Ctx, estimateID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		members, err = s.em.GetByEstimateID(p.Ctx, p.Tx, estimateID, params, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		self = members.Get(estimateID, p.Profile.ID)
+	if self := members.Get(estimateID, p.Profile.ID); self != nil {
+		return members, self, false, nil
 	}
-	return members, self, nil
+	err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	role := enum.MemberStatusMember
+	if len(members) == 0 {
+		role = enum.MemberStatusOwner
+	}
+	_, err = s.em.Register(p.Ctx, estimateID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	members, err = s.em.GetByEstimateID(p.Ctx, p.Tx, estimateID, params, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	return members, members.Get(estimateID, p.Profile.ID), true, nil
 }

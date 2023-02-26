@@ -34,8 +34,8 @@ func commentFromForm(frm util.ValueMap, userID uuid.UUID) (*comment.Comment, str
 	return c, u, nil
 }
 
-func sendTeamSprintUpdates(key string, teamID *uuid.UUID, sprintID *uuid.UUID, model any, userID *uuid.UUID, svc *Service, logger util.Logger) error {
-	msg := map[string]any{"type": key, key: model}
+func sendTeamSprintUpdates(t enum.ModelService, teamID *uuid.UUID, sprintID *uuid.UUID, model any, userID *uuid.UUID, svc *Service, logger util.Logger) error {
+	msg := map[string]any{"type": t, "model": model}
 	if teamID != nil {
 		err := svc.send(enum.ModelServiceTeam, *teamID, action.ActChildUpdate, msg, userID, logger)
 		if err != nil {
@@ -43,7 +43,7 @@ func sendTeamSprintUpdates(key string, teamID *uuid.UUID, sprintID *uuid.UUID, m
 		}
 	}
 	if sprintID != nil {
-		msg := map[string]any{"type": util.KeyRetro, util.KeyRetro: model}
+		msg := map[string]any{"type": t, "model": model}
 		err := svc.send(enum.ModelServiceSprint, *sprintID, action.ActChildUpdate, msg, userID, logger)
 		if err != nil {
 			return err

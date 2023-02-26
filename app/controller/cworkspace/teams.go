@@ -1,7 +1,6 @@
 package cworkspace
 
 import (
-	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -34,9 +33,6 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		ft, err := as.Services.Workspace.LoadTeam(p)
 		if err != nil {
 			return "", err
-		}
-		if ft.Self == nil {
-			return "", errors.New("TODO: Register")
 		}
 		ps.Title = ft.Team.TitleString()
 		ps.Data = ft

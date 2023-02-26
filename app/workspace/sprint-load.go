@@ -31,6 +31,7 @@ type FullSprint struct {
 	Retros      retro.Retros                  `json:"retros,omitempty"`
 	Comments    comment.Comments              `json:"comments,omitempty"`
 	Actions     action.Actions                `json:"actions,omitempty"`
+	Registered  bool                          `json:"registered,omitempty"`
 }
 
 func (f *FullSprint) Admin() bool {
@@ -80,7 +81,7 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (t
 		},
 		func() error {
 			var err error
-			ret.Members, ret.Self, err = s.membersSprint(p, spr.ID)
+			ret.Members, ret.Self, ret.Registered, err = s.membersSprint(p, spr.ID)
 			online := s.online(util.KeySprint + ":" + spr.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
@@ -144,31 +145,30 @@ func (s *Service) loadFullSprint(p *LoadParams, spr *sprint.Sprint, tf func() (t
 	return ret, nil
 }
 
-func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.SprintMembers, *smember.SprintMember, error) {
+func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.SprintMembers, *smember.SprintMember, bool, error) {
 	params := p.Params.Get("smember", nil, p.Logger).Sanitize("smember")
 	members, err := s.sm.GetBySprintID(p.Ctx, p.Tx, sprintID, params, p.Logger)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, false, err
 	}
-	self := members.Get(sprintID, p.Profile.ID)
-	if self == nil && p.Profile.Name != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		role := enum.MemberStatusMember
-		if len(members) == 0 {
-			role = enum.MemberStatusOwner
-		}
-		_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		members, err = s.sm.GetBySprintID(p.Ctx, p.Tx, sprintID, params, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		self = members.Get(sprintID, p.Profile.ID)
+	if self := members.Get(sprintID, p.Profile.ID); self != nil {
+		return members, self, false, nil
 	}
-	return members, self, nil
+	err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	role := enum.MemberStatusMember
+	if len(members) == 0 {
+		role = enum.MemberStatusOwner
+	}
+	_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	members, err = s.sm.GetBySprintID(p.Ctx, p.Tx, sprintID, params, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	return members, members.Get(sprintID, p.Profile.ID), true, nil
 }

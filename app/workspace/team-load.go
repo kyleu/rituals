@@ -31,6 +31,7 @@ type FullTeam struct {
 	Retros      retro.Retros                `json:"retros,omitempty"`
 	Comments    comment.Comments            `json:"comments,omitempty"`
 	Actions     action.Actions              `json:"actions,omitempty"`
+	Registered  bool                        `json:"registered,omitempty"`
 }
 
 func (f *FullTeam) Admin() bool {
@@ -80,7 +81,7 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 		},
 		func() error {
 			var err error
-			ret.Members, ret.Self, err = s.membersTeam(p, t.ID)
+			ret.Members, ret.Self, ret.Registered, err = s.membersTeam(p, t.ID)
 			online := s.online(util.KeyTeam + ":" + t.ID.String())
 			ret.UtilMembers = ret.Members.ToMembers(online)
 			return err
@@ -142,31 +143,30 @@ func (s *Service) loadFullTeam(p *LoadParams, t *team.Team) (*FullTeam, error) {
 	return ret, nil
 }
 
-func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMembers, *tmember.TeamMember, error) {
+func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMembers, *tmember.TeamMember, bool, error) {
 	params := p.Params.Get("tmember", nil, p.Logger).Sanitize("tmember")
 	members, err := s.tm.GetByTeamID(p.Ctx, p.Tx, teamID, params, p.Logger)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, false, err
 	}
-	self := members.Get(teamID, p.Profile.ID)
-	if self == nil && p.Profile.Name != "" {
-		err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		role := enum.MemberStatusMember
-		if len(members) == 0 {
-			role = enum.MemberStatusOwner
-		}
-		_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		members, err = s.tm.GetByTeamID(p.Ctx, p.Tx, teamID, params, p.Logger)
-		if err != nil {
-			return nil, nil, err
-		}
-		self = members.Get(teamID, p.Profile.ID)
+	if self := members.Get(teamID, p.Profile.ID); self != nil {
+		return members, self, false, nil
 	}
-	return members, self, nil
+	err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	role := enum.MemberStatusMember
+	if len(members) == 0 {
+		role = enum.MemberStatusOwner
+	}
+	_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	members, err = s.tm.GetByTeamID(p.Ctx, p.Tx, teamID, params, p.Logger)
+	if err != nil {
+		return nil, nil, false, err
+	}
+	return members, members.Get(teamID, p.Profile.ID), true, nil
 }

@@ -5,7 +5,7 @@ type Act string
 const (
 	ActMessage Act = "message"
 	ActReset   Act = "reset"
-	ActCreate  Act = "create"
+	//ActCreate  Act = "create"
 
 	ActUpdate      Act = "update"
 	ActPermissions Act = "permissions"

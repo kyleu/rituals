@@ -1,7 +1,6 @@
 package cworkspace
 
 import (
-	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -41,9 +40,6 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		})
 		if err != nil {
 			return "", err
-		}
-		if fs.Self == nil {
-			return "", errors.New("TODO: Register")
 		}
 		ps.Title = fs.Sprint.TitleString()
 		ps.Data = fs

@@ -45,9 +45,6 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		if fr.Self == nil {
-			return "", errors.New("TODO: Register")
-		}
 		ps.Title = fr.Retro.TitleString()
 		ps.Data = fr
 		v := &vwretro.RetroWorkspace{FullRetro: fr, Teams: w.Teams, Sprints: w.Sprints}

@@ -109,7 +109,7 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = sendTeamSprintUpdates(util.KeyEstimate, model.TeamID, model.SprintID, model, &fe.Self.UserID, p.Svc, p.Logger)
+		err = sendTeamSprintUpdates(enum.ModelServiceEstimate, model.TeamID, model.SprintID, model, &fe.Self.UserID, p.Svc, p.Logger)
 		if err != nil {
 			return nil, "", "", err
 		}

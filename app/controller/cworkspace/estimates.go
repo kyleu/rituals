@@ -1,7 +1,6 @@
 package cworkspace
 
 import (
-	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -44,9 +43,6 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		})
 		if err != nil {
 			return "", err
-		}
-		if fe.Self == nil {
-			return "", errors.New("TODO: Register")
 		}
 		ps.Title = fe.Estimate.TitleString()
 		ps.Data = fe

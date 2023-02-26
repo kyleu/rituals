@@ -21,23 +21,30 @@ var DefaultEstimateChoices = []string{"0", "1", "2", "3", "5", "8", "13", "100"}
 func (s *Service) CreateEstimate(
 	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
 ) (*estimate.Estimate, *emember.EstimateMember, error) {
-	slug := s.t.Slugify(ctx, id, title, "", s.th, nil, logger)
+	slug := s.e.Slugify(ctx, id, title, "", s.eh, nil, logger)
 	model := &estimate.Estimate{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Created: time.Now()}
 	err := s.e.Create(ctx, nil, logger, model)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate")
 	}
-
-	err = s.a.Post(ctx, util.KeyEstimate, model.ID, user, action.ActCreate, util.ValueMap{"payload": model}, nil, logger)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "unable to save estimate activity")
-	}
-
 	member, err := s.em.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate owner")
 	}
-
+	if teamID != nil {
+		msg := map[string]any{"type": enum.ModelServiceEstimate, "id": model.ID, "title": model.Title, "path": model.PublicWebPath(), "icon": model.IconSafe()}
+		err = s.send(enum.ModelServiceTeam, *teamID, action.ActChildAdd, msg, &user, logger)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to notify team")
+		}
+	}
+	if sprintID != nil {
+		msg := map[string]any{"type": enum.ModelServiceEstimate, "id": model.ID, "title": model.Title, "path": model.PublicWebPath(), "icon": model.IconSafe()}
+		err = s.send(enum.ModelServiceSprint, *sprintID, action.ActChildAdd, msg, &user, logger)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to notify sprint")
+		}
+	}
 	return model, member, nil
 }
 

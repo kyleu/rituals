@@ -27,17 +27,24 @@ func (s *Service) CreateRetro(
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save retro")
 	}
-
-	err = s.a.Post(ctx, util.KeyRetro, model.ID, user, action.ActCreate, util.ValueMap{"payload": model}, nil, logger)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "unable to save retro activity")
-	}
-
 	member, err := s.rm.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save retro owner")
 	}
-
+	if teamID != nil {
+		msg := map[string]any{"type": enum.ModelServiceRetro, "id": model.ID, "title": model.Title, "path": model.PublicWebPath(), "icon": model.IconSafe()}
+		err = s.send(enum.ModelServiceTeam, *teamID, action.ActChildAdd, msg, &user, logger)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to notify team")
+		}
+	}
+	if sprintID != nil {
+		msg := map[string]any{"type": enum.ModelServiceRetro, "id": model.ID, "title": model.Title, "path": model.PublicWebPath(), "icon": model.IconSafe()}
+		err = s.send(enum.ModelServiceSprint, *sprintID, action.ActChildAdd, msg, &user, logger)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "unable to notify sprint")
+		}
+	}
 	return model, member, nil
 }
 
