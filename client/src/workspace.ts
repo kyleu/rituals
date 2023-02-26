@@ -57,7 +57,7 @@ export function onChildAddModel(param: ChildAdd) {
   const commentsDiv = document.createElement("div");
   commentsDiv.classList.add("right");
   commentsDiv.appendChild(snippetCommentsModalLink(param.type, param.id));
-  commentsDiv.appendChild(snippetCommentsModal(param.type, param.id, param.id));
+  commentsDiv.appendChild(snippetCommentsModal(param.type, param.id, param.title));
   td.appendChild(commentsDiv);
 
   const a = document.createElement("a");

@@ -336,7 +336,7 @@ func estimateUpdateSelf(p *Params, fe *FullEstimate) (*FullEstimate, string, str
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
-	if name == fe.Self.Name && picture == fe.Self.Picture {
+	if name == fe.Self.Name && picture == fe.Self.Picture && choice != KeyGlobal {
 		return fe, MsgNoChangesNeeded, fe.Estimate.PublicWebPath(), nil
 	}
 

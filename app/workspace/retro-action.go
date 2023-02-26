@@ -270,7 +270,7 @@ func retroUpdateSelf(p *Params, fr *FullRetro) (*FullRetro, string, string, erro
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
-	if name == fr.Self.Name && picture == fr.Self.Picture {
+	if name == fr.Self.Name && picture == fr.Self.Picture && choice != KeyGlobal {
 		return fr, MsgNoChangesNeeded, fr.Retro.PublicWebPath(), nil
 	}
 

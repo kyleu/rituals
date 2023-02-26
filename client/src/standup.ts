@@ -3,7 +3,7 @@ import {opt, req} from "./dom";
 import {send} from "./app";
 import {configFocus, setTeamSprint} from "./workspace";
 import {initReports, Report, reportAdd, reportRemove} from "./report";
-import {loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
+import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Standup = {
   id: string;
@@ -28,8 +28,7 @@ export function initStandup() {
     sprintEl.onchange = () => {
       permissionsSprintToggle(sprintEl.value !== "");
     };
-    permissionsTeamToggle(teamEl.value !== "");
-    permissionsSprintToggle(sprintEl.value !== "");
+    initPermissions(teamEl, sprintEl);
     frm.onsubmit = () => {
       const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
       const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;

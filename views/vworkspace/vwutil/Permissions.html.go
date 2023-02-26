@@ -150,7 +150,7 @@ func StreamPermissionsForm(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:47
 	for _, perm := range perms.AuthPerms() {
 //line views/vworkspace/vwutil/Permissions.html:48
-		if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil {
+		if (perm.Value != "*" && len(ps.Accounts.GetByProvider(perm.Key)) == 0) && ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil {
 //line views/vworkspace/vwutil/Permissions.html:48
 			qw422016.N().S(`
     <div class="mt"><label>

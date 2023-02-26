@@ -159,7 +159,7 @@ func teamUpdateSelf(p *Params, ft *FullTeam) (*FullTeam, string, string, error) 
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
-	if name == ft.Self.Name && picture == ft.Self.Picture {
+	if name == ft.Self.Name && picture == ft.Self.Picture && choice != KeyGlobal {
 		return ft, MsgNoChangesNeeded, ft.Team.PublicWebPath(), nil
 	}
 

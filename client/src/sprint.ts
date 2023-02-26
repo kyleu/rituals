@@ -2,7 +2,7 @@ import type {Message} from "./socket";
 import {opt, req} from "./dom";
 import {send} from "./app";
 import {ChildAdd, ChildRemove, ChildUpdate, configFocus, onChildAddModel, onChildRemoveModel, onChildUpdateModel, setTeamSprint} from "./workspace";
-import {loadPermsForm, Permission, permissionsTeamToggle, permissionsUpdate} from "./permission";
+import {initPermissions, loadPermsForm, Permission, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Sprint = {
   id: string;
@@ -24,7 +24,7 @@ export function initSprint() {
     teamEl.onchange = () => {
       permissionsTeamToggle(teamEl.value !== "");
     };
-    permissionsTeamToggle(teamEl.value !== "");
+    initPermissions(teamEl);
     frm.onsubmit = () => {
       const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
       const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;

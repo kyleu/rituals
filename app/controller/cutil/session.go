@@ -19,8 +19,8 @@ import (
 var initialIcons = []string{"searchbox"}
 
 func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
-	ctx, logger := httpmetrics.ExtractHeaders(rc, logger)
-	traceCtx, span, logger := telemetry.StartSpan(ctx, "http:"+key, logger)
+	parentCtx, logger := httpmetrics.ExtractHeaders(rc, logger)
+	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
 	span.Attribute("path", string(rc.Request.URI().Path()))
 	httpmetrics.InjectHTTP(rc, span)
 
@@ -35,7 +35,7 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
 		User: u, Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
-		Icons: initialIcons, Context: traceCtx, Span: span, Logger: logger,
+		Icons: initialIcons, Context: ctx, Span: span, Logger: logger,
 	}
 }
 

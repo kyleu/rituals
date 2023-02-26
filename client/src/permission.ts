@@ -28,7 +28,9 @@ export function loadPermsForm(frm: HTMLFormElement) {
   return ret;
 }
 
-export function initPermissions(t: HTMLSelectElement, s: HTMLSelectElement) {
+export function initPermissions(t: HTMLSelectElement, s?: HTMLSelectElement) {
   permissionsTeamToggle(t.value !== "");
-  permissionsSprintToggle(s.value !== "");
+  if (s) {
+    permissionsSprintToggle(s.value !== "");
+  }
 }

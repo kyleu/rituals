@@ -45,7 +45,7 @@
     </label></div>
   {%- endif -%}
   {%- for _, perm := range perms.AuthPerms() -%}
-    {%- if ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil %}
+    {%- if (perm.Value != "*" && len(ps.Accounts.GetByProvider(perm.Key)) == 0) && ps.Accounts.GetByProviderDomain(perm.Key, perm.Value) == nil %}
     <div class="mt"><label>
       {%- if perms.Get(perm.Key, "*") != nil -%}
       <input class="perm-option" type="checkbox" name="perm-{%s perm.Key %}" value="true" checked="checked">

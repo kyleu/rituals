@@ -177,7 +177,7 @@ func sprintUpdateSelf(p *Params, fs *FullSprint) (*FullSprint, string, string, e
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
-	if name == fs.Self.Name && picture == fs.Self.Picture {
+	if name == fs.Self.Name && picture == fs.Self.Picture && choice != KeyGlobal {
 		return fs, MsgNoChangesNeeded, fs.Sprint.PublicWebPath(), nil
 	}
 

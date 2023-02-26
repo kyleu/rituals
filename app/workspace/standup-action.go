@@ -274,7 +274,7 @@ func standupUpdateSelf(p *Params, fu *FullStandup) (*FullStandup, string, string
 	if name == "" {
 		return nil, "", "", errors.New("must provide [name]")
 	}
-	if name == fu.Self.Name && picture == fu.Self.Picture {
+	if name == fu.Self.Name && picture == fu.Self.Picture && choice != KeyGlobal {
 		return fu, MsgNoChangesNeeded, fu.Standup.PublicWebPath(), nil
 	}
 
