@@ -37,7 +37,6 @@
           <span id="model-title">{%s u.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
-        <span id="owner-id" style="display: none;">{%s u.Owner.String() %}</span>
         {%- if w.Admin() -%}
         {%= StandupWorkspaceModalEdit(u, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
         {%- else -%}

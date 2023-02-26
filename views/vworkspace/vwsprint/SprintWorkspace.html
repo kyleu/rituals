@@ -56,7 +56,6 @@
         <div class="clear"></div>
         <div class="right" id="model-summary">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
         {%= vwutil.Banner(w.Team, nil, util.KeySprint) %}
-        <span id="owner-id" style="display: none;">{%s s.Owner.String() %}</span>
         {%- if w.Admin() -%}
         {%= SprintWorkspaceModalEdit(s, p.Teams, w.Permissions.ToPermissions(), ps) %}
         {%- else -%}

@@ -21,7 +21,7 @@ func (s *Service) CreateStandup(
 ) (*standup.Standup, *umember.StandupMember, error) {
 	slug := s.u.Slugify(ctx, id, title, "", s.uh, nil, logger)
 	model := &standup.Standup{
-		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Owner: user, TeamID: teamID, SprintID: sprintID, Created: time.Now(),
+		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Created: time.Now(),
 	}
 	err := s.u.Create(ctx, nil, logger, model)
 	if err != nil {

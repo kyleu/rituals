@@ -32,14 +32,6 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Sprints"
 		ps.Data = ret
-		userIDs := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			userIDs = append(userIDs, x.Owner)
-		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
-		if err != nil {
-			return "", err
-		}
 		teamIDs := make([]*uuid.UUID, 0, len(ret))
 		for _, x := range ret {
 			teamIDs = append(teamIDs, x.TeamID)
@@ -48,7 +40,7 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		page := &vsprint.List{Models: ret, Users: users, Teams: teams, Params: ps.Params, SearchQuery: q}
+		page := &vsprint.List{Models: ret, Teams: teams, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "sprint")
 	})
 }

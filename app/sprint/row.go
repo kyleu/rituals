@@ -15,7 +15,7 @@ import (
 var (
 	table         = "sprint"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "owner", "start_date", "end_date", "created", "updated"}
+	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "start_date", "end_date", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -27,7 +27,6 @@ type row struct {
 	Icon      string             `db:"icon"`
 	Status    enum.SessionStatus `db:"status"`
 	TeamID    *uuid.UUID         `db:"team_id"`
-	Owner     uuid.UUID          `db:"owner"`
 	StartDate *time.Time         `db:"start_date"`
 	EndDate   *time.Time         `db:"end_date"`
 	Created   time.Time          `db:"created"`
@@ -45,7 +44,6 @@ func (r *row) ToSprint() *Sprint {
 		Icon:      r.Icon,
 		Status:    r.Status,
 		TeamID:    r.TeamID,
-		Owner:     r.Owner,
 		StartDate: r.StartDate,
 		EndDate:   r.EndDate,
 		Created:   r.Created,

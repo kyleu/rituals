@@ -39,7 +39,6 @@
           <span id="model-title">{%s r.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
-        <span id="owner-id" style="display: none;">{%s r.Owner.String() %}</span>
         {%- if w.Admin() -%}
         {%= RetroWorkspaceModalEdit(r, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
         {%- else -%}

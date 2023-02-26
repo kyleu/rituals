@@ -119,11 +119,6 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	components.StreamTableInputUUID(qw422016, "sprintID", "input-sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vstandup/Edit.html:35
 	qw422016.N().S(`
-          `)
-//line views/vstandup/Edit.html:36
-	components.StreamTableInputUUID(qw422016, "owner", "input-owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vstandup/Edit.html:36
-	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
       </table>
@@ -131,37 +126,36 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.autocomplete(document.getElementById("input-owner"), "/admin/db/user?user.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
       rituals.autocomplete(document.getElementById("input-teamID"), "/admin/db/team?team.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
       rituals.autocomplete(document.getElementById("input-sprintID"), "/admin/db/sprint?sprint.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
     });
   </script>
 `)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 }
 
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 }
 
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	qs422016 := string(qb422016.B)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 	return qs422016
-//line views/vstandup/Edit.html:49
+//line views/vstandup/Edit.html:47
 }

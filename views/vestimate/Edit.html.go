@@ -122,13 +122,8 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:37
-	components.StreamTableInputUUID(qw422016, "owner", "input-owner", "Owner", &p.Model.Owner, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/Edit.html:37
-	qw422016.N().S(`
-          `)
-//line views/vestimate/Edit.html:38
 	components.StreamTableTextarea(qw422016, "choices", "", "Choices", 8, util.ToJSON(p.Model.Choices), 5, "Comma-separated list of values")
-//line views/vestimate/Edit.html:38
+//line views/vestimate/Edit.html:37
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -137,37 +132,36 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.autocomplete(document.getElementById("input-owner"), "/admin/db/user?user.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
       rituals.autocomplete(document.getElementById("input-teamID"), "/admin/db/team?team.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
       rituals.autocomplete(document.getElementById("input-sprintID"), "/admin/db/sprint?sprint.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " (" + o["id"] + ")", (o) => o["id"]);
     });
   </script>
 `)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 }
 
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 }
 
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	qs422016 := string(qb422016.B)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 	return qs422016
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:49
 }

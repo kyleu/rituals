@@ -37,7 +37,6 @@
           <span id="model-title">{%s t.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(nil, nil, util.KeyTeam) %}
-        <span id="owner-id" style="display: none;">{%s t.Owner.String() %}</span>
         {%- if w.Admin() -%}
         {%= TeamWorkspaceModalEdit(t, w.Permissions.ToPermissions(), ps) %}
         {%- else -%}

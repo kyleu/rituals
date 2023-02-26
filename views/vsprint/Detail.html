@@ -11,7 +11,6 @@
   "github.com/kyleu/rituals/app/sprint/spermission"
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
-  "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vestimate"
@@ -25,7 +24,6 @@
 {% code type Detail struct {
   layout.Basic
   Model *sprint.Sprint
-  Users user.Users
   Teams team.Teams
   Params filter.ParamSet
   EstimatesBySprintID estimate.Estimates
@@ -74,13 +72,6 @@
           </td>
         </tr>
         <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
-          <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-          </td>
-        </tr>
-        <tr>
           <th class="shrink" title="Calendar date (optional)">Start Date</th>
           <td>{%= components.DisplayTimestampDay(p.Model.StartDate) %}</td>
         </tr>
@@ -105,7 +96,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Related estimates by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vestimate.Table(p.EstimatesBySprintID, nil, nil, nil, p.Params, as, ps) %}
+      {%= vestimate.Table(p.EstimatesBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
@@ -113,7 +104,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`retro`, ps) %} Related retros by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vretro.Table(p.RetrosBySprintID, nil, nil, nil, p.Params, as, ps) %}
+      {%= vretro.Table(p.RetrosBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
@@ -145,7 +136,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`standup`, ps) %} Related standups by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vstandup.Table(p.StandupsBySprintID, nil, nil, nil, p.Params, as, ps) %}
+      {%= vstandup.Table(p.StandupsBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

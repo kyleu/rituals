@@ -19,7 +19,6 @@ type Retro struct {
 	Status     enum.SessionStatus `json:"status"`
 	TeamID     *uuid.UUID         `json:"teamID,omitempty"`
 	SprintID   *uuid.UUID         `json:"sprintID,omitempty"`
-	Owner      uuid.UUID          `json:"owner"`
 	Categories []string           `json:"categories"`
 	Created    time.Time          `json:"created"`
 	Updated    *time.Time         `json:"updated,omitempty"`
@@ -38,7 +37,6 @@ func Random() *Retro {
 		Status:     enum.SessionStatus(util.RandomString(12)),
 		TeamID:     util.UUIDP(),
 		SprintID:   util.UUIDP(),
-		Owner:      util.UUID(),
 		Categories: nil,
 		Created:    time.Now(),
 		Updated:    util.NowPointer(),
@@ -84,13 +82,6 @@ func FromMap(m util.ValueMap, setPK bool) (*Retro, error) {
 	if err != nil {
 		return nil, err
 	}
-	retOwner, e := m.ParseUUID("owner", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retOwner != nil {
-		ret.Owner = *retOwner
-	}
 	ret.Categories, err = m.ParseArrayString("categories", true, true)
 	if err != nil {
 		return nil, err
@@ -109,7 +100,6 @@ func (r *Retro) Clone() *Retro {
 		Status:     r.Status,
 		TeamID:     r.TeamID,
 		SprintID:   r.SprintID,
-		Owner:      r.Owner,
 		Categories: r.Categories,
 		Created:    r.Created,
 		Updated:    r.Updated,
@@ -128,7 +118,6 @@ func (r *Retro) WebPath() string {
 	return "/admin/db/retro/" + r.ID.String()
 }
 
-//nolint:gocognit
 func (r *Retro) Diff(rx *Retro) util.Diffs {
 	var diffs util.Diffs
 	if r.ID != rx.ID {
@@ -152,9 +141,6 @@ func (r *Retro) Diff(rx *Retro) util.Diffs {
 	if (r.SprintID == nil && rx.SprintID != nil) || (r.SprintID != nil && rx.SprintID == nil) || (r.SprintID != nil && rx.SprintID != nil && *r.SprintID != *rx.SprintID) { //nolint:lll
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(r.SprintID), fmt.Sprint(rx.SprintID))) //nolint:gocritic // it's nullable
 	}
-	if r.Owner != rx.Owner {
-		diffs = append(diffs, util.NewDiff("owner", r.Owner.String(), rx.Owner.String()))
-	}
 	diffs = append(diffs, util.DiffObjects(r.Categories, rx.Categories, "categories")...)
 	if r.Created != rx.Created {
 		diffs = append(diffs, util.NewDiff("created", r.Created.String(), rx.Created.String()))
@@ -163,5 +149,5 @@ func (r *Retro) Diff(rx *Retro) util.Diffs {
 }
 
 func (r *Retro) ToData() []any {
-	return []any{r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Owner, r.Categories, r.Created, r.Updated}
+	return []any{r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Categories, r.Created, r.Updated}
 }

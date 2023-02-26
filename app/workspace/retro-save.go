@@ -21,7 +21,7 @@ func (s *Service) CreateRetro(
 ) (*retro.Retro, *rmember.RetroMember, error) {
 	slug := s.r.Slugify(ctx, id, title, "", s.rh, nil, logger)
 	model := &retro.Retro{
-		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Owner: user, TeamID: teamID, SprintID: sprintID, Created: time.Now(),
+		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Created: time.Now(),
 	}
 	err := s.r.Create(ctx, nil, logger, model)
 	if err != nil {

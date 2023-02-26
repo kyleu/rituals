@@ -11,7 +11,6 @@
   "github.com/kyleu/rituals/app/team/thistory"
   "github.com/kyleu/rituals/app/team/tmember"
   "github.com/kyleu/rituals/app/team/tpermission"
-  "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vestimate"
@@ -26,7 +25,6 @@
 {% code type Detail struct {
   layout.Basic
   Model *team.Team
-  Users user.Users
   Params filter.ParamSet
   EstimatesByTeamID estimate.Estimates
   RetrosByTeamID retro.Retros
@@ -68,13 +66,6 @@
           <td>{%v p.Model.Status %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Owner</th>
-          <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.Owner) %}{% if x := p.Users.Get(p.Model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/user`+`/`+p.Model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-          </td>
-        </tr>
-        <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
         </tr>
@@ -91,7 +82,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Related estimates by [team id]</h3>
     <div class="overflow clear">
-      {%= vestimate.Table(p.EstimatesByTeamID, nil, nil, nil, p.Params, as, ps) %}
+      {%= vestimate.Table(p.EstimatesByTeamID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
@@ -99,7 +90,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`retro`, ps) %} Related retros by [team id]</h3>
     <div class="overflow clear">
-      {%= vretro.Table(p.RetrosByTeamID, nil, nil, nil, p.Params, as, ps) %}
+      {%= vretro.Table(p.RetrosByTeamID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
@@ -107,7 +98,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`sprint`, ps) %} Related sprints by [team id]</h3>
     <div class="overflow clear">
-      {%= vsprint.Table(p.SprintsByTeamID, nil, nil, p.Params, as, ps) %}
+      {%= vsprint.Table(p.SprintsByTeamID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
@@ -115,7 +106,7 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`standup`, ps) %} Related standups by [team id]</h3>
     <div class="overflow clear">
-      {%= vstandup.Table(p.StandupsByTeamID, nil, nil, nil, p.Params, as, ps) %}
+      {%= vstandup.Table(p.StandupsByTeamID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

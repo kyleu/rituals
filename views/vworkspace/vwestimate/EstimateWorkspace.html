@@ -39,7 +39,6 @@
           <span id="model-title">{%s e.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
-        <span id="owner-id" style="display: none;">{%s e.Owner.String() %}</span>
         {%- if w.Admin() -%}
         {%= EstimateWorkspaceModalEdit(e, p.Teams, p.Sprints, w.Permissions.ToPermissions(), ps) %}
         {%- else -%}

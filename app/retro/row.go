@@ -16,7 +16,7 @@ import (
 var (
 	table         = "retro"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "categories", "created", "updated"}
+	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "categories", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -29,7 +29,6 @@ type row struct {
 	Status     enum.SessionStatus `db:"status"`
 	TeamID     *uuid.UUID         `db:"team_id"`
 	SprintID   *uuid.UUID         `db:"sprint_id"`
-	Owner      uuid.UUID          `db:"owner"`
 	Categories json.RawMessage    `db:"categories"`
 	Created    time.Time          `db:"created"`
 	Updated    *time.Time         `db:"updated"`
@@ -49,7 +48,6 @@ func (r *row) ToRetro() *Retro {
 		Status:     r.Status,
 		TeamID:     r.TeamID,
 		SprintID:   r.SprintID,
-		Owner:      r.Owner,
 		Categories: categoriesArg,
 		Created:    r.Created,
 		Updated:    r.Updated,

@@ -4,11 +4,10 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/team"
-  "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models team.Teams, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("team", nil, ps.Logger).Sanitize("team") -%}
   <table class="mt">
     <thead>
@@ -18,7 +17,6 @@
         {%= components.TableHeaderSimple("team", "title", "Title", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "icon", "Icon", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("team", "owner", "Owner", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
       </tr>
@@ -31,17 +29,13 @@
         <td><strong>{%s model.Title %}</strong></td>
         <td>{%s model.Icon %}</td>
         <td>{%v model.Status %}</td>
-        <td class="nowrap">
-          {%= components.DisplayUUID(&model.Owner) %}{% if x := users.Get(model.Owner); x != nil %} ({%s x.TitleString() %}){% endif %}
-          <a title="User" href="{%s `/user`+`/`+model.Owner.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-        </td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
       <tr>
-        <td colspan="8">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
+        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
       </tr>
       {%- endif -%}
     </tbody>

@@ -69,10 +69,8 @@ create table if not exists "standup" (
   "status" session_status not null,
   "team_id" uuid,
   "sprint_id" uuid,
-  "owner" uuid not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
-  foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
   foreign key ("sprint_id") references "sprint" ("id"),
   unique ("slug"),
@@ -83,37 +81,35 @@ create index if not exists "standup__slug_idx" on "standup" ("slug");
 
 create index if not exists "standup__status_idx" on "standup" ("status");
 
-create index if not exists "standup__owner_idx" on "standup" ("owner");
-
 create index if not exists "standup__team_id_idx" on "standup" ("team_id");
 
 create index if not exists "standup__sprint_id_idx" on "standup" ("sprint_id");
 -- `)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 }
 
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 func WriteStandupCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	StreamStandupCreate(qw422016)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 }
 
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 func StandupCreate() string {
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	WriteStandupCreate(qb422016)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	qs422016 := string(qb422016.B)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 	return qs422016
-//line queries/ddl/standup.sql:34
+//line queries/ddl/standup.sql:30
 }

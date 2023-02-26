@@ -15,7 +15,6 @@ export type Retro = {
   status: string;
   teamID: string;
   sprintID: string;
-  owner: string;
 }
 
 export function initRetro() {
@@ -44,7 +43,6 @@ export function initRetro() {
 }
 
 function onUpdate(param: Retro) {
-  req("#owner-id").innerText = param.owner;
   const panel = req<HTMLElement>("#modal-retro-config");
   const frm = opt<HTMLFormElement>("form", panel);
   if (frm) {

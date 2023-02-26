@@ -12,11 +12,9 @@ create table if not exists "retro" (
   "status" session_status not null,
   "team_id" uuid,
   "sprint_id" uuid,
-  "owner" uuid not null,
   "categories" jsonb not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
-  foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
   foreign key ("sprint_id") references "sprint" ("id"),
   unique ("slug"),
@@ -26,8 +24,6 @@ create table if not exists "retro" (
 create index if not exists "retro__slug_idx" on "retro" ("slug");
 
 create index if not exists "retro__status_idx" on "retro" ("status");
-
-create index if not exists "retro__owner_idx" on "retro" ("owner");
 
 create index if not exists "retro__team_id_idx" on "retro" ("team_id");
 

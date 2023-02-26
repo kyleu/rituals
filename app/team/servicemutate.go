@@ -36,7 +36,7 @@ func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Team, logger u
 	}
 	model.Created = curr.Created
 	model.Updated = util.NowPointer()
-	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $9", "")
+	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"id\" = $8", "")
 	data := model.ToData()
 	data = append(data, model.ID)
 	_, err = s.db.Update(ctx, q, tx, 1, logger, data...)

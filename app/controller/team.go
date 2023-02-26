@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/valyala/fasthttp"
 
@@ -32,15 +31,7 @@ func TeamList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Teams"
 		ps.Data = ret
-		userIDs := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			userIDs = append(userIDs, x.Owner)
-		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
-		if err != nil {
-			return "", err
-		}
-		page := &vteam.List{Models: ret, Users: users, Params: ps.Params, SearchQuery: q}
+		page := &vteam.List{Models: ret, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "team")
 	})
 }

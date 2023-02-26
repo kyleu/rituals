@@ -13,7 +13,6 @@ export type Standup = {
   status: string;
   teamID: string;
   sprintID: string;
-  owner: string;
 }
 
 export function initStandup() {
@@ -41,7 +40,6 @@ export function initStandup() {
 }
 
 function onUpdate(param: Standup) {
-  req("#owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-standup-config");
   setTeamSprint("standup", frm, param.teamID, param.sprintID, param.title, param.icon);
 }

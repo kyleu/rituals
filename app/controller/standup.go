@@ -32,14 +32,6 @@ func StandupList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Standups"
 		ps.Data = ret
-		userIDs := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			userIDs = append(userIDs, x.Owner)
-		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
-		if err != nil {
-			return "", err
-		}
 		teamIDs := make([]*uuid.UUID, 0, len(ret))
 		for _, x := range ret {
 			teamIDs = append(teamIDs, x.TeamID)
@@ -56,7 +48,7 @@ func StandupList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		page := &vstandup.List{Models: ret, Users: users, Teams: teams, Sprints: sprints, Params: ps.Params, SearchQuery: q}
+		page := &vstandup.List{Models: ret, Teams: teams, Sprints: sprints, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "standup")
 	})
 }

@@ -20,7 +20,7 @@ func (s *Service) CreateTeam(
 	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, logger util.Logger,
 ) (*team.Team, *tmember.TeamMember, error) {
 	slug := s.e.Slugify(ctx, id, title, "", s.eh, nil, logger)
-	model := &team.Team{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Owner: user, Created: time.Now()}
+	model := &team.Team{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Created: time.Now()}
 	err := s.t.Create(ctx, nil, logger, model)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save team")

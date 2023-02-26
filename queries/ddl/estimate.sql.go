@@ -69,11 +69,9 @@ create table if not exists "estimate" (
   "status" session_status not null,
   "team_id" uuid,
   "sprint_id" uuid,
-  "owner" uuid not null,
   "choices" jsonb not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
-  foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
   foreign key ("sprint_id") references "sprint" ("id"),
   unique ("slug"),
@@ -84,37 +82,35 @@ create index if not exists "estimate__slug_idx" on "estimate" ("slug");
 
 create index if not exists "estimate__status_idx" on "estimate" ("status");
 
-create index if not exists "estimate__owner_idx" on "estimate" ("owner");
-
 create index if not exists "estimate__team_id_idx" on "estimate" ("team_id");
 
 create index if not exists "estimate__sprint_id_idx" on "estimate" ("sprint_id");
 -- `)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 }
 
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 func WriteEstimateCreate(qq422016 qtio422016.Writer) {
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	StreamEstimateCreate(qw422016)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 }
 
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 func EstimateCreate() string {
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	WriteEstimateCreate(qb422016)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	qs422016 := string(qb422016.B)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 	return qs422016
-//line queries/ddl/estimate.sql:35
+//line queries/ddl/estimate.sql:31
 }

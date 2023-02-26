@@ -60,11 +60,6 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child emails")
 		}
-		estimatePrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
-		estimatesByOwner, err := as.Services.Estimate.GetByOwner(ps.Context, nil, ret.ID, estimatePrms, ps.Logger)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to retrieve child estimates")
-		}
 		estimateMemberPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
 		estimateMembersByUserID, err := as.Services.EstimateMember.GetByUserID(ps.Context, nil, ret.ID, estimateMemberPrms, ps.Logger)
 		if err != nil {
@@ -80,30 +75,15 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child reports")
 		}
-		retroPrms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
-		retrosByOwner, err := as.Services.Retro.GetByOwner(ps.Context, nil, ret.ID, retroPrms, ps.Logger)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to retrieve child retros")
-		}
 		retroMemberPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
 		retroMembersByUserID, err := as.Services.RetroMember.GetByUserID(ps.Context, nil, ret.ID, retroMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		sprintPrms := ps.Params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
-		sprintsByOwner, err := as.Services.Sprint.GetByOwner(ps.Context, nil, ret.ID, sprintPrms, ps.Logger)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to retrieve child sprints")
-		}
 		sprintMemberPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
 		sprintMembersByUserID, err := as.Services.SprintMember.GetByUserID(ps.Context, nil, ret.ID, sprintMemberPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
-		}
-		standupPrms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
-		standupsByOwner, err := as.Services.Standup.GetByOwner(ps.Context, nil, ret.ID, standupPrms, ps.Logger)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
 		standupMemberPrms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
 		standupMembersByUserID, err := as.Services.StandupMember.GetByUserID(ps.Context, nil, ret.ID, standupMemberPrms, ps.Logger)
@@ -114,11 +94,6 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		storiesByUserID, err := as.Services.Story.GetByUserID(ps.Context, nil, ret.ID, storyPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
-		}
-		teamPrms := ps.Params.Get("team", nil, ps.Logger).Sanitize("team")
-		teamsByOwner, err := as.Services.Team.GetByOwner(ps.Context, nil, ret.ID, teamPrms, ps.Logger)
-		if err != nil {
-			return "", errors.Wrap(err, "unable to retrieve child teams")
 		}
 		teamMemberPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
 		teamMembersByUserID, err := as.Services.TeamMember.GetByUserID(ps.Context, nil, ret.ID, teamMemberPrms, ps.Logger)
@@ -136,18 +111,13 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 			ActionsByUserID:         actionsByUserID,
 			CommentsByUserID:        commentsByUserID,
 			EmailsByUserID:          emailsByUserID,
-			EstimatesByOwner:        estimatesByOwner,
 			EstimateMembersByUserID: estimateMembersByUserID,
 			FeedbacksByUserID:       feedbacksByUserID,
 			ReportsByUserID:         reportsByUserID,
-			RetrosByOwner:           retrosByOwner,
 			RetroMembersByUserID:    retroMembersByUserID,
-			SprintsByOwner:          sprintsByOwner,
 			SprintMembersByUserID:   sprintMembersByUserID,
-			StandupsByOwner:         standupsByOwner,
 			StandupMembersByUserID:  standupMembersByUserID,
 			StoriesByUserID:         storiesByUserID,
-			TeamsByOwner:            teamsByOwner,
 			TeamMembersByUserID:     teamMembersByUserID,
 			VotesByUserID:           votesByUserID,
 		}, ps, "user", ret.String())

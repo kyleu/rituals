@@ -16,7 +16,7 @@ import (
 var (
 	table         = "estimate"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "choices", "created", "updated"}
+	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "choices", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -29,7 +29,6 @@ type row struct {
 	Status   enum.SessionStatus `db:"status"`
 	TeamID   *uuid.UUID         `db:"team_id"`
 	SprintID *uuid.UUID         `db:"sprint_id"`
-	Owner    uuid.UUID          `db:"owner"`
 	Choices  json.RawMessage    `db:"choices"`
 	Created  time.Time          `db:"created"`
 	Updated  *time.Time         `db:"updated"`
@@ -49,7 +48,6 @@ func (r *row) ToEstimate() *Estimate {
 		Status:   r.Status,
 		TeamID:   r.TeamID,
 		SprintID: r.SprintID,
-		Owner:    r.Owner,
 		Choices:  choicesArg,
 		Created:  r.Created,
 		Updated:  r.Updated,

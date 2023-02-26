@@ -4,7 +4,6 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/team"
-  "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
 ) %}
@@ -12,7 +11,6 @@
 {% code type List struct {
   layout.Basic
   Models team.Teams
-  Users user.Users
   Params filter.ParamSet
   SearchQuery string
 } %}
@@ -29,7 +27,7 @@
     <div class="mt"><em>No teams available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Users, p.Params, as, ps) %}
+      {%= Table(p.Models, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

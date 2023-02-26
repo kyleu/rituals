@@ -19,7 +19,6 @@ type Estimate struct {
 	Status   enum.SessionStatus `json:"status"`
 	TeamID   *uuid.UUID         `json:"teamID,omitempty"`
 	SprintID *uuid.UUID         `json:"sprintID,omitempty"`
-	Owner    uuid.UUID          `json:"owner"`
 	Choices  []string           `json:"choices"`
 	Created  time.Time          `json:"created"`
 	Updated  *time.Time         `json:"updated,omitempty"`
@@ -38,7 +37,6 @@ func Random() *Estimate {
 		Status:   enum.SessionStatus(util.RandomString(12)),
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
-		Owner:    util.UUID(),
 		Choices:  nil,
 		Created:  time.Now(),
 		Updated:  util.NowPointer(),
@@ -84,13 +82,6 @@ func FromMap(m util.ValueMap, setPK bool) (*Estimate, error) {
 	if err != nil {
 		return nil, err
 	}
-	retOwner, e := m.ParseUUID("owner", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retOwner != nil {
-		ret.Owner = *retOwner
-	}
 	ret.Choices, err = m.ParseArrayString("choices", true, true)
 	if err != nil {
 		return nil, err
@@ -109,7 +100,6 @@ func (e *Estimate) Clone() *Estimate {
 		Status:   e.Status,
 		TeamID:   e.TeamID,
 		SprintID: e.SprintID,
-		Owner:    e.Owner,
 		Choices:  e.Choices,
 		Created:  e.Created,
 		Updated:  e.Updated,
@@ -128,7 +118,6 @@ func (e *Estimate) WebPath() string {
 	return "/admin/db/estimate/" + e.ID.String()
 }
 
-//nolint:gocognit
 func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 	var diffs util.Diffs
 	if e.ID != ex.ID {
@@ -152,9 +141,6 @@ func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 	if (e.SprintID == nil && ex.SprintID != nil) || (e.SprintID != nil && ex.SprintID == nil) || (e.SprintID != nil && ex.SprintID != nil && *e.SprintID != *ex.SprintID) { //nolint:lll
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(e.SprintID), fmt.Sprint(ex.SprintID))) //nolint:gocritic // it's nullable
 	}
-	if e.Owner != ex.Owner {
-		diffs = append(diffs, util.NewDiff("owner", e.Owner.String(), ex.Owner.String()))
-	}
 	diffs = append(diffs, util.DiffObjects(e.Choices, ex.Choices, "choices")...)
 	if e.Created != ex.Created {
 		diffs = append(diffs, util.NewDiff("created", e.Created.String(), ex.Created.String()))
@@ -163,5 +149,5 @@ func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 }
 
 func (e *Estimate) ToData() []any {
-	return []any{e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, e.Owner, e.Choices, e.Created, e.Updated}
+	return []any{e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, e.Choices, e.Created, e.Updated}
 }

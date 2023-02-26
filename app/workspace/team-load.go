@@ -34,7 +34,7 @@ type FullTeam struct {
 }
 
 func (f *FullTeam) Admin() bool {
-	return f.Team.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+	return f.Self.Role == enum.MemberStatusOwner
 }
 
 func (s *Service) LoadTeam(p *LoadParams) (*FullTeam, error) {
@@ -154,7 +154,11 @@ func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMemb
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
+		role := enum.MemberStatusMember
+		if len(members) == 0 {
+			role = enum.MemberStatusOwner
+		}
+		_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

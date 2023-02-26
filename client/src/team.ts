@@ -10,7 +10,6 @@ export type Team = {
   title: string;
   icon: string;
   status: string;
-  owner: string;
 }
 
 export function initTeam() {
@@ -28,7 +27,6 @@ export function initTeam() {
 }
 
 function onUpdate(param: Team) {
-  req("#owner-id").innerText = param.owner;
   const frm = req<HTMLFormElement>("#modal-team-config");
   setTeamSprint("team", frm, null, null, param.title, param.icon);
 }

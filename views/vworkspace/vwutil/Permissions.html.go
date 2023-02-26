@@ -357,7 +357,7 @@ func StreamPermissionsList(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:95
 	if perms.Get(util.KeyTeam, "true") != nil {
 //line views/vworkspace/vwutil/Permissions.html:95
-		qw422016.N().S(`    <div class="permission-config-team mb">Must be a member of this `)
+		qw422016.N().S(`    <div class="permission-config-team">Must be a member of this `)
 //line views/vworkspace/vwutil/Permissions.html:96
 		qw422016.E().S(key)
 //line views/vworkspace/vwutil/Permissions.html:96
@@ -368,7 +368,7 @@ func StreamPermissionsList(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:98
 	if perms.Get(util.KeySprint, "true") != nil {
 //line views/vworkspace/vwutil/Permissions.html:98
-		qw422016.N().S(`    <div class="permission-config-sprint mb">Must be a member of this `)
+		qw422016.N().S(`    <div class="permission-config-sprint">Must be a member of this `)
 //line views/vworkspace/vwutil/Permissions.html:99
 		qw422016.E().S(key)
 //line views/vworkspace/vwutil/Permissions.html:99
@@ -381,7 +381,7 @@ func StreamPermissionsList(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:102
 		if perms.Get(perm.Key, "*") != nil {
 //line views/vworkspace/vwutil/Permissions.html:102
-			qw422016.N().S(`      <div class="mb">Must be signed into [`)
+			qw422016.N().S(`      <div>Must be signed into [`)
 //line views/vworkspace/vwutil/Permissions.html:103
 			qw422016.E().S(perm.Key)
 //line views/vworkspace/vwutil/Permissions.html:103
@@ -392,7 +392,7 @@ func StreamPermissionsList(qw422016 *qt422016.Writer, key string, perms util.Per
 //line views/vworkspace/vwutil/Permissions.html:105
 		if perms.Get(perm.Key, perm.Value) != nil {
 //line views/vworkspace/vwutil/Permissions.html:105
-			qw422016.N().S(`      <div class="mb">Must be signed into [`)
+			qw422016.N().S(`      <div>Must be signed into [`)
 //line views/vworkspace/vwutil/Permissions.html:106
 			qw422016.E().S(perm.Key)
 //line views/vworkspace/vwutil/Permissions.html:106

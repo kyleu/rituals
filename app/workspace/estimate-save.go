@@ -22,9 +22,7 @@ func (s *Service) CreateEstimate(
 	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
 ) (*estimate.Estimate, *emember.EstimateMember, error) {
 	slug := s.t.Slugify(ctx, id, title, "", s.th, nil, logger)
-	model := &estimate.Estimate{
-		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Owner: user, TeamID: teamID, SprintID: sprintID, Created: time.Now(),
-	}
+	model := &estimate.Estimate{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Created: time.Now()}
 	err := s.e.Create(ctx, nil, logger, model)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate")

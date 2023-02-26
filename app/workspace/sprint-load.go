@@ -34,7 +34,7 @@ type FullSprint struct {
 }
 
 func (f *FullSprint) Admin() bool {
-	return f.Sprint.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+	return f.Self.Role == enum.MemberStatusOwner
 }
 
 func (s *Service) LoadSprint(p *LoadParams, tf func() (team.Teams, error)) (*FullSprint, error) {
@@ -156,7 +156,11 @@ func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.Spri
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, p.Tx, s.a, s.send, p.Logger)
+		role := enum.MemberStatusMember
+		if len(members) == 0 {
+			role = enum.MemberStatusOwner
+		}
+		_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

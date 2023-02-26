@@ -24,11 +24,11 @@ func StreamRetroSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_retro.sql:1
 	qw422016.N().S(`
 insert into "retro" (
-  "id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "categories", "created", "updated"
+  "id", "slug", "title", "icon", "status", "team_id", "sprint_id", "categories", "created", "updated"
 ) values (
-  '50000000-0000-0000-0000-000000000000', 'retro-1', 'Retro 1', 'star', 'active', '10000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', '["good","bad"]', now(), null
+  '50000000-0000-0000-0000-000000000000', 'retro-1', 'Retro 1', 'star', 'active', '10000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', '["good","bad"]', now(), null
 ), (
-  '50000001-0000-0000-0000-000000000000', 'retro-2', 'Retro 2', 'bolt', 'active', '10000001-0000-0000-0000-000000000000', '20000001-0000-0000-0000-000000000000', '90000000-0000-0000-0000-000000000000', '["good","bad"]', now(), null
+  '50000001-0000-0000-0000-000000000000', 'retro-2', 'Retro 2', 'bolt', 'active', '10000001-0000-0000-0000-000000000000', '20000001-0000-0000-0000-000000000000', '["good","bad"]', now(), null
 ) on conflict do nothing;
 -- `)
 //line queries/seeddata/seed_retro.sql:9

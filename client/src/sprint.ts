@@ -13,7 +13,6 @@ export type Sprint = {
   icon: string;
   status: string;
   teamID: string;
-  owner: string;
 }
 
 export function initSprint() {
@@ -58,7 +57,6 @@ function summary(param: Sprint) {
 }
 
 function onUpdate(param: Sprint) {
-  req("#owner-id").innerText = param.owner;
   const panel = req<HTMLElement>("#modal-sprint-config");
   const frm = opt<HTMLFormElement>("form", panel);
   if (frm) {

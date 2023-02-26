@@ -15,7 +15,7 @@ import (
 var (
 	table         = "standup"
 	tableQuoted   = fmt.Sprintf("%q", table)
-	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "owner", "created", "updated"}
+	columns       = []string{"id", "slug", "title", "icon", "status", "team_id", "sprint_id", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
 	columnsString = strings.Join(columnsQuoted, ", ")
 )
@@ -28,7 +28,6 @@ type row struct {
 	Status   enum.SessionStatus `db:"status"`
 	TeamID   *uuid.UUID         `db:"team_id"`
 	SprintID *uuid.UUID         `db:"sprint_id"`
-	Owner    uuid.UUID          `db:"owner"`
 	Created  time.Time          `db:"created"`
 	Updated  *time.Time         `db:"updated"`
 }
@@ -45,7 +44,6 @@ func (r *row) ToStandup() *Standup {
 		Status:   r.Status,
 		TeamID:   r.TeamID,
 		SprintID: r.SprintID,
-		Owner:    r.Owner,
 		Created:  r.Created,
 		Updated:  r.Updated,
 	}

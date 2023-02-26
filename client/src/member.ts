@@ -22,7 +22,7 @@ export function getSelfID() {
 }
 
 function isAdmin() {
-  return req("#self-role").innerText === "owner" || req("#owner-id").innerText === selfID;
+  return req("#self-role").innerText === "owner";
 }
 
 function wireSelfForm() {

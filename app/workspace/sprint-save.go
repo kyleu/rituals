@@ -20,7 +20,7 @@ func (s *Service) CreateSprint(
 	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, logger util.Logger,
 ) (*sprint.Sprint, *smember.SprintMember, error) {
 	slug := s.s.Slugify(ctx, id, title, "", s.sh, nil, logger)
-	model := &sprint.Sprint{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, Owner: user, TeamID: teamID, Created: time.Now()}
+	model := &sprint.Sprint{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, Created: time.Now()}
 	err := s.s.Create(ctx, nil, logger, model)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save sprint")

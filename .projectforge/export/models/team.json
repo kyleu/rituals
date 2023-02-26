@@ -52,10 +52,6 @@
       "indexed": true
     },
     {
-      "name": "owner",
-      "type": "uuid"
-    },
-    {
       "name": "created",
       "type": "timestamp",
       "sqlDefault": "now()",
@@ -73,18 +69,6 @@
       ]
     }
   ],
-  "relations": [
-    {
-      "name": "team_owner_fk",
-      "src": [
-        "owner"
-      ],
-      "table": "user",
-      "tgt": [
-        "id"
-      ]
-    }
-  ],
   "seedData": [
     [
       "10000000-0000-0000-0000-000000000000",
@@ -92,7 +76,6 @@
       "Rituals Team",
       "star",
       "active",
-      "90000000-0000-0000-0000-000000000000",
       "now()",
       null
     ],
@@ -102,7 +85,6 @@
       "Team 2",
       "action",
       "active",
-      "90000000-0000-0000-0000-000000000000",
       "now()",
       null
     ]

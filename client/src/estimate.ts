@@ -15,7 +15,6 @@ export type Estimate = {
   status: string;
   teamID: string;
   sprintID: string;
-  owner: string;
 }
 
 export function initEstimate() {
@@ -44,7 +43,6 @@ export function initEstimate() {
 }
 
 function onUpdate(param: Estimate) {
-  req("#owner-id").innerText = param.owner;
   const panel = req<HTMLElement>("#modal-estimate-config");
   const frm = opt<HTMLFormElement>("form", panel);
   if (frm) {

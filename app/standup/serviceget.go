@@ -68,18 +68,6 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	return ret.ToStandups(), nil
 }
 
-func (s *Service) GetByOwner(ctx context.Context, tx *sqlx.Tx, owner uuid.UUID, params *filter.Params, logger util.Logger) (Standups, error) {
-	params = filters(params)
-	wc := "\"owner\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
-	ret := rows{}
-	err := s.db.Select(ctx, &ret, q, tx, logger, owner)
-	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get standups by owner [%v]", owner)
-	}
-	return ret.ToStandups(), nil
-}
-
 func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*Standup, error) {
 	wc := "\"slug\" = $1"
 	ret := &row{}

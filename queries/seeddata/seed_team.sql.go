@@ -24,11 +24,11 @@ func StreamTeamSeedData(qw422016 *qt422016.Writer) {
 //line queries/seeddata/seed_team.sql:1
 	qw422016.N().S(`
 insert into "team" (
-  "id", "slug", "title", "icon", "status", "owner", "created", "updated"
+  "id", "slug", "title", "icon", "status", "created", "updated"
 ) values (
-  '10000000-0000-0000-0000-000000000000', 'rituals-team', 'Rituals Team', 'star', 'active', '90000000-0000-0000-0000-000000000000', now(), null
+  '10000000-0000-0000-0000-000000000000', 'rituals-team', 'Rituals Team', 'star', 'active', now(), null
 ), (
-  '10000001-0000-0000-0000-000000000000', 'team-2', 'Team 2', 'action', 'active', '90000000-0000-0000-0000-000000000000', now(), null
+  '10000001-0000-0000-0000-000000000000', 'team-2', 'Team 2', 'action', 'active', now(), null
 ) on conflict do nothing;
 -- `)
 //line queries/seeddata/seed_team.sql:9

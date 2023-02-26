@@ -19,7 +19,6 @@ type Standup struct {
 	Status   enum.SessionStatus `json:"status"`
 	TeamID   *uuid.UUID         `json:"teamID,omitempty"`
 	SprintID *uuid.UUID         `json:"sprintID,omitempty"`
-	Owner    uuid.UUID          `json:"owner"`
 	Created  time.Time          `json:"created"`
 	Updated  *time.Time         `json:"updated,omitempty"`
 }
@@ -37,7 +36,6 @@ func Random() *Standup {
 		Status:   enum.SessionStatus(util.RandomString(12)),
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
-		Owner:    util.UUID(),
 		Created:  time.Now(),
 		Updated:  util.NowPointer(),
 	}
@@ -82,13 +80,6 @@ func FromMap(m util.ValueMap, setPK bool) (*Standup, error) {
 	if err != nil {
 		return nil, err
 	}
-	retOwner, e := m.ParseUUID("owner", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retOwner != nil {
-		ret.Owner = *retOwner
-	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -103,7 +94,6 @@ func (s *Standup) Clone() *Standup {
 		Status:   s.Status,
 		TeamID:   s.TeamID,
 		SprintID: s.SprintID,
-		Owner:    s.Owner,
 		Created:  s.Created,
 		Updated:  s.Updated,
 	}
@@ -121,7 +111,6 @@ func (s *Standup) WebPath() string {
 	return "/admin/db/standup/" + s.ID.String()
 }
 
-//nolint:gocognit
 func (s *Standup) Diff(sx *Standup) util.Diffs {
 	var diffs util.Diffs
 	if s.ID != sx.ID {
@@ -145,9 +134,6 @@ func (s *Standup) Diff(sx *Standup) util.Diffs {
 	if (s.SprintID == nil && sx.SprintID != nil) || (s.SprintID != nil && sx.SprintID == nil) || (s.SprintID != nil && sx.SprintID != nil && *s.SprintID != *sx.SprintID) { //nolint:lll
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(s.SprintID), fmt.Sprint(sx.SprintID))) //nolint:gocritic // it's nullable
 	}
-	if s.Owner != sx.Owner {
-		diffs = append(diffs, util.NewDiff("owner", s.Owner.String(), sx.Owner.String()))
-	}
 	if s.Created != sx.Created {
 		diffs = append(diffs, util.NewDiff("created", s.Created.String(), sx.Created.String()))
 	}
@@ -155,5 +141,5 @@ func (s *Standup) Diff(sx *Standup) util.Diffs {
 }
 
 func (s *Standup) ToData() []any {
-	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Owner, s.Created, s.Updated}
+	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
 }

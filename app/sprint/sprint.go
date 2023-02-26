@@ -18,7 +18,6 @@ type Sprint struct {
 	Icon      string             `json:"icon"`
 	Status    enum.SessionStatus `json:"status"`
 	TeamID    *uuid.UUID         `json:"teamID,omitempty"`
-	Owner     uuid.UUID          `json:"owner"`
 	StartDate *time.Time         `json:"startDate,omitempty"`
 	EndDate   *time.Time         `json:"endDate,omitempty"`
 	Created   time.Time          `json:"created"`
@@ -37,7 +36,6 @@ func Random() *Sprint {
 		Icon:      util.RandomString(12),
 		Status:    enum.SessionStatus(util.RandomString(12)),
 		TeamID:    util.UUIDP(),
-		Owner:     util.UUID(),
 		StartDate: util.NowPointer(),
 		EndDate:   util.NowPointer(),
 		Created:   time.Now(),
@@ -80,13 +78,6 @@ func FromMap(m util.ValueMap, setPK bool) (*Sprint, error) {
 	if err != nil {
 		return nil, err
 	}
-	retOwner, e := m.ParseUUID("owner", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retOwner != nil {
-		ret.Owner = *retOwner
-	}
 	ret.StartDate, err = m.ParseTime("startDate", true, true)
 	if err != nil {
 		return nil, err
@@ -108,7 +99,6 @@ func (s *Sprint) Clone() *Sprint {
 		Icon:      s.Icon,
 		Status:    s.Status,
 		TeamID:    s.TeamID,
-		Owner:     s.Owner,
 		StartDate: s.StartDate,
 		EndDate:   s.EndDate,
 		Created:   s.Created,
@@ -149,9 +139,6 @@ func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 	if (s.TeamID == nil && sx.TeamID != nil) || (s.TeamID != nil && sx.TeamID == nil) || (s.TeamID != nil && sx.TeamID != nil && *s.TeamID != *sx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(s.TeamID), fmt.Sprint(sx.TeamID))) //nolint:gocritic // it's nullable
 	}
-	if s.Owner != sx.Owner {
-		diffs = append(diffs, util.NewDiff("owner", s.Owner.String(), sx.Owner.String()))
-	}
 	if (s.StartDate == nil && sx.StartDate != nil) || (s.StartDate != nil && sx.StartDate == nil) || (s.StartDate != nil && sx.StartDate != nil && *s.StartDate != *sx.StartDate) { //nolint:lll
 		diffs = append(diffs, util.NewDiff("startDate", fmt.Sprint(s.StartDate), fmt.Sprint(sx.StartDate))) //nolint:gocritic // it's nullable
 	}
@@ -165,5 +152,5 @@ func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 }
 
 func (s *Sprint) ToData() []any {
-	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.Owner, s.StartDate, s.EndDate, s.Created, s.Updated}
+	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.StartDate, s.EndDate, s.Created, s.Updated}
 }

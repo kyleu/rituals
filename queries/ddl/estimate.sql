@@ -12,11 +12,9 @@ create table if not exists "estimate" (
   "status" session_status not null,
   "team_id" uuid,
   "sprint_id" uuid,
-  "owner" uuid not null,
   "choices" jsonb not null,
   "created" timestamp not null default now(),
   "updated" timestamp default now(),
-  foreign key ("owner") references "user" ("id"),
   foreign key ("team_id") references "team" ("id"),
   foreign key ("sprint_id") references "sprint" ("id"),
   unique ("slug"),
@@ -26,8 +24,6 @@ create table if not exists "estimate" (
 create index if not exists "estimate__slug_idx" on "estimate" ("slug");
 
 create index if not exists "estimate__status_idx" on "estimate" ("status");
-
-create index if not exists "estimate__owner_idx" on "estimate" ("owner");
 
 create index if not exists "estimate__team_id_idx" on "estimate" ("team_id");
 

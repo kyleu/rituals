@@ -32,7 +32,7 @@ type FullStandup struct {
 }
 
 func (f *FullStandup) Admin() bool {
-	return f.Standup.Owner == f.Self.UserID || f.Self.Role == enum.MemberStatusOwner
+	return f.Self.Role == enum.MemberStatusOwner
 }
 
 func (s *Service) LoadStandup(p *LoadParams, tf func() (team.Teams, error), sf func() (sprint.Sprints, error)) (*FullStandup, error) {
@@ -139,7 +139,11 @@ func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.St
 		if err != nil {
 			return nil, nil, err
 		}
-		_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), enum.MemberStatusMember, nil, s.a, s.send, p.Logger)
+		role := enum.MemberStatusMember
+		if len(members) == 0 {
+			role = enum.MemberStatusOwner
+		}
+		_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, p.Logger)
 		if err != nil {
 			return nil, nil, err
 		}

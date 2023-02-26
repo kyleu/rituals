@@ -16,7 +16,6 @@ type Team struct {
 	Title   string             `json:"title"`
 	Icon    string             `json:"icon"`
 	Status  enum.SessionStatus `json:"status"`
-	Owner   uuid.UUID          `json:"owner"`
 	Created time.Time          `json:"created"`
 	Updated *time.Time         `json:"updated,omitempty"`
 }
@@ -32,7 +31,6 @@ func Random() *Team {
 		Title:   util.RandomString(12),
 		Icon:    util.RandomString(12),
 		Status:  enum.SessionStatus(util.RandomString(12)),
-		Owner:   util.UUID(),
 		Created: time.Now(),
 		Updated: util.NowPointer(),
 	}
@@ -69,13 +67,6 @@ func FromMap(m util.ValueMap, setPK bool) (*Team, error) {
 		return nil, err
 	}
 	ret.Status = enum.SessionStatus(retStatus)
-	retOwner, e := m.ParseUUID("owner", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retOwner != nil {
-		ret.Owner = *retOwner
-	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -88,7 +79,6 @@ func (t *Team) Clone() *Team {
 		Title:   t.Title,
 		Icon:    t.Icon,
 		Status:  t.Status,
-		Owner:   t.Owner,
 		Created: t.Created,
 		Updated: t.Updated,
 	}
@@ -123,9 +113,6 @@ func (t *Team) Diff(tx *Team) util.Diffs {
 	if t.Status != tx.Status {
 		diffs = append(diffs, util.NewDiff("status", string(t.Status), string(tx.Status)))
 	}
-	if t.Owner != tx.Owner {
-		diffs = append(diffs, util.NewDiff("owner", t.Owner.String(), tx.Owner.String()))
-	}
 	if t.Created != tx.Created {
 		diffs = append(diffs, util.NewDiff("created", t.Created.String(), tx.Created.String()))
 	}
@@ -133,5 +120,5 @@ func (t *Team) Diff(tx *Team) util.Diffs {
 }
 
 func (t *Team) ToData() []any {
-	return []any{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Owner, t.Created, t.Updated}
+	return []any{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Created, t.Updated}
 }

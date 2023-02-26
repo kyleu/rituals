@@ -14,7 +14,7 @@ import (
 
 func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, u uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
-	wc := "\"owner\" = $1 or id in (select estimate_id from estimate_member where user_id = $1)"
+	wc := "id in (select estimate_id from estimate_member where user_id = $1)"
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, u)
