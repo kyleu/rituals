@@ -157,7 +157,7 @@ func standupReportAdd(p *Params, fu *FullStandup) (*FullStandup, string, string,
 func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	id, _ := p.Frm.GetUUID("reportID", false)
 	if id == nil {
-		return nil, "", "", errors.New("must provide [id]")
+		return nil, "", "", errors.New("must provide [reportID]")
 	}
 	curr := fu.Reports.Get(*id)
 	if curr == nil {
@@ -192,7 +192,7 @@ func standupReportUpdate(p *Params, fu *FullStandup) (*FullStandup, string, stri
 func standupReportRemove(p *Params, fu *FullStandup) (*FullStandup, string, string, error) {
 	id, _ := p.Frm.GetUUID("reportID", false)
 	if id == nil {
-		return nil, "", "", errors.New("must provide [id]")
+		return nil, "", "", errors.New("must provide [reportID]")
 	}
 	curr := fu.Reports.Get(*id)
 	if curr == nil {

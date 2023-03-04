@@ -180,7 +180,7 @@ func estimateStoryUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save edited story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildUpdate, st, &fe.Self.UserID, p.Logger, p.ConnIDs...)
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildUpdate, st, &fe.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}
@@ -248,7 +248,7 @@ func estimateStoryVote(p *Params, fe *FullEstimate) (*FullEstimate, string, stri
 func estimateStoryRemove(p *Params, fe *FullEstimate) (*FullEstimate, string, string, error) {
 	id, _ := p.Frm.GetUUID("storyID", false)
 	if id == nil {
-		return nil, "", "", errors.New("must provide [id]")
+		return nil, "", "", errors.New("must provide [storyID]")
 	}
 	curr := fe.Stories.Get(*id)
 	if curr == nil {

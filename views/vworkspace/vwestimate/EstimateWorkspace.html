@@ -53,6 +53,7 @@
         {%= EstimateWorkspaceStories(w, ps) %}
         {%= EstimateWorkspaceStoryModalAdd() %}
         {%= EstimateWorkspaceStoryModalEmpty(ps) %}
+        {%= EstimateWorkspaceStoryModalEditPanel("", "", ps) %}
       </div>
     </div>
     {%= vwutil.MemberPanels(w.UtilMembers, w.Admin(), e.PublicWebPath(), ps) %}

@@ -135,6 +135,10 @@ func (s *Service) DeleteSprint(ctx context.Context, fs *FullSprint, logger util.
 		return err
 	}
 
+	if fs.Sprint.TeamID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceSprint, "id": fs.Sprint.ID}
+		_ = s.send(enum.ModelServiceTeam, *fs.Sprint.TeamID, action.ActChildRemove, msg, &fs.Self.UserID, logger)
+	}
 	err = s.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActReset, nil, nil, logger)
 	if err != nil {
 		return err

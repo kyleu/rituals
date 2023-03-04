@@ -3,10 +3,10 @@ import type {Story} from "./story";
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 
 export function snippetStory(s: Story): HTMLElement {
-  return <tr class="story-row" id="story-row-{%s s.ID.String() %}" data-idx="s.Idx">
-    <td><a href={"#modal-story-" + s.id } class="story-title"><div>{ s.title }</div></a></td>
-    <td>{ s.status }</td>
-    <td>{ s.finalVote ? s.finalVote : "-" }</td>
+  return <tr class="story-row" id={"story-row-"+ s.id} data-idx="s.Idx">
+    <td><a href={"#modal-story-" + s.id }><div class="story-title">{ s.title }</div></a></td>
+    <td class="story-status">{ s.status }</td>
+    <td class="story-final-vote">{ s.finalVote ? s.finalVote : "-" }</td>
     <td>
       { snippetCommentsModalLink("story", s.id)}
       { snippetCommentsModal("story", s.id, s.title)}

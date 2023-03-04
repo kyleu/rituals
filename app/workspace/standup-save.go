@@ -127,6 +127,14 @@ func (s *Service) DeleteStandup(ctx context.Context, fu *FullStandup, logger uti
 		return err
 	}
 
+	if fu.Standup.TeamID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceStandup, "id": fu.Standup.ID}
+		_ = s.send(enum.ModelServiceTeam, *fu.Standup.TeamID, action.ActChildRemove, msg, &fu.Self.UserID, logger)
+	}
+	if fu.Standup.SprintID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceStandup, "id": fu.Standup.ID}
+		_ = s.send(enum.ModelServiceSprint, *fu.Standup.SprintID, action.ActChildRemove, msg, &fu.Self.UserID, logger)
+	}
 	err = s.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActReset, nil, nil, logger)
 	if err != nil {
 		return err

@@ -21,7 +21,8 @@ func (s *Service) CreateRetro(
 ) (*retro.Retro, *rmember.RetroMember, error) {
 	slug := s.r.Slugify(ctx, id, title, "", s.rh, nil, logger)
 	model := &retro.Retro{
-		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Created: time.Now(),
+		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew,
+		TeamID: teamID, SprintID: sprintID, Categories: RetroDefaultCategories, Created: time.Now(),
 	}
 	err := s.r.Create(ctx, nil, logger, model)
 	if err != nil {
@@ -131,6 +132,14 @@ func (s *Service) DeleteRetro(ctx context.Context, fr *FullRetro, logger util.Lo
 		return err
 	}
 
+	if fr.Retro.TeamID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceRetro, "id": fr.Retro.ID}
+		_ = s.send(enum.ModelServiceTeam, *fr.Retro.TeamID, action.ActChildRemove, msg, &fr.Self.UserID, logger)
+	}
+	if fr.Retro.SprintID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceRetro, "id": fr.Retro.ID}
+		_ = s.send(enum.ModelServiceSprint, *fr.Retro.SprintID, action.ActChildRemove, msg, &fr.Self.UserID, logger)
+	}
 	err = s.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActReset, nil, nil, logger)
 	if err != nil {
 		return err

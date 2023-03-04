@@ -11,7 +11,6 @@ function wireStoryModalFormEdit(id: string, a: HTMLAnchorElement) {
 function wireStoryModalFormToNew(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
     send("child-status", {"storyID": id, "status": "new"});
-    console.log("new");
     return false;
   };
 }
@@ -19,7 +18,6 @@ function wireStoryModalFormToNew(id: string, frm: HTMLFormElement) {
 function wireStoryModalFormToActive(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
     send("child-status", {"storyID": id, "status": "active"});
-    console.log("active");
     return false;
   };
 }
@@ -27,7 +25,6 @@ function wireStoryModalFormToActive(id: string, frm: HTMLFormElement) {
 function wireStoryModalFormToComplete(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
     send("child-status", {"storyID": id, "status": "complete"});
-    console.log("complete");
     return false;
   };
 }
@@ -42,7 +39,7 @@ function wireStoryModalFormVote(id: string, e: HTMLElement) {
   });
 }
 
-function wireStoryModalFormDelete(id: string, frm: HTMLFormElement) {
+export function wireStoryModalFormDelete(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
     if (!confirm("Are you sure you want to delete this story?")) {
       return false;

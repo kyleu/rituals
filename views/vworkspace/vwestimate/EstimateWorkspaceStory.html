@@ -21,9 +21,9 @@
     <tbody>
       {%- for _, s := range w.Stories -%}
       <tr class="story-row" id="story-row-{%s s.ID.String() %}" data-idx="s.Idx">
-        <td><a href="#modal-story-{%s s.ID.String() %}" class="story-title"><div>{%s s.TitleString() %}</div></a></td>
-        <td>{%s string(s.Status) %}</td>
-        <td>{%s s.FinalVoteSafe() %}</td>
+        <td><a href="#modal-story-{%s s.ID.String() %}"><div class="story-title">{%s s.TitleString() %}</div></a></td>
+        <td class="story-status">{%s string(s.Status) %}</td>
+        <td class="story-final-vote">{%s s.FinalVoteSafe() %}</td>
         <td>{%= vwutil.Comments(enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps) %}</td>
       </tr>
       {%- endfor -%}
@@ -52,8 +52,8 @@
           <input type="hidden" name="action" value="{%s string(action.ActChildAdd) %}" />
           {%= components.FormVerticalInput("title", "story-add-title", "Title", "", 5, "Story title") %}
           <div class="mt">
+            <button class="right" type="submit">Add Story</button>
             <a href="#"><button type="button">Cancel</button></a>
-            <button type="submit">Add Story</button>
           </div>
         </form>
       </div>
@@ -98,7 +98,11 @@
 {% endfunc %}
 
 {% func EstimateWorkspaceStoryModalEdit(s *story.Story, ps *cutil.PageState) %}
-  <div id="modal-story-{%s s.ID.String() %}-edit" class="modal" style="display: none;">
+  {%= EstimateWorkspaceStoryModalEditPanel(s.ID.String(), s.Title, ps) %}
+{% endfunc %}
+
+{% func EstimateWorkspaceStoryModalEditPanel(id string, title string, ps *cutil.PageState) %}
+  <div {% if id != "" %}id="modal-story-{%s id %}-edit" {% endif %}class="modal modal-story-edit{% if id == `` %} modal-story-edit-new{% endif %}" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
@@ -107,11 +111,11 @@
       </div>
       <div class="modal-body">
         <form action="#" method="post">
-          <input type="hidden" name="storyID" value="{%s s.ID.String() %}" />
-          {%= components.FormVerticalInput("title", "", "Title", s.Title, 5, "Story title") %}
+          <input type="hidden" name="storyID" value="{%s id %}" />
+          {%= components.FormVerticalInput("title", "", "Title", title, 5, "Story title") %}
           <div class="mt">
             <div class="right"><button type="submit" name="action" value="{%s string(action.ActChildUpdate) %}">Save Changes</button></div>
-            <button type="submit" name="action" value="{%s string(action.ActChildRemove) %}" onclick="return confirm('Are you sure you want to delete this story?');">Delete</button>
+            <button class="story-delete-button" data-id="{%s id %}" type="submit" name="action" value="{%s string(action.ActChildRemove) %}" onclick="return confirm('Are you sure you want to delete this story?');">Delete</button>
           </div>
         </form>
       </div>

@@ -33,7 +33,7 @@ func StreamEstimateWorkspaceStoryPanelNew(qw422016 *qt422016.Writer, w *workspac
 	qw422016.N().S(`
   <div class="mt status-new" `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:11
-	if s == nil || s.Status != enum.SessionStatusNew {
+	if s != nil && s.Status != enum.SessionStatusNew {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:11
 		qw422016.N().S(` style="display: none;"`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:11
@@ -62,248 +62,254 @@ func StreamEstimateWorkspaceStoryPanelNew(qw422016 *qt422016.Writer, w *workspac
 	qw422016.N().S(`" />
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:16
-	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:17
-		if ps.Profile.ID == s.UserID {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:17
-			qw422016.N().S(`        <div>Your story is available to <a class="link-edit" href="#modal-story-`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
-			qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
-			qw422016.N().S(`-edit" data-id="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
-			qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:18
-			qw422016.N().S(`">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+	if s == nil {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:16
+		qw422016.N().S(`        <div class="owned">Your story is available to <a class="link-edit" href="TODO" data-id="TODO">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+        <div class="unowned">This story is ready to start voting</div>
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:19
+	} else {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:20
+		if ps.Profile.ID == s.UserID {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:20
+			qw422016.N().S(`        <div>Your story is available to <a class="link-edit" href="#modal-story-`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:21
+			qw422016.E().S(s.ID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:21
+			qw422016.N().S(`-edit" data-id="`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:21
+			qw422016.E().S(s.ID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:21
+			qw422016.N().S(`">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:22
 		} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:20
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:23
 			if mem := w.Members.Get(s.EstimateID, s.UserID); mem == nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:20
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:23
 				qw422016.N().S(`          <div>This story is ready to start voting</div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:22
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:25
 			} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:22
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:25
 				qw422016.N().S(`          <div>This story was created by <a href="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:23
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:26
 				qw422016.E().S(mem.PublicWebPath(w.Estimate.Slug))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:23
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:26
 				qw422016.N().S(`">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:23
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:26
 				qw422016.E().S(mem.Name)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:23
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:26
 				qw422016.N().S(`</a> and is ready to <button type="submit" class="button-link">start voting</button></div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:24
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:27
 			}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:25
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:28
 		}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:26
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:29
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:26
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:29
 	qw422016.N().S(`    </form>
     <hr />
     <div class="mt">
       <form class="status-new-form-next" action="" method="post">
         <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:31
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:34
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:31
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:34
 		qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:31
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:34
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:31
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:34
 	qw422016.N().S(`" />
         <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:32
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:35
 	qw422016.E().S(string(action.ActChildStatus))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:32
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:35
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:33
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:36
 	qw422016.E().S(string(enum.SessionStatusActive))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:33
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:36
 	qw422016.N().S(`" />
         <div class="right"><button type="submit">Start Voting</button></div>
       </form>
       <form class="status-new-form-delete" action="" method="post" onsubmit="return confirm('Are you sure you want to delete this story?')">
         <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:37
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:40
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:37
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:40
 		qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:37
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:40
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:37
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:40
 	qw422016.N().S(`" />
         <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:38
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:41
 	qw422016.E().S(string(action.ActChildRemove))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:38
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:41
 	qw422016.N().S(`" />
         <div><button type="submit">Delete Story</button></div>
       </form>
     </div>
   </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 func WriteEstimateWorkspaceStoryPanelNew(qq422016 qtio422016.Writer, w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	StreamEstimateWorkspaceStoryPanelNew(qw422016, w, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 func EstimateWorkspaceStoryPanelNew(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	WriteEstimateWorkspaceStoryPanelNew(qb422016, w, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:43
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:45
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:48
 func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:45
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:48
 	qw422016.N().S(`
   <div class="mt status-active" `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:49
 	if s == nil || s.Status != enum.SessionStatusActive {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:49
 		qw422016.N().S(` style="display: none;"`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:49
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:46
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:49
 	qw422016.N().S(`>
     <h4>Members</h4>
     <div class="story-members">
       `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:49
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:52
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:49
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:52
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:50
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:53
 		for _, m := range w.Members {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:51
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:54
 			v := w.Votes.Get(s.ID, m.UserID)
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:51
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:54
 			qw422016.N().S(`      <div class="member">
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:53
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:56
 			if v == nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:53
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:56
 				qw422016.N().S(`        <div>-</div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:55
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:58
 			} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:55
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:58
 				qw422016.N().S(`        <div>`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:56
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:59
 				qw422016.E().S(v.Choice)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:56
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:59
 				qw422016.N().S(`</div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:57
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:60
 			}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:57
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:60
 			qw422016.N().S(`        `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:58
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:61
 			qw422016.E().S(m.Name)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:58
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:61
 			qw422016.N().S(`
       </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:60
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:63
 		}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:61
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:64
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:61
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:64
 	qw422016.N().S(`    </div>
     <hr />
     <h4>Choices</h4>
     <form class="status-active-form-vote" action="" method="post">
       <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:66
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:69
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:66
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:69
 		qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:66
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:69
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:66
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:69
 	qw422016.N().S(`" />
       <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:67
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:70
 	qw422016.E().S(string(action.ActVote))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:67
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:70
 	qw422016.N().S(`" />
       <div class="story-vote-options">
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:69
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:72
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:70
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:73
 		selfVote := w.Votes.Get(s.ID, ps.Profile.ID)
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:71
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:74
 		for _, c := range w.Estimate.Choices {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:71
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:74
 			qw422016.N().S(`        <div class="vote-option" data-choice="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:72
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:75
 			qw422016.E().S(c)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:72
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:75
 			qw422016.N().S(`">
           <label>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:74
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:77
 			if selfVote != nil && selfVote.Choice == c {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:74
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:77
 				qw422016.N().S(`            <input type="radio" name="vote" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:75
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:78
 				qw422016.E().S(c)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:75
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:78
 				qw422016.N().S(`" checked="checked" />
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:76
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:79
 			} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:76
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:79
 				qw422016.N().S(`            <input type="radio" name="vote" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:77
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:80
 				qw422016.E().S(c)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:77
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:80
 				qw422016.N().S(`" />
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:78
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:81
 			}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:78
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:81
 			qw422016.N().S(`            <div class="vote-choice">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:79
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:82
 			qw422016.E().S(c)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:79
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:82
 			qw422016.N().S(`</div>
           </label>
         </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:82
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:85
 		}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:83
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:86
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:83
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:86
 	qw422016.N().S(`      </div>
       <div class="mt vote-submit-button">
         <div class="right"><button type="submit">Submit vote</button></div>
@@ -314,163 +320,163 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
     <div class="mt">
       <form class="status-active-form-next" action="" method="post">
         <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:93
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:96
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:93
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:96
 		qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:93
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:96
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:93
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:96
 	qw422016.N().S(`" />
         <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:94
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:97
 	qw422016.E().S(string(action.ActChildStatus))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:94
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:97
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:95
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:98
 	qw422016.E().S(string(enum.SessionStatusComplete))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:95
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:98
 	qw422016.N().S(`" />
         <div class="right"><button type="submit">Finish Voting</button></div>
       </form>
       <form class="status-active-form-prev" action="" method="post">
         <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:99
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:102
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:99
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:102
 		qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:99
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:102
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:99
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:102
 	qw422016.N().S(`" />
         <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:100
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:103
 	qw422016.E().S(string(action.ActChildStatus))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:100
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:103
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:101
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:104
 	qw422016.E().S(string(enum.SessionStatusNew))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:101
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:104
 	qw422016.N().S(`" />
         <div><button type="submit">Restart</button></div>
       </form>
     </div>
   </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 func WriteEstimateWorkspaceStoryPanelActive(qq422016 qtio422016.Writer, w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	StreamEstimateWorkspaceStoryPanelActive(qw422016, w, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 func EstimateWorkspaceStoryPanelActive(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	WriteEstimateWorkspaceStoryPanelActive(qb422016, w, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:106
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:108
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:111
 func StreamEstimateWorkspaceStoryPanelComplete(qw422016 *qt422016.Writer, w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:108
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:111
 	qw422016.N().S(`
   <div class="mt status-complete" `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:112
 	if s == nil || s.Status != enum.SessionStatusComplete {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:112
 		qw422016.N().S(` style="display: none;"`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:112
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:109
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:112
 	qw422016.N().S(`>
     <div class="mt story-results">
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:111
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:114
 	if s != nil && s.Status == enum.SessionStatusComplete {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:111
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:114
 		qw422016.N().S(`      <div class="vote-results">
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:113
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:116
 		for _, m := range w.Members {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:113
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:116
 			qw422016.N().S(`        <div class="vote-result">
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:115
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:118
 			if v := w.Votes.Get(s.ID, m.UserID); v == nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:115
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:118
 				qw422016.N().S(`          <div class="number" title="user did not vote">-</div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:117
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:120
 			} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:117
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:120
 				qw422016.N().S(`          <div class="number">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:118
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:121
 				qw422016.E().S(v.Choice)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:118
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:121
 				qw422016.N().S(`</div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:119
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:122
 			}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:119
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:122
 			qw422016.N().S(`          `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:123
 			qw422016.E().V(m.Name)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:123
 			qw422016.N().S(`
         </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:122
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:125
 		}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:122
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:125
 		qw422016.N().S(`      </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:124
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:127
 	} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:124
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:127
 		qw422016.N().S(`      <em>Voting in progress...</em>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:126
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:129
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:126
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:129
 	qw422016.N().S(`    </div>
     <hr />
     <div class="mt">
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:130
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:133
 	if s != nil && s.Status == enum.SessionStatusComplete {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:130
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:133
 		qw422016.N().S(`      `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:131
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:134
 		StreamEstimateWorkspaceStoryResults(qw422016, w.Votes.GetByStoryIDs(s.ID), ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:131
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:134
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:132
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:135
 	} else {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:132
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:135
 		qw422016.N().S(`      <em>Voting is still active</em>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:134
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:137
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:134
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:137
 	qw422016.N().S(`    </div>
     <hr />
     <div class="mt">
@@ -479,143 +485,143 @@ func StreamEstimateWorkspaceStoryPanelComplete(qw422016 *qt422016.Writer, w *wor
       </div>
       <form class="status-complete-form-prev" action="" method="post">
         <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:142
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:145
 	if s != nil {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:142
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:145
 		qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:142
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:145
 	}
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:142
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:145
 	qw422016.N().S(`" />
         <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:143
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:146
 	qw422016.E().S(string(action.ActChildStatus))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:143
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:146
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:144
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:147
 	qw422016.E().S(string(enum.SessionStatusActive))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:144
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:147
 	qw422016.N().S(`" />
         <div><button type="submit">Reopen</button></div>
       </form>
     </div>
   </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 func WriteEstimateWorkspaceStoryPanelComplete(qq422016 qtio422016.Writer, w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	StreamEstimateWorkspaceStoryPanelComplete(qw422016, w, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 func EstimateWorkspaceStoryPanelComplete(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	WriteEstimateWorkspaceStoryPanelComplete(qb422016, w, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:149
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:151
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:154
 func StreamEstimateWorkspaceStoryResults(qw422016 *qt422016.Writer, v vote.Votes, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:151
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:154
 	qw422016.N().S(`
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:155
 	r := v.Results()
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:152
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:155
 	qw422016.N().S(`  <div class="vote-calculations">
     <div class="vote-calculation" title="portion of votes that were able to be parsed as numbers">
       <div class="value">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:155
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:158
 	qw422016.N().D(r.Count)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:155
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:158
 	qw422016.N().S(`/`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:155
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:158
 	qw422016.N().D(len(v))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:155
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:158
 	qw422016.N().S(`</div>
       Counted
     </div>
     <div class="vote-calculation" title="the minimum and maximum vote recorded">
       <div class="value">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:159
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:162
 	qw422016.N().F(r.Min)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:159
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:162
 	qw422016.N().S(`-`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:159
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:162
 	qw422016.N().F(r.Max)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:159
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:162
 	qw422016.N().S(`</div>
       Range
     </div>
     <div class="vote-calculation" title="mean average of all votes">
       <div class="value">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:163
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:166
 	qw422016.N().F(r.Mean)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:163
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:166
 	qw422016.N().S(`</div>
       Average
     </div>
     <div class="vote-calculation" title="median value from collected votes">
       <div class="value">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:167
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:170
 	qw422016.N().F(r.Median)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:167
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:170
 	qw422016.N().S(`</div>
       Median
     </div>
     <div class="vote-calculation" title="mode value(s) from collected votes">
       <div class="value">`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:171
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:174
 	qw422016.E().S(r.ModeString())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:171
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:174
 	qw422016.N().S(`</div>
       Mode
     </div>
   </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 func WriteEstimateWorkspaceStoryResults(qq422016 qtio422016.Writer, v vote.Votes, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	StreamEstimateWorkspaceStoryResults(qw422016, v, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 func EstimateWorkspaceStoryResults(v vote.Votes, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	WriteEstimateWorkspaceStoryResults(qb422016, v, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:175
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:178
 }

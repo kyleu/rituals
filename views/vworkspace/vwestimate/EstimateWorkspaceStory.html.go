@@ -55,17 +55,17 @@ func StreamEstimateWorkspaceStories(qw422016 *qt422016.Writer, w *workspace.Full
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:24
 		qw422016.E().S(s.ID.String())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:24
-		qw422016.N().S(`" class="story-title"><div>`)
+		qw422016.N().S(`"><div class="story-title">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:24
 		qw422016.E().S(s.TitleString())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:24
 		qw422016.N().S(`</div></a></td>
-        <td>`)
+        <td class="story-status">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25
 		qw422016.E().S(string(s.Status))
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25
 		qw422016.N().S(`</td>
-        <td>`)
+        <td class="story-final-vote">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
 		qw422016.E().S(s.FinalVoteSafe())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
@@ -162,8 +162,8 @@ func StreamEstimateWorkspaceStoryModalAdd(qw422016 *qt422016.Writer) {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:53
 	qw422016.N().S(`
           <div class="mt">
+            <button class="right" type="submit">Add Story</button>
             <a href="#"><button type="button">Cancel</button></a>
-            <button type="submit">Add Story</button>
           </div>
         </form>
       </div>
@@ -341,11 +341,66 @@ func EstimateWorkspaceStoryModal(w *workspace.FullEstimate, s *story.Story, ps *
 func StreamEstimateWorkspaceStoryModalEdit(qw422016 *qt422016.Writer, s *story.Story, ps *cutil.PageState) {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:100
 	qw422016.N().S(`
-  <div id="modal-story-`)
+  `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:101
-	qw422016.E().S(s.ID.String())
+	StreamEstimateWorkspaceStoryModalEditPanel(qw422016, s.ID.String(), s.Title, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:101
-	qw422016.N().S(`-edit" class="modal" style="display: none;">
+	qw422016.N().S(`
+`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+}
+
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+func WriteEstimateWorkspaceStoryModalEdit(qq422016 qtio422016.Writer, s *story.Story, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	StreamEstimateWorkspaceStoryModalEdit(qw422016, s, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	qt422016.ReleaseWriter(qw422016)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+}
+
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+func EstimateWorkspaceStoryModalEdit(s *story.Story, ps *cutil.PageState) string {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	WriteEstimateWorkspaceStoryModalEdit(qb422016, s, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	qs422016 := string(qb422016.B)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+	return qs422016
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:102
+}
+
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:104
+func StreamEstimateWorkspaceStoryModalEditPanel(qw422016 *qt422016.Writer, id string, title string, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:104
+	qw422016.N().S(`
+  <div `)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+	if id != "" {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+		qw422016.N().S(`id="modal-story-`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+		qw422016.E().S(id)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+		qw422016.N().S(`-edit" `)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+	}
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+	qw422016.N().S(`class="modal modal-story-edit`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+	if id == `` {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+		qw422016.N().S(` modal-story-edit-new`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+	}
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:105
+	qw422016.N().S(`" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
@@ -355,25 +410,29 @@ func StreamEstimateWorkspaceStoryModalEdit(qw422016 *qt422016.Writer, s *story.S
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="storyID" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:110
-	qw422016.E().S(s.ID.String())
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:110
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:114
+	qw422016.E().S(id)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:114
 	qw422016.N().S(`" />
           `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:111
-	components.StreamFormVerticalInput(qw422016, "title", "", "Title", s.Title, 5, "Story title")
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:111
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:115
+	components.StreamFormVerticalInput(qw422016, "title", "", "Title", title, 5, "Story title")
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:115
 	qw422016.N().S(`
           <div class="mt">
             <div class="right"><button type="submit" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:113
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:117
 	qw422016.E().S(string(action.ActChildUpdate))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:113
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:117
 	qw422016.N().S(`">Save Changes</button></div>
-            <button type="submit" name="action" value="`)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:114
+            <button class="story-delete-button" data-id="`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:118
+	qw422016.E().S(id)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:118
+	qw422016.N().S(`" type="submit" name="action" value="`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:118
 	qw422016.E().S(string(action.ActChildRemove))
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:114
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:118
 	qw422016.N().S(`" onclick="return confirm('Are you sure you want to delete this story?');">Delete</button>
           </div>
         </form>
@@ -381,31 +440,31 @@ func StreamEstimateWorkspaceStoryModalEdit(qw422016 *qt422016.Writer, s *story.S
     </div>
   </div>
 `)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
-func WriteEstimateWorkspaceStoryModalEdit(qq422016 qtio422016.Writer, s *story.Story, ps *cutil.PageState) {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
+func WriteEstimateWorkspaceStoryModalEditPanel(qq422016 qtio422016.Writer, id string, title string, ps *cutil.PageState) {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
-	StreamEstimateWorkspaceStoryModalEdit(qw422016, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
+	StreamEstimateWorkspaceStoryModalEditPanel(qw422016, id, title, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 }
 
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
-func EstimateWorkspaceStoryModalEdit(s *story.Story, ps *cutil.PageState) string {
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
+func EstimateWorkspaceStoryModalEditPanel(id string, title string, ps *cutil.PageState) string {
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
-	WriteEstimateWorkspaceStoryModalEdit(qb422016, s, ps)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
+	WriteEstimateWorkspaceStoryModalEditPanel(qb422016, id, title, ps)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 	return qs422016
-//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:120
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:124
 }

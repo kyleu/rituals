@@ -8,12 +8,15 @@
 ) %}
 
 {% func EstimateWorkspaceStoryPanelNew(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) %}
-  <div class="mt status-new" {% if s == nil || s.Status != enum.SessionStatusNew %} style="display: none;"{% endif %}>
+  <div class="mt status-new" {% if s != nil && s.Status != enum.SessionStatusNew %} style="display: none;"{% endif %}>
     <form class="status-new-form-next" action="" method="post">
       <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
       <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
       <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
-      {%- if s != nil -%}
+      {%- if s == nil -%}
+        <div class="owned">Your story is available to <a class="link-edit" href="TODO" data-id="TODO">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+        <div class="unowned">This story is ready to start voting</div>
+      {%- else -%}
         {%- if ps.Profile.ID == s.UserID -%}
         <div>Your story is available to <a class="link-edit" href="#modal-story-{%s s.ID.String() %}-edit" data-id="{%s s.ID.String() %}">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
         {%- else -%}

@@ -1,4 +1,4 @@
-import {initStories, Story, storyAdd, storyRemove, storyStatus} from "./story";
+import {initStories, Story, storyAdd, storyRemove, storyStatus, storyUpdate} from "./story";
 import type {Message} from "./socket";
 import {opt, req} from "./dom";
 import {send} from "./app";
@@ -63,6 +63,8 @@ export function handleEstimate(m: Message) {
       return onUpdate(m.param as Estimate);
     case "child-add":
       return storyAdd(m.param as Story);
+    case "child-update":
+      return storyUpdate(m.param as Story);
     case "child-status":
       return storyStatus(m.param as Story);
     case "child-remove":

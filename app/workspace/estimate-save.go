@@ -22,7 +22,9 @@ func (s *Service) CreateEstimate(
 	ctx context.Context, id uuid.UUID, title string, user uuid.UUID, name string, picture string, teamID *uuid.UUID, sprintID *uuid.UUID, logger util.Logger,
 ) (*estimate.Estimate, *emember.EstimateMember, error) {
 	slug := s.e.Slugify(ctx, id, title, "", s.eh, nil, logger)
-	model := &estimate.Estimate{ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Created: time.Now()}
+	model := &estimate.Estimate{
+		ID: id, Slug: slug, Title: title, Status: enum.SessionStatusNew, TeamID: teamID, SprintID: sprintID, Choices: DefaultEstimateChoices, Created: time.Now(),
+	}
 	err := s.e.Create(ctx, nil, logger, model)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate")
@@ -138,6 +140,14 @@ func (s *Service) DeleteEstimate(ctx context.Context, fe *FullEstimate, logger u
 		return err
 	}
 
+	if fe.Estimate.TeamID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceEstimate, "id": fe.Estimate.ID}
+		_ = s.send(enum.ModelServiceTeam, *fe.Estimate.TeamID, action.ActChildRemove, msg, &fe.Self.UserID, logger)
+	}
+	if fe.Estimate.SprintID != nil {
+		msg := util.ValueMap{"type": enum.ModelServiceEstimate, "id": fe.Estimate.ID}
+		_ = s.send(enum.ModelServiceSprint, *fe.Estimate.SprintID, action.ActChildRemove, msg, &fe.Self.UserID, logger)
+	}
 	err = s.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActReset, nil, nil, logger)
 	if err != nil {
 		return err

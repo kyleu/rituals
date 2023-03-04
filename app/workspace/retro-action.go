@@ -158,7 +158,7 @@ func retroFeedbackAdd(p *Params, fr *FullRetro) (*FullRetro, string, string, err
 func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	id, _ := p.Frm.GetUUID("feedbackID", false)
 	if id == nil {
-		return nil, "", "", errors.New("must provide [id]")
+		return nil, "", "", errors.New("must provide [feedbackID]")
 	}
 	curr := fr.Feedbacks.Get(*id)
 	if curr == nil {
@@ -188,7 +188,7 @@ func retroFeedbackUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, 
 func retroFeedbackRemove(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	id, _ := p.Frm.GetUUID("feedbackID", false)
 	if id == nil {
-		return nil, "", "", errors.New("must provide [id]")
+		return nil, "", "", errors.New("must provide [feedbackID]")
 	}
 	curr := fr.Feedbacks.Get(*id)
 	if curr == nil {
