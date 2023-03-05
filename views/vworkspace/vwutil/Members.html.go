@@ -183,7 +183,11 @@ func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageSt
 	}
 //line views/vworkspace/vwutil/Members.html:48
 	qw422016.N().S(`        </div>
-        <span class="member-name">`)
+        <span class="member-name member-`)
+//line views/vworkspace/vwutil/Members.html:50
+	qw422016.E().S(m.UserID.String())
+//line views/vworkspace/vwutil/Members.html:50
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwutil/Members.html:50
 	qw422016.E().S(m.Name)
 //line views/vworkspace/vwutil/Members.html:50
@@ -350,7 +354,11 @@ func StreamMemberModalEdit(qw422016 *qt422016.Writer, m *util.Member, url string
 	}
 //line views/vworkspace/vwutil/Members.html:91
 	qw422016.N().S(`          </span>
-          <span class="member-name">`)
+          <span class="member-name member-`)
+//line views/vworkspace/vwutil/Members.html:93
+	qw422016.E().S(m.UserID.String())
+//line views/vworkspace/vwutil/Members.html:93
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwutil/Members.html:93
 	qw422016.E().S(m.Name)
 //line views/vworkspace/vwutil/Members.html:93
@@ -461,7 +469,11 @@ func StreamMemberModalView(qw422016 *qt422016.Writer, m *util.Member, url string
 	}
 //line views/vworkspace/vwutil/Members.html:122
 	qw422016.N().S(`          </span>
-          <span class="member-name">`)
+          <span class="member-name member-`)
+//line views/vworkspace/vwutil/Members.html:124
+	qw422016.E().S(m.UserID.String())
+//line views/vworkspace/vwutil/Members.html:124
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwutil/Members.html:124
 	qw422016.E().S(m.Name)
 //line views/vworkspace/vwutil/Members.html:124

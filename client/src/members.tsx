@@ -13,7 +13,7 @@ export function snippetMember(userID: string, name: string, role: string, pictur
     <td>
       <a href={"#modal-member-" + userID}>
         <div class="left prs member-picture" dangerouslySetInnerHTML={{"__html": memberPictureFor(picture, 18, "")}}></div>
-        <span class="member-name">{name}</span>
+        <span class={"member-name member-" + userID + "-name"}>{name}</span>
       </a>
     </td>
     <td class="shrink text-align-right"><em class="member-status">{role}</em></td>
@@ -29,7 +29,7 @@ export function snippetMemberModalView(userID: string, name: string, role: strin
         <a href="#" class="modal-close">×</a>
         <h2>
           <span class="member-picture" dangerouslySetInnerHTML={{"__html": memberPictureFor(picture, 18, "")}}></span>
-          <span class="member-name">{name}</span>
+          <span class={"member-name member-" + userID + "-name"}>{name}</span>
         </h2>
       </div>
       <div class="modal-body">
@@ -50,7 +50,7 @@ export function snippetMemberModalEdit(userID: string, name: string, role: strin
         <a href="#" class="modal-close">×</a>
         <h2>
           <span className="member-picture" dangerouslySetInnerHTML={{"__html": memberPictureFor(picture, 18, "")}}></span>
-          <span className="member-name">{name}</span>
+          <span className={"member-name member-" + userID + "-name"}>{name}</span>
         </h2>
       </div>
       <div class="modal-body">

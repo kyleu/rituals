@@ -23,7 +23,7 @@
       {%- for _, s := range w.Stories -%}
       <tr class="story-row" id="story-row-{%s s.ID.String() %}" data-idx="s.Idx">
         <td><a href="#modal-story-{%s s.ID.String() %}"><div class="story-title">{%s s.TitleString() %}</div></a></td>
-        <td class="story-author"><a href="#modal-member-{%s s.UserID.String() %}"><em>{%s w.UtilMembers.Name(&s.UserID) %}</em></a></td>
+        <td class="story-author nowrap"><a href="#modal-member-{%s s.UserID.String() %}"><em class="member-{%s s.UserID.String() %}-name">{%s w.UtilMembers.Name(&s.UserID) %}</em></a></td>
         <td class="story-status">{%s string(s.Status) %}</td>
         <td class="story-final-vote">{%s s.FinalVoteSafe() %}</td>
         <td>{%= vwutil.Comments(enum.ModelServiceStory, s.ID, s.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps) %}</td>

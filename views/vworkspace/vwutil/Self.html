@@ -10,7 +10,7 @@
 
 {% func SelfLink(self *util.Member, ps *cutil.PageState) %}
   <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
-  <a href="#modal-member-{%s self.UserID.String() %}"><h3>
+  <a id="self-edit-link" href="#modal-member-{%s self.UserID.String() %}"><h3>
     <span id="self-picture">
       {%- if self.Picture == "" -%}
       {%= components.SVGRefIcon(`profile`, ps) %}
@@ -18,7 +18,7 @@
       <img class="icon" style="width: 20px; height: 20px;" src="{%s self.Picture %}" />
       {%- endif -%}
     </span>
-    <span id="self-name">{%s self.Name %}</span>
+    <span id="self-name" class="member-{%s self.UserID.String() %}-name">{%s self.Name %}</span>
   </h3></a>
   <em id="self-role">{%s string(self.Role) %}</em>
 {% endfunc %}
@@ -35,7 +35,7 @@
         <form action="{%s formAction %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActMemberSelf) %}" />
           <em>Name</em><br />
-          {%= components.FormInput("name", "", name, "The name you wish to be called") %}
+          {%= components.FormInput("name", "self-name-input", name, "The name you wish to be called") %}
           <div class="mt"><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>
           <div><label><input type="radio" name="choice" value="global"> Change global default</label></div>
           <hr />

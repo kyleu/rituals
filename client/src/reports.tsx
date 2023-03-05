@@ -18,7 +18,7 @@ export function snippetReport(r: Report): HTMLElement {
       <div class="right">{snippetCommentsModalLink("report", r.id)}</div>
       {snippetCommentsModal("report", r.id, r.id)}
       <a href={"#modal-report-" + r.id} data-id={r.id} class="clean">
-        <h4 class="username">{username(r.userID)}</h4>
+        <h4 class={"username member-" + r.userID + "-name"}>{username(r.userID)}</h4>
         <div class="pt">{r.html}</div>
       </a>
     </div>
@@ -31,7 +31,7 @@ export function snippetReportModalView(r: Report): HTMLElement {
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{r.day + ": " + username(r.userID)}</h2>
+        <h2>{r.day}: <span class={"member-" + r.userID + "-name"}>{username(r.userID)}</span></h2>
       </div>
       <div class="modal-body" dangerouslySetInnerHTML={r.html}></div>
     </div>
@@ -44,7 +44,7 @@ export function snippetReportModalEdit(r: Report): HTMLElement {
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{r.day + ": " + username(r.userID)}</h2>
+        <h2>{r.day}: <span className={"member-" + r.userID + "-name"}>{username(r.userID)}</span></h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">

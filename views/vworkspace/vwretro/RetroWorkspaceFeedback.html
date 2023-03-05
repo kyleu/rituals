@@ -22,17 +22,10 @@
       <div class="clear"></div>
       <div class="feedback-list">
       {%- for _, f := range grp.Feedbacks -%}
-      {%- code
-        uname := "Former Guest"
-        curr := w.Members.Get(w.Retro.ID, f.UserID)
-        if curr != nil {
-          uname = curr.Name
-        }
-      -%}
       <div id="feedback-{%s f.ID.String() %}" class="feedback mt clear">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps) %}</div>
         <a href="#modal-feedback-{%s f.ID.String() %}" class="clean modal-feedback-edit-link" data-id="{%s f.ID.String() %}">
-          <div>{%s uname %}</div>
+          <div>{%s w.UtilMembers.Name(&f.UserID) %}</div>
           <div class="pt feedback-content">{%s= f.HTML %}</div>
         </a>
       </div>

@@ -19,16 +19,9 @@
         {%- for _, r := range g.Reports -%}
         <div class="report" id="report-{%s r.ID.String() %}">
           <div>
-            {%- code
-              uname := "Former Guest"
-              curr := w.Members.Get(w.Standup.ID, r.UserID)
-              if curr != nil {
-                uname = curr.Name
-              }
-            -%}
             <div class="right">{%= vwutil.Comments(enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, w.UtilMembers, "", ps) %}</div>
             <a href="#modal-report-{%s r.ID.String() %}" data-id="{%s r.ID.String() %}" class="clean modal-report-edit-link">
-              <h4 class="username">{%s uname %}</h4>
+              <h4 class="username">{%s w.UtilMembers.Name(&r.UserID) %}</h4>
               <div class="pt">{%s= r.HTML %}</div>
             </a>
           </div>
@@ -41,9 +34,9 @@
   <div id="report-modals">
   {%- for _, r := range w.Reports -%}
   {%- if ps.Profile.ID == r.UserID -%}
-  {%= StandupWorkspaceReportModalEdit(r) %}
+  {%= StandupWorkspaceReportModalEdit(r, w.UtilMembers) %}
   {%- else -%}
-  {%= StandupWorkspaceReportModalView(r) %}
+  {%= StandupWorkspaceReportModalView(r, w.UtilMembers) %}
   {%- endif -%}
   {%- endfor -%}
   </div>
@@ -69,13 +62,13 @@
   </div>
 {% endfunc %}
 
-{% func StandupWorkspaceReportModalEdit(r *report.Report) %}
+{% func StandupWorkspaceReportModalEdit(r *report.Report, members util.Members) %}
   <div id="modal-report-{%s r.ID.String() %}" class="modal modal-report-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s r.TitleString() %}</h2>
+        <h2>{%s members.Name(&r.UserID) %}</h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">
@@ -90,13 +83,13 @@
   </div>
 {% endfunc %}
 
-{% func StandupWorkspaceReportModalView(r *report.Report) %}
+{% func StandupWorkspaceReportModalView(r *report.Report, members util.Members) %}
   <div id="modal-report-{%s r.ID.String() %}" class="modal modal-report-view" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s r.TitleString() %}</h2>
+        <h2>{%s util.TimeToYMD(&r.Day) %} :: {%s members.Name(&r.UserID) %}</h2>
       </div>
       <div class="modal-body">
         {%s= r.HTML %}

@@ -37,7 +37,7 @@ func StreamSelfLink(qw422016 *qt422016.Writer, self *util.Member, ps *cutil.Page
 	qw422016.E().S(self.UserID.String())
 //line views/vworkspace/vwutil/Self.html:12
 	qw422016.N().S(`</span>
-  <a href="#modal-member-`)
+  <a id="self-edit-link" href="#modal-member-`)
 //line views/vworkspace/vwutil/Self.html:13
 	qw422016.E().S(self.UserID.String())
 //line views/vworkspace/vwutil/Self.html:13
@@ -66,7 +66,11 @@ func StreamSelfLink(qw422016 *qt422016.Writer, self *util.Member, ps *cutil.Page
 	}
 //line views/vworkspace/vwutil/Self.html:19
 	qw422016.N().S(`    </span>
-    <span id="self-name">`)
+    <span id="self-name" class="member-`)
+//line views/vworkspace/vwutil/Self.html:21
+	qw422016.E().S(self.UserID.String())
+//line views/vworkspace/vwutil/Self.html:21
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwutil/Self.html:21
 	qw422016.E().S(self.Name)
 //line views/vworkspace/vwutil/Self.html:21
@@ -136,7 +140,7 @@ func StreamSelfModal(qw422016 *qt422016.Writer, id uuid.UUID, name string, pictu
           <em>Name</em><br />
           `)
 //line views/vworkspace/vwutil/Self.html:38
-	components.StreamFormInput(qw422016, "name", "", name, "The name you wish to be called")
+	components.StreamFormInput(qw422016, "name", "self-name-input", name, "The name you wish to be called")
 //line views/vworkspace/vwutil/Self.html:38
 	qw422016.N().S(`
           <div class="mt"><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>

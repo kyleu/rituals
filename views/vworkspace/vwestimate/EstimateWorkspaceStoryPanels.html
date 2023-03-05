@@ -15,7 +15,7 @@
       <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
       <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
       {%- if s == nil -%}
-        <div class="owned">Your story is available to <a class="link-edit" href="TODO" data-id="TODO">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+        <div class="owned">Your story is available to <a class="link-edit" href="" data-id="">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
         <div class="unowned">This story is ready to start voting</div>
       {%- else -%}
         {%- if ps.Profile.ID == s.UserID -%}
@@ -61,7 +61,7 @@
         {%- else -%}
         <div class="choice">{%= components.SVGRef("check", 18, 18, "", ps) %}</div>
         {%- endif -%}
-        <div class="name">{%s m.Name %}</div>
+        <div class="name member-{%s m.UserID.String() %}-name">{%s m.Name %}</div>
       </div>
       {%- endfor -%}
       {%- endif -%}
@@ -123,7 +123,7 @@
           {%- else -%}
           <div class="number">{%s v.Choice %}</div>
           {%- endif -%}
-          {%v m.Name %}
+          <div class="member-{%s m.UserID.String() %}-name">{%s m.Name %}</div>
         </div>
         {%- endfor -%}
       </div>

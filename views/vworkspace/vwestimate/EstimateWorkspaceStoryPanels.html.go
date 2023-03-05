@@ -65,7 +65,7 @@ func StreamEstimateWorkspaceStoryPanelNew(qw422016 *qt422016.Writer, w *workspac
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:17
 	if s == nil {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:17
-		qw422016.N().S(`        <div class="owned">Your story is available to <a class="link-edit" href="TODO" data-id="TODO">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
+		qw422016.N().S(`        <div class="owned">Your story is available to <a class="link-edit" href="" data-id="">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
         <div class="unowned">This story is ready to start voting</div>
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:20
@@ -246,7 +246,11 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:63
 			}
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:63
-			qw422016.N().S(`        <div class="name">`)
+			qw422016.N().S(`        <div class="name member-`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:64
+			qw422016.E().S(m.UserID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:64
+			qw422016.N().S(`-name">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:64
 			qw422016.E().S(m.Name)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:64
@@ -453,11 +457,15 @@ func StreamEstimateWorkspaceStoryPanelComplete(qw422016 *qt422016.Writer, w *wor
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:125
 			}
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:125
-			qw422016.N().S(`          `)
+			qw422016.N().S(`          <div class="member-`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:126
-			qw422016.E().V(m.Name)
+			qw422016.E().S(m.UserID.String())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:126
-			qw422016.N().S(`
+			qw422016.N().S(`-name">`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:126
+			qw422016.E().S(m.Name)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:126
+			qw422016.N().S(`</div>
         </div>
 `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:128

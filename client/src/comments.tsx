@@ -15,7 +15,7 @@ export function snippetComment(c: Comment, un: string) {
   li.appendChild(time);
 
   li.appendChild(<div>{c.content}</div>);
-  li.appendChild(<div><em>{un}</em></div>);
+  li.appendChild(<div><em class={"member-" + c.userID + "-name"}>{un}</em></div>);
   return li;
 }
 

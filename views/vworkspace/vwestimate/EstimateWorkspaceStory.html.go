@@ -61,11 +61,15 @@ func StreamEstimateWorkspaceStories(qw422016 *qt422016.Writer, w *workspace.Full
 		qw422016.E().S(s.TitleString())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:25
 		qw422016.N().S(`</div></a></td>
-        <td class="story-author"><a href="#modal-member-`)
+        <td class="story-author nowrap"><a href="#modal-member-`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
 		qw422016.E().S(s.UserID.String())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
-		qw422016.N().S(`"><em>`)
+		qw422016.N().S(`"><em class="member-`)
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
+		qw422016.E().S(s.UserID.String())
+//line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
+		qw422016.N().S(`-name">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26
 		qw422016.E().S(w.UtilMembers.Name(&s.UserID))
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:26

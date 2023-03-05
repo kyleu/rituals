@@ -1,7 +1,7 @@
 import {els, opt, req} from "./dom";
 import {send} from "./app";
 import {memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView} from "./members.jsx";
-import {svgRef} from "./util";
+import {focusDelay, svgRef} from "./util";
 
 export function username(id?: string) {
   if (!id) {
@@ -36,8 +36,7 @@ function wireSelfForm() {
         msg.picture = pictureInput.value;
       }
       send("self", msg);
-
-      req("#self-name").innerText = nameInput.value;
+      els(".member-" + getSelfID() + "-name").forEach((x) => { x.innerText = nameInput.value; });
       req("#self-picture").innerHTML = memberPictureFor(pictureInput ? pictureInput.value : "", 20, "icon");
       document.location.hash = "";
       return false;
@@ -94,18 +93,16 @@ export type MemberMessage = {
 }
 
 export function memberUpdate(param: MemberMessage) {
+  els(".member-" + param.userID + "-name").forEach((x) => { x.innerText = param.name; });
   if (param.userID === getSelfID()) {
-    req("#self-name").innerText = param.name;
     req("#self-role").innerText = param.role;
     req("#self-picture").innerHTML = memberPictureFor(param.picture ? param.picture : "", 20, "icon");
   } else {
     const panel = req("#member-" + param.userID);
-    req(".member-name", panel).innerText = param.name;
     req(".member-role", panel).innerText = param.role;
     req(".member-picture", panel).innerHTML = memberPictureFor(param.picture ? param.picture : "", 18, "");
 
     const modal = req("#modal-member-" + param.userID);
-    req(".member-name", modal).innerText = param.name;
     const rd = opt(".member-role", modal);
     if (rd) {
       rd.innerText = param.role;
@@ -183,6 +180,9 @@ export function onlineUpdate(param: { userID: string; connected: boolean; }) {
 }
 
 export function initMembers() {
+  req("#self-edit-link").onclick = () => {
+    focusDelay(req("#self-name-input"));
+  }
   wireSelfForm();
   wireMemberForms();
 }
