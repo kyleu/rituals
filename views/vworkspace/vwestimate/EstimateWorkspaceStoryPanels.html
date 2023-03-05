@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/estimate/story"
   "github.com/kyleu/rituals/app/estimate/story/vote"
   "github.com/kyleu/rituals/app/workspace"
+  "github.com/kyleu/rituals/views/components"
 ) %}
 
 {% func EstimateWorkspaceStoryPanelNew(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) %}
@@ -36,11 +37,13 @@
         <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
         <div class="right"><button type="submit">Start Voting</button></div>
       </form>
+      {%- if s == nil || ps.Profile.ID == s.UserID -%}
       <form class="status-new-form-delete" action="" method="post" onsubmit="return confirm('Are you sure you want to delete this story?')">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActChildRemove) %}" />
         <div><button type="submit">Delete Story</button></div>
       </form>
+      {%- endif -%}
     </div>
   </div>
 {% endfunc %}
@@ -52,13 +55,13 @@
       {% if s != nil %}
       {%- for _, m := range w.Members -%}
       {%- code v := w.Votes.Get(s.ID, m.UserID) -%}
-      <div class="member">
+      <div class="member" data-member="{%s m.UserID.String() %}">
         {%- if v == nil -%}
-        <div>-</div>
+        <div class="choice">{%= components.SVGRef("minus", 18, 18, "", ps) %}</div>
         {%- else -%}
-        <div>{%s v.Choice %}</div>
+        <div class="choice">{%= components.SVGRef("check", 18, 18, "", ps) %}</div>
         {%- endif -%}
-        {%s m.Name %}
+        <div class="name">{%s m.Name %}</div>
       </div>
       {%- endfor -%}
       {%- endif -%}

@@ -1,6 +1,7 @@
 import {els, req} from "./dom";
 import {send} from "./app";
-import {focusDelay} from "./util";
+import {focusDelay, svgRef} from "./util";
+import {getSelfID} from "./member";
 
 function wireStoryModalFormEdit(id: string, a: HTMLAnchorElement) {
   a.onclick = () => {
@@ -34,6 +35,11 @@ function wireStoryModalFormVote(id: string, e: HTMLElement) {
     opt.onclick = () => {
       req<HTMLInputElement>("input[name=\"vote\"]", opt).checked = true;
       send("vote", {"storyID": id, "vote": opt.dataset.choice});
+      els("#modal-story-" + id + " .story-members .member").forEach((m) => {
+        if (m.dataset.member == getSelfID()) {
+          req(".choice", m).innerHTML = svgRef("check", 18, "");
+        }
+      })
       return false;
     };
   });

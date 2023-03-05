@@ -1,4 +1,6 @@
 {% import (
+  "github.com/google/uuid"
+
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/enum"
@@ -8,7 +10,7 @@
 
 {% func SelfLink(self *util.Member, ps *cutil.PageState) %}
   <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
-  <a href="#modal-self"><h3>
+  <a href="#modal-member-{%s self.UserID.String() %}"><h3>
     <span id="self-picture">
       {%- if self.Picture == "" -%}
       {%= components.SVGRefIcon(`profile`, ps) %}
@@ -21,8 +23,8 @@
   <em id="self-role">{%s string(self.Role) %}</em>
 {% endfunc %}
 
-{% func SelfModal(name string, picture string, role enum.MemberStatus, formAction string, ps *cutil.PageState) %}
-  <div id="modal-self" class="modal" style="display: none;">
+{% func SelfModal(id uuid.UUID, name string, picture string, role enum.MemberStatus, formAction string, ps *cutil.PageState) %}
+  <div id="modal-member-{%s id.String() %}" class="modal self" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
       <div class="modal-header">

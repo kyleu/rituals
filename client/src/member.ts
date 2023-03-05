@@ -3,14 +3,11 @@ import {send} from "./app";
 import {memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView} from "./members.jsx";
 import {svgRef} from "./util";
 
-let selfID: string;
-let names: { [key: string]: string; };
-
 export function username(id?: string) {
   if (!id) {
     return "System";
   }
-  const ret = names[id];
+  const ret = getMemberName(id);
   if (ret) {
     return ret;
   }
@@ -18,7 +15,7 @@ export function username(id?: string) {
 }
 
 export function getSelfID() {
-  return selfID;
+  return req("#self-id").innerText;
 }
 
 function isAdmin() {
@@ -26,7 +23,7 @@ function isAdmin() {
 }
 
 function wireSelfForm() {
-  const selfModal = req("#modal-self");
+  const selfModal = req("#modal-member-" + getSelfID());
   const selfForm = opt<HTMLFormElement>("form", selfModal);
   if (selfForm) {
     selfForm.onsubmit = () => {
@@ -48,19 +45,11 @@ function wireSelfForm() {
   }
 }
 
-export function refreshMembers() {
-  names = {};
-  selfID = req("#self-id").innerText;
-  names[selfID] = req("#self-name").innerText;
-
-  const panel = req("#panel-members");
-  const members = els(".member", panel);
-  for (const m of members) {
-    const id = m.dataset.id;
-    if (id) {
-      names[id] = req(".member-name", m).innerText;
-    }
+export function getMemberName(id: string) {
+  if (id === getSelfID()) {
+    return req("#self-name").innerText;
   }
+  return req("#member-" + id + " .member-name").innerText;
 }
 
 function wireMemberForm(modal: HTMLElement) {
@@ -77,7 +66,6 @@ function wireMemberForm(modal: HTMLElement) {
       req(".member-role", panel).innerText = role;
     } else if (cmd === "member-remove") {
       panel.remove();
-      refreshMembers();
     }
     document.location.hash = "";
     return false;
@@ -106,7 +94,7 @@ export type MemberMessage = {
 }
 
 export function memberUpdate(param: MemberMessage) {
-  if (param.userID === selfID) {
+  if (param.userID === getSelfID()) {
     req("#self-name").innerText = param.name;
     req("#self-role").innerText = param.role;
     req("#self-picture").innerHTML = memberPictureFor(param.picture ? param.picture : "", 20, "icon");
@@ -128,9 +116,7 @@ export function memberUpdate(param: MemberMessage) {
     }
     req(".member-picture", modal).innerHTML = memberPictureFor(param.picture ? param.picture : "", 18, "");
   }
-  if (names[param.userID] !== param.name) {
-    names[param.userID] = param.name;
-
+  if (getMemberName(param.userID) !== param.name) {
     const tbl = req("#panel-members table tbody");
     const items = tbl.children;
     const itemsArr: Element[] = [...items];
@@ -145,7 +131,7 @@ export function memberUpdate(param: MemberMessage) {
 
 export function memberAdd(param: MemberMessage) {
   const panel = opt("#member-" + param.userID);
-  if (panel || param.userID === selfID) {
+  if (panel || param.userID === getSelfID()) {
     return memberUpdate(param);
   }
 
@@ -176,17 +162,15 @@ export function memberAdd(param: MemberMessage) {
   modals.appendChild(modal);
   req(".member-picture", modal).innerHTML = memberPictureFor(param.picture ? param.picture : "", 24, "icon");
   wireMemberForm(modal);
-  names[param.userID] = param.name;
 }
 
 export function memberRemove(userID: string) {
   const panel = req("#member-" + userID);
   panel.remove();
-  refreshMembers();
 }
 
 export function onlineUpdate(param: { userID: string; connected: boolean; }) {
-  if (param.userID === selfID) {
+  if (param.userID === getSelfID()) {
     return;
   }
   const mel = opt("#member-" + param.userID + " .online-status");
@@ -201,5 +185,4 @@ export function onlineUpdate(param: { userID: string; connected: boolean; }) {
 export function initMembers() {
   wireSelfForm();
   wireMemberForms();
-  refreshMembers();
 }

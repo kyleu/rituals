@@ -9,7 +9,7 @@
   {%- code self, others, _ := ms.Split(ps.Profile.ID) -%}
   <div id="panel-self">
     <div class="card">{%= SelfLink(self, ps) %}</div>
-    {%= SelfModal(self.Name, self.Picture, self.Role, path, ps) %}
+    {%= SelfModal(self.UserID, self.Name, self.Picture, self.Role, path, ps) %}
   </div>
   <div id="panel-members">
     <div class="card">

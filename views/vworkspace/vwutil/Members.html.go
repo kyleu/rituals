@@ -42,7 +42,7 @@ func StreamMemberPanels(qw422016 *qt422016.Writer, ms util.Members, admin bool, 
 	qw422016.N().S(`</div>
     `)
 //line views/vworkspace/vwutil/Members.html:12
-	StreamSelfModal(qw422016, self.Name, self.Picture, self.Role, path, ps)
+	StreamSelfModal(qw422016, self.UserID, self.Name, self.Picture, self.Role, path, ps)
 //line views/vworkspace/vwutil/Members.html:12
 	qw422016.N().S(`
   </div>

@@ -18,6 +18,13 @@ type Member struct {
 	Online  bool              `json:"online,omitempty"`
 }
 
+func (m *Member) NameSafe() string {
+	if m.Name == "" {
+		return m.UserID.String()[0:8]
+	}
+	return m.Name
+}
+
 type Members []*Member
 
 func (m Members) Get(userID uuid.UUID) *Member {
@@ -27,6 +34,16 @@ func (m Members) Get(userID uuid.UUID) *Member {
 		}
 	}
 	return nil
+}
+
+func (m Members) Name(userID *uuid.UUID) string {
+	if userID == nil {
+		return "-"
+	}
+	if x := m.Get(*userID); x != nil {
+		return x.NameSafe()
+	}
+	return userID.String()[0:8]
 }
 
 func (m Members) Sort() {

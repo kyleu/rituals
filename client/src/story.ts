@@ -106,8 +106,10 @@ export function storyAdd(s: Story) {
   const editLink = req<HTMLAnchorElement>(".link-edit", modal)
   editLink.href = "#modal-story-" + s.id + "-edit";
   editLink.dataset.id = s.id;
+
   req("#story-modals").appendChild(modal);
   wireStoryModal(modal);
+  storyUpdate(s);
   if (document.location.hash === "modal-story--add" || document.location.hash === "") {
     document.location.hash = "modal-story-" + s.id;
   }
@@ -118,6 +120,7 @@ export function storyUpdate(s: Story) {
   req(".story-status", tr).innerText = s.status;
   req(".story-title", tr).innerText = s.title;
   req(".story-final-vote", tr).innerText = s.finalVote;
+
   const editModal = req("#modal-story-" + s.id + "-edit");
   req("form input[name=\"title\"]", editModal).innerText = s.title;
   const modal = req("#modal-story-" + s.id);

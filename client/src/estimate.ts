@@ -5,6 +5,7 @@ import {send} from "./app";
 import {configFocus, setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
 import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
+import {onVote, Vote} from "./vote";
 
 export type Estimate = {
   id: string;
@@ -69,6 +70,8 @@ export function handleEstimate(m: Message) {
       return storyStatus(m.param as Story);
     case "child-remove":
       return storyRemove(m.param as string);
+    case "vote":
+      return onVote(m.param as Vote);
     case "permissions":
       return permissionsUpdate(m.param as Permission[]);
     default:
