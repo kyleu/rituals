@@ -94,7 +94,11 @@ func StreamRetroWorkspaceFeedbacks(qw422016 *qt422016.Writer, userID uuid.UUID, 
 			qw422016.E().S(f.ID.String())
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:27
 			qw422016.N().S(`">
-          <div>`)
+          <div class="member-`)
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:28
+			qw422016.E().S(f.UserID.String())
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:28
+			qw422016.N().S(`-name">`)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:28
 			qw422016.E().S(w.UtilMembers.Name(&f.UserID))
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:28
@@ -286,11 +290,15 @@ func StreamRetroWorkspaceFeedbackModalEdit(qw422016 *qt422016.Writer, f *feedbac
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
 	qw422016.E().S(f.Category)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
-	qw422016.N().S(` :: `)
+	qw422016.N().S(` :: <span class="member-`)
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
+	qw422016.E().S(f.UserID.String())
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
 	qw422016.E().S(username)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:81
-	qw422016.N().S(`</h2>
+	qw422016.N().S(`</span></h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">
@@ -376,11 +384,15 @@ func StreamRetroWorkspaceFeedbackModalView(qw422016 *qt422016.Writer, f *feedbac
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
 	qw422016.E().S(f.Category)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
-	qw422016.N().S(` :: `)
+	qw422016.N().S(` :: <span class="member-`)
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
+	qw422016.E().S(f.UserID.String())
+//line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
 	qw422016.E().S(username)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:108
-	qw422016.N().S(`</h2>
+	qw422016.N().S(`</span></h2>
     </div>
     <div class="modal-body">
       <div>`)

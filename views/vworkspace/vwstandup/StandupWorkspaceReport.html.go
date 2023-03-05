@@ -86,7 +86,11 @@ func StreamStandupWorkspaceReports(qw422016 *qt422016.Writer, w *workspace.FullS
 			qw422016.E().S(r.ID.String())
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:23
 			qw422016.N().S(`" class="clean modal-report-edit-link">
-              <h4 class="username">`)
+              <h4 class="username member-`)
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:24
+			qw422016.E().S(r.UserID.String())
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:24
+			qw422016.N().S(`-name">`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:24
 			qw422016.E().S(w.UtilMembers.Name(&r.UserID))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:24
@@ -244,7 +248,11 @@ func StreamStandupWorkspaceReportModalEdit(qw422016 *qt422016.Writer, r *report.
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>`)
+        <h2 class="member-`)
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:71
+	qw422016.E().S(r.UserID.String())
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:71
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:71
 	qw422016.E().S(members.Name(&r.UserID))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:71
@@ -328,11 +336,15 @@ func StreamStandupWorkspaceReportModalView(qw422016 *qt422016.Writer, r *report.
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:92
 	qw422016.E().S(util.TimeToYMD(&r.Day))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:92
-	qw422016.N().S(` :: `)
+	qw422016.N().S(` :: <span class="member-`)
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:92
+	qw422016.E().S(r.UserID.String())
+//line views/vworkspace/vwstandup/StandupWorkspaceReport.html:92
+	qw422016.N().S(`-name">`)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:92
 	qw422016.E().S(members.Name(&r.UserID))
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:92
-	qw422016.N().S(`</h2>
+	qw422016.N().S(`</span></h2>
       </div>
       <div class="modal-body">
         `)

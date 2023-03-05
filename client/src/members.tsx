@@ -49,8 +49,8 @@ export function snippetMemberModalEdit(userID: string, name: string, role: strin
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
         <h2>
-          <span className="member-picture" dangerouslySetInnerHTML={{"__html": memberPictureFor(picture, 18, "")}}></span>
-          <span className={"member-name member-" + userID + "-name"}>{name}</span>
+          <span class="member-picture" dangerouslySetInnerHTML={{"__html": memberPictureFor(picture, 18, "")}}></span>
+          <span class={"member-name member-" + userID + "-name"}>{name}</span>
         </h2>
       </div>
       <div class="modal-body">

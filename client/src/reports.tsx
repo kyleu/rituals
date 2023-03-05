@@ -44,7 +44,7 @@ export function snippetReportModalEdit(r: Report): HTMLElement {
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{r.day}: <span className={"member-" + r.userID + "-name"}>{username(r.userID)}</span></h2>
+        <h2>{r.day}: <span class={"member-" + r.userID + "-name"}>{username(r.userID)}</span></h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">

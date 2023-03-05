@@ -25,7 +25,7 @@
       <div id="feedback-{%s f.ID.String() %}" class="feedback mt clear">
         <div class="right">{%= vwutil.Comments(enum.ModelServiceFeedback, f.ID, f.TitleString(), w.Comments, w.UtilMembers, "member-icon", ps) %}</div>
         <a href="#modal-feedback-{%s f.ID.String() %}" class="clean modal-feedback-edit-link" data-id="{%s f.ID.String() %}">
-          <div>{%s w.UtilMembers.Name(&f.UserID) %}</div>
+          <div class="member-{%s f.UserID.String() %}-name">{%s w.UtilMembers.Name(&f.UserID) %}</div>
           <div class="pt feedback-content">{%s= f.HTML %}</div>
         </a>
       </div>
@@ -78,7 +78,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s f.Category %} :: {%s username %}</h2>
+        <h2>{%s f.Category %} :: <span class="member-{%s f.UserID.String() %}-name">{%s username %}</span></h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">
@@ -105,7 +105,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <a href="#" class="modal-close">×</a>
-      <h2>{%s f.Category %} :: {%s username %}</h2>
+      <h2>{%s f.Category %} :: <span class="member-{%s f.UserID.String() %}-name">{%s username %}</span></h2>
     </div>
     <div class="modal-body">
       <div>{%s= f.HTML %}</div>

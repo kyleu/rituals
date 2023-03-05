@@ -21,7 +21,7 @@
           <div>
             <div class="right">{%= vwutil.Comments(enum.ModelServiceReport, r.ID, r.TitleString(), w.Comments, w.UtilMembers, "", ps) %}</div>
             <a href="#modal-report-{%s r.ID.String() %}" data-id="{%s r.ID.String() %}" class="clean modal-report-edit-link">
-              <h4 class="username">{%s w.UtilMembers.Name(&r.UserID) %}</h4>
+              <h4 class="username member-{%s r.UserID.String() %}-name">{%s w.UtilMembers.Name(&r.UserID) %}</h4>
               <div class="pt">{%s= r.HTML %}</div>
             </a>
           </div>
@@ -68,7 +68,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s members.Name(&r.UserID) %}</h2>
+        <h2 class="member-{%s r.UserID.String() %}-name">{%s members.Name(&r.UserID) %}</h2>
       </div>
       <div class="modal-body">
         <form action="#" method="post">
@@ -89,7 +89,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <a href="#" class="modal-close">×</a>
-        <h2>{%s util.TimeToYMD(&r.Day) %} :: {%s members.Name(&r.UserID) %}</h2>
+        <h2>{%s util.TimeToYMD(&r.Day) %} :: <span class="member-{%s r.UserID.String() %}-name">{%s members.Name(&r.UserID) %}</span></h2>
       </div>
       <div class="modal-body">
         {%s= r.HTML %}

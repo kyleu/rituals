@@ -38,16 +38,10 @@
       <div class="modal-body">
         <ul id="comment-list-{%s string(svc) %}-{%s id.String() %}" class="comment-list">
           {%- for _, c := range comments -%}
-          {%- code
-            un := c.UserID.String()
-            if m := members.Get(c.UserID); m != nil {
-              un = m.Name
-            }
-          -%}
           <li>
             <div class="right">{%= components.DisplayTimestampRelative(&c.Created) %}</div>
             <div>{%s= c.HTML %}</div>
-            <div><em>{%s un %}</em></div>
+            <div><em class="member-{%s c.UserID.String() %}-name">{%s members.Name(&c.UserID) %}</em></div>
           </li>
           {%- endfor -%}
         </ul>
