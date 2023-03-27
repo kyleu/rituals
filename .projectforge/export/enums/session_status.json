@@ -6,7 +6,6 @@
   "values": [
     "new",
     "active",
-    "complete",
-    "deleted"
+    "complete"
   ]
 }

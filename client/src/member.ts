@@ -3,6 +3,12 @@ import {send} from "./app";
 import {memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView} from "./members.jsx";
 import {focusDelay, svgRef} from "./util";
 
+export interface Member {
+  id: string;
+  name: string;
+  role: string;
+}
+
 export function username(id?: string) {
   if (!id) {
     return "System";
@@ -49,6 +55,28 @@ export function getMemberName(id: string) {
     return req("#self-name").innerText;
   }
   return req("#member-" + id + " .member-name").innerText;
+}
+
+export function getMemberRole(id: string) {
+  if (id === getSelfID()) {
+    return req("#self-role").innerText;
+  }
+  return req("#member-" + id + " .member-role").innerText;
+}
+
+export function memberList(): Member[] {
+  const ret: Member[] = [];
+  const slID = getSelfID();
+  const sl: Member = {id: slID, name: getMemberName(slID), role: getMemberRole(slID)};
+  ret.push(sl);
+  els("#panel-members .member").forEach((e) => {
+    const id = e.dataset.id!;
+    ret.push({id: id, name: getMemberName(id), role: getMemberRole(id)});
+  })
+  ret.sort((l, r) => {
+    return l.name.localeCompare(r.name, undefined, {sensitivity: "accent"});
+  });
+  return ret;
 }
 
 function wireMemberForm(modal: HTMLElement) {

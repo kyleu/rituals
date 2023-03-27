@@ -63,7 +63,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teams team.Te
 	qw422016.N().S(`
         `)
 //line views/vsprint/Table.html:20
-	components.StreamTableHeaderSimple(qw422016, "sprint", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "sprint", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps)
 //line views/vsprint/Table.html:20
 	qw422016.N().S(`
         `)

@@ -31,7 +31,7 @@
           {%= components.TableInput("slug", "", "Slug", p.Model.Slug, 5, "String text") %}
           {%= components.TableInput("title", "", "Title", p.Model.Title, 5, "String text") %}
           {%= components.TableInput("icon", "", "Icon", p.Model.Icon, 5, "String text") %}
-          {%= components.TableSelect("status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]") %}
+          {%= components.TableSelect("status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete"}, []string{"new", "active", "complete"}, 5, "Available options: [new, active, complete]") %}
           {%= components.TableInputUUID("teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
           {%= components.TableInputUUID("sprintID", "input-sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
           {%= components.TableTextarea("choices", "", "Choices", 8, util.ToJSON(p.Model.Choices), 5, "Comma-separated list of values") %}

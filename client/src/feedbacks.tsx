@@ -48,7 +48,7 @@ export function snippetFeedback(f: Feedback) {
     <div class="right">{snippetCommentsModalLink("feedback", f.id)}</div>
     {snippetCommentsModal("feedback", f.id, f.id)}
     <a href={"#modal-feedback-" + f.id} class="clean modal-feedback-edit-link" data-id={f.id}>
-      <div>{username(f.userID)}</div>
+      <div class={"username member-" + f.userID + "-name"}>{username(f.userID)}</div>
       <div class="pt feedback-content">{f.html}</div>
     </a>
   </div>;

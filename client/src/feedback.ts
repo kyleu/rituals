@@ -107,6 +107,19 @@ export function feedbackAdd(f: Feedback) {
   initCommentsModal(req(".modal", tr));
 }
 
+export function feedbackUpdate(f: Feedback) {
+  let div = opt("#feedback-" + f.id);
+  if (!div) {
+    return feedbackAdd(f);
+  }
+  const body = req(".pt", div);
+  if (f.html) {
+    body.innerHTML = f.html;
+  } else {
+    body.innerText = f.content;
+  }
+}
+
 export function feedbackRemove(id: string) {
   req("#feedback-" + id).remove();
   flashCreate(id + "-removed", "success", `feedback has been removed`);

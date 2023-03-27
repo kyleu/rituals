@@ -17,7 +17,7 @@ exception
   when duplicate_object then null;
 end $$;
 do $$ begin
-  create type "session_status" as enum ('new', 'active', 'complete', 'deleted');
+  create type "session_status" as enum ('new', 'active', 'complete');
 exception
   when duplicate_object then null;
 end $$;

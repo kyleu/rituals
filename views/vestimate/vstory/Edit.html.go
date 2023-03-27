@@ -111,7 +111,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:34
-	components.StreamTableSelect(qw422016, "status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete", "deleted"}, []string{"new", "active", "complete", "deleted"}, 5, "Available options: [new, active, complete, deleted]")
+	components.StreamTableSelect(qw422016, "status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete"}, []string{"new", "active", "complete"}, 5, "Available options: [new, active, complete]")
 //line views/vestimate/vstory/Edit.html:34
 	qw422016.N().S(`
           `)

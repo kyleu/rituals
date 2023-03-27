@@ -202,11 +202,19 @@ func estimateStoryStatus(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	}
 	status := enum.SessionStatus(statusStr)
 	st := &story.Story{ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: fe.Self.UserID, Title: curr.Title, Status: status, Created: curr.Created}
+	fe.Stories.Replace(st)
 	err := p.Svc.st.Update(p.Ctx, nil, st, p.Logger)
 	if err != nil {
 		return nil, "", "", errors.Wrap(err, "unable to save new status for story")
 	}
-	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildStatus, st, &fe.Self.UserID, p.Logger)
+	param := map[string]any{"story": st}
+	if statusStr == "complete" {
+		if v := fe.Votes.GetByStoryIDs(st.ID); len(v) > 0 {
+			param["votes"] = v
+			param["results"] = v.Results()
+		}
+	}
+	err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActChildStatus, param, &fe.Self.UserID, p.Logger)
 	if err != nil {
 		return nil, "", "", err
 	}

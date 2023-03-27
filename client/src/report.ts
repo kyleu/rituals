@@ -99,8 +99,29 @@ export function reportAdd(r: Report) {
   initCommentsModal(req(".modal", div));
 }
 
+export function reportUpdate(r: Report) {
+  if (r.day.length > 10) {
+    r.day = r.day.substring(0, 10);
+  }
+  let div = opt("#report-" + r.id);
+  if (!div) {
+    return reportAdd(r);
+  }
+  const body = req(".pt", div);
+  if (r.html) {
+    body.innerHTML = r.html;
+  } else {
+    body.innerText = r.content;
+  }
+}
+
 export function reportRemove(id: string) {
-  req("#report-" + id).remove();
+  const rpt = req("#report-" + id);
+  const bd = rpt.parentElement!;
+  rpt.remove();
+  if (bd.children.length === 0) {
+    bd.parentElement?.remove();
+  }
   flashCreate(id + "-removed", "success", `report has been removed`);
   req("#modal-report-" + id).remove();
 }

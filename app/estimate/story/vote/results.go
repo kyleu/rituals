@@ -10,20 +10,24 @@ import (
 )
 
 type Results struct {
-	Floats []float64 `json:"floats"`
-	Count  int       `json:"count"`
-	Min    float64   `json:"min"`
-	Max    float64   `json:"max"`
-	Range  float64   `json:"range"`
-	Sum    float64   `json:"sum"`
-	Mean   float64   `json:"mean"`
-	Median float64   `json:"median"`
-	Mode   []float64 `json:"mode"`
+	Floats     []float64 `json:"floats"`
+	Count      int       `json:"count"`
+	Min        float64   `json:"min"`
+	Max        float64   `json:"max"`
+	Range      float64   `json:"range"`
+	Sum        float64   `json:"sum"`
+	Mean       float64   `json:"mean"`
+	Median     float64   `json:"median"`
+	Mode       []float64 `json:"mode"`
+	ModeString string    `json:"modeString"`
 }
 
-func (r *Results) ModeString() string {
-	x := make([]string, 0, len(r.Mode))
-	for _, m := range r.Mode {
+func modeString(mode ...float64) string {
+	if len(mode) == 0 {
+		return "-"
+	}
+	x := make([]string, 0, len(mode))
+	for _, m := range mode {
 		x = append(x, fmt.Sprint(m))
 	}
 	return strings.Join(x, ", ")
@@ -55,6 +59,7 @@ func (v Votes) Results() *Results {
 	ret.Mean = ret.Sum / float64(ret.Count)
 	ret.Median = median(ret.Floats)
 	ret.Mode = mode(ret.Floats)
+	ret.ModeString = modeString(ret.Mode...)
 	return ret
 }
 

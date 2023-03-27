@@ -2,7 +2,7 @@ import type {Message} from "./socket";
 import {opt, req} from "./dom";
 import {send} from "./app";
 import {configFocus, setTeamSprint} from "./workspace";
-import {initReports, Report, reportAdd, reportRemove} from "./report";
+import {initReports, Report, reportAdd, reportRemove, reportUpdate} from "./report";
 import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Standup = {
@@ -51,8 +51,7 @@ export function handleStandup(m: Message) {
     case "child-add":
       return reportAdd(m.param as Report);
     case "child-update":
-      return console.log("TODO: child-update");
-      // return reportUpdate(m.param as Report);
+      return reportUpdate(m.param as Report);
     case "child-remove":
       return reportRemove(m.param as string);
     case "permissions":

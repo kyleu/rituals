@@ -64,7 +64,7 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teams team.Team
 	qw422016.N().S(`
         `)
 //line views/vretro/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "retro", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "retro", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps)
 //line views/vretro/Table.html:21
 	qw422016.N().S(`
         `)

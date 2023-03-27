@@ -3,7 +3,7 @@ import {opt, req} from "./dom";
 import {send} from "./app";
 import {configFocus, setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
-import {Feedback, feedbackAdd, feedbackRemove, initFeedbacks} from "./feedback";
+import {Feedback, feedbackAdd, feedbackRemove, feedbackUpdate, initFeedbacks} from "./feedback";
 import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 
 export type Retro = {
@@ -68,8 +68,7 @@ export function handleRetro(m: Message) {
     case "child-add":
       return feedbackAdd(m.param as Feedback);
     case "child-update":
-      return console.log("TODO: child-update");
-    // return feedbackUpdate(m.param as Feedback);
+      return feedbackUpdate(m.param as Feedback);
     case "child-remove":
       return feedbackRemove(m.param as string);
     case "permissions":

@@ -62,7 +62,7 @@ func StreamTable(qw422016 *qt422016.Writer, models team.Teams, params filter.Par
 	qw422016.N().S(`
         `)
 //line views/vteam/Table.html:19
-	components.StreamTableHeaderSimple(qw422016, "team", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "team", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps)
 //line views/vteam/Table.html:19
 	qw422016.N().S(`
         `)

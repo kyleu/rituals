@@ -155,7 +155,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete, deleted]">Status</th>
+          <th class="shrink" title="Available options: [new, active, complete]">Status</th>
           <td>`)
 //line views/vestimate/vstory/Detail.html:62
 	qw422016.E().V(p.Model.Status)

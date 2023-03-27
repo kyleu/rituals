@@ -17,6 +17,15 @@ func (s Stories) Get(id uuid.UUID) *Story {
 	return nil
 }
 
+func (s Stories) Replace(st *Story) {
+	for idx, x := range s {
+		if x.ID == st.ID {
+			s[idx] = st
+			return
+		}
+	}
+}
+
 func (s Stories) GetByIDs(ids ...uuid.UUID) Stories {
 	var ret Stories
 	for _, x := range s {

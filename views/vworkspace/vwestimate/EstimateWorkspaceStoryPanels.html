@@ -114,29 +114,31 @@
 {% func EstimateWorkspaceStoryPanelComplete(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) %}
   <div class="mt status-complete" {% if s == nil || s.Status != enum.SessionStatusComplete %} style="display: none;"{% endif %}>
     <div class="mt story-results">
-      {%- if s != nil && s.Status == enum.SessionStatusComplete -%}
       <div class="vote-results">
+        {%- if w != nil -%}
         {%- for _, m := range w.Members -%}
         <div class="vote-result">
+          {%- if s != nil && s.Status == enum.SessionStatusComplete -%}
           {%- if v := w.Votes.Get(s.ID, m.UserID); v == nil -%}
           <div class="number" title="user did not vote">-</div>
           {%- else -%}
           <div class="number">{%s v.Choice %}</div>
           {%- endif -%}
+          {%- else -%}
+          <div class="number" title="in progress">-</div>
+          {%- endif -%}
           <div class="member-{%s m.UserID.String() %}-name">{%s m.Name %}</div>
         </div>
         {%- endfor -%}
+        {%- endif -%}
       </div>
-      {%- else -%}
-      <em>Voting in progress...</em>
-      {%- endif -%}
     </div>
     <hr />
     <div class="mt">
       {%- if s != nil && s.Status == enum.SessionStatusComplete -%}
-      {%= EstimateWorkspaceStoryResults(w.Votes.GetByStoryIDs(s.ID), ps) %}
+      {%= EstimateWorkspaceStoryResultCalculations(w.Votes.GetByStoryIDs(s.ID)) %}
       {%- else -%}
-      <em>Voting is still active</em>
+      {%= EstimateWorkspaceStoryCalculations(0, 0, 0, 0, 0, 0, "0") %}
       {%- endif -%}
     </div>
     <hr />
@@ -154,27 +156,31 @@
   </div>
 {% endfunc %}
 
-{% func EstimateWorkspaceStoryResults(v vote.Votes, ps *cutil.PageState) %}
+{% func EstimateWorkspaceStoryResultCalculations(v vote.Votes) %}
   {%- code r := v.Results() -%}
+  {%= EstimateWorkspaceStoryCalculations(len(v), r.Count, r.Min, r.Max, r.Mean, r.Median, r.ModeString) %}
+{% endfunc %}
+
+{% func EstimateWorkspaceStoryCalculations(votes int, counted int, min float64, max float64, mean float64, median float64, modeString string) %}
   <div class="vote-calculations">
-    <div class="vote-calculation" title="portion of votes that were able to be parsed as numbers">
-      <div class="value">{%d r.Count %}/{%d len(v) %}</div>
+    <div class="vote-calculation calc-counted" title="portion of votes that were able to be parsed as numbers">
+      <div class="value">{%d counted %}/{%d votes %}</div>
       Counted
     </div>
-    <div class="vote-calculation" title="the minimum and maximum vote recorded">
-      <div class="value">{%f r.Min %}-{%f r.Max %}</div>
+    <div class="vote-calculation calc-range" title="the minimum and maximum vote recorded">
+      <div class="value">{%f min %}-{%f max %}</div>
       Range
     </div>
-    <div class="vote-calculation" title="mean average of all votes">
-      <div class="value">{%f r.Mean %}</div>
+    <div class="vote-calculation calc-mean" title="mean average of all votes">
+      <div class="value">{%f mean %}</div>
       Average
     </div>
-    <div class="vote-calculation" title="median value from collected votes">
-      <div class="value">{%f r.Median %}</div>
+    <div class="vote-calculation calc-median" title="median value from collected votes">
+      <div class="value">{%f median %}</div>
       Median
     </div>
-    <div class="vote-calculation" title="mode value(s) from collected votes">
-      <div class="value">{%s r.ModeString() %}</div>
+    <div class="vote-calculation calc-mode" title="mode value(s) from collected votes">
+      <div class="value">{%s modeString %}</div>
       Mode
     </div>
   </div>

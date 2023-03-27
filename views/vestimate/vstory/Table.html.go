@@ -69,7 +69,7 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimates esti
 	qw422016.N().S(`
         `)
 //line views/vestimate/vstory/Table.html:22
-	components.StreamTableHeaderSimple(qw422016, "story", "status", "Status", "Available options: [new, active, complete, deleted]", prms, ps.URI, ps)
+	components.StreamTableHeaderSimple(qw422016, "story", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps)
 //line views/vestimate/vstory/Table.html:22
 	qw422016.N().S(`
         `)

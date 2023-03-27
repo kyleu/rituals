@@ -1,11 +1,7 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package user
 
-import (
-	"fmt"
-
-	"github.com/google/uuid"
-)
+import "github.com/google/uuid"
 
 type Profile struct {
 	ID    uuid.UUID `json:"id"`
@@ -17,7 +13,7 @@ type Profile struct {
 var DefaultProfile = &Profile{Name: "Guest"}
 
 func (p *Profile) String() string {
-	return fmt.Sprint(p.Name)
+	return p.Name
 }
 
 func (p *Profile) Clone() *Profile {

@@ -7,5 +7,4 @@ const (
 	SessionStatusNew      SessionStatus = "new"
 	SessionStatusActive   SessionStatus = "active"
 	SessionStatusComplete SessionStatus = "complete"
-	SessionStatusDeleted  SessionStatus = "deleted"
 )

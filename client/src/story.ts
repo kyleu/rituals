@@ -5,6 +5,8 @@ import {wireStoryModal, wireStoryModalFormDelete} from "./storymodal";
 import {initCommentsModal} from "./comment";
 import {flashCreate} from "./flash";
 import {focusDelay} from "./util";
+import type {Vote, VoteResults} from "./vote";
+import {applyCalcs} from "./vote";
 
 export type Story = {
   id: string;
@@ -16,6 +18,12 @@ export type Story = {
   userID: string;
   updated: string;
   created: string;
+}
+
+export type StoryStatusResult = {
+  story: Story;
+  votes?: Vote[];
+  results?: VoteResults;
 }
 
 function onEditSubmit(frm: HTMLElement) {
@@ -127,13 +135,16 @@ export function storyUpdate(s: Story) {
   req("h2.billboard", modal).innerText = s.title;
 }
 
-export function storyStatus(s: Story) {
-  const tr = req("#story-row-" + s.id);
-  req(".story-status", tr).innerText = s.status;
-  const modal = req("#modal-story-" + s.id);
-  req(".status-new", modal).style.display = s.status === "new" ? "block" : "none";
-  req(".status-active", modal).style.display = s.status === "active" ? "block" : "none";
-  req(".status-complete", modal).style.display = s.status === "complete" ? "block" : "none";
+export function storyStatus(s: StoryStatusResult) {
+  const tr = req("#story-row-" + s.story.id);
+  req(".story-status", tr).innerText = s.story.status;
+  const modal = req("#modal-story-" + s.story.id);
+  req(".status-new", modal).style.display = s.story.status === "new" ? "block" : "none";
+  req(".status-active", modal).style.display = s.story.status === "active" ? "block" : "none";
+  req(".status-complete", modal).style.display = s.story.status === "complete" ? "block" : "none";
+  if (s.story.status === "complete" && s.votes !== undefined && s.results !== undefined) {
+    applyCalcs(s.story.id, s.votes, s.results);
+  }
 }
 
 export function storyRemove(id: string) {
