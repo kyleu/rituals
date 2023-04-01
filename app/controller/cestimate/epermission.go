@@ -29,11 +29,11 @@ func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			estimateIDs = append(estimateIDs, x.EstimateID)
 		}
-		estimates, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vepermission.List{Models: ret, Estimates: estimates, Params: ps.Params}
+		page := &vepermission.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "estimate", "epermission")
 	})
 }

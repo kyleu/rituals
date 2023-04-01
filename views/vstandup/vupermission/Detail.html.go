@@ -32,8 +32,8 @@ var (
 //line views/vstandup/vupermission/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model    *upermission.StandupPermission
-	Standups standup.Standups
+	Model               *upermission.StandupPermission
+	StandupsByStandupID standup.Standups
 }
 
 //line views/vstandup/vupermission/Detail.html:17
@@ -72,7 +72,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:30
 	components.StreamDisplayUUID(qw422016, &p.Model.StandupID)
 //line views/vstandup/vupermission/Detail.html:30
-	if x := p.Standups.Get(p.Model.StandupID); x != nil {
+	if x := p.StandupsByStandupID.Get(p.Model.StandupID); x != nil {
 //line views/vstandup/vupermission/Detail.html:30
 		qw422016.N().S(` (`)
 //line views/vstandup/vupermission/Detail.html:30

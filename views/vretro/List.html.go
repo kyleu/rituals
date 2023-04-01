@@ -34,11 +34,11 @@ var (
 //line views/vretro/List.html:13
 type List struct {
 	layout.Basic
-	Models      retro.Retros
-	Teams       team.Teams
-	Sprints     sprint.Sprints
-	Params      filter.ParamSet
-	SearchQuery string
+	Models            retro.Retros
+	TeamsByTeamID     team.Teams
+	SprintsBySprintID sprint.Sprints
+	Params            filter.ParamSet
+	SearchQuery       string
 }
 
 //line views/vretro/List.html:22
@@ -82,7 +82,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vretro/List.html:34
-		StreamTable(qw422016, p.Models, p.Teams, p.Sprints, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.TeamsByTeamID, p.SprintsBySprintID, p.Params, as, ps)
 //line views/vretro/List.html:34
 		qw422016.N().S(`
     </div>

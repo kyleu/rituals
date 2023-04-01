@@ -12,7 +12,7 @@
 {% code type List struct {
   layout.Basic
   Models rhistory.RetroHistories
-  Retros retro.Retros
+  RetrosByRetroID retro.Retros
   Params filter.ParamSet
 } %}
 
@@ -24,7 +24,7 @@
     <div class="mt"><em>No histories available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Retros, p.Params, as, ps) %}
+      {%= Table(p.Models, p.RetrosByRetroID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

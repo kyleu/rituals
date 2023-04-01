@@ -32,8 +32,8 @@ var (
 //line views/vstandup/vuhistory/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model    *uhistory.StandupHistory
-	Standups standup.Standups
+	Model               *uhistory.StandupHistory
+	StandupsByStandupID standup.Standups
 }
 
 //line views/vstandup/vuhistory/Detail.html:17
@@ -80,7 +80,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vuhistory/Detail.html:34
 	components.StreamDisplayUUID(qw422016, &p.Model.StandupID)
 //line views/vstandup/vuhistory/Detail.html:34
-	if x := p.Standups.Get(p.Model.StandupID); x != nil {
+	if x := p.StandupsByStandupID.Get(p.Model.StandupID); x != nil {
 //line views/vstandup/vuhistory/Detail.html:34
 		qw422016.N().S(` (`)
 //line views/vstandup/vuhistory/Detail.html:34

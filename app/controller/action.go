@@ -28,11 +28,11 @@ func ActionList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vaction.List{Models: ret, Users: users, Params: ps.Params}
+		page := &vaction.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
 		return Render(rc, as, page, ps, "action")
 	})
 }

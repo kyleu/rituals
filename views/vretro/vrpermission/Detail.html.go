@@ -32,8 +32,8 @@ var (
 //line views/vretro/vrpermission/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model  *rpermission.RetroPermission
-	Retros retro.Retros
+	Model           *rpermission.RetroPermission
+	RetrosByRetroID retro.Retros
 }
 
 //line views/vretro/vrpermission/Detail.html:17
@@ -72,7 +72,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrpermission/Detail.html:30
 	components.StreamDisplayUUID(qw422016, &p.Model.RetroID)
 //line views/vretro/vrpermission/Detail.html:30
-	if x := p.Retros.Get(p.Model.RetroID); x != nil {
+	if x := p.RetrosByRetroID.Get(p.Model.RetroID); x != nil {
 //line views/vretro/vrpermission/Detail.html:30
 		qw422016.N().S(` (`)
 //line views/vretro/vrpermission/Detail.html:30

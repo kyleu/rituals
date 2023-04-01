@@ -29,7 +29,7 @@ func RetroMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			retroIDs = append(retroIDs, x.RetroID)
 		}
-		retros, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDs...)
+		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDs...)
 		if err != nil {
 			return "", err
 		}
@@ -37,11 +37,11 @@ func RetroMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vrmember.List{Models: ret, Retros: retros, Users: users, Params: ps.Params}
+		page := &vrmember.List{Models: ret, RetrosByRetroID: retrosByRetroID, UsersByUserID: usersByUserID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "retro", "rmember")
 	})
 }

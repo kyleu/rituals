@@ -54,7 +54,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	if len(ids) == 0 {
 		return Sprints{}, nil
 	}
-	wc := database.SQLInClause("id", len(ids), 0)
+	wc := database.SQLInClause("id", len(ids), 0, "")
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	vals := make([]any, 0, len(ids))

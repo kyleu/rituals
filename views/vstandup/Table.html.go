@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vstandup/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vstandup/Table.html:12
 	qw422016.N().S(`
 `)
@@ -131,7 +131,7 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teams team.
 //line views/vstandup/Table.html:37
 		if model.TeamID != nil {
 //line views/vstandup/Table.html:37
-			if x := teams.Get(*model.TeamID); x != nil {
+			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
 //line views/vstandup/Table.html:37
 				qw422016.N().S(` (`)
 //line views/vstandup/Table.html:37
@@ -169,7 +169,7 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teams team.
 //line views/vstandup/Table.html:41
 		if model.SprintID != nil {
 //line views/vstandup/Table.html:41
-			if x := sprints.Get(*model.SprintID); x != nil {
+			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
 //line views/vstandup/Table.html:41
 				qw422016.N().S(` (`)
 //line views/vstandup/Table.html:41
@@ -235,22 +235,22 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teams team.
 }
 
 //line views/vstandup/Table.html:55
-func WriteTable(qq422016 qtio422016.Writer, models standup.Standups, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vstandup/Table.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vstandup/Table.html:55
-	StreamTable(qw422016, models, teams, sprints, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps)
 //line views/vstandup/Table.html:55
 	qt422016.ReleaseWriter(qw422016)
 //line views/vstandup/Table.html:55
 }
 
 //line views/vstandup/Table.html:55
-func Table(models standup.Standups, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vstandup/Table.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vstandup/Table.html:55
-	WriteTable(qb422016, models, teams, sprints, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps)
 //line views/vstandup/Table.html:55
 	qs422016 := string(qb422016.B)
 //line views/vstandup/Table.html:55

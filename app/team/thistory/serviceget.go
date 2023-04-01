@@ -53,7 +53,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	if len(slugs) == 0 {
 		return TeamHistories{}, nil
 	}
-	wc := database.SQLInClause("slug", len(slugs), 0)
+	wc := database.SQLInClause("slug", len(slugs), 0, "")
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	vals := make([]any, 0, len(slugs))

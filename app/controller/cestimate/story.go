@@ -37,7 +37,7 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			estimateIDs = append(estimateIDs, x.EstimateID)
 		}
-		estimates, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
 		if err != nil {
 			return "", err
 		}
@@ -45,11 +45,11 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vstory.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params, SearchQuery: q}
+		page := &vstory.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, UsersByUserID: usersByUserID, Params: ps.Params, SearchQuery: q}
 		return controller.Render(rc, as, page, ps, "estimate", "story")
 	})
 }
@@ -62,8 +62,8 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Story)"
 		ps.Data = ret
-		votePrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
-		votesByStoryID, err := as.Services.Vote.GetByStoryID(ps.Context, nil, ret.ID, votePrms, ps.Logger)
+		votesByStoryIDPrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		votesByStoryID, err := as.Services.Vote.GetByStoryID(ps.Context, nil, ret.ID, votesByStoryIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}

@@ -21,8 +21,8 @@
 {% code type Detail struct {
   layout.Basic
   Model *estimate.Estimate
-  Teams team.Teams
-  Sprints sprint.Sprints
+  TeamsByTeamID team.Teams
+  SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
   EstimateHistoriesByEstimateID ehistory.EstimateHistories
   EstimateMembersByEstimateID emember.EstimateMembers
@@ -63,14 +63,14 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(p.Model.TeamID) %}{% if p.Model.TeamID != nil %}{% if x := p.Teams.Get(*p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+            {%= components.DisplayUUID(p.Model.TeamID) %}{% if p.Model.TeamID != nil %}{% if x := p.TeamsByTeamID.Get(*p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
             {% if p.Model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(p.Model.SprintID) %}{% if p.Model.SprintID != nil %}{% if x := p.Sprints.Get(*p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+            {%= components.DisplayUUID(p.Model.SprintID) %}{% if p.Model.SprintID != nil %}{% if x := p.SprintsBySprintID.Get(*p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
             {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s `/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
           </td>
         </tr>

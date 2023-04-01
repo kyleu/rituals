@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vteam/vtmember/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teams team.Teams, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teamsByTeamID team.Teams, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vteam/vtmember/Table.html:12
 	qw422016.N().S(`
 `)
@@ -98,7 +98,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teams te
 //line views/vteam/vtmember/Table.html:30
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vtmember/Table.html:30
-		if x := teams.Get(model.TeamID); x != nil {
+		if x := teamsByTeamID.Get(model.TeamID); x != nil {
 //line views/vteam/vtmember/Table.html:30
 			qw422016.N().S(` (`)
 //line views/vteam/vtmember/Table.html:30
@@ -132,7 +132,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teams te
 //line views/vteam/vtmember/Table.html:34
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vteam/vtmember/Table.html:34
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vteam/vtmember/Table.html:34
 			qw422016.N().S(` (`)
 //line views/vteam/vtmember/Table.html:34
@@ -207,22 +207,22 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teams te
 }
 
 //line views/vteam/vtmember/Table.html:51
-func WriteTable(qq422016 qtio422016.Writer, models tmember.TeamMembers, teams team.Teams, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models tmember.TeamMembers, teamsByTeamID team.Teams, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vteam/vtmember/Table.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vteam/vtmember/Table.html:51
-	StreamTable(qw422016, models, teams, users, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, usersByUserID, params, as, ps)
 //line views/vteam/vtmember/Table.html:51
 	qt422016.ReleaseWriter(qw422016)
 //line views/vteam/vtmember/Table.html:51
 }
 
 //line views/vteam/vtmember/Table.html:51
-func Table(models tmember.TeamMembers, teams team.Teams, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models tmember.TeamMembers, teamsByTeamID team.Teams, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vteam/vtmember/Table.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vteam/vtmember/Table.html:51
-	WriteTable(qb422016, models, teams, users, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, usersByUserID, params, as, ps)
 //line views/vteam/vtmember/Table.html:51
 	qs422016 := string(qb422016.B)
 //line views/vteam/vtmember/Table.html:51

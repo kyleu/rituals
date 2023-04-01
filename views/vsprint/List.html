@@ -12,7 +12,7 @@
 {% code type List struct {
   layout.Basic
   Models sprint.Sprints
-  Teams team.Teams
+  TeamsByTeamID team.Teams
   Params filter.ParamSet
   SearchQuery string
 } %}
@@ -29,7 +29,7 @@
     <div class="mt"><em>No sprints available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Teams, p.Params, as, ps) %}
+      {%= Table(p.Models, p.TeamsByTeamID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vretro/vrpermission/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vretro/vrpermission/Table.html:11
 	qw422016.N().S(`
 `)
@@ -91,7 +91,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 //line views/vretro/vrpermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrpermission/Table.html:27
-		if x := retros.Get(model.RetroID); x != nil {
+		if x := retrosByRetroID.Get(model.RetroID); x != nil {
 //line views/vretro/vrpermission/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vretro/vrpermission/Table.html:27
@@ -181,22 +181,22 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 }
 
 //line views/vretro/vrpermission/Table.html:43
-func WriteTable(qq422016 qtio422016.Writer, models rpermission.RetroPermissions, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models rpermission.RetroPermissions, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vretro/vrpermission/Table.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vretro/vrpermission/Table.html:43
-	StreamTable(qw422016, models, retros, params, as, ps)
+	StreamTable(qw422016, models, retrosByRetroID, params, as, ps)
 //line views/vretro/vrpermission/Table.html:43
 	qt422016.ReleaseWriter(qw422016)
 //line views/vretro/vrpermission/Table.html:43
 }
 
 //line views/vretro/vrpermission/Table.html:43
-func Table(models rpermission.RetroPermissions, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models rpermission.RetroPermissions, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vretro/vrpermission/Table.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vretro/vrpermission/Table.html:43
-	WriteTable(qb422016, models, retros, params, as, ps)
+	WriteTable(qb422016, models, retrosByRetroID, params, as, ps)
 //line views/vretro/vrpermission/Table.html:43
 	qs422016 := string(qb422016.B)
 //line views/vretro/vrpermission/Table.html:43

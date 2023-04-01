@@ -9,7 +9,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models story.Stories, estimates estimate.Estimates, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("story", nil, ps.Logger).Sanitize("story") -%}
   <table class="mt">
     <thead>
@@ -30,12 +30,12 @@
       <tr>
         <td><a href="/admin/db/estimate/story/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
         </td>
         <td>{%d model.Idx %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Title %}</strong></td>

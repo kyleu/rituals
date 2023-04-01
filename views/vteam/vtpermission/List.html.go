@@ -33,9 +33,9 @@ var (
 //line views/vteam/vtpermission/List.html:12
 type List struct {
 	layout.Basic
-	Models tpermission.TeamPermissions
-	Teams  team.Teams
-	Params filter.ParamSet
+	Models        tpermission.TeamPermissions
+	TeamsByTeamID team.Teams
+	Params        filter.ParamSet
 }
 
 //line views/vteam/vtpermission/List.html:19
@@ -63,7 +63,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vteam/vtpermission/List.html:27
-		StreamTable(qw422016, p.Models, p.Teams, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.TeamsByTeamID, p.Params, as, ps)
 //line views/vteam/vtpermission/List.html:27
 		qw422016.N().S(`
     </div>

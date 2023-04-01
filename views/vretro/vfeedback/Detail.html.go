@@ -33,9 +33,9 @@ var (
 //line views/vretro/vfeedback/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model  *feedback.Feedback
-	Retros retro.Retros
-	Users  user.Users
+	Model           *feedback.Feedback
+	RetrosByRetroID retro.Retros
+	UsersByUserID   user.Users
 }
 
 //line views/vretro/vfeedback/Detail.html:19
@@ -82,7 +82,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:36
 	components.StreamDisplayUUID(qw422016, &p.Model.RetroID)
 //line views/vretro/vfeedback/Detail.html:36
-	if x := p.Retros.Get(p.Model.RetroID); x != nil {
+	if x := p.RetrosByRetroID.Get(p.Model.RetroID); x != nil {
 //line views/vretro/vfeedback/Detail.html:36
 		qw422016.N().S(` (`)
 //line views/vretro/vfeedback/Detail.html:36
@@ -119,7 +119,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:47
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vretro/vfeedback/Detail.html:47
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vretro/vfeedback/Detail.html:47
 		qw422016.N().S(` (`)
 //line views/vretro/vfeedback/Detail.html:47

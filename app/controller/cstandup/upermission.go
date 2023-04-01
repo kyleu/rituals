@@ -29,11 +29,11 @@ func StandupPermissionList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			standupIDs = append(standupIDs, x.StandupID)
 		}
-		standups, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDs...)
+		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vupermission.List{Models: ret, Standups: standups, Params: ps.Params}
+		page := &vupermission.List{Models: ret, StandupsByStandupID: standupsByStandupID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "standup", "upermission")
 	})
 }

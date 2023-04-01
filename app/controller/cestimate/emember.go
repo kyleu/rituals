@@ -29,7 +29,7 @@ func EstimateMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			estimateIDs = append(estimateIDs, x.EstimateID)
 		}
-		estimates, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
 		if err != nil {
 			return "", err
 		}
@@ -37,11 +37,11 @@ func EstimateMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vemember.List{Models: ret, Estimates: estimates, Users: users, Params: ps.Params}
+		page := &vemember.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, UsersByUserID: usersByUserID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "estimate", "emember")
 	})
 }

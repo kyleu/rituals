@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vaction/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vaction/Table.html:11
 	qw422016.N().S(`
 `)
@@ -113,7 +113,7 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Us
 //line views/vaction/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vaction/Table.html:33
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vaction/Table.html:33
 			qw422016.N().S(` (`)
 //line views/vaction/Table.html:33
@@ -179,22 +179,22 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, users user.Us
 }
 
 //line views/vaction/Table.html:49
-func WriteTable(qq422016 qtio422016.Writer, models action.Actions, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vaction/Table.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vaction/Table.html:49
-	StreamTable(qw422016, models, users, params, as, ps)
+	StreamTable(qw422016, models, usersByUserID, params, as, ps)
 //line views/vaction/Table.html:49
 	qt422016.ReleaseWriter(qw422016)
 //line views/vaction/Table.html:49
 }
 
 //line views/vaction/Table.html:49
-func Table(models action.Actions, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vaction/Table.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vaction/Table.html:49
-	WriteTable(qb422016, models, users, params, as, ps)
+	WriteTable(qb422016, models, usersByUserID, params, as, ps)
 //line views/vaction/Table.html:49
 	qs422016 := string(qb422016.B)
 //line views/vaction/Table.html:49

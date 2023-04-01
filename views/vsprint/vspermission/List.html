@@ -12,7 +12,7 @@
 {% code type List struct {
   layout.Basic
   Models spermission.SprintPermissions
-  Sprints sprint.Sprints
+  SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
 } %}
 
@@ -24,7 +24,7 @@
     <div class="mt"><em>No permissions available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Sprints, p.Params, as, ps) %}
+      {%= Table(p.Models, p.SprintsBySprintID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

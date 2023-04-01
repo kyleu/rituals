@@ -12,7 +12,7 @@
 {% code type List struct {
   layout.Basic
   Models tpermission.TeamPermissions
-  Teams team.Teams
+  TeamsByTeamID team.Teams
   Params filter.ParamSet
 } %}
 
@@ -24,7 +24,7 @@
     <div class="mt"><em>No permissions available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Teams, p.Params, as, ps) %}
+      {%= Table(p.Models, p.TeamsByTeamID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

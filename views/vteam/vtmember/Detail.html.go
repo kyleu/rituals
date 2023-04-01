@@ -33,9 +33,9 @@ var (
 //line views/vteam/vtmember/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model *tmember.TeamMember
-	Teams team.Teams
-	Users user.Users
+	Model         *tmember.TeamMember
+	TeamsByTeamID team.Teams
+	UsersByUserID user.Users
 }
 
 //line views/vteam/vtmember/Detail.html:19
@@ -74,7 +74,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/vtmember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.TeamID)
 //line views/vteam/vtmember/Detail.html:32
-	if x := p.Teams.Get(p.Model.TeamID); x != nil {
+	if x := p.TeamsByTeamID.Get(p.Model.TeamID); x != nil {
 //line views/vteam/vtmember/Detail.html:32
 		qw422016.N().S(` (`)
 //line views/vteam/vtmember/Detail.html:32
@@ -103,7 +103,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/vtmember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vteam/vtmember/Detail.html:39
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vteam/vtmember/Detail.html:39
 		qw422016.N().S(` (`)
 //line views/vteam/vtmember/Detail.html:39

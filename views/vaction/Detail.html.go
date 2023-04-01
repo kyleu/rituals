@@ -32,8 +32,8 @@ var (
 //line views/vaction/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model *action.Action
-	Users user.Users
+	Model         *action.Action
+	UsersByUserID user.Users
 }
 
 //line views/vaction/Detail.html:17
@@ -96,7 +96,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Detail.html:42
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vaction/Detail.html:42
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vaction/Detail.html:42
 		qw422016.N().S(` (`)
 //line views/vaction/Detail.html:42

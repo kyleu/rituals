@@ -33,9 +33,9 @@ var (
 //line views/vestimate/vemember/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model     *emember.EstimateMember
-	Estimates estimate.Estimates
-	Users     user.Users
+	Model                 *emember.EstimateMember
+	EstimatesByEstimateID estimate.Estimates
+	UsersByUserID         user.Users
 }
 
 //line views/vestimate/vemember/Detail.html:19
@@ -74,7 +74,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vemember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.EstimateID)
 //line views/vestimate/vemember/Detail.html:32
-	if x := p.Estimates.Get(p.Model.EstimateID); x != nil {
+	if x := p.EstimatesByEstimateID.Get(p.Model.EstimateID); x != nil {
 //line views/vestimate/vemember/Detail.html:32
 		qw422016.N().S(` (`)
 //line views/vestimate/vemember/Detail.html:32
@@ -103,7 +103,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vemember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vestimate/vemember/Detail.html:39
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vestimate/vemember/Detail.html:39
 		qw422016.N().S(` (`)
 //line views/vestimate/vemember/Detail.html:39

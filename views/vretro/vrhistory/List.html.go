@@ -33,9 +33,9 @@ var (
 //line views/vretro/vrhistory/List.html:12
 type List struct {
 	layout.Basic
-	Models rhistory.RetroHistories
-	Retros retro.Retros
-	Params filter.ParamSet
+	Models          rhistory.RetroHistories
+	RetrosByRetroID retro.Retros
+	Params          filter.ParamSet
 }
 
 //line views/vretro/vrhistory/List.html:19
@@ -63,7 +63,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vretro/vrhistory/List.html:27
-		StreamTable(qw422016, p.Models, p.Retros, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.RetrosByRetroID, p.Params, as, ps)
 //line views/vretro/vrhistory/List.html:27
 		qw422016.N().S(`
     </div>

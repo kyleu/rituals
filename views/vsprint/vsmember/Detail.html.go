@@ -33,9 +33,9 @@ var (
 //line views/vsprint/vsmember/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model   *smember.SprintMember
-	Sprints sprint.Sprints
-	Users   user.Users
+	Model             *smember.SprintMember
+	SprintsBySprintID sprint.Sprints
+	UsersByUserID     user.Users
 }
 
 //line views/vsprint/vsmember/Detail.html:19
@@ -74,7 +74,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/vsmember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.SprintID)
 //line views/vsprint/vsmember/Detail.html:32
-	if x := p.Sprints.Get(p.Model.SprintID); x != nil {
+	if x := p.SprintsBySprintID.Get(p.Model.SprintID); x != nil {
 //line views/vsprint/vsmember/Detail.html:32
 		qw422016.N().S(` (`)
 //line views/vsprint/vsmember/Detail.html:32
@@ -103,7 +103,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/vsmember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vsprint/vsmember/Detail.html:39
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vsprint/vsmember/Detail.html:39
 		qw422016.N().S(` (`)
 //line views/vsprint/vsmember/Detail.html:39

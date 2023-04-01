@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vestimate/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/Table.html:12
 	qw422016.N().S(`
 `)
@@ -136,7 +136,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teams tea
 //line views/vestimate/Table.html:38
 		if model.TeamID != nil {
 //line views/vestimate/Table.html:38
-			if x := teams.Get(*model.TeamID); x != nil {
+			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
 //line views/vestimate/Table.html:38
 				qw422016.N().S(` (`)
 //line views/vestimate/Table.html:38
@@ -174,7 +174,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teams tea
 //line views/vestimate/Table.html:42
 		if model.SprintID != nil {
 //line views/vestimate/Table.html:42
-			if x := sprints.Get(*model.SprintID); x != nil {
+			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
 //line views/vestimate/Table.html:42
 				qw422016.N().S(` (`)
 //line views/vestimate/Table.html:42
@@ -245,22 +245,22 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teams tea
 }
 
 //line views/vestimate/Table.html:57
-func WriteTable(qq422016 qtio422016.Writer, models estimate.Estimates, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models estimate.Estimates, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/Table.html:57
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vestimate/Table.html:57
-	StreamTable(qw422016, models, teams, sprints, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps)
 //line views/vestimate/Table.html:57
 	qt422016.ReleaseWriter(qw422016)
 //line views/vestimate/Table.html:57
 }
 
 //line views/vestimate/Table.html:57
-func Table(models estimate.Estimates, teams team.Teams, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models estimate.Estimates, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vestimate/Table.html:57
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vestimate/Table.html:57
-	WriteTable(qb422016, models, teams, sprints, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps)
 //line views/vestimate/Table.html:57
 	qs422016 := string(qb422016.B)
 //line views/vestimate/Table.html:57

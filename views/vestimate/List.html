@@ -13,8 +13,8 @@
 {% code type List struct {
   layout.Basic
   Models estimate.Estimates
-  Teams team.Teams
-  Sprints sprint.Sprints
+  TeamsByTeamID team.Teams
+  SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
   SearchQuery string
 } %}
@@ -31,7 +31,7 @@
     <div class="mt"><em>No estimates available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Teams, p.Sprints, p.Params, as, ps) %}
+      {%= Table(p.Models, p.TeamsByTeamID, p.SprintsBySprintID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

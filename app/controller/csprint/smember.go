@@ -29,7 +29,7 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			sprintIDs = append(sprintIDs, x.SprintID)
 		}
-		sprints, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDs...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDs...)
 		if err != nil {
 			return "", err
 		}
@@ -37,11 +37,11 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vsmember.List{Models: ret, Sprints: sprints, Users: users, Params: ps.Params}
+		page := &vsmember.List{Models: ret, SprintsBySprintID: sprintsBySprintID, UsersByUserID: usersByUserID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "sprint", "smember")
 	})
 }

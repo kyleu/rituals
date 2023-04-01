@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vstandup/vupermission/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermissions, standups standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vstandup/vupermission/Table.html:11
 	qw422016.N().S(`
 `)
@@ -91,7 +91,7 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 //line views/vstandup/vupermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vupermission/Table.html:27
-		if x := standups.Get(model.StandupID); x != nil {
+		if x := standupsByStandupID.Get(model.StandupID); x != nil {
 //line views/vstandup/vupermission/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vstandup/vupermission/Table.html:27
@@ -181,22 +181,22 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 }
 
 //line views/vstandup/vupermission/Table.html:43
-func WriteTable(qq422016 qtio422016.Writer, models upermission.StandupPermissions, standups standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vstandup/vupermission/Table.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vstandup/vupermission/Table.html:43
-	StreamTable(qw422016, models, standups, params, as, ps)
+	StreamTable(qw422016, models, standupsByStandupID, params, as, ps)
 //line views/vstandup/vupermission/Table.html:43
 	qt422016.ReleaseWriter(qw422016)
 //line views/vstandup/vupermission/Table.html:43
 }
 
 //line views/vstandup/vupermission/Table.html:43
-func Table(models upermission.StandupPermissions, standups standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vstandup/vupermission/Table.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vstandup/vupermission/Table.html:43
-	WriteTable(qb422016, models, standups, params, as, ps)
+	WriteTable(qb422016, models, standupsByStandupID, params, as, ps)
 //line views/vstandup/vupermission/Table.html:43
 	qs422016 := string(qb422016.B)
 //line views/vstandup/vupermission/Table.html:43

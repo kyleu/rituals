@@ -32,8 +32,8 @@ var (
 //line views/vteam/vtpermission/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model *tpermission.TeamPermission
-	Teams team.Teams
+	Model         *tpermission.TeamPermission
+	TeamsByTeamID team.Teams
 }
 
 //line views/vteam/vtpermission/Detail.html:17
@@ -72,7 +72,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/vtpermission/Detail.html:30
 	components.StreamDisplayUUID(qw422016, &p.Model.TeamID)
 //line views/vteam/vtpermission/Detail.html:30
-	if x := p.Teams.Get(p.Model.TeamID); x != nil {
+	if x := p.TeamsByTeamID.Get(p.Model.TeamID); x != nil {
 //line views/vteam/vtpermission/Detail.html:30
 		qw422016.N().S(` (`)
 //line views/vteam/vtpermission/Detail.html:30

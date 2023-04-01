@@ -33,10 +33,10 @@ var (
 //line views/vsprint/List.html:12
 type List struct {
 	layout.Basic
-	Models      sprint.Sprints
-	Teams       team.Teams
-	Params      filter.ParamSet
-	SearchQuery string
+	Models        sprint.Sprints
+	TeamsByTeamID team.Teams
+	Params        filter.ParamSet
+	SearchQuery   string
 }
 
 //line views/vsprint/List.html:20
@@ -80,7 +80,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vsprint/List.html:32
-		StreamTable(qw422016, p.Models, p.Teams, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.TeamsByTeamID, p.Params, as, ps)
 //line views/vsprint/List.html:32
 		qw422016.N().S(`
     </div>

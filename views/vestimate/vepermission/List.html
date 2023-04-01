@@ -12,7 +12,7 @@
 {% code type List struct {
   layout.Basic
   Models epermission.EstimatePermissions
-  Estimates estimate.Estimates
+  EstimatesByEstimateID estimate.Estimates
   Params filter.ParamSet
 } %}
 
@@ -24,7 +24,7 @@
     <div class="mt"><em>No permissions available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Estimates, p.Params, as, ps) %}
+      {%= Table(p.Models, p.EstimatesByEstimateID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

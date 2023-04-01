@@ -36,7 +36,7 @@ func StandupList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			teamIDs = append(teamIDs, x.TeamID)
 		}
-		teams, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDs)...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDs)...)
 		if err != nil {
 			return "", err
 		}
@@ -44,11 +44,11 @@ func StandupList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			sprintIDs = append(sprintIDs, x.SprintID)
 		}
-		sprints, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(sprintIDs)...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(sprintIDs)...)
 		if err != nil {
 			return "", err
 		}
-		page := &vstandup.List{Models: ret, Teams: teams, Sprints: sprints, Params: ps.Params, SearchQuery: q}
+		page := &vstandup.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "standup")
 	})
 }
@@ -61,23 +61,23 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Standup)"
 		ps.Data = ret
-		reportPrms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
-		reportsByStandupID, err := as.Services.Report.GetByStandupID(ps.Context, nil, ret.ID, reportPrms, ps.Logger)
+		reportsByStandupIDPrms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
+		reportsByStandupID, err := as.Services.Report.GetByStandupID(ps.Context, nil, ret.ID, reportsByStandupIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child reports")
 		}
-		standupHistoryPrms := ps.Params.Get("uhistory", nil, ps.Logger).Sanitize("uhistory")
-		standupHistoriesByStandupID, err := as.Services.StandupHistory.GetByStandupID(ps.Context, nil, ret.ID, standupHistoryPrms, ps.Logger)
+		standupHistoriesByStandupIDPrms := ps.Params.Get("uhistory", nil, ps.Logger).Sanitize("uhistory")
+		standupHistoriesByStandupID, err := as.Services.StandupHistory.GetByStandupID(ps.Context, nil, ret.ID, standupHistoriesByStandupIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		standupMemberPrms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
-		standupMembersByStandupID, err := as.Services.StandupMember.GetByStandupID(ps.Context, nil, ret.ID, standupMemberPrms, ps.Logger)
+		standupMembersByStandupIDPrms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
+		standupMembersByStandupID, err := as.Services.StandupMember.GetByStandupID(ps.Context, nil, ret.ID, standupMembersByStandupIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		standupPermissionPrms := ps.Params.Get("upermission", nil, ps.Logger).Sanitize("upermission")
-		standupPermissionsByStandupID, err := as.Services.StandupPermission.GetByStandupID(ps.Context, nil, ret.ID, standupPermissionPrms, ps.Logger)
+		standupPermissionsByStandupIDPrms := ps.Params.Get("upermission", nil, ps.Logger).Sanitize("upermission")
+		standupPermissionsByStandupID, err := as.Services.StandupPermission.GetByStandupID(ps.Context, nil, ret.ID, standupPermissionsByStandupIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}

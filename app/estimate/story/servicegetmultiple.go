@@ -15,7 +15,7 @@ func (s *Service) GetByEstimateIDs(ctx context.Context, tx *sqlx.Tx, logger util
 	if len(estimateIDs) == 0 {
 		return Stories{}, nil
 	}
-	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0)
+	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0, "")
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
 	vals := make([]any, 0, len(estimateIDs))

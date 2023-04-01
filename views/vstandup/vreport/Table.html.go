@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vstandup/vreport/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups standup.Standups, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standupsByStandupID standup.Standups, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vstandup/vreport/Table.html:12
 	qw422016.N().S(`
 `)
@@ -99,7 +99,7 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
 //line views/vstandup/vreport/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.StandupID)
 //line views/vstandup/vreport/Table.html:31
-		if x := standups.Get(model.StandupID); x != nil {
+		if x := standupsByStandupID.Get(model.StandupID); x != nil {
 //line views/vstandup/vreport/Table.html:31
 			qw422016.N().S(` (`)
 //line views/vstandup/vreport/Table.html:31
@@ -130,7 +130,7 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
 //line views/vstandup/vreport/Table.html:36
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vstandup/vreport/Table.html:36
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vstandup/vreport/Table.html:36
 			qw422016.N().S(` (`)
 //line views/vstandup/vreport/Table.html:36
@@ -191,22 +191,22 @@ func StreamTable(qw422016 *qt422016.Writer, models report.Reports, standups stan
 }
 
 //line views/vstandup/vreport/Table.html:51
-func WriteTable(qq422016 qtio422016.Writer, models report.Reports, standups standup.Standups, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models report.Reports, standupsByStandupID standup.Standups, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vstandup/vreport/Table.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vstandup/vreport/Table.html:51
-	StreamTable(qw422016, models, standups, users, params, as, ps)
+	StreamTable(qw422016, models, standupsByStandupID, usersByUserID, params, as, ps)
 //line views/vstandup/vreport/Table.html:51
 	qt422016.ReleaseWriter(qw422016)
 //line views/vstandup/vreport/Table.html:51
 }
 
 //line views/vstandup/vreport/Table.html:51
-func Table(models report.Reports, standups standup.Standups, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models report.Reports, standupsByStandupID standup.Standups, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vstandup/vreport/Table.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vstandup/vreport/Table.html:51
-	WriteTable(qb422016, models, standups, users, params, as, ps)
+	WriteTable(qb422016, models, standupsByStandupID, usersByUserID, params, as, ps)
 //line views/vstandup/vreport/Table.html:51
 	qs422016 := string(qb422016.B)
 //line views/vstandup/vreport/Table.html:51

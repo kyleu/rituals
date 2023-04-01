@@ -33,9 +33,9 @@ var (
 //line views/vstandup/vupermission/List.html:12
 type List struct {
 	layout.Basic
-	Models   upermission.StandupPermissions
-	Standups standup.Standups
-	Params   filter.ParamSet
+	Models              upermission.StandupPermissions
+	StandupsByStandupID standup.Standups
+	Params              filter.ParamSet
 }
 
 //line views/vstandup/vupermission/List.html:19
@@ -63,7 +63,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vstandup/vupermission/List.html:27
-		StreamTable(qw422016, p.Models, p.Standups, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.StandupsByStandupID, p.Params, as, ps)
 //line views/vstandup/vupermission/List.html:27
 		qw422016.N().S(`
     </div>

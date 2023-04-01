@@ -9,7 +9,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models emember.EstimateMembers, estimates estimate.Estimates, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models emember.EstimateMembers, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("emember", nil, ps.Logger).Sanitize("emember") -%}
   <table class="mt">
     <thead>
@@ -27,11 +27,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimates.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Estimate" href="{%s `/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
         </td>
         <td class="nowrap">
-          <a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/estimate/member/{%= components.DisplayUUID(&model.EstimateID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>

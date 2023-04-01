@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vestimate/vstory/vvote/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Stories, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vstory/vvote/Table.html:12
 	qw422016.N().S(`
 `)
@@ -88,7 +88,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 //line views/vestimate/vstory/vvote/Table.html:28
 		components.StreamDisplayUUID(qw422016, &model.StoryID)
 //line views/vestimate/vstory/vvote/Table.html:28
-		if x := stories.Get(model.StoryID); x != nil {
+		if x := storiesByStoryID.Get(model.StoryID); x != nil {
 //line views/vestimate/vstory/vvote/Table.html:28
 			qw422016.N().S(` (`)
 //line views/vestimate/vstory/vvote/Table.html:28
@@ -122,7 +122,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 //line views/vestimate/vstory/vvote/Table.html:32
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vestimate/vstory/vvote/Table.html:32
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vestimate/vstory/vvote/Table.html:32
 			qw422016.N().S(` (`)
 //line views/vestimate/vstory/vvote/Table.html:32
@@ -183,22 +183,22 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, stories story.Sto
 }
 
 //line views/vestimate/vstory/vvote/Table.html:47
-func WriteTable(qq422016 qtio422016.Writer, models vote.Votes, stories story.Stories, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vstory/vvote/Table.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vestimate/vstory/vvote/Table.html:47
-	StreamTable(qw422016, models, stories, users, params, as, ps)
+	StreamTable(qw422016, models, storiesByStoryID, usersByUserID, params, as, ps)
 //line views/vestimate/vstory/vvote/Table.html:47
 	qt422016.ReleaseWriter(qw422016)
 //line views/vestimate/vstory/vvote/Table.html:47
 }
 
 //line views/vestimate/vstory/vvote/Table.html:47
-func Table(models vote.Votes, stories story.Stories, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vestimate/vstory/vvote/Table.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vestimate/vstory/vvote/Table.html:47
-	WriteTable(qb422016, models, stories, users, params, as, ps)
+	WriteTable(qb422016, models, storiesByStoryID, usersByUserID, params, as, ps)
 //line views/vestimate/vstory/vvote/Table.html:47
 	qs422016 := string(qb422016.B)
 //line views/vestimate/vstory/vvote/Table.html:47

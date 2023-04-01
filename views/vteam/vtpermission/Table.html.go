@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vteam/vtpermission/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vteam/vtpermission/Table.html:11
 	qw422016.N().S(`
 `)
@@ -91,7 +91,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 //line views/vteam/vtpermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vtpermission/Table.html:27
-		if x := teams.Get(model.TeamID); x != nil {
+		if x := teamsByTeamID.Get(model.TeamID); x != nil {
 //line views/vteam/vtpermission/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vteam/vtpermission/Table.html:27
@@ -181,22 +181,22 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 }
 
 //line views/vteam/vtpermission/Table.html:43
-func WriteTable(qq422016 qtio422016.Writer, models tpermission.TeamPermissions, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vteam/vtpermission/Table.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vteam/vtpermission/Table.html:43
-	StreamTable(qw422016, models, teams, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, params, as, ps)
 //line views/vteam/vtpermission/Table.html:43
 	qt422016.ReleaseWriter(qw422016)
 //line views/vteam/vtpermission/Table.html:43
 }
 
 //line views/vteam/vtpermission/Table.html:43
-func Table(models tpermission.TeamPermissions, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vteam/vtpermission/Table.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vteam/vtpermission/Table.html:43
-	WriteTable(qb422016, models, teams, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, params, as, ps)
 //line views/vteam/vtpermission/Table.html:43
 	qs422016 := string(qb422016.B)
 //line views/vteam/vtpermission/Table.html:43

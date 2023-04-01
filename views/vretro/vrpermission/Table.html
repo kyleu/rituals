@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models rpermission.RetroPermissions, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models rpermission.RetroPermissions, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission") -%}
   <table class="mt">
     <thead>
@@ -24,7 +24,7 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retros.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Retro" href="{%s `/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
         </td>
         <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>

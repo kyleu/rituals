@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models sprint.Sprints, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("sprint", nil, ps.Logger).Sanitize("sprint") -%}
   <table class="mt">
     <thead>
@@ -34,7 +34,7 @@
         <td>{%s model.Icon %}</td>
         <td>{%v model.Status %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teams.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+          {%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
           {% if model.TeamID != nil %}<a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
         </td>
         <td>{%= components.DisplayTimestampDay(model.StartDate) %}</td>

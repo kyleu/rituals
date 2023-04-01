@@ -28,11 +28,11 @@ func TeamHistoryList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			teamIDs = append(teamIDs, x.TeamID)
 		}
-		teams, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, teamIDs...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, teamIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vthistory.List{Models: ret, Teams: teams, Params: ps.Params}
+		page := &vthistory.List{Models: ret, TeamsByTeamID: teamsByTeamID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "team", "thistory")
 	})
 }

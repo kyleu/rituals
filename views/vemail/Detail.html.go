@@ -32,8 +32,8 @@ var (
 //line views/vemail/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model *email.Email
-	Users user.Users
+	Model         *email.Email
+	UsersByUserID user.Users
 }
 
 //line views/vemail/Detail.html:17
@@ -120,7 +120,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vemail/Detail.html:54
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vemail/Detail.html:54
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vemail/Detail.html:54
 		qw422016.N().S(` (`)
 //line views/vemail/Detail.html:54

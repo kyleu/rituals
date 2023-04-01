@@ -43,8 +43,8 @@ var (
 type Detail struct {
 	layout.Basic
 	Model                     *retro.Retro
-	Teams                     team.Teams
-	Sprints                   sprint.Sprints
+	TeamsByTeamID             team.Teams
+	SprintsBySprintID         sprint.Sprints
 	Params                    filter.ParamSet
 	FeedbacksByRetroID        feedback.Feedbacks
 	RetroHistoriesByRetroID   rhistory.RetroHistories
@@ -130,7 +130,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:66
 	if p.Model.TeamID != nil {
 //line views/vretro/Detail.html:66
-		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
+		if x := p.TeamsByTeamID.Get(*p.Model.TeamID); x != nil {
 //line views/vretro/Detail.html:66
 			qw422016.N().S(` (`)
 //line views/vretro/Detail.html:66
@@ -171,7 +171,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:73
 	if p.Model.SprintID != nil {
 //line views/vretro/Detail.html:73
-		if x := p.Sprints.Get(*p.Model.SprintID); x != nil {
+		if x := p.SprintsBySprintID.Get(*p.Model.SprintID); x != nil {
 //line views/vretro/Detail.html:73
 			qw422016.N().S(` (`)
 //line views/vretro/Detail.html:73

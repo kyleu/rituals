@@ -29,7 +29,7 @@ func StandupMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			standupIDs = append(standupIDs, x.StandupID)
 		}
-		standups, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDs...)
+		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDs...)
 		if err != nil {
 			return "", err
 		}
@@ -37,11 +37,11 @@ func StandupMemberList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vumember.List{Models: ret, Standups: standups, Users: users, Params: ps.Params}
+		page := &vumember.List{Models: ret, StandupsByStandupID: standupsByStandupID, UsersByUserID: usersByUserID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "standup", "umember")
 	})
 }

@@ -32,8 +32,8 @@ var (
 //line views/vsprint/vspermission/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model   *spermission.SprintPermission
-	Sprints sprint.Sprints
+	Model             *spermission.SprintPermission
+	SprintsBySprintID sprint.Sprints
 }
 
 //line views/vsprint/vspermission/Detail.html:17
@@ -72,7 +72,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/vspermission/Detail.html:30
 	components.StreamDisplayUUID(qw422016, &p.Model.SprintID)
 //line views/vsprint/vspermission/Detail.html:30
-	if x := p.Sprints.Get(p.Model.SprintID); x != nil {
+	if x := p.SprintsBySprintID.Get(p.Model.SprintID); x != nil {
 //line views/vsprint/vspermission/Detail.html:30
 		qw422016.N().S(` (`)
 //line views/vsprint/vspermission/Detail.html:30

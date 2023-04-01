@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vestimate/vehistory/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, estimates estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vehistory/Table.html:11
 	qw422016.N().S(`
 `)
@@ -83,7 +83,7 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 //line views/vestimate/vehistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vehistory/Table.html:27
-		if x := estimates.Get(model.EstimateID); x != nil {
+		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
 //line views/vestimate/vehistory/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vestimate/vehistory/Table.html:27
@@ -139,22 +139,22 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 }
 
 //line views/vestimate/vehistory/Table.html:41
-func WriteTable(qq422016 qtio422016.Writer, models ehistory.EstimateHistories, estimates estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models ehistory.EstimateHistories, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vehistory/Table.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vestimate/vehistory/Table.html:41
-	StreamTable(qw422016, models, estimates, params, as, ps)
+	StreamTable(qw422016, models, estimatesByEstimateID, params, as, ps)
 //line views/vestimate/vehistory/Table.html:41
 	qt422016.ReleaseWriter(qw422016)
 //line views/vestimate/vehistory/Table.html:41
 }
 
 //line views/vestimate/vehistory/Table.html:41
-func Table(models ehistory.EstimateHistories, estimates estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models ehistory.EstimateHistories, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vestimate/vehistory/Table.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vestimate/vehistory/Table.html:41
-	WriteTable(qb422016, models, estimates, params, as, ps)
+	WriteTable(qb422016, models, estimatesByEstimateID, params, as, ps)
 //line views/vestimate/vehistory/Table.html:41
 	qs422016 := string(qb422016.B)
 //line views/vestimate/vehistory/Table.html:41

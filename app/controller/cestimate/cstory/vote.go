@@ -29,7 +29,7 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			storyIDs = append(storyIDs, x.StoryID)
 		}
-		stories, err := as.Services.Story.GetMultiple(ps.Context, nil, ps.Logger, storyIDs...)
+		storiesByStoryID, err := as.Services.Story.GetMultiple(ps.Context, nil, ps.Logger, storyIDs...)
 		if err != nil {
 			return "", err
 		}
@@ -37,11 +37,11 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			userIDs = append(userIDs, x.UserID)
 		}
-		users, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vvote.List{Models: ret, Stories: stories, Users: users, Params: ps.Params}
+		page := &vvote.List{Models: ret, StoriesByStoryID: storiesByStoryID, UsersByUserID: usersByUserID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "estimate", "story", "vote")
 	})
 }

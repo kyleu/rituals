@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vemail/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vemail/Table.html:11
 	qw422016.N().S(`
 `)
@@ -123,7 +123,7 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, users user.User
 //line views/vemail/Table.html:35
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vemail/Table.html:35
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vemail/Table.html:35
 			qw422016.N().S(` (`)
 //line views/vemail/Table.html:35
@@ -179,22 +179,22 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, users user.User
 }
 
 //line views/vemail/Table.html:49
-func WriteTable(qq422016 qtio422016.Writer, models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vemail/Table.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vemail/Table.html:49
-	StreamTable(qw422016, models, users, params, as, ps)
+	StreamTable(qw422016, models, usersByUserID, params, as, ps)
 //line views/vemail/Table.html:49
 	qt422016.ReleaseWriter(qw422016)
 //line views/vemail/Table.html:49
 }
 
 //line views/vemail/Table.html:49
-func Table(models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vemail/Table.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vemail/Table.html:49
-	WriteTable(qb422016, models, users, params, as, ps)
+	WriteTable(qb422016, models, usersByUserID, params, as, ps)
 //line views/vemail/Table.html:49
 	qs422016 := string(qb422016.B)
 //line views/vemail/Table.html:49

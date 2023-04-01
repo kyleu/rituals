@@ -33,9 +33,9 @@ var (
 //line views/vsprint/vshistory/List.html:12
 type List struct {
 	layout.Basic
-	Models  shistory.SprintHistories
-	Sprints sprint.Sprints
-	Params  filter.ParamSet
+	Models            shistory.SprintHistories
+	SprintsBySprintID sprint.Sprints
+	Params            filter.ParamSet
 }
 
 //line views/vsprint/vshistory/List.html:19
@@ -63,7 +63,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vsprint/vshistory/List.html:27
-		StreamTable(qw422016, p.Models, p.Sprints, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.SprintsBySprintID, p.Params, as, ps)
 //line views/vsprint/vshistory/List.html:27
 		qw422016.N().S(`
     </div>

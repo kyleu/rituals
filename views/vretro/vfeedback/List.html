@@ -13,8 +13,8 @@
 {% code type List struct {
   layout.Basic
   Models feedback.Feedbacks
-  Retros retro.Retros
-  Users user.Users
+  RetrosByRetroID retro.Retros
+  UsersByUserID user.Users
   Params filter.ParamSet
 } %}
 
@@ -26,7 +26,7 @@
     <div class="mt"><em>No feedbacks available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Retros, p.Users, p.Params, as, ps) %}
+      {%= Table(p.Models, p.RetrosByRetroID, p.UsersByUserID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

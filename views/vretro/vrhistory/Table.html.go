@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vretro/vrhistory/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vretro/vrhistory/Table.html:11
 	qw422016.N().S(`
 `)
@@ -83,7 +83,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 //line views/vretro/vrhistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.RetroID)
 //line views/vretro/vrhistory/Table.html:27
-		if x := retros.Get(model.RetroID); x != nil {
+		if x := retrosByRetroID.Get(model.RetroID); x != nil {
 //line views/vretro/vrhistory/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vretro/vrhistory/Table.html:27
@@ -139,22 +139,22 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 }
 
 //line views/vretro/vrhistory/Table.html:41
-func WriteTable(qq422016 qtio422016.Writer, models rhistory.RetroHistories, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vretro/vrhistory/Table.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vretro/vrhistory/Table.html:41
-	StreamTable(qw422016, models, retros, params, as, ps)
+	StreamTable(qw422016, models, retrosByRetroID, params, as, ps)
 //line views/vretro/vrhistory/Table.html:41
 	qt422016.ReleaseWriter(qw422016)
 //line views/vretro/vrhistory/Table.html:41
 }
 
 //line views/vretro/vrhistory/Table.html:41
-func Table(models rhistory.RetroHistories, retros retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vretro/vrhistory/Table.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vretro/vrhistory/Table.html:41
-	WriteTable(qb422016, models, retros, params, as, ps)
+	WriteTable(qb422016, models, retrosByRetroID, params, as, ps)
 //line views/vretro/vrhistory/Table.html:41
 	qs422016 := string(qb422016.B)
 //line views/vretro/vrhistory/Table.html:41

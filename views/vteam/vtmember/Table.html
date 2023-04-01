@@ -9,7 +9,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models tmember.TeamMembers, teams team.Teams, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models tmember.TeamMembers, teamsByTeamID team.Teams, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("tmember", nil, ps.Logger).Sanitize("tmember") -%}
   <table class="mt">
     <thead>
@@ -27,11 +27,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teams.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
         </td>
         <td class="nowrap">
-          <a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/team/member/{%= components.DisplayUUID(&model.TeamID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>

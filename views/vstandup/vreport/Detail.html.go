@@ -33,9 +33,9 @@ var (
 //line views/vstandup/vreport/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model    *report.Report
-	Standups standup.Standups
-	Users    user.Users
+	Model               *report.Report
+	StandupsByStandupID standup.Standups
+	UsersByUserID       user.Users
 }
 
 //line views/vstandup/vreport/Detail.html:19
@@ -82,7 +82,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vreport/Detail.html:36
 	components.StreamDisplayUUID(qw422016, &p.Model.StandupID)
 //line views/vstandup/vreport/Detail.html:36
-	if x := p.Standups.Get(p.Model.StandupID); x != nil {
+	if x := p.StandupsByStandupID.Get(p.Model.StandupID); x != nil {
 //line views/vstandup/vreport/Detail.html:36
 		qw422016.N().S(` (`)
 //line views/vstandup/vreport/Detail.html:36
@@ -119,7 +119,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vreport/Detail.html:47
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vstandup/vreport/Detail.html:47
-	if x := p.Users.Get(p.Model.UserID); x != nil {
+	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
 //line views/vstandup/vreport/Detail.html:47
 		qw422016.N().S(` (`)
 //line views/vstandup/vreport/Detail.html:47

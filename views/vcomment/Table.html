@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models comment.Comments, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("comment", nil, ps.Logger).Sanitize("comment") -%}
   <table class="mt">
     <thead>
@@ -28,7 +28,7 @@
         <td>{%v model.Svc %}</td>
         <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.Content %}</td>

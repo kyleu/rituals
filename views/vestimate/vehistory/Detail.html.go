@@ -32,8 +32,8 @@ var (
 //line views/vestimate/vehistory/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model     *ehistory.EstimateHistory
-	Estimates estimate.Estimates
+	Model                 *ehistory.EstimateHistory
+	EstimatesByEstimateID estimate.Estimates
 }
 
 //line views/vestimate/vehistory/Detail.html:17
@@ -80,7 +80,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vehistory/Detail.html:34
 	components.StreamDisplayUUID(qw422016, &p.Model.EstimateID)
 //line views/vestimate/vehistory/Detail.html:34
-	if x := p.Estimates.Get(p.Model.EstimateID); x != nil {
+	if x := p.EstimatesByEstimateID.Get(p.Model.EstimateID); x != nil {
 //line views/vestimate/vehistory/Detail.html:34
 		qw422016.N().S(` (`)
 //line views/vestimate/vehistory/Detail.html:34

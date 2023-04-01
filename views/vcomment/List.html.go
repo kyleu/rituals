@@ -33,9 +33,9 @@ var (
 //line views/vcomment/List.html:12
 type List struct {
 	layout.Basic
-	Models comment.Comments
-	Users  user.Users
-	Params filter.ParamSet
+	Models        comment.Comments
+	UsersByUserID user.Users
+	Params        filter.ParamSet
 }
 
 //line views/vcomment/List.html:19
@@ -63,7 +63,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vcomment/List.html:27
-		StreamTable(qw422016, p.Models, p.Users, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.UsersByUserID, p.Params, as, ps)
 //line views/vcomment/List.html:27
 		qw422016.N().S(`
     </div>

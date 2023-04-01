@@ -9,7 +9,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models umember.StandupMembers, standups standup.Standups, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models umember.StandupMembers, standupsByStandupID standup.Standups, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("umember", nil, ps.Logger).Sanitize("umember") -%}
   <table class="mt">
     <thead>
@@ -27,11 +27,11 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/standup/member/{%= components.DisplayUUID(&model.StandupID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standups.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/standup/member/{%= components.DisplayUUID(&model.StandupID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRef("standup", 18, 18, "", ps) %}</a>
         </td>
         <td class="nowrap">
-          <a href="/admin/db/standup/member/{%= components.DisplayUUID(&model.StandupID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/standup/member/{%= components.DisplayUUID(&model.StandupID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>

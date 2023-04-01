@@ -29,11 +29,11 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			sprintIDs = append(sprintIDs, x.SprintID)
 		}
-		sprints, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDs...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vspermission.List{Models: ret, Sprints: sprints, Params: ps.Params}
+		page := &vspermission.List{Models: ret, SprintsBySprintID: sprintsBySprintID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "sprint", "spermission")
 	})
 }

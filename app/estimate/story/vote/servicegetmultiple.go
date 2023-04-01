@@ -16,7 +16,7 @@ func (s *Service) GetByStoryIDs(ctx context.Context, tx *sqlx.Tx, params *filter
 		return Votes{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("\"story_id\"", len(storyIDs), 0)
+	wc := database.SQLInClause("\"story_id\"", len(storyIDs), 0, "")
 	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, util.InterfaceArrayFrom(storyIDs...)...)

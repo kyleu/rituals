@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vteam/vthistory/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vteam/vthistory/Table.html:11
 	qw422016.N().S(`
 `)
@@ -83,7 +83,7 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
 //line views/vteam/vthistory/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.TeamID)
 //line views/vteam/vthistory/Table.html:27
-		if x := teams.Get(model.TeamID); x != nil {
+		if x := teamsByTeamID.Get(model.TeamID); x != nil {
 //line views/vteam/vthistory/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vteam/vthistory/Table.html:27
@@ -139,22 +139,22 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
 }
 
 //line views/vteam/vthistory/Table.html:41
-func WriteTable(qq422016 qtio422016.Writer, models thistory.TeamHistories, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vteam/vthistory/Table.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vteam/vthistory/Table.html:41
-	StreamTable(qw422016, models, teams, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, params, as, ps)
 //line views/vteam/vthistory/Table.html:41
 	qt422016.ReleaseWriter(qw422016)
 //line views/vteam/vthistory/Table.html:41
 }
 
 //line views/vteam/vthistory/Table.html:41
-func Table(models thistory.TeamHistories, teams team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vteam/vthistory/Table.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vteam/vthistory/Table.html:41
-	WriteTable(qb422016, models, teams, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, params, as, ps)
 //line views/vteam/vthistory/Table.html:41
 	qs422016 := string(qb422016.B)
 //line views/vteam/vthistory/Table.html:41

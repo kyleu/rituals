@@ -34,11 +34,11 @@ var (
 //line views/vestimate/vstory/List.html:13
 type List struct {
 	layout.Basic
-	Models      story.Stories
-	Estimates   estimate.Estimates
-	Users       user.Users
-	Params      filter.ParamSet
-	SearchQuery string
+	Models                story.Stories
+	EstimatesByEstimateID estimate.Estimates
+	UsersByUserID         user.Users
+	Params                filter.ParamSet
+	SearchQuery           string
 }
 
 //line views/vestimate/vstory/List.html:22
@@ -82,7 +82,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="overflow clear">
       `)
 //line views/vestimate/vstory/List.html:34
-		StreamTable(qw422016, p.Models, p.Estimates, p.Users, p.Params, as, ps)
+		StreamTable(qw422016, p.Models, p.EstimatesByEstimateID, p.UsersByUserID, p.Params, as, ps)
 //line views/vestimate/vstory/List.html:34
 		qw422016.N().S(`
     </div>

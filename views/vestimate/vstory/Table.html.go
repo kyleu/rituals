@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vestimate/vstory/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimates estimate.Estimates, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vstory/Table.html:12
 	qw422016.N().S(`
 `)
@@ -109,7 +109,7 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimates esti
 //line views/vestimate/vstory/Table.html:33
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vstory/Table.html:33
-		if x := estimates.Get(model.EstimateID); x != nil {
+		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
 //line views/vestimate/vstory/Table.html:33
 			qw422016.N().S(` (`)
 //line views/vestimate/vstory/Table.html:33
@@ -140,7 +140,7 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimates esti
 //line views/vestimate/vstory/Table.html:38
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vestimate/vstory/Table.html:38
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vestimate/vstory/Table.html:38
 			qw422016.N().S(` (`)
 //line views/vestimate/vstory/Table.html:38
@@ -211,22 +211,22 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimates esti
 }
 
 //line views/vestimate/vstory/Table.html:55
-func WriteTable(qq422016 qtio422016.Writer, models story.Stories, estimates estimate.Estimates, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vstory/Table.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vestimate/vstory/Table.html:55
-	StreamTable(qw422016, models, estimates, users, params, as, ps)
+	StreamTable(qw422016, models, estimatesByEstimateID, usersByUserID, params, as, ps)
 //line views/vestimate/vstory/Table.html:55
 	qt422016.ReleaseWriter(qw422016)
 //line views/vestimate/vstory/Table.html:55
 }
 
 //line views/vestimate/vstory/Table.html:55
-func Table(models story.Stories, estimates estimate.Estimates, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vestimate/vstory/Table.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vestimate/vstory/Table.html:55
-	WriteTable(qb422016, models, estimates, users, params, as, ps)
+	WriteTable(qb422016, models, estimatesByEstimateID, usersByUserID, params, as, ps)
 //line views/vestimate/vstory/Table.html:55
 	qs422016 := string(qb422016.B)
 //line views/vestimate/vstory/Table.html:55

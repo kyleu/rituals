@@ -32,8 +32,8 @@ var (
 //line views/vteam/vthistory/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model *thistory.TeamHistory
-	Teams team.Teams
+	Model         *thistory.TeamHistory
+	TeamsByTeamID team.Teams
 }
 
 //line views/vteam/vthistory/Detail.html:17
@@ -80,7 +80,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/vthistory/Detail.html:34
 	components.StreamDisplayUUID(qw422016, &p.Model.TeamID)
 //line views/vteam/vthistory/Detail.html:34
-	if x := p.Teams.Get(p.Model.TeamID); x != nil {
+	if x := p.TeamsByTeamID.Get(p.Model.TeamID); x != nil {
 //line views/vteam/vthistory/Detail.html:34
 		qw422016.N().S(` (`)
 //line views/vteam/vthistory/Detail.html:34

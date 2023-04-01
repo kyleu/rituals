@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vcomment/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vcomment/Table.html:11
 	qw422016.N().S(`
 `)
@@ -103,7 +103,7 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, users user.
 //line views/vcomment/Table.html:31
 		components.StreamDisplayUUID(qw422016, &model.UserID)
 //line views/vcomment/Table.html:31
-		if x := users.Get(model.UserID); x != nil {
+		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vcomment/Table.html:31
 			qw422016.N().S(` (`)
 //line views/vcomment/Table.html:31
@@ -159,22 +159,22 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, users user.
 }
 
 //line views/vcomment/Table.html:45
-func WriteTable(qq422016 qtio422016.Writer, models comment.Comments, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vcomment/Table.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vcomment/Table.html:45
-	StreamTable(qw422016, models, users, params, as, ps)
+	StreamTable(qw422016, models, usersByUserID, params, as, ps)
 //line views/vcomment/Table.html:45
 	qt422016.ReleaseWriter(qw422016)
 //line views/vcomment/Table.html:45
 }
 
 //line views/vcomment/Table.html:45
-func Table(models comment.Comments, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vcomment/Table.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vcomment/Table.html:45
-	WriteTable(qb422016, models, users, params, as, ps)
+	WriteTable(qb422016, models, usersByUserID, params, as, ps)
 //line views/vcomment/Table.html:45
 	qs422016 := string(qb422016.B)
 //line views/vcomment/Table.html:45

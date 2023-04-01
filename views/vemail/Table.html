@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models email.Emails, users user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("email", nil, ps.Logger).Sanitize("email") -%}
   <table class="mt">
     <thead>
@@ -32,7 +32,7 @@
         <td>{%= components.JSON(model.Data) %}</td>
         <td>{%s model.Plain %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.UserID) %}{% if x := users.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.Status %}</td>

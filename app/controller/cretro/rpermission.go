@@ -29,11 +29,11 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			retroIDs = append(retroIDs, x.RetroID)
 		}
-		retros, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDs...)
+		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDs...)
 		if err != nil {
 			return "", err
 		}
-		page := &vrpermission.List{Models: ret, Retros: retros, Params: ps.Params}
+		page := &vrpermission.List{Models: ret, RetrosByRetroID: retrosByRetroID, Params: ps.Params}
 		return controller.Render(rc, as, page, ps, "retro", "rpermission")
 	})
 }

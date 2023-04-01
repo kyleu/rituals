@@ -17,3 +17,12 @@ func (s *Story) FinalVoteSafe() string {
 	}
 	return "-"
 }
+
+func (s Stories) Replace(st *Story) {
+	for idx, x := range s {
+		if x.ID == st.ID {
+			s[idx] = st
+			return
+		}
+	}
+}

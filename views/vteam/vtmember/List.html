@@ -13,8 +13,8 @@
 {% code type List struct {
   layout.Basic
   Models tmember.TeamMembers
-  Teams team.Teams
-  Users user.Users
+  TeamsByTeamID team.Teams
+  UsersByUserID user.Users
   Params filter.ParamSet
 } %}
 
@@ -26,7 +26,7 @@
     <div class="mt"><em>No members available</em></div>
     {%- else -%}
     <div class="overflow clear">
-      {%= Table(p.Models, p.Teams, p.Users, p.Params, as, ps) %}
+      {%= Table(p.Models, p.TeamsByTeamID, p.UsersByUserID, p.Params, as, ps) %}
     </div>
     {%- endif -%}
   </div>

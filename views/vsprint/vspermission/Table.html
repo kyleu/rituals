@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func Table(models spermission.SprintPermissions, sprints sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("spermission", nil, ps.Logger).Sanitize("spermission") -%}
   <table class="mt">
     <thead>
@@ -24,7 +24,7 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprints.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
         </td>
         <td><a href="/admin/db/sprint/permission/{%= components.DisplayUUID(&model.SprintID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>

@@ -43,8 +43,8 @@ var (
 type Detail struct {
 	layout.Basic
 	Model                         *standup.Standup
-	Teams                         team.Teams
-	Sprints                       sprint.Sprints
+	TeamsByTeamID                 team.Teams
+	SprintsBySprintID             sprint.Sprints
 	Params                        filter.ParamSet
 	ReportsByStandupID            report.Reports
 	StandupHistoriesByStandupID   uhistory.StandupHistories
@@ -130,7 +130,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:66
 	if p.Model.TeamID != nil {
 //line views/vstandup/Detail.html:66
-		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
+		if x := p.TeamsByTeamID.Get(*p.Model.TeamID); x != nil {
 //line views/vstandup/Detail.html:66
 			qw422016.N().S(` (`)
 //line views/vstandup/Detail.html:66
@@ -171,7 +171,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:73
 	if p.Model.SprintID != nil {
 //line views/vstandup/Detail.html:73
-		if x := p.Sprints.Get(*p.Model.SprintID); x != nil {
+		if x := p.SprintsBySprintID.Get(*p.Model.SprintID); x != nil {
 //line views/vstandup/Detail.html:73
 			qw422016.N().S(` (`)
 //line views/vstandup/Detail.html:73

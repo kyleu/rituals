@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vestimate/vepermission/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissions, estimates estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissions, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vepermission/Table.html:11
 	qw422016.N().S(`
 `)
@@ -91,7 +91,7 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 //line views/vestimate/vepermission/Table.html:27
 		components.StreamDisplayUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vepermission/Table.html:27
-		if x := estimates.Get(model.EstimateID); x != nil {
+		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
 //line views/vestimate/vepermission/Table.html:27
 			qw422016.N().S(` (`)
 //line views/vestimate/vepermission/Table.html:27
@@ -181,22 +181,22 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 }
 
 //line views/vestimate/vepermission/Table.html:43
-func WriteTable(qq422016 qtio422016.Writer, models epermission.EstimatePermissions, estimates estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models epermission.EstimatePermissions, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
 //line views/vestimate/vepermission/Table.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vestimate/vepermission/Table.html:43
-	StreamTable(qw422016, models, estimates, params, as, ps)
+	StreamTable(qw422016, models, estimatesByEstimateID, params, as, ps)
 //line views/vestimate/vepermission/Table.html:43
 	qt422016.ReleaseWriter(qw422016)
 //line views/vestimate/vepermission/Table.html:43
 }
 
 //line views/vestimate/vepermission/Table.html:43
-func Table(models epermission.EstimatePermissions, estimates estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models epermission.EstimatePermissions, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
 //line views/vestimate/vepermission/Table.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vestimate/vepermission/Table.html:43
-	WriteTable(qb422016, models, estimates, params, as, ps)
+	WriteTable(qb422016, models, estimatesByEstimateID, params, as, ps)
 //line views/vestimate/vepermission/Table.html:43
 	qs422016 := string(qb422016.B)
 //line views/vestimate/vepermission/Table.html:43

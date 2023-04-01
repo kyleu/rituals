@@ -46,7 +46,7 @@ var (
 type Detail struct {
 	layout.Basic
 	Model                       *sprint.Sprint
-	Teams                       team.Teams
+	TeamsByTeamID               team.Teams
 	Params                      filter.ParamSet
 	EstimatesBySprintID         estimate.Estimates
 	RetrosBySprintID            retro.Retros
@@ -134,7 +134,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:70
 	if p.Model.TeamID != nil {
 //line views/vsprint/Detail.html:70
-		if x := p.Teams.Get(*p.Model.TeamID); x != nil {
+		if x := p.TeamsByTeamID.Get(*p.Model.TeamID); x != nil {
 //line views/vsprint/Detail.html:70
 			qw422016.N().S(` (`)
 //line views/vsprint/Detail.html:70
