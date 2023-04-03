@@ -17,7 +17,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (RetroHistories, error) {
 	params = filters(params)
 	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
@@ -30,7 +30,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
 		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
 	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, whereClause)
+	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Placeholder(), whereClause)
 	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
 	if err != nil {
 		return 0, errors.Wrap(err, "unable to get count of histories")
@@ -41,7 +41,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*RetroHistory, error) {
 	wc := defaultWC(0)
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get retroHistory by slug [%v]", slug)
@@ -53,9 +53,9 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	if len(slugs) == 0 {
 		return RetroHistories{}, nil
 	}
-	wc := database.SQLInClause("slug", len(slugs), 0, "")
+	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	vals := make([]any, 0, len(slugs))
 	for _, x := range slugs {
 		vals = append(vals, x)
@@ -70,7 +70,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, params *filter.Params, logger util.Logger) (RetroHistories, error) {
 	params = filters(params)
 	wc := "\"retro_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, retroID)
 	if err != nil {

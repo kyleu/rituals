@@ -19,7 +19,7 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 	for _, model := range models {
 		model.Created = time.Now()
 	}
-	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), "")
+	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
 	vals := make([]any, 0, len(models)*len(columnsQuoted))
 	for _, arg := range models {
 		vals = append(vals, arg.ToData()...)
@@ -33,7 +33,7 @@ func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *EstimateHistor
 		return errors.Wrapf(err, "can't get original history [%s]", model.String())
 	}
 	model.Created = curr.Created
-	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"slug\" = $5", "")
+	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"slug\" = $5", s.db.Placeholder())
 	data := model.ToData()
 	data = append(data, model.Slug)
 	_, err = s.db.Update(ctx, q, tx, 1, logger, data...)
@@ -50,7 +50,7 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 	for _, model := range models {
 		model.Created = time.Now()
 	}
-	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"slug"}, columnsQuoted, "")
+	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"slug"}, columnsQuoted, s.db.Placeholder())
 	var data []any
 	for _, model := range models {
 		data = append(data, model.ToData()...)
@@ -59,13 +59,13 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 }
 
 func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) error {
-	q := database.SQLDelete(tableQuoted, defaultWC(0))
+	q := database.SQLDelete(tableQuoted, defaultWC(0), s.db.Placeholder())
 	_, err := s.db.Delete(ctx, q, tx, 1, logger, slug)
 	return err
 }
 
 func (s *Service) DeleteWhere(ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any) error {
-	q := database.SQLDelete(tableQuoted, wc)
+	q := database.SQLDelete(tableQuoted, wc, s.db.Placeholder())
 	_, err := s.db.Delete(ctx, q, tx, expected, logger, values...)
 	return err
 }

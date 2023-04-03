@@ -18,7 +18,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (SprintPermissions, error) {
 	params = filters(params)
 	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
@@ -31,7 +31,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
 		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
 	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, whereClause)
+	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Placeholder(), whereClause)
 	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
 	if err != nil {
 		return 0, errors.Wrap(err, "unable to get count of permissions")
@@ -42,7 +42,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, sprintID uuid.UUID, key string, value string, logger util.Logger) (*SprintPermission, error) {
 	wc := defaultWC(0)
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, sprintID, key, value)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get sprintPermission by sprintID [%v], key [%v], value [%v]", sprintID, key, value)
@@ -63,7 +63,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	}
 	wc += ")"
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	vals := make([]any, 0, len(pks)*3)
 	for _, x := range pks {
 		vals = append(vals, x.SprintID, x.Key, x.Value)
@@ -78,7 +78,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params *filter.Params, logger util.Logger) (SprintPermissions, error) {
 	params = filters(params)
 	wc := "\"key\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
@@ -90,7 +90,7 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.UUID, params *filter.Params, logger util.Logger) (SprintPermissions, error) {
 	params = filters(params)
 	wc := "\"sprint_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
@@ -102,7 +102,7 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (SprintPermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {

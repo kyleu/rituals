@@ -15,7 +15,7 @@ import (
 func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, u uuid.UUID, params *filter.Params, logger util.Logger) (Standups, error) {
 	params = filters(params)
 	wc := "id in (select standup_id from standup_member where user_id = $1)"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, u)
 	if err != nil {

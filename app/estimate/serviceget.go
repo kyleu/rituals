@@ -18,7 +18,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
@@ -31,7 +31,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
 		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
 	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, whereClause)
+	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Placeholder(), whereClause)
 	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
 	if err != nil {
 		return 0, errors.Wrap(err, "unable to get count of estimates")
@@ -42,7 +42,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Estimate, error) {
 	wc := defaultWC(0)
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimate by id [%v]", id)
@@ -54,9 +54,9 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	if len(ids) == 0 {
 		return Estimates{}, nil
 	}
-	wc := database.SQLInClause("id", len(ids), 0, "")
+	wc := database.SQLInClause("id", len(ids), 0, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	vals := make([]any, 0, len(ids))
 	for _, x := range ids {
 		vals = append(vals, x)
@@ -71,7 +71,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*Estimate, error) {
 	wc := "\"slug\" = $1"
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimate by slug [%v]", slug)
@@ -82,7 +82,7 @@ func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logge
 func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := "\"sprint_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
@@ -94,7 +94,7 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid
 func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.SessionStatus, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := "\"status\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, status)
 	if err != nil {
@@ -106,7 +106,7 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := "\"team_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
@@ -120,7 +120,7 @@ const searchClause = "(lower(id::text) like $1 or lower(slug) like $1 or lower(t
 func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := searchClause
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
 	if err != nil {
