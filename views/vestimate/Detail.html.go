@@ -42,14 +42,14 @@ var (
 //line views/vestimate/Detail.html:21
 type Detail struct {
 	layout.Basic
-	Model                           *estimate.Estimate
-	TeamsByTeamID                   team.Teams
-	SprintsBySprintID               sprint.Sprints
-	Params                          filter.ParamSet
-	EstimateHistoriesByEstimateID   ehistory.EstimateHistories
-	EstimateMembersByEstimateID     emember.EstimateMembers
-	EstimatePermissionsByEstimateID epermission.EstimatePermissions
-	StoriesByEstimateID             story.Stories
+	Model                              *estimate.Estimate
+	TeamsByTeamID                      team.Teams
+	SprintsBySprintID                  sprint.Sprints
+	Params                             filter.ParamSet
+	RelEstimateHistoriesByEstimateID   ehistory.EstimateHistories
+	RelEstimateMembersByEstimateID     emember.EstimateMembers
+	RelEstimatePermissionsByEstimateID epermission.EstimatePermissions
+	RelStoriesByEstimateID             story.Stories
 }
 
 //line views/vestimate/Detail.html:33
@@ -232,7 +232,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vestimate/Detail.html:94
-	if len(p.EstimateHistoriesByEstimateID) > 0 {
+	if len(p.RelEstimateHistoriesByEstimateID) > 0 {
 //line views/vestimate/Detail.html:94
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -243,7 +243,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vestimate/Detail.html:98
-		vehistory.StreamTable(qw422016, p.EstimateHistoriesByEstimateID, nil, p.Params, as, ps)
+		vehistory.StreamTable(qw422016, p.RelEstimateHistoriesByEstimateID, nil, p.Params, as, ps)
 //line views/vestimate/Detail.html:98
 		qw422016.N().S(`
     </div>
@@ -252,7 +252,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:101
 	}
 //line views/vestimate/Detail.html:102
-	if len(p.EstimateMembersByEstimateID) > 0 {
+	if len(p.RelEstimateMembersByEstimateID) > 0 {
 //line views/vestimate/Detail.html:102
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -263,7 +263,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vestimate/Detail.html:106
-		vemember.StreamTable(qw422016, p.EstimateMembersByEstimateID, nil, nil, p.Params, as, ps)
+		vemember.StreamTable(qw422016, p.RelEstimateMembersByEstimateID, nil, nil, p.Params, as, ps)
 //line views/vestimate/Detail.html:106
 		qw422016.N().S(`
     </div>
@@ -272,7 +272,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:109
 	}
 //line views/vestimate/Detail.html:110
-	if len(p.EstimatePermissionsByEstimateID) > 0 {
+	if len(p.RelEstimatePermissionsByEstimateID) > 0 {
 //line views/vestimate/Detail.html:110
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -283,7 +283,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vestimate/Detail.html:114
-		vepermission.StreamTable(qw422016, p.EstimatePermissionsByEstimateID, nil, p.Params, as, ps)
+		vepermission.StreamTable(qw422016, p.RelEstimatePermissionsByEstimateID, nil, p.Params, as, ps)
 //line views/vestimate/Detail.html:114
 		qw422016.N().S(`
     </div>
@@ -292,7 +292,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:117
 	}
 //line views/vestimate/Detail.html:118
-	if len(p.StoriesByEstimateID) > 0 {
+	if len(p.RelStoriesByEstimateID) > 0 {
 //line views/vestimate/Detail.html:118
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -303,7 +303,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vestimate/Detail.html:122
-		vstory.StreamTable(qw422016, p.StoriesByEstimateID, nil, nil, p.Params, as, ps)
+		vstory.StreamTable(qw422016, p.RelStoriesByEstimateID, nil, nil, p.Params, as, ps)
 //line views/vestimate/Detail.html:122
 		qw422016.N().S(`
     </div>

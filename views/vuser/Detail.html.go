@@ -56,20 +56,20 @@ var (
 //line views/vuser/Detail.html:35
 type Detail struct {
 	layout.Basic
-	Model                   *user.User
-	Params                  filter.ParamSet
-	ActionsByUserID         action.Actions
-	CommentsByUserID        comment.Comments
-	EmailsByUserID          email.Emails
-	EstimateMembersByUserID emember.EstimateMembers
-	FeedbacksByUserID       feedback.Feedbacks
-	ReportsByUserID         report.Reports
-	RetroMembersByUserID    rmember.RetroMembers
-	SprintMembersByUserID   smember.SprintMembers
-	StandupMembersByUserID  umember.StandupMembers
-	StoriesByUserID         story.Stories
-	TeamMembersByUserID     tmember.TeamMembers
-	VotesByUserID           vote.Votes
+	Model                      *user.User
+	Params                     filter.ParamSet
+	RelActionsByUserID         action.Actions
+	RelCommentsByUserID        comment.Comments
+	RelEmailsByUserID          email.Emails
+	RelEstimateMembersByUserID emember.EstimateMembers
+	RelFeedbacksByUserID       feedback.Feedbacks
+	RelReportsByUserID         report.Reports
+	RelRetroMembersByUserID    rmember.RetroMembers
+	RelSprintMembersByUserID   smember.SprintMembers
+	RelStandupMembersByUserID  umember.StandupMembers
+	RelStoriesByUserID         story.Stories
+	RelTeamMembersByUserID     tmember.TeamMembers
+	RelVotesByUserID           vote.Votes
 }
 
 //line views/vuser/Detail.html:53
@@ -150,7 +150,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vuser/Detail.html:88
-	if len(p.ActionsByUserID) > 0 {
+	if len(p.RelActionsByUserID) > 0 {
 //line views/vuser/Detail.html:88
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -161,7 +161,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:92
-		vaction.StreamTable(qw422016, p.ActionsByUserID, nil, p.Params, as, ps)
+		vaction.StreamTable(qw422016, p.RelActionsByUserID, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:92
 		qw422016.N().S(`
     </div>
@@ -170,7 +170,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:95
 	}
 //line views/vuser/Detail.html:96
-	if len(p.CommentsByUserID) > 0 {
+	if len(p.RelCommentsByUserID) > 0 {
 //line views/vuser/Detail.html:96
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -181,7 +181,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:100
-		vcomment.StreamTable(qw422016, p.CommentsByUserID, nil, p.Params, as, ps)
+		vcomment.StreamTable(qw422016, p.RelCommentsByUserID, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:100
 		qw422016.N().S(`
     </div>
@@ -190,7 +190,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:103
 	}
 //line views/vuser/Detail.html:104
-	if len(p.EmailsByUserID) > 0 {
+	if len(p.RelEmailsByUserID) > 0 {
 //line views/vuser/Detail.html:104
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -201,7 +201,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:108
-		vemail.StreamTable(qw422016, p.EmailsByUserID, nil, p.Params, as, ps)
+		vemail.StreamTable(qw422016, p.RelEmailsByUserID, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:108
 		qw422016.N().S(`
     </div>
@@ -210,7 +210,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:111
 	}
 //line views/vuser/Detail.html:112
-	if len(p.EstimateMembersByUserID) > 0 {
+	if len(p.RelEstimateMembersByUserID) > 0 {
 //line views/vuser/Detail.html:112
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -221,7 +221,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:116
-		vemember.StreamTable(qw422016, p.EstimateMembersByUserID, nil, nil, p.Params, as, ps)
+		vemember.StreamTable(qw422016, p.RelEstimateMembersByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:116
 		qw422016.N().S(`
     </div>
@@ -230,7 +230,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:119
 	}
 //line views/vuser/Detail.html:120
-	if len(p.FeedbacksByUserID) > 0 {
+	if len(p.RelFeedbacksByUserID) > 0 {
 //line views/vuser/Detail.html:120
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -241,7 +241,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:124
-		vfeedback.StreamTable(qw422016, p.FeedbacksByUserID, nil, nil, p.Params, as, ps)
+		vfeedback.StreamTable(qw422016, p.RelFeedbacksByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:124
 		qw422016.N().S(`
     </div>
@@ -250,7 +250,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:127
 	}
 //line views/vuser/Detail.html:128
-	if len(p.ReportsByUserID) > 0 {
+	if len(p.RelReportsByUserID) > 0 {
 //line views/vuser/Detail.html:128
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -261,7 +261,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:132
-		vreport.StreamTable(qw422016, p.ReportsByUserID, nil, nil, p.Params, as, ps)
+		vreport.StreamTable(qw422016, p.RelReportsByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:132
 		qw422016.N().S(`
     </div>
@@ -270,7 +270,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:135
 	}
 //line views/vuser/Detail.html:136
-	if len(p.RetroMembersByUserID) > 0 {
+	if len(p.RelRetroMembersByUserID) > 0 {
 //line views/vuser/Detail.html:136
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -281,7 +281,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:140
-		vrmember.StreamTable(qw422016, p.RetroMembersByUserID, nil, nil, p.Params, as, ps)
+		vrmember.StreamTable(qw422016, p.RelRetroMembersByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:140
 		qw422016.N().S(`
     </div>
@@ -290,7 +290,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:143
 	}
 //line views/vuser/Detail.html:144
-	if len(p.SprintMembersByUserID) > 0 {
+	if len(p.RelSprintMembersByUserID) > 0 {
 //line views/vuser/Detail.html:144
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -301,7 +301,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:148
-		vsmember.StreamTable(qw422016, p.SprintMembersByUserID, nil, nil, p.Params, as, ps)
+		vsmember.StreamTable(qw422016, p.RelSprintMembersByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:148
 		qw422016.N().S(`
     </div>
@@ -310,7 +310,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:151
 	}
 //line views/vuser/Detail.html:152
-	if len(p.StandupMembersByUserID) > 0 {
+	if len(p.RelStandupMembersByUserID) > 0 {
 //line views/vuser/Detail.html:152
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -321,7 +321,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:156
-		vumember.StreamTable(qw422016, p.StandupMembersByUserID, nil, nil, p.Params, as, ps)
+		vumember.StreamTable(qw422016, p.RelStandupMembersByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:156
 		qw422016.N().S(`
     </div>
@@ -330,7 +330,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:159
 	}
 //line views/vuser/Detail.html:160
-	if len(p.StoriesByUserID) > 0 {
+	if len(p.RelStoriesByUserID) > 0 {
 //line views/vuser/Detail.html:160
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -341,7 +341,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:164
-		vstory.StreamTable(qw422016, p.StoriesByUserID, nil, nil, p.Params, as, ps)
+		vstory.StreamTable(qw422016, p.RelStoriesByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:164
 		qw422016.N().S(`
     </div>
@@ -350,7 +350,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:167
 	}
 //line views/vuser/Detail.html:168
-	if len(p.TeamMembersByUserID) > 0 {
+	if len(p.RelTeamMembersByUserID) > 0 {
 //line views/vuser/Detail.html:168
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -361,7 +361,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:172
-		vtmember.StreamTable(qw422016, p.TeamMembersByUserID, nil, nil, p.Params, as, ps)
+		vtmember.StreamTable(qw422016, p.RelTeamMembersByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:172
 		qw422016.N().S(`
     </div>
@@ -370,7 +370,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:175
 	}
 //line views/vuser/Detail.html:176
-	if len(p.VotesByUserID) > 0 {
+	if len(p.RelVotesByUserID) > 0 {
 //line views/vuser/Detail.html:176
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -381,7 +381,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vuser/Detail.html:180
-		vvote.StreamTable(qw422016, p.VotesByUserID, nil, nil, p.Params, as, ps)
+		vvote.StreamTable(qw422016, p.RelVotesByUserID, nil, nil, p.Params, as, ps)
 //line views/vuser/Detail.html:180
 		qw422016.N().S(`
     </div>

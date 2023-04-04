@@ -36,18 +36,18 @@
   layout.Basic
   Model *user.User
   Params filter.ParamSet
-  ActionsByUserID action.Actions
-  CommentsByUserID comment.Comments
-  EmailsByUserID email.Emails
-  EstimateMembersByUserID emember.EstimateMembers
-  FeedbacksByUserID feedback.Feedbacks
-  ReportsByUserID report.Reports
-  RetroMembersByUserID rmember.RetroMembers
-  SprintMembersByUserID smember.SprintMembers
-  StandupMembersByUserID umember.StandupMembers
-  StoriesByUserID story.Stories
-  TeamMembersByUserID tmember.TeamMembers
-  VotesByUserID vote.Votes
+  RelActionsByUserID action.Actions
+  RelCommentsByUserID comment.Comments
+  RelEmailsByUserID email.Emails
+  RelEstimateMembersByUserID emember.EstimateMembers
+  RelFeedbacksByUserID feedback.Feedbacks
+  RelReportsByUserID report.Reports
+  RelRetroMembersByUserID rmember.RetroMembers
+  RelSprintMembersByUserID smember.SprintMembers
+  RelStandupMembersByUserID umember.StandupMembers
+  RelStoriesByUserID story.Stories
+  RelTeamMembersByUserID tmember.TeamMembers
+  RelVotesByUserID vote.Votes
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -85,99 +85,99 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.ActionsByUserID) > 0 -%}
+  {%- if len(p.RelActionsByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`action`, ps) %} Related actions by [user id]</h3>
     <div class="overflow clear">
-      {%= vaction.Table(p.ActionsByUserID, nil, p.Params, as, ps) %}
+      {%= vaction.Table(p.RelActionsByUserID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.CommentsByUserID) > 0 -%}
+  {%- if len(p.RelCommentsByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`comments`, ps) %} Related comments by [user id]</h3>
     <div class="overflow clear">
-      {%= vcomment.Table(p.CommentsByUserID, nil, p.Params, as, ps) %}
+      {%= vcomment.Table(p.RelCommentsByUserID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.EmailsByUserID) > 0 -%}
+  {%- if len(p.RelEmailsByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`email`, ps) %} Related emails by [user id]</h3>
     <div class="overflow clear">
-      {%= vemail.Table(p.EmailsByUserID, nil, p.Params, as, ps) %}
+      {%= vemail.Table(p.RelEmailsByUserID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.EstimateMembersByUserID) > 0 -%}
+  {%- if len(p.RelEstimateMembersByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
     <div class="overflow clear">
-      {%= vemember.Table(p.EstimateMembersByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vemember.Table(p.RelEstimateMembersByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.FeedbacksByUserID) > 0 -%}
+  {%- if len(p.RelFeedbacksByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`comment`, ps) %} Related feedbacks by [user id]</h3>
     <div class="overflow clear">
-      {%= vfeedback.Table(p.FeedbacksByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vfeedback.Table(p.RelFeedbacksByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.ReportsByUserID) > 0 -%}
+  {%- if len(p.RelReportsByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`file-alt`, ps) %} Related reports by [user id]</h3>
     <div class="overflow clear">
-      {%= vreport.Table(p.ReportsByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vreport.Table(p.RelReportsByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.RetroMembersByUserID) > 0 -%}
+  {%- if len(p.RelRetroMembersByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
     <div class="overflow clear">
-      {%= vrmember.Table(p.RetroMembersByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vrmember.Table(p.RelRetroMembersByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.SprintMembersByUserID) > 0 -%}
+  {%- if len(p.RelSprintMembersByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
     <div class="overflow clear">
-      {%= vsmember.Table(p.SprintMembersByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vsmember.Table(p.RelSprintMembersByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StandupMembersByUserID) > 0 -%}
+  {%- if len(p.RelStandupMembersByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
     <div class="overflow clear">
-      {%= vumember.Table(p.StandupMembersByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vumember.Table(p.RelStandupMembersByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StoriesByUserID) > 0 -%}
+  {%- if len(p.RelStoriesByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`story`, ps) %} Related stories by [user id]</h3>
     <div class="overflow clear">
-      {%= vstory.Table(p.StoriesByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vstory.Table(p.RelStoriesByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.TeamMembersByUserID) > 0 -%}
+  {%- if len(p.RelTeamMembersByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
     <div class="overflow clear">
-      {%= vtmember.Table(p.TeamMembersByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vtmember.Table(p.RelTeamMembersByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.VotesByUserID) > 0 -%}
+  {%- if len(p.RelVotesByUserID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`vote-yea`, ps) %} Related votes by [user id]</h3>
     <div class="overflow clear">
-      {%= vvote.Table(p.VotesByUserID, nil, nil, p.Params, as, ps) %}
+      {%= vvote.Table(p.RelVotesByUserID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

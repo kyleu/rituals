@@ -106,20 +106,20 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
 		return Render(rc, as, &vuser.Detail{
-			Model:                   ret,
-			Params:                  ps.Params,
-			ActionsByUserID:         actionsByUserID,
-			CommentsByUserID:        commentsByUserID,
-			EmailsByUserID:          emailsByUserID,
-			EstimateMembersByUserID: estimateMembersByUserID,
-			FeedbacksByUserID:       feedbacksByUserID,
-			ReportsByUserID:         reportsByUserID,
-			RetroMembersByUserID:    retroMembersByUserID,
-			SprintMembersByUserID:   sprintMembersByUserID,
-			StandupMembersByUserID:  standupMembersByUserID,
-			StoriesByUserID:         storiesByUserID,
-			TeamMembersByUserID:     teamMembersByUserID,
-			VotesByUserID:           votesByUserID,
+			Model:                      ret,
+			Params:                     ps.Params,
+			RelActionsByUserID:         actionsByUserID,
+			RelCommentsByUserID:        commentsByUserID,
+			RelEmailsByUserID:          emailsByUserID,
+			RelEstimateMembersByUserID: estimateMembersByUserID,
+			RelFeedbacksByUserID:       feedbacksByUserID,
+			RelReportsByUserID:         reportsByUserID,
+			RelRetroMembersByUserID:    retroMembersByUserID,
+			RelSprintMembersByUserID:   sprintMembersByUserID,
+			RelStandupMembersByUserID:  standupMembersByUserID,
+			RelStoriesByUserID:         storiesByUserID,
+			RelTeamMembersByUserID:     teamMembersByUserID,
+			RelVotesByUserID:           votesByUserID,
 		}, ps, "user", ret.String())
 	})
 }

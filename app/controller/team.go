@@ -80,15 +80,15 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vteam.Detail{
-			Model:                   ret,
-			Params:                  ps.Params,
-			EstimatesByTeamID:       estimatesByTeamID,
-			RetrosByTeamID:          retrosByTeamID,
-			SprintsByTeamID:         sprintsByTeamID,
-			StandupsByTeamID:        standupsByTeamID,
-			TeamHistoriesByTeamID:   teamHistoriesByTeamID,
-			TeamMembersByTeamID:     teamMembersByTeamID,
-			TeamPermissionsByTeamID: teamPermissionsByTeamID,
+			Model:                      ret,
+			Params:                     ps.Params,
+			RelEstimatesByTeamID:       estimatesByTeamID,
+			RelRetrosByTeamID:          retrosByTeamID,
+			RelSprintsByTeamID:         sprintsByTeamID,
+			RelStandupsByTeamID:        standupsByTeamID,
+			RelTeamHistoriesByTeamID:   teamHistoriesByTeamID,
+			RelTeamMembersByTeamID:     teamMembersByTeamID,
+			RelTeamPermissionsByTeamID: teamPermissionsByTeamID,
 		}, ps, "team", ret.String())
 	})
 }

@@ -46,15 +46,15 @@ var (
 //line views/vteam/Detail.html:25
 type Detail struct {
 	layout.Basic
-	Model                   *team.Team
-	Params                  filter.ParamSet
-	EstimatesByTeamID       estimate.Estimates
-	RetrosByTeamID          retro.Retros
-	SprintsByTeamID         sprint.Sprints
-	StandupsByTeamID        standup.Standups
-	TeamHistoriesByTeamID   thistory.TeamHistories
-	TeamMembersByTeamID     tmember.TeamMembers
-	TeamPermissionsByTeamID tpermission.TeamPermissions
+	Model                      *team.Team
+	Params                     filter.ParamSet
+	RelEstimatesByTeamID       estimate.Estimates
+	RelRetrosByTeamID          retro.Retros
+	RelSprintsByTeamID         sprint.Sprints
+	RelStandupsByTeamID        standup.Standups
+	RelTeamHistoriesByTeamID   thistory.TeamHistories
+	RelTeamMembersByTeamID     tmember.TeamMembers
+	RelTeamPermissionsByTeamID tpermission.TeamPermissions
 }
 
 //line views/vteam/Detail.html:38
@@ -147,7 +147,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vteam/Detail.html:81
-	if len(p.EstimatesByTeamID) > 0 {
+	if len(p.RelEstimatesByTeamID) > 0 {
 //line views/vteam/Detail.html:81
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -158,7 +158,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:85
-		vestimate.StreamTable(qw422016, p.EstimatesByTeamID, nil, nil, p.Params, as, ps)
+		vestimate.StreamTable(qw422016, p.RelEstimatesByTeamID, nil, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:85
 		qw422016.N().S(`
     </div>
@@ -167,7 +167,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:88
 	}
 //line views/vteam/Detail.html:89
-	if len(p.RetrosByTeamID) > 0 {
+	if len(p.RelRetrosByTeamID) > 0 {
 //line views/vteam/Detail.html:89
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -178,7 +178,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:93
-		vretro.StreamTable(qw422016, p.RetrosByTeamID, nil, nil, p.Params, as, ps)
+		vretro.StreamTable(qw422016, p.RelRetrosByTeamID, nil, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:93
 		qw422016.N().S(`
     </div>
@@ -187,7 +187,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:96
 	}
 //line views/vteam/Detail.html:97
-	if len(p.SprintsByTeamID) > 0 {
+	if len(p.RelSprintsByTeamID) > 0 {
 //line views/vteam/Detail.html:97
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -198,7 +198,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:101
-		vsprint.StreamTable(qw422016, p.SprintsByTeamID, nil, p.Params, as, ps)
+		vsprint.StreamTable(qw422016, p.RelSprintsByTeamID, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:101
 		qw422016.N().S(`
     </div>
@@ -207,7 +207,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:104
 	}
 //line views/vteam/Detail.html:105
-	if len(p.StandupsByTeamID) > 0 {
+	if len(p.RelStandupsByTeamID) > 0 {
 //line views/vteam/Detail.html:105
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -218,7 +218,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:109
-		vstandup.StreamTable(qw422016, p.StandupsByTeamID, nil, nil, p.Params, as, ps)
+		vstandup.StreamTable(qw422016, p.RelStandupsByTeamID, nil, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:109
 		qw422016.N().S(`
     </div>
@@ -227,7 +227,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:112
 	}
 //line views/vteam/Detail.html:113
-	if len(p.TeamHistoriesByTeamID) > 0 {
+	if len(p.RelTeamHistoriesByTeamID) > 0 {
 //line views/vteam/Detail.html:113
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -238,7 +238,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:117
-		vthistory.StreamTable(qw422016, p.TeamHistoriesByTeamID, nil, p.Params, as, ps)
+		vthistory.StreamTable(qw422016, p.RelTeamHistoriesByTeamID, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:117
 		qw422016.N().S(`
     </div>
@@ -247,7 +247,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:120
 	}
 //line views/vteam/Detail.html:121
-	if len(p.TeamMembersByTeamID) > 0 {
+	if len(p.RelTeamMembersByTeamID) > 0 {
 //line views/vteam/Detail.html:121
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -258,7 +258,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:125
-		vtmember.StreamTable(qw422016, p.TeamMembersByTeamID, nil, nil, p.Params, as, ps)
+		vtmember.StreamTable(qw422016, p.RelTeamMembersByTeamID, nil, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:125
 		qw422016.N().S(`
     </div>
@@ -267,7 +267,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:128
 	}
 //line views/vteam/Detail.html:129
-	if len(p.TeamPermissionsByTeamID) > 0 {
+	if len(p.RelTeamPermissionsByTeamID) > 0 {
 //line views/vteam/Detail.html:129
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -278,7 +278,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vteam/Detail.html:133
-		vtpermission.StreamTable(qw422016, p.TeamPermissionsByTeamID, nil, p.Params, as, ps)
+		vtpermission.StreamTable(qw422016, p.RelTeamPermissionsByTeamID, nil, p.Params, as, ps)
 //line views/vteam/Detail.html:133
 		qw422016.N().S(`
     </div>

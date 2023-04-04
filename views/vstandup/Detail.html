@@ -24,10 +24,10 @@
   TeamsByTeamID team.Teams
   SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
-  ReportsByStandupID report.Reports
-  StandupHistoriesByStandupID uhistory.StandupHistories
-  StandupMembersByStandupID umember.StandupMembers
-  StandupPermissionsByStandupID upermission.StandupPermissions
+  RelReportsByStandupID report.Reports
+  RelStandupHistoriesByStandupID uhistory.StandupHistories
+  RelStandupMembersByStandupID umember.StandupMembers
+  RelStandupPermissionsByStandupID upermission.StandupPermissions
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -87,35 +87,35 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.ReportsByStandupID) > 0 -%}
+  {%- if len(p.RelReportsByStandupID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`file-alt`, ps) %} Related reports by [standup id]</h3>
     <div class="overflow clear">
-      {%= vreport.Table(p.ReportsByStandupID, nil, nil, p.Params, as, ps) %}
+      {%= vreport.Table(p.RelReportsByStandupID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StandupHistoriesByStandupID) > 0 -%}
+  {%- if len(p.RelStandupHistoriesByStandupID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [standup id]</h3>
     <div class="overflow clear">
-      {%= vuhistory.Table(p.StandupHistoriesByStandupID, nil, p.Params, as, ps) %}
+      {%= vuhistory.Table(p.RelStandupHistoriesByStandupID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StandupMembersByStandupID) > 0 -%}
+  {%- if len(p.RelStandupMembersByStandupID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [standup id]</h3>
     <div class="overflow clear">
-      {%= vumember.Table(p.StandupMembersByStandupID, nil, nil, p.Params, as, ps) %}
+      {%= vumember.Table(p.RelStandupMembersByStandupID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StandupPermissionsByStandupID) > 0 -%}
+  {%- if len(p.RelStandupPermissionsByStandupID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [standup id]</h3>
     <div class="overflow clear">
-      {%= vupermission.Table(p.StandupPermissionsByStandupID, nil, p.Params, as, ps) %}
+      {%= vupermission.Table(p.RelStandupPermissionsByStandupID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

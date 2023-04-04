@@ -24,10 +24,10 @@
   TeamsByTeamID team.Teams
   SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
-  FeedbacksByRetroID feedback.Feedbacks
-  RetroHistoriesByRetroID rhistory.RetroHistories
-  RetroMembersByRetroID rmember.RetroMembers
-  RetroPermissionsByRetroID rpermission.RetroPermissions
+  RelFeedbacksByRetroID feedback.Feedbacks
+  RelRetroHistoriesByRetroID rhistory.RetroHistories
+  RelRetroMembersByRetroID rmember.RetroMembers
+  RelRetroPermissionsByRetroID rpermission.RetroPermissions
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -91,35 +91,35 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.FeedbacksByRetroID) > 0 -%}
+  {%- if len(p.RelFeedbacksByRetroID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`comment`, ps) %} Related feedbacks by [retro id]</h3>
     <div class="overflow clear">
-      {%= vfeedback.Table(p.FeedbacksByRetroID, nil, nil, p.Params, as, ps) %}
+      {%= vfeedback.Table(p.RelFeedbacksByRetroID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.RetroHistoriesByRetroID) > 0 -%}
+  {%- if len(p.RelRetroHistoriesByRetroID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [retro id]</h3>
     <div class="overflow clear">
-      {%= vrhistory.Table(p.RetroHistoriesByRetroID, nil, p.Params, as, ps) %}
+      {%= vrhistory.Table(p.RelRetroHistoriesByRetroID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.RetroMembersByRetroID) > 0 -%}
+  {%- if len(p.RelRetroMembersByRetroID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [retro id]</h3>
     <div class="overflow clear">
-      {%= vrmember.Table(p.RetroMembersByRetroID, nil, nil, p.Params, as, ps) %}
+      {%= vrmember.Table(p.RelRetroMembersByRetroID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.RetroPermissionsByRetroID) > 0 -%}
+  {%- if len(p.RelRetroPermissionsByRetroID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [retro id]</h3>
     <div class="overflow clear">
-      {%= vrpermission.Table(p.RetroPermissionsByRetroID, nil, p.Params, as, ps) %}
+      {%= vrpermission.Table(p.RelRetroPermissionsByRetroID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

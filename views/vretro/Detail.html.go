@@ -42,14 +42,14 @@ var (
 //line views/vretro/Detail.html:21
 type Detail struct {
 	layout.Basic
-	Model                     *retro.Retro
-	TeamsByTeamID             team.Teams
-	SprintsBySprintID         sprint.Sprints
-	Params                    filter.ParamSet
-	FeedbacksByRetroID        feedback.Feedbacks
-	RetroHistoriesByRetroID   rhistory.RetroHistories
-	RetroMembersByRetroID     rmember.RetroMembers
-	RetroPermissionsByRetroID rpermission.RetroPermissions
+	Model                        *retro.Retro
+	TeamsByTeamID                team.Teams
+	SprintsBySprintID            sprint.Sprints
+	Params                       filter.ParamSet
+	RelFeedbacksByRetroID        feedback.Feedbacks
+	RelRetroHistoriesByRetroID   rhistory.RetroHistories
+	RelRetroMembersByRetroID     rmember.RetroMembers
+	RelRetroPermissionsByRetroID rpermission.RetroPermissions
 }
 
 //line views/vretro/Detail.html:33
@@ -232,7 +232,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vretro/Detail.html:94
-	if len(p.FeedbacksByRetroID) > 0 {
+	if len(p.RelFeedbacksByRetroID) > 0 {
 //line views/vretro/Detail.html:94
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -243,7 +243,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vretro/Detail.html:98
-		vfeedback.StreamTable(qw422016, p.FeedbacksByRetroID, nil, nil, p.Params, as, ps)
+		vfeedback.StreamTable(qw422016, p.RelFeedbacksByRetroID, nil, nil, p.Params, as, ps)
 //line views/vretro/Detail.html:98
 		qw422016.N().S(`
     </div>
@@ -252,7 +252,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:101
 	}
 //line views/vretro/Detail.html:102
-	if len(p.RetroHistoriesByRetroID) > 0 {
+	if len(p.RelRetroHistoriesByRetroID) > 0 {
 //line views/vretro/Detail.html:102
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -263,7 +263,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vretro/Detail.html:106
-		vrhistory.StreamTable(qw422016, p.RetroHistoriesByRetroID, nil, p.Params, as, ps)
+		vrhistory.StreamTable(qw422016, p.RelRetroHistoriesByRetroID, nil, p.Params, as, ps)
 //line views/vretro/Detail.html:106
 		qw422016.N().S(`
     </div>
@@ -272,7 +272,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:109
 	}
 //line views/vretro/Detail.html:110
-	if len(p.RetroMembersByRetroID) > 0 {
+	if len(p.RelRetroMembersByRetroID) > 0 {
 //line views/vretro/Detail.html:110
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -283,7 +283,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vretro/Detail.html:114
-		vrmember.StreamTable(qw422016, p.RetroMembersByRetroID, nil, nil, p.Params, as, ps)
+		vrmember.StreamTable(qw422016, p.RelRetroMembersByRetroID, nil, nil, p.Params, as, ps)
 //line views/vretro/Detail.html:114
 		qw422016.N().S(`
     </div>
@@ -292,7 +292,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:117
 	}
 //line views/vretro/Detail.html:118
-	if len(p.RetroPermissionsByRetroID) > 0 {
+	if len(p.RelRetroPermissionsByRetroID) > 0 {
 //line views/vretro/Detail.html:118
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -303,7 +303,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vretro/Detail.html:122
-		vrpermission.StreamTable(qw422016, p.RetroPermissionsByRetroID, nil, p.Params, as, ps)
+		vrpermission.StreamTable(qw422016, p.RelRetroPermissionsByRetroID, nil, p.Params, as, ps)
 //line views/vretro/Detail.html:122
 		qw422016.N().S(`
     </div>

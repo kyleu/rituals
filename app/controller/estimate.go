@@ -82,12 +82,12 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
 		}
 		return Render(rc, as, &vestimate.Detail{
-			Model:                           ret,
-			Params:                          ps.Params,
-			EstimateHistoriesByEstimateID:   estimateHistoriesByEstimateID,
-			EstimateMembersByEstimateID:     estimateMembersByEstimateID,
-			EstimatePermissionsByEstimateID: estimatePermissionsByEstimateID,
-			StoriesByEstimateID:             storiesByEstimateID,
+			Model:                              ret,
+			Params:                             ps.Params,
+			RelEstimateHistoriesByEstimateID:   estimateHistoriesByEstimateID,
+			RelEstimateMembersByEstimateID:     estimateMembersByEstimateID,
+			RelEstimatePermissionsByEstimateID: estimatePermissionsByEstimateID,
+			RelStoriesByEstimateID:             storiesByEstimateID,
 		}, ps, "estimate", ret.String())
 	})
 }

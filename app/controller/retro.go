@@ -82,12 +82,12 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vretro.Detail{
-			Model:                     ret,
-			Params:                    ps.Params,
-			FeedbacksByRetroID:        feedbacksByRetroID,
-			RetroHistoriesByRetroID:   retroHistoriesByRetroID,
-			RetroMembersByRetroID:     retroMembersByRetroID,
-			RetroPermissionsByRetroID: retroPermissionsByRetroID,
+			Model:                        ret,
+			Params:                       ps.Params,
+			RelFeedbacksByRetroID:        feedbacksByRetroID,
+			RelRetroHistoriesByRetroID:   retroHistoriesByRetroID,
+			RelRetroMembersByRetroID:     retroMembersByRetroID,
+			RelRetroPermissionsByRetroID: retroPermissionsByRetroID,
 		}, ps, "retro", ret.String())
 	})
 }

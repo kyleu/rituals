@@ -68,9 +68,9 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
 		return controller.Render(rc, as, &vstory.Detail{
-			Model:          ret,
-			Params:         ps.Params,
-			VotesByStoryID: votesByStoryID,
+			Model:             ret,
+			Params:            ps.Params,
+			RelVotesByStoryID: votesByStoryID,
 		}, ps, "estimate", "story", ret.String())
 	})
 }

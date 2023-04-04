@@ -40,7 +40,7 @@ type Detail struct {
 	EstimatesByEstimateID estimate.Estimates
 	UsersByUserID         user.Users
 	Params                filter.ParamSet
-	VotesByStoryID        vote.Votes
+	RelVotesByStoryID     vote.Votes
 }
 
 //line views/vestimate/vstory/Detail.html:24
@@ -191,7 +191,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vestimate/vstory/Detail.html:81
-	if len(p.VotesByStoryID) > 0 {
+	if len(p.RelVotesByStoryID) > 0 {
 //line views/vestimate/vstory/Detail.html:81
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -202,7 +202,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vestimate/vstory/Detail.html:85
-		vvote.StreamTable(qw422016, p.VotesByStoryID, nil, nil, p.Params, as, ps)
+		vvote.StreamTable(qw422016, p.RelVotesByStoryID, nil, nil, p.Params, as, ps)
 //line views/vestimate/vstory/Detail.html:85
 		qw422016.N().S(`
     </div>

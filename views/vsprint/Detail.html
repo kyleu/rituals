@@ -26,12 +26,12 @@
   Model *sprint.Sprint
   TeamsByTeamID team.Teams
   Params filter.ParamSet
-  EstimatesBySprintID estimate.Estimates
-  RetrosBySprintID retro.Retros
-  SprintHistoriesBySprintID shistory.SprintHistories
-  SprintMembersBySprintID smember.SprintMembers
-  SprintPermissionsBySprintID spermission.SprintPermissions
-  StandupsBySprintID standup.Standups
+  RelEstimatesBySprintID estimate.Estimates
+  RelRetrosBySprintID retro.Retros
+  RelSprintHistoriesBySprintID shistory.SprintHistories
+  RelSprintMembersBySprintID smember.SprintMembers
+  RelSprintPermissionsBySprintID spermission.SprintPermissions
+  RelStandupsBySprintID standup.Standups
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -92,51 +92,51 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.EstimatesBySprintID) > 0 -%}
+  {%- if len(p.RelEstimatesBySprintID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Related estimates by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vestimate.Table(p.EstimatesBySprintID, nil, nil, p.Params, as, ps) %}
+      {%= vestimate.Table(p.RelEstimatesBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.RetrosBySprintID) > 0 -%}
+  {%- if len(p.RelRetrosBySprintID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`retro`, ps) %} Related retros by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vretro.Table(p.RetrosBySprintID, nil, nil, p.Params, as, ps) %}
+      {%= vretro.Table(p.RelRetrosBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.SprintHistoriesBySprintID) > 0 -%}
+  {%- if len(p.RelSprintHistoriesBySprintID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vshistory.Table(p.SprintHistoriesBySprintID, nil, p.Params, as, ps) %}
+      {%= vshistory.Table(p.RelSprintHistoriesBySprintID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.SprintMembersBySprintID) > 0 -%}
+  {%- if len(p.RelSprintMembersBySprintID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vsmember.Table(p.SprintMembersBySprintID, nil, nil, p.Params, as, ps) %}
+      {%= vsmember.Table(p.RelSprintMembersBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.SprintPermissionsBySprintID) > 0 -%}
+  {%- if len(p.RelSprintPermissionsBySprintID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vspermission.Table(p.SprintPermissionsBySprintID, nil, p.Params, as, ps) %}
+      {%= vspermission.Table(p.RelSprintPermissionsBySprintID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StandupsBySprintID) > 0 -%}
+  {%- if len(p.RelStandupsBySprintID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`standup`, ps) %} Related standups by [sprint id]</h3>
     <div class="overflow clear">
-      {%= vstandup.Table(p.StandupsBySprintID, nil, nil, p.Params, as, ps) %}
+      {%= vstandup.Table(p.RelStandupsBySprintID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

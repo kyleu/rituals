@@ -45,15 +45,15 @@ var (
 //line views/vsprint/Detail.html:24
 type Detail struct {
 	layout.Basic
-	Model                       *sprint.Sprint
-	TeamsByTeamID               team.Teams
-	Params                      filter.ParamSet
-	EstimatesBySprintID         estimate.Estimates
-	RetrosBySprintID            retro.Retros
-	SprintHistoriesBySprintID   shistory.SprintHistories
-	SprintMembersBySprintID     smember.SprintMembers
-	SprintPermissionsBySprintID spermission.SprintPermissions
-	StandupsBySprintID          standup.Standups
+	Model                          *sprint.Sprint
+	TeamsByTeamID                  team.Teams
+	Params                         filter.ParamSet
+	RelEstimatesBySprintID         estimate.Estimates
+	RelRetrosBySprintID            retro.Retros
+	RelSprintHistoriesBySprintID   shistory.SprintHistories
+	RelSprintMembersBySprintID     smember.SprintMembers
+	RelSprintPermissionsBySprintID spermission.SprintPermissions
+	RelStandupsBySprintID          standup.Standups
 }
 
 //line views/vsprint/Detail.html:37
@@ -203,7 +203,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vsprint/Detail.html:95
-	if len(p.EstimatesBySprintID) > 0 {
+	if len(p.RelEstimatesBySprintID) > 0 {
 //line views/vsprint/Detail.html:95
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -214,7 +214,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vsprint/Detail.html:99
-		vestimate.StreamTable(qw422016, p.EstimatesBySprintID, nil, nil, p.Params, as, ps)
+		vestimate.StreamTable(qw422016, p.RelEstimatesBySprintID, nil, nil, p.Params, as, ps)
 //line views/vsprint/Detail.html:99
 		qw422016.N().S(`
     </div>
@@ -223,7 +223,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:102
 	}
 //line views/vsprint/Detail.html:103
-	if len(p.RetrosBySprintID) > 0 {
+	if len(p.RelRetrosBySprintID) > 0 {
 //line views/vsprint/Detail.html:103
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -234,7 +234,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vsprint/Detail.html:107
-		vretro.StreamTable(qw422016, p.RetrosBySprintID, nil, nil, p.Params, as, ps)
+		vretro.StreamTable(qw422016, p.RelRetrosBySprintID, nil, nil, p.Params, as, ps)
 //line views/vsprint/Detail.html:107
 		qw422016.N().S(`
     </div>
@@ -243,7 +243,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:110
 	}
 //line views/vsprint/Detail.html:111
-	if len(p.SprintHistoriesBySprintID) > 0 {
+	if len(p.RelSprintHistoriesBySprintID) > 0 {
 //line views/vsprint/Detail.html:111
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -254,7 +254,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vsprint/Detail.html:115
-		vshistory.StreamTable(qw422016, p.SprintHistoriesBySprintID, nil, p.Params, as, ps)
+		vshistory.StreamTable(qw422016, p.RelSprintHistoriesBySprintID, nil, p.Params, as, ps)
 //line views/vsprint/Detail.html:115
 		qw422016.N().S(`
     </div>
@@ -263,7 +263,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:118
 	}
 //line views/vsprint/Detail.html:119
-	if len(p.SprintMembersBySprintID) > 0 {
+	if len(p.RelSprintMembersBySprintID) > 0 {
 //line views/vsprint/Detail.html:119
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -274,7 +274,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vsprint/Detail.html:123
-		vsmember.StreamTable(qw422016, p.SprintMembersBySprintID, nil, nil, p.Params, as, ps)
+		vsmember.StreamTable(qw422016, p.RelSprintMembersBySprintID, nil, nil, p.Params, as, ps)
 //line views/vsprint/Detail.html:123
 		qw422016.N().S(`
     </div>
@@ -283,7 +283,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:126
 	}
 //line views/vsprint/Detail.html:127
-	if len(p.SprintPermissionsBySprintID) > 0 {
+	if len(p.RelSprintPermissionsBySprintID) > 0 {
 //line views/vsprint/Detail.html:127
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -294,7 +294,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vsprint/Detail.html:131
-		vspermission.StreamTable(qw422016, p.SprintPermissionsBySprintID, nil, p.Params, as, ps)
+		vspermission.StreamTable(qw422016, p.RelSprintPermissionsBySprintID, nil, p.Params, as, ps)
 //line views/vsprint/Detail.html:131
 		qw422016.N().S(`
     </div>
@@ -303,7 +303,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:134
 	}
 //line views/vsprint/Detail.html:135
-	if len(p.StandupsBySprintID) > 0 {
+	if len(p.RelStandupsBySprintID) > 0 {
 //line views/vsprint/Detail.html:135
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -314,7 +314,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vsprint/Detail.html:139
-		vstandup.StreamTable(qw422016, p.StandupsBySprintID, nil, nil, p.Params, as, ps)
+		vstandup.StreamTable(qw422016, p.RelStandupsBySprintID, nil, nil, p.Params, as, ps)
 //line views/vsprint/Detail.html:139
 		qw422016.N().S(`
     </div>

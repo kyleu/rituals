@@ -24,10 +24,10 @@
   TeamsByTeamID team.Teams
   SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
-  EstimateHistoriesByEstimateID ehistory.EstimateHistories
-  EstimateMembersByEstimateID emember.EstimateMembers
-  EstimatePermissionsByEstimateID epermission.EstimatePermissions
-  StoriesByEstimateID story.Stories
+  RelEstimateHistoriesByEstimateID ehistory.EstimateHistories
+  RelEstimateMembersByEstimateID emember.EstimateMembers
+  RelEstimatePermissionsByEstimateID epermission.EstimatePermissions
+  RelStoriesByEstimateID story.Stories
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -91,35 +91,35 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.EstimateHistoriesByEstimateID) > 0 -%}
+  {%- if len(p.RelEstimateHistoriesByEstimateID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [estimate id]</h3>
     <div class="overflow clear">
-      {%= vehistory.Table(p.EstimateHistoriesByEstimateID, nil, p.Params, as, ps) %}
+      {%= vehistory.Table(p.RelEstimateHistoriesByEstimateID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.EstimateMembersByEstimateID) > 0 -%}
+  {%- if len(p.RelEstimateMembersByEstimateID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [estimate id]</h3>
     <div class="overflow clear">
-      {%= vemember.Table(p.EstimateMembersByEstimateID, nil, nil, p.Params, as, ps) %}
+      {%= vemember.Table(p.RelEstimateMembersByEstimateID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.EstimatePermissionsByEstimateID) > 0 -%}
+  {%- if len(p.RelEstimatePermissionsByEstimateID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [estimate id]</h3>
     <div class="overflow clear">
-      {%= vepermission.Table(p.EstimatePermissionsByEstimateID, nil, p.Params, as, ps) %}
+      {%= vepermission.Table(p.RelEstimatePermissionsByEstimateID, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}
-  {%- if len(p.StoriesByEstimateID) > 0 -%}
+  {%- if len(p.RelStoriesByEstimateID) > 0 -%}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`story`, ps) %} Related stories by [estimate id]</h3>
     <div class="overflow clear">
-      {%= vstory.Table(p.StoriesByEstimateID, nil, nil, p.Params, as, ps) %}
+      {%= vstory.Table(p.RelStoriesByEstimateID, nil, nil, p.Params, as, ps) %}
     </div>
   </div>
   {%- endif -%}

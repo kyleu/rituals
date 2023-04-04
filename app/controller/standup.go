@@ -82,12 +82,12 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vstandup.Detail{
-			Model:                         ret,
-			Params:                        ps.Params,
-			ReportsByStandupID:            reportsByStandupID,
-			StandupHistoriesByStandupID:   standupHistoriesByStandupID,
-			StandupMembersByStandupID:     standupMembersByStandupID,
-			StandupPermissionsByStandupID: standupPermissionsByStandupID,
+			Model:                            ret,
+			Params:                           ps.Params,
+			RelReportsByStandupID:            reportsByStandupID,
+			RelStandupHistoriesByStandupID:   standupHistoriesByStandupID,
+			RelStandupMembersByStandupID:     standupMembersByStandupID,
+			RelStandupPermissionsByStandupID: standupPermissionsByStandupID,
 		}, ps, "standup", ret.String())
 	})
 }

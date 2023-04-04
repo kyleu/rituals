@@ -42,14 +42,14 @@ var (
 //line views/vstandup/Detail.html:21
 type Detail struct {
 	layout.Basic
-	Model                         *standup.Standup
-	TeamsByTeamID                 team.Teams
-	SprintsBySprintID             sprint.Sprints
-	Params                        filter.ParamSet
-	ReportsByStandupID            report.Reports
-	StandupHistoriesByStandupID   uhistory.StandupHistories
-	StandupMembersByStandupID     umember.StandupMembers
-	StandupPermissionsByStandupID upermission.StandupPermissions
+	Model                            *standup.Standup
+	TeamsByTeamID                    team.Teams
+	SprintsBySprintID                sprint.Sprints
+	Params                           filter.ParamSet
+	RelReportsByStandupID            report.Reports
+	RelStandupHistoriesByStandupID   uhistory.StandupHistories
+	RelStandupMembersByStandupID     umember.StandupMembers
+	RelStandupPermissionsByStandupID upermission.StandupPermissions
 }
 
 //line views/vstandup/Detail.html:33
@@ -224,7 +224,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vstandup/Detail.html:90
-	if len(p.ReportsByStandupID) > 0 {
+	if len(p.RelReportsByStandupID) > 0 {
 //line views/vstandup/Detail.html:90
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -235,7 +235,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vstandup/Detail.html:94
-		vreport.StreamTable(qw422016, p.ReportsByStandupID, nil, nil, p.Params, as, ps)
+		vreport.StreamTable(qw422016, p.RelReportsByStandupID, nil, nil, p.Params, as, ps)
 //line views/vstandup/Detail.html:94
 		qw422016.N().S(`
     </div>
@@ -244,7 +244,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:97
 	}
 //line views/vstandup/Detail.html:98
-	if len(p.StandupHistoriesByStandupID) > 0 {
+	if len(p.RelStandupHistoriesByStandupID) > 0 {
 //line views/vstandup/Detail.html:98
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -255,7 +255,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vstandup/Detail.html:102
-		vuhistory.StreamTable(qw422016, p.StandupHistoriesByStandupID, nil, p.Params, as, ps)
+		vuhistory.StreamTable(qw422016, p.RelStandupHistoriesByStandupID, nil, p.Params, as, ps)
 //line views/vstandup/Detail.html:102
 		qw422016.N().S(`
     </div>
@@ -264,7 +264,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:105
 	}
 //line views/vstandup/Detail.html:106
-	if len(p.StandupMembersByStandupID) > 0 {
+	if len(p.RelStandupMembersByStandupID) > 0 {
 //line views/vstandup/Detail.html:106
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -275,7 +275,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vstandup/Detail.html:110
-		vumember.StreamTable(qw422016, p.StandupMembersByStandupID, nil, nil, p.Params, as, ps)
+		vumember.StreamTable(qw422016, p.RelStandupMembersByStandupID, nil, nil, p.Params, as, ps)
 //line views/vstandup/Detail.html:110
 		qw422016.N().S(`
     </div>
@@ -284,7 +284,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:113
 	}
 //line views/vstandup/Detail.html:114
-	if len(p.StandupPermissionsByStandupID) > 0 {
+	if len(p.RelStandupPermissionsByStandupID) > 0 {
 //line views/vstandup/Detail.html:114
 		qw422016.N().S(`  <div class="card">
     <h3>`)
@@ -295,7 +295,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="overflow clear">
       `)
 //line views/vstandup/Detail.html:118
-		vupermission.StreamTable(qw422016, p.StandupPermissionsByStandupID, nil, p.Params, as, ps)
+		vupermission.StreamTable(qw422016, p.RelStandupPermissionsByStandupID, nil, p.Params, as, ps)
 //line views/vstandup/Detail.html:118
 		qw422016.N().S(`
     </div>
