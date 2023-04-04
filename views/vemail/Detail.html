@@ -52,7 +52,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
             {%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.UsersByUserID.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+            <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>

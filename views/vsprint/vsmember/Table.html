@@ -28,11 +28,11 @@
       <tr>
         <td class="nowrap">
           <a href="/admin/db/sprint/member/{%= components.DisplayUUID(&model.SprintID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="Sprint" href="{%s `/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
+          <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
         </td>
         <td class="nowrap">
           <a href="/admin/db/sprint/member/{%= components.DisplayUUID(&model.SprintID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+          <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>

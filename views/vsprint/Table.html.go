@@ -154,7 +154,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID
 //line views/vsprint/Table.html:38
 			qw422016.N().S(`<a title="Team" href="`)
 //line views/vsprint/Table.html:38
-			qw422016.E().S(`/team` + `/` + model.TeamID.String())
+			qw422016.E().S(`/admin/db/team` + `/` + model.TeamID.String())
 //line views/vsprint/Table.html:38
 			qw422016.N().S(`">`)
 //line views/vsprint/Table.html:38

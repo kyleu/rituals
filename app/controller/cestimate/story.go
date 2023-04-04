@@ -33,19 +33,19 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Stories"
 		ps.Data = ret
-		estimateIDs := make([]uuid.UUID, 0, len(ret))
+		estimateIDsByEstimateID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			estimateIDs = append(estimateIDs, x.EstimateID)
+			estimateIDsByEstimateID = append(estimateIDsByEstimateID, x.EstimateID)
 		}
-		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDsByEstimateID...)
 		if err != nil {
 			return "", err
 		}
-		userIDs := make([]uuid.UUID, 0, len(ret))
+		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			userIDs = append(userIDs, x.UserID)
+			userIDsByUserID = append(userIDsByUserID, x.UserID)
 		}
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

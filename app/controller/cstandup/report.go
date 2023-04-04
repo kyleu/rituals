@@ -25,19 +25,19 @@ func ReportList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Reports"
 		ps.Data = ret
-		standupIDs := make([]uuid.UUID, 0, len(ret))
+		standupIDsByStandupID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			standupIDs = append(standupIDs, x.StandupID)
+			standupIDsByStandupID = append(standupIDsByStandupID, x.StandupID)
 		}
-		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDs...)
+		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDsByStandupID...)
 		if err != nil {
 			return "", err
 		}
-		userIDs := make([]uuid.UUID, 0, len(ret))
+		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			userIDs = append(userIDs, x.UserID)
+			userIDsByUserID = append(userIDsByUserID, x.UserID)
 		}
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

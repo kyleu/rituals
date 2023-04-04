@@ -25,7 +25,7 @@
       <tr>
         <td class="nowrap">
           <a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="Standup" href="{%s `/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRef("standup", 18, 18, "", ps) %}</a>
+          <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRef("standup", 18, 18, "", ps) %}</a>
         </td>
         <td><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
         <td><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>

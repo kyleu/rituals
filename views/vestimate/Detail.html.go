@@ -149,7 +149,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:67
 		qw422016.N().S(`<a title="Team" href="`)
 //line views/vestimate/Detail.html:67
-		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
+		qw422016.E().S(`/admin/db/team` + `/` + p.Model.TeamID.String())
 //line views/vestimate/Detail.html:67
 		qw422016.N().S(`">`)
 //line views/vestimate/Detail.html:67
@@ -190,7 +190,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:74
 		qw422016.N().S(`<a title="Sprint" href="`)
 //line views/vestimate/Detail.html:74
-		qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
+		qw422016.E().S(`/admin/db/sprint` + `/` + p.Model.SprintID.String())
 //line views/vestimate/Detail.html:74
 		qw422016.N().S(`">`)
 //line views/vestimate/Detail.html:74

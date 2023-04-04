@@ -25,19 +25,19 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Members"
 		ps.Data = ret
-		sprintIDs := make([]uuid.UUID, 0, len(ret))
+		sprintIDsBySprintID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			sprintIDs = append(sprintIDs, x.SprintID)
+			sprintIDsBySprintID = append(sprintIDsBySprintID, x.SprintID)
 		}
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDs...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDsBySprintID...)
 		if err != nil {
 			return "", err
 		}
-		userIDs := make([]uuid.UUID, 0, len(ret))
+		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			userIDs = append(userIDs, x.UserID)
+			userIDsByUserID = append(userIDsByUserID, x.UserID)
 		}
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

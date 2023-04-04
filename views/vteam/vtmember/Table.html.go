@@ -111,7 +111,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teamsByT
 		qw422016.N().S(`</a>
           <a title="Team" href="`)
 //line views/vteam/vtmember/Table.html:31
-		qw422016.E().S(`/team` + `/` + model.TeamID.String())
+		qw422016.E().S(`/admin/db/team` + `/` + model.TeamID.String())
 //line views/vteam/vtmember/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vteam/vtmember/Table.html:31
@@ -145,7 +145,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teamsByT
 		qw422016.N().S(`</a>
           <a title="User" href="`)
 //line views/vteam/vtmember/Table.html:35
-		qw422016.E().S(`/user` + `/` + model.UserID.String())
+		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
 //line views/vteam/vtmember/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vteam/vtmember/Table.html:35

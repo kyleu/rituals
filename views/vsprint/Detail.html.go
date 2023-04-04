@@ -153,7 +153,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:71
 		qw422016.N().S(`<a title="Team" href="`)
 //line views/vsprint/Detail.html:71
-		qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
+		qw422016.E().S(`/admin/db/team` + `/` + p.Model.TeamID.String())
 //line views/vsprint/Detail.html:71
 		qw422016.N().S(`">`)
 //line views/vsprint/Detail.html:71

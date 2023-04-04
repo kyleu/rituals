@@ -25,19 +25,19 @@ func TeamMemberList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Members"
 		ps.Data = ret
-		teamIDs := make([]uuid.UUID, 0, len(ret))
+		teamIDsByTeamID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			teamIDs = append(teamIDs, x.TeamID)
+			teamIDsByTeamID = append(teamIDsByTeamID, x.TeamID)
 		}
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, teamIDs...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, teamIDsByTeamID...)
 		if err != nil {
 			return "", err
 		}
-		userIDs := make([]uuid.UUID, 0, len(ret))
+		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			userIDs = append(userIDs, x.UserID)
+			userIDsByUserID = append(userIDsByUserID, x.UserID)
 		}
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

@@ -28,7 +28,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
           <td class="nowrap">
             {%= components.DisplayUUID(&p.Model.EstimateID) %}{% if x := p.EstimatesByEstimateID.Get(p.Model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Estimate" href="{%s `/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
+            <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>

@@ -25,19 +25,19 @@ func FeedbackList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Feedbacks"
 		ps.Data = ret
-		retroIDs := make([]uuid.UUID, 0, len(ret))
+		retroIDsByRetroID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			retroIDs = append(retroIDs, x.RetroID)
+			retroIDsByRetroID = append(retroIDsByRetroID, x.RetroID)
 		}
-		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDs...)
+		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDsByRetroID...)
 		if err != nil {
 			return "", err
 		}
-		userIDs := make([]uuid.UUID, 0, len(ret))
+		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			userIDs = append(userIDs, x.UserID)
+			userIDsByUserID = append(userIDsByUserID, x.UserID)
 		}
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

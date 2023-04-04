@@ -111,7 +111,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
           <a title="Retro" href="`)
 //line views/vretro/vrmember/Table.html:31
-		qw422016.E().S(`/retro` + `/` + model.RetroID.String())
+		qw422016.E().S(`/admin/db/retro` + `/` + model.RetroID.String())
 //line views/vretro/vrmember/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:31
@@ -145,7 +145,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
           <a title="User" href="`)
 //line views/vretro/vrmember/Table.html:35
-		qw422016.E().S(`/user` + `/` + model.UserID.String())
+		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
 //line views/vretro/vrmember/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:35

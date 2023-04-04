@@ -32,19 +32,19 @@ func StandupList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Standups"
 		ps.Data = ret
-		teamIDs := make([]*uuid.UUID, 0, len(ret))
+		teamIDsByTeamID := make([]*uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			teamIDs = append(teamIDs, x.TeamID)
+			teamIDsByTeamID = append(teamIDsByTeamID, x.TeamID)
 		}
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDs)...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDsByTeamID)...)
 		if err != nil {
 			return "", err
 		}
-		sprintIDs := make([]*uuid.UUID, 0, len(ret))
+		sprintIDsBySprintID := make([]*uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			sprintIDs = append(sprintIDs, x.SprintID)
+			sprintIDsBySprintID = append(sprintIDsBySprintID, x.SprintID)
 		}
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(sprintIDs)...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(sprintIDsBySprintID)...)
 		if err != nil {
 			return "", err
 		}

@@ -85,7 +85,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="Retro" href="`)
 //line views/vretro/vrpermission/Detail.html:31
-	qw422016.E().S(`/retro` + `/` + p.Model.RetroID.String())
+	qw422016.E().S(`/admin/db/retro` + `/` + p.Model.RetroID.String())
 //line views/vretro/vrpermission/Detail.html:31
 	qw422016.N().S(`">`)
 //line views/vretro/vrpermission/Detail.html:31

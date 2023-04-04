@@ -25,19 +25,19 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Votes"
 		ps.Data = ret
-		storyIDs := make([]uuid.UUID, 0, len(ret))
+		storyIDsByStoryID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			storyIDs = append(storyIDs, x.StoryID)
+			storyIDsByStoryID = append(storyIDsByStoryID, x.StoryID)
 		}
-		storiesByStoryID, err := as.Services.Story.GetMultiple(ps.Context, nil, ps.Logger, storyIDs...)
+		storiesByStoryID, err := as.Services.Story.GetMultiple(ps.Context, nil, ps.Logger, storyIDsByStoryID...)
 		if err != nil {
 			return "", err
 		}
-		userIDs := make([]uuid.UUID, 0, len(ret))
+		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			userIDs = append(userIDs, x.UserID)
+			userIDsByUserID = append(userIDsByUserID, x.UserID)
 		}
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDs...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

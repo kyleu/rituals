@@ -117,7 +117,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 		qw422016.N().S(`
           <a title="Retro" href="`)
 //line views/vretro/vfeedback/Table.html:33
-		qw422016.E().S(`/retro` + `/` + model.RetroID.String())
+		qw422016.E().S(`/admin/db/retro` + `/` + model.RetroID.String())
 //line views/vretro/vfeedback/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:33
@@ -148,7 +148,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 		qw422016.N().S(`
           <a title="User" href="`)
 //line views/vretro/vfeedback/Table.html:38
-		qw422016.E().S(`/user` + `/` + model.UserID.String())
+		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
 //line views/vretro/vfeedback/Table.html:38
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:38

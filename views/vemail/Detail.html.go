@@ -133,7 +133,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vemail/Detail.html:55
-	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
+	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
 //line views/vemail/Detail.html:55
 	qw422016.N().S(`">`)
 //line views/vemail/Detail.html:55

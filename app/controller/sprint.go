@@ -32,11 +32,11 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Sprints"
 		ps.Data = ret
-		teamIDs := make([]*uuid.UUID, 0, len(ret))
+		teamIDsByTeamID := make([]*uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			teamIDs = append(teamIDs, x.TeamID)
+			teamIDsByTeamID = append(teamIDsByTeamID, x.TeamID)
 		}
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDs)...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDsByTeamID)...)
 		if err != nil {
 			return "", err
 		}

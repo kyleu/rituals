@@ -93,7 +93,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="Standup" href="`)
 //line views/vstandup/vuhistory/Detail.html:35
-	qw422016.E().S(`/standup` + `/` + p.Model.StandupID.String())
+	qw422016.E().S(`/admin/db/standup` + `/` + p.Model.StandupID.String())
 //line views/vstandup/vuhistory/Detail.html:35
 	qw422016.N().S(`">`)
 //line views/vstandup/vuhistory/Detail.html:35

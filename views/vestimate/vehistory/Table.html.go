@@ -96,7 +96,7 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 		qw422016.N().S(`
           <a title="Estimate" href="`)
 //line views/vestimate/vehistory/Table.html:28
-		qw422016.E().S(`/estimate` + `/` + model.EstimateID.String())
+		qw422016.E().S(`/admin/db/estimate` + `/` + model.EstimateID.String())
 //line views/vestimate/vehistory/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vestimate/vehistory/Table.html:28

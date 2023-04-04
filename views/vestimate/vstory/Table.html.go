@@ -122,7 +122,7 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEst
 		qw422016.N().S(`
           <a title="Estimate" href="`)
 //line views/vestimate/vstory/Table.html:34
-		qw422016.E().S(`/estimate` + `/` + model.EstimateID.String())
+		qw422016.E().S(`/admin/db/estimate` + `/` + model.EstimateID.String())
 //line views/vestimate/vstory/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/Table.html:34
@@ -153,7 +153,7 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEst
 		qw422016.N().S(`
           <a title="User" href="`)
 //line views/vestimate/vstory/Table.html:39
-		qw422016.E().S(`/user` + `/` + model.UserID.String())
+		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
 //line views/vestimate/vstory/Table.html:39
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/Table.html:39

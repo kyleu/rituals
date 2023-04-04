@@ -68,7 +68,7 @@ func (s *Service) SearchEstimates(ctx context.Context, q string, prms filter.Par
 
 func (s *Service) SearchStories(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
 	var ret result.Results
-	curr, err := s.st.GetByEstimateIDs(ctx, nil, logger, w.Estimates.IDs()...)
+	curr, err := s.st.GetByEstimateIDs(ctx, nil, prms.Get("story", nil, logger), logger, w.Estimates.IDs()...)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't load stories")
 	}

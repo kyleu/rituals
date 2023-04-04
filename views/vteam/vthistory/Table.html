@@ -25,7 +25,7 @@
         <td><a href="/admin/db/team/history/{%u model.Slug %}">{%s model.Slug %}</a></td>
         <td class="nowrap">
           {%= components.DisplayUUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}
-          <a title="Team" href="{%s `/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
+          <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.TeamName %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>

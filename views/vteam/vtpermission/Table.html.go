@@ -104,7 +104,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 		qw422016.N().S(`</a>
           <a title="Team" href="`)
 //line views/vteam/vtpermission/Table.html:28
-		qw422016.E().S(`/team` + `/` + model.TeamID.String())
+		qw422016.E().S(`/admin/db/team` + `/` + model.TeamID.String())
 //line views/vteam/vtpermission/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vteam/vtpermission/Table.html:28

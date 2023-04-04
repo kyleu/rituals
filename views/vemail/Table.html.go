@@ -136,7 +136,7 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 		qw422016.N().S(`
           <a title="User" href="`)
 //line views/vemail/Table.html:36
-		qw422016.E().S(`/user` + `/` + model.UserID.String())
+		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
 //line views/vemail/Table.html:36
 		qw422016.N().S(`">`)
 //line views/vemail/Table.html:36

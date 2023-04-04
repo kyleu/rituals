@@ -85,7 +85,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="Sprint" href="`)
 //line views/vsprint/vspermission/Detail.html:31
-	qw422016.E().S(`/sprint` + `/` + p.Model.SprintID.String())
+	qw422016.E().S(`/admin/db/sprint` + `/` + p.Model.SprintID.String())
 //line views/vsprint/vspermission/Detail.html:31
 	qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Detail.html:31

@@ -24,11 +24,11 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Histories"
 		ps.Data = ret
-		estimateIDs := make([]uuid.UUID, 0, len(ret))
+		estimateIDsByEstimateID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			estimateIDs = append(estimateIDs, x.EstimateID)
+			estimateIDsByEstimateID = append(estimateIDsByEstimateID, x.EstimateID)
 		}
-		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDs...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDsByEstimateID...)
 		if err != nil {
 			return "", err
 		}

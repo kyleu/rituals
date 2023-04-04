@@ -87,7 +87,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="Team" href="`)
 //line views/vteam/vtmember/Detail.html:33
-	qw422016.E().S(`/team` + `/` + p.Model.TeamID.String())
+	qw422016.E().S(`/admin/db/team` + `/` + p.Model.TeamID.String())
 //line views/vteam/vtmember/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vteam/vtmember/Detail.html:33
@@ -116,7 +116,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vteam/vtmember/Detail.html:40
-	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
+	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
 //line views/vteam/vtmember/Detail.html:40
 	qw422016.N().S(`">`)
 //line views/vteam/vtmember/Detail.html:40

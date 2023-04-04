@@ -31,7 +31,7 @@
         <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
         <td class="nowrap">
           {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-          <a title="User" href="{%s `/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+          <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td>{%s model.Act %}</td>
         <td>{%= components.JSON(model.Content) %}</td>

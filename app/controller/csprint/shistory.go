@@ -24,11 +24,11 @@ func SprintHistoryList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Histories"
 		ps.Data = ret
-		sprintIDs := make([]uuid.UUID, 0, len(ret))
+		sprintIDsBySprintID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			sprintIDs = append(sprintIDs, x.SprintID)
+			sprintIDsBySprintID = append(sprintIDsBySprintID, x.SprintID)
 		}
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDs...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDsBySprintID...)
 		if err != nil {
 			return "", err
 		}

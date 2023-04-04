@@ -25,7 +25,7 @@
       <tr>
         <td class="nowrap">
           <a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="Retro" href="{%s `/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
+          <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
         </td>
         <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
         <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>

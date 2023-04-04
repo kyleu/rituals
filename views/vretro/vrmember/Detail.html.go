@@ -87,7 +87,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="Retro" href="`)
 //line views/vretro/vrmember/Detail.html:33
-	qw422016.E().S(`/retro` + `/` + p.Model.RetroID.String())
+	qw422016.E().S(`/admin/db/retro` + `/` + p.Model.RetroID.String())
 //line views/vretro/vrmember/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:33
@@ -116,7 +116,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
             <a title="User" href="`)
 //line views/vretro/vrmember/Detail.html:40
-	qw422016.E().S(`/user` + `/` + p.Model.UserID.String())
+	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
 //line views/vretro/vrmember/Detail.html:40
 	qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:40

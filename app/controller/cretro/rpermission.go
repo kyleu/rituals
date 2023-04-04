@@ -25,11 +25,11 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Permissions"
 		ps.Data = ret
-		retroIDs := make([]uuid.UUID, 0, len(ret))
+		retroIDsByRetroID := make([]uuid.UUID, 0, len(ret))
 		for _, x := range ret {
-			retroIDs = append(retroIDs, x.RetroID)
+			retroIDsByRetroID = append(retroIDsByRetroID, x.RetroID)
 		}
-		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDs...)
+		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDsByRetroID...)
 		if err != nil {
 			return "", err
 		}
