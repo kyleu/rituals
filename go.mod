@@ -1,6 +1,6 @@
 module github.com/kyleu/rituals
 
-go 1.19
+go 1.20
 
 require (
 	github.com/alecthomas/chroma v0.10.0
