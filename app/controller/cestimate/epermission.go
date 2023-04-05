@@ -46,7 +46,10 @@ func EstimatePermissionDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Permission)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vepermission.Detail{Model: ret}, ps, "estimate", "epermission", ret.String())
+
+		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
+
+		return controller.Render(rc, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.String())
 	})
 }
 

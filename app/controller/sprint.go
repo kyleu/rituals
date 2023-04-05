@@ -12,6 +12,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vsprint"
 )
@@ -53,45 +54,52 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Sprint)"
 		ps.Data = ret
-		estimatesBySprintIDPrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
-		estimatesBySprintID, err := as.Services.Estimate.GetBySprintID(ps.Context, nil, &ret.ID, estimatesBySprintIDPrms, ps.Logger)
+
+		var teamByTeamID *team.Team
+		if ret.TeamID != nil {
+			teamByTeamID, _ = as.Services.Team.Get(ps.Context, nil, *ret.TeamID, ps.Logger)
+		}
+
+		relEstimatesBySprintIDPrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
+		relEstimatesBySprintID, err := as.Services.Estimate.GetBySprintID(ps.Context, nil, &ret.ID, relEstimatesBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child estimates")
 		}
-		retrosBySprintIDPrms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
-		retrosBySprintID, err := as.Services.Retro.GetBySprintID(ps.Context, nil, &ret.ID, retrosBySprintIDPrms, ps.Logger)
+		relRetrosBySprintIDPrms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
+		relRetrosBySprintID, err := as.Services.Retro.GetBySprintID(ps.Context, nil, &ret.ID, relRetrosBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child retros")
 		}
-		sprintHistoriesBySprintIDPrms := ps.Params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
-		sprintHistoriesBySprintID, err := as.Services.SprintHistory.GetBySprintID(ps.Context, nil, ret.ID, sprintHistoriesBySprintIDPrms, ps.Logger)
+		relSprintHistoriesBySprintIDPrms := ps.Params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
+		relSprintHistoriesBySprintID, err := as.Services.SprintHistory.GetBySprintID(ps.Context, nil, ret.ID, relSprintHistoriesBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		sprintMembersBySprintIDPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
-		sprintMembersBySprintID, err := as.Services.SprintMember.GetBySprintID(ps.Context, nil, ret.ID, sprintMembersBySprintIDPrms, ps.Logger)
+		relSprintMembersBySprintIDPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
+		relSprintMembersBySprintID, err := as.Services.SprintMember.GetBySprintID(ps.Context, nil, ret.ID, relSprintMembersBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		sprintPermissionsBySprintIDPrms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
-		sprintPermissionsBySprintID, err := as.Services.SprintPermission.GetBySprintID(ps.Context, nil, ret.ID, sprintPermissionsBySprintIDPrms, ps.Logger)
+		relSprintPermissionsBySprintIDPrms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
+		relSprintPermissionsBySprintID, err := as.Services.SprintPermission.GetBySprintID(ps.Context, nil, ret.ID, relSprintPermissionsBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		standupsBySprintIDPrms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
-		standupsBySprintID, err := as.Services.Standup.GetBySprintID(ps.Context, nil, &ret.ID, standupsBySprintIDPrms, ps.Logger)
+		relStandupsBySprintIDPrms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
+		relStandupsBySprintID, err := as.Services.Standup.GetBySprintID(ps.Context, nil, &ret.ID, relStandupsBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
 		return Render(rc, as, &vsprint.Detail{
 			Model:                          ret,
+			TeamByTeamID:                   teamByTeamID,
 			Params:                         ps.Params,
-			RelEstimatesBySprintID:         estimatesBySprintID,
-			RelRetrosBySprintID:            retrosBySprintID,
-			RelSprintHistoriesBySprintID:   sprintHistoriesBySprintID,
-			RelSprintMembersBySprintID:     sprintMembersBySprintID,
-			RelSprintPermissionsBySprintID: sprintPermissionsBySprintID,
-			RelStandupsBySprintID:          standupsBySprintID,
+			RelEstimatesBySprintID:         relEstimatesBySprintID,
+			RelRetrosBySprintID:            relRetrosBySprintID,
+			RelSprintHistoriesBySprintID:   relSprintHistoriesBySprintID,
+			RelSprintMembersBySprintID:     relSprintMembersBySprintID,
+			RelSprintPermissionsBySprintID: relSprintPermissionsBySprintID,
+			RelStandupsBySprintID:          relStandupsBySprintID,
 		}, ps, "sprint", ret.String())
 	})
 }

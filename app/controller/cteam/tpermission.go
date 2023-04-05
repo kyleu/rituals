@@ -46,7 +46,10 @@ func TeamPermissionDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Permission)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vtpermission.Detail{Model: ret}, ps, "team", "tpermission", ret.String())
+
+		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
+
+		return controller.Render(rc, as, &vtpermission.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "tpermission", ret.String())
 	})
 }
 

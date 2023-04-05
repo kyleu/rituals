@@ -54,7 +54,15 @@ func RetroMemberDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Member)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vrmember.Detail{Model: ret}, ps, "retro", "rmember", ret.String())
+
+		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vrmember.Detail{
+			Model:          ret,
+			RetroByRetroID: retroByRetroID,
+			UserByUserID:   userByUserID,
+		}, ps, "retro", "rmember", ret.String())
 	})
 }
 

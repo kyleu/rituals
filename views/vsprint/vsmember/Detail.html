@@ -12,8 +12,8 @@
 {% code type Detail struct {
   layout.Basic
   Model *smember.SprintMember
-  SprintsBySprintID sprint.Sprints
-  UsersByUserID user.Users
+  SprintBySprintID *sprint.Sprint
+  UserByUserID *user.User
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -29,14 +29,14 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.SprintID) %}{% if x := p.SprintsBySprintID.Get(p.Model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            {%= components.DisplayUUID(&p.Model.SprintID) %}{% if p.SprintBySprintID != nil %} ({%s p.SprintBySprintID.TitleString() %}){% endif %}
             <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.UsersByUserID.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            {%= components.DisplayUUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
             <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>

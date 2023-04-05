@@ -11,7 +11,7 @@
 {% code type Detail struct {
   layout.Basic
   Model *tpermission.TeamPermission
-  TeamsByTeamID team.Teams
+  TeamByTeamID *team.Team
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -27,7 +27,7 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.TeamID) %}{% if x := p.TeamsByTeamID.Get(p.Model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            {%= components.DisplayUUID(&p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
             <a title="Team" href="{%s `/admin/db/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
           </td>
         </tr>

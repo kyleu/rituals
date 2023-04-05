@@ -46,7 +46,7 @@ var (
 type Detail struct {
 	layout.Basic
 	Model                          *sprint.Sprint
-	TeamsByTeamID                  team.Teams
+	TeamByTeamID                   *team.Team
 	Params                         filter.ParamSet
 	RelEstimatesBySprintID         estimate.Estimates
 	RelRetrosBySprintID            retro.Retros
@@ -132,17 +132,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:70
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
 //line views/vsprint/Detail.html:70
-	if p.Model.TeamID != nil {
+	if p.TeamByTeamID != nil {
 //line views/vsprint/Detail.html:70
-		if x := p.TeamsByTeamID.Get(*p.Model.TeamID); x != nil {
+		qw422016.N().S(` (`)
 //line views/vsprint/Detail.html:70
-			qw422016.N().S(` (`)
+		qw422016.E().S(p.TeamByTeamID.TitleString())
 //line views/vsprint/Detail.html:70
-			qw422016.E().S(x.TitleString())
-//line views/vsprint/Detail.html:70
-			qw422016.N().S(`)`)
-//line views/vsprint/Detail.html:70
-		}
+		qw422016.N().S(`)`)
 //line views/vsprint/Detail.html:70
 	}
 //line views/vsprint/Detail.html:70

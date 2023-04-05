@@ -45,7 +45,10 @@ func RetroHistoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (History)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vrhistory.Detail{Model: ret}, ps, "retro", "rhistory", ret.String())
+
+		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
+
+		return controller.Render(rc, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.String())
 	})
 }
 

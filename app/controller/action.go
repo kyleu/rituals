@@ -45,7 +45,10 @@ func ActionDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Action)"
 		ps.Data = ret
-		return Render(rc, as, &vaction.Detail{Model: ret}, ps, "action", ret.String())
+
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return Render(rc, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.String())
 	})
 }
 

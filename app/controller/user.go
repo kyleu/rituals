@@ -45,81 +45,82 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (User)"
 		ps.Data = ret
-		actionsByUserIDPrms := ps.Params.Get("action", nil, ps.Logger).Sanitize("action")
-		actionsByUserID, err := as.Services.Action.GetByUserID(ps.Context, nil, ret.ID, actionsByUserIDPrms, ps.Logger)
+
+		relActionsByUserIDPrms := ps.Params.Get("action", nil, ps.Logger).Sanitize("action")
+		relActionsByUserID, err := as.Services.Action.GetByUserID(ps.Context, nil, ret.ID, relActionsByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child actions")
 		}
-		commentsByUserIDPrms := ps.Params.Get("comment", nil, ps.Logger).Sanitize("comment")
-		commentsByUserID, err := as.Services.Comment.GetByUserID(ps.Context, nil, ret.ID, commentsByUserIDPrms, ps.Logger)
+		relCommentsByUserIDPrms := ps.Params.Get("comment", nil, ps.Logger).Sanitize("comment")
+		relCommentsByUserID, err := as.Services.Comment.GetByUserID(ps.Context, nil, ret.ID, relCommentsByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child comments")
 		}
-		emailsByUserIDPrms := ps.Params.Get("email", nil, ps.Logger).Sanitize("email")
-		emailsByUserID, err := as.Services.Email.GetByUserID(ps.Context, nil, ret.ID, emailsByUserIDPrms, ps.Logger)
+		relEmailsByUserIDPrms := ps.Params.Get("email", nil, ps.Logger).Sanitize("email")
+		relEmailsByUserID, err := as.Services.Email.GetByUserID(ps.Context, nil, ret.ID, relEmailsByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child emails")
 		}
-		estimateMembersByUserIDPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
-		estimateMembersByUserID, err := as.Services.EstimateMember.GetByUserID(ps.Context, nil, ret.ID, estimateMembersByUserIDPrms, ps.Logger)
+		relEstimateMembersByUserIDPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
+		relEstimateMembersByUserID, err := as.Services.EstimateMember.GetByUserID(ps.Context, nil, ret.ID, relEstimateMembersByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		feedbacksByUserIDPrms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
-		feedbacksByUserID, err := as.Services.Feedback.GetByUserID(ps.Context, nil, ret.ID, feedbacksByUserIDPrms, ps.Logger)
+		relFeedbacksByUserIDPrms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+		relFeedbacksByUserID, err := as.Services.Feedback.GetByUserID(ps.Context, nil, ret.ID, relFeedbacksByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child feedbacks")
 		}
-		reportsByUserIDPrms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
-		reportsByUserID, err := as.Services.Report.GetByUserID(ps.Context, nil, ret.ID, reportsByUserIDPrms, ps.Logger)
+		relReportsByUserIDPrms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
+		relReportsByUserID, err := as.Services.Report.GetByUserID(ps.Context, nil, ret.ID, relReportsByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child reports")
 		}
-		retroMembersByUserIDPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
-		retroMembersByUserID, err := as.Services.RetroMember.GetByUserID(ps.Context, nil, ret.ID, retroMembersByUserIDPrms, ps.Logger)
+		relRetroMembersByUserIDPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
+		relRetroMembersByUserID, err := as.Services.RetroMember.GetByUserID(ps.Context, nil, ret.ID, relRetroMembersByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		sprintMembersByUserIDPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
-		sprintMembersByUserID, err := as.Services.SprintMember.GetByUserID(ps.Context, nil, ret.ID, sprintMembersByUserIDPrms, ps.Logger)
+		relSprintMembersByUserIDPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
+		relSprintMembersByUserID, err := as.Services.SprintMember.GetByUserID(ps.Context, nil, ret.ID, relSprintMembersByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		standupMembersByUserIDPrms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
-		standupMembersByUserID, err := as.Services.StandupMember.GetByUserID(ps.Context, nil, ret.ID, standupMembersByUserIDPrms, ps.Logger)
+		relStandupMembersByUserIDPrms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
+		relStandupMembersByUserID, err := as.Services.StandupMember.GetByUserID(ps.Context, nil, ret.ID, relStandupMembersByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		storiesByUserIDPrms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
-		storiesByUserID, err := as.Services.Story.GetByUserID(ps.Context, nil, ret.ID, storiesByUserIDPrms, ps.Logger)
+		relStoriesByUserIDPrms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
+		relStoriesByUserID, err := as.Services.Story.GetByUserID(ps.Context, nil, ret.ID, relStoriesByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
 		}
-		teamMembersByUserIDPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
-		teamMembersByUserID, err := as.Services.TeamMember.GetByUserID(ps.Context, nil, ret.ID, teamMembersByUserIDPrms, ps.Logger)
+		relTeamMembersByUserIDPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
+		relTeamMembersByUserID, err := as.Services.TeamMember.GetByUserID(ps.Context, nil, ret.ID, relTeamMembersByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		votesByUserIDPrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
-		votesByUserID, err := as.Services.Vote.GetByUserID(ps.Context, nil, ret.ID, votesByUserIDPrms, ps.Logger)
+		relVotesByUserIDPrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		relVotesByUserID, err := as.Services.Vote.GetByUserID(ps.Context, nil, ret.ID, relVotesByUserIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
 		return Render(rc, as, &vuser.Detail{
 			Model:                      ret,
 			Params:                     ps.Params,
-			RelActionsByUserID:         actionsByUserID,
-			RelCommentsByUserID:        commentsByUserID,
-			RelEmailsByUserID:          emailsByUserID,
-			RelEstimateMembersByUserID: estimateMembersByUserID,
-			RelFeedbacksByUserID:       feedbacksByUserID,
-			RelReportsByUserID:         reportsByUserID,
-			RelRetroMembersByUserID:    retroMembersByUserID,
-			RelSprintMembersByUserID:   sprintMembersByUserID,
-			RelStandupMembersByUserID:  standupMembersByUserID,
-			RelStoriesByUserID:         storiesByUserID,
-			RelTeamMembersByUserID:     teamMembersByUserID,
-			RelVotesByUserID:           votesByUserID,
+			RelActionsByUserID:         relActionsByUserID,
+			RelCommentsByUserID:        relCommentsByUserID,
+			RelEmailsByUserID:          relEmailsByUserID,
+			RelEstimateMembersByUserID: relEstimateMembersByUserID,
+			RelFeedbacksByUserID:       relFeedbacksByUserID,
+			RelReportsByUserID:         relReportsByUserID,
+			RelRetroMembersByUserID:    relRetroMembersByUserID,
+			RelSprintMembersByUserID:   relSprintMembersByUserID,
+			RelStandupMembersByUserID:  relStandupMembersByUserID,
+			RelStoriesByUserID:         relStoriesByUserID,
+			RelTeamMembersByUserID:     relTeamMembersByUserID,
+			RelVotesByUserID:           relVotesByUserID,
 		}, ps, "user", ret.String())
 	})
 }

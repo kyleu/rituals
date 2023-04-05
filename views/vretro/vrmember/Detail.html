@@ -12,8 +12,8 @@
 {% code type Detail struct {
   layout.Basic
   Model *rmember.RetroMember
-  RetrosByRetroID retro.Retros
-  UsersByUserID user.Users
+  RetroByRetroID *retro.Retro
+  UserByUserID *user.User
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -29,14 +29,14 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.RetroID) %}{% if x := p.RetrosByRetroID.Get(p.Model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            {%= components.DisplayUUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
             <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.UserID) %}{% if x := p.UsersByUserID.Get(p.Model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            {%= components.DisplayUUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
             <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>

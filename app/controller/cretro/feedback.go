@@ -54,7 +54,15 @@ func FeedbackDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Feedback)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vfeedback.Detail{Model: ret}, ps, "retro", "feedback", ret.String())
+
+		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vfeedback.Detail{
+			Model:          ret,
+			RetroByRetroID: retroByRetroID,
+			UserByUserID:   userByUserID,
+		}, ps, "retro", "feedback", ret.String())
 	})
 }
 

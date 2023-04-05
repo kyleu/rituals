@@ -54,7 +54,15 @@ func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Member)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vemember.Detail{Model: ret}, ps, "estimate", "emember", ret.String())
+
+		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vemember.Detail{
+			Model:                ret,
+			EstimateByEstimateID: estimateByEstimateID,
+			UserByUserID:         userByUserID,
+		}, ps, "estimate", "emember", ret.String())
 	})
 }
 

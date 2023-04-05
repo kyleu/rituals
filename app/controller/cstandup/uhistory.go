@@ -45,7 +45,10 @@ func StandupHistoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (History)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vuhistory.Detail{Model: ret}, ps, "standup", "uhistory", ret.String())
+
+		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
+
+		return controller.Render(rc, as, &vuhistory.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "uhistory", ret.String())
 	})
 }
 

@@ -12,6 +12,8 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/retro"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vretro"
 )
@@ -61,33 +63,45 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Retro)"
 		ps.Data = ret
-		feedbacksByRetroIDPrms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
-		feedbacksByRetroID, err := as.Services.Feedback.GetByRetroID(ps.Context, nil, ret.ID, feedbacksByRetroIDPrms, ps.Logger)
+
+		var teamByTeamID *team.Team
+		if ret.TeamID != nil {
+			teamByTeamID, _ = as.Services.Team.Get(ps.Context, nil, *ret.TeamID, ps.Logger)
+		}
+		var sprintBySprintID *sprint.Sprint
+		if ret.SprintID != nil {
+			sprintBySprintID, _ = as.Services.Sprint.Get(ps.Context, nil, *ret.SprintID, ps.Logger)
+		}
+
+		relFeedbacksByRetroIDPrms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+		relFeedbacksByRetroID, err := as.Services.Feedback.GetByRetroID(ps.Context, nil, ret.ID, relFeedbacksByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child feedbacks")
 		}
-		retroHistoriesByRetroIDPrms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
-		retroHistoriesByRetroID, err := as.Services.RetroHistory.GetByRetroID(ps.Context, nil, ret.ID, retroHistoriesByRetroIDPrms, ps.Logger)
+		relRetroHistoriesByRetroIDPrms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
+		relRetroHistoriesByRetroID, err := as.Services.RetroHistory.GetByRetroID(ps.Context, nil, ret.ID, relRetroHistoriesByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		retroMembersByRetroIDPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
-		retroMembersByRetroID, err := as.Services.RetroMember.GetByRetroID(ps.Context, nil, ret.ID, retroMembersByRetroIDPrms, ps.Logger)
+		relRetroMembersByRetroIDPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
+		relRetroMembersByRetroID, err := as.Services.RetroMember.GetByRetroID(ps.Context, nil, ret.ID, relRetroMembersByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		retroPermissionsByRetroIDPrms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
-		retroPermissionsByRetroID, err := as.Services.RetroPermission.GetByRetroID(ps.Context, nil, ret.ID, retroPermissionsByRetroIDPrms, ps.Logger)
+		relRetroPermissionsByRetroIDPrms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
+		relRetroPermissionsByRetroID, err := as.Services.RetroPermission.GetByRetroID(ps.Context, nil, ret.ID, relRetroPermissionsByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vretro.Detail{
 			Model:                        ret,
+			TeamByTeamID:                 teamByTeamID,
+			SprintBySprintID:             sprintBySprintID,
 			Params:                       ps.Params,
-			RelFeedbacksByRetroID:        feedbacksByRetroID,
-			RelRetroHistoriesByRetroID:   retroHistoriesByRetroID,
-			RelRetroMembersByRetroID:     retroMembersByRetroID,
-			RelRetroPermissionsByRetroID: retroPermissionsByRetroID,
+			RelFeedbacksByRetroID:        relFeedbacksByRetroID,
+			RelRetroHistoriesByRetroID:   relRetroHistoriesByRetroID,
+			RelRetroMembersByRetroID:     relRetroMembersByRetroID,
+			RelRetroPermissionsByRetroID: relRetroPermissionsByRetroID,
 		}, ps, "retro", ret.String())
 	})
 }

@@ -46,7 +46,10 @@ func SprintPermissionDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Permission)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vspermission.Detail{Model: ret}, ps, "sprint", "spermission", ret.String())
+
+		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
+
+		return controller.Render(rc, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.String())
 	})
 }
 

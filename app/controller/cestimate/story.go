@@ -62,15 +62,21 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Story)"
 		ps.Data = ret
-		votesByStoryIDPrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
-		votesByStoryID, err := as.Services.Vote.GetByStoryID(ps.Context, nil, ret.ID, votesByStoryIDPrms, ps.Logger)
+
+		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		relVotesByStoryIDPrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		relVotesByStoryID, err := as.Services.Vote.GetByStoryID(ps.Context, nil, ret.ID, relVotesByStoryIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
 		return controller.Render(rc, as, &vstory.Detail{
-			Model:             ret,
-			Params:            ps.Params,
-			RelVotesByStoryID: votesByStoryID,
+			Model:                ret,
+			EstimateByEstimateID: estimateByEstimateID,
+			UserByUserID:         userByUserID,
+			Params:               ps.Params,
+			RelVotesByStoryID:    relVotesByStoryID,
 		}, ps, "estimate", "story", ret.String())
 	})
 }

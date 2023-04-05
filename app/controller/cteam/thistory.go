@@ -45,7 +45,10 @@ func TeamHistoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (History)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vthistory.Detail{Model: ret}, ps, "team", "thistory", ret.String())
+
+		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
+
+		return controller.Render(rc, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.String())
 	})
 }
 

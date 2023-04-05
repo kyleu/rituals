@@ -45,7 +45,10 @@ func SprintHistoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (History)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vshistory.Detail{Model: ret}, ps, "sprint", "shistory", ret.String())
+
+		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
+
+		return controller.Render(rc, as, &vshistory.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "shistory", ret.String())
 	})
 }
 

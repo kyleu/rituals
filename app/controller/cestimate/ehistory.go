@@ -45,7 +45,10 @@ func EstimateHistoryDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (History)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vehistory.Detail{Model: ret}, ps, "estimate", "ehistory", ret.String())
+
+		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
+
+		return controller.Render(rc, as, &vehistory.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "ehistory", ret.String())
 	})
 }
 

@@ -11,7 +11,7 @@
 {% code type Detail struct {
   layout.Basic
   Model *epermission.EstimatePermission
-  EstimatesByEstimateID estimate.Estimates
+  EstimateByEstimateID *estimate.Estimate
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
@@ -27,7 +27,7 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.EstimateID) %}{% if x := p.EstimatesByEstimateID.Get(p.Model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            {%= components.DisplayUUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
             <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
           </td>
         </tr>

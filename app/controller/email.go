@@ -45,7 +45,10 @@ func EmailDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Email)"
 		ps.Data = ret
-		return Render(rc, as, &vemail.Detail{Model: ret}, ps, "email", ret.String())
+
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return Render(rc, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.String())
 	})
 }
 

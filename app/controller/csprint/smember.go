@@ -54,7 +54,15 @@ func SprintMemberDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Member)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vsmember.Detail{Model: ret}, ps, "sprint", "smember", ret.String())
+
+		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vsmember.Detail{
+			Model:            ret,
+			SprintBySprintID: sprintBySprintID,
+			UserByUserID:     userByUserID,
+		}, ps, "sprint", "smember", ret.String())
 	})
 }
 

@@ -36,11 +36,11 @@ var (
 //line views/vestimate/vstory/Detail.html:15
 type Detail struct {
 	layout.Basic
-	Model                 *story.Story
-	EstimatesByEstimateID estimate.Estimates
-	UsersByUserID         user.Users
-	Params                filter.ParamSet
-	RelVotesByStoryID     vote.Votes
+	Model                *story.Story
+	EstimateByEstimateID *estimate.Estimate
+	UserByUserID         *user.User
+	Params               filter.ParamSet
+	RelVotesByStoryID    vote.Votes
 }
 
 //line views/vestimate/vstory/Detail.html:24
@@ -87,11 +87,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:41
 	components.StreamDisplayUUID(qw422016, &p.Model.EstimateID)
 //line views/vestimate/vstory/Detail.html:41
-	if x := p.EstimatesByEstimateID.Get(p.Model.EstimateID); x != nil {
+	if p.EstimateByEstimateID != nil {
 //line views/vestimate/vstory/Detail.html:41
 		qw422016.N().S(` (`)
 //line views/vestimate/vstory/Detail.html:41
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.EstimateByEstimateID.TitleString())
 //line views/vestimate/vstory/Detail.html:41
 		qw422016.N().S(`)`)
 //line views/vestimate/vstory/Detail.html:41
@@ -124,11 +124,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:52
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vestimate/vstory/Detail.html:52
-	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
+	if p.UserByUserID != nil {
 //line views/vestimate/vstory/Detail.html:52
 		qw422016.N().S(` (`)
 //line views/vestimate/vstory/Detail.html:52
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.UserByUserID.TitleString())
 //line views/vestimate/vstory/Detail.html:52
 		qw422016.N().S(`)`)
 //line views/vestimate/vstory/Detail.html:52

@@ -46,7 +46,10 @@ func StandupPermissionDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Permission)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vupermission.Detail{Model: ret}, ps, "standup", "upermission", ret.String())
+
+		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
+
+		return controller.Render(rc, as, &vupermission.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "upermission", ret.String())
 	})
 }
 

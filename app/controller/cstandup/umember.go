@@ -54,7 +54,15 @@ func StandupMemberDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Member)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vumember.Detail{Model: ret}, ps, "standup", "umember", ret.String())
+
+		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vumember.Detail{
+			Model:              ret,
+			StandupByStandupID: standupByStandupID,
+			UserByUserID:       userByUserID,
+		}, ps, "standup", "umember", ret.String())
 	})
 }
 

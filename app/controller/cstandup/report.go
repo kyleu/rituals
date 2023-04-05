@@ -54,7 +54,15 @@ func ReportDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Report)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vreport.Detail{Model: ret}, ps, "standup", "report", ret.String())
+
+		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vreport.Detail{
+			Model:              ret,
+			StandupByStandupID: standupByStandupID,
+			UserByUserID:       userByUserID,
+		}, ps, "standup", "report", ret.String())
 	})
 }
 

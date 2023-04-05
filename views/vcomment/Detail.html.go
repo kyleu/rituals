@@ -32,8 +32,8 @@ var (
 //line views/vcomment/Detail.html:11
 type Detail struct {
 	layout.Basic
-	Model         *comment.Comment
-	UsersByUserID user.Users
+	Model        *comment.Comment
+	UserByUserID *user.User
 }
 
 //line views/vcomment/Detail.html:17
@@ -96,11 +96,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcomment/Detail.html:42
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vcomment/Detail.html:42
-	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
+	if p.UserByUserID != nil {
 //line views/vcomment/Detail.html:42
 		qw422016.N().S(` (`)
 //line views/vcomment/Detail.html:42
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.UserByUserID.TitleString())
 //line views/vcomment/Detail.html:42
 		qw422016.N().S(`)`)
 //line views/vcomment/Detail.html:42

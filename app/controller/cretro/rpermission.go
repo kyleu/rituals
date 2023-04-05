@@ -46,7 +46,10 @@ func RetroPermissionDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Permission)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vrpermission.Detail{Model: ret}, ps, "retro", "rpermission", ret.String())
+
+		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
+
+		return controller.Render(rc, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.String())
 	})
 }
 

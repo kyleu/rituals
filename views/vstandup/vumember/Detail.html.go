@@ -33,9 +33,9 @@ var (
 //line views/vstandup/vumember/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model               *umember.StandupMember
-	StandupsByStandupID standup.Standups
-	UsersByUserID       user.Users
+	Model              *umember.StandupMember
+	StandupByStandupID *standup.Standup
+	UserByUserID       *user.User
 }
 
 //line views/vstandup/vumember/Detail.html:19
@@ -74,11 +74,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vumember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.StandupID)
 //line views/vstandup/vumember/Detail.html:32
-	if x := p.StandupsByStandupID.Get(p.Model.StandupID); x != nil {
+	if p.StandupByStandupID != nil {
 //line views/vstandup/vumember/Detail.html:32
 		qw422016.N().S(` (`)
 //line views/vstandup/vumember/Detail.html:32
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.StandupByStandupID.TitleString())
 //line views/vstandup/vumember/Detail.html:32
 		qw422016.N().S(`)`)
 //line views/vstandup/vumember/Detail.html:32
@@ -103,11 +103,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vumember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vstandup/vumember/Detail.html:39
-	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
+	if p.UserByUserID != nil {
 //line views/vstandup/vumember/Detail.html:39
 		qw422016.N().S(` (`)
 //line views/vstandup/vumember/Detail.html:39
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.UserByUserID.TitleString())
 //line views/vstandup/vumember/Detail.html:39
 		qw422016.N().S(`)`)
 //line views/vstandup/vumember/Detail.html:39

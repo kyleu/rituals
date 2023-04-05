@@ -12,6 +12,8 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vestimate"
 )
@@ -61,33 +63,45 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Estimate)"
 		ps.Data = ret
-		estimateHistoriesByEstimateIDPrms := ps.Params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
-		estimateHistoriesByEstimateID, err := as.Services.EstimateHistory.GetByEstimateID(ps.Context, nil, ret.ID, estimateHistoriesByEstimateIDPrms, ps.Logger)
+
+		var teamByTeamID *team.Team
+		if ret.TeamID != nil {
+			teamByTeamID, _ = as.Services.Team.Get(ps.Context, nil, *ret.TeamID, ps.Logger)
+		}
+		var sprintBySprintID *sprint.Sprint
+		if ret.SprintID != nil {
+			sprintBySprintID, _ = as.Services.Sprint.Get(ps.Context, nil, *ret.SprintID, ps.Logger)
+		}
+
+		relEstimateHistoriesByEstimateIDPrms := ps.Params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
+		relEstimateHistoriesByEstimateID, err := as.Services.EstimateHistory.GetByEstimateID(ps.Context, nil, ret.ID, relEstimateHistoriesByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		estimateMembersByEstimateIDPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
-		estimateMembersByEstimateID, err := as.Services.EstimateMember.GetByEstimateID(ps.Context, nil, ret.ID, estimateMembersByEstimateIDPrms, ps.Logger)
+		relEstimateMembersByEstimateIDPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
+		relEstimateMembersByEstimateID, err := as.Services.EstimateMember.GetByEstimateID(ps.Context, nil, ret.ID, relEstimateMembersByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		estimatePermissionsByEstimateIDPrms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
-		estimatePermissionsByEstimateID, err := as.Services.EstimatePermission.GetByEstimateID(ps.Context, nil, ret.ID, estimatePermissionsByEstimateIDPrms, ps.Logger)
+		relEstimatePermissionsByEstimateIDPrms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
+		relEstimatePermissionsByEstimateID, err := as.Services.EstimatePermission.GetByEstimateID(ps.Context, nil, ret.ID, relEstimatePermissionsByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		storiesByEstimateIDPrms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
-		storiesByEstimateID, err := as.Services.Story.GetByEstimateID(ps.Context, nil, ret.ID, storiesByEstimateIDPrms, ps.Logger)
+		relStoriesByEstimateIDPrms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
+		relStoriesByEstimateID, err := as.Services.Story.GetByEstimateID(ps.Context, nil, ret.ID, relStoriesByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
 		}
 		return Render(rc, as, &vestimate.Detail{
 			Model:                              ret,
+			TeamByTeamID:                       teamByTeamID,
+			SprintBySprintID:                   sprintBySprintID,
 			Params:                             ps.Params,
-			RelEstimateHistoriesByEstimateID:   estimateHistoriesByEstimateID,
-			RelEstimateMembersByEstimateID:     estimateMembersByEstimateID,
-			RelEstimatePermissionsByEstimateID: estimatePermissionsByEstimateID,
-			RelStoriesByEstimateID:             storiesByEstimateID,
+			RelEstimateHistoriesByEstimateID:   relEstimateHistoriesByEstimateID,
+			RelEstimateMembersByEstimateID:     relEstimateMembersByEstimateID,
+			RelEstimatePermissionsByEstimateID: relEstimatePermissionsByEstimateID,
+			RelStoriesByEstimateID:             relStoriesByEstimateID,
 		}, ps, "estimate", ret.String())
 	})
 }

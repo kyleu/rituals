@@ -33,9 +33,9 @@ var (
 //line views/vretro/vrmember/Detail.html:12
 type Detail struct {
 	layout.Basic
-	Model           *rmember.RetroMember
-	RetrosByRetroID retro.Retros
-	UsersByUserID   user.Users
+	Model          *rmember.RetroMember
+	RetroByRetroID *retro.Retro
+	UserByUserID   *user.User
 }
 
 //line views/vretro/vrmember/Detail.html:19
@@ -74,11 +74,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrmember/Detail.html:32
 	components.StreamDisplayUUID(qw422016, &p.Model.RetroID)
 //line views/vretro/vrmember/Detail.html:32
-	if x := p.RetrosByRetroID.Get(p.Model.RetroID); x != nil {
+	if p.RetroByRetroID != nil {
 //line views/vretro/vrmember/Detail.html:32
 		qw422016.N().S(` (`)
 //line views/vretro/vrmember/Detail.html:32
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.RetroByRetroID.TitleString())
 //line views/vretro/vrmember/Detail.html:32
 		qw422016.N().S(`)`)
 //line views/vretro/vrmember/Detail.html:32
@@ -103,11 +103,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrmember/Detail.html:39
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
 //line views/vretro/vrmember/Detail.html:39
-	if x := p.UsersByUserID.Get(p.Model.UserID); x != nil {
+	if p.UserByUserID != nil {
 //line views/vretro/vrmember/Detail.html:39
 		qw422016.N().S(` (`)
 //line views/vretro/vrmember/Detail.html:39
-		qw422016.E().S(x.TitleString())
+		qw422016.E().S(p.UserByUserID.TitleString())
 //line views/vretro/vrmember/Detail.html:39
 		qw422016.N().S(`)`)
 //line views/vretro/vrmember/Detail.html:39

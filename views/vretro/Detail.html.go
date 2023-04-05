@@ -43,8 +43,8 @@ var (
 type Detail struct {
 	layout.Basic
 	Model                        *retro.Retro
-	TeamsByTeamID                team.Teams
-	SprintsBySprintID            sprint.Sprints
+	TeamByTeamID                 *team.Team
+	SprintBySprintID             *sprint.Sprint
 	Params                       filter.ParamSet
 	RelFeedbacksByRetroID        feedback.Feedbacks
 	RelRetroHistoriesByRetroID   rhistory.RetroHistories
@@ -128,17 +128,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:66
 	components.StreamDisplayUUID(qw422016, p.Model.TeamID)
 //line views/vretro/Detail.html:66
-	if p.Model.TeamID != nil {
+	if p.TeamByTeamID != nil {
 //line views/vretro/Detail.html:66
-		if x := p.TeamsByTeamID.Get(*p.Model.TeamID); x != nil {
+		qw422016.N().S(` (`)
 //line views/vretro/Detail.html:66
-			qw422016.N().S(` (`)
+		qw422016.E().S(p.TeamByTeamID.TitleString())
 //line views/vretro/Detail.html:66
-			qw422016.E().S(x.TitleString())
-//line views/vretro/Detail.html:66
-			qw422016.N().S(`)`)
-//line views/vretro/Detail.html:66
-		}
+		qw422016.N().S(`)`)
 //line views/vretro/Detail.html:66
 	}
 //line views/vretro/Detail.html:66
@@ -169,17 +165,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:73
 	components.StreamDisplayUUID(qw422016, p.Model.SprintID)
 //line views/vretro/Detail.html:73
-	if p.Model.SprintID != nil {
+	if p.SprintBySprintID != nil {
 //line views/vretro/Detail.html:73
-		if x := p.SprintsBySprintID.Get(*p.Model.SprintID); x != nil {
+		qw422016.N().S(` (`)
 //line views/vretro/Detail.html:73
-			qw422016.N().S(` (`)
+		qw422016.E().S(p.SprintBySprintID.TitleString())
 //line views/vretro/Detail.html:73
-			qw422016.E().S(x.TitleString())
-//line views/vretro/Detail.html:73
-			qw422016.N().S(`)`)
-//line views/vretro/Detail.html:73
-		}
+		qw422016.N().S(`)`)
 //line views/vretro/Detail.html:73
 	}
 //line views/vretro/Detail.html:73

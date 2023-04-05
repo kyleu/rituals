@@ -54,7 +54,15 @@ func TeamMemberDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Member)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vtmember.Detail{Model: ret}, ps, "team", "tmember", ret.String())
+
+		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vtmember.Detail{
+			Model:        ret,
+			TeamByTeamID: teamByTeamID,
+			UserByUserID: userByUserID,
+		}, ps, "team", "tmember", ret.String())
 	})
 }
 

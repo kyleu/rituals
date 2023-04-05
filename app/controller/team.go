@@ -44,51 +44,52 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Team)"
 		ps.Data = ret
-		estimatesByTeamIDPrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
-		estimatesByTeamID, err := as.Services.Estimate.GetByTeamID(ps.Context, nil, &ret.ID, estimatesByTeamIDPrms, ps.Logger)
+
+		relEstimatesByTeamIDPrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
+		relEstimatesByTeamID, err := as.Services.Estimate.GetByTeamID(ps.Context, nil, &ret.ID, relEstimatesByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child estimates")
 		}
-		retrosByTeamIDPrms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
-		retrosByTeamID, err := as.Services.Retro.GetByTeamID(ps.Context, nil, &ret.ID, retrosByTeamIDPrms, ps.Logger)
+		relRetrosByTeamIDPrms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
+		relRetrosByTeamID, err := as.Services.Retro.GetByTeamID(ps.Context, nil, &ret.ID, relRetrosByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child retros")
 		}
-		sprintsByTeamIDPrms := ps.Params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
-		sprintsByTeamID, err := as.Services.Sprint.GetByTeamID(ps.Context, nil, &ret.ID, sprintsByTeamIDPrms, ps.Logger)
+		relSprintsByTeamIDPrms := ps.Params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
+		relSprintsByTeamID, err := as.Services.Sprint.GetByTeamID(ps.Context, nil, &ret.ID, relSprintsByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child sprints")
 		}
-		standupsByTeamIDPrms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
-		standupsByTeamID, err := as.Services.Standup.GetByTeamID(ps.Context, nil, &ret.ID, standupsByTeamIDPrms, ps.Logger)
+		relStandupsByTeamIDPrms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
+		relStandupsByTeamID, err := as.Services.Standup.GetByTeamID(ps.Context, nil, &ret.ID, relStandupsByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
-		teamHistoriesByTeamIDPrms := ps.Params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
-		teamHistoriesByTeamID, err := as.Services.TeamHistory.GetByTeamID(ps.Context, nil, ret.ID, teamHistoriesByTeamIDPrms, ps.Logger)
+		relTeamHistoriesByTeamIDPrms := ps.Params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
+		relTeamHistoriesByTeamID, err := as.Services.TeamHistory.GetByTeamID(ps.Context, nil, ret.ID, relTeamHistoriesByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		teamMembersByTeamIDPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
-		teamMembersByTeamID, err := as.Services.TeamMember.GetByTeamID(ps.Context, nil, ret.ID, teamMembersByTeamIDPrms, ps.Logger)
+		relTeamMembersByTeamIDPrms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
+		relTeamMembersByTeamID, err := as.Services.TeamMember.GetByTeamID(ps.Context, nil, ret.ID, relTeamMembersByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		teamPermissionsByTeamIDPrms := ps.Params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
-		teamPermissionsByTeamID, err := as.Services.TeamPermission.GetByTeamID(ps.Context, nil, ret.ID, teamPermissionsByTeamIDPrms, ps.Logger)
+		relTeamPermissionsByTeamIDPrms := ps.Params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
+		relTeamPermissionsByTeamID, err := as.Services.TeamPermission.GetByTeamID(ps.Context, nil, ret.ID, relTeamPermissionsByTeamIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vteam.Detail{
 			Model:                      ret,
 			Params:                     ps.Params,
-			RelEstimatesByTeamID:       estimatesByTeamID,
-			RelRetrosByTeamID:          retrosByTeamID,
-			RelSprintsByTeamID:         sprintsByTeamID,
-			RelStandupsByTeamID:        standupsByTeamID,
-			RelTeamHistoriesByTeamID:   teamHistoriesByTeamID,
-			RelTeamMembersByTeamID:     teamMembersByTeamID,
-			RelTeamPermissionsByTeamID: teamPermissionsByTeamID,
+			RelEstimatesByTeamID:       relEstimatesByTeamID,
+			RelRetrosByTeamID:          relRetrosByTeamID,
+			RelSprintsByTeamID:         relSprintsByTeamID,
+			RelStandupsByTeamID:        relStandupsByTeamID,
+			RelTeamHistoriesByTeamID:   relTeamHistoriesByTeamID,
+			RelTeamMembersByTeamID:     relTeamMembersByTeamID,
+			RelTeamPermissionsByTeamID: relTeamPermissionsByTeamID,
 		}, ps, "team", ret.String())
 	})
 }

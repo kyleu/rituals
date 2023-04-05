@@ -54,7 +54,15 @@ func VoteDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Vote)"
 		ps.Data = ret
-		return controller.Render(rc, as, &vvote.Detail{Model: ret}, ps, "estimate", "story", "vote", ret.String())
+
+		storyByStoryID, _ := as.Services.Story.Get(ps.Context, nil, ret.StoryID, ps.Logger)
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return controller.Render(rc, as, &vvote.Detail{
+			Model:          ret,
+			StoryByStoryID: storyByStoryID,
+			UserByUserID:   userByUserID,
+		}, ps, "estimate", "story", "vote", ret.String())
 	})
 }
 

@@ -45,7 +45,10 @@ func CommentDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ret.TitleString() + " (Comment)"
 		ps.Data = ret
-		return Render(rc, as, &vcomment.Detail{Model: ret}, ps, "comment", ret.String())
+
+		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
+
+		return Render(rc, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.String())
 	})
 }
 
