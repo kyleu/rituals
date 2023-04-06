@@ -13,7 +13,7 @@ import (
 )
 
 func MenuFor(
-	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger,
+	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger, //nolint:revive
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any

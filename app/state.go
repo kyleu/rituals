@@ -25,11 +25,10 @@ type BuildInfo struct {
 
 func (b *BuildInfo) String() string {
 	if b.Date == "unknown" {
-	} else {
-		d, _ := util.TimeFromJS(b.Date)
-		return fmt.Sprintf("%s (%s)", b.Version, util.TimeToYMD(d))
+		return b.Version
 	}
-	return b.Version
+	d, _ := util.TimeFromJS(b.Date)
+	return fmt.Sprintf("%s (%s)", b.Version, util.TimeToYMD(d))
 }
 
 type State struct {
