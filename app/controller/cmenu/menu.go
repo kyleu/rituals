@@ -37,7 +37,7 @@ func MenuFor(
 		ret = append(ret, menu.Separator, sandbox.Menu(ctx), menu.Separator, admin)
 	}
 	const aboutDesc = "Get assistance and advice for using " + util.AppName
-	ret = append(ret, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
+	ret = append(ret, menu.Separator, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
 	// $PF_SECTION_END(routes_end)$
 	return ret, data, nil
 }

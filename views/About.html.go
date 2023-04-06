@@ -57,79 +57,129 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <h3>Help</h3>
 `)
 //line views/About.html:19
-	qw422016.N().S(`    <p>Coming soon...</p>
+	qw422016.N().S(`    <p>
+      This app, <a href="https://rituals.dev">rituals.dev</a>, allows you to collaborate with your team to manage your work.
+      It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.
+    </p>
+    <p>
+      Collaborative editing is supported, using a websocket to provide lightning-fast updates.
+      If preferred, the app is fully functional without JavaScript.
+    </p>
 `)
-//line views/About.html:21
+//line views/About.html:28
 	qw422016.N().S(`  </div>
   `)
-//line views/About.html:23
+//line views/About.html:30
+	StreamSourceCode(qw422016)
+//line views/About.html:30
+	qw422016.N().S(`
+  `)
+//line views/About.html:31
 	StreamFeedback(qw422016)
-//line views/About.html:23
+//line views/About.html:31
 	qw422016.N().S(`
 `)
-//line views/About.html:24
+//line views/About.html:32
 }
 
-//line views/About.html:24
+//line views/About.html:32
 func (p *About) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/About.html:24
+//line views/About.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:24
+//line views/About.html:32
 	p.StreamBody(qw422016, as, ps)
-//line views/About.html:24
+//line views/About.html:32
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:24
+//line views/About.html:32
 }
 
-//line views/About.html:24
+//line views/About.html:32
 func (p *About) Body(as *app.State, ps *cutil.PageState) string {
-//line views/About.html:24
+//line views/About.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:24
+//line views/About.html:32
 	p.WriteBody(qb422016, as, ps)
-//line views/About.html:24
+//line views/About.html:32
 	qs422016 := string(qb422016.B)
-//line views/About.html:24
+//line views/About.html:32
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:24
+//line views/About.html:32
 	return qs422016
-//line views/About.html:24
+//line views/About.html:32
 }
 
-//line views/About.html:26
+//line views/About.html:34
+func StreamSourceCode(qw422016 *qt422016.Writer) {
+//line views/About.html:34
+	qw422016.N().S(`
+<div class="card">
+  <h3>Source Code</h3>
+  <p>The project is available on <a href="https://github.com/kyleu/rituals.dev" target="_blank">GitHub</a></p>
+</div>
+`)
+//line views/About.html:39
+}
+
+//line views/About.html:39
+func WriteSourceCode(qq422016 qtio422016.Writer) {
+//line views/About.html:39
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/About.html:39
+	StreamSourceCode(qw422016)
+//line views/About.html:39
+	qt422016.ReleaseWriter(qw422016)
+//line views/About.html:39
+}
+
+//line views/About.html:39
+func SourceCode() string {
+//line views/About.html:39
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/About.html:39
+	WriteSourceCode(qb422016)
+//line views/About.html:39
+	qs422016 := string(qb422016.B)
+//line views/About.html:39
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/About.html:39
+	return qs422016
+//line views/About.html:39
+}
+
+//line views/About.html:41
 func StreamFeedback(qw422016 *qt422016.Writer) {
-//line views/About.html:26
+//line views/About.html:41
 	qw422016.N().S(`
 <div class="card">
   <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:kyle@kyleu.com">Kyle U</a></p>
+  <p>For now, email <a href="mailto:rituals.dev@kyleu.com">Kyle U</a></p>
 </div>
 `)
-//line views/About.html:31
+//line views/About.html:46
 }
 
-//line views/About.html:31
+//line views/About.html:46
 func WriteFeedback(qq422016 qtio422016.Writer) {
-//line views/About.html:31
+//line views/About.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/About.html:31
+//line views/About.html:46
 	StreamFeedback(qw422016)
-//line views/About.html:31
+//line views/About.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/About.html:31
+//line views/About.html:46
 }
 
-//line views/About.html:31
+//line views/About.html:46
 func Feedback() string {
-//line views/About.html:31
+//line views/About.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/About.html:31
+//line views/About.html:46
 	WriteFeedback(qb422016)
-//line views/About.html:31
+//line views/About.html:46
 	qs422016 := string(qb422016.B)
-//line views/About.html:31
+//line views/About.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/About.html:31
+//line views/About.html:46
 	return qs422016
-//line views/About.html:31
+//line views/About.html:46
 }

@@ -108,7 +108,7 @@ export function feedbackAdd(f: Feedback) {
 }
 
 export function feedbackUpdate(f: Feedback) {
-  let div = opt("#feedback-" + f.id);
+  const div = opt("#feedback-" + f.id);
   if (!div) {
     return feedbackAdd(f);
   }

@@ -24,7 +24,7 @@
     <ul class="mt">
       {%- for _, link := range p.Links.GetByModes("desktop") -%}
       <li>
-        <a href="https://github.com/kyleu/rituals/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
+        <a href="https://github.com/kyleu/rituals.dev/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">
           {%= components.SVGRef(link.OSIcon(), 20, 20, "icon", ps) %} {%s link.OSString() %}
         </a>
         <div class="clear"></div>
@@ -53,7 +53,7 @@
             {%- if link.OS == "linux" && (link.Arch == "ppc64" || link.Arch == "mips64_hardfloat" || link.Arch == "mips_hardfloat") -%}
             <br />
             {%- endif -%}
-            <a href="https://github.com/kyleu/rituals/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.Arch %}</a>
+            <a href="https://github.com/kyleu/rituals.dev/releases/download/v{%s as.BuildInfo.Version %}/{%s link.URL %}">{%s link.Arch %}</a>
         {%- endfor -%}
           </td>
         </tr>

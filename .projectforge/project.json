@@ -29,10 +29,10 @@
     "org": "kyleu",
     "authorID": "kyleu",
     "authorName": "Kyle U",
-    "authorEmail": "kyle@kyleu.com",
+    "authorEmail": "rituals.dev@kyleu.com",
     "license": "MIT",
     "homepage": "https://rituals.dev",
-    "sourcecode": "https://github.com/kyleu/rituals",
+    "sourcecode": "https://github.com/kyleu/rituals.dev",
     "summary": "Work with your team to estimate work, track your progress, and gather feedback",
     "description": "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
   },

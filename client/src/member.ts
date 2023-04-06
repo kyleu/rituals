@@ -3,21 +3,10 @@ import {send} from "./app";
 import {memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView} from "./members.jsx";
 import {focusDelay, svgRef} from "./util";
 
-export interface Member {
+export type Member = {
   id: string;
   name: string;
   role: string;
-}
-
-export function username(id?: string) {
-  if (!id) {
-    return "System";
-  }
-  const ret = getMemberName(id);
-  if (ret) {
-    return ret;
-  }
-  return "Unknown User";
 }
 
 export function getSelfID() {
@@ -42,7 +31,9 @@ function wireSelfForm() {
         msg.picture = pictureInput.value;
       }
       send("self", msg);
-      els(".member-" + getSelfID() + "-name").forEach((x) => { x.innerText = nameInput.value; });
+      els(".member-" + getSelfID() + "-name").forEach((x) => {
+        x.innerText = nameInput.value;
+      });
       req("#self-picture").innerHTML = memberPictureFor(pictureInput ? pictureInput.value : "", 20, "icon");
       document.location.hash = "";
       return false;
@@ -55,6 +46,17 @@ export function getMemberName(id: string) {
     return req("#self-name").innerText;
   }
   return req("#member-" + id + " .member-name").innerText;
+}
+
+export function username(id?: string) {
+  if (!id) {
+    return "System";
+  }
+  const ret = getMemberName(id);
+  if (ret) {
+    return ret;
+  }
+  return "Unknown User";
 }
 
 export function getMemberRole(id: string) {
@@ -70,9 +72,11 @@ export function memberList(): Member[] {
   const sl: Member = {id: slID, name: getMemberName(slID), role: getMemberRole(slID)};
   ret.push(sl);
   els("#panel-members .member").forEach((e) => {
-    const id = e.dataset.id!;
-    ret.push({id: id, name: getMemberName(id), role: getMemberRole(id)});
-  })
+    if (e.dataset.id) {
+      const id = e.dataset.id;
+      ret.push({id: id, name: getMemberName(id), role: getMemberRole(id)});
+    }
+  });
   ret.sort((l, r) => {
     return l.name.localeCompare(r.name, undefined, {sensitivity: "accent"});
   });
@@ -121,7 +125,9 @@ export type MemberMessage = {
 }
 
 export function memberUpdate(param: MemberMessage) {
-  els(".member-" + param.userID + "-name").forEach((x) => { x.innerText = param.name; });
+  els(".member-" + param.userID + "-name").forEach((x) => {
+    x.innerText = param.name;
+  });
   if (param.userID === getSelfID()) {
     req("#self-role").innerText = param.role;
     req("#self-picture").innerHTML = memberPictureFor(param.picture ? param.picture : "", 20, "icon");
@@ -210,7 +216,7 @@ export function onlineUpdate(param: { userID: string; connected: boolean; }) {
 export function initMembers() {
   req("#self-edit-link").onclick = () => {
     focusDelay(req("#self-name-input"));
-  }
+  };
   wireSelfForm();
   wireMemberForms();
 }

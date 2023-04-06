@@ -7,10 +7,10 @@ const (
 	AppName    = "rituals.dev"
 	AppSummary = "Work with your team to estimate work, track your progress, and gather feedback"
 	AppPort    = 18000
-	AppContact = "Kyle U <kyle@kyleu.com>"
+	AppContact = "Kyle U <rituals.dev@kyleu.com>"
 	AppURL     = "https://rituals.dev"
-	AppSource  = "https://github.com/kyleu/rituals"
-	AppLegal   = `Built by <a href="mailto:kyle@kyleu.com">Kyle U</a>, all rights reserved`
+	AppSource  = "https://github.com/kyleu/rituals.dev"
+	AppLegal   = `Built by <a href="mailto:rituals.dev@kyleu.com">Kyle U</a>, all rights reserved`
 
 	// $PF_SECTION_START(keys)$.
 	KeyTeam     = "team"

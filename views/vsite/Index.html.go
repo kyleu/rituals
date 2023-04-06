@@ -46,7 +46,7 @@ func (p *Index) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
     <p>This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.</p>
     <p>
       <a href="/download"><button>Download</button></a>
-      <a href="https://github.com/kyleu/rituals"><button>Source Code</button></a>
+      <a href="https://github.com/kyleu/rituals.dev"><button>Source Code</button></a>
     </p>
   </div>
 `)

@@ -59,58 +59,65 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/Home.html:30
 	qw422016.N().S(`</h3>
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
+    <p>
+      This app, <a href="https://rituals.dev">rituals.dev</a>, allows you to collaborate with your team to manage your work.
+      It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.
+    </p>
+    <div>
+      Get started below!
+    </div>
   </div>
   `)
-//line views/Home.html:33
+//line views/Home.html:40
 	vwteam.StreamTeamListTable(qw422016, p.Teams, false, nil, nil, ps)
-//line views/Home.html:33
+//line views/Home.html:40
 	qw422016.N().S(`
   `)
-//line views/Home.html:34
+//line views/Home.html:41
 	vwsprint.StreamSprintListTable(qw422016, p.Sprints, nil, false, nil, nil, ps)
-//line views/Home.html:34
+//line views/Home.html:41
 	qw422016.N().S(`
   `)
-//line views/Home.html:35
+//line views/Home.html:42
 	vwestimate.StreamEstimateListTable(qw422016, p.Estimates, nil, nil, false, nil, nil, ps)
-//line views/Home.html:35
+//line views/Home.html:42
 	qw422016.N().S(`
   `)
-//line views/Home.html:36
+//line views/Home.html:43
 	vwstandup.StreamStandupListTable(qw422016, p.Standups, nil, nil, false, nil, nil, ps)
-//line views/Home.html:36
+//line views/Home.html:43
 	qw422016.N().S(`
   `)
-//line views/Home.html:37
+//line views/Home.html:44
 	vwretro.StreamRetroListTable(qw422016, p.Retros, nil, nil, false, nil, nil, ps)
-//line views/Home.html:37
+//line views/Home.html:44
 	qw422016.N().S(`
 `)
-//line views/Home.html:38
+//line views/Home.html:45
 }
 
-//line views/Home.html:38
+//line views/Home.html:45
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:38
+//line views/Home.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:38
+//line views/Home.html:45
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:38
+//line views/Home.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:38
+//line views/Home.html:45
 }
 
-//line views/Home.html:38
+//line views/Home.html:45
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:38
+//line views/Home.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:38
+//line views/Home.html:45
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:38
+//line views/Home.html:45
 	qs422016 := string(qb422016.B)
-//line views/Home.html:38
+//line views/Home.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:38
+//line views/Home.html:45
 	return qs422016
-//line views/Home.html:38
+//line views/Home.html:45
 }

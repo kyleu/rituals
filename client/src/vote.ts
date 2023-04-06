@@ -24,7 +24,7 @@ export type VoteResults = {
 
 export function onVote(v: Vote) {
   els("#modal-story-" + v.storyID + " .story-members .member").forEach((m) => {
-    if (m.dataset.member == v.userID) {
+    if (m.dataset.member === v.userID) {
       req(".choice", m).innerHTML = svgRef("check", 18, "");
     }
   });
@@ -32,10 +32,10 @@ export function onVote(v: Vote) {
 }
 
 export function applyCalcs(storyID: string, votes: Vote[], results: VoteResults) {
-  const items = memberList().map(member => {
-    const v = votes.find(vote => {
-      return vote.userID == member.id;
-    })
+  const items = memberList().map((member) => {
+    const v = votes.find((vote) => {
+      return vote.userID === member.id;
+    });
     return snippetVote(member, v);
   });
 

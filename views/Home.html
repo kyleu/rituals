@@ -29,6 +29,13 @@
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
+    <p>
+      This app, <a href="https://rituals.dev">rituals.dev</a>, allows you to collaborate with your team to manage your work.
+      It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.
+    </p>
+    <div>
+      Get started below!
+    </div>
   </div>
   {%= vwteam.TeamListTable(p.Teams, false, nil, nil, ps) %}
   {%= vwsprint.SprintListTable(p.Sprints, nil, false, nil, nil, ps) %}

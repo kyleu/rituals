@@ -17,15 +17,30 @@
   <div class="card">
     <h3>Help</h3>
     {%- comment %}$PF_SECTION_START(help)${% endcomment -%}
-    <p>Coming soon...</p>
+    <p>
+      This app, <a href="https://rituals.dev">rituals.dev</a>, allows you to collaborate with your team to manage your work.
+      It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.
+    </p>
+    <p>
+      Collaborative editing is supported, using a websocket to provide lightning-fast updates.
+      If preferred, the app is fully functional without JavaScript.
+    </p>
     {%- comment %}$PF_SECTION_END(help)${% endcomment -%}
   </div>
+  {%= SourceCode() %}
   {%= Feedback() %}
+{% endfunc %}
+
+{% func SourceCode() %}
+<div class="card">
+  <h3>Source Code</h3>
+  <p>The project is available on <a href="https://github.com/kyleu/rituals.dev" target="_blank">GitHub</a></p>
+</div>
 {% endfunc %}
 
 {% func Feedback() %}
 <div class="card">
   <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:kyle@kyleu.com">Kyle U</a></p>
+  <p>For now, email <a href="mailto:rituals.dev@kyleu.com">Kyle U</a></p>
 </div>
 {% endfunc %}

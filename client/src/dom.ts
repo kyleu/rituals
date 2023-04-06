@@ -1,7 +1,4 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-// @ts-ignore
-import * as JSX from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
-
 export function els<T extends HTMLElement>(selector: string, context?: Element): readonly T[] {
   let result: NodeListOf<Element>;
   if (context) {
@@ -55,20 +52,6 @@ export function setDisplay(el: string | HTMLElement, condition: boolean, v = "bl
 
 export function clear(el: string | HTMLElement) {
   return setHTML(el, "");
-}
-
-export function setContent(el: string | HTMLElement, e: Element | Element[]) {
-  if (typeof el === "string") {
-    el = req(el);
-  }
-  clear(el);
-  const h = el as HTMLElement;
-  if (Array.isArray(e)) {
-    e.forEach((x) => h.appendChild(x));
-  } else {
-    el.appendChild(e);
-  }
-  return el;
 }
 
 export function setText(el: string | HTMLElement, text: string): HTMLElement {

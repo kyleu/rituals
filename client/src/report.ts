@@ -103,7 +103,7 @@ export function reportUpdate(r: Report) {
   if (r.day.length > 10) {
     r.day = r.day.substring(0, 10);
   }
-  let div = opt("#report-" + r.id);
+  const div = opt("#report-" + r.id);
   if (!div) {
     return reportAdd(r);
   }
@@ -117,10 +117,12 @@ export function reportUpdate(r: Report) {
 
 export function reportRemove(id: string) {
   const rpt = req("#report-" + id);
-  const bd = rpt.parentElement!;
-  rpt.remove();
-  if (bd.children.length === 0) {
-    bd.parentElement?.remove();
+  if (rpt.parentElement) {
+    const bd = rpt.parentElement;
+    rpt.remove();
+    if (bd.children.length === 0) {
+      bd.parentElement?.remove();
+    }
   }
   flashCreate(id + "-removed", "success", `report has been removed`);
   req("#modal-report-" + id).remove();

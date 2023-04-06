@@ -36,10 +36,10 @@ function wireStoryModalFormVote(id: string, e: HTMLElement) {
       req<HTMLInputElement>("input[name=\"vote\"]", opt).checked = true;
       send("vote", {"storyID": id, "vote": opt.dataset.choice});
       els("#modal-story-" + id + " .story-members .member").forEach((m) => {
-        if (m.dataset.member == getSelfID()) {
+        if (m.dataset.member === getSelfID()) {
           req(".choice", m).innerHTML = svgRef("check", 18, "");
         }
-      })
+      });
       return false;
     };
   });
