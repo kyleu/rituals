@@ -125,7 +125,9 @@ func (s *Service) Close() {
 
 var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
 
-func (s *Service) Upgrade(ctx context.Context, rc *fasthttp.RequestCtx, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger) error {
+func (s *Service) Upgrade(
+	ctx context.Context, rc *fasthttp.RequestCtx, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger,
+) error {
 	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
 		cx, err := s.Register(u, profile, accts, conn, logger)
 		if err != nil {

@@ -66,7 +66,7 @@ func (s *Service) Healthcheck(dbName string, db *sqlx.DB) error {
 			err = res.Err()
 		}
 		if strings.Contains(err.Error(), "does not exist") {
-			return errors.Wrapf(err, "database does not exist; run the following:\n"+schema.CreateDatabase())
+			return errors.Wrapf(err, "database [%s] does not exist; run the following:\n"+schema.CreateDatabase(), dbName)
 		}
 		return errors.Wrapf(err, "unable to run healthcheck [%s]", q)
 	}
@@ -143,7 +143,7 @@ func (s *Service) newSpan(
 	return time.Now(), nc, span, logger
 }
 
-func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, logger util.Logger, err error) {
+func (s *Service) complete(q string, op string, span *telemetry.Span, started time.Time, _ util.Logger, err error) {
 	if err != nil && span != nil {
 		span.OnError(err)
 	}

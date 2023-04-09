@@ -28,8 +28,8 @@ type Connection struct {
 }
 
 // Creates a new Connection.
-func NewConnection(svc string, user *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(), User: user, Profile: profile, Accounts: accounts, Svc: svc, socket: socket}
+func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
+	return &Connection{ID: util.UUID(), User: usr, Profile: profile, Accounts: accounts, Svc: svc, socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.

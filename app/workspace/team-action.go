@@ -64,9 +64,9 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 		return ft, MsgNoChangesNeeded, ft.Team.PublicWebPath(), nil
 	}
 	if modelChanged {
-		model, err := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, tx, p.Logger)
-		if err != nil {
-			return nil, "", "", err
+		model, e := p.Svc.SaveTeam(p.Ctx, tgt, ft.Self.UserID, tx, p.Logger)
+		if e != nil {
+			return nil, "", "", e
 		}
 		ft.Team = model
 		err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActUpdate, model, &ft.Self.UserID, p.Logger)
@@ -75,15 +75,15 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 		}
 	}
 	if permsChanged {
-		if err := p.Svc.tp.DeleteWhere(p.Ctx, tx, "team_id = $1", len(ft.Permissions), p.Logger, tgt.ID); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.tp.DeleteWhere(p.Ctx, tx, "team_id = $1", len(ft.Permissions), p.Logger, tgt.ID); e != nil {
+			return nil, "", "", e
 		}
 		newPerms := make(tpermission.TeamPermissions, 0, len(perms))
 		for _, x := range perms {
 			newPerms = append(newPerms, &tpermission.TeamPermission{TeamID: tgt.ID, Key: x.Key, Value: x.Value})
 		}
-		if err = p.Svc.tp.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.tp.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
+			return nil, "", "", e
 		}
 		err = p.Svc.send(enum.ModelServiceTeam, ft.Team.ID, action.ActPermissions, perms, &ft.Self.UserID, p.Logger)
 		if err != nil {

@@ -11,5 +11,7 @@ Work with your team to estimate work, track your progress, and gather feedback
 - [Installation](doc/installation.md)
 - [Contributing](doc/contributing.md)
 - [Customizing](doc/customizing.md)
-- [Contributing](doc/contributing.md)
+- [Releasing](doc/releasing.md)
+- [Running](doc/running.md)
+- [Scripts](doc/scripts.md)
 - [Technology](doc/technology.md)

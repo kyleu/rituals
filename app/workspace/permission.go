@@ -11,11 +11,12 @@ func loadPermissionsForm(frm util.ValueMap) util.Permissions {
 	for k := range frm {
 		if strings.HasPrefix(k, "perm-") {
 			k = strings.TrimPrefix(k, "perm-")
-			if k == util.KeyTeam {
+			switch k {
+			case util.KeyTeam:
 				ret = append(ret, &util.Permission{Key: util.KeyTeam, Value: "true"})
-			} else if k == util.KeySprint {
+			case util.KeySprint:
 				ret = append(ret, &util.Permission{Key: util.KeySprint, Value: "true"})
-			} else {
+			default:
 				l, r := util.StringSplit(k, '-', true)
 				var curr *util.Permission
 				for _, x := range ret {

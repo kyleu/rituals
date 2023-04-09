@@ -80,9 +80,9 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		return fu, MsgNoChangesNeeded, fu.Standup.PublicWebPath(), nil
 	}
 	if modelChanged {
-		model, err := p.Svc.SaveStandup(p.Ctx, tgt, fu.Self.UserID, tx, p.Logger)
-		if err != nil {
-			return nil, "", "", err
+		model, e := p.Svc.SaveStandup(p.Ctx, tgt, fu.Self.UserID, tx, p.Logger)
+		if e != nil {
+			return nil, "", "", e
 		}
 		err = updateTeam(
 			util.KeyStandup, fu.Standup.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fu.Self.UserID, p,
@@ -107,15 +107,15 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		}
 	}
 	if permsChanged {
-		if err := p.Svc.up.DeleteWhere(p.Ctx, tx, "standup_id = $1", len(fu.Permissions), p.Logger, tgt.ID); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.up.DeleteWhere(p.Ctx, tx, "standup_id = $1", len(fu.Permissions), p.Logger, tgt.ID); e != nil {
+			return nil, "", "", e
 		}
 		newPerms := make(upermission.StandupPermissions, 0, len(perms))
 		for _, x := range perms {
 			newPerms = append(newPerms, &upermission.StandupPermission{StandupID: tgt.ID, Key: x.Key, Value: x.Value})
 		}
-		if err = p.Svc.up.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.up.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
+			return nil, "", "", e
 		}
 		err = p.Svc.send(enum.ModelServiceStandup, fu.Standup.ID, action.ActPermissions, perms, &fu.Self.UserID, p.Logger)
 		if err != nil {

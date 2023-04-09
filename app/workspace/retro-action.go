@@ -85,9 +85,9 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		return fr, MsgNoChangesNeeded, fr.Retro.PublicWebPath(), nil
 	}
 	if modelChanged {
-		model, err := p.Svc.SaveRetro(p.Ctx, tgt, fr.Self.UserID, tx, p.Logger)
-		if err != nil {
-			return nil, "", "", err
+		model, e := p.Svc.SaveRetro(p.Ctx, tgt, fr.Self.UserID, tx, p.Logger)
+		if e != nil {
+			return nil, "", "", e
 		}
 		err = updateTeam(
 			util.KeyRetro, fr.Retro.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fr.Self.UserID, p,
@@ -112,15 +112,15 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		}
 	}
 	if permsChanged {
-		if err := p.Svc.rp.DeleteWhere(p.Ctx, tx, "retro_id = $1", len(fr.Permissions), p.Logger, tgt.ID); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.rp.DeleteWhere(p.Ctx, tx, "retro_id = $1", len(fr.Permissions), p.Logger, tgt.ID); e != nil {
+			return nil, "", "", e
 		}
 		newPerms := make(rpermission.RetroPermissions, 0, len(perms))
 		for _, x := range perms {
 			newPerms = append(newPerms, &rpermission.RetroPermission{RetroID: tgt.ID, Key: x.Key, Value: x.Value})
 		}
-		if err = p.Svc.rp.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.rp.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
+			return nil, "", "", e
 		}
 		err = p.Svc.send(enum.ModelServiceRetro, fr.Retro.ID, action.ActPermissions, perms, &fr.Self.UserID, p.Logger)
 		if err != nil {

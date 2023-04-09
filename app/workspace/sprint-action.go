@@ -72,9 +72,9 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		return fs, MsgNoChangesNeeded, fs.Sprint.PublicWebPath(), nil
 	}
 	if modelChanged {
-		model, err := p.Svc.SaveSprint(p.Ctx, tgt, fs.Self.UserID, tx, p.Logger)
-		if err != nil {
-			return nil, "", "", err
+		model, e := p.Svc.SaveSprint(p.Ctx, tgt, fs.Self.UserID, tx, p.Logger)
+		if e != nil {
+			return nil, "", "", e
 		}
 		err = updateTeam(
 			util.KeySprint, fs.Sprint.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fs.Self.UserID, p,
@@ -93,15 +93,15 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		}
 	}
 	if permsChanged {
-		if err := p.Svc.sp.DeleteWhere(p.Ctx, tx, "sprint_id = $1", len(fs.Permissions), p.Logger, tgt.ID); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.sp.DeleteWhere(p.Ctx, tx, "sprint_id = $1", len(fs.Permissions), p.Logger, tgt.ID); e != nil {
+			return nil, "", "", e
 		}
 		newPerms := make(spermission.SprintPermissions, 0, len(perms))
 		for _, x := range perms {
 			newPerms = append(newPerms, &spermission.SprintPermission{SprintID: tgt.ID, Key: x.Key, Value: x.Value})
 		}
-		if err = p.Svc.sp.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.sp.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
+			return nil, "", "", e
 		}
 		err = p.Svc.send(enum.ModelServiceSprint, fs.Sprint.ID, action.ActPermissions, perms, &fs.Self.UserID, p.Logger)
 		if err != nil {

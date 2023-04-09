@@ -1,7 +1,7 @@
 package cutil
 
 import (
-	"crypto/md5"
+	"crypto/md5" //nolint:gosec
 	"fmt"
 	"strconv"
 	"strings"
@@ -17,7 +17,7 @@ type Gravatar struct {
 }
 
 func NewGravatar(email string, size int) *Gravatar {
-	hash := md5.Sum([]byte(email))
+	hash := md5.Sum([]byte(email)) //nolint:gosec
 	return &Gravatar{hash: fmt.Sprintf("%x", hash), size: size, forceDefault: true, rating: "pg"}
 }
 
@@ -46,9 +46,9 @@ func (g *Gravatar) AvatarURL() string {
 
 func (g *Gravatar) addParameter(url string, key string, value string) string {
 	if strings.HasSuffix(url, g.hash) || strings.HasSuffix(url, ".json") {
-		url = url + "?"
+		url += "?"
 	} else {
-		url = url + "&"
+		url += "&"
 	}
 
 	return url + key + "=" + value

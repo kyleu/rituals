@@ -13,7 +13,7 @@ import (
 
 type searchFn func(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error)
 
-func (s *Service) Search(ctx context.Context, q string, params filter.ParamSet, profile *user.Profile, data any, logger util.Logger) (result.Results, error) {
+func (s *Service) Search(ctx context.Context, q string, params filter.ParamSet, _ *user.Profile, data any, logger util.Logger) (result.Results, error) {
 	w, err := FromAny(data)
 	if err != nil {
 		return nil, errors.Errorf("invalid search data of type [%T]", data)
@@ -33,7 +33,7 @@ func (s *Service) Search(ctx context.Context, q string, params filter.ParamSet, 
 	return ret, nil
 }
 
-func (s *Service) SearchTeams(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
+func (s *Service) SearchTeams(_ context.Context, q string, _ filter.ParamSet, w *Workspace, _ util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Teams {
 		res := result.NewResult(util.KeyTeam, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyTeam, x, x, q)
@@ -44,7 +44,7 @@ func (s *Service) SearchTeams(ctx context.Context, q string, prms filter.ParamSe
 	return ret, nil
 }
 
-func (s *Service) SearchSprints(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
+func (s *Service) SearchSprints(_ context.Context, q string, _ filter.ParamSet, w *Workspace, _ util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Sprints {
 		res := result.NewResult(util.KeySprint, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeySprint, x, x, q)
@@ -55,7 +55,7 @@ func (s *Service) SearchSprints(ctx context.Context, q string, prms filter.Param
 	return ret, nil
 }
 
-func (s *Service) SearchEstimates(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
+func (s *Service) SearchEstimates(_ context.Context, q string, _ filter.ParamSet, w *Workspace, _ util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Estimates {
 		res := result.NewResult(util.KeyEstimate, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyEstimate, x, x, q)
@@ -81,7 +81,7 @@ func (s *Service) SearchStories(ctx context.Context, q string, prms filter.Param
 	return ret, nil
 }
 
-func (s *Service) SearchStandups(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
+func (s *Service) SearchStandups(_ context.Context, q string, _ filter.ParamSet, w *Workspace, _ util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Standups {
 		res := result.NewResult(util.KeyStandup, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyStandup, x, x, q)
@@ -92,7 +92,7 @@ func (s *Service) SearchStandups(ctx context.Context, q string, prms filter.Para
 	return ret, nil
 }
 
-func (s *Service) SearchRetros(ctx context.Context, q string, prms filter.ParamSet, w *Workspace, logger util.Logger) (result.Results, error) {
+func (s *Service) SearchRetros(_ context.Context, q string, _ filter.ParamSet, w *Workspace, _ util.Logger) (result.Results, error) {
 	var ret result.Results
 	for _, x := range w.Retros {
 		res := result.NewResult(util.KeyRetro, x.ID.String(), x.PublicWebPath(), x.TitleString(), util.KeyRetro, x, x, q)

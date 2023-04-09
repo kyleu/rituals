@@ -88,9 +88,9 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 		return fe, MsgNoChangesNeeded, fe.Estimate.PublicWebPath(), nil
 	}
 	if modelChanged {
-		model, err := p.Svc.SaveEstimate(p.Ctx, tgt, fe.Self.UserID, tx, p.Logger)
-		if err != nil {
-			return nil, "", "", err
+		model, e := p.Svc.SaveEstimate(p.Ctx, tgt, fe.Self.UserID, tx, p.Logger)
+		if e != nil {
+			return nil, "", "", e
 		}
 		err = updateTeam(
 			util.KeyEstimate, fe.Estimate.TeamID, model.TeamID, model.ID, model.TitleString(), model.PublicWebPath(), model.IconSafe(), fe.Self.UserID, p,
@@ -115,15 +115,15 @@ func estimateUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, string,
 		}
 	}
 	if permsChanged {
-		if err := p.Svc.ep.DeleteWhere(p.Ctx, tx, "estimate_id = $1", len(fe.Permissions), p.Logger, tgt.ID); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.ep.DeleteWhere(p.Ctx, tx, "estimate_id = $1", len(fe.Permissions), p.Logger, tgt.ID); e != nil {
+			return nil, "", "", e
 		}
 		newPerms := make(epermission.EstimatePermissions, 0, len(perms))
 		for _, x := range perms {
 			newPerms = append(newPerms, &epermission.EstimatePermission{EstimateID: tgt.ID, Key: x.Key, Value: x.Value})
 		}
-		if err = p.Svc.ep.Save(p.Ctx, tx, p.Logger, newPerms...); err != nil {
-			return nil, "", "", err
+		if e := p.Svc.ep.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
+			return nil, "", "", e
 		}
 		err = p.Svc.send(enum.ModelServiceEstimate, fe.Estimate.ID, action.ActPermissions, perms, &fe.Self.UserID, p.Logger)
 		if err != nil {

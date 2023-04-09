@@ -12,12 +12,12 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) SocketOpen(sock *websocket.Service, conn *websocket.Connection, logger util.Logger) error {
+func (s *Service) SocketOpen(_ *websocket.Service, _ *websocket.Connection, _ util.Logger) error {
 	return nil
 }
 
 func (s *Service) SocketHandler(
-	ctx context.Context, sock *websocket.Service, conn *websocket.Connection, svc string, cmd string, param json.RawMessage, logger util.Logger,
+	ctx context.Context, _ *websocket.Service, conn *websocket.Connection, svc string, cmd string, param json.RawMessage, logger util.Logger,
 ) error {
 	logger.Infof("processing [%s] message of type [%s]", svc, cmd)
 	svc, idStr := util.StringSplit(svc, ':', true)
@@ -62,7 +62,7 @@ func (s *Service) SocketHandler(
 	return nil
 }
 
-func (s *Service) SocketClose(sock *websocket.Service, conn *websocket.Connection, logger util.Logger) error {
+func (s *Service) SocketClose(_ *websocket.Service, conn *websocket.Connection, logger util.Logger) error {
 	param := util.ValueMap{"userID": conn.Profile.ID, "connected": false}
 	for _, ch := range conn.Channels {
 		svc, modelIDStr := util.StringSplit(ch, ':', true)

@@ -30,7 +30,6 @@ func (s Sandboxes) Get(key string) *Sandbox {
 	return nil
 }
 
-// AllSandboxes is a list of all sandboxes, in order
 // $PF_SECTION_START(sandboxes)$.
 var AllSandboxes = Sandboxes{testbed}
 
