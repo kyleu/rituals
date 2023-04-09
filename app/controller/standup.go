@@ -94,10 +94,11 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
 		return Render(rc, as, &vstandup.Detail{
-			Model:                            ret,
-			TeamByTeamID:                     teamByTeamID,
-			SprintBySprintID:                 sprintBySprintID,
-			Params:                           ps.Params,
+			Model:            ret,
+			TeamByTeamID:     teamByTeamID,
+			SprintBySprintID: sprintBySprintID,
+			Params:           ps.Params,
+
 			RelReportsByStandupID:            relReportsByStandupID,
 			RelStandupHistoriesByStandupID:   relStandupHistoriesByStandupID,
 			RelStandupMembersByStandupID:     relStandupMembersByStandupID,

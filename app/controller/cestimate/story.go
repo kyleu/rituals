@@ -76,7 +76,8 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 			EstimateByEstimateID: estimateByEstimateID,
 			UserByUserID:         userByUserID,
 			Params:               ps.Params,
-			RelVotesByStoryID:    relVotesByStoryID,
+
+			RelVotesByStoryID: relVotesByStoryID,
 		}, ps, "estimate", "story", ret.String())
 	})
 }

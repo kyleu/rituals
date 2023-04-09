@@ -15,25 +15,26 @@ import (
 	"github.com/kyleu/rituals/app/estimate/story/vote"
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/user"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
 	"github.com/kyleu/rituals/views/vestimate/vstory/vvote"
 )
 
-//line views/vestimate/vstory/Detail.html:15
+//line views/vestimate/vstory/Detail.html:16
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vestimate/vstory/Detail.html:15
+//line views/vestimate/vstory/Detail.html:16
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vestimate/vstory/Detail.html:15
+//line views/vestimate/vstory/Detail.html:16
 type Detail struct {
 	layout.Basic
 	Model                *story.Story
@@ -43,31 +44,31 @@ type Detail struct {
 	RelVotesByStoryID    vote.Votes
 }
 
-//line views/vestimate/vstory/Detail.html:24
+//line views/vestimate/vstory/Detail.html:25
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/Detail.html:24
+//line views/vestimate/vstory/Detail.html:25
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-story"><button type="button">JSON</button></a>
       <a href="`)
-//line views/vestimate/vstory/Detail.html:28
+//line views/vestimate/vstory/Detail.html:29
 	qw422016.E().S(p.Model.WebPath())
-//line views/vestimate/vstory/Detail.html:28
+//line views/vestimate/vstory/Detail.html:29
 	qw422016.N().S(`/edit"><button>`)
-//line views/vestimate/vstory/Detail.html:28
+//line views/vestimate/vstory/Detail.html:29
 	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vestimate/vstory/Detail.html:28
+//line views/vestimate/vstory/Detail.html:29
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
-//line views/vestimate/vstory/Detail.html:30
+//line views/vestimate/vstory/Detail.html:31
 	components.StreamSVGRefIcon(qw422016, `story`, ps)
-//line views/vestimate/vstory/Detail.html:30
+//line views/vestimate/vstory/Detail.html:31
 	qw422016.N().S(` `)
-//line views/vestimate/vstory/Detail.html:30
+//line views/vestimate/vstory/Detail.html:31
 	qw422016.E().S(p.Model.TitleString())
-//line views/vestimate/vstory/Detail.html:30
+//line views/vestimate/vstory/Detail.html:31
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/estimate/story"><em>Story</em></a></div>
     <table class="mt">
@@ -75,115 +76,115 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
           <td>`)
-//line views/vestimate/vstory/Detail.html:36
+//line views/vestimate/vstory/Detail.html:37
 	components.StreamDisplayUUID(qw422016, &p.Model.ID)
-//line views/vestimate/vstory/Detail.html:36
+//line views/vestimate/vstory/Detail.html:37
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
           <td class="nowrap">
             `)
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 	components.StreamDisplayUUID(qw422016, &p.Model.EstimateID)
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 	if p.EstimateByEstimateID != nil {
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 		qw422016.N().S(` (`)
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 		qw422016.E().S(p.EstimateByEstimateID.TitleString())
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 		qw422016.N().S(`)`)
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 	}
-//line views/vestimate/vstory/Detail.html:41
+//line views/vestimate/vstory/Detail.html:42
 	qw422016.N().S(`
             <a title="Estimate" href="`)
-//line views/vestimate/vstory/Detail.html:42
+//line views/vestimate/vstory/Detail.html:43
 	qw422016.E().S(`/admin/db/estimate` + `/` + p.Model.EstimateID.String())
-//line views/vestimate/vstory/Detail.html:42
+//line views/vestimate/vstory/Detail.html:43
 	qw422016.N().S(`">`)
-//line views/vestimate/vstory/Detail.html:42
+//line views/vestimate/vstory/Detail.html:43
 	components.StreamSVGRef(qw422016, "estimate", 18, 18, "", ps)
-//line views/vestimate/vstory/Detail.html:42
+//line views/vestimate/vstory/Detail.html:43
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Integer">Idx</th>
           <td>`)
-//line views/vestimate/vstory/Detail.html:47
+//line views/vestimate/vstory/Detail.html:48
 	qw422016.N().D(p.Model.Idx)
-//line views/vestimate/vstory/Detail.html:47
+//line views/vestimate/vstory/Detail.html:48
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
             `)
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 	if p.UserByUserID != nil {
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 		qw422016.N().S(` (`)
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 		qw422016.N().S(`)`)
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 	}
-//line views/vestimate/vstory/Detail.html:52
+//line views/vestimate/vstory/Detail.html:53
 	qw422016.N().S(`
             <a title="User" href="`)
-//line views/vestimate/vstory/Detail.html:53
+//line views/vestimate/vstory/Detail.html:54
 	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
-//line views/vestimate/vstory/Detail.html:53
+//line views/vestimate/vstory/Detail.html:54
 	qw422016.N().S(`">`)
-//line views/vestimate/vstory/Detail.html:53
+//line views/vestimate/vstory/Detail.html:54
 	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
-//line views/vestimate/vstory/Detail.html:53
+//line views/vestimate/vstory/Detail.html:54
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Title</th>
           <td><strong>`)
-//line views/vestimate/vstory/Detail.html:58
+//line views/vestimate/vstory/Detail.html:59
 	qw422016.E().S(p.Model.Title)
-//line views/vestimate/vstory/Detail.html:58
+//line views/vestimate/vstory/Detail.html:59
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
           <th class="shrink" title="Available options: [new, active, complete]">Status</th>
           <td>`)
-//line views/vestimate/vstory/Detail.html:62
+//line views/vestimate/vstory/Detail.html:63
 	qw422016.E().V(p.Model.Status)
-//line views/vestimate/vstory/Detail.html:62
+//line views/vestimate/vstory/Detail.html:63
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Final Vote</th>
           <td>`)
-//line views/vestimate/vstory/Detail.html:66
+//line views/vestimate/vstory/Detail.html:67
 	qw422016.E().S(p.Model.FinalVote)
-//line views/vestimate/vstory/Detail.html:66
+//line views/vestimate/vstory/Detail.html:67
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vestimate/vstory/Detail.html:70
+//line views/vestimate/vstory/Detail.html:71
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vestimate/vstory/Detail.html:70
+//line views/vestimate/vstory/Detail.html:71
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vestimate/vstory/Detail.html:74
+//line views/vestimate/vstory/Detail.html:75
 	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vestimate/vstory/Detail.html:74
+//line views/vestimate/vstory/Detail.html:75
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
@@ -191,57 +192,88 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
   </div>
 `)
 //line views/vestimate/vstory/Detail.html:81
-	if len(p.RelVotesByStoryID) > 0 {
-//line views/vestimate/vstory/Detail.html:81
-		qw422016.N().S(`  <div class="card">
-    <h3>`)
-//line views/vestimate/vstory/Detail.html:83
-		components.StreamSVGRefIcon(qw422016, `vote-yea`, ps)
-//line views/vestimate/vstory/Detail.html:83
-		qw422016.N().S(` Related votes by [story id]</h3>
-    <div class="overflow clear">
-      `)
-//line views/vestimate/vstory/Detail.html:85
-		vvote.StreamTable(qw422016, p.RelVotesByStoryID, nil, nil, p.Params, as, ps)
-//line views/vestimate/vstory/Detail.html:85
-		qw422016.N().S(`
-    </div>
-  </div>
-`)
+	qw422016.N().S(`  <div class="card">
+  <h3 class="mb">Relations</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-VotesByStoryID" type="checkbox" hidden />
+        <label for="accordion-VotesByStoryID">
+          `)
 //line views/vestimate/vstory/Detail.html:88
-	}
+	components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vestimate/vstory/Detail.html:88
-	qw422016.N().S(`  `)
+	qw422016.N().S(`
+          `)
 //line views/vestimate/vstory/Detail.html:89
-	components.StreamJSONModal(qw422016, "story", "Story JSON", p.Model, 1)
+	components.StreamSVGRefIcon(qw422016, `star`, ps)
 //line views/vestimate/vstory/Detail.html:89
 	qw422016.N().S(`
+          `)
+//line views/vestimate/vstory/Detail.html:90
+	qw422016.N().D(len(p.RelVotesByStoryID))
+//line views/vestimate/vstory/Detail.html:90
+	qw422016.N().S(` `)
+//line views/vestimate/vstory/Detail.html:90
+	qw422016.E().S(util.StringPluralMaybe("Vote", len(p.RelVotesByStoryID)))
+//line views/vestimate/vstory/Detail.html:90
+	qw422016.N().S(` by [discount id]
+        </label>
+        <div class="bd">
 `)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:93
+	if len(p.RelVotesByStoryID) == 0 {
+//line views/vestimate/vstory/Detail.html:93
+		qw422016.N().S(`          <em>no related Votes</em>
+`)
+//line views/vestimate/vstory/Detail.html:95
+	} else {
+//line views/vestimate/vstory/Detail.html:95
+		qw422016.N().S(`          <div class="overflow clear">
+            `)
+//line views/vestimate/vstory/Detail.html:97
+		vvote.StreamTable(qw422016, p.RelVotesByStoryID, nil, nil, p.Params, as, ps)
+//line views/vestimate/vstory/Detail.html:97
+		qw422016.N().S(`
+          </div>
+`)
+//line views/vestimate/vstory/Detail.html:99
+	}
+//line views/vestimate/vstory/Detail.html:99
+	qw422016.N().S(`        </div>
+      </li>
+    </ul>
+  </div>
+  `)
+//line views/vestimate/vstory/Detail.html:104
+	components.StreamJSONModal(qw422016, "story", "Story JSON", p.Model, 1)
+//line views/vestimate/vstory/Detail.html:104
+	qw422016.N().S(`
+`)
+//line views/vestimate/vstory/Detail.html:105
 }
 
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 }
 
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 	return qs422016
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:105
 }

@@ -16,6 +16,7 @@
   "github.com/kyleu/rituals/app/standup/umember"
   "github.com/kyleu/rituals/app/team/tmember"
   "github.com/kyleu/rituals/app/user"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vaction"
@@ -85,101 +86,214 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.RelActionsByUserID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`action`, ps) %} Related actions by [user id]</h3>
-    <div class="overflow clear">
-      {%= vaction.Table(p.RelActionsByUserID, nil, p.Params, as, ps) %}
-    </div>
+  <h3 class="mb">Relations</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-ActionsByUserID" type="checkbox" hidden />
+        <label for="accordion-ActionsByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelActionsByUserID) %} {%s util.StringPluralMaybe("Action", len(p.RelActionsByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelActionsByUserID) == 0 -%}
+          <em>no related Actions</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vaction.Table(p.RelActionsByUserID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-CommentsByUserID" type="checkbox" hidden />
+        <label for="accordion-CommentsByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelCommentsByUserID) %} {%s util.StringPluralMaybe("Comment", len(p.RelCommentsByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelCommentsByUserID) == 0 -%}
+          <em>no related Comments</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vcomment.Table(p.RelCommentsByUserID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-EmailsByUserID" type="checkbox" hidden />
+        <label for="accordion-EmailsByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelEmailsByUserID) %} {%s util.StringPluralMaybe("Email", len(p.RelEmailsByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelEmailsByUserID) == 0 -%}
+          <em>no related Emails</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vemail.Table(p.RelEmailsByUserID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden />
+        <label for="accordion-EstimateMembersByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelEstimateMembersByUserID) %} {%s util.StringPluralMaybe("Member", len(p.RelEstimateMembersByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelEstimateMembersByUserID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vemember.Table(p.RelEstimateMembersByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-FeedbacksByUserID" type="checkbox" hidden />
+        <label for="accordion-FeedbacksByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`comment`, ps) %}
+          {%d len(p.RelFeedbacksByUserID) %} {%s util.StringPluralMaybe("Feedback", len(p.RelFeedbacksByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelFeedbacksByUserID) == 0 -%}
+          <em>no related Feedbacks</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vfeedback.Table(p.RelFeedbacksByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-ReportsByUserID" type="checkbox" hidden />
+        <label for="accordion-ReportsByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelReportsByUserID) %} {%s util.StringPluralMaybe("Report", len(p.RelReportsByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelReportsByUserID) == 0 -%}
+          <em>no related Reports</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vreport.Table(p.RelReportsByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-RetroMembersByUserID" type="checkbox" hidden />
+        <label for="accordion-RetroMembersByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelRetroMembersByUserID) %} {%s util.StringPluralMaybe("Member", len(p.RelRetroMembersByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelRetroMembersByUserID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vrmember.Table(p.RelRetroMembersByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-SprintMembersByUserID" type="checkbox" hidden />
+        <label for="accordion-SprintMembersByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelSprintMembersByUserID) %} {%s util.StringPluralMaybe("Member", len(p.RelSprintMembersByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelSprintMembersByUserID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vsmember.Table(p.RelSprintMembersByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-StandupMembersByUserID" type="checkbox" hidden />
+        <label for="accordion-StandupMembersByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelStandupMembersByUserID) %} {%s util.StringPluralMaybe("Member", len(p.RelStandupMembersByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelStandupMembersByUserID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vumember.Table(p.RelStandupMembersByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-StoriesByUserID" type="checkbox" hidden />
+        <label for="accordion-StoriesByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelStoriesByUserID) %} {%s util.StringPluralMaybe("Story", len(p.RelStoriesByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelStoriesByUserID) == 0 -%}
+          <em>no related Stories</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vstory.Table(p.RelStoriesByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-TeamMembersByUserID" type="checkbox" hidden />
+        <label for="accordion-TeamMembersByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelTeamMembersByUserID) %} {%s util.StringPluralMaybe("Member", len(p.RelTeamMembersByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelTeamMembersByUserID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vtmember.Table(p.RelTeamMembersByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-VotesByUserID" type="checkbox" hidden />
+        <label for="accordion-VotesByUserID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelVotesByUserID) %} {%s util.StringPluralMaybe("Vote", len(p.RelVotesByUserID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelVotesByUserID) == 0 -%}
+          <em>no related Votes</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vvote.Table(p.RelVotesByUserID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+    </ul>
   </div>
-  {%- endif -%}
-  {%- if len(p.RelCommentsByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`comments`, ps) %} Related comments by [user id]</h3>
-    <div class="overflow clear">
-      {%= vcomment.Table(p.RelCommentsByUserID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelEmailsByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`email`, ps) %} Related emails by [user id]</h3>
-    <div class="overflow clear">
-      {%= vemail.Table(p.RelEmailsByUserID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelEstimateMembersByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
-    <div class="overflow clear">
-      {%= vemember.Table(p.RelEstimateMembersByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelFeedbacksByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`comment`, ps) %} Related feedbacks by [user id]</h3>
-    <div class="overflow clear">
-      {%= vfeedback.Table(p.RelFeedbacksByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelReportsByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`file-alt`, ps) %} Related reports by [user id]</h3>
-    <div class="overflow clear">
-      {%= vreport.Table(p.RelReportsByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelRetroMembersByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
-    <div class="overflow clear">
-      {%= vrmember.Table(p.RelRetroMembersByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelSprintMembersByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
-    <div class="overflow clear">
-      {%= vsmember.Table(p.RelSprintMembersByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelStandupMembersByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
-    <div class="overflow clear">
-      {%= vumember.Table(p.RelStandupMembersByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelStoriesByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`story`, ps) %} Related stories by [user id]</h3>
-    <div class="overflow clear">
-      {%= vstory.Table(p.RelStoriesByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelTeamMembersByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [user id]</h3>
-    <div class="overflow clear">
-      {%= vtmember.Table(p.RelTeamMembersByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelVotesByUserID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`vote-yea`, ps) %} Related votes by [user id]</h3>
-    <div class="overflow clear">
-      {%= vvote.Table(p.RelVotesByUserID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
   {%= components.JSONModal("user", "User JSON", p.Model, 1) %}
 {% endfunc %}

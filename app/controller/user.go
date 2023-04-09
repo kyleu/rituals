@@ -107,8 +107,9 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
 		return Render(rc, as, &vuser.Detail{
-			Model:                      ret,
-			Params:                     ps.Params,
+			Model:  ret,
+			Params: ps.Params,
+
 			RelActionsByUserID:         relActionsByUserID,
 			RelCommentsByUserID:        relCommentsByUserID,
 			RelEmailsByUserID:          relEmailsByUserID,

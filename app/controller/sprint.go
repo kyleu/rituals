@@ -91,9 +91,10 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
 		return Render(rc, as, &vsprint.Detail{
-			Model:                          ret,
-			TeamByTeamID:                   teamByTeamID,
-			Params:                         ps.Params,
+			Model:        ret,
+			TeamByTeamID: teamByTeamID,
+			Params:       ps.Params,
+
 			RelEstimatesBySprintID:         relEstimatesBySprintID,
 			RelRetrosBySprintID:            relRetrosBySprintID,
 			RelSprintHistoriesBySprintID:   relSprintHistoriesBySprintID,

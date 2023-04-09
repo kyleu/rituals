@@ -11,6 +11,7 @@
   "github.com/kyleu/rituals/app/sprint/spermission"
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vestimate"
@@ -92,53 +93,112 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.RelEstimatesBySprintID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`estimate`, ps) %} Related estimates by [sprint id]</h3>
-    <div class="overflow clear">
-      {%= vestimate.Table(p.RelEstimatesBySprintID, nil, nil, p.Params, as, ps) %}
-    </div>
+  <h3 class="mb">Relations</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-EstimatesBySprintID" type="checkbox" hidden />
+        <label for="accordion-EstimatesBySprintID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelEstimatesBySprintID) %} {%s util.StringPluralMaybe("Estimate", len(p.RelEstimatesBySprintID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelEstimatesBySprintID) == 0 -%}
+          <em>no related Estimates</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vestimate.Table(p.RelEstimatesBySprintID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-RetrosBySprintID" type="checkbox" hidden />
+        <label for="accordion-RetrosBySprintID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelRetrosBySprintID) %} {%s util.StringPluralMaybe("Retro", len(p.RelRetrosBySprintID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelRetrosBySprintID) == 0 -%}
+          <em>no related Retros</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vretro.Table(p.RelRetrosBySprintID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden />
+        <label for="accordion-SprintHistoriesBySprintID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelSprintHistoriesBySprintID) %} {%s util.StringPluralMaybe("History", len(p.RelSprintHistoriesBySprintID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelSprintHistoriesBySprintID) == 0 -%}
+          <em>no related Histories</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vshistory.Table(p.RelSprintHistoriesBySprintID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-SprintMembersBySprintID" type="checkbox" hidden />
+        <label for="accordion-SprintMembersBySprintID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelSprintMembersBySprintID) %} {%s util.StringPluralMaybe("Member", len(p.RelSprintMembersBySprintID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelSprintMembersBySprintID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vsmember.Table(p.RelSprintMembersBySprintID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden />
+        <label for="accordion-SprintPermissionsBySprintID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelSprintPermissionsBySprintID) %} {%s util.StringPluralMaybe("Permission", len(p.RelSprintPermissionsBySprintID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelSprintPermissionsBySprintID) == 0 -%}
+          <em>no related Permissions</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vspermission.Table(p.RelSprintPermissionsBySprintID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-StandupsBySprintID" type="checkbox" hidden />
+        <label for="accordion-StandupsBySprintID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelStandupsBySprintID) %} {%s util.StringPluralMaybe("Standup", len(p.RelStandupsBySprintID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelStandupsBySprintID) == 0 -%}
+          <em>no related Standups</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vstandup.Table(p.RelStandupsBySprintID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+    </ul>
   </div>
-  {%- endif -%}
-  {%- if len(p.RelRetrosBySprintID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`retro`, ps) %} Related retros by [sprint id]</h3>
-    <div class="overflow clear">
-      {%= vretro.Table(p.RelRetrosBySprintID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelSprintHistoriesBySprintID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [sprint id]</h3>
-    <div class="overflow clear">
-      {%= vshistory.Table(p.RelSprintHistoriesBySprintID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelSprintMembersBySprintID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [sprint id]</h3>
-    <div class="overflow clear">
-      {%= vsmember.Table(p.RelSprintMembersBySprintID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelSprintPermissionsBySprintID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [sprint id]</h3>
-    <div class="overflow clear">
-      {%= vspermission.Table(p.RelSprintPermissionsBySprintID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelStandupsBySprintID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`standup`, ps) %} Related standups by [sprint id]</h3>
-    <div class="overflow clear">
-      {%= vstandup.Table(p.RelStandupsBySprintID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
   {%= components.JSONModal("sprint", "Sprint JSON", p.Model, 1) %}
 {% endfunc %}

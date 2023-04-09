@@ -10,6 +10,7 @@
   "github.com/kyleu/rituals/app/retro/rpermission"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vretro/vfeedback"
@@ -91,37 +92,78 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.RelFeedbacksByRetroID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`comment`, ps) %} Related feedbacks by [retro id]</h3>
-    <div class="overflow clear">
-      {%= vfeedback.Table(p.RelFeedbacksByRetroID, nil, nil, p.Params, as, ps) %}
-    </div>
+  <h3 class="mb">Relations</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden />
+        <label for="accordion-FeedbacksByRetroID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`comment`, ps) %}
+          {%d len(p.RelFeedbacksByRetroID) %} {%s util.StringPluralMaybe("Feedback", len(p.RelFeedbacksByRetroID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelFeedbacksByRetroID) == 0 -%}
+          <em>no related Feedbacks</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vfeedback.Table(p.RelFeedbacksByRetroID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden />
+        <label for="accordion-RetroHistoriesByRetroID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelRetroHistoriesByRetroID) %} {%s util.StringPluralMaybe("History", len(p.RelRetroHistoriesByRetroID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelRetroHistoriesByRetroID) == 0 -%}
+          <em>no related Histories</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vrhistory.Table(p.RelRetroHistoriesByRetroID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden />
+        <label for="accordion-RetroMembersByRetroID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelRetroMembersByRetroID) %} {%s util.StringPluralMaybe("Member", len(p.RelRetroMembersByRetroID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelRetroMembersByRetroID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vrmember.Table(p.RelRetroMembersByRetroID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden />
+        <label for="accordion-RetroPermissionsByRetroID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelRetroPermissionsByRetroID) %} {%s util.StringPluralMaybe("Permission", len(p.RelRetroPermissionsByRetroID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelRetroPermissionsByRetroID) == 0 -%}
+          <em>no related Permissions</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vrpermission.Table(p.RelRetroPermissionsByRetroID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+    </ul>
   </div>
-  {%- endif -%}
-  {%- if len(p.RelRetroHistoriesByRetroID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [retro id]</h3>
-    <div class="overflow clear">
-      {%= vrhistory.Table(p.RelRetroHistoriesByRetroID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelRetroMembersByRetroID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [retro id]</h3>
-    <div class="overflow clear">
-      {%= vrmember.Table(p.RelRetroMembersByRetroID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelRetroPermissionsByRetroID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [retro id]</h3>
-    <div class="overflow clear">
-      {%= vrpermission.Table(p.RelRetroPermissionsByRetroID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
   {%= components.JSONModal("retro", "Retro JSON", p.Model, 1) %}
 {% endfunc %}

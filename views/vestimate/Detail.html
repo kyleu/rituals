@@ -10,6 +10,7 @@
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/team"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vestimate/vehistory"
@@ -91,37 +92,78 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
-  {%- if len(p.RelEstimateHistoriesByEstimateID) > 0 -%}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`history`, ps) %} Related histories by [estimate id]</h3>
-    <div class="overflow clear">
-      {%= vehistory.Table(p.RelEstimateHistoriesByEstimateID, nil, p.Params, as, ps) %}
-    </div>
+  <h3 class="mb">Relations</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-EstimateHistoriesByEstimateID" type="checkbox" hidden />
+        <label for="accordion-EstimateHistoriesByEstimateID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelEstimateHistoriesByEstimateID) %} {%s util.StringPluralMaybe("History", len(p.RelEstimateHistoriesByEstimateID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelEstimateHistoriesByEstimateID) == 0 -%}
+          <em>no related Histories</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vehistory.Table(p.RelEstimateHistoriesByEstimateID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-EstimateMembersByEstimateID" type="checkbox" hidden />
+        <label for="accordion-EstimateMembersByEstimateID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`users`, ps) %}
+          {%d len(p.RelEstimateMembersByEstimateID) %} {%s util.StringPluralMaybe("Member", len(p.RelEstimateMembersByEstimateID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelEstimateMembersByEstimateID) == 0 -%}
+          <em>no related Members</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vemember.Table(p.RelEstimateMembersByEstimateID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-EstimatePermissionsByEstimateID" type="checkbox" hidden />
+        <label for="accordion-EstimatePermissionsByEstimateID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelEstimatePermissionsByEstimateID) %} {%s util.StringPluralMaybe("Permission", len(p.RelEstimatePermissionsByEstimateID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelEstimatePermissionsByEstimateID) == 0 -%}
+          <em>no related Permissions</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vepermission.Table(p.RelEstimatePermissionsByEstimateID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      <li>
+        <input id="accordion-StoriesByEstimateID" type="checkbox" hidden />
+        <label for="accordion-StoriesByEstimateID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`star`, ps) %}
+          {%d len(p.RelStoriesByEstimateID) %} {%s util.StringPluralMaybe("Story", len(p.RelStoriesByEstimateID)) %} by [discount id]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelStoriesByEstimateID) == 0 -%}
+          <em>no related Stories</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vstory.Table(p.RelStoriesByEstimateID, nil, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+    </ul>
   </div>
-  {%- endif -%}
-  {%- if len(p.RelEstimateMembersByEstimateID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} Related members by [estimate id]</h3>
-    <div class="overflow clear">
-      {%= vemember.Table(p.RelEstimateMembersByEstimateID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelEstimatePermissionsByEstimateID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`permission`, ps) %} Related permissions by [estimate id]</h3>
-    <div class="overflow clear">
-      {%= vepermission.Table(p.RelEstimatePermissionsByEstimateID, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
-  {%- if len(p.RelStoriesByEstimateID) > 0 -%}
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`story`, ps) %} Related stories by [estimate id]</h3>
-    <div class="overflow clear">
-      {%= vstory.Table(p.RelStoriesByEstimateID, nil, nil, p.Params, as, ps) %}
-    </div>
-  </div>
-  {%- endif -%}
   {%= components.JSONModal("estimate", "Estimate JSON", p.Model, 1) %}
 {% endfunc %}
