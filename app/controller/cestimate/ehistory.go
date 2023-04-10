@@ -135,7 +135,7 @@ func EstimateHistoryDelete(rc *fasthttp.RequestCtx) {
 func ehistoryFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*ehistory.EstimateHistory, error) {
 	slugArg, err := cutil.RCRequiredString(rc, "slug", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [slug] as an argument")
+		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}
 	return as.Services.EstimateHistory.Get(ps.Context, nil, slugArg, ps.Logger)
 }

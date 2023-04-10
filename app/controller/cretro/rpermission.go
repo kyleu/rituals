@@ -147,11 +147,11 @@ func rpermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 	retroIDArg := *retroIDArgP
 	keyArg, err := cutil.RCRequiredString(rc, "key", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [key] as an argument")
+		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
 	valueArg, err := cutil.RCRequiredString(rc, "value", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [value] as an argument")
+		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}
 	return as.Services.RetroPermission.Get(ps.Context, nil, retroIDArg, keyArg, valueArg, ps.Logger)
 }

@@ -4,6 +4,7 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/retro"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/standup"
@@ -80,14 +81,14 @@
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   <div class="card">
-  <h3 class="mb">Relations</h3>
+    <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-EstimatesByTeamID" type="checkbox" hidden />
         <label for="accordion-EstimatesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelEstimatesByTeamID) %} {%s util.StringPluralMaybe("Estimate", len(p.RelEstimatesByTeamID)) %} by [discount id]
+          {%= components.SVGRefIcon(`estimate`, ps) %}
+          {%d len(p.RelEstimatesByTeamID) %} {%s util.StringPluralMaybe("Estimate", len(p.RelEstimatesByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelEstimatesByTeamID) == 0 -%}
@@ -103,8 +104,8 @@
         <input id="accordion-RetrosByTeamID" type="checkbox" hidden />
         <label for="accordion-RetrosByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelRetrosByTeamID) %} {%s util.StringPluralMaybe("Retro", len(p.RelRetrosByTeamID)) %} by [discount id]
+          {%= components.SVGRefIcon(`retro`, ps) %}
+          {%d len(p.RelRetrosByTeamID) %} {%s util.StringPluralMaybe("Retro", len(p.RelRetrosByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelRetrosByTeamID) == 0 -%}
@@ -120,8 +121,8 @@
         <input id="accordion-SprintsByTeamID" type="checkbox" hidden />
         <label for="accordion-SprintsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelSprintsByTeamID) %} {%s util.StringPluralMaybe("Sprint", len(p.RelSprintsByTeamID)) %} by [discount id]
+          {%= components.SVGRefIcon(`sprint`, ps) %}
+          {%d len(p.RelSprintsByTeamID) %} {%s util.StringPluralMaybe("Sprint", len(p.RelSprintsByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintsByTeamID) == 0 -%}
@@ -137,8 +138,8 @@
         <input id="accordion-StandupsByTeamID" type="checkbox" hidden />
         <label for="accordion-StandupsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelStandupsByTeamID) %} {%s util.StringPluralMaybe("Standup", len(p.RelStandupsByTeamID)) %} by [discount id]
+          {%= components.SVGRefIcon(`standup`, ps) %}
+          {%d len(p.RelStandupsByTeamID) %} {%s util.StringPluralMaybe("Standup", len(p.RelStandupsByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupsByTeamID) == 0 -%}
@@ -154,8 +155,8 @@
         <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden />
         <label for="accordion-TeamHistoriesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelTeamHistoriesByTeamID) %} {%s util.StringPluralMaybe("History", len(p.RelTeamHistoriesByTeamID)) %} by [discount id]
+          {%= components.SVGRefIcon(`history`, ps) %}
+          {%d len(p.RelTeamHistoriesByTeamID) %} {%s util.StringPluralMaybe("History", len(p.RelTeamHistoriesByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelTeamHistoriesByTeamID) == 0 -%}
@@ -172,7 +173,7 @@
         <label for="accordion-TeamMembersByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%d len(p.RelTeamMembersByTeamID) %} {%s util.StringPluralMaybe("Member", len(p.RelTeamMembersByTeamID)) %} by [discount id]
+          {%d len(p.RelTeamMembersByTeamID) %} {%s util.StringPluralMaybe("Member", len(p.RelTeamMembersByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelTeamMembersByTeamID) == 0 -%}
@@ -188,8 +189,8 @@
         <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden />
         <label for="accordion-TeamPermissionsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelTeamPermissionsByTeamID) %} {%s util.StringPluralMaybe("Permission", len(p.RelTeamPermissionsByTeamID)) %} by [discount id]
+          {%= components.SVGRefIcon(`permission`, ps) %}
+          {%d len(p.RelTeamPermissionsByTeamID) %} {%s util.StringPluralMaybe("Permission", len(p.RelTeamPermissionsByTeamID)) %} by [team_id]
         </label>
         <div class="bd">
           {%- if len(p.RelTeamPermissionsByTeamID) == 0 -%}

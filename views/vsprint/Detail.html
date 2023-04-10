@@ -4,6 +4,7 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/lib/filter"
+  "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/retro"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/sprint/shistory"
@@ -94,14 +95,14 @@
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   <div class="card">
-  <h3 class="mb">Relations</h3>
+    <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-EstimatesBySprintID" type="checkbox" hidden />
         <label for="accordion-EstimatesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelEstimatesBySprintID) %} {%s util.StringPluralMaybe("Estimate", len(p.RelEstimatesBySprintID)) %} by [discount id]
+          {%= components.SVGRefIcon(`estimate`, ps) %}
+          {%d len(p.RelEstimatesBySprintID) %} {%s util.StringPluralMaybe("Estimate", len(p.RelEstimatesBySprintID)) %} by [sprint_id]
         </label>
         <div class="bd">
           {%- if len(p.RelEstimatesBySprintID) == 0 -%}
@@ -117,8 +118,8 @@
         <input id="accordion-RetrosBySprintID" type="checkbox" hidden />
         <label for="accordion-RetrosBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelRetrosBySprintID) %} {%s util.StringPluralMaybe("Retro", len(p.RelRetrosBySprintID)) %} by [discount id]
+          {%= components.SVGRefIcon(`retro`, ps) %}
+          {%d len(p.RelRetrosBySprintID) %} {%s util.StringPluralMaybe("Retro", len(p.RelRetrosBySprintID)) %} by [sprint_id]
         </label>
         <div class="bd">
           {%- if len(p.RelRetrosBySprintID) == 0 -%}
@@ -134,8 +135,8 @@
         <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden />
         <label for="accordion-SprintHistoriesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelSprintHistoriesBySprintID) %} {%s util.StringPluralMaybe("History", len(p.RelSprintHistoriesBySprintID)) %} by [discount id]
+          {%= components.SVGRefIcon(`history`, ps) %}
+          {%d len(p.RelSprintHistoriesBySprintID) %} {%s util.StringPluralMaybe("History", len(p.RelSprintHistoriesBySprintID)) %} by [sprint_id]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintHistoriesBySprintID) == 0 -%}
@@ -152,7 +153,7 @@
         <label for="accordion-SprintMembersBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%d len(p.RelSprintMembersBySprintID) %} {%s util.StringPluralMaybe("Member", len(p.RelSprintMembersBySprintID)) %} by [discount id]
+          {%d len(p.RelSprintMembersBySprintID) %} {%s util.StringPluralMaybe("Member", len(p.RelSprintMembersBySprintID)) %} by [sprint_id]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintMembersBySprintID) == 0 -%}
@@ -168,8 +169,8 @@
         <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden />
         <label for="accordion-SprintPermissionsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelSprintPermissionsBySprintID) %} {%s util.StringPluralMaybe("Permission", len(p.RelSprintPermissionsBySprintID)) %} by [discount id]
+          {%= components.SVGRefIcon(`permission`, ps) %}
+          {%d len(p.RelSprintPermissionsBySprintID) %} {%s util.StringPluralMaybe("Permission", len(p.RelSprintPermissionsBySprintID)) %} by [sprint_id]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintPermissionsBySprintID) == 0 -%}
@@ -185,8 +186,8 @@
         <input id="accordion-StandupsBySprintID" type="checkbox" hidden />
         <label for="accordion-StandupsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`star`, ps) %}
-          {%d len(p.RelStandupsBySprintID) %} {%s util.StringPluralMaybe("Standup", len(p.RelStandupsBySprintID)) %} by [discount id]
+          {%= components.SVGRefIcon(`standup`, ps) %}
+          {%d len(p.RelStandupsBySprintID) %} {%s util.StringPluralMaybe("Standup", len(p.RelStandupsBySprintID)) %} by [sprint_id]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupsBySprintID) == 0 -%}

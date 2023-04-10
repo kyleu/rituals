@@ -135,7 +135,7 @@ func RetroHistoryDelete(rc *fasthttp.RequestCtx) {
 func rhistoryFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*rhistory.RetroHistory, error) {
 	slugArg, err := cutil.RCRequiredString(rc, "slug", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [slug] as an argument")
+		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}
 	return as.Services.RetroHistory.Get(ps.Context, nil, slugArg, ps.Logger)
 }

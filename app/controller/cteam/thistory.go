@@ -135,7 +135,7 @@ func TeamHistoryDelete(rc *fasthttp.RequestCtx) {
 func thistoryFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*thistory.TeamHistory, error) {
 	slugArg, err := cutil.RCRequiredString(rc, "slug", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [slug] as an argument")
+		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}
 	return as.Services.TeamHistory.Get(ps.Context, nil, slugArg, ps.Logger)
 }

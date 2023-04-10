@@ -135,7 +135,7 @@ func SprintHistoryDelete(rc *fasthttp.RequestCtx) {
 func shistoryFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*shistory.SprintHistory, error) {
 	slugArg, err := cutil.RCRequiredString(rc, "slug", false)
 	if err != nil {
-		return nil, errors.Wrap(err, "must provide [slug] as an argument")
+		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}
 	return as.Services.SprintHistory.Get(ps.Context, nil, slugArg, ps.Logger)
 }
