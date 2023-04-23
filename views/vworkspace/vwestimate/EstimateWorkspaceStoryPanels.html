@@ -113,6 +113,18 @@
 
 {% func EstimateWorkspaceStoryPanelComplete(w *workspace.FullEstimate, s *story.Story, ps *cutil.PageState) %}
   <div class="mt status-complete" {% if s == nil || s.Status != enum.SessionStatusComplete %} style="display: none;"{% endif %}>
+    <div class="final-vote">
+      {%- if w == nil || s.FinalVote == "" -%}
+      <div class="message">Choose one of the scores below to set the final score for this story</div>
+      <div class="value" style="display: none;"></div>
+      <div class="description" style="display: none;"><em>Final Score</em></div>
+      {%- else -%}
+      <div class="message" style="display: none;">Choose one of the scores below to set the final score for this story</div>
+      <div class="value">{%s s.FinalVote %}</div>
+      <div class="description"><em>Final Score</em></div>
+      {%- endif -%}
+    </div>
+    <hr />
     <div class="mt story-results">
       <div class="vote-results">
         {%- if w != nil -%}
@@ -122,7 +134,13 @@
           {%- if v := w.Votes.Get(s.ID, m.UserID); v == nil -%}
           <div class="number" title="user did not vote">-</div>
           {%- else -%}
-          <div class="number">{%s v.Choice %}</div>
+          <form action="" method="post">
+            <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
+            <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
+            <input type="hidden" name="typ" value="user" />
+            <input type="hidden" name="value" value="{%s v.Choice %}" />
+            <button type="submit" class="number button-link">{%s v.Choice %}</button>
+          </form>
           {%- endif -%}
           {%- else -%}
           <div class="number" title="in progress">-</div>
@@ -136,9 +154,9 @@
     <hr />
     <div class="mt">
       {%- if s != nil && s.Status == enum.SessionStatusComplete -%}
-      {%= EstimateWorkspaceStoryResultCalculations(w.Votes.GetByStoryIDs(s.ID)) %}
+      {%= EstimateWorkspaceStoryResultCalculations(s, w.Votes.GetByStoryIDs(s.ID)) %}
       {%- else -%}
-      {%= EstimateWorkspaceStoryCalculations(0, 0, 0, 0, 0, 0, "0") %}
+      {%= EstimateWorkspaceStoryCalculations(s, 0, 0, 0, 0, 0, 0, "0") %}
       {%- endif -%}
     </div>
     <hr />
@@ -156,12 +174,12 @@
   </div>
 {% endfunc %}
 
-{% func EstimateWorkspaceStoryResultCalculations(v vote.Votes) %}
+{% func EstimateWorkspaceStoryResultCalculations(s *story.Story, v vote.Votes) %}
   {%- code r := v.Results() -%}
-  {%= EstimateWorkspaceStoryCalculations(len(v), r.Count, r.Min, r.Max, r.Mean, r.Median, r.ModeString) %}
+  {%= EstimateWorkspaceStoryCalculations(s, len(v), r.Count, r.Min, r.Max, r.Mean, r.Median, r.ModeString) %}
 {% endfunc %}
 
-{% func EstimateWorkspaceStoryCalculations(votes int, counted int, min float64, max float64, mean float64, median float64, modeString string) %}
+{% func EstimateWorkspaceStoryCalculations(s *story.Story, votes int, counted int, min float64, max float64, mean float64, median float64, modeString string) %}
   <div class="vote-calculations">
     <div class="vote-calculation calc-counted" title="portion of votes that were able to be parsed as numbers">
       <div class="value">{%d counted %}/{%d votes %}</div>
@@ -171,17 +189,35 @@
       <div class="value">{%f min %}-{%f max %}</div>
       Range
     </div>
-    <div class="vote-calculation calc-mean" title="mean average of all votes">
-      <div class="value">{%f mean %}</div>
-      Average
+    <div class="vote-calculation calc-mean" title="mean average of all votes (click to set the final score)">
+      <form action="" method="post">
+        <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
+        <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
+        <input type="hidden" name="typ" value="mean" />
+        <input type="hidden" name="value" value="{%f mean %}" />
+        <button type="submit" class="value button-link">{%f mean %}</button>
+      </form>
+      <div>Average</div>
     </div>
-    <div class="vote-calculation calc-median" title="median value from collected votes">
-      <div class="value">{%f median %}</div>
-      Median
+    <div class="vote-calculation calc-median" title="median value from collected votes (click to set the final score)">
+      <form action="" method="post">
+        <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
+        <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
+        <input type="hidden" name="typ" value="median" />
+        <input type="hidden" name="value" value="{%f median %}" />
+        <button type="submit" class="value button-link">{%f median %}</button>
+      </form>
+      <div>Median</div>
     </div>
-    <div class="vote-calculation calc-mode" title="mode value(s) from collected votes">
-      <div class="value">{%s modeString %}</div>
-      Mode
+    <div class="vote-calculation calc-mode" title="mode value(s) from collected votes (click to set the final score)">
+      <form action="" method="post">
+        <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
+        <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
+        <input type="hidden" name="typ" value="mode" />
+        <input type="hidden" name="value" value="{%s modeString %}" />
+        <button type="submit" class="value button-link">{%s modeString %}</button>
+      </form>
+      <div>Mode</div>
     </div>
   </div>
 {% endfunc %}

@@ -28,7 +28,6 @@ export function onVote(v: Vote) {
       req(".choice", m).innerHTML = svgRef("check", 18, "");
     }
   });
-  console.log("VOTE", v);
 }
 
 export function applyCalcs(storyID: string, votes: Vote[], results: VoteResults) {

@@ -41,6 +41,9 @@ func (v Votes) Results() *Results {
 	for _, x := range v {
 		fl, err := strconv.ParseFloat(x.Choice, 64)
 		if err == nil {
+			if math.IsNaN(fl) || math.IsInf(fl, 0) {
+				fl = 0
+			}
 			ret.Floats = append(ret.Floats, fl)
 		}
 	}
@@ -57,7 +60,13 @@ func (v Votes) Results() *Results {
 	ret.Range = ret.Max - ret.Min
 	slices.Sort(ret.Floats)
 	ret.Mean = ret.Sum / float64(ret.Count)
+	if math.IsNaN(ret.Mean) || math.IsInf(ret.Mean, 0) {
+		ret.Mean = 0
+	}
 	ret.Median = median(ret.Floats)
+	if math.IsNaN(ret.Median) || math.IsInf(ret.Median, 0) {
+		ret.Median = 0
+	}
 	ret.Mode = mode(ret.Floats)
 	ret.ModeString = modeString(ret.Mode...)
 	return ret

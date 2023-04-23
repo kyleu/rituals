@@ -6,7 +6,7 @@ export type Permission = {
 }
 
 export function permissionsUpdate(perms: Permission[]) {
-  console.log("permissionsUpdate", perms);
+  console.log("TODO: permissionsUpdate", perms);
 }
 
 export function permissionsTeamToggle(set: boolean) {

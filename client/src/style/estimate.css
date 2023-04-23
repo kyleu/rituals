@@ -37,6 +37,23 @@
   border: 3px solid var(--color-foreground-muted);
 }
 
+.final-vote {
+  text-align: center;
+}
+
+.final-vote .value {
+  display: inline-block;
+  border: 3px solid var(--color-background-muted);
+  border-radius: 36px;
+  min-width: 60px;
+  padding: var(--padding);
+  font-size: 150%;
+}
+
+.final-vote .message {
+  padding: var(--padding);
+}
+
 .vote-results {
   display: flex;
   flex-wrap: wrap;
@@ -49,6 +66,10 @@
 }
 
 .vote-results .vote-result .number {
+  border: 3px solid var(--color-background-muted);
+  border-radius: 36px;
+  min-width: 60px;
+  padding: var(--padding);
   font-size: 150%;
 }
 

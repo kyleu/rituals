@@ -71,6 +71,7 @@ export function storyUpdate(s: Story) {
   req(".story-status", tr).innerText = s.status;
   req(".story-title", tr).innerText = s.title;
   req(".story-final-vote", tr).innerText = s.finalVote;
+  req(".story-final-vote", tr).innerText = s.finalVote;
 
   const editModal = req("#modal-story-" + s.id + "-edit");
   req("form input[name=\"title\"]", editModal).innerText = s.title;
