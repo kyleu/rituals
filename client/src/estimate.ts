@@ -43,6 +43,11 @@ export function initEstimate() {
   initStories();
 }
 
+export function estimateChoices() {
+  const choiceEL = req<HTMLInputElement>("#modal-estimate-config input[name=\"choices\"]");
+  return choiceEL.value.split(",").map((x) => x.trim());
+}
+
 function onUpdate(param: Estimate) {
   const panel = req<HTMLElement>("#modal-estimate-config");
   const frm = opt<HTMLFormElement>("form", panel);

@@ -66,6 +66,7 @@
 }
 
 .vote-results .vote-result .number {
+  display: inline-block;
   border: 3px solid var(--color-background-muted);
   border-radius: 36px;
   min-width: 60px;

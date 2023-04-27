@@ -2,9 +2,21 @@ import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-v
 import type {Vote} from "./vote";
 import type {Member} from "./member";
 
-export function snippetVote(m: Member, v: Vote | undefined): HTMLElement {
+export function snippetVote(storyID: string, m: Member, v: Vote | undefined): HTMLElement {
+  if (!v) {
+    return <div class="vote-result">
+      <div class="number" title="user did not vote">-</div>
+      <div class={"member-" + m.id + "-name"}>{ m.name }</div>
+    </div>;
+  }
   return <div class="vote-result">
-    <div class="number" title={ v ? "" : "user did not vote" }>{ v ? v.choice : "-" }</div>
+    <form class="final-vote-form" action="" method="post">
+      <input type="hidden" name="storyID" value={ storyID } />
+      <input type="hidden" name="action" value="vote"/>
+      <input type="hidden" name="typ" value="user"/>
+      <input type="hidden" name="value" value={ v.choice } />
+      <button type="submit" class="number button-link">{ v.choice }</button>
+    </form>
     <div class={"member-" + m.id + "-name"}>{ m.name }</div>
   </div>;
 }

@@ -24,7 +24,7 @@ type Results struct {
 
 func modeString(mode ...float64) string {
 	if len(mode) == 0 {
-		return "-"
+		return "0"
 	}
 	x := make([]string, 0, len(mode))
 	for _, m := range mode {
@@ -35,7 +35,7 @@ func modeString(mode ...float64) string {
 
 func (v Votes) Results() *Results {
 	if len(v) == 0 {
-		return &Results{}
+		return &Results{ModeString: "0"}
 	}
 	ret := &Results{Floats: make([]float64, 0, len(v))}
 	for _, x := range v {

@@ -473,7 +473,7 @@ func StreamEstimateWorkspaceStoryPanelComplete(qw422016 *qt422016.Writer, w *wor
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:136
 				} else {
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:136
-					qw422016.N().S(`          <form action="" method="post">
+					qw422016.N().S(`          <form class="final-vote-form" action="" method="post">
             <input type="hidden" name="storyID" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:138
 					if s != nil {
@@ -687,7 +687,7 @@ func StreamEstimateWorkspaceStoryCalculations(qw422016 *qt422016.Writer, s *stor
       Range
     </div>
     <div class="vote-calculation calc-mean" title="mean average of all votes (click to set the final score)">
-      <form action="" method="post">
+      <form class="final-vote-form" action="" method="post">
         <input type="hidden" name="storyID" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:194
 	if s != nil {
@@ -717,7 +717,7 @@ func StreamEstimateWorkspaceStoryCalculations(qw422016 *qt422016.Writer, s *stor
       <div>Average</div>
     </div>
     <div class="vote-calculation calc-median" title="median value from collected votes (click to set the final score)">
-      <form action="" method="post">
+      <form class="final-vote-form" action="" method="post">
         <input type="hidden" name="storyID" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:204
 	if s != nil {
@@ -747,7 +747,7 @@ func StreamEstimateWorkspaceStoryCalculations(qw422016 *qt422016.Writer, s *stor
       <div>Median</div>
     </div>
     <div class="vote-calculation calc-mode" title="mode value(s) from collected votes (click to set the final score)">
-      <form action="" method="post">
+      <form class="final-vote-form" action="" method="post">
         <input type="hidden" name="storyID" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:214
 	if s != nil {

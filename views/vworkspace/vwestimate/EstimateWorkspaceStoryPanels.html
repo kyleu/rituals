@@ -134,7 +134,7 @@
           {%- if v := w.Votes.Get(s.ID, m.UserID); v == nil -%}
           <div class="number" title="user did not vote">-</div>
           {%- else -%}
-          <form action="" method="post">
+          <form class="final-vote-form" action="" method="post">
             <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
             <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
             <input type="hidden" name="typ" value="user" />
@@ -190,7 +190,7 @@
       Range
     </div>
     <div class="vote-calculation calc-mean" title="mean average of all votes (click to set the final score)">
-      <form action="" method="post">
+      <form class="final-vote-form" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
         <input type="hidden" name="typ" value="mean" />
@@ -200,7 +200,7 @@
       <div>Average</div>
     </div>
     <div class="vote-calculation calc-median" title="median value from collected votes (click to set the final score)">
-      <form action="" method="post">
+      <form class="final-vote-form" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
         <input type="hidden" name="typ" value="median" />
@@ -210,7 +210,7 @@
       <div>Median</div>
     </div>
     <div class="vote-calculation calc-mode" title="mode value(s) from collected votes (click to set the final score)">
-      <form action="" method="post">
+      <form class="final-vote-form" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActVote) %}" />
         <input type="hidden" name="typ" value="mode" />

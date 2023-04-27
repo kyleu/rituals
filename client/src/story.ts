@@ -1,11 +1,13 @@
 import {els, req} from "./dom";
 import {send} from "./app";
-import {snippetStory} from "./stories";
+import {choiceItem, memberItem, snippetStory} from "./stories";
 import {wireStoryModal, wireStoryModalFormDelete} from "./storymodal";
 import {initCommentsModal} from "./comment";
 import {flashCreate} from "./flash";
 import {focusDelay} from "./util";
 import {applyCalcs, type Vote, type VoteResults} from "./vote";
+import {estimateChoices} from "./estimate";
+import {memberList, username} from "./member";
 
 export type Story = {
   id: string;
@@ -70,13 +72,28 @@ export function storyUpdate(s: Story) {
   const tr = req("#story-row-" + s.id);
   req(".story-status", tr).innerText = s.status;
   req(".story-title", tr).innerText = s.title;
-  req(".story-final-vote", tr).innerText = s.finalVote;
-  req(".story-final-vote", tr).innerText = s.finalVote;
+  req(".story-final-vote", tr).innerText = s.finalVote === "" ? "-" : s.finalVote;
 
   const editModal = req("#modal-story-" + s.id + "-edit");
   req("form input[name=\"title\"]", editModal).innerText = s.title;
-  const modal = req("#modal-story-" + s.id);
-  req("h2.billboard", modal).innerText = s.title;
+
+  const viewModal = req("#modal-story-" + s.id);
+  const fv = req(".final-vote", viewModal);
+  req(".value", fv).innerText = s.finalVote === "" ? "-" : s.finalVote;
+  if (s.finalVote == "") {
+    req(".message", fv).style.display = "block";
+    req(".description", fv).style.display = "none";
+  } else {
+    req("#story-row-" + s.id + " .story-final-vote").innerText = s.finalVote === "" ? "-" : s.finalVote
+    req(".message", fv).style.display = "none";
+    req(".description", fv).style.display = "block";
+  }
+
+  els<HTMLFormElement>("input[name=\"storyID\"]", viewModal).forEach((el) => {
+    el.value = s.id;
+  });
+
+  req("h2.billboard", viewModal).innerText = s.title;
 }
 
 export function storyAdd(s: Story) {
@@ -97,7 +114,7 @@ export function storyAdd(s: Story) {
       }
     }
   }
-  const tr = snippetStory(s);
+  const tr = snippetStory(s, username(s.userID));
   if (idx === -1) {
     tbl.appendChild(tr);
   } else {
@@ -129,6 +146,16 @@ export function storyAdd(s: Story) {
   editLink.href = "#modal-story-" + s.id + "-edit";
   editLink.dataset.id = s.id;
 
+  const memberItems = memberList().map((x) => {
+    return memberItem(x);
+  });
+  req(".story-members", modal).replaceChildren(...memberItems);
+
+  const choiceItems = estimateChoices().map((x) => {
+    return choiceItem(x);
+  });
+  req(".story-vote-options", modal).replaceChildren(...choiceItems);
+
   req("#story-modals").appendChild(modal);
   wireStoryModal(modal);
   storyUpdate(s);
@@ -145,7 +172,7 @@ export function storyStatus(s: StoryStatusResult) {
   req(".status-active", modal).style.display = s.story.status === "active" ? "block" : "none";
   req(".status-complete", modal).style.display = s.story.status === "complete" ? "block" : "none";
   if (s.story.status === "complete" && s.votes !== undefined && s.results !== undefined) {
-    applyCalcs(s.story.id, s.votes, s.results);
+    applyCalcs(s.story.id, s.votes, s.results, s.story.finalVote);
   }
 }
 
