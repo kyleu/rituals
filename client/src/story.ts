@@ -80,11 +80,11 @@ export function storyUpdate(s: Story) {
   const viewModal = req("#modal-story-" + s.id);
   const fv = req(".final-vote", viewModal);
   req(".value", fv).innerText = s.finalVote === "" ? "-" : s.finalVote;
-  if (s.finalVote == "") {
+  req("#story-row-" + s.id + " .story-final-vote").innerText = s.finalVote === "" ? "-" : s.finalVote;
+  if (s.finalVote === "") {
     req(".message", fv).style.display = "block";
     req(".description", fv).style.display = "none";
   } else {
-    req("#story-row-" + s.id + " .story-final-vote").innerText = s.finalVote === "" ? "-" : s.finalVote
     req(".message", fv).style.display = "none";
     req(".description", fv).style.display = "block";
   }
@@ -147,7 +147,7 @@ export function storyAdd(s: Story) {
   editLink.dataset.id = s.id;
 
   const memberItems = memberList().map((x) => {
-    return memberItem(x);
+    return memberItem(x.id, x.name);
   });
   req(".story-members", modal).replaceChildren(...memberItems);
 

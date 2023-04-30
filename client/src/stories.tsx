@@ -1,10 +1,9 @@
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
 import type {Story} from "./story";
-import type { Member } from "./member";
 import {svg} from "./util";
 
-export function snippetStory(s: Story, memberName: String): HTMLElement {
+export function snippetStory(s: Story, memberName: string): HTMLElement {
   return <tr class="story-row" id={"story-row-" + s.id} data-idx="s.Idx">
     <td><a href={"#modal-story-" + s.id }><div class="story-title">{ s.title }</div></a></td>
     <td class="story-author nowrap"><a href={ "#modal-member-" + s.userID}><em class={ "member-" + s.userID + "-name"}>{ memberName }</em></a></td>
@@ -17,10 +16,10 @@ export function snippetStory(s: Story, memberName: String): HTMLElement {
   </tr>;
 }
 
-export function memberItem(m: Member) {
-  return <div class="member" data-member={ m.id }>
+export function memberItem(id: string, name: string) {
+  return <div class="member" data-member={ id }>
     <div class="choice" dangerouslySetInnerHTML={ svg("minus", 18, "") }></div>
-    <div class="name member-{%s m.UserID.String() %}-name">{ m.name }</div>
+    <div class={"name member-" + id + "-name"}>{ name }</div>
   </div>;
 }
 

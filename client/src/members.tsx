@@ -16,7 +16,7 @@ export function snippetMember(userID: string, name: string, role: string, pictur
         <span class={"member-name member-" + userID + "-name"}>{name}</span>
       </a>
     </td>
-    <td class="shrink text-align-right"><em class="member-status">{role}</em></td>
+    <td class="shrink text-align-right"><em class="member-role">{role}</em></td>
     <td class="shrink online-status" title="offline" dangerouslySetInnerHTML={svg("circle", 18, "right")}></td>
   </tr>;
 }

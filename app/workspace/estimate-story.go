@@ -112,9 +112,8 @@ func estimateStoryVote(p *Params, fe *FullEstimate) (*FullEstimate, string, stri
 	}
 	if typ := strings.TrimSpace(p.Frm.GetStringOpt("typ")); typ == "" {
 		return estimateStoryUserVote(p, fe, currStory)
-	} else {
-		return estimateStoryFinalVote(p, fe, currStory)
 	}
+	return estimateStoryFinalVote(p, fe, currStory)
 }
 
 func estimateStoryUserVote(p *Params, fe *FullEstimate, s *story.Story) (*FullEstimate, string, string, error) {

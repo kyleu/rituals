@@ -1,11 +1,13 @@
 import {initStories, Story, storyAdd, storyRemove, storyStatus, StoryStatusResult, storyUpdate} from "./story";
 import type {Message} from "./socket";
-import {opt, req} from "./dom";
+import {els, opt, req} from "./dom";
 import {send} from "./app";
 import {configFocus, setTeamSprint} from "./workspace";
 import {tagsWire} from "./tags";
 import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
 import {onVote, Vote} from "./vote";
+import type {MemberMessage} from "./member";
+import {memberItem} from "./stories";
 
 export type Estimate = {
   id: string;
@@ -48,6 +50,12 @@ export function estimateChoices() {
   return choiceEL.value.split(",").map((x) => x.trim());
 }
 
+function onMemberAdd(param: MemberMessage) {
+  els(".modal-story").forEach((m) => {
+    req(".story-members", m).appendChild(memberItem(param.userID, param.name));
+  });
+}
+
 function onUpdate(param: Estimate) {
   const panel = req<HTMLElement>("#modal-estimate-config");
   const frm = opt<HTMLFormElement>("form", panel);
@@ -65,6 +73,8 @@ function onUpdate(param: Estimate) {
 
 export function handleEstimate(m: Message) {
   switch (m.cmd) {
+    case "member-add":
+      return onMemberAdd(m.param as MemberMessage);
     case "update":
       return onUpdate(m.param as Estimate);
     case "child-add":

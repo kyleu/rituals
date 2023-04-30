@@ -37,7 +37,6 @@ function wireFinalVote(f: HTMLFormElement) {
     const typ = req<HTMLInputElement>("input[name=\"typ\"]", f).value;
     const value = req<HTMLInputElement>("input[name=\"value\"]", f).value;
 
-    console.log(f);
     const storyEl = req("#modal-story-" + storyID);
     req(".final-vote .value", storyEl).innerText = value;
 
@@ -70,8 +69,8 @@ export function applyCalcs(storyID: string, votes: Vote[], results: VoteResults,
   req<HTMLInputElement>(".calc-mean input[name=\"value\"]", calcEl).value = results.mean.toString(10);
   req(".calc-median .value", calcEl).innerText = results.median.toString(10);
   req<HTMLInputElement>(".calc-median input[name=\"value\"]", calcEl).value = results.median.toString(10);
-  req(".calc-mode .value", calcEl).innerText = results.modeString === "" ? "0": results.modeString;
-  req<HTMLInputElement>(".calc-mode input[name=\"value\"]", calcEl).value = results.modeString === "" ? "0": results.modeString;
+  req(".calc-mode .value", calcEl).innerText = results.modeString === "" ? "0" : results.modeString;
+  req<HTMLInputElement>(".calc-mode input[name=\"value\"]", calcEl).value = results.modeString === "" ? "0" : results.modeString;
 
   els<HTMLFormElement>(".final-vote-form", storyEl).forEach((frm) => {
     wireFinalVote(frm);
