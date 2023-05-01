@@ -162,7 +162,14 @@ func DatabaseSQLRun(rc *fasthttp.RequestCtx) {
 				results = append(results, row)
 			}
 		}
-		_ = tx.Rollback()
+		if commit {
+			err = tx.Commit()
+			if err != nil {
+				return "", errors.Wrap(err, "unable to commit transaction")
+			}
+		} else {
+			_ = tx.Rollback()
+		}
 
 		ps.Title = "SQL Results"
 		ps.Data = results
