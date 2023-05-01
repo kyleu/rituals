@@ -162,7 +162,7 @@ func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.Spri
 	if len(members) == 0 {
 		role = enum.MemberStatusOwner
 	}
-	_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
+	_, err = s.sm.Register(p.Ctx, sprintID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, s.us, p.Logger)
 	if err != nil {
 		return nil, nil, false, err
 	}

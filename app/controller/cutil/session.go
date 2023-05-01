@@ -3,8 +3,6 @@ package cutil
 
 import (
 	"context"
-	"time"
-
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -12,7 +10,6 @@ import (
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/telemetry/httpmetrics"
 	"github.com/kyleu/rituals/app/lib/user"
-	usr "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -79,12 +76,12 @@ func loadSession(ctx context.Context, as *app.State, rc *fasthttp.RequestCtx, lo
 
 	if prof.ID == util.UUIDDefault {
 		prof.ID = util.UUID()
-		u := &usr.User{ID: prof.ID, Name: prof.Name, Picture: accts.Image(), Created: time.Now()}
-		err = as.Services.User.Save(ctx, nil, logger, u)
-		if err != nil {
-			logger.Warnf("unable to save user [%s]", prof.ID.String())
-			return nil, nil, prof, nil
-		}
+		//u := &usr.User{ID: prof.ID, Name: prof.Name, Picture: accts.Image(), Created: time.Now()}
+		//err = as.Services.User.Create(ctx, nil, logger, u)
+		//if err != nil {
+		//	logger.Warnf("unable to save user [%s]", prof.ID.String())
+		//	return nil, nil, prof, nil
+		//}
 		session["profile"] = prof
 		err = csession.SaveSession(rc, session, logger)
 		if err != nil {

@@ -29,7 +29,7 @@ func (s *Service) CreateEstimate(
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate")
 	}
-	member, err := s.em.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, logger)
+	member, err := s.em.Register(ctx, model.ID, user, name, picture, enum.MemberStatusOwner, nil, s.a, s.send, s.us, logger)
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "unable to save estimate owner")
 	}

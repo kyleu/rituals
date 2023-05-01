@@ -145,7 +145,7 @@ func (s *Service) membersStandup(p *LoadParams, standupID uuid.UUID) (umember.St
 	if len(members) == 0 {
 		role = enum.MemberStatusOwner
 	}
-	_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, p.Logger)
+	_, err = s.um.Register(p.Ctx, standupID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, s.us, p.Logger)
 	if err != nil {
 		return nil, nil, false, err
 	}

@@ -156,7 +156,7 @@ func (s *Service) membersEstimate(p *LoadParams, estimateID uuid.UUID) (emember.
 	if len(members) == 0 {
 		role = enum.MemberStatusOwner
 	}
-	_, err = s.em.Register(p.Ctx, estimateID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, p.Logger)
+	_, err = s.em.Register(p.Ctx, estimateID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, p.Tx, s.a, s.send, s.us, p.Logger)
 	if err != nil {
 		return nil, nil, false, err
 	}

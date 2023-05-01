@@ -160,7 +160,7 @@ func (s *Service) membersTeam(p *LoadParams, teamID uuid.UUID) (tmember.TeamMemb
 	if len(members) == 0 {
 		role = enum.MemberStatusOwner
 	}
-	_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, p.Logger)
+	_, err = s.tm.Register(p.Ctx, teamID, p.Profile.ID, p.Profile.Name, p.Accounts.Image(), role, nil, s.a, s.send, s.us, p.Logger)
 	if err != nil {
 		return nil, nil, false, err
 	}
