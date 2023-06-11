@@ -2,7 +2,6 @@ package tmember
 
 import (
 	"context"
-	"github.com/kyleu/rituals/app/user"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
