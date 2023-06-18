@@ -47,7 +47,7 @@ func (p *GoSource) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`</h3>
     <pre>go install github.com/kyleu/rituals@latest</pre>
     <p>
-      <a href="https://github.com/kyleu/rituals.dev"><button>Source Code</button></a>
+      <a href="https://github.com/kyleu/rituals"><button>Source Code</button></a>
     </p>
   </div>
 `)

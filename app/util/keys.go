@@ -9,7 +9,7 @@ const (
 	AppPort    = 18000
 	AppContact = "Kyle U <rituals.dev@kyleu.com>"
 	AppURL     = "https://rituals.dev"
-	AppSource  = "https://github.com/kyleu/rituals.dev"
+	AppSource  = "https://github.com/kyleu/rituals"
 	AppLegal   = `Built by <a href="mailto:rituals.dev@kyleu.com">Kyle U</a>, all rights reserved`
 
 	// $PF_SECTION_START(keys)$.

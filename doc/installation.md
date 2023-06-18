@@ -2,7 +2,7 @@
 # Installation
 
 ## Pre-built binaries
-Download any package from the [release page](https://github.com/kyleu/rituals.dev/releases).
+Download any package from the [release page](https://github.com/kyleu/rituals/releases).
 
 ### Homebrew
 ```shell
@@ -10,7 +10,7 @@ brew install kyleu/kyleu/rituals
 ```
 
 ### deb, rpm and apk packages
-Download the .deb, .rpm or .apk packages from the [release page](https://github.com/kyleu/rituals.dev/releases) and install them with the appropriate tools.
+Download the .deb, .rpm or .apk packages from the [release page](https://github.com/kyleu/rituals/releases) and install them with the appropriate tools.
 
 ## Running with Docker
 ```shell
@@ -32,7 +32,7 @@ If you want to contribute to the project, please follow the steps on our [contri
 If you just want to build from source for whatever reason, follow these steps:
 
 ```shell
-git clone https://github.com/kyleu/rituals.dev
+git clone https://github.com/kyleu/rituals
 cd rituals
 make build
 ./build/debug/rituals --help

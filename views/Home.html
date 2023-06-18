@@ -30,12 +30,18 @@
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
     <p>Work with your team to estimate work, track your progress, and gather feedback</p>
     <p>
-      This app, <a href="https://rituals.dev">rituals.dev</a>, allows you to collaborate with your team to manage your work.
+      This application allows you to collaborate with your team to manage your work.
       It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.
     </p>
-    <div>
+    <p>
+      Source code available at <a href="https://github.com/kyleu/rituals.dev">https://github.com/kyleu/rituals.dev</a>.
+    </p>
+    <p>
+      <a href="https://rituals.dev">rituals.dev</a> was built with help from <a href="https://projectforge.dev">Project Forge</a>.
+    </p>
+    <p>
       Get started below!
-    </div>
+    </p>
   </div>
   {%= vwteam.TeamListTable(p.Teams, false, nil, nil, ps) %}
   {%= vwsprint.SprintListTable(p.Sprints, nil, false, nil, nil, ps) %}

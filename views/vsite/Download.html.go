@@ -64,7 +64,7 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	for _, link := range p.Links.GetByModes("desktop") {
 //line views/vsite/Download.html:25
 		qw422016.N().S(`      <li>
-        <a href="https://github.com/kyleu/rituals.dev/releases/download/v`)
+        <a href="https://github.com/kyleu/rituals/releases/download/v`)
 //line views/vsite/Download.html:27
 		qw422016.E().S(as.BuildInfo.Version)
 //line views/vsite/Download.html:27
@@ -135,7 +135,7 @@ func (p *Download) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vsite/Download.html:55
 		}
 //line views/vsite/Download.html:55
-		qw422016.N().S(`            <a href="https://github.com/kyleu/rituals.dev/releases/download/v`)
+		qw422016.N().S(`            <a href="https://github.com/kyleu/rituals/releases/download/v`)
 //line views/vsite/Download.html:56
 		qw422016.E().S(as.BuildInfo.Version)
 //line views/vsite/Download.html:56

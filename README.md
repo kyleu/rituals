@@ -4,7 +4,9 @@
 Work with your team to estimate work, track your progress, and gather feedback
 
 - https://rituals.dev
-- https://rituals.dev/rituals
+- https://github.com/kyleu/rituals.dev
+
+This application was built with help from [Project Forge](https://projectforge.dev)
 
 ## Documentation
 
