@@ -37,7 +37,7 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			teamIDsByTeamID = append(teamIDsByTeamID, x.TeamID)
 		}
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDsByTeamID)...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDereference(teamIDsByTeamID)...)
 		if err != nil {
 			return "", err
 		}

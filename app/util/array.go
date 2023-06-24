@@ -4,30 +4,25 @@ package util
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/samber/lo"
 )
 
 func StringArrayMaxLength(a []string) int {
-	ret := 0
-	for _, x := range a {
-		l := len(x)
-		if l > ret {
-			ret = l
-		}
-	}
-	return ret
+	return len(lo.MaxBy(a, func(x string, max string) bool {
+		return len(x) > len(max)
+	}))
 }
 
 func StringArrayQuoted(a []string) []string {
-	ret := make([]string, 0, len(a))
-	for _, x := range a {
-		ret = append(ret, fmt.Sprintf("%q", x))
-	}
-	return ret
+	return lo.Map(a, func(x string, _ int) string {
+		return fmt.Sprintf("%q", x)
+	})
 }
 
 func StringArrayFromInterfaces(a []any, maxLength int) []string {
 	ret := make([]string, 0, len(a))
-	for _, x := range a {
+	lo.ForEach(a, func(x any, _ int) {
 		var v string
 		switch t := x.(type) {
 		case string:
@@ -41,33 +36,23 @@ func StringArrayFromInterfaces(a []any, maxLength int) []string {
 			v = v[:maxLength] + "... (truncated)"
 		}
 		ret = append(ret, v)
-	}
+	})
 	return ret
 }
 
 func ArrayRemoveDuplicates[T comparable](x []T) []T {
-	m := make(map[T]struct{}, len(x))
-	ret := make([]T, 0, len(x))
-	for _, item := range x {
-		if _, ok := m[item]; !ok {
-			m[item] = struct{}{}
-			ret = append(ret, item)
-		}
-	}
-	return ret
+	return lo.Uniq(x)
 }
 
 func InterfaceArrayFrom[T any](x ...T) []any {
-	ret := make([]any, len(x))
-	for idx, item := range x {
-		ret[idx] = item
-	}
-	return ret
+	return lo.Map(x, func(item T, idx int) any {
+		return item
+	})
 }
 
 func StringArrayOxfordComma(names []string, separator string) string {
 	ret := ""
-	for idx, name := range names {
+	lo.ForEach(names, func(name string, idx int) {
 		if idx > 0 {
 			if idx == (len(names) - 1) {
 				if idx > 1 {
@@ -79,28 +64,20 @@ func StringArrayOxfordComma(names []string, separator string) string {
 			}
 		}
 		ret += name
-	}
+	})
 	return ret
 }
 
 func ArrayRemoveNil[T any](x []*T) []*T {
-	ret := make([]*T, 0, len(x))
-	for _, item := range x {
-		if item != nil {
-			ret = append(ret, item)
-		}
-	}
-	return ret
+	return lo.Reject(x, func(item *T, _ int) bool {
+		return item == nil
+	})
 }
 
-func ArrayDefererence[T any](x []*T) []T {
-	ret := make([]T, 0, len(x))
-	for _, item := range x {
-		if item != nil {
-			ret = append(ret, *item)
-		}
-	}
-	return ret
+func ArrayDereference[T any](x []*T) []T {
+	return lo.Map(x, func(item *T, _ int) T {
+		return lo.FromPtr(item)
+	})
 }
 
 func LengthAny(dest any) int {
@@ -119,27 +96,15 @@ func ArrayFromAny(dest any) []any {
 		rfl = rfl.Elem()
 	}
 	if k := rfl.Kind(); k == reflect.Array || k == reflect.Slice {
-		ret := make([]any, 0, rfl.Len())
-		for i := 0; i < rfl.Len(); i++ {
-			e := rfl.Index(i)
-			ret = append(ret, e.Interface())
-		}
-		return ret
+		return lo.Times(rfl.Len(), func(i int) any {
+			return rfl.Index(i).Interface()
+		})
 	}
 	return []any{dest}
 }
 
 func ArrayFlatten[T any](arrs ...[]T) []T {
-	l := 0
-	for _, a := range arrs {
-		l += len(a)
-	}
-
-	out := make([]T, 0, l)
-	for _, a := range arrs {
-		out = append(out, a...)
-	}
-	return out
+	return lo.Flatten(arrs)
 }
 
 func ArrayFirstN[V any](items []V, n int) []V {

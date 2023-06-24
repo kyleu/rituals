@@ -1,7 +1,10 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package uhistory
 
-import "golang.org/x/exp/slices"
+import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
+)
 
 type StandupHistories []*StandupHistory
 
@@ -17,7 +20,7 @@ func (s StandupHistories) Get(slug string) *StandupHistory {
 func (s StandupHistories) GetBySlugs(slugs ...string) StandupHistories {
 	var ret StandupHistories
 	for _, x := range s {
-		if slices.Contains(slugs, x.Slug) {
+		if lo.Contains(slugs, x.Slug) {
 			ret = append(ret, x)
 		}
 	}

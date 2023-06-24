@@ -1,7 +1,10 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package shistory
 
-import "golang.org/x/exp/slices"
+import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
+)
 
 type SprintHistories []*SprintHistory
 
@@ -17,7 +20,7 @@ func (s SprintHistories) Get(slug string) *SprintHistory {
 func (s SprintHistories) GetBySlugs(slugs ...string) SprintHistories {
 	var ret SprintHistories
 	for _, x := range s {
-		if slices.Contains(slugs, x.Slug) {
+		if lo.Contains(slugs, x.Slug) {
 			ret = append(ret, x)
 		}
 	}

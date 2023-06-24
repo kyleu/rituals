@@ -3,6 +3,7 @@ package rmember
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (r RetroMembers) Get(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
 func (r RetroMembers) GetByRetroIDs(retroIDs ...uuid.UUID) RetroMembers {
 	var ret RetroMembers
 	for _, x := range r {
-		if slices.Contains(retroIDs, x.RetroID) {
+		if lo.Contains(retroIDs, x.RetroID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (r RetroMembers) RetroIDStrings(includeNil bool) []string {
 func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
 	var ret RetroMembers
 	for _, x := range r {
-		if slices.Contains(userIDs, x.UserID) {
+		if lo.Contains(userIDs, x.UserID) {
 			ret = append(ret, x)
 		}
 	}

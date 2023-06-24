@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -42,11 +43,9 @@ func Search(ctx context.Context, params *Params, as *app.State, page *cutil.Page
 		return item(ctx, params, as, page, logger)
 	})
 
-	ret := make(result.Results, 0, len(results)*len(results))
-	for _, x := range results {
-		ret = append(ret, x...)
-	}
-
+	var ret result.Results = lo.FlatMap(results, func(x result.Results, _ int) []*result.Result {
+		return x
+	})
 	ret.Sort()
 	return ret, errs
 }

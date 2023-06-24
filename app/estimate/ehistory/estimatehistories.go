@@ -1,7 +1,10 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package ehistory
 
-import "golang.org/x/exp/slices"
+import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
+)
 
 type EstimateHistories []*EstimateHistory
 
@@ -17,7 +20,7 @@ func (e EstimateHistories) Get(slug string) *EstimateHistory {
 func (e EstimateHistories) GetBySlugs(slugs ...string) EstimateHistories {
 	var ret EstimateHistories
 	for _, x := range e {
-		if slices.Contains(slugs, x.Slug) {
+		if lo.Contains(slugs, x.Slug) {
 			ret = append(ret, x)
 		}
 	}

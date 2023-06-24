@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"golang.org/x/exp/slices"
+	"github.com/samber/lo"
 )
 
 type Diff struct {
@@ -29,19 +29,15 @@ func (d Diff) StringVerbose() string {
 type Diffs []*Diff
 
 func (d Diffs) String() string {
-	sb := make([]string, 0, len(d))
-	for _, x := range d {
-		sb = append(sb, x.String())
-	}
-	return strings.Join(sb, "; ")
+	return strings.Join(lo.Map(d, func(x *Diff, _ int) string {
+		return x.String()
+	}), "; ")
 }
 
 func (d Diffs) StringVerbose() string {
-	sb := make([]string, 0, len(d))
-	for _, x := range d {
-		sb = append(sb, x.StringVerbose())
-	}
-	return strings.Join(sb, "; ")
+	return strings.Join(lo.Map(d, func(x *Diff, _ int) string {
+		return x.StringVerbose()
+	}), "; ")
 }
 
 func DiffObjects(l any, r any, path ...string) Diffs {
@@ -49,7 +45,7 @@ func DiffObjects(l any, r any, path ...string) Diffs {
 }
 
 func DiffObjectsIgnoring(l any, r any, ignored []string, path ...string) Diffs {
-	if len(path) > 0 && slices.Contains(ignored, path[len(path)-1]) {
+	if len(path) > 0 && lo.Contains(ignored, path[len(path)-1]) {
 		return nil
 	}
 	if l == nil {
@@ -77,10 +73,10 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 		ret = append(ret, diffArrays(t, r, ignored, path...)...)
 	case Diffs:
 		rm, _ := r.(Diffs)
-		for idx, v := range t {
+		lo.ForEach(t, func(v *Diff, idx int) {
 			rv := rm[idx]
 			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append([]string{}, path...)...)...)
-		}
+		})
 	case int64:
 		i, _ := r.(int64)
 		if t != i {
@@ -118,14 +114,14 @@ func diffType(l any, r any, ignored []string, recursed bool, path ...string) Dif
 func diffArrays(l []any, r any, ignored []string, path ...string) Diffs {
 	var ret Diffs
 	rm, _ := r.([]any)
-	for idx, v := range l {
+	lo.ForEach(l, func(v any, idx int) {
 		if len(rm) > idx {
 			rv := rm[idx]
 			ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
 		} else {
 			ret = append(ret, DiffObjectsIgnoring(v, nil, ignored, append(append([]string{}, path...), fmt.Sprint(idx))...)...)
 		}
-	}
+	})
 	if len(rm) > len(l) {
 		for i := len(l); i < len(rm); i++ {
 			ret = append(ret, DiffObjectsIgnoring(nil, rm[i], ignored, append(append([]string{}, path...), fmt.Sprint(i))...)...)
@@ -141,14 +137,14 @@ func diffMaps(l map[string]any, r any, ignored []string, path ...string) Diffs {
 		rm, _ = r.(ValueMap)
 	}
 	for k, v := range l {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		rv := rm[k]
 		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {
@@ -162,14 +158,14 @@ func diffIntMaps(l map[string]int, r any, ignored []string, path ...string) Diff
 	var ret Diffs
 	rm, _ := r.(map[string]int)
 	for k, v := range l {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		rv := rm[k]
 		ret = append(ret, DiffObjectsIgnoring(v, rv, ignored, append(append([]string{}, path...), k)...)...)
 	}
 	for k, v := range rm {
-		if slices.Contains(ignored, k) {
+		if lo.Contains(ignored, k) {
 			continue
 		}
 		if _, exists := l[k]; !exists {

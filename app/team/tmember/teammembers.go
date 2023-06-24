@@ -3,6 +3,7 @@ package tmember
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (t TeamMembers) Get(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
 func (t TeamMembers) GetByTeamIDs(teamIDs ...uuid.UUID) TeamMembers {
 	var ret TeamMembers
 	for _, x := range t {
-		if slices.Contains(teamIDs, x.TeamID) {
+		if lo.Contains(teamIDs, x.TeamID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
 func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
 	var ret TeamMembers
 	for _, x := range t {
-		if slices.Contains(userIDs, x.UserID) {
+		if lo.Contains(userIDs, x.UserID) {
 			ret = append(ret, x)
 		}
 	}

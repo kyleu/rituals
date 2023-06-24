@@ -3,6 +3,7 @@ package spermission
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (s SprintPermissions) Get(sprintID uuid.UUID, key string, value string) *Sp
 func (s SprintPermissions) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintPermissions {
 	var ret SprintPermissions
 	for _, x := range s {
-		if slices.Contains(sprintIDs, x.SprintID) {
+		if lo.Contains(sprintIDs, x.SprintID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
 func (s SprintPermissions) GetByKeys(keys ...string) SprintPermissions {
 	var ret SprintPermissions
 	for _, x := range s {
-		if slices.Contains(keys, x.Key) {
+		if lo.Contains(keys, x.Key) {
 			ret = append(ret, x)
 		}
 	}
@@ -78,7 +79,7 @@ func (s SprintPermissions) KeyStrings(includeNil bool) []string {
 func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 	var ret SprintPermissions
 	for _, x := range s {
-		if slices.Contains(values, x.Value) {
+		if lo.Contains(values, x.Value) {
 			ret = append(ret, x)
 		}
 	}

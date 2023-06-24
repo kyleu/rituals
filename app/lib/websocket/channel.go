@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -26,7 +26,7 @@ func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, e
 	if !ok {
 		return false, invalidConnection(connID)
 	}
-	if !slices.Contains(conn.Channels, ch) {
+	if !lo.Contains(conn.Channels, ch) {
 		conn.Channels = append(conn.Channels, ch)
 	}
 
@@ -40,7 +40,7 @@ func (s *Service) Join(connID uuid.UUID, ch string, logger util.Logger) (bool, e
 		s.channels[ch] = curr
 		created = true
 	}
-	if !slices.Contains(curr.ConnIDs, connID) {
+	if !lo.Contains(curr.ConnIDs, connID) {
 		curr.ConnIDs = append(curr.ConnIDs, connID)
 	}
 	return created, s.sendOnlineUpdate(ch, conn.ID, conn.Profile.ID, true, logger)
@@ -56,17 +56,11 @@ func (s *Service) Leave(connID uuid.UUID, ch string, logger util.Logger) (bool, 
 	s.channelsMu.Lock()
 	defer s.channelsMu.Unlock()
 
-	curr, ok := s.channels[ch]
-	if !ok {
-		curr = newChannel(ch)
-	}
+	curr := lo.ValueOr(s.channels, ch, newChannel(ch))
 
-	filteredConns := make([]uuid.UUID, 0, len(curr.ConnIDs))
-	for _, i := range curr.ConnIDs {
-		if i != connID {
-			filteredConns = append(filteredConns, i)
-		}
-	}
+	filteredConns := lo.FilterMap(curr.ConnIDs, func(i uuid.UUID, _ int) (uuid.UUID, bool) {
+		return i, i != connID
+	})
 	if len(filteredConns) == 0 {
 		delete(s.channels, ch)
 		return true, nil
@@ -87,11 +81,7 @@ func (s *Service) GetConnection(id uuid.UUID) *Connection {
 }
 
 func chanWithout(c []string, ch string) []string {
-	ret := make([]string, 0, len(c))
-	for _, x := range c {
-		if x != ch {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Reject(c, func(x string, _ int) bool {
+		return x == ch
+	})
 }

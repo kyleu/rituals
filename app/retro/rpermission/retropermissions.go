@@ -3,6 +3,7 @@ package rpermission
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (r RetroPermissions) Get(retroID uuid.UUID, key string, value string) *Retr
 func (r RetroPermissions) GetByRetroIDs(retroIDs ...uuid.UUID) RetroPermissions {
 	var ret RetroPermissions
 	for _, x := range r {
-		if slices.Contains(retroIDs, x.RetroID) {
+		if lo.Contains(retroIDs, x.RetroID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
 func (r RetroPermissions) GetByKeys(keys ...string) RetroPermissions {
 	var ret RetroPermissions
 	for _, x := range r {
-		if slices.Contains(keys, x.Key) {
+		if lo.Contains(keys, x.Key) {
 			ret = append(ret, x)
 		}
 	}
@@ -78,7 +79,7 @@ func (r RetroPermissions) KeyStrings(includeNil bool) []string {
 func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 	var ret RetroPermissions
 	for _, x := range r {
-		if slices.Contains(values, x.Value) {
+		if lo.Contains(values, x.Value) {
 			ret = append(ret, x)
 		}
 	}

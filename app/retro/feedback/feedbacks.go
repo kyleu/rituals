@@ -3,6 +3,7 @@ package feedback
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (f Feedbacks) Get(id uuid.UUID) *Feedback {
 func (f Feedbacks) GetByIDs(ids ...uuid.UUID) Feedbacks {
 	var ret Feedbacks
 	for _, x := range f {
-		if slices.Contains(ids, x.ID) {
+		if lo.Contains(ids, x.ID) {
 			ret = append(ret, x)
 		}
 	}

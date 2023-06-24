@@ -3,6 +3,7 @@ package story
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (s Stories) Get(id uuid.UUID) *Story {
 func (s Stories) GetByIDs(ids ...uuid.UUID) Stories {
 	var ret Stories
 	for _, x := range s {
-		if slices.Contains(ids, x.ID) {
+		if lo.Contains(ids, x.ID) {
 			ret = append(ret, x)
 		}
 	}

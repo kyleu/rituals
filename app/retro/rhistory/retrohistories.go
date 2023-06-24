@@ -1,7 +1,10 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package rhistory
 
-import "golang.org/x/exp/slices"
+import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
+)
 
 type RetroHistories []*RetroHistory
 
@@ -17,7 +20,7 @@ func (r RetroHistories) Get(slug string) *RetroHistory {
 func (r RetroHistories) GetBySlugs(slugs ...string) RetroHistories {
 	var ret RetroHistories
 	for _, x := range r {
-		if slices.Contains(slugs, x.Slug) {
+		if lo.Contains(slugs, x.Slug) {
 			ret = append(ret, x)
 		}
 	}

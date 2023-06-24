@@ -1,7 +1,10 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 package thistory
 
-import "golang.org/x/exp/slices"
+import (
+	"github.com/samber/lo"
+	"golang.org/x/exp/slices"
+)
 
 type TeamHistories []*TeamHistory
 
@@ -17,7 +20,7 @@ func (t TeamHistories) Get(slug string) *TeamHistory {
 func (t TeamHistories) GetBySlugs(slugs ...string) TeamHistories {
 	var ret TeamHistories
 	for _, x := range t {
-		if slices.Contains(slugs, x.Slug) {
+		if lo.Contains(slugs, x.Slug) {
 			ret = append(ret, x)
 		}
 	}

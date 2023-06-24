@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -66,18 +67,11 @@ type PageState struct {
 }
 
 func (p *PageState) AddIcon(keys ...string) {
-	for _, k := range keys {
-		var hit bool
-		for _, icon := range p.Icons {
-			if icon == k {
-				hit = true
-				break
-			}
-		}
-		if !hit {
+	lo.ForEach(keys, func(k string, _ int) {
+		if !lo.Contains(p.Icons, k) {
 			p.Icons = append(p.Icons, k)
 		}
-	}
+	})
 }
 
 func (p *PageState) TitleString() string {

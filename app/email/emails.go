@@ -3,6 +3,7 @@ package email
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (e Emails) Get(id uuid.UUID) *Email {
 func (e Emails) GetByIDs(ids ...uuid.UUID) Emails {
 	var ret Emails
 	for _, x := range e {
-		if slices.Contains(ids, x.ID) {
+		if lo.Contains(ids, x.ID) {
 			ret = append(ret, x)
 		}
 	}

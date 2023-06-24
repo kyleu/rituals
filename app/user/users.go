@@ -3,6 +3,7 @@ package user
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (u Users) Get(id uuid.UUID) *User {
 func (u Users) GetByIDs(ids ...uuid.UUID) Users {
 	var ret Users
 	for _, x := range u {
-		if slices.Contains(ids, x.ID) {
+		if lo.Contains(ids, x.ID) {
 			ret = append(ret, x)
 		}
 	}

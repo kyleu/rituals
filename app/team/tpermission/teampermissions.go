@@ -3,6 +3,7 @@ package tpermission
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (t TeamPermissions) Get(teamID uuid.UUID, key string, value string) *TeamPe
 func (t TeamPermissions) GetByTeamIDs(teamIDs ...uuid.UUID) TeamPermissions {
 	var ret TeamPermissions
 	for _, x := range t {
-		if slices.Contains(teamIDs, x.TeamID) {
+		if lo.Contains(teamIDs, x.TeamID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (t TeamPermissions) TeamIDStrings(includeNil bool) []string {
 func (t TeamPermissions) GetByKeys(keys ...string) TeamPermissions {
 	var ret TeamPermissions
 	for _, x := range t {
-		if slices.Contains(keys, x.Key) {
+		if lo.Contains(keys, x.Key) {
 			ret = append(ret, x)
 		}
 	}
@@ -78,7 +79,7 @@ func (t TeamPermissions) KeyStrings(includeNil bool) []string {
 func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
 	var ret TeamPermissions
 	for _, x := range t {
-		if slices.Contains(values, x.Value) {
+		if lo.Contains(values, x.Value) {
 			ret = append(ret, x)
 		}
 	}

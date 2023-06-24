@@ -10,8 +10,8 @@ import (
 
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/lib/filter"
@@ -62,12 +62,12 @@ func (s *Service) UserList(params *filter.Params) Statuses {
 	ret := make(Statuses, 0)
 	ret = append(ret, systemStatus)
 	idx := 0
-	for _, conn := range s.connections {
+	lo.ForEach(lo.Values(s.connections), func(conn *Connection, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret = append(ret, conn.ToStatus())
 		}
 		idx++
-	}
+	})
 	return ret
 }
 
@@ -76,12 +76,12 @@ func (s *Service) ChannelList(params *filter.Params) []string {
 	params = filter.ParamsWithDefaultOrdering("channel", params)
 	ret := make([]string, 0)
 	idx := 0
-	for conn := range s.channels {
+	lo.ForEach(lo.Keys(s.channels), func(conn string, _ int) {
 		if idx >= params.Offset && (params.Limit == 0 || idx < params.Limit) {
 			ret = append(ret, conn)
 		}
 		idx++
-	}
+	})
 	slices.Sort(ret)
 	return ret
 }
@@ -107,20 +107,20 @@ func (s *Service) Count() int {
 func (s *Service) Status() ([]string, []*Connection, []uuid.UUID) {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
-	conns := make([]*Connection, 0, len(s.connections))
-	for _, conn := range s.connections {
-		conns = append(conns, conn)
-	}
-	taps := slices.Clone(maps.Keys(s.taps))
+	conns := lo.Values(s.connections)
+	slices.SortFunc(conns, func(l *Connection, r *Connection) bool {
+		return l.ID.String() < r.ID.String()
+	})
+	taps := slices.Clone(lo.Keys(s.taps))
 	return s.ChannelList(nil), conns, taps
 }
 
 func (s *Service) Close() {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
-	for _, v := range s.connections {
+	lo.ForEach(lo.Values(s.connections), func(v *Connection, _ int) {
 		_ = v.Close()
-	}
+	})
 }
 
 var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}

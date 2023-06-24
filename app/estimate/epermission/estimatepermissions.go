@@ -3,6 +3,7 @@ package epermission
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (e EstimatePermissions) Get(estimateID uuid.UUID, key string, value string)
 func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
 	var ret EstimatePermissions
 	for _, x := range e {
-		if slices.Contains(estimateIDs, x.EstimateID) {
+		if lo.Contains(estimateIDs, x.EstimateID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (e EstimatePermissions) EstimateIDStrings(includeNil bool) []string {
 func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
 	var ret EstimatePermissions
 	for _, x := range e {
-		if slices.Contains(keys, x.Key) {
+		if lo.Contains(keys, x.Key) {
 			ret = append(ret, x)
 		}
 	}
@@ -78,7 +79,7 @@ func (e EstimatePermissions) KeyStrings(includeNil bool) []string {
 func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
 	var ret EstimatePermissions
 	for _, x := range e {
-		if slices.Contains(values, x.Value) {
+		if lo.Contains(values, x.Value) {
 			ret = append(ret, x)
 		}
 	}

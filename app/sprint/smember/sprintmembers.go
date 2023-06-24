@@ -3,6 +3,7 @@ package smember
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (s SprintMembers) Get(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 func (s SprintMembers) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintMembers {
 	var ret SprintMembers
 	for _, x := range s {
-		if slices.Contains(sprintIDs, x.SprintID) {
+		if lo.Contains(sprintIDs, x.SprintID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
 func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 	var ret SprintMembers
 	for _, x := range s {
-		if slices.Contains(userIDs, x.UserID) {
+		if lo.Contains(userIDs, x.UserID) {
 			ret = append(ret, x)
 		}
 	}

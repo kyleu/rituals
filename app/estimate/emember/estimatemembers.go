@@ -3,6 +3,7 @@ package emember
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (e EstimateMembers) Get(estimateID uuid.UUID, userID uuid.UUID) *EstimateMe
 func (e EstimateMembers) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateMembers {
 	var ret EstimateMembers
 	for _, x := range e {
-		if slices.Contains(estimateIDs, x.EstimateID) {
+		if lo.Contains(estimateIDs, x.EstimateID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (e EstimateMembers) EstimateIDStrings(includeNil bool) []string {
 func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
 	var ret EstimateMembers
 	for _, x := range e {
-		if slices.Contains(userIDs, x.UserID) {
+		if lo.Contains(userIDs, x.UserID) {
 			ret = append(ret, x)
 		}
 	}

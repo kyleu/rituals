@@ -38,7 +38,7 @@ func RetroList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			teamIDsByTeamID = append(teamIDsByTeamID, x.TeamID)
 		}
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(teamIDsByTeamID)...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDereference(teamIDsByTeamID)...)
 		if err != nil {
 			return "", err
 		}
@@ -46,7 +46,7 @@ func RetroList(rc *fasthttp.RequestCtx) {
 		for _, x := range ret {
 			sprintIDsBySprintID = append(sprintIDsBySprintID, x.SprintID)
 		}
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDefererence(sprintIDsBySprintID)...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDereference(sprintIDsBySprintID)...)
 		if err != nil {
 			return "", err
 		}

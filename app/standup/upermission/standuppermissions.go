@@ -3,6 +3,7 @@ package upermission
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (s StandupPermissions) Get(standupID uuid.UUID, key string, value string) *
 func (s StandupPermissions) GetByStandupIDs(standupIDs ...uuid.UUID) StandupPermissions {
 	var ret StandupPermissions
 	for _, x := range s {
-		if slices.Contains(standupIDs, x.StandupID) {
+		if lo.Contains(standupIDs, x.StandupID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
 func (s StandupPermissions) GetByKeys(keys ...string) StandupPermissions {
 	var ret StandupPermissions
 	for _, x := range s {
-		if slices.Contains(keys, x.Key) {
+		if lo.Contains(keys, x.Key) {
 			ret = append(ret, x)
 		}
 	}
@@ -78,7 +79,7 @@ func (s StandupPermissions) KeyStrings(includeNil bool) []string {
 func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 	var ret StandupPermissions
 	for _, x := range s {
-		if slices.Contains(values, x.Value) {
+		if lo.Contains(values, x.Value) {
 			ret = append(ret, x)
 		}
 	}

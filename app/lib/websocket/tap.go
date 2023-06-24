@@ -5,6 +5,7 @@ import (
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/util"
@@ -51,10 +52,10 @@ func (s *Service) WriteTap(message *Message, logger util.Logger) {
 		return
 	}
 	b := util.ToJSONBytes(message, true)
-	for _, tap := range s.taps {
+	lo.ForEach(lo.Values(s.taps), func(tap *websocket.Conn, _ int) {
 		err := tap.WriteMessage(websocket.TextMessage, b)
 		if err != nil {
 			logger.Warnf("error writing tap message: %s", err.Error())
 		}
-	}
+	})
 }

@@ -3,6 +3,7 @@ package vote
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
 func (v Votes) GetByStoryIDs(storyIDs ...uuid.UUID) Votes {
 	var ret Votes
 	for _, x := range v {
-		if slices.Contains(storyIDs, x.StoryID) {
+		if lo.Contains(storyIDs, x.StoryID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (v Votes) StoryIDStrings(includeNil bool) []string {
 func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
 	var ret Votes
 	for _, x := range v {
-		if slices.Contains(userIDs, x.UserID) {
+		if lo.Contains(userIDs, x.UserID) {
 			ret = append(ret, x)
 		}
 	}

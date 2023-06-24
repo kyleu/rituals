@@ -3,6 +3,7 @@ package action
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (a Actions) Get(id uuid.UUID) *Action {
 func (a Actions) GetByIDs(ids ...uuid.UUID) Actions {
 	var ret Actions
 	for _, x := range a {
-		if slices.Contains(ids, x.ID) {
+		if lo.Contains(ids, x.ID) {
 			ret = append(ret, x)
 		}
 	}

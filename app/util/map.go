@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,15 +21,11 @@ func ValueMapFor(kvs ...any) ValueMap {
 }
 
 func (m ValueMap) KeysAndValues() ([]string, []any) {
-	cols := make([]string, 0, len(m))
-	vals := make([]any, 0, len(m))
-	for k := range m {
-		cols = append(cols, k)
-	}
+	cols := lo.Keys(m)
 	slices.Sort(cols)
-	for _, col := range cols {
-		vals = append(vals, m[col])
-	}
+	vals := lo.Map(cols, func(col string, _ int) any {
+		return m[col]
+	})
 	return cols, vals
 }
 
@@ -51,32 +48,24 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 		}
 	}
 
-	ret := make(ValueMap, len(keys))
-	for _, k := range keys {
-		ret[k] = vals[k]
-	}
-	return ret, nil
+	return lo.Associate(keys, func(k string) (string, any) {
+		return k, vals[k]
+	}), nil
 }
 
 func (m ValueMap) Keys() []string {
-	ret := make([]string, 0, len(m))
-	for k := range m {
-		ret = append(ret, k)
-	}
+	ret := lo.Keys(m)
 	slices.Sort(ret)
 	return ret
 }
 
 func (m ValueMap) Merge(args ...ValueMap) ValueMap {
-	ret := make(ValueMap, len(m)+len(args))
-	for k, v := range m {
-		ret[k] = v
-	}
-	for _, arg := range args {
+	ret := m.Clone()
+	lo.ForEach(args, func(arg ValueMap, _ int) {
 		for k, v := range arg {
 			ret[k] = v
 		}
-	}
+	})
 	return ret
 }
 
@@ -128,11 +117,11 @@ func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 func (m ValueMap) Filter(keys []string) ValueMap {
 	filteredMap := ValueMap{}
-	for _, key := range keys {
+	lo.ForEach(keys, func(key string, _ int) {
 		if data, ok := m[key]; ok {
 			filteredMap[key] = data
 		}
-	}
+	})
 	return filteredMap
 }
 

@@ -21,8 +21,9 @@ rituals.dev relies on a ton of open source projects. First among them is the [Go
 - [pkg/errors][15]
 - [prometheus][16]
 - [opentelemetry][17]
-- [sqlx][18]
-- [pgx][19]
+- [lo][18]
+- [sqlx][19]
+- [pgx][20]
 
 
 [1]: https://golang.org "What a great contribution to the world of engineering"
@@ -41,6 +42,7 @@ rituals.dev relies on a ton of open source projects. First among them is the [Go
 [14]: https://github.com/kirsle/configdir "Provides access to OS-specific directories"
 [15]: https://github.com/pkg/errors "Errors with stack traces and detailed logging"
 [16]: https://github.com/prometheus/client_golang "Metrics for all aspects of the system"
-[17]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"
-[18]: https://github.com/jmoiron/sqlx "Provides enhancements to the stdlib's sql package, super handy"
-[19]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"
+[17]: https://github.com/samber/lo "Functional programming conveniences, used everywhere"
+[18]: https://go.opentelemetry.io/otel "Telemetry for full system tracing"
+[19]: https://github.com/jmoiron/sqlx "Provides enhancements to the stdlib's sql package, super handy"
+[20]: https://github.com/jackc/pgx "Handles (most of) the crazy types that PostgreSQL supports"

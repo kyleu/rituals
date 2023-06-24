@@ -3,6 +3,7 @@ package umember
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (s StandupMembers) Get(standupID uuid.UUID, userID uuid.UUID) *StandupMembe
 func (s StandupMembers) GetByStandupIDs(standupIDs ...uuid.UUID) StandupMembers {
 	var ret StandupMembers
 	for _, x := range s {
-		if slices.Contains(standupIDs, x.StandupID) {
+		if lo.Contains(standupIDs, x.StandupID) {
 			ret = append(ret, x)
 		}
 	}
@@ -49,7 +50,7 @@ func (s StandupMembers) StandupIDStrings(includeNil bool) []string {
 func (s StandupMembers) GetByUserIDs(userIDs ...uuid.UUID) StandupMembers {
 	var ret StandupMembers
 	for _, x := range s {
-		if slices.Contains(userIDs, x.UserID) {
+		if lo.Contains(userIDs, x.UserID) {
 			ret = append(ret, x)
 		}
 	}

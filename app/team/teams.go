@@ -3,6 +3,7 @@ package team
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -20,7 +21,7 @@ func (t Teams) Get(id uuid.UUID) *Team {
 func (t Teams) GetByIDs(ids ...uuid.UUID) Teams {
 	var ret Teams
 	for _, x := range t {
-		if slices.Contains(ids, x.ID) {
+		if lo.Contains(ids, x.ID) {
 			ret = append(ret, x)
 		}
 	}
