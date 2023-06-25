@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -57,11 +58,9 @@ func (r *row) ToRetro() *Retro {
 type rows []*row
 
 func (x rows) ToRetros() Retros {
-	ret := make(Retros, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToRetro())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Retro {
+		return d.ToRetro()
+	})
 }
 
 func defaultWC(idx int) string {

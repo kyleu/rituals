@@ -10,30 +10,21 @@ import (
 type RetroPermissions []*RetroPermission
 
 func (r RetroPermissions) Get(retroID uuid.UUID, key string, value string) *RetroPermission {
-	for _, x := range r {
-		if x.RetroID == retroID && x.Key == key && x.Value == value {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(r, nil, func(x *RetroPermission) bool {
+		return x.RetroID == retroID && x.Key == key && x.Value == value
+	})
 }
 
 func (r RetroPermissions) GetByRetroIDs(retroIDs ...uuid.UUID) RetroPermissions {
-	var ret RetroPermissions
-	for _, x := range r {
-		if lo.Contains(retroIDs, x.RetroID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *RetroPermission, _ int) bool {
+		return lo.Contains(retroIDs, x.RetroID)
+	})
 }
 
 func (r RetroPermissions) RetroIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.RetroID)
-	}
-	return ret
+	return lo.Map(r, func(x *RetroPermission, _ int) uuid.UUID {
+		return x.RetroID
+	})
 }
 
 func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroPermission, _ int) {
 		ret = append(ret, x.RetroID.String())
-	}
+	})
 	return ret
 }
 
 func (r RetroPermissions) GetByKeys(keys ...string) RetroPermissions {
-	var ret RetroPermissions
-	for _, x := range r {
-		if lo.Contains(keys, x.Key) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *RetroPermission, _ int) bool {
+		return lo.Contains(keys, x.Key)
+	})
 }
 
 func (r RetroPermissions) Keys() []string {
-	ret := make([]string, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(r, func(x *RetroPermission, _ int) string {
+		return x.Key
+	})
 }
 
 func (r RetroPermissions) KeyStrings(includeNil bool) []string {
@@ -70,28 +55,22 @@ func (r RetroPermissions) KeyStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroPermission, _ int) {
 		ret = append(ret, x.Key)
-	}
+	})
 	return ret
 }
 
 func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
-	var ret RetroPermissions
-	for _, x := range r {
-		if lo.Contains(values, x.Value) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *RetroPermission, _ int) bool {
+		return lo.Contains(values, x.Value)
+	})
 }
 
 func (r RetroPermissions) Values() []string {
-	ret := make([]string, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.Value)
-	}
-	return ret
+	return lo.Map(r, func(x *RetroPermission, _ int) string {
+		return x.Value
+	})
 }
 
 func (r RetroPermissions) ValueStrings(includeNil bool) []string {
@@ -99,9 +78,9 @@ func (r RetroPermissions) ValueStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroPermission, _ int) {
 		ret = append(ret, x.Value)
-	}
+	})
 	return ret
 }
 
@@ -110,9 +89,9 @@ func (r RetroPermissions) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroPermission, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

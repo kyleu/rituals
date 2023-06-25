@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -52,11 +53,9 @@ func (r *row) ToStandup() *Standup {
 type rows []*row
 
 func (x rows) ToStandups() Standups {
-	ret := make(Standups, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToStandup())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Standup {
+		return d.ToStandup()
+	})
 }
 
 func defaultWC(idx int) string {

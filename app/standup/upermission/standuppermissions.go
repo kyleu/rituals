@@ -10,30 +10,21 @@ import (
 type StandupPermissions []*StandupPermission
 
 func (s StandupPermissions) Get(standupID uuid.UUID, key string, value string) *StandupPermission {
-	for _, x := range s {
-		if x.StandupID == standupID && x.Key == key && x.Value == value {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *StandupPermission) bool {
+		return x.StandupID == standupID && x.Key == key && x.Value == value
+	})
 }
 
 func (s StandupPermissions) GetByStandupIDs(standupIDs ...uuid.UUID) StandupPermissions {
-	var ret StandupPermissions
-	for _, x := range s {
-		if lo.Contains(standupIDs, x.StandupID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
+		return lo.Contains(standupIDs, x.StandupID)
+	})
 }
 
 func (s StandupPermissions) StandupIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.StandupID)
-	}
-	return ret
+	return lo.Map(s, func(x *StandupPermission, _ int) uuid.UUID {
+		return x.StandupID
+	})
 }
 
 func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupPermission, _ int) {
 		ret = append(ret, x.StandupID.String())
-	}
+	})
 	return ret
 }
 
 func (s StandupPermissions) GetByKeys(keys ...string) StandupPermissions {
-	var ret StandupPermissions
-	for _, x := range s {
-		if lo.Contains(keys, x.Key) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
+		return lo.Contains(keys, x.Key)
+	})
 }
 
 func (s StandupPermissions) Keys() []string {
-	ret := make([]string, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(s, func(x *StandupPermission, _ int) string {
+		return x.Key
+	})
 }
 
 func (s StandupPermissions) KeyStrings(includeNil bool) []string {
@@ -70,28 +55,22 @@ func (s StandupPermissions) KeyStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupPermission, _ int) {
 		ret = append(ret, x.Key)
-	}
+	})
 	return ret
 }
 
 func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
-	var ret StandupPermissions
-	for _, x := range s {
-		if lo.Contains(values, x.Value) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
+		return lo.Contains(values, x.Value)
+	})
 }
 
 func (s StandupPermissions) Values() []string {
-	ret := make([]string, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.Value)
-	}
-	return ret
+	return lo.Map(s, func(x *StandupPermission, _ int) string {
+		return x.Value
+	})
 }
 
 func (s StandupPermissions) ValueStrings(includeNil bool) []string {
@@ -99,9 +78,9 @@ func (s StandupPermissions) ValueStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupPermission, _ int) {
 		ret = append(ret, x.Value)
-	}
+	})
 	return ret
 }
 
@@ -110,9 +89,9 @@ func (s StandupPermissions) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupPermission, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

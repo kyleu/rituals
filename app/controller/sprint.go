@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -33,10 +34,9 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Sprints"
 		ps.Data = ret
-		teamIDsByTeamID := make([]*uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			teamIDsByTeamID = append(teamIDsByTeamID, x.TeamID)
-		}
+		teamIDsByTeamID := lo.Map(ret, func(x *sprint.Sprint, _ int) *uuid.UUID {
+			return x.TeamID
+		})
 		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDereference(teamIDsByTeamID)...)
 		if err != nil {
 			return "", err

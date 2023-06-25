@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -53,11 +54,9 @@ func (r *row) ToAction() *Action {
 type rows []*row
 
 func (x rows) ToActions() Actions {
-	ret := make(Actions, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToAction())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Action {
+		return d.ToAction()
+	})
 }
 
 func defaultWC(idx int) string {

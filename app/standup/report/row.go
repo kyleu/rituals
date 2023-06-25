@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -49,11 +50,9 @@ func (r *row) ToReport() *Report {
 type rows []*row
 
 func (x rows) ToReports() Reports {
-	ret := make(Reports, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToReport())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Report {
+		return d.ToReport()
+	})
 }
 
 func defaultWC(idx int) string {

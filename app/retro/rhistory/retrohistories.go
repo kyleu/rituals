@@ -9,30 +9,21 @@ import (
 type RetroHistories []*RetroHistory
 
 func (r RetroHistories) Get(slug string) *RetroHistory {
-	for _, x := range r {
-		if x.Slug == slug {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(r, nil, func(x *RetroHistory) bool {
+		return x.Slug == slug
+	})
 }
 
 func (r RetroHistories) GetBySlugs(slugs ...string) RetroHistories {
-	var ret RetroHistories
-	for _, x := range r {
-		if lo.Contains(slugs, x.Slug) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *RetroHistory, _ int) bool {
+		return lo.Contains(slugs, x.Slug)
+	})
 }
 
 func (r RetroHistories) Slugs() []string {
-	ret := make([]string, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.Slug)
-	}
-	return ret
+	return lo.Map(r, func(x *RetroHistory, _ int) string {
+		return x.Slug
+	})
 }
 
 func (r RetroHistories) SlugStrings(includeNil bool) []string {
@@ -40,9 +31,9 @@ func (r RetroHistories) SlugStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroHistory, _ int) {
 		ret = append(ret, x.Slug)
-	}
+	})
 	return ret
 }
 
@@ -51,9 +42,9 @@ func (r RetroHistories) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroHistory, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

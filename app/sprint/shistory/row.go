@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -41,11 +42,9 @@ func (r *row) ToSprintHistory() *SprintHistory {
 type rows []*row
 
 func (x rows) ToSprintHistories() SprintHistories {
-	ret := make(SprintHistories, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToSprintHistory())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *SprintHistory {
+		return d.ToSprintHistory()
+	})
 }
 
 func defaultWC(idx int) string {

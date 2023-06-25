@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -43,11 +44,9 @@ func (r *row) ToRetroPermission() *RetroPermission {
 type rows []*row
 
 func (x rows) ToRetroPermissions() RetroPermissions {
-	ret := make(RetroPermissions, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToRetroPermission())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *RetroPermission {
+		return d.ToRetroPermission()
+	})
 }
 
 func defaultWC(idx int) string {

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -43,11 +44,9 @@ func (r *row) ToSprintPermission() *SprintPermission {
 type rows []*row
 
 func (x rows) ToSprintPermissions() SprintPermissions {
-	ret := make(SprintPermissions, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToSprintPermission())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *SprintPermission {
+		return d.ToSprintPermission()
+	})
 }
 
 func defaultWC(idx int) string {

@@ -10,30 +10,21 @@ import (
 type Standups []*Standup
 
 func (s Standups) Get(id uuid.UUID) *Standup {
-	for _, x := range s {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *Standup) bool {
+		return x.ID == id
+	})
 }
 
 func (s Standups) GetByIDs(ids ...uuid.UUID) Standups {
-	var ret Standups
-	for _, x := range s {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *Standup, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (s Standups) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(s, func(x *Standup, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (s Standups) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (s Standups) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *Standup, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (s Standups) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *Standup, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

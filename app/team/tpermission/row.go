@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -43,11 +44,9 @@ func (r *row) ToTeamPermission() *TeamPermission {
 type rows []*row
 
 func (x rows) ToTeamPermissions() TeamPermissions {
-	ret := make(TeamPermissions, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToTeamPermission())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *TeamPermission {
+		return d.ToTeamPermission()
+	})
 }
 
 func defaultWC(idx int) string {

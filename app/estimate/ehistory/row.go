@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -41,11 +42,9 @@ func (r *row) ToEstimateHistory() *EstimateHistory {
 type rows []*row
 
 func (x rows) ToEstimateHistories() EstimateHistories {
-	ret := make(EstimateHistories, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToEstimateHistory())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *EstimateHistory {
+		return d.ToEstimateHistory()
+	})
 }
 
 func defaultWC(idx int) string {

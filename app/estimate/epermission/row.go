@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -43,11 +44,9 @@ func (r *row) ToEstimatePermission() *EstimatePermission {
 type rows []*row
 
 func (x rows) ToEstimatePermissions() EstimatePermissions {
-	ret := make(EstimatePermissions, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToEstimatePermission())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *EstimatePermission {
+		return d.ToEstimatePermission()
+	})
 }
 
 func defaultWC(idx int) string {

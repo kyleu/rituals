@@ -10,30 +10,21 @@ import (
 type Reports []*Report
 
 func (r Reports) Get(id uuid.UUID) *Report {
-	for _, x := range r {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(r, nil, func(x *Report) bool {
+		return x.ID == id
+	})
 }
 
 func (r Reports) GetByIDs(ids ...uuid.UUID) Reports {
-	var ret Reports
-	for _, x := range r {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *Report, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (r Reports) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(r, func(x *Report, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (r Reports) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (r Reports) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *Report, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (r Reports) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *Report, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

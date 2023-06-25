@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -25,18 +26,16 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Votes"
 		ps.Data = ret
-		storyIDsByStoryID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			storyIDsByStoryID = append(storyIDsByStoryID, x.StoryID)
-		}
+		storyIDsByStoryID := lo.Map(ret, func(x *vote.Vote, _ int) uuid.UUID {
+			return x.StoryID
+		})
 		storiesByStoryID, err := as.Services.Story.GetMultiple(ps.Context, nil, ps.Logger, storyIDsByStoryID...)
 		if err != nil {
 			return "", err
 		}
-		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			userIDsByUserID = append(userIDsByUserID, x.UserID)
-		}
+		userIDsByUserID := lo.Map(ret, func(x *vote.Vote, _ int) uuid.UUID {
+			return x.UserID
+		})
 		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err

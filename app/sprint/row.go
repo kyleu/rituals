@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -54,11 +55,9 @@ func (r *row) ToSprint() *Sprint {
 type rows []*row
 
 func (x rows) ToSprints() Sprints {
-	ret := make(Sprints, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToSprint())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Sprint {
+		return d.ToSprint()
+	})
 }
 
 func defaultWC(idx int) string {

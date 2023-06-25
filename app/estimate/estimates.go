@@ -10,30 +10,21 @@ import (
 type Estimates []*Estimate
 
 func (e Estimates) Get(id uuid.UUID) *Estimate {
-	for _, x := range e {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *Estimate) bool {
+		return x.ID == id
+	})
 }
 
 func (e Estimates) GetByIDs(ids ...uuid.UUID) Estimates {
-	var ret Estimates
-	for _, x := range e {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *Estimate, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (e Estimates) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(e, func(x *Estimate, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (e Estimates) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (e Estimates) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *Estimate, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (e Estimates) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *Estimate, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

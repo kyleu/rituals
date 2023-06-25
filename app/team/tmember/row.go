@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -48,11 +49,9 @@ func (r *row) ToTeamMember() *TeamMember {
 type rows []*row
 
 func (x rows) ToTeamMembers() TeamMembers {
-	ret := make(TeamMembers, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToTeamMember())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *TeamMember {
+		return d.ToTeamMember()
+	})
 }
 
 func defaultWC(idx int) string {

@@ -1,6 +1,7 @@
 package workspace
 
 import (
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/kyleu/rituals/app/util"
@@ -8,7 +9,7 @@ import (
 
 func loadPermissionsForm(frm util.ValueMap) util.Permissions {
 	var ret util.Permissions
-	for k := range frm {
+	lo.ForEach(frm.Keys(), func(k string, _ int) {
 		if strings.HasPrefix(k, "perm-") {
 			k = strings.TrimPrefix(k, "perm-")
 			switch k {
@@ -38,6 +39,6 @@ func loadPermissionsForm(frm util.ValueMap) util.Permissions {
 				}
 			}
 		}
-	}
+	})
 	return ret
 }

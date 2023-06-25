@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -43,11 +44,9 @@ func (r *row) ToVote() *Vote {
 type rows []*row
 
 func (x rows) ToVotes() Votes {
-	ret := make(Votes, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToVote())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Vote {
+		return d.ToVote()
+	})
 }
 
 func defaultWC(idx int) string {

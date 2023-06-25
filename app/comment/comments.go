@@ -10,30 +10,21 @@ import (
 type Comments []*Comment
 
 func (c Comments) Get(id uuid.UUID) *Comment {
-	for _, x := range c {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(c, nil, func(x *Comment) bool {
+		return x.ID == id
+	})
 }
 
 func (c Comments) GetByIDs(ids ...uuid.UUID) Comments {
-	var ret Comments
-	for _, x := range c {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(c, func(x *Comment, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (c Comments) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(c)+1)
-	for _, x := range c {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(c, func(x *Comment, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (c Comments) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (c Comments) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range c {
+	lo.ForEach(c, func(x *Comment, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (c Comments) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range c {
+	lo.ForEach(c, func(x *Comment, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

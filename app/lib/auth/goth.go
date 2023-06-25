@@ -2,14 +2,19 @@
 package auth
 
 import (
+	"net/http"
+
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/amazon"
+	"github.com/markbates/goth/providers/apple"
 	"github.com/markbates/goth/providers/auth0"
 	"github.com/markbates/goth/providers/azuread"
 	"github.com/markbates/goth/providers/battlenet"
 	"github.com/markbates/goth/providers/bitbucket"
+	"github.com/markbates/goth/providers/bitly"
 	"github.com/markbates/goth/providers/box"
 	"github.com/markbates/goth/providers/cloudfoundry"
+	"github.com/markbates/goth/providers/cognito"
 	"github.com/markbates/goth/providers/dailymotion"
 	"github.com/markbates/goth/providers/deezer"
 	"github.com/markbates/goth/providers/digitalocean"
@@ -41,6 +46,7 @@ import (
 	"github.com/markbates/goth/providers/onedrive"
 	"github.com/markbates/goth/providers/openidConnect"
 	"github.com/markbates/goth/providers/oura"
+	"github.com/markbates/goth/providers/patreon"
 	"github.com/markbates/goth/providers/paypal"
 	"github.com/markbates/goth/providers/salesforce"
 	"github.com/markbates/goth/providers/seatalk"
@@ -51,6 +57,7 @@ import (
 	"github.com/markbates/goth/providers/steam"
 	"github.com/markbates/goth/providers/strava"
 	"github.com/markbates/goth/providers/stripe"
+	"github.com/markbates/goth/providers/tiktok"
 	"github.com/markbates/goth/providers/tumblr"
 	"github.com/markbates/goth/providers/twitch"
 	"github.com/markbates/goth/providers/twitter"
@@ -75,6 +82,8 @@ func toGoth(id string, k string, s string, c string, scopes ...string) (goth.Pro
 	switch id {
 	case "amazon":
 		return amazon.New(k, s, c, scopes...), nil
+	case "apple":
+		return apple.New(k, s, c, http.DefaultClient, scopes...), nil
 	case auth0Key:
 		return auth0.New(k, s, c, util.GetEnv("auth0_domain"), scopes...), nil
 	case "azuread":
@@ -83,10 +92,14 @@ func toGoth(id string, k string, s string, c string, scopes ...string) (goth.Pro
 		return battlenet.New(k, s, c, scopes...), nil
 	case "bitbucket":
 		return bitbucket.New(k, s, c, scopes...), nil
+	case "bitly":
+		return bitly.New(k, s, c, scopes...), nil
 	case "box":
 		return box.New(k, s, c, scopes...), nil
 	case "cloudfoundry":
 		return cloudfoundry.New("", k, s, c, scopes...), nil
+	case "cognito":
+		return cognito.New(k, s, c, c, scopes...), nil
 	case "dailymotion":
 		return dailymotion.New(k, s, c, append([]string{"email"}, scopes...)...), nil
 	case "deezer":
@@ -151,6 +164,8 @@ func toGoth(id string, k string, s string, c string, scopes ...string) (goth.Pro
 		return openidConnect.New(k, s, c, util.GetEnv("openid_connect_url"), append([]string{"profile", "email"}, scopes...)...)
 	case "oura":
 		return oura.New(k, s, c, scopes...), nil
+	case "patreon":
+		return patreon.New(k, s, c, scopes...), nil
 	case "paypal":
 		return paypal.New(k, s, c, scopes...), nil
 	case "salesforce":
@@ -171,6 +186,8 @@ func toGoth(id string, k string, s string, c string, scopes ...string) (goth.Pro
 		return strava.New(k, s, c, scopes...), nil
 	case "stripe":
 		return stripe.New(k, s, c, scopes...), nil
+	case "tiktok":
+		return tiktok.New(k, s, c, scopes...), nil
 	case "tumblr":
 		return tumblr.New(k, s, c), nil
 	case "twitch":

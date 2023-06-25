@@ -10,30 +10,21 @@ import (
 type EstimatePermissions []*EstimatePermission
 
 func (e EstimatePermissions) Get(estimateID uuid.UUID, key string, value string) *EstimatePermission {
-	for _, x := range e {
-		if x.EstimateID == estimateID && x.Key == key && x.Value == value {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *EstimatePermission) bool {
+		return x.EstimateID == estimateID && x.Key == key && x.Value == value
+	})
 }
 
 func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
-	var ret EstimatePermissions
-	for _, x := range e {
-		if lo.Contains(estimateIDs, x.EstimateID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
+		return lo.Contains(estimateIDs, x.EstimateID)
+	})
 }
 
 func (e EstimatePermissions) EstimateIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.EstimateID)
-	}
-	return ret
+	return lo.Map(e, func(x *EstimatePermission, _ int) uuid.UUID {
+		return x.EstimateID
+	})
 }
 
 func (e EstimatePermissions) EstimateIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (e EstimatePermissions) EstimateIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimatePermission, _ int) {
 		ret = append(ret, x.EstimateID.String())
-	}
+	})
 	return ret
 }
 
 func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
-	var ret EstimatePermissions
-	for _, x := range e {
-		if lo.Contains(keys, x.Key) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
+		return lo.Contains(keys, x.Key)
+	})
 }
 
 func (e EstimatePermissions) Keys() []string {
-	ret := make([]string, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(e, func(x *EstimatePermission, _ int) string {
+		return x.Key
+	})
 }
 
 func (e EstimatePermissions) KeyStrings(includeNil bool) []string {
@@ -70,28 +55,22 @@ func (e EstimatePermissions) KeyStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimatePermission, _ int) {
 		ret = append(ret, x.Key)
-	}
+	})
 	return ret
 }
 
 func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
-	var ret EstimatePermissions
-	for _, x := range e {
-		if lo.Contains(values, x.Value) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
+		return lo.Contains(values, x.Value)
+	})
 }
 
 func (e EstimatePermissions) Values() []string {
-	ret := make([]string, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.Value)
-	}
-	return ret
+	return lo.Map(e, func(x *EstimatePermission, _ int) string {
+		return x.Value
+	})
 }
 
 func (e EstimatePermissions) ValueStrings(includeNil bool) []string {
@@ -99,9 +78,9 @@ func (e EstimatePermissions) ValueStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimatePermission, _ int) {
 		ret = append(ret, x.Value)
-	}
+	})
 	return ret
 }
 
@@ -110,9 +89,9 @@ func (e EstimatePermissions) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimatePermission, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

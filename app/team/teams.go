@@ -10,30 +10,21 @@ import (
 type Teams []*Team
 
 func (t Teams) Get(id uuid.UUID) *Team {
-	for _, x := range t {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(t, nil, func(x *Team) bool {
+		return x.ID == id
+	})
 }
 
 func (t Teams) GetByIDs(ids ...uuid.UUID) Teams {
-	var ret Teams
-	for _, x := range t {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(t, func(x *Team, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (t Teams) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(t)+1)
-	for _, x := range t {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(t, func(x *Team, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (t Teams) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (t Teams) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *Team, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (t Teams) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *Team, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

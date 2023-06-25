@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/lib/database"
@@ -57,11 +58,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	wc := database.SQLInClause("id", len(ids), 0, s.db.Placeholder())
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
-	vals := make([]any, 0, len(ids))
-	for _, x := range ids {
-		vals = append(vals, x)
-	}
-	err := s.db.Select(ctx, &ret, q, tx, logger, vals...)
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(ids)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Standups for [%d] ids", len(ids))
 	}

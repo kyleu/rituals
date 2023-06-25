@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -24,10 +25,9 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Histories"
 		ps.Data = ret
-		estimateIDsByEstimateID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			estimateIDsByEstimateID = append(estimateIDsByEstimateID, x.EstimateID)
-		}
+		estimateIDsByEstimateID := lo.Map(ret, func(x *ehistory.EstimateHistory, _ int) uuid.UUID {
+			return x.EstimateID
+		})
 		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDsByEstimateID...)
 		if err != nil {
 			return "", err

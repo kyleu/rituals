@@ -10,30 +10,21 @@ import (
 type SprintPermissions []*SprintPermission
 
 func (s SprintPermissions) Get(sprintID uuid.UUID, key string, value string) *SprintPermission {
-	for _, x := range s {
-		if x.SprintID == sprintID && x.Key == key && x.Value == value {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *SprintPermission) bool {
+		return x.SprintID == sprintID && x.Key == key && x.Value == value
+	})
 }
 
 func (s SprintPermissions) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintPermissions {
-	var ret SprintPermissions
-	for _, x := range s {
-		if lo.Contains(sprintIDs, x.SprintID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
+		return lo.Contains(sprintIDs, x.SprintID)
+	})
 }
 
 func (s SprintPermissions) SprintIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.SprintID)
-	}
-	return ret
+	return lo.Map(s, func(x *SprintPermission, _ int) uuid.UUID {
+		return x.SprintID
+	})
 }
 
 func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintPermission, _ int) {
 		ret = append(ret, x.SprintID.String())
-	}
+	})
 	return ret
 }
 
 func (s SprintPermissions) GetByKeys(keys ...string) SprintPermissions {
-	var ret SprintPermissions
-	for _, x := range s {
-		if lo.Contains(keys, x.Key) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
+		return lo.Contains(keys, x.Key)
+	})
 }
 
 func (s SprintPermissions) Keys() []string {
-	ret := make([]string, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.Key)
-	}
-	return ret
+	return lo.Map(s, func(x *SprintPermission, _ int) string {
+		return x.Key
+	})
 }
 
 func (s SprintPermissions) KeyStrings(includeNil bool) []string {
@@ -70,28 +55,22 @@ func (s SprintPermissions) KeyStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintPermission, _ int) {
 		ret = append(ret, x.Key)
-	}
+	})
 	return ret
 }
 
 func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
-	var ret SprintPermissions
-	for _, x := range s {
-		if lo.Contains(values, x.Value) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
+		return lo.Contains(values, x.Value)
+	})
 }
 
 func (s SprintPermissions) Values() []string {
-	ret := make([]string, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.Value)
-	}
-	return ret
+	return lo.Map(s, func(x *SprintPermission, _ int) string {
+		return x.Value
+	})
 }
 
 func (s SprintPermissions) ValueStrings(includeNil bool) []string {
@@ -99,9 +78,9 @@ func (s SprintPermissions) ValueStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintPermission, _ int) {
 		ret = append(ret, x.Value)
-	}
+	})
 	return ret
 }
 
@@ -110,9 +89,9 @@ func (s SprintPermissions) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintPermission, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 
