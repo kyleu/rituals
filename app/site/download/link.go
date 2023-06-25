@@ -12,43 +12,102 @@ type Link struct {
 	Arch string `json:"arch"`
 }
 
+func (l *Link) ArchString() string {
+	switch l.Arch {
+	case ArchAMD64:
+		return "Intel 64-bit"
+	case ArchARM64:
+		return "ARM64"
+	case ArchARMV5:
+		return "ARM v5"
+	case ArchARMV6:
+		return "ARM v6"
+	case ArchARMV7:
+		return "ARM v7"
+	case Arch386:
+		return "Intel 32-bit"
+	case ArchMIPS64Hard:
+		return "MIPS64 (hardfloat)"
+	case ArchMIPS64LEHard:
+		return "MIPS64 (le, hardfloat)"
+	case ArchMIPS64LESoft:
+		return "MIPS64 (le, softfloat)"
+	case ArchMIPS64Soft:
+		return "MIPS64 (softfloat)"
+	case ArchMIPSHard:
+		return "MIPS (hardfloat)"
+	case ArchMIPSLEHard:
+		return "MIPS (le, hardfloat)"
+	case ArchMIPSLESoft:
+		return "MIPS (le, softfloat)"
+	case ArchMIPSSoft:
+		return "MIPS (softfloat)"
+	case ArchRISCV64:
+		return "RISC-V 64-bit"
+	case ArchS390X:
+		return "X390x"
+	case ArchUniversal:
+		return "All (Universal)"
+	case ArchWASM:
+		return "WASM"
+	case "apk":
+		return "Application"
+	case "aar":
+		return "AAR Library"
+	case "framework":
+		return "Xcode Framework"
+	case "app":
+		return "Application"
+	default:
+		return l.Arch
+	}
+}
+
 func (l *Link) OSString() string {
 	switch l.OS {
-	case osAndroid:
+	case OSAndroid:
 		return "Android"
-	case osDragonfly:
+	case OSDragonfly:
 		return "Dragonfly"
-	case osFreeBSD:
+	case OSFreeBSD:
 		return "FreeBSD"
-	case osIllumos:
+	case OSIllumos:
 		return "Illumos"
-	case osIOS:
+	case OSIOS:
 		return "iOS"
-	case osJS:
+	case OSJS:
 		return "JavaScript"
-	case osLinux:
+	case OSLinux:
 		return "Linux"
-	case osMac:
+	case OSMac:
 		return "macOS"
-	case osNetBSD:
+	case OSNetBSD:
 		return "NetBSD"
-	case osOpenBSD:
+	case OSOpenBSD:
 		return "OpenBSD"
-	case osPlan9:
+	case OSPlan9:
 		return "Plan9"
-	case osSolaris:
+	case OSSolaris:
 		return "Solaris"
-	case osWindows:
+	case OSWindows:
 		return "Windows"
 	}
 	return "Unknown"
 }
 
 func (l *Link) OSIcon() string {
-	if l.OS == osMac {
+	switch l.OS {
+	case OSAndroid:
+		return OSAndroid
+	case OSLinux:
+		return OSLinux
+	case OSMac, OSIOS:
 		return "apple"
+	case OSWindows:
+		return OSWindows
+	default:
+		return "star"
 	}
-	return l.OS
 }
 
 type Links []*Link
@@ -74,41 +133,41 @@ func (l Links) GetByOS(os string) Links {
 var availableLinks Links
 
 const (
-	modeServer  = "server"
-	modeDesktop = "desktop"
-	modeMobile  = "mobile"
+	ModeServer  = "server"
+	ModeDesktop = "desktop"
+	ModeMobile  = "mobile"
 
-	osAndroid   = "android"
-	osDragonfly = "dragonfly"
-	osFreeBSD   = "freebsd"
-	osIllumos   = "illumos"
-	osIOS       = "ios"
-	osJS        = "js"
-	osLinux     = "linux"
-	osMac       = "macos"
-	osNetBSD    = "netbsd"
-	osOpenBSD   = "openbsd"
-	osPlan9     = "plan9"
-	osSolaris   = "solaris"
-	osWindows   = "windows"
+	OSAndroid   = "android"
+	OSDragonfly = "dragonfly"
+	OSFreeBSD   = "freebsd"
+	OSIllumos   = "illumos"
+	OSIOS       = "ios"
+	OSJS        = "js"
+	OSLinux     = "linux"
+	OSMac       = "darwin"
+	OSNetBSD    = "netbsd"
+	OSOpenBSD   = "openbsd"
+	OSPlan9     = "plan9"
+	OSSolaris   = "solaris"
+	OSWindows   = "windows"
 
-	archAMD64        = "x86_64"
-	archARM64        = "arm64"
-	archARMV5        = "armv5"
-	archARMV6        = "armv6"
-	archARMV7        = "armv7"
-	archI386         = "i386"
-	archMIPS64Hard   = "mips64_hardfloat"
-	archMIPS64LEHard = "mips64le_hardfloat"
-	archMIPS64LESoft = "mips64le_softfloat"
-	archMIPS64Soft   = "mips64_softfloat"
-	archMIPSHard     = "mips_hardfloat"
-	archMIPSLEHard   = "mipsle_hardfloat"
-	archMIPSLESoft   = "mipsle_softfloat"
-	archMIPSSoft     = "mips_softfloat"
-	archPPC64        = "ppc64"
-	archRISCV64      = "riscv64"
-	archS390X        = "s390x"
-	archUniversal    = "all"
-	archWASM         = "wasm"
+	ArchAMD64        = "amd64"
+	ArchARM64        = "arm64"
+	ArchARMV5        = "armv5"
+	ArchARMV6        = "armv6"
+	ArchARMV7        = "armv7"
+	Arch386          = "386"
+	ArchMIPS64Hard   = "mips64_hardfloat"
+	ArchMIPS64LEHard = "mips64le_hardfloat"
+	ArchMIPS64LESoft = "mips64le_softfloat"
+	ArchMIPS64Soft   = "mips64_softfloat"
+	ArchMIPSHard     = "mips_hardfloat"
+	ArchMIPSLEHard   = "mipsle_hardfloat"
+	ArchMIPSLESoft   = "mipsle_softfloat"
+	ArchMIPSSoft     = "mips_softfloat"
+	ArchPPC64        = "ppc64"
+	ArchRISCV64      = "riscv64"
+	ArchS390X        = "s390x"
+	ArchUniversal    = "all"
+	ArchWASM         = "wasm"
 )
