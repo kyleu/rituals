@@ -10,30 +10,21 @@ import (
 type StandupMembers []*StandupMember
 
 func (s StandupMembers) Get(standupID uuid.UUID, userID uuid.UUID) *StandupMember {
-	for _, x := range s {
-		if x.StandupID == standupID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *StandupMember) bool {
+		return x.StandupID == standupID && x.UserID == userID
+	})
 }
 
 func (s StandupMembers) GetByStandupIDs(standupIDs ...uuid.UUID) StandupMembers {
-	var ret StandupMembers
-	for _, x := range s {
-		if lo.Contains(standupIDs, x.StandupID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *StandupMember, _ int) bool {
+		return lo.Contains(standupIDs, x.StandupID)
+	})
 }
 
 func (s StandupMembers) StandupIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.StandupID)
-	}
-	return ret
+	return lo.Map(s, func(x *StandupMember, _ int) uuid.UUID {
+		return x.StandupID
+	})
 }
 
 func (s StandupMembers) StandupIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (s StandupMembers) StandupIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupMember, _ int) {
 		ret = append(ret, x.StandupID.String())
-	}
+	})
 	return ret
 }
 
 func (s StandupMembers) GetByUserIDs(userIDs ...uuid.UUID) StandupMembers {
-	var ret StandupMembers
-	for _, x := range s {
-		if lo.Contains(userIDs, x.UserID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *StandupMember, _ int) bool {
+		return lo.Contains(userIDs, x.UserID)
+	})
 }
 
 func (s StandupMembers) UserIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.UserID)
-	}
-	return ret
+	return lo.Map(s, func(x *StandupMember, _ int) uuid.UUID {
+		return x.UserID
+	})
 }
 
 func (s StandupMembers) UserIDStrings(includeNil bool) []string {
@@ -70,9 +55,9 @@ func (s StandupMembers) UserIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupMember, _ int) {
 		ret = append(ret, x.UserID.String())
-	}
+	})
 	return ret
 }
 
@@ -81,9 +66,9 @@ func (s StandupMembers) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupMember, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

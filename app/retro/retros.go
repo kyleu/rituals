@@ -10,30 +10,21 @@ import (
 type Retros []*Retro
 
 func (r Retros) Get(id uuid.UUID) *Retro {
-	for _, x := range r {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(r, nil, func(x *Retro) bool {
+		return x.ID == id
+	})
 }
 
 func (r Retros) GetByIDs(ids ...uuid.UUID) Retros {
-	var ret Retros
-	for _, x := range r {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *Retro, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (r Retros) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(r, func(x *Retro, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (r Retros) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (r Retros) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *Retro, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (r Retros) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *Retro, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

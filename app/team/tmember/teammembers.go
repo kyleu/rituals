@@ -10,30 +10,21 @@ import (
 type TeamMembers []*TeamMember
 
 func (t TeamMembers) Get(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
-	for _, x := range t {
-		if x.TeamID == teamID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(t, nil, func(x *TeamMember) bool {
+		return x.TeamID == teamID && x.UserID == userID
+	})
 }
 
 func (t TeamMembers) GetByTeamIDs(teamIDs ...uuid.UUID) TeamMembers {
-	var ret TeamMembers
-	for _, x := range t {
-		if lo.Contains(teamIDs, x.TeamID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(t, func(x *TeamMember, _ int) bool {
+		return lo.Contains(teamIDs, x.TeamID)
+	})
 }
 
 func (t TeamMembers) TeamIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(t)+1)
-	for _, x := range t {
-		ret = append(ret, x.TeamID)
-	}
-	return ret
+	return lo.Map(t, func(x *TeamMember, _ int) uuid.UUID {
+		return x.TeamID
+	})
 }
 
 func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *TeamMember, _ int) {
 		ret = append(ret, x.TeamID.String())
-	}
+	})
 	return ret
 }
 
 func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
-	var ret TeamMembers
-	for _, x := range t {
-		if lo.Contains(userIDs, x.UserID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(t, func(x *TeamMember, _ int) bool {
+		return lo.Contains(userIDs, x.UserID)
+	})
 }
 
 func (t TeamMembers) UserIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(t)+1)
-	for _, x := range t {
-		ret = append(ret, x.UserID)
-	}
-	return ret
+	return lo.Map(t, func(x *TeamMember, _ int) uuid.UUID {
+		return x.UserID
+	})
 }
 
 func (t TeamMembers) UserIDStrings(includeNil bool) []string {
@@ -70,9 +55,9 @@ func (t TeamMembers) UserIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *TeamMember, _ int) {
 		ret = append(ret, x.UserID.String())
-	}
+	})
 	return ret
 }
 
@@ -81,9 +66,9 @@ func (t TeamMembers) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *TeamMember, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -41,11 +42,9 @@ func (r *row) ToTeamHistory() *TeamHistory {
 type rows []*row
 
 func (x rows) ToTeamHistories() TeamHistories {
-	ret := make(TeamHistories, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToTeamHistory())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *TeamHistory {
+		return d.ToTeamHistory()
+	})
 }
 
 func defaultWC(idx int) string {

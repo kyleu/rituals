@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -56,11 +57,9 @@ func (r *row) ToEmail() *Email {
 type rows []*row
 
 func (x rows) ToEmails() Emails {
-	ret := make(Emails, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToEmail())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Email {
+		return d.ToEmail()
+	})
 }
 
 func defaultWC(idx int) string {

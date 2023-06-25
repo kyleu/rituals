@@ -10,30 +10,21 @@ import (
 type Votes []*Vote
 
 func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
-	for _, x := range v {
-		if x.StoryID == storyID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(v, nil, func(x *Vote) bool {
+		return x.StoryID == storyID && x.UserID == userID
+	})
 }
 
 func (v Votes) GetByStoryIDs(storyIDs ...uuid.UUID) Votes {
-	var ret Votes
-	for _, x := range v {
-		if lo.Contains(storyIDs, x.StoryID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(v, func(x *Vote, _ int) bool {
+		return lo.Contains(storyIDs, x.StoryID)
+	})
 }
 
 func (v Votes) StoryIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(v)+1)
-	for _, x := range v {
-		ret = append(ret, x.StoryID)
-	}
-	return ret
+	return lo.Map(v, func(x *Vote, _ int) uuid.UUID {
+		return x.StoryID
+	})
 }
 
 func (v Votes) StoryIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (v Votes) StoryIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range v {
+	lo.ForEach(v, func(x *Vote, _ int) {
 		ret = append(ret, x.StoryID.String())
-	}
+	})
 	return ret
 }
 
 func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
-	var ret Votes
-	for _, x := range v {
-		if lo.Contains(userIDs, x.UserID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(v, func(x *Vote, _ int) bool {
+		return lo.Contains(userIDs, x.UserID)
+	})
 }
 
 func (v Votes) UserIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(v)+1)
-	for _, x := range v {
-		ret = append(ret, x.UserID)
-	}
-	return ret
+	return lo.Map(v, func(x *Vote, _ int) uuid.UUID {
+		return x.UserID
+	})
 }
 
 func (v Votes) UserIDStrings(includeNil bool) []string {
@@ -70,9 +55,9 @@ func (v Votes) UserIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range v {
+	lo.ForEach(v, func(x *Vote, _ int) {
 		ret = append(ret, x.UserID.String())
-	}
+	})
 	return ret
 }
 
@@ -81,9 +66,9 @@ func (v Votes) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range v {
+	lo.ForEach(v, func(x *Vote, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

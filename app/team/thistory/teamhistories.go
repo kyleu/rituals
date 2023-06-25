@@ -9,30 +9,21 @@ import (
 type TeamHistories []*TeamHistory
 
 func (t TeamHistories) Get(slug string) *TeamHistory {
-	for _, x := range t {
-		if x.Slug == slug {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(t, nil, func(x *TeamHistory) bool {
+		return x.Slug == slug
+	})
 }
 
 func (t TeamHistories) GetBySlugs(slugs ...string) TeamHistories {
-	var ret TeamHistories
-	for _, x := range t {
-		if lo.Contains(slugs, x.Slug) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(t, func(x *TeamHistory, _ int) bool {
+		return lo.Contains(slugs, x.Slug)
+	})
 }
 
 func (t TeamHistories) Slugs() []string {
-	ret := make([]string, 0, len(t)+1)
-	for _, x := range t {
-		ret = append(ret, x.Slug)
-	}
-	return ret
+	return lo.Map(t, func(x *TeamHistory, _ int) string {
+		return x.Slug
+	})
 }
 
 func (t TeamHistories) SlugStrings(includeNil bool) []string {
@@ -40,9 +31,9 @@ func (t TeamHistories) SlugStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *TeamHistory, _ int) {
 		ret = append(ret, x.Slug)
-	}
+	})
 	return ret
 }
 
@@ -51,9 +42,9 @@ func (t TeamHistories) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *TeamHistory, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

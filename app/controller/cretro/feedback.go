@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -25,18 +26,16 @@ func FeedbackList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Feedbacks"
 		ps.Data = ret
-		retroIDsByRetroID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			retroIDsByRetroID = append(retroIDsByRetroID, x.RetroID)
-		}
+		retroIDsByRetroID := lo.Map(ret, func(x *feedback.Feedback, _ int) uuid.UUID {
+			return x.RetroID
+		})
 		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDsByRetroID...)
 		if err != nil {
 			return "", err
 		}
-		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			userIDsByUserID = append(userIDsByUserID, x.UserID)
-		}
+		userIDsByUserID := lo.Map(ret, func(x *feedback.Feedback, _ int) uuid.UUID {
+			return x.UserID
+		})
 		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err

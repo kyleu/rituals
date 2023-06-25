@@ -10,30 +10,21 @@ import (
 type RetroMembers []*RetroMember
 
 func (r RetroMembers) Get(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
-	for _, x := range r {
-		if x.RetroID == retroID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(r, nil, func(x *RetroMember) bool {
+		return x.RetroID == retroID && x.UserID == userID
+	})
 }
 
 func (r RetroMembers) GetByRetroIDs(retroIDs ...uuid.UUID) RetroMembers {
-	var ret RetroMembers
-	for _, x := range r {
-		if lo.Contains(retroIDs, x.RetroID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *RetroMember, _ int) bool {
+		return lo.Contains(retroIDs, x.RetroID)
+	})
 }
 
 func (r RetroMembers) RetroIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.RetroID)
-	}
-	return ret
+	return lo.Map(r, func(x *RetroMember, _ int) uuid.UUID {
+		return x.RetroID
+	})
 }
 
 func (r RetroMembers) RetroIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (r RetroMembers) RetroIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroMember, _ int) {
 		ret = append(ret, x.RetroID.String())
-	}
+	})
 	return ret
 }
 
 func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
-	var ret RetroMembers
-	for _, x := range r {
-		if lo.Contains(userIDs, x.UserID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(r, func(x *RetroMember, _ int) bool {
+		return lo.Contains(userIDs, x.UserID)
+	})
 }
 
 func (r RetroMembers) UserIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(r)+1)
-	for _, x := range r {
-		ret = append(ret, x.UserID)
-	}
-	return ret
+	return lo.Map(r, func(x *RetroMember, _ int) uuid.UUID {
+		return x.UserID
+	})
 }
 
 func (r RetroMembers) UserIDStrings(includeNil bool) []string {
@@ -70,9 +55,9 @@ func (r RetroMembers) UserIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroMember, _ int) {
 		ret = append(ret, x.UserID.String())
-	}
+	})
 	return ret
 }
 
@@ -81,9 +66,9 @@ func (r RetroMembers) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *RetroMember, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

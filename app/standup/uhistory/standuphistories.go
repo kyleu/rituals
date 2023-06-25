@@ -9,30 +9,21 @@ import (
 type StandupHistories []*StandupHistory
 
 func (s StandupHistories) Get(slug string) *StandupHistory {
-	for _, x := range s {
-		if x.Slug == slug {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *StandupHistory) bool {
+		return x.Slug == slug
+	})
 }
 
 func (s StandupHistories) GetBySlugs(slugs ...string) StandupHistories {
-	var ret StandupHistories
-	for _, x := range s {
-		if lo.Contains(slugs, x.Slug) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *StandupHistory, _ int) bool {
+		return lo.Contains(slugs, x.Slug)
+	})
 }
 
 func (s StandupHistories) Slugs() []string {
-	ret := make([]string, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.Slug)
-	}
-	return ret
+	return lo.Map(s, func(x *StandupHistory, _ int) string {
+		return x.Slug
+	})
 }
 
 func (s StandupHistories) SlugStrings(includeNil bool) []string {
@@ -40,9 +31,9 @@ func (s StandupHistories) SlugStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupHistory, _ int) {
 		ret = append(ret, x.Slug)
-	}
+	})
 	return ret
 }
 
@@ -51,9 +42,9 @@ func (s StandupHistories) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *StandupHistory, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

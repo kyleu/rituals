@@ -10,30 +10,21 @@ import (
 type Sprints []*Sprint
 
 func (s Sprints) Get(id uuid.UUID) *Sprint {
-	for _, x := range s {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *Sprint) bool {
+		return x.ID == id
+	})
 }
 
 func (s Sprints) GetByIDs(ids ...uuid.UUID) Sprints {
-	var ret Sprints
-	for _, x := range s {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *Sprint, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (s Sprints) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(s, func(x *Sprint, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (s Sprints) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (s Sprints) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *Sprint, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (s Sprints) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *Sprint, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

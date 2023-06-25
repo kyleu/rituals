@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/samber/lo"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,11 +15,7 @@ func NewAction(svc enum.ModelService, model uuid.UUID, user uuid.UUID, act strin
 }
 
 func (a Actions) GetByModel(svc enum.ModelService, id uuid.UUID) Actions {
-	var ret Actions
-	for _, x := range a {
-		if x.Svc == svc && x.ModelID == id {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.FilterMap(a, func(x *Action, _ int) (*Action, bool) {
+		return x, x.Svc == svc && x.ModelID == id
+	})
 }

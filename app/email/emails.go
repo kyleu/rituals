@@ -10,30 +10,21 @@ import (
 type Emails []*Email
 
 func (e Emails) Get(id uuid.UUID) *Email {
-	for _, x := range e {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *Email) bool {
+		return x.ID == id
+	})
 }
 
 func (e Emails) GetByIDs(ids ...uuid.UUID) Emails {
-	var ret Emails
-	for _, x := range e {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *Email, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (e Emails) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(e, func(x *Email, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (e Emails) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (e Emails) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *Email, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (e Emails) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *Email, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

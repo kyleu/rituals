@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -25,18 +26,16 @@ func StandupMemberList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Members"
 		ps.Data = ret
-		standupIDsByStandupID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			standupIDsByStandupID = append(standupIDsByStandupID, x.StandupID)
-		}
+		standupIDsByStandupID := lo.Map(ret, func(x *umember.StandupMember, _ int) uuid.UUID {
+			return x.StandupID
+		})
 		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDsByStandupID...)
 		if err != nil {
 			return "", err
 		}
-		userIDsByUserID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			userIDsByUserID = append(userIDsByUserID, x.UserID)
-		}
+		userIDsByUserID := lo.Map(ret, func(x *umember.StandupMember, _ int) uuid.UUID {
+			return x.UserID
+		})
 		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err

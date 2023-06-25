@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/util"
@@ -17,9 +18,9 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 	if len(models) == 0 {
 		return nil
 	}
-	for _, model := range models {
+	lo.ForEach(models, func(model *EstimatePermission, _ int) {
 		model.Created = time.Now()
-	}
+	})
 	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
 	vals := make([]any, 0, len(models)*len(columnsQuoted))
 	for _, arg := range models {
@@ -48,14 +49,13 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 	if len(models) == 0 {
 		return nil
 	}
-	for _, model := range models {
+	lo.ForEach(models, func(model *EstimatePermission, _ int) {
 		model.Created = time.Now()
-	}
+	})
 	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"estimate_id", "key", "value"}, columnsQuoted, s.db.Placeholder())
-	var data []any
-	for _, model := range models {
-		data = append(data, model.ToData()...)
-	}
+	data := lo.FlatMap(models, func(model *EstimatePermission, _ int) []any {
+		return model.ToData()
+	})
 	return s.db.Insert(ctx, q, tx, logger, data...)
 }
 

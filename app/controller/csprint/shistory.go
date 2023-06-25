@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -24,10 +25,9 @@ func SprintHistoryList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Histories"
 		ps.Data = ret
-		sprintIDsBySprintID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			sprintIDsBySprintID = append(sprintIDsBySprintID, x.SprintID)
-		}
+		sprintIDsBySprintID := lo.Map(ret, func(x *shistory.SprintHistory, _ int) uuid.UUID {
+			return x.SprintID
+		})
 		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDsBySprintID...)
 		if err != nil {
 			return "", err

@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
@@ -64,10 +65,9 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	wc += ")"
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
-	vals := make([]any, 0, len(pks)*3)
-	for _, x := range pks {
-		vals = append(vals, x.RetroID, x.Key, x.Value)
-	}
+	vals := lo.FlatMap(pks, func(x *PK, _ int) []any {
+		return []any{x.RetroID, x.Key, x.Value}
+	})
 	err := s.db.Select(ctx, &ret, q, tx, logger, vals...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get RetroPermissions for [%d] pks", len(pks))

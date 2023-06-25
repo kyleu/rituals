@@ -10,30 +10,21 @@ import (
 type EstimateMembers []*EstimateMember
 
 func (e EstimateMembers) Get(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {
-	for _, x := range e {
-		if x.EstimateID == estimateID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *EstimateMember) bool {
+		return x.EstimateID == estimateID && x.UserID == userID
+	})
 }
 
 func (e EstimateMembers) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateMembers {
-	var ret EstimateMembers
-	for _, x := range e {
-		if lo.Contains(estimateIDs, x.EstimateID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *EstimateMember, _ int) bool {
+		return lo.Contains(estimateIDs, x.EstimateID)
+	})
 }
 
 func (e EstimateMembers) EstimateIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.EstimateID)
-	}
-	return ret
+	return lo.Map(e, func(x *EstimateMember, _ int) uuid.UUID {
+		return x.EstimateID
+	})
 }
 
 func (e EstimateMembers) EstimateIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (e EstimateMembers) EstimateIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimateMember, _ int) {
 		ret = append(ret, x.EstimateID.String())
-	}
+	})
 	return ret
 }
 
 func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
-	var ret EstimateMembers
-	for _, x := range e {
-		if lo.Contains(userIDs, x.UserID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *EstimateMember, _ int) bool {
+		return lo.Contains(userIDs, x.UserID)
+	})
 }
 
 func (e EstimateMembers) UserIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.UserID)
-	}
-	return ret
+	return lo.Map(e, func(x *EstimateMember, _ int) uuid.UUID {
+		return x.UserID
+	})
 }
 
 func (e EstimateMembers) UserIDStrings(includeNil bool) []string {
@@ -70,9 +55,9 @@ func (e EstimateMembers) UserIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimateMember, _ int) {
 		ret = append(ret, x.UserID.String())
-	}
+	})
 	return ret
 }
 
@@ -81,9 +66,9 @@ func (e EstimateMembers) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimateMember, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

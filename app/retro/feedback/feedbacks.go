@@ -10,30 +10,21 @@ import (
 type Feedbacks []*Feedback
 
 func (f Feedbacks) Get(id uuid.UUID) *Feedback {
-	for _, x := range f {
-		if x.ID == id {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(f, nil, func(x *Feedback) bool {
+		return x.ID == id
+	})
 }
 
 func (f Feedbacks) GetByIDs(ids ...uuid.UUID) Feedbacks {
-	var ret Feedbacks
-	for _, x := range f {
-		if lo.Contains(ids, x.ID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(f, func(x *Feedback, _ int) bool {
+		return lo.Contains(ids, x.ID)
+	})
 }
 
 func (f Feedbacks) IDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(f)+1)
-	for _, x := range f {
-		ret = append(ret, x.ID)
-	}
-	return ret
+	return lo.Map(f, func(x *Feedback, _ int) uuid.UUID {
+		return x.ID
+	})
 }
 
 func (f Feedbacks) IDStrings(includeNil bool) []string {
@@ -41,9 +32,9 @@ func (f Feedbacks) IDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range f {
+	lo.ForEach(f, func(x *Feedback, _ int) {
 		ret = append(ret, x.ID.String())
-	}
+	})
 	return ret
 }
 
@@ -52,9 +43,9 @@ func (f Feedbacks) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range f {
+	lo.ForEach(f, func(x *Feedback, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

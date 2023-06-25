@@ -10,30 +10,21 @@ import (
 type SprintMembers []*SprintMember
 
 func (s SprintMembers) Get(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
-	for _, x := range s {
-		if x.SprintID == sprintID && x.UserID == userID {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(s, nil, func(x *SprintMember) bool {
+		return x.SprintID == sprintID && x.UserID == userID
+	})
 }
 
 func (s SprintMembers) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintMembers {
-	var ret SprintMembers
-	for _, x := range s {
-		if lo.Contains(sprintIDs, x.SprintID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *SprintMember, _ int) bool {
+		return lo.Contains(sprintIDs, x.SprintID)
+	})
 }
 
 func (s SprintMembers) SprintIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.SprintID)
-	}
-	return ret
+	return lo.Map(s, func(x *SprintMember, _ int) uuid.UUID {
+		return x.SprintID
+	})
 }
 
 func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
@@ -41,28 +32,22 @@ func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintMember, _ int) {
 		ret = append(ret, x.SprintID.String())
-	}
+	})
 	return ret
 }
 
 func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
-	var ret SprintMembers
-	for _, x := range s {
-		if lo.Contains(userIDs, x.UserID) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(s, func(x *SprintMember, _ int) bool {
+		return lo.Contains(userIDs, x.UserID)
+	})
 }
 
 func (s SprintMembers) UserIDs() []uuid.UUID {
-	ret := make([]uuid.UUID, 0, len(s)+1)
-	for _, x := range s {
-		ret = append(ret, x.UserID)
-	}
-	return ret
+	return lo.Map(s, func(x *SprintMember, _ int) uuid.UUID {
+		return x.UserID
+	})
 }
 
 func (s SprintMembers) UserIDStrings(includeNil bool) []string {
@@ -70,9 +55,9 @@ func (s SprintMembers) UserIDStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintMember, _ int) {
 		ret = append(ret, x.UserID.String())
-	}
+	})
 	return ret
 }
 
@@ -81,9 +66,9 @@ func (s SprintMembers) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *SprintMember, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

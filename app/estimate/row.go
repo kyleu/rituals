@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -57,11 +58,9 @@ func (r *row) ToEstimate() *Estimate {
 type rows []*row
 
 func (x rows) ToEstimates() Estimates {
-	ret := make(Estimates, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToEstimate())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Estimate {
+		return d.ToEstimate()
+	})
 }
 
 func defaultWC(idx int) string {

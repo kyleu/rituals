@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -43,11 +44,9 @@ func (r *row) ToStandupPermission() *StandupPermission {
 type rows []*row
 
 func (x rows) ToStandupPermissions() StandupPermissions {
-	ret := make(StandupPermissions, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToStandupPermission())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *StandupPermission {
+		return d.ToStandupPermission()
+	})
 }
 
 func defaultWC(idx int) string {

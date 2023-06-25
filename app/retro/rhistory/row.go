@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -41,11 +42,9 @@ func (r *row) ToRetroHistory() *RetroHistory {
 type rows []*row
 
 func (x rows) ToRetroHistories() RetroHistories {
-	ret := make(RetroHistories, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToRetroHistory())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *RetroHistory {
+		return d.ToRetroHistory()
+	})
 }
 
 func defaultWC(idx int) string {

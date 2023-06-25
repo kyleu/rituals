@@ -9,30 +9,21 @@ import (
 type EstimateHistories []*EstimateHistory
 
 func (e EstimateHistories) Get(slug string) *EstimateHistory {
-	for _, x := range e {
-		if x.Slug == slug {
-			return x
-		}
-	}
-	return nil
+	return lo.FindOrElse(e, nil, func(x *EstimateHistory) bool {
+		return x.Slug == slug
+	})
 }
 
 func (e EstimateHistories) GetBySlugs(slugs ...string) EstimateHistories {
-	var ret EstimateHistories
-	for _, x := range e {
-		if lo.Contains(slugs, x.Slug) {
-			ret = append(ret, x)
-		}
-	}
-	return ret
+	return lo.Filter(e, func(x *EstimateHistory, _ int) bool {
+		return lo.Contains(slugs, x.Slug)
+	})
 }
 
 func (e EstimateHistories) Slugs() []string {
-	ret := make([]string, 0, len(e)+1)
-	for _, x := range e {
-		ret = append(ret, x.Slug)
-	}
-	return ret
+	return lo.Map(e, func(x *EstimateHistory, _ int) string {
+		return x.Slug
+	})
 }
 
 func (e EstimateHistories) SlugStrings(includeNil bool) []string {
@@ -40,9 +31,9 @@ func (e EstimateHistories) SlugStrings(includeNil bool) []string {
 	if includeNil {
 		ret = append(ret, "")
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimateHistory, _ int) {
 		ret = append(ret, x.Slug)
-	}
+	})
 	return ret
 }
 
@@ -51,9 +42,9 @@ func (e EstimateHistories) TitleStrings(nilTitle string) []string {
 	if nilTitle != "" {
 		ret = append(ret, nilTitle)
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *EstimateHistory, _ int) {
 		ret = append(ret, x.TitleString())
-	}
+	})
 	return ret
 }
 

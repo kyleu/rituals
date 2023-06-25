@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
@@ -25,10 +26,9 @@ func StandupPermissionList(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = "Permissions"
 		ps.Data = ret
-		standupIDsByStandupID := make([]uuid.UUID, 0, len(ret))
-		for _, x := range ret {
-			standupIDsByStandupID = append(standupIDsByStandupID, x.StandupID)
-		}
+		standupIDsByStandupID := lo.Map(ret, func(x *upermission.StandupPermission, _ int) uuid.UUID {
+			return x.StandupID
+		})
 		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDsByStandupID...)
 		if err != nil {
 			return "", err

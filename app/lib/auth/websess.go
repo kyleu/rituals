@@ -2,6 +2,7 @@
 package auth
 
 import (
+	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/controller/csession"
@@ -31,13 +32,13 @@ func addToSession(
 
 func removeProviderData(rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
 	dirty := false
-	for s := range websess {
+	lo.ForEach(websess.Keys(), func(s string, _ int) {
 		if isProvider(s) {
 			logger.Debug("removing auth info for provider [" + s + "]")
 			dirty = true
 			delete(websess, s)
 		}
-	}
+	})
 	if dirty {
 		return csession.SaveSession(rc, websess, logger)
 	}
@@ -45,10 +46,5 @@ func removeProviderData(rc *fasthttp.RequestCtx, websess util.ValueMap, logger u
 }
 
 func isProvider(k string) bool {
-	for _, x := range AvailableProviderKeys {
-		if x == k {
-			return true
-		}
-	}
-	return false
+	return lo.Contains(AvailableProviderKeys, k)
 }

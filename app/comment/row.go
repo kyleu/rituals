@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"
@@ -48,11 +49,9 @@ func (r *row) ToComment() *Comment {
 type rows []*row
 
 func (x rows) ToComments() Comments {
-	ret := make(Comments, 0, len(x))
-	for _, d := range x {
-		ret = append(ret, d.ToComment())
-	}
-	return ret
+	return lo.Map(x, func(d *row, _ int) *Comment {
+		return d.ToComment()
+	})
 }
 
 func defaultWC(idx int) string {
