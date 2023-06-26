@@ -4,9 +4,18 @@ package search
 import (
 	"context"
 
+	"github.com/samber/lo"
+
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/lib/search/result"
+	"github.com/kyleu/rituals/app/retro"
+	"github.com/kyleu/rituals/app/sprint"
+	"github.com/kyleu/rituals/app/standup"
+	"github.com/kyleu/rituals/app/team"
+	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -21,11 +30,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("estimate", m.String(), m.WebPath(), m.String(), "estimate", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *estimate.Estimate, _ int) *result.Result {
+			return result.NewResult("estimate", m.String(), m.WebPath(), m.String(), "estimate", m, m, params.Q)
+		}), nil
 	}
 	retroFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {
@@ -36,11 +43,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("retro", m.String(), m.WebPath(), m.String(), "retro", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *retro.Retro, _ int) *result.Result {
+			return result.NewResult("retro", m.String(), m.WebPath(), m.String(), "retro", m, m, params.Q)
+		}), nil
 	}
 	sprintFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {
@@ -51,11 +56,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("sprint", m.String(), m.WebPath(), m.String(), "sprint", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *sprint.Sprint, _ int) *result.Result {
+			return result.NewResult("sprint", m.String(), m.WebPath(), m.String(), "sprint", m, m, params.Q)
+		}), nil
 	}
 	standupFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {
@@ -66,11 +69,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("standup", m.String(), m.WebPath(), m.String(), "standup", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *standup.Standup, _ int) *result.Result {
+			return result.NewResult("standup", m.String(), m.WebPath(), m.String(), "standup", m, m, params.Q)
+		}), nil
 	}
 	storyFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {
@@ -81,11 +82,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("story", m.String(), m.WebPath(), m.String(), "story", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *story.Story, _ int) *result.Result {
+			return result.NewResult("story", m.String(), m.WebPath(), m.String(), "story", m, m, params.Q)
+		}), nil
 	}
 	teamFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {
@@ -96,11 +95,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("team", m.String(), m.WebPath(), m.String(), "team", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *team.Team, _ int) *result.Result {
+			return result.NewResult("team", m.String(), m.WebPath(), m.String(), "team", m, m, params.Q)
+		}), nil
 	}
 	userFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {
@@ -111,11 +108,9 @@ func generatedSearch() []Provider {
 		if err != nil {
 			return nil, err
 		}
-		res := make(result.Results, 0, len(models))
-		for _, m := range models {
-			res = append(res, result.NewResult("user", m.String(), m.WebPath(), m.String(), "profile", m, m, params.Q))
-		}
-		return res, nil
+		return lo.Map(models, func(m *user.User, _ int) *result.Result {
+			return result.NewResult("user", m.String(), m.WebPath(), m.String(), "profile", m, m, params.Q)
+		}), nil
 	}
 	return []Provider{estimateFunc, retroFunc, sprintFunc, standupFunc, storyFunc, teamFunc, userFunc}
 }

@@ -56,12 +56,12 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 		return StandupMembers{}, nil
 	}
 	wc := "("
-	for idx := range pks {
+	lo.ForEach(pks, func(_ *PK, idx int) {
 		if idx > 0 {
 			wc += " or "
 		}
 		wc += fmt.Sprintf("(standup_id = $%d and user_id = $%d)", (idx*2)+1, (idx*2)+2)
-	}
+	})
 	wc += ")"
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)

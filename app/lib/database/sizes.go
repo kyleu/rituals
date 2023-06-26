@@ -4,6 +4,8 @@ package database
 import (
 	"context"
 
+	"github.com/samber/lo"
+
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/queries/schema"
 )
@@ -54,11 +56,9 @@ func (s *sizeRow) ToSize() *TableSize {
 type sizeRows []*sizeRow
 
 func (ts sizeRows) ToSizes() TableSizes {
-	ret := make(TableSizes, 0, len(ts))
-	for _, t := range ts {
-		ret = append(ret, t.ToSize())
-	}
-	return ret
+	return lo.Map(ts, func(t *sizeRow, _ int) *TableSize {
+		return t.ToSize()
+	})
 }
 
 func (s *Service) Sizes(ctx context.Context, logger util.Logger) (TableSizes, error) {

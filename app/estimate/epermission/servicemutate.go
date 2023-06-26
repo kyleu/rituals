@@ -22,10 +22,9 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 		model.Created = time.Now()
 	})
 	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
-	vals := make([]any, 0, len(models)*len(columnsQuoted))
-	for _, arg := range models {
-		vals = append(vals, arg.ToData()...)
-	}
+	vals := lo.FlatMap(models, func(arg *EstimatePermission, _ int) []any {
+		return arg.ToData()
+	})
 	return s.db.Insert(ctx, q, tx, logger, vals...)
 }
 

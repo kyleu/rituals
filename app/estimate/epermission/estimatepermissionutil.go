@@ -2,12 +2,11 @@ package epermission
 
 import (
 	"github.com/kyleu/rituals/app/util"
+	"github.com/samber/lo"
 )
 
 func (e EstimatePermissions) ToPermissions() util.Permissions {
-	ret := make(util.Permissions, 0, len(e))
-	for _, x := range e {
-		ret = append(ret, &util.Permission{Key: x.Key, Value: x.Value})
-	}
-	return ret
+	return lo.Map(e, func(x *EstimatePermission, _ int) *util.Permission {
+		return &util.Permission{Key: x.Key, Value: x.Value}
+	})
 }

@@ -56,12 +56,12 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 		return EstimatePermissions{}, nil
 	}
 	wc := "("
-	for idx := range pks {
+	lo.ForEach(pks, func(_ *PK, idx int) {
 		if idx > 0 {
 			wc += " or "
 		}
 		wc += fmt.Sprintf("(estimate_id = $%d and key = $%d and value = $%d)", (idx*3)+1, (idx*3)+2, (idx*3)+3)
-	}
+	})
 	wc += ")"
 	ret := rows{}
 	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 )
 
@@ -26,11 +27,9 @@ func modeString(mode ...float64) string {
 	if len(mode) == 0 {
 		return "0"
 	}
-	x := make([]string, 0, len(mode))
-	for _, m := range mode {
-		x = append(x, fmt.Sprint(m))
-	}
-	return strings.Join(x, ", ")
+	return strings.Join(lo.Map(mode, func(m float64, _ int) string {
+		return fmt.Sprint(m)
+	}), ", ")
 }
 
 func (v Votes) Results() *Results {
@@ -48,7 +47,7 @@ func (v Votes) Results() *Results {
 		}
 	}
 	ret.Count = len(ret.Floats)
-	for idx, fl := range ret.Floats {
+	lo.ForEach(ret.Floats, func(fl float64, idx int) {
 		if fl < ret.Min || idx == 0 {
 			ret.Min = fl
 		}
@@ -56,7 +55,7 @@ func (v Votes) Results() *Results {
 			ret.Max = fl
 		}
 		ret.Sum += fl
-	}
+	})
 	ret.Range = ret.Max - ret.Min
 	slices.Sort(ret.Floats)
 	ret.Mean = ret.Sum / float64(ret.Count)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/maps"
 
 	"github.com/kyleu/rituals/app"
@@ -95,10 +96,10 @@ func teamMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *ap
 	if err != nil {
 		return nil, nil, err
 	}
-	for _, x := range t {
+	lo.ForEach(t, func(x *team.Team, _ int) {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
-	}
+	})
 	ret.Badge = fmt.Sprint(len(t))
 	return ret, t, nil
 }
@@ -110,10 +111,10 @@ func sprintMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *
 	if err != nil {
 		return nil, nil, err
 	}
-	for _, x := range s {
+	lo.ForEach(s, func(x *sprint.Sprint, _ int) {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
-	}
+	})
 	ret.Badge = fmt.Sprint(len(s))
 	return ret, s, nil
 }
@@ -125,10 +126,10 @@ func estimateMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as
 	if err != nil {
 		return nil, nil, err
 	}
-	for _, x := range e {
+	lo.ForEach(e, func(x *estimate.Estimate, _ int) {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
-	}
+	})
 	ret.Badge = fmt.Sprint(len(e))
 	return ret, e, nil
 }
@@ -140,10 +141,10 @@ func standupMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as 
 	if err != nil {
 		return nil, nil, err
 	}
-	for _, x := range u {
+	lo.ForEach(u, func(x *standup.Standup, _ int) {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
-	}
+	})
 	ret.Badge = fmt.Sprint(len(u))
 	return ret, u, nil
 }
@@ -155,10 +156,10 @@ func retroMenu(ctx context.Context, usr uuid.UUID, params filter.ParamSet, as *a
 	if err != nil {
 		return nil, nil, err
 	}
-	for _, x := range r {
+	lo.ForEach(r, func(x *retro.Retro, _ int) {
 		kid := &menu.Item{Key: x.ID.String(), Title: x.TitleString(), Description: "", Icon: x.IconSafe(), Route: x.PublicWebPath()}
 		ret.Children = append(ret.Children, kid)
-	}
+	})
 	ret.Badge = fmt.Sprint(len(r))
 	return ret, r, nil
 }

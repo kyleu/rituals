@@ -4,6 +4,7 @@ package user
 import (
 	"strings"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
@@ -63,11 +64,9 @@ func (a Account) Domain() string {
 type Accounts []*Account
 
 func (a Accounts) String() string {
-	ret := make([]string, 0, len(a))
-	for _, x := range a {
-		ret = append(ret, x.String())
-	}
-	return strings.Join(ret, ",")
+	return strings.Join(lo.Map(a, func(x *Account, _ int) string {
+		return x.String()
+	}), ",")
 }
 
 func (a Accounts) TitleString() string {
