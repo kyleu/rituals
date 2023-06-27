@@ -1,6 +1,7 @@
 package report
 
 import (
+	"github.com/samber/lo"
 	"time"
 
 	"golang.org/x/exp/slices"
@@ -19,11 +20,11 @@ func (g *Group) DayString() string {
 
 func (r Reports) Grouped() []*Group {
 	m := make(map[time.Time]Reports, len(r))
-	for _, x := range r {
+	lo.ForEach(r, func(x *Report, _ int) {
 		curr := m[x.Day]
 		curr = append(curr, x)
 		m[x.Day] = curr
-	}
+	})
 	ret := make([]*Group, 0, len(m))
 	for k, v := range m {
 		ret = append(ret, &Group{Day: k, Reports: v})

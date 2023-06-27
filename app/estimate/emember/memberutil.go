@@ -10,7 +10,6 @@ import (
 
 func (e EstimateMembers) ToMembers(online []uuid.UUID) util.Members {
 	return lo.Map(e, func(x *EstimateMember, _ int) *util.Member {
-		o := slices.Contains(online, x.UserID)
-		return &util.Member{UserID: x.UserID, Name: x.Name, Picture: x.Picture, Role: x.Role, Online: o}
+		return &util.Member{UserID: x.UserID, Name: x.Name, Picture: x.Picture, Role: x.Role, Online: slices.Contains(online, x.UserID)}
 	})
 }

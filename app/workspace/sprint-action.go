@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
@@ -96,10 +97,9 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		if e := p.Svc.sp.DeleteWhere(p.Ctx, tx, "sprint_id = $1", len(fs.Permissions), p.Logger, tgt.ID); e != nil {
 			return nil, "", "", e
 		}
-		newPerms := make(spermission.SprintPermissions, 0, len(perms))
-		for _, x := range perms {
-			newPerms = append(newPerms, &spermission.SprintPermission{SprintID: tgt.ID, Key: x.Key, Value: x.Value})
-		}
+		newPerms := lo.Map(perms, func(x *util.Permission, _ int) *spermission.SprintPermission {
+			return &spermission.SprintPermission{SprintID: tgt.ID, Key: x.Key, Value: x.Value}
+		})
 		if e := p.Svc.sp.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
 			return nil, "", "", e
 		}

@@ -3,6 +3,7 @@ package workspace
 import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
@@ -111,9 +112,9 @@ func (s *Service) loadFullEstimate(
 			var err error
 			args := make([]any, 0, (len(ret.Stories)*2)+2)
 			args = append(args, util.KeyEstimate, e.ID)
-			for _, str := range ret.Stories {
+			lo.ForEach(ret.Stories, func(str *story.Story, _ int) {
 				args = append(args, util.KeyStory, str.ID)
-			}
+			})
 			ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
 			return err
 		},

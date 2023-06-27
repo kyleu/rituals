@@ -37,7 +37,7 @@ func (v Votes) Results() *Results {
 		return &Results{ModeString: "0"}
 	}
 	ret := &Results{Floats: make([]float64, 0, len(v))}
-	for _, x := range v {
+	lo.ForEach(v, func(x *Vote, _ int) {
 		fl, err := strconv.ParseFloat(x.Choice, 64)
 		if err == nil {
 			if math.IsNaN(fl) || math.IsInf(fl, 0) {
@@ -45,7 +45,7 @@ func (v Votes) Results() *Results {
 			}
 			ret.Floats = append(ret.Floats, fl)
 		}
-	}
+	})
 	ret.Count = len(ret.Floats)
 	lo.ForEach(ret.Floats, func(fl float64, idx int) {
 		if fl < ret.Min || idx == 0 {

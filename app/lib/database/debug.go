@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
@@ -86,12 +87,9 @@ func GetDebugStatement(key string, idx int) *DebugStatement {
 	}
 	statementsMu.Lock()
 	defer statementsMu.Unlock()
-	for _, st := range statements[key] {
-		if st.Index == idx {
-			return st
-		}
-	}
-	return nil
+	return lo.FindOrElse(statements[key], nil, func(st *DebugStatement) bool {
+		return st.Index == idx
+	})
 }
 
 func (s *Service) newStatement(ctx context.Context, q string, values []any, timing int, logger util.Logger) (*DebugStatement, error) {

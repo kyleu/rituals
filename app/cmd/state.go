@@ -27,7 +27,7 @@ func buildDefaultAppState(flags *Flags, logger util.Logger) (*app.State, error) 
 
 	db, err := database.OpenDefaultPostgres(ctx, logger)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to open database")
+		return nil, err
 	}
 	st.DB = db
 	svcs, err := app.NewServices(ctx, st, logger)

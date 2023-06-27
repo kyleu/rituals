@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
@@ -78,10 +79,9 @@ func teamUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error) {
 		if e := p.Svc.tp.DeleteWhere(p.Ctx, tx, "team_id = $1", len(ft.Permissions), p.Logger, tgt.ID); e != nil {
 			return nil, "", "", e
 		}
-		newPerms := make(tpermission.TeamPermissions, 0, len(perms))
-		for _, x := range perms {
-			newPerms = append(newPerms, &tpermission.TeamPermission{TeamID: tgt.ID, Key: x.Key, Value: x.Value})
-		}
+		newPerms := lo.Map(perms, func(x *util.Permission, _ int) *tpermission.TeamPermission {
+			return &tpermission.TeamPermission{TeamID: tgt.ID, Key: x.Key, Value: x.Value}
+		})
 		if e := p.Svc.tp.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
 			return nil, "", "", e
 		}

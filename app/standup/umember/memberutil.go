@@ -2,16 +2,14 @@ package umember
 
 import (
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
 
 func (s StandupMembers) ToMembers(online []uuid.UUID) util.Members {
-	ret := make(util.Members, 0, len(s))
-	for _, x := range s {
-		o := slices.Contains(online, x.UserID)
-		ret = append(ret, &util.Member{UserID: x.UserID, Name: x.Name, Picture: x.Picture, Role: x.Role, Online: o})
-	}
-	return ret
+	return lo.Map(s, func(x *StandupMember, _ int) *util.Member {
+		return &util.Member{UserID: x.UserID, Name: x.Name, Picture: x.Picture, Role: x.Role, Online: slices.Contains(online, x.UserID)}
+	})
 }

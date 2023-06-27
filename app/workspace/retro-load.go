@@ -3,6 +3,7 @@ package workspace
 import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
@@ -108,9 +109,9 @@ func (s *Service) loadFullRetro(p *LoadParams, r *retro.Retro, tf func() (team.T
 			}
 			args := make([]any, 0, (len(ret.Feedbacks)*2)+2)
 			args = append(args, util.KeyRetro, r.ID)
-			for _, f := range ret.Feedbacks {
+			lo.ForEach(ret.Feedbacks, func(f *feedback.Feedback, _ int) {
 				args = append(args, util.KeyFeedback, f.ID)
-			}
+			})
 			ret.Comments, err = s.c.GetByModels(p.Ctx, p.Tx, p.Logger, args...)
 			return err
 		},

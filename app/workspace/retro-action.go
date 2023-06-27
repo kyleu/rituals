@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"
@@ -113,10 +114,9 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		if e := p.Svc.rp.DeleteWhere(p.Ctx, tx, "retro_id = $1", len(fr.Permissions), p.Logger, tgt.ID); e != nil {
 			return nil, "", "", e
 		}
-		newPerms := make(rpermission.RetroPermissions, 0, len(perms))
-		for _, x := range perms {
-			newPerms = append(newPerms, &rpermission.RetroPermission{RetroID: tgt.ID, Key: x.Key, Value: x.Value})
-		}
+		newPerms := lo.Map(perms, func(x *util.Permission, _ int) *rpermission.RetroPermission {
+			return &rpermission.RetroPermission{RetroID: tgt.ID, Key: x.Key, Value: x.Value}
+		})
 		if e := p.Svc.rp.Save(p.Ctx, tx, p.Logger, newPerms...); e != nil {
 			return nil, "", "", e
 		}
