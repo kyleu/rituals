@@ -2,7 +2,6 @@
 package util
 
 const (
-	BoolTrue   = "true"
 	AppKey     = "rituals"
 	AppName    = "rituals.dev"
 	AppSummary = "Work with your team to estimate work, track your progress, and gather feedback"
@@ -11,6 +10,10 @@ const (
 	AppURL     = "https://rituals.dev"
 	AppSource  = "https://github.com/kyleu/rituals"
 	AppLegal   = `Built by <a href="mailto:rituals.dev@kyleu.com">Kyle U</a>, all rights reserved`
+
+	BoolTrue   = "true"
+	KeyError   = "error"
+	KeyUnknown = "unknown"
 
 	// $PF_SECTION_START(keys)$.
 	KeyTeam     = "team"
