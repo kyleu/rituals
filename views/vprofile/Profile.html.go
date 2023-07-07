@@ -127,7 +127,7 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
           </tr>
           `)
 //line views/vprofile/Profile.html:64
-	vtheme.StreamChoicePanel(qw422016, as.Themes.All(ps.Logger), 5, ps)
+	vtheme.StreamChoicePanel(qw422016, as.Themes.All(ps.Logger), "app", 5, ps)
 //line views/vprofile/Profile.html:64
 	qw422016.N().S(`
         </tbody>
