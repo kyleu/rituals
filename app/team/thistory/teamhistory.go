@@ -25,7 +25,7 @@ func Random() *TeamHistory {
 		Slug:     util.RandomString(12),
 		TeamID:   util.UUID(),
 		TeamName: util.RandomString(12),
-		Created:  time.Now(),
+		Created:  util.TimeCurrent(),
 	}
 }
 

@@ -35,7 +35,7 @@ func Random() *Email {
 		HTML:       "<h3>" + util.RandomString(6) + "</h3>",
 		UserID:     util.UUID(),
 		Status:     util.RandomString(12),
-		Created:    time.Now(),
+		Created:    util.TimeCurrent(),
 	}
 }
 

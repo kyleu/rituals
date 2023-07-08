@@ -37,8 +37,8 @@ func Random() *EstimateMember {
 		Name:       util.RandomString(12),
 		Picture:    "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
 		Role:       enum.MemberStatus(util.RandomString(12)),
-		Created:    time.Now(),
-		Updated:    util.NowPointer(),
+		Created:    util.TimeCurrent(),
+		Updated:    util.TimeCurrentP(),
 	}
 }
 

@@ -25,7 +25,7 @@ func Random() *StandupHistory {
 		Slug:        util.RandomString(12),
 		StandupID:   util.UUID(),
 		StandupName: util.RandomString(12),
-		Created:     time.Now(),
+		Created:     util.TimeCurrent(),
 	}
 }
 

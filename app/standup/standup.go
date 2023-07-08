@@ -36,8 +36,8 @@ func Random() *Standup {
 		Status:   enum.SessionStatus(util.RandomString(12)),
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
-		Created:  time.Now(),
-		Updated:  util.NowPointer(),
+		Created:  util.TimeCurrent(),
+		Updated:  util.TimeCurrentP(),
 	}
 }
 

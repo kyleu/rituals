@@ -38,8 +38,8 @@ func Random() *Retro {
 		TeamID:     util.UUIDP(),
 		SprintID:   util.UUIDP(),
 		Categories: nil,
-		Created:    time.Now(),
-		Updated:    util.NowPointer(),
+		Created:    util.TimeCurrent(),
+		Updated:    util.TimeCurrentP(),
 	}
 }
 

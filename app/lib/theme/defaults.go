@@ -23,7 +23,8 @@ var ThemeDefault = func() *Theme {
 			Background: "#ffffff", BackgroundMuted: "#e8f2e8",
 			LinkForeground: "#546c54", LinkVisitedForeground: "#394839",
 			NavForeground: "#000000", NavBackground: nbl,
-			MenuForeground: "#000000", MenuBackground: "#bcd7bb", MenuSelectedBackground: "#8fbc8f", MenuSelectedForeground: "#000000",
+			MenuForeground: "#000000", MenuSelectedForeground: "#000000",
+			MenuBackground: "#bcd7bb", MenuSelectedBackground: "#8fbc8f",
 			ModalBackdrop: "rgba(77, 77, 77, .7)", Success: "#008000", Error: "#ff0000",
 		},
 		Dark: &Colors{
@@ -32,7 +33,8 @@ var ThemeDefault = func() *Theme {
 			Background: "#121212", BackgroundMuted: "#142214",
 			LinkForeground: "#779076", LinkVisitedForeground: "#a3b4a2",
 			NavForeground: "#ffffff", NavBackground: nbd,
-			MenuForeground: "#eeeeee", MenuBackground: "#19301b", MenuSelectedBackground: "#234d27", MenuSelectedForeground: "#ffffff",
+			MenuForeground: "#eeeeee", MenuSelectedForeground: "#ffffff",
+			MenuBackground: "#19301b", MenuSelectedBackground: "#234d27",
 			ModalBackdrop: "rgba(33, 33, 33, .7)", Success: "#008000", Error: "#ff0000",
 		},
 	}

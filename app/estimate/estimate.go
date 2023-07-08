@@ -38,8 +38,8 @@ func Random() *Estimate {
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
 		Choices:  nil,
-		Created:  time.Now(),
-		Updated:  util.NowPointer(),
+		Created:  util.TimeCurrent(),
+		Updated:  util.TimeCurrentP(),
 	}
 }
 

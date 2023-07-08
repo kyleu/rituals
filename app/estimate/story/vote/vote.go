@@ -32,8 +32,8 @@ func Random() *Vote {
 		StoryID: util.UUID(),
 		UserID:  util.UUID(),
 		Choice:  util.RandomString(12),
-		Created: time.Now(),
-		Updated: util.NowPointer(),
+		Created: util.TimeCurrent(),
+		Updated: util.TimeCurrentP(),
 	}
 }
 

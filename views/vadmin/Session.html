@@ -3,10 +3,10 @@
   "fmt"
 
   "github.com/samber/lo"
-  "golang.org/x/exp/slices"
 
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
 ) %}
@@ -23,11 +23,7 @@
     <h3>Values</h3>
     <table class="mt expanded">
       <tbody>
-        {%- code
-          keys := lo.Keys(ps.Session)
-          slices.Sort(keys)
-        -%}
-        {%- for _, k := range keys -%}
+        {%- for _, k := range util.ArraySorted(lo.Keys(ps.Session)) -%}
           {%- code v := ps.Session[k] -%}
           <tr>
             <th class="shrink">{%s k %}</th>

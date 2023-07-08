@@ -3,7 +3,6 @@ package vote
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -19,8 +18,8 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 		return nil
 	}
 	lo.ForEach(models, func(model *Vote, _ int) {
-		model.Created = time.Now()
-		model.Updated = util.NowPointer()
+		model.Created = util.TimeCurrent()
+		model.Updated = util.TimeCurrentP()
 	})
 	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
 	vals := lo.FlatMap(models, func(arg *Vote, _ int) []any {
@@ -35,7 +34,7 @@ func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *Vote, logger u
 		return errors.Wrapf(err, "can't get original vote [%s]", model.String())
 	}
 	model.Created = curr.Created
-	model.Updated = util.NowPointer()
+	model.Updated = util.TimeCurrentP()
 	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"story_id\" = $6 and \"user_id\" = $7", s.db.Placeholder())
 	data := model.ToData()
 	data = append(data, model.StoryID, model.UserID)
@@ -51,8 +50,8 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 		return nil
 	}
 	lo.ForEach(models, func(model *Vote, _ int) {
-		model.Created = time.Now()
-		model.Updated = util.NowPointer()
+		model.Created = util.TimeCurrent()
+		model.Updated = util.TimeCurrentP()
 	})
 	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"story_id", "user_id"}, columnsQuoted, s.db.Placeholder())
 	data := lo.FlatMap(models, func(model *Vote, _ int) []any {

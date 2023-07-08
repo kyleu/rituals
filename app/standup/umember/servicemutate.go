@@ -3,7 +3,6 @@ package umember
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -19,8 +18,8 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 		return nil
 	}
 	lo.ForEach(models, func(model *StandupMember, _ int) {
-		model.Created = time.Now()
-		model.Updated = util.NowPointer()
+		model.Created = util.TimeCurrent()
+		model.Updated = util.TimeCurrentP()
 	})
 	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
 	vals := lo.FlatMap(models, func(arg *StandupMember, _ int) []any {
@@ -35,7 +34,7 @@ func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *StandupMember,
 		return errors.Wrapf(err, "can't get original member [%s]", model.String())
 	}
 	model.Created = curr.Created
-	model.Updated = util.NowPointer()
+	model.Updated = util.TimeCurrentP()
 	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"standup_id\" = $8 and \"user_id\" = $9", s.db.Placeholder())
 	data := model.ToData()
 	data = append(data, model.StandupID, model.UserID)
@@ -51,8 +50,8 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 		return nil
 	}
 	lo.ForEach(models, func(model *StandupMember, _ int) {
-		model.Created = time.Now()
-		model.Updated = util.NowPointer()
+		model.Created = util.TimeCurrent()
+		model.Updated = util.TimeCurrentP()
 	})
 	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"standup_id", "user_id"}, columnsQuoted, s.db.Placeholder())
 	data := lo.FlatMap(models, func(model *StandupMember, _ int) []any {

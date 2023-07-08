@@ -3,7 +3,6 @@ package rpermission
 
 import (
 	"context"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -19,7 +18,7 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 		return nil
 	}
 	lo.ForEach(models, func(model *RetroPermission, _ int) {
-		model.Created = time.Now()
+		model.Created = util.TimeCurrent()
 	})
 	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
 	vals := lo.FlatMap(models, func(arg *RetroPermission, _ int) []any {
@@ -49,7 +48,7 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 		return nil
 	}
 	lo.ForEach(models, func(model *RetroPermission, _ int) {
-		model.Created = time.Now()
+		model.Created = util.TimeCurrent()
 	})
 	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"retro_id", "key", "value"}, columnsQuoted, s.db.Placeholder())
 	data := lo.FlatMap(models, func(model *RetroPermission, _ int) []any {

@@ -31,8 +31,8 @@ func Random() *Team {
 		Title:   util.RandomString(12),
 		Icon:    util.RandomString(12),
 		Status:  enum.SessionStatus(util.RandomString(12)),
-		Created: time.Now(),
-		Updated: util.NowPointer(),
+		Created: util.TimeCurrent(),
+		Updated: util.TimeCurrentP(),
 	}
 }
 

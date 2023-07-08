@@ -26,8 +26,8 @@ func Random() *User {
 		ID:      util.UUID(),
 		Name:    util.RandomString(12),
 		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Created: time.Now(),
-		Updated: util.NowPointer(),
+		Created: util.TimeCurrent(),
+		Updated: util.TimeCurrentP(),
 	}
 }
 

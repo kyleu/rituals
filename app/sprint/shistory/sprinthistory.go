@@ -25,7 +25,7 @@ func Random() *SprintHistory {
 		Slug:       util.RandomString(12),
 		SprintID:   util.UUID(),
 		SprintName: util.RandomString(12),
-		Created:    time.Now(),
+		Created:    util.TimeCurrent(),
 	}
 }
 

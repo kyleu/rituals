@@ -11,90 +11,90 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/theme"
-	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vtheme/List.html:10
+//line views/vtheme/List.html:9
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vtheme/List.html:10
+//line views/vtheme/List.html:9
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vtheme/List.html:10
+//line views/vtheme/List.html:9
 type List struct {
 	layout.Basic
 	Themes theme.Themes
 }
 
-//line views/vtheme/List.html:15
+//line views/vtheme/List.html:14
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:15
+//line views/vtheme/List.html:14
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/theme/new" title="add new theme">`)
-//line views/vtheme/List.html:17
-	components.StreamSVGRefIcon(qw422016, `plus`, ps)
-//line views/vtheme/List.html:17
-	qw422016.N().S(`</a></div>
-    <h3>Themes</h3>
+    <h3>Add Theme</h3>
+    <div class="mt">
+      <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Current Themes</h3>
     <div class="theme-container mt">
 `)
-//line views/vtheme/List.html:20
+//line views/vtheme/List.html:24
 	for _, t := range p.Themes {
-//line views/vtheme/List.html:20
+//line views/vtheme/List.html:24
 		qw422016.N().S(`      <div class="theme-item">
         <a href="/theme/`)
-//line views/vtheme/List.html:22
+//line views/vtheme/List.html:26
 		qw422016.N().U(t.Key)
-//line views/vtheme/List.html:22
+//line views/vtheme/List.html:26
 		qw422016.N().S(`">
           `)
-//line views/vtheme/List.html:23
+//line views/vtheme/List.html:27
 		StreamMockupTheme(qw422016, t, true, "app", 5, ps)
-//line views/vtheme/List.html:23
+//line views/vtheme/List.html:27
 		qw422016.N().S(`
         </a>
       </div>
 `)
-//line views/vtheme/List.html:26
+//line views/vtheme/List.html:30
 	}
-//line views/vtheme/List.html:26
+//line views/vtheme/List.html:30
 	qw422016.N().S(`    </div>
   </div>
 `)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 }
 
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 }
 
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	qs422016 := string(qb422016.B)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 	return qs422016
-//line views/vtheme/List.html:29
+//line views/vtheme/List.html:33
 }

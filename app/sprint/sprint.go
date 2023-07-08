@@ -36,10 +36,10 @@ func Random() *Sprint {
 		Icon:      util.RandomString(12),
 		Status:    enum.SessionStatus(util.RandomString(12)),
 		TeamID:    util.UUIDP(),
-		StartDate: util.NowPointer(),
-		EndDate:   util.NowPointer(),
-		Created:   time.Now(),
-		Updated:   util.NowPointer(),
+		StartDate: util.TimeCurrentP(),
+		EndDate:   util.TimeCurrentP(),
+		Created:   util.TimeCurrent(),
+		Updated:   util.TimeCurrentP(),
 	}
 }
 

@@ -13,6 +13,7 @@ import (
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/user"
 	"github.com/kyleu/rituals/app/site"
+	"github.com/kyleu/rituals/app/util"
 )
 
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
@@ -47,7 +48,6 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 	}
 	status := fasthttp.StatusOK
 	cutil.WriteCORS(rc)
-	startNanos := time.Now().UnixNano()
 	var redir string
 	logger := ps.Logger
 	ctx := ps.Context
@@ -75,7 +75,7 @@ func actComplete(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.Re
 		status = fasthttp.StatusFound
 		rc.SetStatusCode(status)
 	}
-	elapsedMillis := float64((time.Now().UnixNano()-startNanos)/int64(time.Microsecond)) / float64(1000)
+	elapsedMillis := float64((util.TimeCurrentNanos()-ps.Started.UnixNano())/int64(time.Microsecond)) / float64(1000)
 	defer ps.Close()
 	rc.Response.Header.Set("Server-Timing", fmt.Sprintf("server:dur=%.3f", elapsedMillis))
 	logger = logger.With("elapsed", elapsedMillis)

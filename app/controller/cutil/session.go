@@ -7,6 +7,7 @@ import (
 
 	"github.com/mileusna/useragent"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/csession"
@@ -29,17 +30,20 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 	params := ParamSetFromRequest(rc)
 	ua := useragent.Parse(string(rc.Request.Header.Peek("User-Agent")))
 	os := strings.ToLower(ua.OS)
-	brws := strings.ToLower(ua.Name)
-	plat := "unknown"
-	if ua.Desktop {
-		plat = "desktop"
-	} else if ua.Tablet {
-		plat = "tablet"
-	} else if ua.Mobile {
-		plat = "mobile"
-	} else if ua.Bot {
-		plat = "bot"
+	browser := strings.ToLower(ua.Name)
+	platform := "unknown"
+	switch {
+	case ua.Desktop:
+		platform = "desktop"
+	case ua.Tablet:
+		platform = "tablet"
+	case ua.Mobile:
+		platform = "mobile"
+	case ua.Bot:
+		platform = "bot"
 	}
+	span.Attribute("browser", browser)
+	span.Attribute("os", os)
 
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts)
@@ -48,9 +52,9 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 
 	return &PageState{
 		Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
-		OS: os, OSVersion: ua.OSVersion, Browser: brws, BrowserVersion: ua.Version, Platform: plat,
+		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		User: u, Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
-		Icons: initialIcons, Logger: logger, Context: ctx, Span: span,
+		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,
 	}
 }
 

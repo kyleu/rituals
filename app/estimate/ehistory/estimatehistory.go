@@ -25,7 +25,7 @@ func Random() *EstimateHistory {
 		Slug:         util.RandomString(12),
 		EstimateID:   util.UUID(),
 		EstimateName: util.RandomString(12),
-		Created:      time.Now(),
+		Created:      util.TimeCurrent(),
 	}
 }
 

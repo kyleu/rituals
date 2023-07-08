@@ -11,10 +11,10 @@ import (
 	"fmt"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
 )
@@ -56,58 +56,54 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
     <table class="mt expanded">
       <tbody>
 `)
+//line views/vadmin/Session.html:26
+		for _, k := range util.ArraySorted(lo.Keys(ps.Session)) {
 //line views/vadmin/Session.html:27
-		keys := lo.Keys(ps.Session)
-		slices.Sort(keys)
-
-//line views/vadmin/Session.html:30
-		for _, k := range keys {
-//line views/vadmin/Session.html:31
 			v := ps.Session[k]
 
-//line views/vadmin/Session.html:31
+//line views/vadmin/Session.html:27
 			qw422016.N().S(`          <tr>
             <th class="shrink">`)
-//line views/vadmin/Session.html:33
+//line views/vadmin/Session.html:29
 			qw422016.E().S(k)
-//line views/vadmin/Session.html:33
+//line views/vadmin/Session.html:29
 			qw422016.N().S(`</th>
             <td>`)
-//line views/vadmin/Session.html:34
+//line views/vadmin/Session.html:30
 			qw422016.E().S(fmt.Sprint(v))
-//line views/vadmin/Session.html:34
+//line views/vadmin/Session.html:30
 			qw422016.N().S(`</td>
           </tr>
 `)
-//line views/vadmin/Session.html:36
+//line views/vadmin/Session.html:32
 		}
-//line views/vadmin/Session.html:36
+//line views/vadmin/Session.html:32
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vadmin/Session.html:40
+//line views/vadmin/Session.html:36
 	} else {
-//line views/vadmin/Session.html:40
+//line views/vadmin/Session.html:36
 		qw422016.N().S(`  <div class="card">
     <em>Empty session</em>
   </div>
 `)
-//line views/vadmin/Session.html:44
+//line views/vadmin/Session.html:40
 	}
-//line views/vadmin/Session.html:44
+//line views/vadmin/Session.html:40
 	qw422016.N().S(`  <div class="card">
     <h3>Profile</h3>
     <div class="mt">`)
-//line views/vadmin/Session.html:47
+//line views/vadmin/Session.html:43
 	components.StreamJSON(qw422016, ps.Profile)
-//line views/vadmin/Session.html:47
+//line views/vadmin/Session.html:43
 	qw422016.N().S(`</div>
   </div>
 `)
-//line views/vadmin/Session.html:49
+//line views/vadmin/Session.html:45
 	if len(ps.Accounts) > 0 {
-//line views/vadmin/Session.html:49
+//line views/vadmin/Session.html:45
 		qw422016.N().S(`  <div class="card">
     <h3>Accounts</h3>
     <table class="mt">
@@ -121,66 +117,66 @@ func (p *Session) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
       </thead>
       <tbody>
 `)
-//line views/vadmin/Session.html:62
+//line views/vadmin/Session.html:58
 		for _, acct := range ps.Accounts {
-//line views/vadmin/Session.html:62
+//line views/vadmin/Session.html:58
 			qw422016.N().S(`      <tr>
         <td>`)
-//line views/vadmin/Session.html:64
+//line views/vadmin/Session.html:60
 			qw422016.E().S(acct.Provider)
-//line views/vadmin/Session.html:64
+//line views/vadmin/Session.html:60
 			qw422016.N().S(`</td>
         <td>`)
-//line views/vadmin/Session.html:65
+//line views/vadmin/Session.html:61
 			qw422016.E().S(acct.Email)
-//line views/vadmin/Session.html:65
+//line views/vadmin/Session.html:61
 			qw422016.N().S(`</td>
         <td><div class="break-word">`)
-//line views/vadmin/Session.html:66
+//line views/vadmin/Session.html:62
 			qw422016.E().S(acct.Token)
-//line views/vadmin/Session.html:66
+//line views/vadmin/Session.html:62
 			qw422016.N().S(`</div></td>
         <td>`)
-//line views/vadmin/Session.html:67
+//line views/vadmin/Session.html:63
 			qw422016.E().S(acct.Picture)
-//line views/vadmin/Session.html:67
+//line views/vadmin/Session.html:63
 			qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vadmin/Session.html:69
+//line views/vadmin/Session.html:65
 		}
-//line views/vadmin/Session.html:69
+//line views/vadmin/Session.html:65
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vadmin/Session.html:73
+//line views/vadmin/Session.html:69
 	}
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 }
 
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 func (p *Session) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	p.StreamBody(qw422016, as, ps)
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 }
 
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 func (p *Session) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	p.WriteBody(qb422016, as, ps)
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 	return qs422016
-//line views/vadmin/Session.html:74
+//line views/vadmin/Session.html:70
 }

@@ -34,7 +34,7 @@ func Random() *EstimatePermission {
 		Key:        util.RandomString(12),
 		Value:      util.RandomString(12),
 		Access:     util.RandomString(12),
-		Created:    time.Now(),
+		Created:    util.TimeCurrent(),
 	}
 }
 

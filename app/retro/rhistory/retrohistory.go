@@ -25,7 +25,7 @@ func Random() *RetroHistory {
 		Slug:      util.RandomString(12),
 		RetroID:   util.UUID(),
 		RetroName: util.RandomString(12),
-		Created:   time.Now(),
+		Created:   util.TimeCurrent(),
 	}
 }
 

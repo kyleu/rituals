@@ -34,7 +34,7 @@ func Random() *Action {
 		Act:     util.RandomString(12),
 		Content: util.RandomValueMap(4),
 		Note:    util.RandomString(12),
-		Created: time.Now(),
+		Created: util.TimeCurrent(),
 	}
 }
 

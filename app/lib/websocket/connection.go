@@ -31,7 +31,7 @@ type Connection struct {
 
 // Creates a new Connection.
 func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(), User: usr, Profile: profile, Accounts: accounts, Svc: svc, Started: time.Now(), socket: socket}
+	return &Connection{ID: util.UUID(), User: usr, Profile: profile, Accounts: accounts, Svc: svc, Started: util.TimeCurrent(), socket: socket}
 }
 
 // Transforms this Connection to a serializable Status object.

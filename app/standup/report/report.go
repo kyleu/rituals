@@ -28,12 +28,12 @@ func Random() *Report {
 	return &Report{
 		ID:        util.UUID(),
 		StandupID: util.UUID(),
-		Day:       time.Now(),
+		Day:       util.TimeCurrent(),
 		UserID:    util.UUID(),
 		Content:   util.RandomString(12),
 		HTML:      "<h3>" + util.RandomString(6) + "</h3>",
-		Created:   time.Now(),
-		Updated:   util.NowPointer(),
+		Created:   util.TimeCurrent(),
+		Updated:   util.TimeCurrentP(),
 	}
 }
 

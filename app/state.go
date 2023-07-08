@@ -66,7 +66,7 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 		Files:     f,
 		Auth:      as,
 		Themes:    ts,
-		Started:   time.Now(),
+		Started:   util.TimeCurrent(),
 	}, nil
 }
 
