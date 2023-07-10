@@ -8,7 +8,7 @@ clean: ## Removes builds and compiled templates
 
 .PHONY: dev
 dev: ## Start the project, reloading on changes
-	@bash bin/dev.sh
+	@bin/dev.sh
 
 .PHONY: templates
 templates:
