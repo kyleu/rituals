@@ -54,6 +54,7 @@ func StandupList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func StandupDetail(rc *fasthttp.RequestCtx) {
 	Act("standup.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := standupFromPath(rc, as, ps)

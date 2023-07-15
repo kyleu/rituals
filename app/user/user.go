@@ -59,13 +59,7 @@ func FromMap(m util.ValueMap, setPK bool) (*User, error) {
 }
 
 func (u *User) Clone() *User {
-	return &User{
-		ID:      u.ID,
-		Name:    u.Name,
-		Picture: u.Picture,
-		Created: u.Created,
-		Updated: u.Updated,
-	}
+	return &User{u.ID, u.Name, u.Picture, u.Created, u.Updated}
 }
 
 func (u *User) String() string {

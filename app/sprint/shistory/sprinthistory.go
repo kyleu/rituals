@@ -57,12 +57,7 @@ func FromMap(m util.ValueMap, setPK bool) (*SprintHistory, error) {
 }
 
 func (s *SprintHistory) Clone() *SprintHistory {
-	return &SprintHistory{
-		Slug:       s.Slug,
-		SprintID:   s.SprintID,
-		SprintName: s.SprintName,
-		Created:    s.Created,
-	}
+	return &SprintHistory{s.Slug, s.SprintID, s.SprintName, s.Created}
 }
 
 func (s *SprintHistory) String() string {

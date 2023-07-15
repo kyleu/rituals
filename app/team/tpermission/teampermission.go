@@ -70,13 +70,7 @@ func FromMap(m util.ValueMap, setPK bool) (*TeamPermission, error) {
 }
 
 func (t *TeamPermission) Clone() *TeamPermission {
-	return &TeamPermission{
-		TeamID:  t.TeamID,
-		Key:     t.Key,
-		Value:   t.Value,
-		Access:  t.Access,
-		Created: t.Created,
-	}
+	return &TeamPermission{t.TeamID, t.Key, t.Value, t.Access, t.Created}
 }
 
 func (t *TeamPermission) String() string {

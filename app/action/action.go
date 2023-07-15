@@ -89,16 +89,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Action, error) {
 }
 
 func (a *Action) Clone() *Action {
-	return &Action{
-		ID:      a.ID,
-		Svc:     a.Svc,
-		ModelID: a.ModelID,
-		UserID:  a.UserID,
-		Act:     a.Act,
-		Content: a.Content.Clone(),
-		Note:    a.Note,
-		Created: a.Created,
-	}
+	return &Action{a.ID, a.Svc, a.ModelID, a.UserID, a.Act, a.Content.Clone(), a.Note, a.Created}
 }
 
 func (a *Action) String() string {

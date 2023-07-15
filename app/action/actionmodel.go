@@ -1,10 +1,10 @@
 package action
 
 import (
-	"github.com/samber/lo"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/util"

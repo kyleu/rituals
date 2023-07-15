@@ -57,12 +57,7 @@ func FromMap(m util.ValueMap, setPK bool) (*EstimateHistory, error) {
 }
 
 func (e *EstimateHistory) Clone() *EstimateHistory {
-	return &EstimateHistory{
-		Slug:         e.Slug,
-		EstimateID:   e.EstimateID,
-		EstimateName: e.EstimateName,
-		Created:      e.Created,
-	}
+	return &EstimateHistory{e.Slug, e.EstimateID, e.EstimateName, e.Created}
 }
 
 func (e *EstimateHistory) String() string {

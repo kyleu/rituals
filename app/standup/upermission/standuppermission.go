@@ -70,13 +70,7 @@ func FromMap(m util.ValueMap, setPK bool) (*StandupPermission, error) {
 }
 
 func (s *StandupPermission) Clone() *StandupPermission {
-	return &StandupPermission{
-		StandupID: s.StandupID,
-		Key:       s.Key,
-		Value:     s.Value,
-		Access:    s.Access,
-		Created:   s.Created,
-	}
+	return &StandupPermission{s.StandupID, s.Key, s.Value, s.Access, s.Created}
 }
 
 func (s *StandupPermission) String() string {

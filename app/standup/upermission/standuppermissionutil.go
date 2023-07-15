@@ -1,8 +1,9 @@
 package upermission
 
 import (
-	"github.com/kyleu/rituals/app/util"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 func (s StandupPermissions) ToPermissions() util.Permissions {

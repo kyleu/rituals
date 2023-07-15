@@ -1,8 +1,9 @@
 package epermission
 
 import (
-	"github.com/kyleu/rituals/app/util"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 func (e EstimatePermissions) ToPermissions() util.Permissions {

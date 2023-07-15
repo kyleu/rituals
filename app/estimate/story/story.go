@@ -92,17 +92,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Story, error) {
 }
 
 func (s *Story) Clone() *Story {
-	return &Story{
-		ID:         s.ID,
-		EstimateID: s.EstimateID,
-		Idx:        s.Idx,
-		UserID:     s.UserID,
-		Title:      s.Title,
-		Status:     s.Status,
-		FinalVote:  s.FinalVote,
-		Created:    s.Created,
-		Updated:    s.Updated,
-	}
+	return &Story{s.ID, s.EstimateID, s.Idx, s.UserID, s.Title, s.Status, s.FinalVote, s.Created, s.Updated}
 }
 
 func (s *Story) String() string {

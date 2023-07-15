@@ -92,18 +92,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Retro, error) {
 }
 
 func (r *Retro) Clone() *Retro {
-	return &Retro{
-		ID:         r.ID,
-		Slug:       r.Slug,
-		Title:      r.Title,
-		Icon:       r.Icon,
-		Status:     r.Status,
-		TeamID:     r.TeamID,
-		SprintID:   r.SprintID,
-		Categories: r.Categories,
-		Created:    r.Created,
-		Updated:    r.Updated,
-	}
+	return &Retro{r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Categories, r.Created, r.Updated}
 }
 
 func (r *Retro) String() string {
@@ -118,6 +107,7 @@ func (r *Retro) WebPath() string {
 	return "/admin/db/retro/" + r.ID.String()
 }
 
+//nolint:lll,gocognit
 func (r *Retro) Diff(rx *Retro) util.Diffs {
 	var diffs util.Diffs
 	if r.ID != rx.ID {
@@ -138,7 +128,7 @@ func (r *Retro) Diff(rx *Retro) util.Diffs {
 	if (r.TeamID == nil && rx.TeamID != nil) || (r.TeamID != nil && rx.TeamID == nil) || (r.TeamID != nil && rx.TeamID != nil && *r.TeamID != *rx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(r.TeamID), fmt.Sprint(rx.TeamID))) //nolint:gocritic // it's nullable
 	}
-	if (r.SprintID == nil && rx.SprintID != nil) || (r.SprintID != nil && rx.SprintID == nil) || (r.SprintID != nil && rx.SprintID != nil && *r.SprintID != *rx.SprintID) { //nolint:lll
+	if (r.SprintID == nil && rx.SprintID != nil) || (r.SprintID != nil && rx.SprintID == nil) || (r.SprintID != nil && rx.SprintID != nil && *r.SprintID != *rx.SprintID) {
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(r.SprintID), fmt.Sprint(rx.SprintID))) //nolint:gocritic // it's nullable
 	}
 	diffs = append(diffs, util.DiffObjects(r.Categories, rx.Categories, "categories")...)

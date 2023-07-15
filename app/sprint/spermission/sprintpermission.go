@@ -70,13 +70,7 @@ func FromMap(m util.ValueMap, setPK bool) (*SprintPermission, error) {
 }
 
 func (s *SprintPermission) Clone() *SprintPermission {
-	return &SprintPermission{
-		SprintID: s.SprintID,
-		Key:      s.Key,
-		Value:    s.Value,
-		Access:   s.Access,
-		Created:  s.Created,
-	}
+	return &SprintPermission{s.SprintID, s.Key, s.Value, s.Access, s.Created}
 }
 
 func (s *SprintPermission) String() string {

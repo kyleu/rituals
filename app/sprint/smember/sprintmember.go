@@ -82,15 +82,7 @@ func FromMap(m util.ValueMap, setPK bool) (*SprintMember, error) {
 }
 
 func (s *SprintMember) Clone() *SprintMember {
-	return &SprintMember{
-		SprintID: s.SprintID,
-		UserID:   s.UserID,
-		Name:     s.Name,
-		Picture:  s.Picture,
-		Role:     s.Role,
-		Created:  s.Created,
-		Updated:  s.Updated,
-	}
+	return &SprintMember{s.SprintID, s.UserID, s.Name, s.Picture, s.Role, s.Created, s.Updated}
 }
 
 func (s *SprintMember) String() string {

@@ -17,7 +17,8 @@ type (
 )
 
 func (s *Service) Post(
-	ctx context.Context, svc enum.ModelService, id uuid.UUID, userID uuid.UUID, a Act, t util.ValueMap, tx *sqlx.Tx, logger util.Logger, sends ...SendFn,
+	ctx context.Context, svc enum.ModelService, id uuid.UUID, userID uuid.UUID,
+	a Act, t util.ValueMap, tx *sqlx.Tx, logger util.Logger, sends ...SendFn,
 ) error {
 	action := &Action{ID: util.UUID(), Svc: svc, ModelID: id, UserID: userID, Act: string(a), Content: t, Created: time.Now()}
 	err := s.Create(ctx, tx, logger, action)

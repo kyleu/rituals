@@ -86,16 +86,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Report, error) {
 }
 
 func (r *Report) Clone() *Report {
-	return &Report{
-		ID:        r.ID,
-		StandupID: r.StandupID,
-		Day:       r.Day,
-		UserID:    r.UserID,
-		Content:   r.Content,
-		HTML:      r.HTML,
-		Created:   r.Created,
-		Updated:   r.Updated,
-	}
+	return &Report{r.ID, r.StandupID, r.Day, r.UserID, r.Content, r.HTML, r.Created, r.Updated}
 }
 
 func (r *Report) String() string {

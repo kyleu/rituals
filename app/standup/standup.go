@@ -86,17 +86,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Standup, error) {
 }
 
 func (s *Standup) Clone() *Standup {
-	return &Standup{
-		ID:       s.ID,
-		Slug:     s.Slug,
-		Title:    s.Title,
-		Icon:     s.Icon,
-		Status:   s.Status,
-		TeamID:   s.TeamID,
-		SprintID: s.SprintID,
-		Created:  s.Created,
-		Updated:  s.Updated,
-	}
+	return &Standup{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
 }
 
 func (s *Standup) String() string {
@@ -111,6 +101,7 @@ func (s *Standup) WebPath() string {
 	return "/admin/db/standup/" + s.ID.String()
 }
 
+//nolint:lll,gocognit
 func (s *Standup) Diff(sx *Standup) util.Diffs {
 	var diffs util.Diffs
 	if s.ID != sx.ID {
@@ -131,7 +122,7 @@ func (s *Standup) Diff(sx *Standup) util.Diffs {
 	if (s.TeamID == nil && sx.TeamID != nil) || (s.TeamID != nil && sx.TeamID == nil) || (s.TeamID != nil && sx.TeamID != nil && *s.TeamID != *sx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(s.TeamID), fmt.Sprint(sx.TeamID))) //nolint:gocritic // it's nullable
 	}
-	if (s.SprintID == nil && sx.SprintID != nil) || (s.SprintID != nil && sx.SprintID == nil) || (s.SprintID != nil && sx.SprintID != nil && *s.SprintID != *sx.SprintID) { //nolint:lll
+	if (s.SprintID == nil && sx.SprintID != nil) || (s.SprintID != nil && sx.SprintID == nil) || (s.SprintID != nil && sx.SprintID != nil && *s.SprintID != *sx.SprintID) {
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(s.SprintID), fmt.Sprint(sx.SprintID))) //nolint:gocritic // it's nullable
 	}
 	if s.Created != sx.Created {

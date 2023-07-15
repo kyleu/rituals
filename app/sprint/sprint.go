@@ -92,18 +92,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Sprint, error) {
 }
 
 func (s *Sprint) Clone() *Sprint {
-	return &Sprint{
-		ID:        s.ID,
-		Slug:      s.Slug,
-		Title:     s.Title,
-		Icon:      s.Icon,
-		Status:    s.Status,
-		TeamID:    s.TeamID,
-		StartDate: s.StartDate,
-		EndDate:   s.EndDate,
-		Created:   s.Created,
-		Updated:   s.Updated,
-	}
+	return &Sprint{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.StartDate, s.EndDate, s.Created, s.Updated}
 }
 
 func (s *Sprint) String() string {
@@ -118,7 +107,7 @@ func (s *Sprint) WebPath() string {
 	return "/admin/db/sprint/" + s.ID.String()
 }
 
-//nolint:gocognit
+//nolint:lll,gocognit
 func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 	var diffs util.Diffs
 	if s.ID != sx.ID {
@@ -139,10 +128,10 @@ func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 	if (s.TeamID == nil && sx.TeamID != nil) || (s.TeamID != nil && sx.TeamID == nil) || (s.TeamID != nil && sx.TeamID != nil && *s.TeamID != *sx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(s.TeamID), fmt.Sprint(sx.TeamID))) //nolint:gocritic // it's nullable
 	}
-	if (s.StartDate == nil && sx.StartDate != nil) || (s.StartDate != nil && sx.StartDate == nil) || (s.StartDate != nil && sx.StartDate != nil && *s.StartDate != *sx.StartDate) { //nolint:lll
+	if (s.StartDate == nil && sx.StartDate != nil) || (s.StartDate != nil && sx.StartDate == nil) || (s.StartDate != nil && sx.StartDate != nil && *s.StartDate != *sx.StartDate) {
 		diffs = append(diffs, util.NewDiff("startDate", fmt.Sprint(s.StartDate), fmt.Sprint(sx.StartDate))) //nolint:gocritic // it's nullable
 	}
-	if (s.EndDate == nil && sx.EndDate != nil) || (s.EndDate != nil && sx.EndDate == nil) || (s.EndDate != nil && sx.EndDate != nil && *s.EndDate != *sx.EndDate) { //nolint:lll
+	if (s.EndDate == nil && sx.EndDate != nil) || (s.EndDate != nil && sx.EndDate == nil) || (s.EndDate != nil && sx.EndDate != nil && *s.EndDate != *sx.EndDate) {
 		diffs = append(diffs, util.NewDiff("endDate", fmt.Sprint(s.EndDate), fmt.Sprint(sx.EndDate))) //nolint:gocritic // it's nullable
 	}
 	if s.Created != sx.Created {

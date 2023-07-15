@@ -19,7 +19,6 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-//nolint:gocognit
 func generatedSearch() []Provider {
 	estimateFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
 		if !page.Admin {

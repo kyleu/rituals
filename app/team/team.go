@@ -73,15 +73,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Team, error) {
 }
 
 func (t *Team) Clone() *Team {
-	return &Team{
-		ID:      t.ID,
-		Slug:    t.Slug,
-		Title:   t.Title,
-		Icon:    t.Icon,
-		Status:  t.Status,
-		Created: t.Created,
-		Updated: t.Updated,
-	}
+	return &Team{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Created, t.Updated}
 }
 
 func (t *Team) String() string {

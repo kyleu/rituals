@@ -57,12 +57,7 @@ func FromMap(m util.ValueMap, setPK bool) (*StandupHistory, error) {
 }
 
 func (s *StandupHistory) Clone() *StandupHistory {
-	return &StandupHistory{
-		Slug:        s.Slug,
-		StandupID:   s.StandupID,
-		StandupName: s.StandupName,
-		Created:     s.Created,
-	}
+	return &StandupHistory{s.Slug, s.StandupID, s.StandupName, s.Created}
 }
 
 func (s *StandupHistory) String() string {

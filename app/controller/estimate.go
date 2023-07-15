@@ -54,6 +54,7 @@ func EstimateList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func EstimateDetail(rc *fasthttp.RequestCtx) {
 	Act("estimate.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := estimateFromPath(rc, as, ps)

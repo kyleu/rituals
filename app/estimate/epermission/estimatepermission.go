@@ -70,13 +70,7 @@ func FromMap(m util.ValueMap, setPK bool) (*EstimatePermission, error) {
 }
 
 func (e *EstimatePermission) Clone() *EstimatePermission {
-	return &EstimatePermission{
-		EstimateID: e.EstimateID,
-		Key:        e.Key,
-		Value:      e.Value,
-		Access:     e.Access,
-		Created:    e.Created,
-	}
+	return &EstimatePermission{e.EstimateID, e.Key, e.Value, e.Access, e.Created}
 }
 
 func (e *EstimatePermission) String() string {

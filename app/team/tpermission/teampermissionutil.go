@@ -1,8 +1,9 @@
 package tpermission
 
 import (
-	"github.com/kyleu/rituals/app/util"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 func (t TeamPermissions) ToPermissions() util.Permissions {

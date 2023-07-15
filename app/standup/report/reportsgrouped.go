@@ -1,9 +1,9 @@
 package report
 
 import (
-	"github.com/samber/lo"
 	"time"
 
+	"github.com/samber/lo"
 	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"

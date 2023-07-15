@@ -83,15 +83,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Comment, error) {
 }
 
 func (c *Comment) Clone() *Comment {
-	return &Comment{
-		ID:      c.ID,
-		Svc:     c.Svc,
-		ModelID: c.ModelID,
-		UserID:  c.UserID,
-		Content: c.Content,
-		HTML:    c.HTML,
-		Created: c.Created,
-	}
+	return &Comment{c.ID, c.Svc, c.ModelID, c.UserID, c.Content, c.HTML, c.Created}
 }
 
 func (c *Comment) String() string {

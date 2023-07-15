@@ -1,8 +1,9 @@
 package workspace
 
 import (
-	"github.com/samber/lo"
 	"strings"
+
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )

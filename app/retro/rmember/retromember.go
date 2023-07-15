@@ -82,15 +82,7 @@ func FromMap(m util.ValueMap, setPK bool) (*RetroMember, error) {
 }
 
 func (r *RetroMember) Clone() *RetroMember {
-	return &RetroMember{
-		RetroID: r.RetroID,
-		UserID:  r.UserID,
-		Name:    r.Name,
-		Picture: r.Picture,
-		Role:    r.Role,
-		Created: r.Created,
-		Updated: r.Updated,
-	}
+	return &RetroMember{r.RetroID, r.UserID, r.Name, r.Picture, r.Role, r.Created, r.Updated}
 }
 
 func (r *RetroMember) String() string {

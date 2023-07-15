@@ -57,12 +57,7 @@ func FromMap(m util.ValueMap, setPK bool) (*RetroHistory, error) {
 }
 
 func (r *RetroHistory) Clone() *RetroHistory {
-	return &RetroHistory{
-		Slug:      r.Slug,
-		RetroID:   r.RetroID,
-		RetroName: r.RetroName,
-		Created:   r.Created,
-	}
+	return &RetroHistory{r.Slug, r.RetroID, r.RetroName, r.Created}
 }
 
 func (r *RetroHistory) String() string {

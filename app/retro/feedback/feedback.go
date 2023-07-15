@@ -90,17 +90,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Feedback, error) {
 }
 
 func (f *Feedback) Clone() *Feedback {
-	return &Feedback{
-		ID:       f.ID,
-		RetroID:  f.RetroID,
-		Idx:      f.Idx,
-		UserID:   f.UserID,
-		Category: f.Category,
-		Content:  f.Content,
-		HTML:     f.HTML,
-		Created:  f.Created,
-		Updated:  f.Updated,
-	}
+	return &Feedback{f.ID, f.RetroID, f.Idx, f.UserID, f.Category, f.Content, f.HTML, f.Created, f.Updated}
 }
 
 func (f *Feedback) String() string {

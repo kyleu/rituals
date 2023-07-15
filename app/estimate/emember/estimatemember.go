@@ -82,15 +82,7 @@ func FromMap(m util.ValueMap, setPK bool) (*EstimateMember, error) {
 }
 
 func (e *EstimateMember) Clone() *EstimateMember {
-	return &EstimateMember{
-		EstimateID: e.EstimateID,
-		UserID:     e.UserID,
-		Name:       e.Name,
-		Picture:    e.Picture,
-		Role:       e.Role,
-		Created:    e.Created,
-		Updated:    e.Updated,
-	}
+	return &EstimateMember{e.EstimateID, e.UserID, e.Name, e.Picture, e.Role, e.Created, e.Updated}
 }
 
 func (e *EstimateMember) String() string {

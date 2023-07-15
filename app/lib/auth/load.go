@@ -50,4 +50,3 @@ func (s *Service) load(logger util.Logger) error {
 
 	return nil
 }
-

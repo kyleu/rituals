@@ -92,18 +92,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Estimate, error) {
 }
 
 func (e *Estimate) Clone() *Estimate {
-	return &Estimate{
-		ID:       e.ID,
-		Slug:     e.Slug,
-		Title:    e.Title,
-		Icon:     e.Icon,
-		Status:   e.Status,
-		TeamID:   e.TeamID,
-		SprintID: e.SprintID,
-		Choices:  e.Choices,
-		Created:  e.Created,
-		Updated:  e.Updated,
-	}
+	return &Estimate{e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, e.Choices, e.Created, e.Updated}
 }
 
 func (e *Estimate) String() string {
@@ -118,6 +107,7 @@ func (e *Estimate) WebPath() string {
 	return "/admin/db/estimate/" + e.ID.String()
 }
 
+//nolint:lll,gocognit
 func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 	var diffs util.Diffs
 	if e.ID != ex.ID {
@@ -138,7 +128,7 @@ func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 	if (e.TeamID == nil && ex.TeamID != nil) || (e.TeamID != nil && ex.TeamID == nil) || (e.TeamID != nil && ex.TeamID != nil && *e.TeamID != *ex.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(e.TeamID), fmt.Sprint(ex.TeamID))) //nolint:gocritic // it's nullable
 	}
-	if (e.SprintID == nil && ex.SprintID != nil) || (e.SprintID != nil && ex.SprintID == nil) || (e.SprintID != nil && ex.SprintID != nil && *e.SprintID != *ex.SprintID) { //nolint:lll
+	if (e.SprintID == nil && ex.SprintID != nil) || (e.SprintID != nil && ex.SprintID == nil) || (e.SprintID != nil && ex.SprintID != nil && *e.SprintID != *ex.SprintID) {
 		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(e.SprintID), fmt.Sprint(ex.SprintID))) //nolint:gocritic // it's nullable
 	}
 	diffs = append(diffs, util.DiffObjects(e.Choices, ex.Choices, "choices")...)

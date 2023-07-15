@@ -1,8 +1,9 @@
 package rpermission
 
 import (
-	"github.com/kyleu/rituals/app/util"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 func (r RetroPermissions) ToPermissions() util.Permissions {

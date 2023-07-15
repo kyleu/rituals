@@ -47,7 +47,6 @@ func (s *Service) ActionRetro(p *Params) (*FullRetro, string, string, error) {
 	}
 }
 
-//nolint:gocognit
 func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 	if !fr.Admin() {
 		return nil, "", "", errors.New("you do not have permission to update this retro")

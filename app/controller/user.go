@@ -36,7 +36,6 @@ func UserList(rc *fasthttp.RequestCtx) {
 	})
 }
 
-//nolint:funlen,gocognit
 func UserDetail(rc *fasthttp.RequestCtx) {
 	Act("user.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := userFromPath(rc, as, ps)

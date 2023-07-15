@@ -12,7 +12,7 @@ import (
 
 const explainPrefix = "explain query plan "
 
-func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]util.ValueMap, error) {
+func (s *Service) Explain(ctx context.Context, q string, values []any, _ util.Logger) ([]util.ValueMap, error) {
 	q = strings.TrimSpace(q)
 	if !strings.HasPrefix(q, explainPrefix) {
 		q = explainPrefix + q

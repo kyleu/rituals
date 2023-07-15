@@ -70,13 +70,7 @@ func FromMap(m util.ValueMap, setPK bool) (*RetroPermission, error) {
 }
 
 func (r *RetroPermission) Clone() *RetroPermission {
-	return &RetroPermission{
-		RetroID: r.RetroID,
-		Key:     r.Key,
-		Value:   r.Value,
-		Access:  r.Access,
-		Created: r.Created,
-	}
+	return &RetroPermission{r.RetroID, r.Key, r.Value, r.Access, r.Created}
 }
 
 func (r *RetroPermission) String() string {
