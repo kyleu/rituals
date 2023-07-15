@@ -10,7 +10,7 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-const explainPrefix = "explain "
+const explainPrefix = "explain query plan "
 
 func (s *Service) Explain(ctx context.Context, q string, values []any, logger util.Logger) ([]util.ValueMap, error) {
 	q = strings.TrimSpace(q)
