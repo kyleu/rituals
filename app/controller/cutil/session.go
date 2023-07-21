@@ -126,5 +126,8 @@ func loadProfile(session util.ValueMap) (*user.Profile, error) {
 	if err != nil {
 		return nil, err
 	}
+	if p.Name == "" {
+		p.Name = user.DefaultProfile.Name
+	}
 	return p, nil
 }

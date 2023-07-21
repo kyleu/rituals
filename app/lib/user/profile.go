@@ -5,7 +5,7 @@ import "github.com/google/uuid"
 
 type Profile struct {
 	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
+	Name  string    `json:"name,omitempty"`
 	Mode  string    `json:"mode,omitempty"`
 	Theme string    `json:"theme,omitempty"`
 }
