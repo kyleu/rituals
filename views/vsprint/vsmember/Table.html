@@ -35,7 +35,7 @@
           <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Name %}</strong></td>
-        <td><a href="{%s model.Picture %}" target="_blank">{%s model.Picture %}</a></td>
+        <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
         <td>{%v model.Role %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>

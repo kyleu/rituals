@@ -162,7 +162,7 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 //line views/vsprint/vsmember/Table.html:38
 		qw422016.E().S(model.Picture)
 //line views/vsprint/vsmember/Table.html:38
-		qw422016.N().S(`" target="_blank">`)
+		qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
 //line views/vsprint/vsmember/Table.html:38
 		qw422016.E().S(model.Picture)
 //line views/vsprint/vsmember/Table.html:38
