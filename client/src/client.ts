@@ -26,7 +26,7 @@ declare global {
       tags: (el: HTMLElement) => void;
       Socket: unknown;
     };
-    audit: (s: string, ...args: any) => void;
+    audit: (s: string, ...args: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
     JSX: (tag: string, attrs: unknown[]) => HTMLElement;
   }
 }
