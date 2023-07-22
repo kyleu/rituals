@@ -1,6 +1,7 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
 import "./client.css";
 import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import {audit} from "./audit";
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
 import {flashInit} from "./flash";
@@ -25,7 +26,8 @@ declare global {
       tags: (el: HTMLElement) => void;
       Socket: unknown;
     };
-    "JSX": (tag: string, attrs: unknown[]) => HTMLElement;
+    audit: (s: string, ...args: any) => void;
+    JSX: (tag: string, attrs: unknown[]) => HTMLElement;
   }
 }
 
@@ -45,6 +47,7 @@ export function init(): void {
   linkInit();
   modalInit();
   themeInit();
+  window.audit = audit;
   window.JSX = JSX;
   appInit();
 }
