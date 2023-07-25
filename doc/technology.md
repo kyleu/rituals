@@ -20,8 +20,8 @@ rituals.dev relies on a ton of open source projects. First among them is the [Go
 - [configdir][14]
 - [pkg/errors][15]
 - [prometheus][16]
-- [opentelemetry][17]
-- [lo][18]
+- [lo][17]
+- [opentelemetry][18]
 - [sqlx][19]
 - [pgx][20]
 
