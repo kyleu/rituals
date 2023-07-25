@@ -37,12 +37,12 @@ dockers:
     image_templates:
       - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}"
       - "ghcr.io/kyleu/rituals:latest"
-    dockerfile: ./tools/release/Dockerfile
+    dockerfile: ./tools/release/Dockerfile.release
   -
     image_templates:
       - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}-debug"
       - "ghcr.io/kyleu/rituals:latest-debug"
-    dockerfile: ./tools/release/debug.Dockerfile
+    dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"
 
