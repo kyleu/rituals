@@ -15,6 +15,12 @@ func (s SprintMembers) Get(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 	})
 }
 
+func (s SprintMembers) ToPKs() []*PK {
+	return lo.Map(s, func(x *SprintMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (s SprintMembers) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintMembers {
 	return lo.Filter(s, func(x *SprintMember, _ int) bool {
 		return lo.Contains(sprintIDs, x.SprintID)

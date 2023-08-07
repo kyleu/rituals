@@ -15,6 +15,12 @@ func (s SprintPermissions) Get(sprintID uuid.UUID, key string, value string) *Sp
 	})
 }
 
+func (s SprintPermissions) ToPKs() []*PK {
+	return lo.Map(s, func(x *SprintPermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (s SprintPermissions) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintPermissions {
 	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
 		return lo.Contains(sprintIDs, x.SprintID)

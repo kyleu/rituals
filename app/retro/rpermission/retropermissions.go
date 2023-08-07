@@ -15,6 +15,12 @@ func (r RetroPermissions) Get(retroID uuid.UUID, key string, value string) *Retr
 	})
 }
 
+func (r RetroPermissions) ToPKs() []*PK {
+	return lo.Map(r, func(x *RetroPermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (r RetroPermissions) GetByRetroIDs(retroIDs ...uuid.UUID) RetroPermissions {
 	return lo.Filter(r, func(x *RetroPermission, _ int) bool {
 		return lo.Contains(retroIDs, x.RetroID)

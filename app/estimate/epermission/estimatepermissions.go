@@ -15,6 +15,12 @@ func (e EstimatePermissions) Get(estimateID uuid.UUID, key string, value string)
 	})
 }
 
+func (e EstimatePermissions) ToPKs() []*PK {
+	return lo.Map(e, func(x *EstimatePermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
 	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
 		return lo.Contains(estimateIDs, x.EstimateID)

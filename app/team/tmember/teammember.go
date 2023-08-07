@@ -93,6 +93,13 @@ func (t *TeamMember) TitleString() string {
 	return t.TeamID.String() + " / " + t.Name
 }
 
+func (t *TeamMember) ToPK() *PK {
+	return &PK{
+		TeamID: t.TeamID,
+		UserID: t.UserID,
+	}
+}
+
 func (t *TeamMember) WebPath() string {
 	return "/admin/db/team/member/" + t.TeamID.String() + "/" + t.UserID.String()
 }

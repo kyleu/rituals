@@ -15,6 +15,12 @@ func (s StandupPermissions) Get(standupID uuid.UUID, key string, value string) *
 	})
 }
 
+func (s StandupPermissions) ToPKs() []*PK {
+	return lo.Map(s, func(x *StandupPermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (s StandupPermissions) GetByStandupIDs(standupIDs ...uuid.UUID) StandupPermissions {
 	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
 		return lo.Contains(standupIDs, x.StandupID)

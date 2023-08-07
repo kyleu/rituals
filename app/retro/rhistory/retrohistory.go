@@ -2,6 +2,7 @@
 package rhistory
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -69,7 +70,7 @@ func (r *RetroHistory) TitleString() string {
 }
 
 func (r *RetroHistory) WebPath() string {
-	return "/admin/db/retro/history/" + r.Slug
+	return "/admin/db/retro/history/" + url.QueryEscape(r.Slug)
 }
 
 func (r *RetroHistory) Diff(rx *RetroHistory) util.Diffs {

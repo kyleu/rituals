@@ -93,6 +93,13 @@ func (e *EstimateMember) TitleString() string {
 	return e.EstimateID.String() + " / " + e.Name
 }
 
+func (e *EstimateMember) ToPK() *PK {
+	return &PK{
+		EstimateID: e.EstimateID,
+		UserID:     e.UserID,
+	}
+}
+
 func (e *EstimateMember) WebPath() string {
 	return "/admin/db/estimate/member/" + e.EstimateID.String() + "/" + e.UserID.String()
 }

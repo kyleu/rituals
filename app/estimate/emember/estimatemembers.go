@@ -15,6 +15,12 @@ func (e EstimateMembers) Get(estimateID uuid.UUID, userID uuid.UUID) *EstimateMe
 	})
 }
 
+func (e EstimateMembers) ToPKs() []*PK {
+	return lo.Map(e, func(x *EstimateMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (e EstimateMembers) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateMembers {
 	return lo.Filter(e, func(x *EstimateMember, _ int) bool {
 		return lo.Contains(estimateIDs, x.EstimateID)

@@ -2,6 +2,7 @@
 package shistory
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -69,7 +70,7 @@ func (s *SprintHistory) TitleString() string {
 }
 
 func (s *SprintHistory) WebPath() string {
-	return "/admin/db/sprint/history/" + s.Slug
+	return "/admin/db/sprint/history/" + url.QueryEscape(s.Slug)
 }
 
 func (s *SprintHistory) Diff(sx *SprintHistory) util.Diffs {

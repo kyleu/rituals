@@ -15,6 +15,12 @@ func (t TeamPermissions) Get(teamID uuid.UUID, key string, value string) *TeamPe
 	})
 }
 
+func (t TeamPermissions) ToPKs() []*PK {
+	return lo.Map(t, func(x *TeamPermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (t TeamPermissions) GetByTeamIDs(teamIDs ...uuid.UUID) TeamPermissions {
 	return lo.Filter(t, func(x *TeamPermission, _ int) bool {
 		return lo.Contains(teamIDs, x.TeamID)

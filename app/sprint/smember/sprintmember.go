@@ -93,6 +93,13 @@ func (s *SprintMember) TitleString() string {
 	return s.SprintID.String() + " / " + s.Name
 }
 
+func (s *SprintMember) ToPK() *PK {
+	return &PK{
+		SprintID: s.SprintID,
+		UserID:   s.UserID,
+	}
+}
+
 func (s *SprintMember) WebPath() string {
 	return "/admin/db/sprint/member/" + s.SprintID.String() + "/" + s.UserID.String()
 }

@@ -3,6 +3,7 @@ package spermission
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -81,8 +82,16 @@ func (s *SprintPermission) TitleString() string {
 	return s.String()
 }
 
+func (s *SprintPermission) ToPK() *PK {
+	return &PK{
+		SprintID: s.SprintID,
+		Key:      s.Key,
+		Value:    s.Value,
+	}
+}
+
 func (s *SprintPermission) WebPath() string {
-	return "/admin/db/sprint/permission/" + s.SprintID.String() + "/" + s.Key + "/" + s.Value
+	return "/admin/db/sprint/permission/" + s.SprintID.String() + "/" + url.QueryEscape(s.Key) + "/" + url.QueryEscape(s.Value)
 }
 
 func (s *SprintPermission) Diff(sx *SprintPermission) util.Diffs {

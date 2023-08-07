@@ -3,6 +3,7 @@ package epermission
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -81,8 +82,16 @@ func (e *EstimatePermission) TitleString() string {
 	return e.String()
 }
 
+func (e *EstimatePermission) ToPK() *PK {
+	return &PK{
+		EstimateID: e.EstimateID,
+		Key:        e.Key,
+		Value:      e.Value,
+	}
+}
+
 func (e *EstimatePermission) WebPath() string {
-	return "/admin/db/estimate/permission/" + e.EstimateID.String() + "/" + e.Key + "/" + e.Value
+	return "/admin/db/estimate/permission/" + e.EstimateID.String() + "/" + url.QueryEscape(e.Key) + "/" + url.QueryEscape(e.Value)
 }
 
 func (e *EstimatePermission) Diff(ex *EstimatePermission) util.Diffs {

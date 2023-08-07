@@ -15,6 +15,12 @@ func (r RetroMembers) Get(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
 	})
 }
 
+func (r RetroMembers) ToPKs() []*PK {
+	return lo.Map(r, func(x *RetroMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (r RetroMembers) GetByRetroIDs(retroIDs ...uuid.UUID) RetroMembers {
 	return lo.Filter(r, func(x *RetroMember, _ int) bool {
 		return lo.Contains(retroIDs, x.RetroID)

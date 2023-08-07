@@ -3,6 +3,7 @@ package upermission
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -81,8 +82,16 @@ func (s *StandupPermission) TitleString() string {
 	return s.String()
 }
 
+func (s *StandupPermission) ToPK() *PK {
+	return &PK{
+		StandupID: s.StandupID,
+		Key:       s.Key,
+		Value:     s.Value,
+	}
+}
+
 func (s *StandupPermission) WebPath() string {
-	return "/admin/db/standup/permission/" + s.StandupID.String() + "/" + s.Key + "/" + s.Value
+	return "/admin/db/standup/permission/" + s.StandupID.String() + "/" + url.QueryEscape(s.Key) + "/" + url.QueryEscape(s.Value)
 }
 
 func (s *StandupPermission) Diff(sx *StandupPermission) util.Diffs {

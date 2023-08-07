@@ -15,6 +15,12 @@ func (v Votes) Get(storyID uuid.UUID, userID uuid.UUID) *Vote {
 	})
 }
 
+func (v Votes) ToPKs() []*PK {
+	return lo.Map(v, func(x *Vote, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (v Votes) GetByStoryIDs(storyIDs ...uuid.UUID) Votes {
 	return lo.Filter(v, func(x *Vote, _ int) bool {
 		return lo.Contains(storyIDs, x.StoryID)

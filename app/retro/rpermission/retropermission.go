@@ -3,6 +3,7 @@ package rpermission
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -81,8 +82,16 @@ func (r *RetroPermission) TitleString() string {
 	return r.String()
 }
 
+func (r *RetroPermission) ToPK() *PK {
+	return &PK{
+		RetroID: r.RetroID,
+		Key:     r.Key,
+		Value:   r.Value,
+	}
+}
+
 func (r *RetroPermission) WebPath() string {
-	return "/admin/db/retro/permission/" + r.RetroID.String() + "/" + r.Key + "/" + r.Value
+	return "/admin/db/retro/permission/" + r.RetroID.String() + "/" + url.QueryEscape(r.Key) + "/" + url.QueryEscape(r.Value)
 }
 
 func (r *RetroPermission) Diff(rx *RetroPermission) util.Diffs {

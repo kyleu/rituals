@@ -93,6 +93,13 @@ func (s *StandupMember) TitleString() string {
 	return s.StandupID.String() + " / " + s.Name
 }
 
+func (s *StandupMember) ToPK() *PK {
+	return &PK{
+		StandupID: s.StandupID,
+		UserID:    s.UserID,
+	}
+}
+
 func (s *StandupMember) WebPath() string {
 	return "/admin/db/standup/member/" + s.StandupID.String() + "/" + s.UserID.String()
 }

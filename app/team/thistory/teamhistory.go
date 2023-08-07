@@ -2,6 +2,7 @@
 package thistory
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -69,7 +70,7 @@ func (t *TeamHistory) TitleString() string {
 }
 
 func (t *TeamHistory) WebPath() string {
-	return "/admin/db/team/history/" + t.Slug
+	return "/admin/db/team/history/" + url.QueryEscape(t.Slug)
 }
 
 func (t *TeamHistory) Diff(tx *TeamHistory) util.Diffs {

@@ -79,6 +79,13 @@ func (v *Vote) TitleString() string {
 	return v.String()
 }
 
+func (v *Vote) ToPK() *PK {
+	return &PK{
+		StoryID: v.StoryID,
+		UserID:  v.UserID,
+	}
+}
+
 func (v *Vote) WebPath() string {
 	return "/admin/db/estimate/story/vote/" + v.StoryID.String() + "/" + v.UserID.String()
 }

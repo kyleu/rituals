@@ -93,6 +93,13 @@ func (r *RetroMember) TitleString() string {
 	return r.RetroID.String() + " / " + r.Name
 }
 
+func (r *RetroMember) ToPK() *PK {
+	return &PK{
+		RetroID: r.RetroID,
+		UserID:  r.UserID,
+	}
+}
+
 func (r *RetroMember) WebPath() string {
 	return "/admin/db/retro/member/" + r.RetroID.String() + "/" + r.UserID.String()
 }

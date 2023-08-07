@@ -2,6 +2,7 @@
 package uhistory
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -69,7 +70,7 @@ func (s *StandupHistory) TitleString() string {
 }
 
 func (s *StandupHistory) WebPath() string {
-	return "/admin/db/standup/history/" + s.Slug
+	return "/admin/db/standup/history/" + url.QueryEscape(s.Slug)
 }
 
 func (s *StandupHistory) Diff(sx *StandupHistory) util.Diffs {

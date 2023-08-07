@@ -15,6 +15,12 @@ func (s StandupMembers) Get(standupID uuid.UUID, userID uuid.UUID) *StandupMembe
 	})
 }
 
+func (s StandupMembers) ToPKs() []*PK {
+	return lo.Map(s, func(x *StandupMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (s StandupMembers) GetByStandupIDs(standupIDs ...uuid.UUID) StandupMembers {
 	return lo.Filter(s, func(x *StandupMember, _ int) bool {
 		return lo.Contains(standupIDs, x.StandupID)

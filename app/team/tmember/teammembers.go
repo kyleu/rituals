@@ -15,6 +15,12 @@ func (t TeamMembers) Get(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
 	})
 }
 
+func (t TeamMembers) ToPKs() []*PK {
+	return lo.Map(t, func(x *TeamMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
 func (t TeamMembers) GetByTeamIDs(teamIDs ...uuid.UUID) TeamMembers {
 	return lo.Filter(t, func(x *TeamMember, _ int) bool {
 		return lo.Contains(teamIDs, x.TeamID)

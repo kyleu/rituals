@@ -3,6 +3,7 @@ package tpermission
 
 import (
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -81,8 +82,16 @@ func (t *TeamPermission) TitleString() string {
 	return t.String()
 }
 
+func (t *TeamPermission) ToPK() *PK {
+	return &PK{
+		TeamID: t.TeamID,
+		Key:    t.Key,
+		Value:  t.Value,
+	}
+}
+
 func (t *TeamPermission) WebPath() string {
-	return "/admin/db/team/permission/" + t.TeamID.String() + "/" + t.Key + "/" + t.Value
+	return "/admin/db/team/permission/" + t.TeamID.String() + "/" + url.QueryEscape(t.Key) + "/" + url.QueryEscape(t.Value)
 }
 
 func (t *TeamPermission) Diff(tx *TeamPermission) util.Diffs {
