@@ -141,7 +141,7 @@ func FeedbackDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete feedback [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Feedback [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/feedback", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/feedback", rc, ps)
 	})
 }
 

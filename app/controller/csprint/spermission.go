@@ -131,7 +131,7 @@ func SprintPermissionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/sprintPermission", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/permission", rc, ps)
 	})
 }
 

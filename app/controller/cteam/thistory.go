@@ -128,7 +128,7 @@ func TeamHistoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/teamHistory", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/team/history", rc, ps)
 	})
 }
 

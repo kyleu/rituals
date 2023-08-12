@@ -171,7 +171,7 @@ func TeamDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete team [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Team [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/team", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/team", rc, ps)
 	})
 }
 

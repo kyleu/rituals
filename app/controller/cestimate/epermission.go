@@ -131,7 +131,7 @@ func EstimatePermissionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/estimatePermission", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/permission", rc, ps)
 	})
 }
 

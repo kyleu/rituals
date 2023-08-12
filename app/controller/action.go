@@ -128,7 +128,7 @@ func ActionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete action [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Action [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/action", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/action", rc, ps)
 	})
 }
 

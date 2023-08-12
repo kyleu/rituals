@@ -128,7 +128,7 @@ func CommentDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete comment [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Comment [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/comment", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/comment", rc, ps)
 	})
 }
 

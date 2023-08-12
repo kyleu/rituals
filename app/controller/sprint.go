@@ -181,7 +181,7 @@ func SprintDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete sprint [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Sprint [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/sprint", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/sprint", rc, ps)
 	})
 }
 

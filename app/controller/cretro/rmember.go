@@ -142,7 +142,7 @@ func RetroMemberDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/retroMember", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/member", rc, ps)
 	})
 }
 

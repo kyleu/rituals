@@ -182,7 +182,7 @@ func RetroDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete retro [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Retro [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/retro", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/retro", rc, ps)
 	})
 }
 

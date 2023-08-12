@@ -128,7 +128,7 @@ func SprintHistoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/sprintHistory", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/history", rc, ps)
 	})
 }
 

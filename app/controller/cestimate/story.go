@@ -157,7 +157,7 @@ func StoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete story [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Story [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/story", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story", rc, ps)
 	})
 }
 

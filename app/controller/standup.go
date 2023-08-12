@@ -183,7 +183,7 @@ func StandupDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete standup [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Standup [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/standup", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/standup", rc, ps)
 	})
 }
 

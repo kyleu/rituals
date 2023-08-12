@@ -201,7 +201,7 @@ func UserDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete user [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("User [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/user", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/user", rc, ps)
 	})
 }
 

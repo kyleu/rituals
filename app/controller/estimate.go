@@ -183,7 +183,7 @@ func EstimateDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete estimate [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Estimate [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/estimate", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/estimate", rc, ps)
 	})
 }
 

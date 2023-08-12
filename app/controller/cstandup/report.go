@@ -141,7 +141,7 @@ func ReportDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete report [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Report [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/report", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/standup/report", rc, ps)
 	})
 }
 

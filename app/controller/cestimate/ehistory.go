@@ -128,7 +128,7 @@ func EstimateHistoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimateHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/estimateHistory", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/history", rc, ps)
 	})
 }
 

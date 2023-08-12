@@ -142,7 +142,7 @@ func VoteDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete vote [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Vote [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/vote", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story/vote", rc, ps)
 	})
 }
 

@@ -128,7 +128,7 @@ func EmailDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete email [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Email [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/email", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/email", rc, ps)
 	})
 }
 

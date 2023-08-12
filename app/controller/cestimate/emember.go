@@ -142,7 +142,7 @@ func EstimateMemberDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/estimateMember", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/member", rc, ps)
 	})
 }
 
