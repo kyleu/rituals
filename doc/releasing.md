@@ -35,6 +35,3 @@ The source code will be bundled in the release, available as `rituals_x.x.x_sour
 
 A universal macOS app will be created, containing the complete app for x86-64 and ARM
 
-### Web Build
-
-The server is compiled to WASM and available as a WebAssembly module

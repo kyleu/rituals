@@ -49,8 +49,8 @@
       "nf": "#000000",
       "nb": "#8fbc8f",
       "mf": "#000000",
-      "mb": "#bcd7bb",
       "msf": "#000000",
+      "mb": "#bcd7bb",
       "msb": "#8fbc8f",
       "mbd": "rgba(77, 77, 77, .7)",
       "ok": "#008000",
@@ -68,8 +68,8 @@
       "nf": "#ffffff",
       "nb": "#234d27",
       "mf": "#eeeeee",
-      "mb": "#19301b",
       "msf": "#ffffff",
+      "mb": "#19301b",
       "msb": "#234d27",
       "mbd": "rgba(33, 33, 33, .7)",
       "ok": "#008000",
@@ -77,8 +77,6 @@
     }
   },
   "build": {
-    "publish": true,
-    "wasm": true,
     "x86": true,
     "windowsARM": true,
     "linuxARM": true,

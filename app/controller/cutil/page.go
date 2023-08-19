@@ -154,6 +154,10 @@ func (p *PageState) Close() {
 	}
 }
 
+func (p *PageState) LogError(msg string, args ...any) {
+	p.Logger.Errorf(msg, args...)
+}
+
 func (p *PageState) ClassDecl() string {
 	var ret []string
 	if p.Profile.Mode != "" {
