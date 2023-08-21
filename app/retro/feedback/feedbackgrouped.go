@@ -1,8 +1,9 @@
 package feedback
 
 import (
+	"slices"
+
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type Group struct {

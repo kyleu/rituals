@@ -1,16 +1,16 @@
 package story
 
 import (
+	"cmp"
+	"slices"
 	"strings"
-
-	"golang.org/x/exp/slices"
 )
 
 func (s Stories) Sort() {
-	slices.SortFunc(s, func(l, r *Story) bool {
+	slices.SortFunc(s, func(l, r *Story) int {
 		if l.Idx != r.Idx {
-			return l.Idx < r.Idx
+			return cmp.Compare(l.Idx, r.Idx)
 		}
-		return strings.ToLower(l.Title) < strings.ToLower(r.Title)
+		return cmp.Compare(strings.ToLower(l.Title), strings.ToLower(r.Title))
 	})
 }

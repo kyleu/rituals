@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/maps"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/enum"
@@ -77,7 +76,7 @@ func workspaceMenu(ctx context.Context, as *app.State, params filter.ParamSet, p
 		}
 	})
 	if len(errs) > 0 {
-		return nil, nil, util.ErrorMerge(maps.Values(errs)...)
+		return nil, nil, util.ErrorMerge(lo.Values(errs)...)
 	}
 	ret := menu.Items{
 		items[enum.ModelServiceTeam],

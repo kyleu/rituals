@@ -1,11 +1,11 @@
 package workspace
 
 import (
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/enum"

@@ -2,9 +2,10 @@
 package user
 
 import (
+	"slices"
+
 	"github.com/google/uuid"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 )
 
 type Users []*User

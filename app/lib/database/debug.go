@@ -3,12 +3,12 @@ package database
 
 import (
 	"context"
+	"slices"
 	"strings"
 	"sync"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )

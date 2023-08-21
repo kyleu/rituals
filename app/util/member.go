@@ -1,11 +1,12 @@
 package util
 
 import (
+	"cmp"
+	"slices"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/enum"
 )
@@ -47,8 +48,8 @@ func (m Members) Name(userID *uuid.UUID) string {
 }
 
 func (m Members) Sort() {
-	slices.SortFunc(m, func(l, r *Member) bool {
-		return strings.ToLower(l.Name) < strings.ToLower(r.Name)
+	slices.SortFunc(m, func(l, r *Member) int {
+		return cmp.Compare(strings.ToLower(l.Name), strings.ToLower(r.Name))
 	})
 }
 

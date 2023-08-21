@@ -2,9 +2,11 @@
 package websocket
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strings"
 	"sync"
 
@@ -12,7 +14,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 	"github.com/valyala/fasthttp"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/lib/user"
@@ -109,8 +110,8 @@ func (s *Service) Status() ([]string, []*Connection, []uuid.UUID) {
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	conns := lo.Values(s.connections)
-	slices.SortFunc(conns, func(l *Connection, r *Connection) bool {
-		return l.ID.String() < r.ID.String()
+	slices.SortFunc(conns, func(l *Connection, r *Connection) int {
+		return cmp.Compare(l.ID.String(), r.ID.String())
 	})
 	taps := slices.Clone(lo.Keys(s.taps))
 	return s.ChannelList(nil), conns, taps

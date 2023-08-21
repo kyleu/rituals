@@ -1,10 +1,11 @@
 package report
 
 import (
+	"cmp"
+	"slices"
 	"time"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -29,8 +30,8 @@ func (r Reports) Grouped() []*Group {
 	for k, v := range m {
 		ret = append(ret, &Group{Day: k, Reports: v})
 	}
-	slices.SortFunc(ret, func(l *Group, r *Group) bool {
-		return l.Day.UnixMilli() < r.Day.UnixMilli()
+	slices.SortFunc(ret, func(l *Group, r *Group) int {
+		return cmp.Compare(l.Day.UnixMilli(), r.Day.UnixMilli())
 	})
 	return ret
 }

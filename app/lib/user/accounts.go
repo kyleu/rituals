@@ -2,10 +2,11 @@
 package user
 
 import (
+	"cmp"
 	"strings"
+	"slices"
 
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -42,11 +43,11 @@ func (a Accounts) Image() string {
 }
 
 func (a Accounts) Sort() {
-	slices.SortFunc(a, func(l *Account, r *Account) bool {
+	slices.SortFunc(a, func(l *Account, r *Account) int {
 		if l.Provider == r.Provider {
-			return strings.ToLower(l.Email) < strings.ToLower(r.Email)
+			return cmp.Compare(strings.ToLower(l.Email), strings.ToLower(r.Email))
 		}
-		return l.Provider < r.Provider
+		return cmp.Compare(l.Provider, r.Provider)
 	})
 }
 

@@ -1,9 +1,10 @@
 package tmember
 
 import (
+	"slices"
+
 	"github.com/google/uuid"
 	"github.com/samber/lo"
-	"golang.org/x/exp/slices"
 
 	"github.com/kyleu/rituals/app/util"
 )

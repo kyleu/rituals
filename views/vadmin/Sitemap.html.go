@@ -8,7 +8,7 @@ package vadmin
 
 //line views/vadmin/Sitemap.html:2
 import (
-	"golang.org/x/exp/slices"
+	"slices"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cmenu"

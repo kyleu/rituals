@@ -2,7 +2,6 @@
 package filesystem
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -20,9 +19,9 @@ func (f *FileSystem) CopyFile(src string, tgt string) error {
 		return err
 	}
 
-	var mode os.FileMode
+	var mode FileMode
 	if stat, e := f.Stat(src); stat != nil && e == nil {
-		mode = stat.Mode()
+		mode = stat.Mode
 	}
 
 	err = f.WriteFile(tgt, input, mode, false)
@@ -55,7 +54,7 @@ func (f *FileSystem) Move(src string, tgt string) error {
 		return errors.Errorf("target file [%s] exists, will not overwrite", tp)
 	}
 
-	if err := os.Rename(sp, tp); err != nil {
+	if err := f.f.Rename(sp, tp); err != nil {
 		return errors.Wrapf(err, "error renaming [%s] to [%s]", sp, tp)
 	}
 
