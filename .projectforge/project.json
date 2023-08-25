@@ -2,7 +2,7 @@
   "key": "rituals",
   "name": "rituals.dev",
   "icon": "code-branch",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "package": "github.com/kyleu/rituals",
   "port": 18000,
   "modules": [
