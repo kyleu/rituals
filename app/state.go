@@ -7,11 +7,14 @@ import (
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app/lib/auth"
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filesystem"
 	"github.com/kyleu/rituals/app/lib/telemetry"
 	"github.com/kyleu/rituals/app/lib/theme"
+	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -76,4 +79,11 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 		logger.Errorf("error closing database: %+v", err)
 	}
 	return s.Services.Close(ctx, logger)
+}
+
+func (s State) User(ctx context.Context, id uuid.UUID, logger util.Logger) (*user.User, error) {
+	if s.Services == nil || s.Services.User == nil {
+		return nil, nil
+	}
+	return s.Services.User.Get(ctx, nil, id, logger)
 }

@@ -3,8 +3,8 @@ package user
 
 import (
 	"cmp"
-	"strings"
 	"slices"
+	"strings"
 
 	"github.com/samber/lo"
 
