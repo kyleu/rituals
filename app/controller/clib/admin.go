@@ -14,6 +14,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/database/migrate"
+	"github.com/kyleu/rituals/app/lib/log"
 	"github.com/kyleu/rituals/app/lib/user"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vadmin"
@@ -58,6 +59,10 @@ func Admin(rc *fasthttp.RequestCtx) {
 				return "", err
 			}
 			return controller.FlashAndRedir(true, "wrote heap profile", "/admin", rc, ps)
+		case "logs":
+			x := util.DebugMemStats()
+			ps.Data = x
+			return controller.Render(rc, as, &vadmin.Logs{Logs: log.RecentLogs}, ps, "admin", "Recent Logs")
 		case "memusage":
 			x := util.DebugMemStats()
 			ps.Data = x
