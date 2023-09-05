@@ -243,13 +243,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:103
-	qw422016.N().D(len(p.RelFeedbacksByRetroID))
+	qw422016.E().S(util.StringPlural(len(p.RelFeedbacksByRetroID), "Feedback"))
 //line views/vretro/Detail.html:103
-	qw422016.N().S(` `)
-//line views/vretro/Detail.html:103
-	qw422016.E().S(util.StringPluralMaybe("Feedback", len(p.RelFeedbacksByRetroID)))
-//line views/vretro/Detail.html:103
-	qw422016.N().S(` by [retro_id]
+	qw422016.N().S(` by [FeedbacksByRetroID]%!!(MISSING)(EXTRA string=retro_id)
         </label>
         <div class="bd">
 `)
@@ -289,13 +285,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:120
-	qw422016.N().D(len(p.RelRetroHistoriesByRetroID))
+	qw422016.E().S(util.StringPlural(len(p.RelRetroHistoriesByRetroID), "History"))
 //line views/vretro/Detail.html:120
-	qw422016.N().S(` `)
-//line views/vretro/Detail.html:120
-	qw422016.E().S(util.StringPluralMaybe("History", len(p.RelRetroHistoriesByRetroID)))
-//line views/vretro/Detail.html:120
-	qw422016.N().S(` by [retro_id]
+	qw422016.N().S(` by [RetroHistoriesByRetroID]%!!(MISSING)(EXTRA string=retro_id)
         </label>
         <div class="bd">
 `)
@@ -335,13 +327,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:137
-	qw422016.N().D(len(p.RelRetroMembersByRetroID))
+	qw422016.E().S(util.StringPlural(len(p.RelRetroMembersByRetroID), "Member"))
 //line views/vretro/Detail.html:137
-	qw422016.N().S(` `)
-//line views/vretro/Detail.html:137
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelRetroMembersByRetroID)))
-//line views/vretro/Detail.html:137
-	qw422016.N().S(` by [retro_id]
+	qw422016.N().S(` by [RetroMembersByRetroID]%!!(MISSING)(EXTRA string=retro_id)
         </label>
         <div class="bd">
 `)
@@ -381,13 +369,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:154
-	qw422016.N().D(len(p.RelRetroPermissionsByRetroID))
+	qw422016.E().S(util.StringPlural(len(p.RelRetroPermissionsByRetroID), "Permission"))
 //line views/vretro/Detail.html:154
-	qw422016.N().S(` `)
-//line views/vretro/Detail.html:154
-	qw422016.E().S(util.StringPluralMaybe("Permission", len(p.RelRetroPermissionsByRetroID)))
-//line views/vretro/Detail.html:154
-	qw422016.N().S(` by [retro_id]
+	qw422016.N().S(` by [RetroPermissionsByRetroID]%!!(MISSING)(EXTRA string=retro_id)
         </label>
         <div class="bd">
 `)

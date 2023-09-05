@@ -48,11 +48,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`Databases</h3>
     <em>`)
 //line views/vdatabase/List.html:20
-	qw422016.N().D(len(p.Keys))
-//line views/vdatabase/List.html:20
-	qw422016.N().S(` `)
-//line views/vdatabase/List.html:20
-	qw422016.E().S(util.StringPluralMaybe("database", len(p.Keys)))
+	qw422016.E().S(util.StringPlural(len(p.Keys), "database"))
 //line views/vdatabase/List.html:20
 	qw422016.N().S(` available</em>
   </div>

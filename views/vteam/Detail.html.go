@@ -166,13 +166,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:90
-	qw422016.N().D(len(p.RelEstimatesByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate"))
 //line views/vteam/Detail.html:90
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:90
-	qw422016.E().S(util.StringPluralMaybe("Estimate", len(p.RelEstimatesByTeamID)))
-//line views/vteam/Detail.html:90
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [EstimatesByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)
@@ -212,13 +208,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:107
-	qw422016.N().D(len(p.RelRetrosByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelRetrosByTeamID), "Retro"))
 //line views/vteam/Detail.html:107
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:107
-	qw422016.E().S(util.StringPluralMaybe("Retro", len(p.RelRetrosByTeamID)))
-//line views/vteam/Detail.html:107
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [RetrosByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)
@@ -258,13 +250,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:124
-	qw422016.N().D(len(p.RelSprintsByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelSprintsByTeamID), "Sprint"))
 //line views/vteam/Detail.html:124
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:124
-	qw422016.E().S(util.StringPluralMaybe("Sprint", len(p.RelSprintsByTeamID)))
-//line views/vteam/Detail.html:124
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [SprintsByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)
@@ -304,13 +292,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:141
-	qw422016.N().D(len(p.RelStandupsByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelStandupsByTeamID), "Standup"))
 //line views/vteam/Detail.html:141
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:141
-	qw422016.E().S(util.StringPluralMaybe("Standup", len(p.RelStandupsByTeamID)))
-//line views/vteam/Detail.html:141
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [StandupsByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)
@@ -350,13 +334,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:158
-	qw422016.N().D(len(p.RelTeamHistoriesByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History"))
 //line views/vteam/Detail.html:158
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:158
-	qw422016.E().S(util.StringPluralMaybe("History", len(p.RelTeamHistoriesByTeamID)))
-//line views/vteam/Detail.html:158
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [TeamHistoriesByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)
@@ -396,13 +376,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:175
-	qw422016.N().D(len(p.RelTeamMembersByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelTeamMembersByTeamID), "Member"))
 //line views/vteam/Detail.html:175
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:175
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelTeamMembersByTeamID)))
-//line views/vteam/Detail.html:175
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [TeamMembersByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)
@@ -442,13 +418,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:192
-	qw422016.N().D(len(p.RelTeamPermissionsByTeamID))
+	qw422016.E().S(util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission"))
 //line views/vteam/Detail.html:192
-	qw422016.N().S(` `)
-//line views/vteam/Detail.html:192
-	qw422016.E().S(util.StringPluralMaybe("Permission", len(p.RelTeamPermissionsByTeamID)))
-//line views/vteam/Detail.html:192
-	qw422016.N().S(` by [team_id]
+	qw422016.N().S(` by [TeamPermissionsByTeamID]%!!(MISSING)(EXTRA string=team_id)
         </label>
         <div class="bd">
 `)

@@ -169,13 +169,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:97
-	qw422016.N().D(len(p.RelActionsByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelActionsByUserID), "Action"))
 //line views/vuser/Detail.html:97
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:97
-	qw422016.E().S(util.StringPluralMaybe("Action", len(p.RelActionsByUserID)))
-//line views/vuser/Detail.html:97
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [ActionsByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -215,13 +211,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:114
-	qw422016.N().D(len(p.RelCommentsByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelCommentsByUserID), "Comment"))
 //line views/vuser/Detail.html:114
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:114
-	qw422016.E().S(util.StringPluralMaybe("Comment", len(p.RelCommentsByUserID)))
-//line views/vuser/Detail.html:114
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [CommentsByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -261,13 +253,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:131
-	qw422016.N().D(len(p.RelEmailsByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelEmailsByUserID), "Email"))
 //line views/vuser/Detail.html:131
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:131
-	qw422016.E().S(util.StringPluralMaybe("Email", len(p.RelEmailsByUserID)))
-//line views/vuser/Detail.html:131
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [EmailsByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -307,13 +295,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:148
-	qw422016.N().D(len(p.RelEstimateMembersByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelEstimateMembersByUserID), "Member"))
 //line views/vuser/Detail.html:148
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:148
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelEstimateMembersByUserID)))
-//line views/vuser/Detail.html:148
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [EstimateMembersByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -353,13 +337,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:165
-	qw422016.N().D(len(p.RelFeedbacksByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelFeedbacksByUserID), "Feedback"))
 //line views/vuser/Detail.html:165
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:165
-	qw422016.E().S(util.StringPluralMaybe("Feedback", len(p.RelFeedbacksByUserID)))
-//line views/vuser/Detail.html:165
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [FeedbacksByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -399,13 +379,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:182
-	qw422016.N().D(len(p.RelReportsByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelReportsByUserID), "Report"))
 //line views/vuser/Detail.html:182
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:182
-	qw422016.E().S(util.StringPluralMaybe("Report", len(p.RelReportsByUserID)))
-//line views/vuser/Detail.html:182
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [ReportsByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -445,13 +421,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:199
-	qw422016.N().D(len(p.RelRetroMembersByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelRetroMembersByUserID), "Member"))
 //line views/vuser/Detail.html:199
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:199
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelRetroMembersByUserID)))
-//line views/vuser/Detail.html:199
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [RetroMembersByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -491,13 +463,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:216
-	qw422016.N().D(len(p.RelSprintMembersByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelSprintMembersByUserID), "Member"))
 //line views/vuser/Detail.html:216
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:216
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelSprintMembersByUserID)))
-//line views/vuser/Detail.html:216
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [SprintMembersByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -537,13 +505,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:233
-	qw422016.N().D(len(p.RelStandupMembersByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelStandupMembersByUserID), "Member"))
 //line views/vuser/Detail.html:233
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:233
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelStandupMembersByUserID)))
-//line views/vuser/Detail.html:233
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [StandupMembersByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -583,13 +547,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:250
-	qw422016.N().D(len(p.RelStoriesByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelStoriesByUserID), "Story"))
 //line views/vuser/Detail.html:250
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:250
-	qw422016.E().S(util.StringPluralMaybe("Story", len(p.RelStoriesByUserID)))
-//line views/vuser/Detail.html:250
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [StoriesByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -629,13 +589,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:267
-	qw422016.N().D(len(p.RelTeamMembersByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelTeamMembersByUserID), "Member"))
 //line views/vuser/Detail.html:267
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:267
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelTeamMembersByUserID)))
-//line views/vuser/Detail.html:267
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [TeamMembersByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)
@@ -675,13 +631,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:284
-	qw422016.N().D(len(p.RelVotesByUserID))
+	qw422016.E().S(util.StringPlural(len(p.RelVotesByUserID), "Vote"))
 //line views/vuser/Detail.html:284
-	qw422016.N().S(` `)
-//line views/vuser/Detail.html:284
-	qw422016.E().S(util.StringPluralMaybe("Vote", len(p.RelVotesByUserID)))
-//line views/vuser/Detail.html:284
-	qw422016.N().S(` by [user_id]
+	qw422016.N().S(` by [VotesByUserID]%!!(MISSING)(EXTRA string=user_id)
         </label>
         <div class="bd">
 `)

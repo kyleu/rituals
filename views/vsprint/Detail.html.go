@@ -218,13 +218,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:104
-	qw422016.N().D(len(p.RelEstimatesBySprintID))
+	qw422016.E().S(util.StringPlural(len(p.RelEstimatesBySprintID), "Estimate"))
 //line views/vsprint/Detail.html:104
-	qw422016.N().S(` `)
-//line views/vsprint/Detail.html:104
-	qw422016.E().S(util.StringPluralMaybe("Estimate", len(p.RelEstimatesBySprintID)))
-//line views/vsprint/Detail.html:104
-	qw422016.N().S(` by [sprint_id]
+	qw422016.N().S(` by [EstimatesBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
         </label>
         <div class="bd">
 `)
@@ -264,13 +260,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:121
-	qw422016.N().D(len(p.RelRetrosBySprintID))
+	qw422016.E().S(util.StringPlural(len(p.RelRetrosBySprintID), "Retro"))
 //line views/vsprint/Detail.html:121
-	qw422016.N().S(` `)
-//line views/vsprint/Detail.html:121
-	qw422016.E().S(util.StringPluralMaybe("Retro", len(p.RelRetrosBySprintID)))
-//line views/vsprint/Detail.html:121
-	qw422016.N().S(` by [sprint_id]
+	qw422016.N().S(` by [RetrosBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
         </label>
         <div class="bd">
 `)
@@ -310,13 +302,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:138
-	qw422016.N().D(len(p.RelSprintHistoriesBySprintID))
+	qw422016.E().S(util.StringPlural(len(p.RelSprintHistoriesBySprintID), "History"))
 //line views/vsprint/Detail.html:138
-	qw422016.N().S(` `)
-//line views/vsprint/Detail.html:138
-	qw422016.E().S(util.StringPluralMaybe("History", len(p.RelSprintHistoriesBySprintID)))
-//line views/vsprint/Detail.html:138
-	qw422016.N().S(` by [sprint_id]
+	qw422016.N().S(` by [SprintHistoriesBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
         </label>
         <div class="bd">
 `)
@@ -356,13 +344,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:155
-	qw422016.N().D(len(p.RelSprintMembersBySprintID))
+	qw422016.E().S(util.StringPlural(len(p.RelSprintMembersBySprintID), "Member"))
 //line views/vsprint/Detail.html:155
-	qw422016.N().S(` `)
-//line views/vsprint/Detail.html:155
-	qw422016.E().S(util.StringPluralMaybe("Member", len(p.RelSprintMembersBySprintID)))
-//line views/vsprint/Detail.html:155
-	qw422016.N().S(` by [sprint_id]
+	qw422016.N().S(` by [SprintMembersBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
         </label>
         <div class="bd">
 `)
@@ -402,13 +386,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:172
-	qw422016.N().D(len(p.RelSprintPermissionsBySprintID))
+	qw422016.E().S(util.StringPlural(len(p.RelSprintPermissionsBySprintID), "Permission"))
 //line views/vsprint/Detail.html:172
-	qw422016.N().S(` `)
-//line views/vsprint/Detail.html:172
-	qw422016.E().S(util.StringPluralMaybe("Permission", len(p.RelSprintPermissionsBySprintID)))
-//line views/vsprint/Detail.html:172
-	qw422016.N().S(` by [sprint_id]
+	qw422016.N().S(` by [SprintPermissionsBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
         </label>
         <div class="bd">
 `)
@@ -448,13 +428,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:189
-	qw422016.N().D(len(p.RelStandupsBySprintID))
+	qw422016.E().S(util.StringPlural(len(p.RelStandupsBySprintID), "Standup"))
 //line views/vsprint/Detail.html:189
-	qw422016.N().S(` `)
-//line views/vsprint/Detail.html:189
-	qw422016.E().S(util.StringPluralMaybe("Standup", len(p.RelStandupsBySprintID)))
-//line views/vsprint/Detail.html:189
-	qw422016.N().S(` by [sprint_id]
+	qw422016.N().S(` by [StandupsBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
         </label>
         <div class="bd">
 `)

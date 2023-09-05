@@ -100,7 +100,7 @@
         <label for="accordion-EstimateHistoriesByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`history`, ps) %}
-          {%d len(p.RelEstimateHistoriesByEstimateID) %} {%s util.StringPluralMaybe("History", len(p.RelEstimateHistoriesByEstimateID)) %} by [estimate_id]
+          {%s util.StringPlural(len(p.RelEstimateHistoriesByEstimateID), "History") %} by [EstimateHistoriesByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
         </label>
         <div class="bd">
           {%- if len(p.RelEstimateHistoriesByEstimateID) == 0 -%}
@@ -117,7 +117,7 @@
         <label for="accordion-EstimateMembersByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%d len(p.RelEstimateMembersByEstimateID) %} {%s util.StringPluralMaybe("Member", len(p.RelEstimateMembersByEstimateID)) %} by [estimate_id]
+          {%s util.StringPlural(len(p.RelEstimateMembersByEstimateID), "Member") %} by [EstimateMembersByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
         </label>
         <div class="bd">
           {%- if len(p.RelEstimateMembersByEstimateID) == 0 -%}
@@ -134,7 +134,7 @@
         <label for="accordion-EstimatePermissionsByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`permission`, ps) %}
-          {%d len(p.RelEstimatePermissionsByEstimateID) %} {%s util.StringPluralMaybe("Permission", len(p.RelEstimatePermissionsByEstimateID)) %} by [estimate_id]
+          {%s util.StringPlural(len(p.RelEstimatePermissionsByEstimateID), "Permission") %} by [EstimatePermissionsByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
         </label>
         <div class="bd">
           {%- if len(p.RelEstimatePermissionsByEstimateID) == 0 -%}
@@ -151,7 +151,7 @@
         <label for="accordion-StoriesByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`story`, ps) %}
-          {%d len(p.RelStoriesByEstimateID) %} {%s util.StringPluralMaybe("Story", len(p.RelStoriesByEstimateID)) %} by [estimate_id]
+          {%s util.StringPlural(len(p.RelStoriesByEstimateID), "Story") %} by [StoriesByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
         </label>
         <div class="bd">
           {%- if len(p.RelStoriesByEstimateID) == 0 -%}

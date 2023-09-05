@@ -87,7 +87,7 @@
         <label for="accordion-VotesByStoryID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`vote-yea`, ps) %}
-          {%d len(p.RelVotesByStoryID) %} {%s util.StringPluralMaybe("Vote", len(p.RelVotesByStoryID)) %} by [story_id]
+          {%s util.StringPlural(len(p.RelVotesByStoryID), "Vote") %} by [VotesByStoryID]%!!(MISSING)(EXTRA string=story_id)
         </label>
         <div class="bd">
           {%- if len(p.RelVotesByStoryID) == 0 -%}
