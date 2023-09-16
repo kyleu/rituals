@@ -116,11 +116,7 @@ func StreamCommentsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id uui
 //line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`-comments" title="`)
 //line views/vworkspace/vwutil/Comments.html:27
-	qw422016.N().D(len(comments))
-//line views/vworkspace/vwutil/Comments.html:27
-	qw422016.N().S(` `)
-//line views/vworkspace/vwutil/Comments.html:27
-	qw422016.E().S(util.StringPluralMaybe(`comment`, len(comments)))
+	qw422016.E().S(util.StringPlural(len(comments), `comment`))
 //line views/vworkspace/vwutil/Comments.html:27
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwutil/Comments.html:27

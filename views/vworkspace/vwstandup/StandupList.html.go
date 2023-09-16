@@ -53,11 +53,7 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vworkspace/vwstandup/StandupList.html:28
 	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupList.html:28
-	qw422016.N().D(len(p.Standups))
-//line views/vworkspace/vwstandup/StandupList.html:28
-	qw422016.N().S(` `)
-//line views/vworkspace/vwstandup/StandupList.html:28
-	qw422016.E().S(util.StringPluralMaybe("Standup", len(p.Standups)))
+	qw422016.E().S(util.StringPlural(len(p.Standups), "Standup"))
 //line views/vworkspace/vwstandup/StandupList.html:28
 	qw422016.N().S(`</h3>
     <em>`)

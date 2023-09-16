@@ -51,11 +51,7 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vworkspace/vwsprint/SprintList.html:26
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintList.html:26
-	qw422016.N().D(len(p.Sprints))
-//line views/vworkspace/vwsprint/SprintList.html:26
-	qw422016.N().S(` `)
-//line views/vworkspace/vwsprint/SprintList.html:26
-	qw422016.E().S(util.StringPluralMaybe("Sprint", len(p.Sprints)))
+	qw422016.E().S(util.StringPlural(len(p.Sprints), "Sprint"))
 //line views/vworkspace/vwsprint/SprintList.html:26
 	qw422016.N().S(`</h3>
     <em>`)

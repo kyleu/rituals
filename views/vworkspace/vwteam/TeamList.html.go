@@ -45,11 +45,7 @@ func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vworkspace/vwteam/TeamList.html:20
 	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
 //line views/vworkspace/vwteam/TeamList.html:20
-	qw422016.N().D(len(p.Teams))
-//line views/vworkspace/vwteam/TeamList.html:20
-	qw422016.N().S(` `)
-//line views/vworkspace/vwteam/TeamList.html:20
-	qw422016.E().S(util.StringPluralMaybe("Team", len(p.Teams)))
+	qw422016.E().S(util.StringPlural(len(p.Teams), "Team"))
 //line views/vworkspace/vwteam/TeamList.html:20
 	qw422016.N().S(`</h3>
     <em>`)

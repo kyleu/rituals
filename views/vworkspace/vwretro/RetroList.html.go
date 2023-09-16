@@ -53,11 +53,7 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vworkspace/vwretro/RetroList.html:28
 	components.StreamSVGRefIcon(qw422016, `retro`, ps)
 //line views/vworkspace/vwretro/RetroList.html:28
-	qw422016.N().D(len(p.Retros))
-//line views/vworkspace/vwretro/RetroList.html:28
-	qw422016.N().S(` `)
-//line views/vworkspace/vwretro/RetroList.html:28
-	qw422016.E().S(util.StringPluralMaybe("Retro", len(p.Retros)))
+	qw422016.E().S(util.StringPlural(len(p.Retros), "Retro"))
 //line views/vworkspace/vwretro/RetroList.html:28
 	qw422016.N().S(`</h3>
     <em>`)

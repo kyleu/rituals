@@ -25,7 +25,7 @@
 
 {% func (p *RetroList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`retro`, ps) %}{%d len(p.Retros) %} {%s util.StringPluralMaybe("Retro", len(p.Retros)) %}</h3>
+    <h3>{%= components.SVGRefIcon(`retro`, ps) %}{%s util.StringPlural(len(p.Retros), "Retro") %}</h3>
     <em>{%s util.KeyRetroDesc %}</em>
     <table class="mt expanded">
       <tbody>

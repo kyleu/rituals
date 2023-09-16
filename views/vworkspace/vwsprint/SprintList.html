@@ -23,7 +23,7 @@
 
 {% func (p *SprintList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}{%d len(p.Sprints) %} {%s util.StringPluralMaybe("Sprint", len(p.Sprints)) %}</h3>
+    <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}{%s util.StringPlural(len(p.Sprints), "Sprint") %}</h3>
     <em>{%s util.KeySprintDesc %}</em>
     <table class="mt expanded">
       <tbody>

@@ -53,11 +53,7 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vworkspace/vwestimate/EstimateList.html:28
 	components.StreamSVGRefIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:28
-	qw422016.N().D(len(p.Estimates))
-//line views/vworkspace/vwestimate/EstimateList.html:28
-	qw422016.N().S(` `)
-//line views/vworkspace/vwestimate/EstimateList.html:28
-	qw422016.E().S(util.StringPluralMaybe("Estimate", len(p.Estimates)))
+	qw422016.E().S(util.StringPlural(len(p.Estimates), "Estimate"))
 //line views/vworkspace/vwestimate/EstimateList.html:28
 	qw422016.N().S(`</h3>
     <em>`)

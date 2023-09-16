@@ -1,6 +1,4 @@
 {% import (
-  "fmt"
-
   "github.com/google/uuid"
 
   "github.com/kyleu/rituals/app/controller/cutil"
@@ -13,7 +11,7 @@
 
 {% func PermissionsLink(svc enum.ModelService, id uuid.UUID, permissions util.Permissions, ps *cutil.PageState) %}
   {%- code
-    title := fmt.Sprint(len(permissions)) + " " + util.StringPluralMaybe("permission", len(permissions))
+    title := util.StringPlural(len(permissions), "permission")
     icon := "lock"
     if len(permissions) == 0 {
       icon = "unlock"

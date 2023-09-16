@@ -25,7 +25,7 @@
 
 {% func (p *EstimateList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}{%d len(p.Estimates) %} {%s util.StringPluralMaybe("Estimate", len(p.Estimates)) %}</h3>
+    <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}{%s util.StringPlural(len(p.Estimates), "Estimate") %}</h3>
     <em>{%s util.KeyEstimateDesc %}</em>
     <table class="mt expanded">
       <tbody>

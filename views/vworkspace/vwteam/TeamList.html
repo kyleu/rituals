@@ -17,7 +17,7 @@
 
 {% func (p *TeamList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%d len(p.Teams) %} {%s util.StringPluralMaybe("Team", len(p.Teams)) %}</h3>
+    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%s util.StringPlural(len(p.Teams), "Team") %}</h3>
     <em>{%s util.KeyTeamDesc %}</em>
     <table class="mt expanded">
       <tbody>
