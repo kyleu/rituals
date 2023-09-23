@@ -45,56 +45,58 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <div class="card">
     <h3>Current Themes</h3>
-    <div class="theme-container mt">
+    <div class="overflow full-width">
+      <div class="theme-container mt">
 `)
-//line views/vtheme/List.html:24
+//line views/vtheme/List.html:25
 	for _, t := range p.Themes {
-//line views/vtheme/List.html:24
-		qw422016.N().S(`      <div class="theme-item">
-        <a href="/theme/`)
-//line views/vtheme/List.html:26
+//line views/vtheme/List.html:25
+		qw422016.N().S(`        <div class="theme-item">
+          <a href="/theme/`)
+//line views/vtheme/List.html:27
 		qw422016.N().U(t.Key)
-//line views/vtheme/List.html:26
+//line views/vtheme/List.html:27
 		qw422016.N().S(`">
-          `)
-//line views/vtheme/List.html:27
+            `)
+//line views/vtheme/List.html:28
 		StreamMockupTheme(qw422016, t, true, "app", 5, ps)
-//line views/vtheme/List.html:27
+//line views/vtheme/List.html:28
 		qw422016.N().S(`
-        </a>
-      </div>
+          </a>
+        </div>
 `)
-//line views/vtheme/List.html:30
+//line views/vtheme/List.html:31
 	}
-//line views/vtheme/List.html:30
-	qw422016.N().S(`    </div>
+//line views/vtheme/List.html:31
+	qw422016.N().S(`      </div>
+    </div>
   </div>
 `)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 }
 
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	p.StreamBody(qw422016, as, ps)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	qt422016.ReleaseWriter(qw422016)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 }
 
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	p.WriteBody(qb422016, as, ps)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	qs422016 := string(qb422016.B)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 	return qs422016
-//line views/vtheme/List.html:33
+//line views/vtheme/List.html:35
 }

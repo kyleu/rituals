@@ -233,150 +233,154 @@ func statementSQL(s *database.DebugStatement) string {
 func streamstatementValues(qw422016 *qt422016.Writer, s *database.DebugStatement) {
 //line views/vdatabase/Statement.html:62
 	qw422016.N().S(`
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Values</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="overflow full-width">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Values</th>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vdatabase/Statement.html:71
+//line views/vdatabase/Statement.html:72
 	for idx, v := range s.Values {
-//line views/vdatabase/Statement.html:71
-		qw422016.N().S(`      <tr>
-        <td>`)
-//line views/vdatabase/Statement.html:73
+//line views/vdatabase/Statement.html:72
+		qw422016.N().S(`        <tr>
+          <td>`)
+//line views/vdatabase/Statement.html:74
 		qw422016.N().D(idx + 1)
-//line views/vdatabase/Statement.html:73
-		qw422016.N().S(`</td>
-        <td>`)
 //line views/vdatabase/Statement.html:74
+		qw422016.N().S(`</td>
+          <td>`)
+//line views/vdatabase/Statement.html:75
 		components.StreamJSON(qw422016, v)
-//line views/vdatabase/Statement.html:74
+//line views/vdatabase/Statement.html:75
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vdatabase/Statement.html:76
+//line views/vdatabase/Statement.html:77
 	}
-//line views/vdatabase/Statement.html:76
-	qw422016.N().S(`    </tbody>
-  </table>
+//line views/vdatabase/Statement.html:77
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 }
 
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 func writestatementValues(qq422016 qtio422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	streamstatementValues(qw422016, s)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 }
 
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 func statementValues(s *database.DebugStatement) string {
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	writestatementValues(qb422016, s)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 	return qs422016
-//line views/vdatabase/Statement.html:79
+//line views/vdatabase/Statement.html:81
 }
 
-//line views/vdatabase/Statement.html:81
+//line views/vdatabase/Statement.html:83
 func streamstatementOut(qw422016 *qt422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:81
+//line views/vdatabase/Statement.html:83
 	qw422016.N().S(`
 `)
-//line views/vdatabase/Statement.html:82
+//line views/vdatabase/Statement.html:84
 	if len(s.Out) == 0 {
-//line views/vdatabase/Statement.html:82
+//line views/vdatabase/Statement.html:84
 		qw422016.N().S(`  <em>no results</em>
 `)
-//line views/vdatabase/Statement.html:84
+//line views/vdatabase/Statement.html:86
 	} else {
-//line views/vdatabase/Statement.html:84
-		qw422016.N().S(`  <table>
-    <thead>
-      <tr>
-        <th class="shrink">Idx</th>
-        <th>Result</th>
-      </tr>
-    </thead>
-    <tbody>
+//line views/vdatabase/Statement.html:86
+		qw422016.N().S(`  <div class="overflow full-width">
+    <table>
+      <thead>
+        <tr>
+          <th class="shrink">Idx</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vdatabase/Statement.html:93
+//line views/vdatabase/Statement.html:96
 		for idx, v := range s.Out {
-//line views/vdatabase/Statement.html:93
-			qw422016.N().S(`      <tr>
-        <td>`)
-//line views/vdatabase/Statement.html:95
-			qw422016.N().D(idx + 1)
-//line views/vdatabase/Statement.html:95
-			qw422016.N().S(`</td>
-        <td>`)
 //line views/vdatabase/Statement.html:96
-			components.StreamJSON(qw422016, v)
-//line views/vdatabase/Statement.html:96
-			qw422016.N().S(`</td>
-      </tr>
-`)
+			qw422016.N().S(`        <tr>
+          <td>`)
 //line views/vdatabase/Statement.html:98
-		}
+			qw422016.N().D(idx + 1)
+//line views/vdatabase/Statement.html:98
+			qw422016.N().S(`</td>
+          <td>`)
 //line views/vdatabase/Statement.html:99
-		if s.Count > len(s.Out) {
+			components.StreamJSON(qw422016, v)
 //line views/vdatabase/Statement.html:99
-			qw422016.N().S(`      <tr>
-        <td colspan="2">...and `)
-//line views/vdatabase/Statement.html:101
-			qw422016.N().D(s.Count - len(s.Out))
-//line views/vdatabase/Statement.html:101
-			qw422016.N().S(` additional rows</td>
-      </tr>
+			qw422016.N().S(`</td>
+        </tr>
 `)
-//line views/vdatabase/Statement.html:103
+//line views/vdatabase/Statement.html:101
 		}
-//line views/vdatabase/Statement.html:103
-		qw422016.N().S(`    </tbody>
-  </table>
+//line views/vdatabase/Statement.html:102
+		if s.Count > len(s.Out) {
+//line views/vdatabase/Statement.html:102
+			qw422016.N().S(`        <tr>
+          <td colspan="2">...and `)
+//line views/vdatabase/Statement.html:104
+			qw422016.N().D(s.Count - len(s.Out))
+//line views/vdatabase/Statement.html:104
+			qw422016.N().S(` additional rows</td>
+        </tr>
 `)
 //line views/vdatabase/Statement.html:106
+		}
+//line views/vdatabase/Statement.html:106
+		qw422016.N().S(`      </tbody>
+    </table>
+  </div>
+`)
+//line views/vdatabase/Statement.html:110
 	}
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 }
 
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 func writestatementOut(qq422016 qtio422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	streamstatementOut(qw422016, s)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 }
 
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 func statementOut(s *database.DebugStatement) string {
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	writestatementOut(qb422016, s)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 	return qs422016
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:111
 }

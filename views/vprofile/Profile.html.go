@@ -62,76 +62,78 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <a href="#modal-theme"><button type="button">Theme</button></a>
       </div>
       <h3>Profile</h3>
-      <table class="mt expanded">
-        <tbody>
-          `)
-//line views/vprofile/Profile.html:34
+      <div class="overflow full-width">
+        <table class="mt expanded">
+          <tbody>
+            `)
+//line views/vprofile/Profile.html:35
 	components.StreamTableInput(qw422016, "name", "", "Name", ps.Username(), 5)
-//line views/vprofile/Profile.html:34
+//line views/vprofile/Profile.html:35
 	qw422016.N().S(`
-          <tr>
-            <th class="shrink"><label>Mode</label></th>
-            <td>
-              <label>
+            <tr>
+              <th class="shrink"><label>Mode</label></th>
+              <td>
+                <label>
 `)
-//line views/vprofile/Profile.html:39
+//line views/vprofile/Profile.html:40
 	if p.Profile.Mode == "" {
-//line views/vprofile/Profile.html:39
-		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
+//line views/vprofile/Profile.html:40
+		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
 `)
-//line views/vprofile/Profile.html:41
+//line views/vprofile/Profile.html:42
 	} else {
-//line views/vprofile/Profile.html:41
-		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="" />
+//line views/vprofile/Profile.html:42
+		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="" />
 `)
-//line views/vprofile/Profile.html:43
+//line views/vprofile/Profile.html:44
 	}
-//line views/vprofile/Profile.html:43
-	qw422016.N().S(`                System Default
-              </label>
-              <label>
+//line views/vprofile/Profile.html:44
+	qw422016.N().S(`                  System Default
+                </label>
+                <label>
 `)
-//line views/vprofile/Profile.html:47
+//line views/vprofile/Profile.html:48
 	if p.Profile.Mode == "light" {
-//line views/vprofile/Profile.html:47
-		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
+//line views/vprofile/Profile.html:48
+		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
 `)
-//line views/vprofile/Profile.html:49
+//line views/vprofile/Profile.html:50
 	} else {
-//line views/vprofile/Profile.html:49
-		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="light" />
+//line views/vprofile/Profile.html:50
+		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="light" />
 `)
-//line views/vprofile/Profile.html:51
+//line views/vprofile/Profile.html:52
 	}
-//line views/vprofile/Profile.html:51
-	qw422016.N().S(`                Light
-              </label>
-              <label>
+//line views/vprofile/Profile.html:52
+	qw422016.N().S(`                  Light
+                </label>
+                <label>
 `)
-//line views/vprofile/Profile.html:55
+//line views/vprofile/Profile.html:56
 	if p.Profile.Mode == "dark" {
-//line views/vprofile/Profile.html:55
-		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
+//line views/vprofile/Profile.html:56
+		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
 `)
-//line views/vprofile/Profile.html:57
+//line views/vprofile/Profile.html:58
 	} else {
-//line views/vprofile/Profile.html:57
-		qw422016.N().S(`                <input type="radio" class="mode-input" name="mode" value="dark" />
+//line views/vprofile/Profile.html:58
+		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="dark" />
 `)
-//line views/vprofile/Profile.html:59
+//line views/vprofile/Profile.html:60
 	}
-//line views/vprofile/Profile.html:59
-	qw422016.N().S(`                Dark
-              </label>
-            </td>
-          </tr>
-          `)
-//line views/vprofile/Profile.html:64
+//line views/vprofile/Profile.html:60
+	qw422016.N().S(`                  Dark
+                </label>
+              </td>
+            </tr>
+            `)
+//line views/vprofile/Profile.html:65
 	vtheme.StreamChoicePanel(qw422016, as.Themes.All(ps.Logger), "app", 5, ps)
-//line views/vprofile/Profile.html:64
+//line views/vprofile/Profile.html:65
 	qw422016.N().S(`
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
       <div class="mt">
         <button type="submit">Save All Changes</button>
         <button type="reset">Reset</button>
@@ -140,41 +142,41 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   </form>
 
   `)
-//line views/vprofile/Profile.html:74
+//line views/vprofile/Profile.html:76
 	components.StreamJSONModal(qw422016, "profile", "Profile JSON", p.Profile, 1)
-//line views/vprofile/Profile.html:74
+//line views/vprofile/Profile.html:76
 	qw422016.N().S(`
   `)
-//line views/vprofile/Profile.html:75
+//line views/vprofile/Profile.html:77
 	components.StreamJSONModal(qw422016, "theme", "Theme JSON", p.Theme, 1)
-//line views/vprofile/Profile.html:75
+//line views/vprofile/Profile.html:77
 	qw422016.N().S(`
 `)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 }
 
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 func (p *Profile) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	p.StreamBody(qw422016, as, ps)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	qt422016.ReleaseWriter(qw422016)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 }
 
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 func (p *Profile) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	p.WriteBody(qb422016, as, ps)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	qs422016 := string(qb422016.B)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 	return qs422016
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:78
 }

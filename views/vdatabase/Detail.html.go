@@ -197,246 +197,250 @@ func streamrecentStatements(qw422016 *qt422016.Writer, recent database.DebugStat
 //line views/vdatabase/Detail.html:64
 	} else {
 //line views/vdatabase/Detail.html:64
-		qw422016.N().S(`    <table>
-      <thead>
-      <tr>
-        <th>SQL</th>
-        <th>Values</th>
-        <th>Count</th>
-        <th>Message</th>
-        <th>Duration</th>
-      </tr>
-      </thead>
-      <tbody>
-`)
-//line views/vdatabase/Detail.html:76
-		for _, s := range recent {
-//line views/vdatabase/Detail.html:76
-			qw422016.N().S(`        <tr>
-          <td>
-            <a href="?idx=`)
-//line views/vdatabase/Detail.html:79
-			qw422016.N().D(s.Index)
-//line views/vdatabase/Detail.html:79
-			qw422016.N().S(`">`)
-//line views/vdatabase/Detail.html:79
-			qw422016.E().S(s.SQLTrimmed(100))
-//line views/vdatabase/Detail.html:79
-			qw422016.N().S(`</a>
-          </td>
-          <td>`)
-//line views/vdatabase/Detail.html:81
-			qw422016.N().D(len(s.Values))
-//line views/vdatabase/Detail.html:81
-			qw422016.N().S(`</td>
-          <td>`)
-//line views/vdatabase/Detail.html:82
-			qw422016.N().D(s.Count)
-//line views/vdatabase/Detail.html:82
-			qw422016.N().S(`</td>
-          <td>`)
-//line views/vdatabase/Detail.html:83
-			qw422016.E().S(s.Message)
-//line views/vdatabase/Detail.html:83
-			qw422016.N().S(`</td>
-          <td>`)
-//line views/vdatabase/Detail.html:84
-			qw422016.E().S(util.MicrosToMillis(s.Timing))
-//line views/vdatabase/Detail.html:84
-			qw422016.N().S(`</td>
+		qw422016.N().S(`    <div class="overflow full-width">
+      <table>
+        <thead>
+        <tr>
+          <th>SQL</th>
+          <th>Values</th>
+          <th>Count</th>
+          <th>Message</th>
+          <th>Duration</th>
         </tr>
+        </thead>
+        <tbody>
 `)
-//line views/vdatabase/Detail.html:86
+//line views/vdatabase/Detail.html:77
+		for _, s := range recent {
+//line views/vdatabase/Detail.html:77
+			qw422016.N().S(`          <tr>
+            <td>
+              <a href="?idx=`)
+//line views/vdatabase/Detail.html:80
+			qw422016.N().D(s.Index)
+//line views/vdatabase/Detail.html:80
+			qw422016.N().S(`">`)
+//line views/vdatabase/Detail.html:80
+			qw422016.E().S(s.SQLTrimmed(100))
+//line views/vdatabase/Detail.html:80
+			qw422016.N().S(`</a>
+            </td>
+            <td>`)
+//line views/vdatabase/Detail.html:82
+			qw422016.N().D(len(s.Values))
+//line views/vdatabase/Detail.html:82
+			qw422016.N().S(`</td>
+            <td>`)
+//line views/vdatabase/Detail.html:83
+			qw422016.N().D(s.Count)
+//line views/vdatabase/Detail.html:83
+			qw422016.N().S(`</td>
+            <td>`)
+//line views/vdatabase/Detail.html:84
+			qw422016.E().S(s.Message)
+//line views/vdatabase/Detail.html:84
+			qw422016.N().S(`</td>
+            <td>`)
+//line views/vdatabase/Detail.html:85
+			qw422016.E().S(util.MicrosToMillis(s.Timing))
+//line views/vdatabase/Detail.html:85
+			qw422016.N().S(`</td>
+          </tr>
+`)
+//line views/vdatabase/Detail.html:87
 		}
-//line views/vdatabase/Detail.html:86
-		qw422016.N().S(`      </tbody>
-    </table>
+//line views/vdatabase/Detail.html:87
+		qw422016.N().S(`        </tbody>
+      </table>
+    </div>
 `)
-//line views/vdatabase/Detail.html:89
+//line views/vdatabase/Detail.html:91
 	}
-//line views/vdatabase/Detail.html:89
+//line views/vdatabase/Detail.html:91
 	qw422016.N().S(`  </div>
 `)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 }
 
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 func writerecentStatements(qq422016 qtio422016.Writer, recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	streamrecentStatements(qw422016, recent, svc, as, ps)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 }
 
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 func recentStatements(recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) string {
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	writerecentStatements(qb422016, recent, svc, as, ps)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 	return qs422016
-//line views/vdatabase/Detail.html:91
+//line views/vdatabase/Detail.html:93
 }
 
-//line views/vdatabase/Detail.html:93
+//line views/vdatabase/Detail.html:95
 func streamtableSizes(qw422016 *qt422016.Writer, key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Detail.html:93
+//line views/vdatabase/Detail.html:95
 	qw422016.N().S(`
   <div class="card">
     <h3>Table Sizes</h3>
-    <table>
-      <thead>
-      <tr>
-        <th>Schema</th>
-        <th>Name</th>
-        <th title="(estimated)">Rows*</th>
-        <th>Total</th>
-        <th>Index</th>
-        <th>Toast</th>
-        <th>Table</th>
-      </tr>
-      </thead>
-      <tbody>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+        <tr>
+          <th>Schema</th>
+          <th>Name</th>
+          <th title="(estimated)">Rows*</th>
+          <th>Total</th>
+          <th>Index</th>
+          <th>Toast</th>
+          <th>Table</th>
+        </tr>
+        </thead>
+        <tbody>
 `)
-//line views/vdatabase/Detail.html:109
+//line views/vdatabase/Detail.html:112
 	for _, size := range sizes {
-//line views/vdatabase/Detail.html:109
-		qw422016.N().S(`      <tr>
-        <td>`)
-//line views/vdatabase/Detail.html:111
-		qw422016.E().S(size.Schema)
-//line views/vdatabase/Detail.html:111
-		qw422016.N().S(`</td>
-        <td><a href="/admin/database/`)
 //line views/vdatabase/Detail.html:112
+		qw422016.N().S(`        <tr>
+          <td>`)
+//line views/vdatabase/Detail.html:114
+		qw422016.E().S(size.Schema)
+//line views/vdatabase/Detail.html:114
+		qw422016.N().S(`</td>
+          <td><a href="/admin/database/`)
+//line views/vdatabase/Detail.html:115
 		qw422016.E().S(key)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.N().S(`/tables/`)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.E().S(size.Schema)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.N().S(`/`)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.E().S(size.Name)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.N().S(`">`)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.E().S(size.Name)
-//line views/vdatabase/Detail.html:112
+//line views/vdatabase/Detail.html:115
 		qw422016.N().S(`</a></td>
-        <td>`)
-//line views/vdatabase/Detail.html:113
+          <td>`)
+//line views/vdatabase/Detail.html:116
 		qw422016.E().S(size.Rows)
-//line views/vdatabase/Detail.html:113
+//line views/vdatabase/Detail.html:116
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vdatabase/Detail.html:114
+          <td>`)
+//line views/vdatabase/Detail.html:117
 		qw422016.E().S(size.Total.String)
-//line views/vdatabase/Detail.html:114
+//line views/vdatabase/Detail.html:117
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vdatabase/Detail.html:115
+          <td>`)
+//line views/vdatabase/Detail.html:118
 		qw422016.E().S(size.Index.String)
-//line views/vdatabase/Detail.html:115
+//line views/vdatabase/Detail.html:118
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vdatabase/Detail.html:116
+          <td>`)
+//line views/vdatabase/Detail.html:119
 		qw422016.E().S(size.Toast.String)
-//line views/vdatabase/Detail.html:116
+//line views/vdatabase/Detail.html:119
 		qw422016.N().S(`</td>
-        <td>`)
-//line views/vdatabase/Detail.html:117
+          <td>`)
+//line views/vdatabase/Detail.html:120
 		qw422016.E().S(size.Table.String)
-//line views/vdatabase/Detail.html:117
+//line views/vdatabase/Detail.html:120
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vdatabase/Detail.html:119
+//line views/vdatabase/Detail.html:122
 	}
-//line views/vdatabase/Detail.html:119
-	qw422016.N().S(`      </tbody>
-    </table>
+//line views/vdatabase/Detail.html:122
+	qw422016.N().S(`        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 }
 
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 func writetableSizes(qq422016 qtio422016.Writer, key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	streamtableSizes(qw422016, key, sizes, as, ps)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 }
 
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 func tableSizes(key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) string {
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	writetableSizes(qb422016, key, sizes, as, ps)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 	return qs422016
-//line views/vdatabase/Detail.html:123
+//line views/vdatabase/Detail.html:127
 }
 
-//line views/vdatabase/Detail.html:125
+//line views/vdatabase/Detail.html:129
 func streamsqlEditor(qw422016 *qt422016.Writer, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Detail.html:125
+//line views/vdatabase/Detail.html:129
 	qw422016.N().S(`
   <div class="card">
     <h3>SQL Editor</h3>
     <form method="post" action="/admin/database/`)
-//line views/vdatabase/Detail.html:128
+//line views/vdatabase/Detail.html:132
 	qw422016.E().S(svc.Key)
-//line views/vdatabase/Detail.html:128
+//line views/vdatabase/Detail.html:132
 	qw422016.N().S(`/sql">
       <div class="mt expanded">
         <textarea name="sql" rows="12" placeholder="SQL statement">`)
-//line views/vdatabase/Detail.html:130
+//line views/vdatabase/Detail.html:134
 	qw422016.E().S(sql)
-//line views/vdatabase/Detail.html:130
+//line views/vdatabase/Detail.html:134
 	qw422016.N().S(`</textarea>
       </div>
 `)
-//line views/vdatabase/Detail.html:132
+//line views/vdatabase/Detail.html:136
 	if svc.ReadOnly {
-//line views/vdatabase/Detail.html:132
+//line views/vdatabase/Detail.html:136
 		qw422016.N().S(`      <input type="hidden" name="commit" value="false" />
 `)
-//line views/vdatabase/Detail.html:134
+//line views/vdatabase/Detail.html:138
 	} else {
-//line views/vdatabase/Detail.html:134
+//line views/vdatabase/Detail.html:138
 		qw422016.N().S(`      <div class="mt">
         <label><input type="checkbox" name="commit" value="true" `)
-//line views/vdatabase/Detail.html:136
+//line views/vdatabase/Detail.html:140
 		if commit {
-//line views/vdatabase/Detail.html:136
+//line views/vdatabase/Detail.html:140
 			qw422016.N().S(`checked="checked"`)
-//line views/vdatabase/Detail.html:136
+//line views/vdatabase/Detail.html:140
 		}
-//line views/vdatabase/Detail.html:136
+//line views/vdatabase/Detail.html:140
 		qw422016.N().S(`/> Commit Changes</label>
       </div>
 `)
-//line views/vdatabase/Detail.html:138
+//line views/vdatabase/Detail.html:142
 	}
-//line views/vdatabase/Detail.html:138
+//line views/vdatabase/Detail.html:142
 	qw422016.N().S(`      <div class="mt">
         <button type="submit" name="action" value="run">Run</button>
         <button type="submit" name="action" value="analyze">Analyze</button>
@@ -444,109 +448,111 @@ func streamsqlEditor(qw422016 *qt422016.Writer, sql string, svc *database.Servic
     </form>
   </div>
 `)
-//line views/vdatabase/Detail.html:145
+//line views/vdatabase/Detail.html:149
 	if results != nil {
-//line views/vdatabase/Detail.html:145
+//line views/vdatabase/Detail.html:149
 		qw422016.N().S(`  <div class="card">
     <div class="right">`)
-//line views/vdatabase/Detail.html:147
+//line views/vdatabase/Detail.html:151
 		qw422016.E().S(util.MicrosToMillis(timing))
-//line views/vdatabase/Detail.html:147
+//line views/vdatabase/Detail.html:151
 		qw422016.N().S(`</div>
     <h3>Results</h3>
 `)
-//line views/vdatabase/Detail.html:149
+//line views/vdatabase/Detail.html:153
 		if len(results) == 0 {
-//line views/vdatabase/Detail.html:149
-			qw422016.N().S(`      <em>No rows returned</em>
+//line views/vdatabase/Detail.html:153
+			qw422016.N().S(`    <em>No rows returned</em>
 `)
-//line views/vdatabase/Detail.html:151
+//line views/vdatabase/Detail.html:155
 		} else {
-//line views/vdatabase/Detail.html:151
-			qw422016.N().S(`      <table class="mt expanded">
+//line views/vdatabase/Detail.html:155
+			qw422016.N().S(`    <div class="overflow full-width">
+      <table class="mt expanded">
         <thead>
           <tr>
 `)
-//line views/vdatabase/Detail.html:155
+//line views/vdatabase/Detail.html:160
 			for _, c := range columns {
-//line views/vdatabase/Detail.html:155
+//line views/vdatabase/Detail.html:160
 				qw422016.N().S(`            <th>`)
-//line views/vdatabase/Detail.html:156
+//line views/vdatabase/Detail.html:161
 				qw422016.E().S(c)
-//line views/vdatabase/Detail.html:156
+//line views/vdatabase/Detail.html:161
 				qw422016.N().S(`</th>
 `)
-//line views/vdatabase/Detail.html:157
+//line views/vdatabase/Detail.html:162
 			}
-//line views/vdatabase/Detail.html:157
+//line views/vdatabase/Detail.html:162
 			qw422016.N().S(`          </tr>
         </thead>
         <tbody>
 `)
-//line views/vdatabase/Detail.html:161
+//line views/vdatabase/Detail.html:166
 			for _, row := range results {
-//line views/vdatabase/Detail.html:161
+//line views/vdatabase/Detail.html:166
 				qw422016.N().S(`            <tr>
 `)
-//line views/vdatabase/Detail.html:163
+//line views/vdatabase/Detail.html:168
 				for _, x := range row {
-//line views/vdatabase/Detail.html:163
+//line views/vdatabase/Detail.html:168
 					qw422016.N().S(`              <td>`)
-//line views/vdatabase/Detail.html:164
+//line views/vdatabase/Detail.html:169
 					qw422016.E().V(x)
-//line views/vdatabase/Detail.html:164
+//line views/vdatabase/Detail.html:169
 					qw422016.N().S(`</td>
 `)
-//line views/vdatabase/Detail.html:165
+//line views/vdatabase/Detail.html:170
 				}
-//line views/vdatabase/Detail.html:165
+//line views/vdatabase/Detail.html:170
 				qw422016.N().S(`            </tr>
 `)
-//line views/vdatabase/Detail.html:167
+//line views/vdatabase/Detail.html:172
 			}
-//line views/vdatabase/Detail.html:167
+//line views/vdatabase/Detail.html:172
 			qw422016.N().S(`        </tbody>
       </table>
+    </div>
 `)
-//line views/vdatabase/Detail.html:170
+//line views/vdatabase/Detail.html:176
 		}
-//line views/vdatabase/Detail.html:170
+//line views/vdatabase/Detail.html:176
 		qw422016.N().S(`  </div>
 `)
-//line views/vdatabase/Detail.html:172
+//line views/vdatabase/Detail.html:178
 	}
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 }
 
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 func writesqlEditor(qq422016 qtio422016.Writer, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	streamsqlEditor(qw422016, sql, svc, commit, columns, results, timing, as, ps)
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 }
 
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 func sqlEditor(sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) string {
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	writesqlEditor(qb422016, sql, svc, commit, columns, results, timing, as, ps)
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 	return qs422016
-//line views/vdatabase/Detail.html:173
+//line views/vdatabase/Detail.html:179
 }
 
-//line views/vdatabase/Detail.html:175
+//line views/vdatabase/Detail.html:181
 func streamsettingsModal(qw422016 *qt422016.Writer, svc *database.Service) {
-//line views/vdatabase/Detail.html:175
+//line views/vdatabase/Detail.html:181
 	qw422016.N().S(`
   <div id="modal-settings" class="modal" style="display: none;">
     <a class="backdrop" href="#"></a>
@@ -557,101 +563,103 @@ func streamsettingsModal(qw422016 *qt422016.Writer, svc *database.Service) {
       </div>
       <div class="modal-body">
         <form action="/admin/database/`)
-//line views/vdatabase/Detail.html:184
+//line views/vdatabase/Detail.html:190
 	qw422016.E().S(svc.Key)
-//line views/vdatabase/Detail.html:184
+//line views/vdatabase/Detail.html:190
 	qw422016.N().S(`/enable">
-          <table>
-            <tbody>
+          <div class="overflow full-width">
+            <table>
+              <tbody>
 `)
-//line views/vdatabase/Detail.html:187
+//line views/vdatabase/Detail.html:194
 	trc := svc.Tracing()
 
-//line views/vdatabase/Detail.html:187
+//line views/vdatabase/Detail.html:194
 	qw422016.N().S(`
-              <tr>
-                <td><label><input type="radio" name="tracing" value=""`)
-//line views/vdatabase/Detail.html:189
+                <tr>
+                  <td><label><input type="radio" name="tracing" value=""`)
+//line views/vdatabase/Detail.html:196
 	if trc == `` {
-//line views/vdatabase/Detail.html:189
+//line views/vdatabase/Detail.html:196
 		qw422016.N().S(` checked="checked"`)
-//line views/vdatabase/Detail.html:189
+//line views/vdatabase/Detail.html:196
 	}
-//line views/vdatabase/Detail.html:189
+//line views/vdatabase/Detail.html:196
 	qw422016.N().S(`> No Tracing</label></td>
-                <td><em>Fastest configuration, no tracing overhead</em></td>
-              </tr>
-              <tr>
-                <td><label><input type="radio" name="tracing" value="statement"`)
-//line views/vdatabase/Detail.html:193
+                  <td><em>Fastest configuration, no tracing overhead</em></td>
+                </tr>
+                <tr>
+                  <td><label><input type="radio" name="tracing" value="statement"`)
+//line views/vdatabase/Detail.html:200
 	if trc == `statement` {
-//line views/vdatabase/Detail.html:193
+//line views/vdatabase/Detail.html:200
 		qw422016.N().S(` checked="checked"`)
-//line views/vdatabase/Detail.html:193
+//line views/vdatabase/Detail.html:200
 	}
-//line views/vdatabase/Detail.html:193
+//line views/vdatabase/Detail.html:200
 	qw422016.N().S(`> Save Queries</label></td>
-                <td><em>Save most recent 100 SQL statements with timing information</em></td>
-              </tr>
-              <tr>
-                <td><label><input type="radio" name="tracing" value="values"`)
-//line views/vdatabase/Detail.html:197
+                  <td><em>Save most recent 100 SQL statements with timing information</em></td>
+                </tr>
+                <tr>
+                  <td><label><input type="radio" name="tracing" value="values"`)
+//line views/vdatabase/Detail.html:204
 	if trc == `values` {
-//line views/vdatabase/Detail.html:197
+//line views/vdatabase/Detail.html:204
 		qw422016.N().S(` checked="checked"`)
-//line views/vdatabase/Detail.html:197
+//line views/vdatabase/Detail.html:204
 	}
-//line views/vdatabase/Detail.html:197
+//line views/vdatabase/Detail.html:204
 	qw422016.N().S(`> Save Results</label></td>
-                <td><em>Saves SQL, timing, and the results of the query</em></td>
-              </tr>
-              <tr>
-                <td><label><input type="radio" name="tracing" value="analyze"`)
-//line views/vdatabase/Detail.html:201
+                  <td><em>Saves SQL, timing, and the results of the query</em></td>
+                </tr>
+                <tr>
+                  <td><label><input type="radio" name="tracing" value="analyze"`)
+//line views/vdatabase/Detail.html:208
 	if trc == `analyze` {
-//line views/vdatabase/Detail.html:201
+//line views/vdatabase/Detail.html:208
 		qw422016.N().S(` checked="checked"`)
-//line views/vdatabase/Detail.html:201
+//line views/vdatabase/Detail.html:208
 	}
-//line views/vdatabase/Detail.html:201
+//line views/vdatabase/Detail.html:208
 	qw422016.N().S(`> Analyze Queries</label></td>
-                <td><em>In addition to the above, runs an explain plan on each query</em></td>
-              </tr>
-              <tr>
-                <td colspan="2"><button>Submit</button></td>
-              </tr>
-            </tbody>
-          </table>
+                  <td><em>In addition to the above, runs an explain plan on each query</em></td>
+                </tr>
+                <tr>
+                  <td colspan="2"><button>Submit</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </form>
       </div>
     </div>
   </div>
 `)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 }
 
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 func writesettingsModal(qq422016 qtio422016.Writer, svc *database.Service) {
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	streamsettingsModal(qw422016, svc)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 }
 
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 func settingsModal(svc *database.Service) string {
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	writesettingsModal(qb422016, svc)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 	return qs422016
-//line views/vdatabase/Detail.html:213
+//line views/vdatabase/Detail.html:221
 }

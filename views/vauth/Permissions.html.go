@@ -35,71 +35,73 @@ func StreamPermissions(qw422016 *qt422016.Writer, perms user.Permissions, as *ap
 //line views/vauth/Permissions.html:8
 		qw422016.N().S(`  <div class="card">
     <h3>Permissions</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Path</th>
-          <th>Match</th>
-          <th>Allow</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div class="overflow full-width">
+      <table>
+        <thead>
+          <tr>
+            <th>Path</th>
+            <th>Match</th>
+            <th>Allow</th>
+          </tr>
+        </thead>
+        <tbody>
 `)
-//line views/vauth/Permissions.html:20
+//line views/vauth/Permissions.html:21
 		for _, p := range perms {
-//line views/vauth/Permissions.html:20
-			qw422016.N().S(`        <tr>
-          <td>`)
-//line views/vauth/Permissions.html:22
+//line views/vauth/Permissions.html:21
+			qw422016.N().S(`          <tr>
+            <td>`)
+//line views/vauth/Permissions.html:23
 			qw422016.E().S(p.Path)
-//line views/vauth/Permissions.html:22
-			qw422016.N().S(`</td>
-          <td>`)
 //line views/vauth/Permissions.html:23
+			qw422016.N().S(`</td>
+            <td>`)
+//line views/vauth/Permissions.html:24
 			qw422016.E().S(p.Match)
-//line views/vauth/Permissions.html:23
-			qw422016.N().S(`</td>
-          <td>`)
 //line views/vauth/Permissions.html:24
+			qw422016.N().S(`</td>
+            <td>`)
+//line views/vauth/Permissions.html:25
 			qw422016.E().V(p.Allow)
-//line views/vauth/Permissions.html:24
+//line views/vauth/Permissions.html:25
 			qw422016.N().S(`</td>
-        </tr>
+          </tr>
 `)
-//line views/vauth/Permissions.html:26
+//line views/vauth/Permissions.html:27
 		}
-//line views/vauth/Permissions.html:26
-		qw422016.N().S(`      </tbody>
-    </table>
+//line views/vauth/Permissions.html:27
+		qw422016.N().S(`        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vauth/Permissions.html:30
+//line views/vauth/Permissions.html:32
 	}
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 }
 
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 func WritePermissions(qq422016 qtio422016.Writer, perms user.Permissions, as *app.State) {
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	StreamPermissions(qw422016, perms, as)
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 }
 
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 func Permissions(perms user.Permissions, as *app.State) string {
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	WritePermissions(qb422016, perms, as)
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	qs422016 := string(qb422016.B)
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 	return qs422016
-//line views/vauth/Permissions.html:31
+//line views/vauth/Permissions.html:33
 }
