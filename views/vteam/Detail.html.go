@@ -168,7 +168,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:90
 	qw422016.E().S(util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate"))
 //line views/vteam/Detail.html:90
-	qw422016.N().S(` by [EstimatesByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)
@@ -210,7 +210,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:107
 	qw422016.E().S(util.StringPlural(len(p.RelRetrosByTeamID), "Retro"))
 //line views/vteam/Detail.html:107
-	qw422016.N().S(` by [RetrosByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)
@@ -252,7 +252,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:124
 	qw422016.E().S(util.StringPlural(len(p.RelSprintsByTeamID), "Sprint"))
 //line views/vteam/Detail.html:124
-	qw422016.N().S(` by [SprintsByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)
@@ -294,7 +294,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:141
 	qw422016.E().S(util.StringPlural(len(p.RelStandupsByTeamID), "Standup"))
 //line views/vteam/Detail.html:141
-	qw422016.N().S(` by [StandupsByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)
@@ -336,7 +336,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:158
 	qw422016.E().S(util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History"))
 //line views/vteam/Detail.html:158
-	qw422016.N().S(` by [TeamHistoriesByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)
@@ -378,7 +378,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:175
 	qw422016.E().S(util.StringPlural(len(p.RelTeamMembersByTeamID), "Member"))
 //line views/vteam/Detail.html:175
-	qw422016.N().S(` by [TeamMembersByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)
@@ -420,7 +420,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:192
 	qw422016.E().S(util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission"))
 //line views/vteam/Detail.html:192
-	qw422016.N().S(` by [TeamPermissionsByTeamID]%!!(MISSING)(EXTRA string=team_id)
+	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd">
 `)

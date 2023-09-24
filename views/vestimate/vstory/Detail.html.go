@@ -212,7 +212,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:90
 	qw422016.E().S(util.StringPlural(len(p.RelVotesByStoryID), "Vote"))
 //line views/vestimate/vstory/Detail.html:90
-	qw422016.N().S(` by [VotesByStoryID]%!!(MISSING)(EXTRA string=story_id)
+	qw422016.N().S(` by [Story ID]
         </label>
         <div class="bd">
 `)

@@ -96,7 +96,7 @@
         <label for="accordion-ReportsByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`file-alt`, ps) %}
-          {%s util.StringPlural(len(p.RelReportsByStandupID), "Report") %} by [ReportsByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+          {%s util.StringPlural(len(p.RelReportsByStandupID), "Report") %} by [Standup ID]
         </label>
         <div class="bd">
           {%- if len(p.RelReportsByStandupID) == 0 -%}
@@ -113,7 +113,7 @@
         <label for="accordion-StandupHistoriesByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`history`, ps) %}
-          {%s util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History") %} by [StandupHistoriesByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+          {%s util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History") %} by [Standup ID]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupHistoriesByStandupID) == 0 -%}
@@ -130,7 +130,7 @@
         <label for="accordion-StandupMembersByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%s util.StringPlural(len(p.RelStandupMembersByStandupID), "Member") %} by [StandupMembersByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+          {%s util.StringPlural(len(p.RelStandupMembersByStandupID), "Member") %} by [Standup ID]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupMembersByStandupID) == 0 -%}
@@ -147,7 +147,7 @@
         <label for="accordion-StandupPermissionsByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`permission`, ps) %}
-          {%s util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission") %} by [StandupPermissionsByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+          {%s util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission") %} by [Standup ID]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupPermissionsByStandupID) == 0 -%}

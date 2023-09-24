@@ -220,7 +220,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:104
 	qw422016.E().S(util.StringPlural(len(p.RelEstimatesBySprintID), "Estimate"))
 //line views/vsprint/Detail.html:104
-	qw422016.N().S(` by [EstimatesBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+	qw422016.N().S(` by [Sprint ID]
         </label>
         <div class="bd">
 `)
@@ -262,7 +262,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:121
 	qw422016.E().S(util.StringPlural(len(p.RelRetrosBySprintID), "Retro"))
 //line views/vsprint/Detail.html:121
-	qw422016.N().S(` by [RetrosBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+	qw422016.N().S(` by [Sprint ID]
         </label>
         <div class="bd">
 `)
@@ -304,7 +304,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:138
 	qw422016.E().S(util.StringPlural(len(p.RelSprintHistoriesBySprintID), "History"))
 //line views/vsprint/Detail.html:138
-	qw422016.N().S(` by [SprintHistoriesBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+	qw422016.N().S(` by [Sprint ID]
         </label>
         <div class="bd">
 `)
@@ -346,7 +346,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:155
 	qw422016.E().S(util.StringPlural(len(p.RelSprintMembersBySprintID), "Member"))
 //line views/vsprint/Detail.html:155
-	qw422016.N().S(` by [SprintMembersBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+	qw422016.N().S(` by [Sprint ID]
         </label>
         <div class="bd">
 `)
@@ -388,7 +388,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:172
 	qw422016.E().S(util.StringPlural(len(p.RelSprintPermissionsBySprintID), "Permission"))
 //line views/vsprint/Detail.html:172
-	qw422016.N().S(` by [SprintPermissionsBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+	qw422016.N().S(` by [Sprint ID]
         </label>
         <div class="bd">
 `)
@@ -430,7 +430,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:189
 	qw422016.E().S(util.StringPlural(len(p.RelStandupsBySprintID), "Standup"))
 //line views/vsprint/Detail.html:189
-	qw422016.N().S(` by [StandupsBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+	qw422016.N().S(` by [Sprint ID]
         </label>
         <div class="bd">
 `)

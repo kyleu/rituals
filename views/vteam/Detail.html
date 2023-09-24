@@ -87,7 +87,7 @@
         <label for="accordion-EstimatesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`estimate`, ps) %}
-          {%s util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate") %} by [EstimatesByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelEstimatesByTeamID) == 0 -%}
@@ -104,7 +104,7 @@
         <label for="accordion-RetrosByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`retro`, ps) %}
-          {%s util.StringPlural(len(p.RelRetrosByTeamID), "Retro") %} by [RetrosByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelRetrosByTeamID), "Retro") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelRetrosByTeamID) == 0 -%}
@@ -121,7 +121,7 @@
         <label for="accordion-SprintsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`sprint`, ps) %}
-          {%s util.StringPlural(len(p.RelSprintsByTeamID), "Sprint") %} by [SprintsByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelSprintsByTeamID), "Sprint") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintsByTeamID) == 0 -%}
@@ -138,7 +138,7 @@
         <label for="accordion-StandupsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`standup`, ps) %}
-          {%s util.StringPlural(len(p.RelStandupsByTeamID), "Standup") %} by [StandupsByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelStandupsByTeamID), "Standup") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupsByTeamID) == 0 -%}
@@ -155,7 +155,7 @@
         <label for="accordion-TeamHistoriesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`history`, ps) %}
-          {%s util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History") %} by [TeamHistoriesByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelTeamHistoriesByTeamID) == 0 -%}
@@ -172,7 +172,7 @@
         <label for="accordion-TeamMembersByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%s util.StringPlural(len(p.RelTeamMembersByTeamID), "Member") %} by [TeamMembersByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelTeamMembersByTeamID), "Member") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelTeamMembersByTeamID) == 0 -%}
@@ -189,7 +189,7 @@
         <label for="accordion-TeamPermissionsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`permission`, ps) %}
-          {%s util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission") %} by [TeamPermissionsByTeamID]%!!(MISSING)(EXTRA string=team_id)
+          {%s util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission") %} by [Team ID]
         </label>
         <div class="bd">
           {%- if len(p.RelTeamPermissionsByTeamID) == 0 -%}

@@ -100,7 +100,7 @@
         <label for="accordion-FeedbacksByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`comment`, ps) %}
-          {%s util.StringPlural(len(p.RelFeedbacksByRetroID), "Feedback") %} by [FeedbacksByRetroID]%!!(MISSING)(EXTRA string=retro_id)
+          {%s util.StringPlural(len(p.RelFeedbacksByRetroID), "Feedback") %} by [Retro ID]
         </label>
         <div class="bd">
           {%- if len(p.RelFeedbacksByRetroID) == 0 -%}
@@ -117,7 +117,7 @@
         <label for="accordion-RetroHistoriesByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`history`, ps) %}
-          {%s util.StringPlural(len(p.RelRetroHistoriesByRetroID), "History") %} by [RetroHistoriesByRetroID]%!!(MISSING)(EXTRA string=retro_id)
+          {%s util.StringPlural(len(p.RelRetroHistoriesByRetroID), "History") %} by [Retro ID]
         </label>
         <div class="bd">
           {%- if len(p.RelRetroHistoriesByRetroID) == 0 -%}
@@ -134,7 +134,7 @@
         <label for="accordion-RetroMembersByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%s util.StringPlural(len(p.RelRetroMembersByRetroID), "Member") %} by [RetroMembersByRetroID]%!!(MISSING)(EXTRA string=retro_id)
+          {%s util.StringPlural(len(p.RelRetroMembersByRetroID), "Member") %} by [Retro ID]
         </label>
         <div class="bd">
           {%- if len(p.RelRetroMembersByRetroID) == 0 -%}
@@ -151,7 +151,7 @@
         <label for="accordion-RetroPermissionsByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`permission`, ps) %}
-          {%s util.StringPlural(len(p.RelRetroPermissionsByRetroID), "Permission") %} by [RetroPermissionsByRetroID]%!!(MISSING)(EXTRA string=retro_id)
+          {%s util.StringPlural(len(p.RelRetroPermissionsByRetroID), "Permission") %} by [Retro ID]
         </label>
         <div class="bd">
           {%- if len(p.RelRetroPermissionsByRetroID) == 0 -%}

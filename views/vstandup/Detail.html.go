@@ -237,7 +237,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:99
 	qw422016.E().S(util.StringPlural(len(p.RelReportsByStandupID), "Report"))
 //line views/vstandup/Detail.html:99
-	qw422016.N().S(` by [ReportsByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd">
 `)
@@ -279,7 +279,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:116
 	qw422016.E().S(util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History"))
 //line views/vstandup/Detail.html:116
-	qw422016.N().S(` by [StandupHistoriesByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd">
 `)
@@ -321,7 +321,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:133
 	qw422016.E().S(util.StringPlural(len(p.RelStandupMembersByStandupID), "Member"))
 //line views/vstandup/Detail.html:133
-	qw422016.N().S(` by [StandupMembersByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd">
 `)
@@ -363,7 +363,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:150
 	qw422016.E().S(util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission"))
 //line views/vstandup/Detail.html:150
-	qw422016.N().S(` by [StandupPermissionsByStandupID]%!!(MISSING)(EXTRA string=standup_id)
+	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd">
 `)

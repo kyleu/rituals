@@ -245,7 +245,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:103
 	qw422016.E().S(util.StringPlural(len(p.RelEstimateHistoriesByEstimateID), "History"))
 //line views/vestimate/Detail.html:103
-	qw422016.N().S(` by [EstimateHistoriesByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
+	qw422016.N().S(` by [Estimate ID]
         </label>
         <div class="bd">
 `)
@@ -287,7 +287,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:120
 	qw422016.E().S(util.StringPlural(len(p.RelEstimateMembersByEstimateID), "Member"))
 //line views/vestimate/Detail.html:120
-	qw422016.N().S(` by [EstimateMembersByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
+	qw422016.N().S(` by [Estimate ID]
         </label>
         <div class="bd">
 `)
@@ -329,7 +329,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:137
 	qw422016.E().S(util.StringPlural(len(p.RelEstimatePermissionsByEstimateID), "Permission"))
 //line views/vestimate/Detail.html:137
-	qw422016.N().S(` by [EstimatePermissionsByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
+	qw422016.N().S(` by [Estimate ID]
         </label>
         <div class="bd">
 `)
@@ -371,7 +371,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:154
 	qw422016.E().S(util.StringPlural(len(p.RelStoriesByEstimateID), "Story"))
 //line views/vestimate/Detail.html:154
-	qw422016.N().S(` by [StoriesByEstimateID]%!!(MISSING)(EXTRA string=estimate_id)
+	qw422016.N().S(` by [Estimate ID]
         </label>
         <div class="bd">
 `)

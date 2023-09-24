@@ -101,7 +101,7 @@
         <label for="accordion-EstimatesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`estimate`, ps) %}
-          {%s util.StringPlural(len(p.RelEstimatesBySprintID), "Estimate") %} by [EstimatesBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+          {%s util.StringPlural(len(p.RelEstimatesBySprintID), "Estimate") %} by [Sprint ID]
         </label>
         <div class="bd">
           {%- if len(p.RelEstimatesBySprintID) == 0 -%}
@@ -118,7 +118,7 @@
         <label for="accordion-RetrosBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`retro`, ps) %}
-          {%s util.StringPlural(len(p.RelRetrosBySprintID), "Retro") %} by [RetrosBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+          {%s util.StringPlural(len(p.RelRetrosBySprintID), "Retro") %} by [Sprint ID]
         </label>
         <div class="bd">
           {%- if len(p.RelRetrosBySprintID) == 0 -%}
@@ -135,7 +135,7 @@
         <label for="accordion-SprintHistoriesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`history`, ps) %}
-          {%s util.StringPlural(len(p.RelSprintHistoriesBySprintID), "History") %} by [SprintHistoriesBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+          {%s util.StringPlural(len(p.RelSprintHistoriesBySprintID), "History") %} by [Sprint ID]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintHistoriesBySprintID) == 0 -%}
@@ -152,7 +152,7 @@
         <label for="accordion-SprintMembersBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`users`, ps) %}
-          {%s util.StringPlural(len(p.RelSprintMembersBySprintID), "Member") %} by [SprintMembersBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+          {%s util.StringPlural(len(p.RelSprintMembersBySprintID), "Member") %} by [Sprint ID]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintMembersBySprintID) == 0 -%}
@@ -169,7 +169,7 @@
         <label for="accordion-SprintPermissionsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`permission`, ps) %}
-          {%s util.StringPlural(len(p.RelSprintPermissionsBySprintID), "Permission") %} by [SprintPermissionsBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+          {%s util.StringPlural(len(p.RelSprintPermissionsBySprintID), "Permission") %} by [Sprint ID]
         </label>
         <div class="bd">
           {%- if len(p.RelSprintPermissionsBySprintID) == 0 -%}
@@ -186,7 +186,7 @@
         <label for="accordion-StandupsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRefIcon(`standup`, ps) %}
-          {%s util.StringPlural(len(p.RelStandupsBySprintID), "Standup") %} by [StandupsBySprintID]%!!(MISSING)(EXTRA string=sprint_id)
+          {%s util.StringPlural(len(p.RelStandupsBySprintID), "Standup") %} by [Sprint ID]
         </label>
         <div class="bd">
           {%- if len(p.RelStandupsBySprintID) == 0 -%}
