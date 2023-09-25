@@ -49,7 +49,7 @@ dist: "build/dist"
 nfpms:
   -
     vendor: "Kyle U"
-    homepage: "https://rituals.dev}"
+    homepage: "https://rituals.dev"
     maintainer: "Kyle U <rituals.dev@kyleu.com>"
     description: "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
     license: "MIT"
