@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package clib - Content managed by Project Forge, see [projectforge.md] for details.
 package clib
 
 import (
@@ -68,7 +68,7 @@ func ProfileSave(rc *fasthttp.RequestCtx) {
 		n.Name = frm.GetStringOpt("name")
 		n.Mode = frm.GetStringOpt("mode")
 		n.Theme = frm.GetStringOpt("theme")
-		if n.Theme == theme.ThemeDefault.Key {
+		if n.Theme == theme.Default.Key {
 			n.Theme = ""
 		}
 		if ps.Profile.ID == util.UUIDDefault {

@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package cutil - Content managed by Project Forge, see [projectforge.md] for details.
 package cutil
 
 import (
@@ -11,6 +11,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"gopkg.in/yaml.v2"
 
+	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -55,8 +56,8 @@ func WriteCORS(rc *fasthttp.RequestCtx) {
 	setIfEmpty(fasthttp.HeaderAccessControlExposeHeaders, AllowedResponseHeaders)
 }
 
-func RespondDebug(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {
-	return RespondJSON(rc, filename, RequestCtxToMap(rc, body))
+func RespondDebug(rc *fasthttp.RequestCtx, as *app.State, filename string, ps *PageState) (string, error) {
+	return RespondJSON(rc, filename, RequestCtxToMap(rc, as, ps))
 }
 
 func RespondJSON(rc *fasthttp.RequestCtx, filename string, body any) (string, error) {

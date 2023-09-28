@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package telemetry - Content managed by Project Forge, see [projectforge.md] for details.
 package telemetry
 
 import (
@@ -17,8 +17,8 @@ import (
 )
 
 var (
+	Enabled        = true
 	initialized    = false
-	enabled        = true
 	tracerProvider *sdktrace.TracerProvider
 )
 

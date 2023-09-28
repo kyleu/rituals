@@ -1,9 +1,9 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package filter - Content managed by Project Forge, see [projectforge.md] for details.
 package filter
 
 import "github.com/kyleu/rituals/app/util"
 
-var OrderingModelDescs = util.ModelDescs{
+var OrderingFieldDescs = util.FieldDescs{
 	{Key: "column", Title: "Column", Description: "The name of the column to sort by"},
 	{Key: "asc", Title: "Ascending", Description: "Determines if this ordering is applied ascending or descending"},
 }

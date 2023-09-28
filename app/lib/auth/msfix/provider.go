@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package msfix - Content managed by Project Forge, see [projectforge.md] for details.
 package msfix
 
 import (

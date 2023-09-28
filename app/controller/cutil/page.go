@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package cutil - Content managed by Project Forge, see [projectforge.md] for details.
 package cutil
 
 import (
@@ -39,6 +39,7 @@ var (
 )
 
 type PageState struct {
+	Action         string            `json:"action,omitempty"`
 	Title          string            `json:"title,omitempty"`
 	Description    string            `json:"description,omitempty"`
 	Method         string            `json:"method,omitempty"`
@@ -115,7 +116,7 @@ func (p *PageState) AuthString() string {
 
 func (p *PageState) Clean(_ *fasthttp.RequestCtx, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
-		p.Profile.Theme = theme.ThemeDefault.Key
+		p.Profile.Theme = theme.Default.Key
 	}
 	if p.RootIcon == "" {
 		p.RootIcon = defaultIcon

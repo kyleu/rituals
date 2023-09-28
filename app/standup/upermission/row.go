@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package upermission - Content managed by Project Forge, see [projectforge.md] for details.
 package upermission
 
 import (

@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package util - Content managed by Project Forge, see [projectforge.md] for details.
 package util
 
 import (
@@ -87,11 +87,11 @@ func (k KeyTypeDescs) Array(key string) [][]string {
 	})
 }
 
-type ModelDesc struct {
+type FieldDesc struct {
 	Key         string `json:"key"`
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
 	Type        string `json:"type,omitempty"`
 }
 
-type ModelDescs []*ModelDesc
+type FieldDescs []*FieldDesc

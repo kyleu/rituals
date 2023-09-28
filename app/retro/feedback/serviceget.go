@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package feedback - Content managed by Project Forge, see [projectforge.md] for details.
 package feedback
 
 import (

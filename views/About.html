@@ -15,8 +15,8 @@
     <em>v{%s as.BuildInfo.Version %}, started {%s util.TimeRelative(&as.Started) %}</em>
   </div>
   <div class="card">
-    <h3>Help</h3>
-    {%- comment %}$PF_SECTION_START(help)${% endcomment -%}
+    <h3>About</h3>
+    {%- comment %}$PF_SECTION_START(about)${% endcomment -%}
     <p>
       This app, <a href="https://rituals.dev">rituals.dev</a>, allows you to collaborate with your team to manage your work.
       It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.
@@ -25,7 +25,7 @@
       Collaborative editing is supported, using a websocket to provide lightning-fast updates.
       If preferred, the app is fully functional without JavaScript.
     </p>
-    {%- comment %}$PF_SECTION_END(help)${% endcomment -%}
+    {%- comment %}$PF_SECTION_END(about)${% endcomment -%}
   </div>
   {%= SourceCode() %}
   {%= Feedback() %}

@@ -115,67 +115,68 @@ func StreamNav(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
 //line views/layout/Nav.html:30
 	}
 //line views/layout/Nav.html:30
-	qw422016.N().S(`  </a>`)
-//line views/layout/Nav.html:31
+	qw422016.N().S(`  </a>
+`)
+//line views/layout/Nav.html:32
 	if !ps.HideMenu {
-//line views/layout/Nav.html:31
-		qw422016.N().S(`
-
-  <input type="checkbox" id="menu-toggle-input" style="display: none;" />
+//line views/layout/Nav.html:32
+		qw422016.N().S(`  <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
   `)
 //line views/layout/Nav.html:35
 		StreamMenu(qw422016, ps)
 //line views/layout/Nav.html:35
+		qw422016.N().S(`
+`)
+//line views/layout/Nav.html:36
 	}
-//line views/layout/Nav.html:35
-	qw422016.N().S(`
-</nav>`)
 //line views/layout/Nav.html:36
+	qw422016.N().S(`</nav>`)
+//line views/layout/Nav.html:37
 }
 
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 func WriteNav(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	StreamNav(qw422016, as, ps)
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 }
 
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 func Nav(as *app.State, ps *cutil.PageState) string {
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	WriteNav(qb422016, as, ps)
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	qs422016 := string(qb422016.B)
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 	return qs422016
-//line views/layout/Nav.html:36
+//line views/layout/Nav.html:37
 }
 
-//line views/layout/Nav.html:38
-func StreamNavItems(qw422016 *qt422016.Writer, m menu.Items, breadcrumbs cmenu.Breadcrumbs) {
 //line views/layout/Nav.html:39
+func StreamNavItems(qw422016 *qt422016.Writer, m menu.Items, breadcrumbs cmenu.Breadcrumbs) {
+//line views/layout/Nav.html:40
 	for idx, bc := range breadcrumbs {
-//line views/layout/Nav.html:41
+//line views/layout/Nav.html:42
 		i := m.GetByPath(breadcrumbs[:idx+1])
 
-//line views/layout/Nav.html:43
+//line views/layout/Nav.html:44
 		vutil.StreamIndent(qw422016, true, 2)
-//line views/layout/Nav.html:43
+//line views/layout/Nav.html:44
 		qw422016.N().S(`<span class="separator">/</span>`)
-//line views/layout/Nav.html:45
-		vutil.StreamIndent(qw422016, true, 2)
 //line views/layout/Nav.html:46
+		vutil.StreamIndent(qw422016, true, 2)
+//line views/layout/Nav.html:47
 		if i == nil {
-//line views/layout/Nav.html:48
+//line views/layout/Nav.html:49
 			bcLink := ""
 			if strings.Contains(bc, "||") {
 				bci := strings.Index(bc, "||")
@@ -183,57 +184,57 @@ func StreamNavItems(qw422016 *qt422016.Writer, m menu.Items, breadcrumbs cmenu.B
 				bc = bc[:bci]
 			}
 
-//line views/layout/Nav.html:54
-			qw422016.N().S(`<a class="link" href="`)
 //line views/layout/Nav.html:55
+			qw422016.N().S(`<a class="link" href="`)
+//line views/layout/Nav.html:56
 			qw422016.E().S(bcLink)
-//line views/layout/Nav.html:55
+//line views/layout/Nav.html:56
 			qw422016.N().S(`">`)
-//line views/layout/Nav.html:55
+//line views/layout/Nav.html:56
 			qw422016.E().S(bc)
-//line views/layout/Nav.html:55
-			qw422016.N().S(`</a>`)
 //line views/layout/Nav.html:56
+			qw422016.N().S(`</a>`)
+//line views/layout/Nav.html:57
 		} else {
-//line views/layout/Nav.html:56
+//line views/layout/Nav.html:57
 			qw422016.N().S(`<a class="link" href="`)
-//line views/layout/Nav.html:57
-			qw422016.E().S(i.Route)
-//line views/layout/Nav.html:57
-			qw422016.N().S(`">`)
-//line views/layout/Nav.html:57
-			qw422016.E().S(i.Title)
-//line views/layout/Nav.html:57
-			qw422016.N().S(`</a>`)
 //line views/layout/Nav.html:58
-		}
+			qw422016.E().S(i.Route)
+//line views/layout/Nav.html:58
+			qw422016.N().S(`">`)
+//line views/layout/Nav.html:58
+			qw422016.E().S(i.Title)
+//line views/layout/Nav.html:58
+			qw422016.N().S(`</a>`)
 //line views/layout/Nav.html:59
+		}
+//line views/layout/Nav.html:60
 	}
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 }
 
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 func WriteNavItems(qq422016 qtio422016.Writer, m menu.Items, breadcrumbs cmenu.Breadcrumbs) {
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	StreamNavItems(qw422016, m, breadcrumbs)
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 }
 
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 func NavItems(m menu.Items, breadcrumbs cmenu.Breadcrumbs) string {
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	WriteNavItems(qb422016, m, breadcrumbs)
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	qs422016 := string(qb422016.B)
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 	return qs422016
-//line views/layout/Nav.html:60
+//line views/layout/Nav.html:61
 }

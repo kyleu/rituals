@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package log - Content managed by Project Forge, see [projectforge.md] for details.
 package log
 
 import (
@@ -62,7 +62,7 @@ func initJSONLogging(lvl zapcore.Level) (*zap.Logger, error) {
 
 func initSimpleLogging(lvl zapcore.Level) (*zap.Logger, error) {
 	_ = zap.RegisterEncoder(keyCustom, func(cfg zapcore.EncoderConfig) (zapcore.Encoder, error) {
-		return SimpleEncoder(cfg), nil
+		return createSimpleEncoder(cfg), nil
 	})
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig = zapcore.EncoderConfig{}

@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package controller - Content managed by Project Forge, see [projectforge.md] for details.
 package controller
 
 import (
@@ -44,7 +44,7 @@ func Render(rc *fasthttp.RequestCtx, as *app.State, page layout.Page, ps *cutil.
 		case cutil.IsContentTypeYAML(ct):
 			return cutil.RespondYAML(rc, "", ps.Data)
 		case ct == "debug":
-			return cutil.RespondDebug(rc, "", ps.Data)
+			return cutil.RespondDebug(rc, as, "", ps)
 		}
 	}
 	startNanos := util.TimeCurrentNanos()

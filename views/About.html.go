@@ -54,7 +54,7 @@ func (p *About) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.N().S(`</em>
   </div>
   <div class="card">
-    <h3>Help</h3>
+    <h3>About</h3>
 `)
 //line views/About.html:19
 	qw422016.N().S(`    <p>

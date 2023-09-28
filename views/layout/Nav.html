@@ -28,11 +28,12 @@
     {%- else -%}
     {%= components.SVGRef(`profile`, 24, 24, ``, ps) %}
     {%- endif -%}
-  </a>{% if !ps.HideMenu %}
-
+  </a>
+  {%- if !ps.HideMenu -%}
   <input type="checkbox" id="menu-toggle-input" style="display: none;" />
   <label class="menu-toggle" for="menu-toggle-input"><div class="spinner diagonal part-1"></div><div class="spinner horizontal"></div><div class="spinner diagonal part-2"></div></label>
-  {%= Menu(ps) %}{% endif %}
+  {%= Menu(ps) %}
+  {%- endif -%}
 </nav>{% endfunc %}
 
 {% func NavItems(m menu.Items, breadcrumbs cmenu.Breadcrumbs) %}{% stripspace %}

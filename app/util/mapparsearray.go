@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package util - Content managed by Project Forge, see [projectforge.md] for details.
 package util
 
 import (
@@ -19,7 +19,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		if strings.TrimSpace(t) == "" {
 			return nil, nil
 		}
-		ret := []any{}
+		var ret []any
 		err := FromJSON([]byte(t), &ret)
 		if err != nil {
 			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))
@@ -29,7 +29,7 @@ func (m ValueMap) ParseArray(path string, allowMissing bool, allowEmpty bool) ([
 		if len(t) == 0 {
 			return nil, nil
 		}
-		ret := []any{}
+		var ret []any
 		err := FromJSON(t, &ret)
 		if err != nil {
 			return nil, decorateError(m, path, "time", errors.Wrap(err, "invalid JSON"))

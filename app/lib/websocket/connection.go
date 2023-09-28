@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package websocket - Content managed by Project Forge, see [projectforge.md] for details.
 package websocket
 
 import (
@@ -15,7 +15,6 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-// Represents a user's WebSocket session.
 type Connection struct {
 	ID       uuid.UUID     `json:"id"`
 	User     *dbuser.User  `json:"user,omitempty"`
@@ -29,12 +28,10 @@ type Connection struct {
 	mu       sync.Mutex
 }
 
-// Creates a new Connection.
 func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
 	return &Connection{ID: util.UUID(), User: usr, Profile: profile, Accounts: accounts, Svc: svc, Started: util.TimeCurrent(), socket: socket}
 }
 
-// Transforms this Connection to a serializable Status object.
 func (c *Connection) ToStatus() *Status {
 	if c.Channels == nil {
 		return &Status{ID: c.ID, Username: c.Profile.Name, Channels: nil}
@@ -49,7 +46,6 @@ func (c *Connection) Username() string {
 	return c.Profile.Name
 }
 
-// Writes bytes to this Connection, you should probably use a helper method.
 func (c *Connection) Write(b []byte) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -60,13 +56,11 @@ func (c *Connection) Write(b []byte) error {
 	return nil
 }
 
-// Reads bytes from this Connection, you should probably use a helper method.
 func (c *Connection) Read() ([]byte, error) {
 	_, message, err := c.socket.ReadMessage()
 	return message, errors.Wrap(err, "unable to write to websocket")
 }
 
-// Closes the backing socket.
 func (c *Connection) Close() error {
 	return c.socket.Close()
 }

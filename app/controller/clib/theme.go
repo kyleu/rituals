@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package clib - Content managed by Project Forge, see [projectforge.md] for details.
 package clib
 
 import (
@@ -29,12 +29,12 @@ func ThemeEdit(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		if key == theme.ThemeDefault.Key {
+		if key == theme.Default.Key {
 			return controller.FlashAndRedir(false, "Unable to edit default theme", "/theme", rc, ps)
 		}
 		var t *theme.Theme
 		if key == theme.KeyNew {
-			t = theme.ThemeDefault.Clone(key)
+			t = theme.Default.Clone(key)
 		} else {
 			t = as.Themes.Get(key, ps.Logger)
 		}
