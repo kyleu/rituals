@@ -170,7 +170,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:90
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:93
 	if len(p.RelEstimatesByTeamID) == 0 {
@@ -191,7 +191,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:99
 	}
 //line views/vteam/Detail.html:99
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetrosByTeamID" type="checkbox" hidden />
@@ -212,7 +212,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:107
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:110
 	if len(p.RelRetrosByTeamID) == 0 {
@@ -233,7 +233,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:116
 	}
 //line views/vteam/Detail.html:116
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-SprintsByTeamID" type="checkbox" hidden />
@@ -254,7 +254,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:124
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:127
 	if len(p.RelSprintsByTeamID) == 0 {
@@ -275,7 +275,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:133
 	}
 //line views/vteam/Detail.html:133
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupsByTeamID" type="checkbox" hidden />
@@ -296,7 +296,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:141
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:144
 	if len(p.RelStandupsByTeamID) == 0 {
@@ -317,7 +317,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:150
 	}
 //line views/vteam/Detail.html:150
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden />
@@ -338,7 +338,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:158
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:161
 	if len(p.RelTeamHistoriesByTeamID) == 0 {
@@ -359,7 +359,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:167
 	}
 //line views/vteam/Detail.html:167
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamMembersByTeamID" type="checkbox" hidden />
@@ -380,7 +380,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:175
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:178
 	if len(p.RelTeamMembersByTeamID) == 0 {
@@ -401,7 +401,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:184
 	}
 //line views/vteam/Detail.html:184
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden />
@@ -422,7 +422,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:192
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vteam/Detail.html:195
 	if len(p.RelTeamPermissionsByTeamID) == 0 {
@@ -443,7 +443,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:201
 	}
 //line views/vteam/Detail.html:201
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>

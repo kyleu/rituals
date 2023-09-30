@@ -214,7 +214,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:90
 	qw422016.N().S(` by [Story ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vestimate/vstory/Detail.html:93
 	if len(p.RelVotesByStoryID) == 0 {
@@ -235,7 +235,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:99
 	}
 //line views/vestimate/vstory/Detail.html:99
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>

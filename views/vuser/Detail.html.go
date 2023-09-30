@@ -173,7 +173,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:97
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:100
 	if len(p.RelActionsByUserID) == 0 {
@@ -194,7 +194,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:106
 	}
 //line views/vuser/Detail.html:106
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-CommentsByUserID" type="checkbox" hidden />
@@ -215,7 +215,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:114
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:117
 	if len(p.RelCommentsByUserID) == 0 {
@@ -236,7 +236,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:123
 	}
 //line views/vuser/Detail.html:123
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-EmailsByUserID" type="checkbox" hidden />
@@ -257,7 +257,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:131
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:134
 	if len(p.RelEmailsByUserID) == 0 {
@@ -278,7 +278,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:140
 	}
 //line views/vuser/Detail.html:140
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden />
@@ -299,7 +299,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:148
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:151
 	if len(p.RelEstimateMembersByUserID) == 0 {
@@ -320,7 +320,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:157
 	}
 //line views/vuser/Detail.html:157
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-FeedbacksByUserID" type="checkbox" hidden />
@@ -341,7 +341,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:165
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:168
 	if len(p.RelFeedbacksByUserID) == 0 {
@@ -362,7 +362,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:174
 	}
 //line views/vuser/Detail.html:174
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-ReportsByUserID" type="checkbox" hidden />
@@ -383,7 +383,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:182
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:185
 	if len(p.RelReportsByUserID) == 0 {
@@ -404,7 +404,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:191
 	}
 //line views/vuser/Detail.html:191
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroMembersByUserID" type="checkbox" hidden />
@@ -425,7 +425,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:199
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:202
 	if len(p.RelRetroMembersByUserID) == 0 {
@@ -446,7 +446,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:208
 	}
 //line views/vuser/Detail.html:208
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-SprintMembersByUserID" type="checkbox" hidden />
@@ -467,7 +467,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:216
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:219
 	if len(p.RelSprintMembersByUserID) == 0 {
@@ -488,7 +488,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:225
 	}
 //line views/vuser/Detail.html:225
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupMembersByUserID" type="checkbox" hidden />
@@ -509,7 +509,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:233
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:236
 	if len(p.RelStandupMembersByUserID) == 0 {
@@ -530,7 +530,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:242
 	}
 //line views/vuser/Detail.html:242
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StoriesByUserID" type="checkbox" hidden />
@@ -551,7 +551,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:250
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:253
 	if len(p.RelStoriesByUserID) == 0 {
@@ -572,7 +572,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:259
 	}
 //line views/vuser/Detail.html:259
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamMembersByUserID" type="checkbox" hidden />
@@ -593,7 +593,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:267
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:270
 	if len(p.RelTeamMembersByUserID) == 0 {
@@ -614,7 +614,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:276
 	}
 //line views/vuser/Detail.html:276
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-VotesByUserID" type="checkbox" hidden />
@@ -635,7 +635,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:284
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vuser/Detail.html:287
 	if len(p.RelVotesByUserID) == 0 {
@@ -656,7 +656,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:293
 	}
 //line views/vuser/Detail.html:293
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>

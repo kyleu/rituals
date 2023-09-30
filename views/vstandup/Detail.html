@@ -98,7 +98,7 @@
           {%= components.SVGRefIcon(`file-alt`, ps) %}
           {%s util.StringPlural(len(p.RelReportsByStandupID), "Report") %} by [Standup ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelReportsByStandupID) == 0 -%}
           <em>no related Reports</em>
           {%- else -%}
@@ -106,7 +106,7 @@
             {%= vreport.Table(p.RelReportsByStandupID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden />
@@ -115,7 +115,7 @@
           {%= components.SVGRefIcon(`history`, ps) %}
           {%s util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History") %} by [Standup ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelStandupHistoriesByStandupID) == 0 -%}
           <em>no related Histories</em>
           {%- else -%}
@@ -123,7 +123,7 @@
             {%= vuhistory.Table(p.RelStandupHistoriesByStandupID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden />
@@ -132,7 +132,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelStandupMembersByStandupID), "Member") %} by [Standup ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelStandupMembersByStandupID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -140,7 +140,7 @@
             {%= vumember.Table(p.RelStandupMembersByStandupID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden />
@@ -149,7 +149,7 @@
           {%= components.SVGRefIcon(`permission`, ps) %}
           {%s util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission") %} by [Standup ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelStandupPermissionsByStandupID) == 0 -%}
           <em>no related Permissions</em>
           {%- else -%}
@@ -157,7 +157,7 @@
             {%= vupermission.Table(p.RelStandupPermissionsByStandupID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
     </ul>
   </div>

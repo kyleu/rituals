@@ -89,7 +89,7 @@
           {%= components.SVGRefIcon(`vote-yea`, ps) %}
           {%s util.StringPlural(len(p.RelVotesByStoryID), "Vote") %} by [Story ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelVotesByStoryID) == 0 -%}
           <em>no related Votes</em>
           {%- else -%}
@@ -97,7 +97,7 @@
             {%= vvote.Table(p.RelVotesByStoryID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
     </ul>
   </div>

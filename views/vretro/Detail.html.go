@@ -247,7 +247,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:103
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vretro/Detail.html:106
 	if len(p.RelFeedbacksByRetroID) == 0 {
@@ -268,7 +268,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:112
 	}
 //line views/vretro/Detail.html:112
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden />
@@ -289,7 +289,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:120
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vretro/Detail.html:123
 	if len(p.RelRetroHistoriesByRetroID) == 0 {
@@ -310,7 +310,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:129
 	}
 //line views/vretro/Detail.html:129
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden />
@@ -331,7 +331,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:137
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vretro/Detail.html:140
 	if len(p.RelRetroMembersByRetroID) == 0 {
@@ -352,7 +352,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:146
 	}
 //line views/vretro/Detail.html:146
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden />
@@ -373,7 +373,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:154
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
 `)
 //line views/vretro/Detail.html:157
 	if len(p.RelRetroPermissionsByRetroID) == 0 {
@@ -394,7 +394,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:163
 	}
 //line views/vretro/Detail.html:163
-	qw422016.N().S(`        </div>
+	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>

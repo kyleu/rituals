@@ -89,7 +89,7 @@
           {%= components.SVGRefIcon(`estimate`, ps) %}
           {%s util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelEstimatesByTeamID) == 0 -%}
           <em>no related Estimates</em>
           {%- else -%}
@@ -97,7 +97,7 @@
             {%= vestimate.Table(p.RelEstimatesByTeamID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetrosByTeamID" type="checkbox" hidden />
@@ -106,7 +106,7 @@
           {%= components.SVGRefIcon(`retro`, ps) %}
           {%s util.StringPlural(len(p.RelRetrosByTeamID), "Retro") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelRetrosByTeamID) == 0 -%}
           <em>no related Retros</em>
           {%- else -%}
@@ -114,7 +114,7 @@
             {%= vretro.Table(p.RelRetrosByTeamID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-SprintsByTeamID" type="checkbox" hidden />
@@ -123,7 +123,7 @@
           {%= components.SVGRefIcon(`sprint`, ps) %}
           {%s util.StringPlural(len(p.RelSprintsByTeamID), "Sprint") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelSprintsByTeamID) == 0 -%}
           <em>no related Sprints</em>
           {%- else -%}
@@ -131,7 +131,7 @@
             {%= vsprint.Table(p.RelSprintsByTeamID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupsByTeamID" type="checkbox" hidden />
@@ -140,7 +140,7 @@
           {%= components.SVGRefIcon(`standup`, ps) %}
           {%s util.StringPlural(len(p.RelStandupsByTeamID), "Standup") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelStandupsByTeamID) == 0 -%}
           <em>no related Standups</em>
           {%- else -%}
@@ -148,7 +148,7 @@
             {%= vstandup.Table(p.RelStandupsByTeamID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden />
@@ -157,7 +157,7 @@
           {%= components.SVGRefIcon(`history`, ps) %}
           {%s util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelTeamHistoriesByTeamID) == 0 -%}
           <em>no related Histories</em>
           {%- else -%}
@@ -165,7 +165,7 @@
             {%= vthistory.Table(p.RelTeamHistoriesByTeamID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamMembersByTeamID" type="checkbox" hidden />
@@ -174,7 +174,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelTeamMembersByTeamID), "Member") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelTeamMembersByTeamID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -182,7 +182,7 @@
             {%= vtmember.Table(p.RelTeamMembersByTeamID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden />
@@ -191,7 +191,7 @@
           {%= components.SVGRefIcon(`permission`, ps) %}
           {%s util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission") %} by [Team ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelTeamPermissionsByTeamID) == 0 -%}
           <em>no related Permissions</em>
           {%- else -%}
@@ -199,7 +199,7 @@
             {%= vtpermission.Table(p.RelTeamPermissionsByTeamID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
     </ul>
   </div>

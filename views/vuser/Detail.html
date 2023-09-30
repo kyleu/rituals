@@ -96,7 +96,7 @@
           {%= components.SVGRefIcon(`action`, ps) %}
           {%s util.StringPlural(len(p.RelActionsByUserID), "Action") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelActionsByUserID) == 0 -%}
           <em>no related Actions</em>
           {%- else -%}
@@ -104,7 +104,7 @@
             {%= vaction.Table(p.RelActionsByUserID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-CommentsByUserID" type="checkbox" hidden />
@@ -113,7 +113,7 @@
           {%= components.SVGRefIcon(`comments`, ps) %}
           {%s util.StringPlural(len(p.RelCommentsByUserID), "Comment") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelCommentsByUserID) == 0 -%}
           <em>no related Comments</em>
           {%- else -%}
@@ -121,7 +121,7 @@
             {%= vcomment.Table(p.RelCommentsByUserID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-EmailsByUserID" type="checkbox" hidden />
@@ -130,7 +130,7 @@
           {%= components.SVGRefIcon(`email`, ps) %}
           {%s util.StringPlural(len(p.RelEmailsByUserID), "Email") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelEmailsByUserID) == 0 -%}
           <em>no related Emails</em>
           {%- else -%}
@@ -138,7 +138,7 @@
             {%= vemail.Table(p.RelEmailsByUserID, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden />
@@ -147,7 +147,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelEstimateMembersByUserID), "Member") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelEstimateMembersByUserID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -155,7 +155,7 @@
             {%= vemember.Table(p.RelEstimateMembersByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-FeedbacksByUserID" type="checkbox" hidden />
@@ -164,7 +164,7 @@
           {%= components.SVGRefIcon(`comment`, ps) %}
           {%s util.StringPlural(len(p.RelFeedbacksByUserID), "Feedback") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelFeedbacksByUserID) == 0 -%}
           <em>no related Feedbacks</em>
           {%- else -%}
@@ -172,7 +172,7 @@
             {%= vfeedback.Table(p.RelFeedbacksByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-ReportsByUserID" type="checkbox" hidden />
@@ -181,7 +181,7 @@
           {%= components.SVGRefIcon(`file-alt`, ps) %}
           {%s util.StringPlural(len(p.RelReportsByUserID), "Report") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelReportsByUserID) == 0 -%}
           <em>no related Reports</em>
           {%- else -%}
@@ -189,7 +189,7 @@
             {%= vreport.Table(p.RelReportsByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroMembersByUserID" type="checkbox" hidden />
@@ -198,7 +198,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelRetroMembersByUserID), "Member") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelRetroMembersByUserID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -206,7 +206,7 @@
             {%= vrmember.Table(p.RelRetroMembersByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-SprintMembersByUserID" type="checkbox" hidden />
@@ -215,7 +215,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelSprintMembersByUserID), "Member") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelSprintMembersByUserID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -223,7 +223,7 @@
             {%= vsmember.Table(p.RelSprintMembersByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupMembersByUserID" type="checkbox" hidden />
@@ -232,7 +232,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelStandupMembersByUserID), "Member") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelStandupMembersByUserID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -240,7 +240,7 @@
             {%= vumember.Table(p.RelStandupMembersByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-StoriesByUserID" type="checkbox" hidden />
@@ -249,7 +249,7 @@
           {%= components.SVGRefIcon(`story`, ps) %}
           {%s util.StringPlural(len(p.RelStoriesByUserID), "Story") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelStoriesByUserID) == 0 -%}
           <em>no related Stories</em>
           {%- else -%}
@@ -257,7 +257,7 @@
             {%= vstory.Table(p.RelStoriesByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamMembersByUserID" type="checkbox" hidden />
@@ -266,7 +266,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelTeamMembersByUserID), "Member") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelTeamMembersByUserID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -274,7 +274,7 @@
             {%= vtmember.Table(p.RelTeamMembersByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
       <li>
         <input id="accordion-VotesByUserID" type="checkbox" hidden />
@@ -283,7 +283,7 @@
           {%= components.SVGRefIcon(`vote-yea`, ps) %}
           {%s util.StringPlural(len(p.RelVotesByUserID), "Vote") %} by [User ID]
         </label>
-        <div class="bd">
+        <div class="bd-animated"><div><div>
           {%- if len(p.RelVotesByUserID) == 0 -%}
           <em>no related Votes</em>
           {%- else -%}
@@ -291,7 +291,7 @@
             {%= vvote.Table(p.RelVotesByUserID, nil, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
-        </div>
+        </div></div></div>
       </li>
     </ul>
   </div>
