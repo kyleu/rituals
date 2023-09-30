@@ -201,7 +201,7 @@ func streamaccordion(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageSta
 	components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vsandbox/Testbed.html:43
 	qw422016.N().S(` Option A</label>
-        <div class="bd-animated"><div><div>Option A!</div></div></div>
+        <div class="bd"><div><div>Option A!</div></div></div>
       </li>
       <li>
         <input id="accordion-b" type="checkbox" hidden />
@@ -210,7 +210,7 @@ func streamaccordion(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageSta
 	components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vsandbox/Testbed.html:48
 	qw422016.N().S(` Option B</label>
-        <div class="bd-animated"><div><div>Option B!</div></div></div>
+        <div class="bd"><div><div>Option B!</div></div></div>
       </li>
       <li>
         <input id="accordion-c" type="checkbox" hidden />
@@ -219,7 +219,7 @@ func streamaccordion(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageSta
 	components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vsandbox/Testbed.html:53
 	qw422016.N().S(` Option C (not animated)</label>
-        <div class="bd">Option C!</div>
+        <div class="bd-no-animation">Option C!</div>
       </li>
     </ul>
   </div>

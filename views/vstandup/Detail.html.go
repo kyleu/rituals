@@ -239,7 +239,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:99
 	qw422016.N().S(` by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vstandup/Detail.html:102
 	if len(p.RelReportsByStandupID) == 0 {
@@ -281,7 +281,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:116
 	qw422016.N().S(` by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vstandup/Detail.html:119
 	if len(p.RelStandupHistoriesByStandupID) == 0 {
@@ -323,7 +323,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:133
 	qw422016.N().S(` by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vstandup/Detail.html:136
 	if len(p.RelStandupMembersByStandupID) == 0 {
@@ -365,7 +365,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:150
 	qw422016.N().S(` by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vstandup/Detail.html:153
 	if len(p.RelStandupPermissionsByStandupID) == 0 {

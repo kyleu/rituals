@@ -8,7 +8,7 @@ export function snippetReportContainer(day: string) {
   return <li id={"report-group-" + day}>
     <input id={"accordion-" + day} type="checkbox" hidden checked="checked"/>
     <label for={"accordion-" + day} dangerouslySetInnerHTML={expandCollapse(day)}></label>
-    <div class="bd"></div>
+    <div class="bd"><div><div></div></div></div>
   </li>;
 }
 

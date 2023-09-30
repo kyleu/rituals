@@ -61,7 +61,7 @@ func StreamStandupWorkspaceReports(qw422016 *qt422016.Writer, w *workspace.FullS
 		qw422016.E().S(g.DayString())
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:17
 		qw422016.N().S(`</label>
-      <div class="bd">
+      <div class="bd"><div><div>
 `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:19
 		for _, r := range g.Reports {
@@ -107,7 +107,7 @@ func StreamStandupWorkspaceReports(qw422016 *qt422016.Writer, w *workspace.FullS
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:29
 		}
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:29
-		qw422016.N().S(`      </div>
+		qw422016.N().S(`      </div></div></div>
     </li>
 `)
 //line views/vworkspace/vwstandup/StandupWorkspaceReport.html:32

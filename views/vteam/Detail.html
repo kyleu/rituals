@@ -89,7 +89,7 @@
           {%= components.SVGRefIcon(`estimate`, ps) %}
           {%s util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelEstimatesByTeamID) == 0 -%}
           <em>no related Estimates</em>
           {%- else -%}
@@ -106,7 +106,7 @@
           {%= components.SVGRefIcon(`retro`, ps) %}
           {%s util.StringPlural(len(p.RelRetrosByTeamID), "Retro") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelRetrosByTeamID) == 0 -%}
           <em>no related Retros</em>
           {%- else -%}
@@ -123,7 +123,7 @@
           {%= components.SVGRefIcon(`sprint`, ps) %}
           {%s util.StringPlural(len(p.RelSprintsByTeamID), "Sprint") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelSprintsByTeamID) == 0 -%}
           <em>no related Sprints</em>
           {%- else -%}
@@ -140,7 +140,7 @@
           {%= components.SVGRefIcon(`standup`, ps) %}
           {%s util.StringPlural(len(p.RelStandupsByTeamID), "Standup") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelStandupsByTeamID) == 0 -%}
           <em>no related Standups</em>
           {%- else -%}
@@ -157,7 +157,7 @@
           {%= components.SVGRefIcon(`history`, ps) %}
           {%s util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelTeamHistoriesByTeamID) == 0 -%}
           <em>no related Histories</em>
           {%- else -%}
@@ -174,7 +174,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelTeamMembersByTeamID), "Member") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelTeamMembersByTeamID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -191,7 +191,7 @@
           {%= components.SVGRefIcon(`permission`, ps) %}
           {%s util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission") %} by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelTeamPermissionsByTeamID) == 0 -%}
           <em>no related Permissions</em>
           {%- else -%}

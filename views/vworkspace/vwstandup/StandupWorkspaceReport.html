@@ -15,7 +15,7 @@
     <li id="report-group-{%s g.DayString() %}">
       <input id="accordion-{%s g.DayString() %}" type="checkbox" hidden checked="checked" />
       <label for="accordion-{%s g.DayString() %}">{%= components.ExpandCollapse(3, ps) %} {%s g.DayString() %}</label>
-      <div class="bd">
+      <div class="bd"><div><div>
         {%- for _, r := range g.Reports -%}
         <div class="report" id="report-{%s r.ID.String() %}">
           <div>
@@ -27,7 +27,7 @@
           </div>
         </div>
         {%- endfor -%}
-      </div>
+      </div></div></div>
     </li>
     {%- endfor -%}
   </ul>

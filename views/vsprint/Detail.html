@@ -103,7 +103,7 @@
           {%= components.SVGRefIcon(`estimate`, ps) %}
           {%s util.StringPlural(len(p.RelEstimatesBySprintID), "Estimate") %} by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelEstimatesBySprintID) == 0 -%}
           <em>no related Estimates</em>
           {%- else -%}
@@ -120,7 +120,7 @@
           {%= components.SVGRefIcon(`retro`, ps) %}
           {%s util.StringPlural(len(p.RelRetrosBySprintID), "Retro") %} by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelRetrosBySprintID) == 0 -%}
           <em>no related Retros</em>
           {%- else -%}
@@ -137,7 +137,7 @@
           {%= components.SVGRefIcon(`history`, ps) %}
           {%s util.StringPlural(len(p.RelSprintHistoriesBySprintID), "History") %} by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelSprintHistoriesBySprintID) == 0 -%}
           <em>no related Histories</em>
           {%- else -%}
@@ -154,7 +154,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelSprintMembersBySprintID), "Member") %} by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelSprintMembersBySprintID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -171,7 +171,7 @@
           {%= components.SVGRefIcon(`permission`, ps) %}
           {%s util.StringPlural(len(p.RelSprintPermissionsBySprintID), "Permission") %} by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelSprintPermissionsBySprintID) == 0 -%}
           <em>no related Permissions</em>
           {%- else -%}
@@ -188,7 +188,7 @@
           {%= components.SVGRefIcon(`standup`, ps) %}
           {%s util.StringPlural(len(p.RelStandupsBySprintID), "Standup") %} by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelStandupsBySprintID) == 0 -%}
           <em>no related Standups</em>
           {%- else -%}

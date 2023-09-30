@@ -170,7 +170,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:90
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:93
 	if len(p.RelEstimatesByTeamID) == 0 {
@@ -212,7 +212,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:107
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:110
 	if len(p.RelRetrosByTeamID) == 0 {
@@ -254,7 +254,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:124
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:127
 	if len(p.RelSprintsByTeamID) == 0 {
@@ -296,7 +296,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:141
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:144
 	if len(p.RelStandupsByTeamID) == 0 {
@@ -338,7 +338,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:158
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:161
 	if len(p.RelTeamHistoriesByTeamID) == 0 {
@@ -380,7 +380,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:175
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:178
 	if len(p.RelTeamMembersByTeamID) == 0 {
@@ -422,7 +422,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/Detail.html:192
 	qw422016.N().S(` by [Team ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vteam/Detail.html:195
 	if len(p.RelTeamPermissionsByTeamID) == 0 {

@@ -173,7 +173,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:97
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:100
 	if len(p.RelActionsByUserID) == 0 {
@@ -215,7 +215,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:114
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:117
 	if len(p.RelCommentsByUserID) == 0 {
@@ -257,7 +257,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:131
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:134
 	if len(p.RelEmailsByUserID) == 0 {
@@ -299,7 +299,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:148
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:151
 	if len(p.RelEstimateMembersByUserID) == 0 {
@@ -341,7 +341,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:165
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:168
 	if len(p.RelFeedbacksByUserID) == 0 {
@@ -383,7 +383,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:182
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:185
 	if len(p.RelReportsByUserID) == 0 {
@@ -425,7 +425,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:199
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:202
 	if len(p.RelRetroMembersByUserID) == 0 {
@@ -467,7 +467,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:216
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:219
 	if len(p.RelSprintMembersByUserID) == 0 {
@@ -509,7 +509,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:233
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:236
 	if len(p.RelStandupMembersByUserID) == 0 {
@@ -551,7 +551,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:250
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:253
 	if len(p.RelStoriesByUserID) == 0 {
@@ -593,7 +593,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:267
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:270
 	if len(p.RelTeamMembersByUserID) == 0 {
@@ -635,7 +635,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:284
 	qw422016.N().S(` by [User ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vuser/Detail.html:287
 	if len(p.RelVotesByUserID) == 0 {

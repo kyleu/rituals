@@ -247,7 +247,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:103
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vretro/Detail.html:106
 	if len(p.RelFeedbacksByRetroID) == 0 {
@@ -289,7 +289,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:120
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vretro/Detail.html:123
 	if len(p.RelRetroHistoriesByRetroID) == 0 {
@@ -331,7 +331,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:137
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vretro/Detail.html:140
 	if len(p.RelRetroMembersByRetroID) == 0 {
@@ -373,7 +373,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/Detail.html:154
 	qw422016.N().S(` by [Retro ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vretro/Detail.html:157
 	if len(p.RelRetroPermissionsByRetroID) == 0 {

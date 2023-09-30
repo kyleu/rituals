@@ -98,7 +98,7 @@
           {%= components.SVGRefIcon(`file-alt`, ps) %}
           {%s util.StringPlural(len(p.RelReportsByStandupID), "Report") %} by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelReportsByStandupID) == 0 -%}
           <em>no related Reports</em>
           {%- else -%}
@@ -115,7 +115,7 @@
           {%= components.SVGRefIcon(`history`, ps) %}
           {%s util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History") %} by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelStandupHistoriesByStandupID) == 0 -%}
           <em>no related Histories</em>
           {%- else -%}
@@ -132,7 +132,7 @@
           {%= components.SVGRefIcon(`users`, ps) %}
           {%s util.StringPlural(len(p.RelStandupMembersByStandupID), "Member") %} by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelStandupMembersByStandupID) == 0 -%}
           <em>no related Members</em>
           {%- else -%}
@@ -149,7 +149,7 @@
           {%= components.SVGRefIcon(`permission`, ps) %}
           {%s util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission") %} by [Standup ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
           {%- if len(p.RelStandupPermissionsByStandupID) == 0 -%}
           <em>no related Permissions</em>
           {%- else -%}

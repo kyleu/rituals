@@ -222,7 +222,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:104
 	qw422016.N().S(` by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vsprint/Detail.html:107
 	if len(p.RelEstimatesBySprintID) == 0 {
@@ -264,7 +264,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:121
 	qw422016.N().S(` by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vsprint/Detail.html:124
 	if len(p.RelRetrosBySprintID) == 0 {
@@ -306,7 +306,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:138
 	qw422016.N().S(` by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vsprint/Detail.html:141
 	if len(p.RelSprintHistoriesBySprintID) == 0 {
@@ -348,7 +348,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:155
 	qw422016.N().S(` by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vsprint/Detail.html:158
 	if len(p.RelSprintMembersBySprintID) == 0 {
@@ -390,7 +390,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:172
 	qw422016.N().S(` by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vsprint/Detail.html:175
 	if len(p.RelSprintPermissionsBySprintID) == 0 {
@@ -432,7 +432,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/Detail.html:189
 	qw422016.N().S(` by [Sprint ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vsprint/Detail.html:192
 	if len(p.RelStandupsBySprintID) == 0 {

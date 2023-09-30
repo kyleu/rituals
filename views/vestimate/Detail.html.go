@@ -247,7 +247,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:103
 	qw422016.N().S(` by [Estimate ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vestimate/Detail.html:106
 	if len(p.RelEstimateHistoriesByEstimateID) == 0 {
@@ -289,7 +289,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:120
 	qw422016.N().S(` by [Estimate ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vestimate/Detail.html:123
 	if len(p.RelEstimateMembersByEstimateID) == 0 {
@@ -331,7 +331,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:137
 	qw422016.N().S(` by [Estimate ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vestimate/Detail.html:140
 	if len(p.RelEstimatePermissionsByEstimateID) == 0 {
@@ -373,7 +373,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/Detail.html:154
 	qw422016.N().S(` by [Estimate ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vestimate/Detail.html:157
 	if len(p.RelStoriesByEstimateID) == 0 {

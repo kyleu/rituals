@@ -91,7 +91,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vdatabase/Statement.html:30
 	qw422016.N().S(` SQL</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             `)
 //line views/vdatabase/Statement.html:32
 	streamstatementSQL(qw422016, s)
@@ -110,7 +110,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 		components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vdatabase/Statement.html:38
 		qw422016.N().S(` Values</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             `)
 //line views/vdatabase/Statement.html:40
 		streamstatementValues(qw422016, s)
@@ -129,7 +129,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vdatabase/Statement.html:46
 	qw422016.N().S(` Result</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             `)
 //line views/vdatabase/Statement.html:48
 	streamstatementOut(qw422016, s)
@@ -148,7 +148,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 		components.StreamExpandCollapse(qw422016, 3, ps)
 //line views/vdatabase/Statement.html:54
 		qw422016.N().S(` Query Plan</label>
-          <div class="bd-animated"><div><div>
+          <div class="bd"><div><div>
             `)
 //line views/vdatabase/Statement.html:56
 		components.StreamDisplayMaps(qw422016, s.Extra, nil, true, ps)
