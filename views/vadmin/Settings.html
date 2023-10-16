@@ -31,16 +31,14 @@
 
   <div class="card">
     <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>
-    <ul class="mt">
-      <li><a href="/admin/database">Database management</a></li>
-    </ul>
+    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}
+    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}
   </div>
 
   <div class="card">
     <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
     {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}
-    {%= settingsLink("/admin/migrations", "archive", "Database Migrations", "Shows the full content of all database SQL migrations", ps) %}
     {%= settingsLink("/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps) %}
     {%= settingsLink("/admin/logs", "archive", "Recent Logs", "Displays the 100 most recent app logs", ps) %}
     <div class="clear"></div>
