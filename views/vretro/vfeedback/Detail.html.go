@@ -159,9 +159,9 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td><pre>`)
+          <td>`)
 //line views/vretro/vfeedback/Detail.html:61
-	qw422016.E().S(p.Model.HTML)
+	components.StreamFormat(qw422016, p.Model.HTML, "html")
 //line views/vretro/vfeedback/Detail.html:61
 	qw422016.N().S(`</pre></td>
         </tr>

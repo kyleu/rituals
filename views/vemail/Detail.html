@@ -46,7 +46,7 @@
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td><pre>{%s p.Model.HTML %}</pre></td>
+          <td>{%= components.Format(p.Model.HTML, "html") %}</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>

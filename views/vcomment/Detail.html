@@ -49,7 +49,7 @@
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td><pre>{%s p.Model.HTML %}</pre></td>
+          <td>{%= components.Format(p.Model.HTML, "html") %}</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
