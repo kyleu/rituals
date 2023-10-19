@@ -85,3 +85,13 @@ func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger u
 	}
 	return ret.ToEstimateHistories(), nil
 }
+
+func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*EstimateHistory, error) {
+	ret := &row{}
+	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Placeholder())
+	err := s.db.Get(ctx, ret, q, tx, logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get random histories")
+	}
+	return ret.ToEstimateHistory(), nil
+}

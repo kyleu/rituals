@@ -11,15 +11,15 @@ import (
 )
 
 type PK struct {
-	StoryID uuid.UUID `json:"storyID"`
-	UserID  uuid.UUID `json:"userID"`
+	StoryID uuid.UUID `json:"storyID,omitempty"`
+	UserID  uuid.UUID `json:"userID,omitempty"`
 }
 
 type Vote struct {
-	StoryID uuid.UUID  `json:"storyID"`
-	UserID  uuid.UUID  `json:"userID"`
-	Choice  string     `json:"choice"`
-	Created time.Time  `json:"created"`
+	StoryID uuid.UUID  `json:"storyID,omitempty"`
+	UserID  uuid.UUID  `json:"userID,omitempty"`
+	Choice  string     `json:"choice,omitempty"`
+	Created time.Time  `json:"created,omitempty"`
 	Updated *time.Time `json:"updated,omitempty"`
 }
 

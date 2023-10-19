@@ -11,13 +11,13 @@ import (
 )
 
 type Comment struct {
-	ID      uuid.UUID         `json:"id"`
-	Svc     enum.ModelService `json:"svc"`
-	ModelID uuid.UUID         `json:"modelID"`
-	UserID  uuid.UUID         `json:"userID"`
-	Content string            `json:"content"`
-	HTML    string            `json:"html"`
-	Created time.Time         `json:"created"`
+	ID      uuid.UUID         `json:"id,omitempty"`
+	Svc     enum.ModelService `json:"svc,omitempty"`
+	ModelID uuid.UUID         `json:"modelID,omitempty"`
+	UserID  uuid.UUID         `json:"userID,omitempty"`
+	Content string            `json:"content,omitempty"`
+	HTML    string            `json:"html,omitempty"`
+	Created time.Time         `json:"created,omitempty"`
 }
 
 func New(id uuid.UUID) *Comment {

@@ -12,17 +12,17 @@ import (
 )
 
 type PK struct {
-	RetroID uuid.UUID `json:"retroID"`
-	UserID  uuid.UUID `json:"userID"`
+	RetroID uuid.UUID `json:"retroID,omitempty"`
+	UserID  uuid.UUID `json:"userID,omitempty"`
 }
 
 type RetroMember struct {
-	RetroID uuid.UUID         `json:"retroID"`
-	UserID  uuid.UUID         `json:"userID"`
-	Name    string            `json:"name"`
-	Picture string            `json:"picture"`
-	Role    enum.MemberStatus `json:"role"`
-	Created time.Time         `json:"created"`
+	RetroID uuid.UUID         `json:"retroID,omitempty"`
+	UserID  uuid.UUID         `json:"userID,omitempty"`
+	Name    string            `json:"name,omitempty"`
+	Picture string            `json:"picture,omitempty"`
+	Role    enum.MemberStatus `json:"role,omitempty"`
+	Created time.Time         `json:"created,omitempty"`
 	Updated *time.Time        `json:"updated,omitempty"`
 }
 

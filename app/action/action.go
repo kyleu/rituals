@@ -11,14 +11,14 @@ import (
 )
 
 type Action struct {
-	ID      uuid.UUID         `json:"id"`
-	Svc     enum.ModelService `json:"svc"`
-	ModelID uuid.UUID         `json:"modelID"`
-	UserID  uuid.UUID         `json:"userID"`
-	Act     string            `json:"act"`
-	Content util.ValueMap     `json:"content"`
-	Note    string            `json:"note"`
-	Created time.Time         `json:"created"`
+	ID      uuid.UUID         `json:"id,omitempty"`
+	Svc     enum.ModelService `json:"svc,omitempty"`
+	ModelID uuid.UUID         `json:"modelID,omitempty"`
+	UserID  uuid.UUID         `json:"userID,omitempty"`
+	Act     string            `json:"act,omitempty"`
+	Content util.ValueMap     `json:"content,omitempty"`
+	Note    string            `json:"note,omitempty"`
+	Created time.Time         `json:"created,omitempty"`
 }
 
 func New(id uuid.UUID) *Action {

@@ -12,14 +12,14 @@ import (
 )
 
 type Story struct {
-	ID         uuid.UUID          `json:"id"`
-	EstimateID uuid.UUID          `json:"estimateID"`
-	Idx        int                `json:"idx"`
-	UserID     uuid.UUID          `json:"userID"`
-	Title      string             `json:"title"`
-	Status     enum.SessionStatus `json:"status"`
-	FinalVote  string             `json:"finalVote"`
-	Created    time.Time          `json:"created"`
+	ID         uuid.UUID          `json:"id,omitempty"`
+	EstimateID uuid.UUID          `json:"estimateID,omitempty"`
+	Idx        int                `json:"idx,omitempty"`
+	UserID     uuid.UUID          `json:"userID,omitempty"`
+	Title      string             `json:"title,omitempty"`
+	Status     enum.SessionStatus `json:"status,omitempty"`
+	FinalVote  string             `json:"finalVote,omitempty"`
+	Created    time.Time          `json:"created,omitempty"`
 	Updated    *time.Time         `json:"updated,omitempty"`
 }
 

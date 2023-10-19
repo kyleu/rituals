@@ -11,14 +11,14 @@ import (
 )
 
 type Feedback struct {
-	ID       uuid.UUID  `json:"id"`
-	RetroID  uuid.UUID  `json:"retroID"`
-	Idx      int        `json:"idx"`
-	UserID   uuid.UUID  `json:"userID"`
-	Category string     `json:"category"`
-	Content  string     `json:"content"`
-	HTML     string     `json:"html"`
-	Created  time.Time  `json:"created"`
+	ID       uuid.UUID  `json:"id,omitempty"`
+	RetroID  uuid.UUID  `json:"retroID,omitempty"`
+	Idx      int        `json:"idx,omitempty"`
+	UserID   uuid.UUID  `json:"userID,omitempty"`
+	Category string     `json:"category,omitempty"`
+	Content  string     `json:"content,omitempty"`
+	HTML     string     `json:"html,omitempty"`
+	Created  time.Time  `json:"created,omitempty"`
 	Updated  *time.Time `json:"updated,omitempty"`
 }
 

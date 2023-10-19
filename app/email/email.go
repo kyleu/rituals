@@ -10,15 +10,15 @@ import (
 )
 
 type Email struct {
-	ID         uuid.UUID     `json:"id"`
-	Recipients []string      `json:"recipients"`
-	Subject    string        `json:"subject"`
-	Data       util.ValueMap `json:"data"`
-	Plain      string        `json:"plain"`
-	HTML       string        `json:"html"`
-	UserID     uuid.UUID     `json:"userID"`
-	Status     string        `json:"status"`
-	Created    time.Time     `json:"created"`
+	ID         uuid.UUID     `json:"id,omitempty"`
+	Recipients []string      `json:"recipients,omitempty"`
+	Subject    string        `json:"subject,omitempty"`
+	Data       util.ValueMap `json:"data,omitempty"`
+	Plain      string        `json:"plain,omitempty"`
+	HTML       string        `json:"html,omitempty"`
+	UserID     uuid.UUID     `json:"userID,omitempty"`
+	Status     string        `json:"status,omitempty"`
+	Created    time.Time     `json:"created,omitempty"`
 }
 
 func New(id uuid.UUID) *Email {

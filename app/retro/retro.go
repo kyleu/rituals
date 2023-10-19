@@ -12,15 +12,15 @@ import (
 )
 
 type Retro struct {
-	ID         uuid.UUID          `json:"id"`
-	Slug       string             `json:"slug"`
-	Title      string             `json:"title"`
-	Icon       string             `json:"icon"`
-	Status     enum.SessionStatus `json:"status"`
+	ID         uuid.UUID          `json:"id,omitempty"`
+	Slug       string             `json:"slug,omitempty"`
+	Title      string             `json:"title,omitempty"`
+	Icon       string             `json:"icon,omitempty"`
+	Status     enum.SessionStatus `json:"status,omitempty"`
 	TeamID     *uuid.UUID         `json:"teamID,omitempty"`
 	SprintID   *uuid.UUID         `json:"sprintID,omitempty"`
-	Categories []string           `json:"categories"`
-	Created    time.Time          `json:"created"`
+	Categories []string           `json:"categories,omitempty"`
+	Created    time.Time          `json:"created,omitempty"`
 	Updated    *time.Time         `json:"updated,omitempty"`
 }
 

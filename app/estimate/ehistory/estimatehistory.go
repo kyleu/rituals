@@ -11,10 +11,10 @@ import (
 )
 
 type EstimateHistory struct {
-	Slug         string    `json:"slug"`
-	EstimateID   uuid.UUID `json:"estimateID"`
-	EstimateName string    `json:"estimateName"`
-	Created      time.Time `json:"created"`
+	Slug         string    `json:"slug,omitempty"`
+	EstimateID   uuid.UUID `json:"estimateID,omitempty"`
+	EstimateName string    `json:"estimateName,omitempty"`
+	Created      time.Time `json:"created,omitempty"`
 }
 
 func New(slug string) *EstimateHistory {

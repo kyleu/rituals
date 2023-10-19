@@ -10,13 +10,13 @@ import (
 )
 
 type Report struct {
-	ID        uuid.UUID  `json:"id"`
-	StandupID uuid.UUID  `json:"standupID"`
-	Day       time.Time  `json:"day"`
-	UserID    uuid.UUID  `json:"userID"`
-	Content   string     `json:"content"`
-	HTML      string     `json:"html"`
-	Created   time.Time  `json:"created"`
+	ID        uuid.UUID  `json:"id,omitempty"`
+	StandupID uuid.UUID  `json:"standupID,omitempty"`
+	Day       time.Time  `json:"day,omitempty"`
+	UserID    uuid.UUID  `json:"userID,omitempty"`
+	Content   string     `json:"content,omitempty"`
+	HTML      string     `json:"html,omitempty"`
+	Created   time.Time  `json:"created,omitempty"`
 	Updated   *time.Time `json:"updated,omitempty"`
 }
 

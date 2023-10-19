@@ -12,17 +12,17 @@ import (
 )
 
 type PK struct {
-	EstimateID uuid.UUID `json:"estimateID"`
-	Key        string    `json:"key"`
-	Value      string    `json:"value"`
+	EstimateID uuid.UUID `json:"estimateID,omitempty"`
+	Key        string    `json:"key,omitempty"`
+	Value      string    `json:"value,omitempty"`
 }
 
 type EstimatePermission struct {
-	EstimateID uuid.UUID `json:"estimateID"`
-	Key        string    `json:"key"`
-	Value      string    `json:"value"`
-	Access     string    `json:"access"`
-	Created    time.Time `json:"created"`
+	EstimateID uuid.UUID `json:"estimateID,omitempty"`
+	Key        string    `json:"key,omitempty"`
+	Value      string    `json:"value,omitempty"`
+	Access     string    `json:"access,omitempty"`
+	Created    time.Time `json:"created,omitempty"`
 }
 
 func New(estimateID uuid.UUID, key string, value string) *EstimatePermission {

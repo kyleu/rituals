@@ -12,17 +12,17 @@ import (
 )
 
 type PK struct {
-	SprintID uuid.UUID `json:"sprintID"`
-	Key      string    `json:"key"`
-	Value    string    `json:"value"`
+	SprintID uuid.UUID `json:"sprintID,omitempty"`
+	Key      string    `json:"key,omitempty"`
+	Value    string    `json:"value,omitempty"`
 }
 
 type SprintPermission struct {
-	SprintID uuid.UUID `json:"sprintID"`
-	Key      string    `json:"key"`
-	Value    string    `json:"value"`
-	Access   string    `json:"access"`
-	Created  time.Time `json:"created"`
+	SprintID uuid.UUID `json:"sprintID,omitempty"`
+	Key      string    `json:"key,omitempty"`
+	Value    string    `json:"value,omitempty"`
+	Access   string    `json:"access,omitempty"`
+	Created  time.Time `json:"created,omitempty"`
 }
 
 func New(sprintID uuid.UUID, key string, value string) *SprintPermission {

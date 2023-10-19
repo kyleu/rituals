@@ -11,10 +11,10 @@ import (
 )
 
 type SprintHistory struct {
-	Slug       string    `json:"slug"`
-	SprintID   uuid.UUID `json:"sprintID"`
-	SprintName string    `json:"sprintName"`
-	Created    time.Time `json:"created"`
+	Slug       string    `json:"slug,omitempty"`
+	SprintID   uuid.UUID `json:"sprintID,omitempty"`
+	SprintName string    `json:"sprintName,omitempty"`
+	Created    time.Time `json:"created,omitempty"`
 }
 
 func New(slug string) *SprintHistory {

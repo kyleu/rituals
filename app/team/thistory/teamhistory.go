@@ -11,10 +11,10 @@ import (
 )
 
 type TeamHistory struct {
-	Slug     string    `json:"slug"`
-	TeamID   uuid.UUID `json:"teamID"`
-	TeamName string    `json:"teamName"`
-	Created  time.Time `json:"created"`
+	Slug     string    `json:"slug,omitempty"`
+	TeamID   uuid.UUID `json:"teamID,omitempty"`
+	TeamName string    `json:"teamName,omitempty"`
+	Created  time.Time `json:"created,omitempty"`
 }
 
 func New(slug string) *TeamHistory {

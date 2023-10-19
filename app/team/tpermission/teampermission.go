@@ -12,17 +12,17 @@ import (
 )
 
 type PK struct {
-	TeamID uuid.UUID `json:"teamID"`
-	Key    string    `json:"key"`
-	Value  string    `json:"value"`
+	TeamID uuid.UUID `json:"teamID,omitempty"`
+	Key    string    `json:"key,omitempty"`
+	Value  string    `json:"value,omitempty"`
 }
 
 type TeamPermission struct {
-	TeamID  uuid.UUID `json:"teamID"`
-	Key     string    `json:"key"`
-	Value   string    `json:"value"`
-	Access  string    `json:"access"`
-	Created time.Time `json:"created"`
+	TeamID  uuid.UUID `json:"teamID,omitempty"`
+	Key     string    `json:"key,omitempty"`
+	Value   string    `json:"value,omitempty"`
+	Access  string    `json:"access,omitempty"`
+	Created time.Time `json:"created,omitempty"`
 }
 
 func New(teamID uuid.UUID, key string, value string) *TeamPermission {

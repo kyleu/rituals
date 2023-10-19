@@ -12,17 +12,17 @@ import (
 )
 
 type PK struct {
-	StandupID uuid.UUID `json:"standupID"`
-	Key       string    `json:"key"`
-	Value     string    `json:"value"`
+	StandupID uuid.UUID `json:"standupID,omitempty"`
+	Key       string    `json:"key,omitempty"`
+	Value     string    `json:"value,omitempty"`
 }
 
 type StandupPermission struct {
-	StandupID uuid.UUID `json:"standupID"`
-	Key       string    `json:"key"`
-	Value     string    `json:"value"`
-	Access    string    `json:"access"`
-	Created   time.Time `json:"created"`
+	StandupID uuid.UUID `json:"standupID,omitempty"`
+	Key       string    `json:"key,omitempty"`
+	Value     string    `json:"value,omitempty"`
+	Access    string    `json:"access,omitempty"`
+	Created   time.Time `json:"created,omitempty"`
 }
 
 func New(standupID uuid.UUID, key string, value string) *StandupPermission {

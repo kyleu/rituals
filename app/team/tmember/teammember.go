@@ -12,17 +12,17 @@ import (
 )
 
 type PK struct {
-	TeamID uuid.UUID `json:"teamID"`
-	UserID uuid.UUID `json:"userID"`
+	TeamID uuid.UUID `json:"teamID,omitempty"`
+	UserID uuid.UUID `json:"userID,omitempty"`
 }
 
 type TeamMember struct {
-	TeamID  uuid.UUID         `json:"teamID"`
-	UserID  uuid.UUID         `json:"userID"`
-	Name    string            `json:"name"`
-	Picture string            `json:"picture"`
-	Role    enum.MemberStatus `json:"role"`
-	Created time.Time         `json:"created"`
+	TeamID  uuid.UUID         `json:"teamID,omitempty"`
+	UserID  uuid.UUID         `json:"userID,omitempty"`
+	Name    string            `json:"name,omitempty"`
+	Picture string            `json:"picture,omitempty"`
+	Role    enum.MemberStatus `json:"role,omitempty"`
+	Created time.Time         `json:"created,omitempty"`
 	Updated *time.Time        `json:"updated,omitempty"`
 }
 

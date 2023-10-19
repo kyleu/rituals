@@ -11,10 +11,10 @@ import (
 )
 
 type RetroHistory struct {
-	Slug      string    `json:"slug"`
-	RetroID   uuid.UUID `json:"retroID"`
-	RetroName string    `json:"retroName"`
-	Created   time.Time `json:"created"`
+	Slug      string    `json:"slug,omitempty"`
+	RetroID   uuid.UUID `json:"retroID,omitempty"`
+	RetroName string    `json:"retroName,omitempty"`
+	Created   time.Time `json:"created,omitempty"`
 }
 
 func New(slug string) *RetroHistory {
