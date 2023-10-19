@@ -15,13 +15,13 @@ import (
 
 type MemberStatus struct {
 	Key         string
-	Title       string
+	Name       string
 	Description string
 }
 
 func (m MemberStatus) String() string {
-	if m.Title != "" {
-		return m.Title
+	if m.Name != "" {
+		return m.Name
 	}
 	return m.Key
 }
@@ -69,17 +69,17 @@ func (m *MemberStatus) Scan(value any) error {
 	return errors.Errorf("failed to scan MemberStatus enum from value [%v]", value)
 }
 
+func MemberStatusParse(logger util.Logger, strings ...string) MemberStatuses {
+	return lo.Map(strings, func(x string, _ int) MemberStatus {
+		return AllMemberStatuses.Get(x, logger)
+	})
+}
+
 type MemberStatuses []MemberStatus
 
 func (m MemberStatuses) Keys() []string {
 	return lo.Map(m, func(x MemberStatus, _ int) string {
 		return x.Key
-	})
-}
-
-func (m MemberStatuses) Titles() []string {
-	return lo.Map(m, func(x MemberStatus, _ int) string {
-		return x.Title
 	})
 }
 
@@ -103,7 +103,7 @@ func (m MemberStatuses) Get(key string, logger util.Logger) MemberStatus {
 	if logger != nil {
 		logger.Warn(msg)
 	}
-	return MemberStatus{Key: "_error", Title: "error: " + msg}
+	return MemberStatus{Key: "_error", Name: "error: " + msg}
 }
 
 func (m MemberStatuses) Random() MemberStatus {
@@ -111,9 +111,9 @@ func (m MemberStatuses) Random() MemberStatus {
 }
 
 var (
-	MemberStatusOwner    = MemberStatus{Key: "owner", Title: "Owner"}
-	MemberStatusMember   = MemberStatus{Key: "member", Title: "Member"}
-	MemberStatusObserver = MemberStatus{Key: "observer", Title: "Observer"}
+	MemberStatusOwner    = MemberStatus{Key: "owner"}
+	MemberStatusMember   = MemberStatus{Key: "member"}
+	MemberStatusObserver = MemberStatus{Key: "observer"}
 
 	AllMemberStatuses = MemberStatuses{MemberStatusOwner, MemberStatusMember, MemberStatusObserver}
 )

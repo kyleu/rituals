@@ -15,13 +15,13 @@ import (
 
 type ModelService struct {
 	Key         string
-	Title       string
+	Name       string
 	Description string
 }
 
 func (m ModelService) String() string {
-	if m.Title != "" {
-		return m.Title
+	if m.Name != "" {
+		return m.Name
 	}
 	return m.Key
 }
@@ -69,17 +69,17 @@ func (m *ModelService) Scan(value any) error {
 	return errors.Errorf("failed to scan ModelService enum from value [%v]", value)
 }
 
+func ModelServiceParse(logger util.Logger, strings ...string) ModelServices {
+	return lo.Map(strings, func(x string, _ int) ModelService {
+		return AllModelServices.Get(x, logger)
+	})
+}
+
 type ModelServices []ModelService
 
 func (m ModelServices) Keys() []string {
 	return lo.Map(m, func(x ModelService, _ int) string {
 		return x.Key
-	})
-}
-
-func (m ModelServices) Titles() []string {
-	return lo.Map(m, func(x ModelService, _ int) string {
-		return x.Title
 	})
 }
 
@@ -103,7 +103,7 @@ func (m ModelServices) Get(key string, logger util.Logger) ModelService {
 	if logger != nil {
 		logger.Warn(msg)
 	}
-	return ModelService{Key: "_error", Title: "error: " + msg}
+	return ModelService{Key: "_error", Name: "error: " + msg}
 }
 
 func (m ModelServices) Random() ModelService {
@@ -112,14 +112,14 @@ func (m ModelServices) Random() ModelService {
 
 //nolint:lll
 var (
-	ModelServiceTeam     = ModelService{Key: "team", Title: "Team"}
-	ModelServiceSprint   = ModelService{Key: "sprint", Title: "Sprint"}
-	ModelServiceEstimate = ModelService{Key: "estimate", Title: "Estimate"}
-	ModelServiceStandup  = ModelService{Key: "standup", Title: "Standup"}
-	ModelServiceRetro    = ModelService{Key: "retro", Title: "Retro"}
-	ModelServiceStory    = ModelService{Key: "story", Title: "Story"}
-	ModelServiceFeedback = ModelService{Key: "feedback", Title: "Feedback"}
-	ModelServiceReport   = ModelService{Key: "report", Title: "Report"}
+	ModelServiceTeam     = ModelService{Key: "team"}
+	ModelServiceSprint   = ModelService{Key: "sprint"}
+	ModelServiceEstimate = ModelService{Key: "estimate"}
+	ModelServiceStandup  = ModelService{Key: "standup"}
+	ModelServiceRetro    = ModelService{Key: "retro"}
+	ModelServiceStory    = ModelService{Key: "story"}
+	ModelServiceFeedback = ModelService{Key: "feedback"}
+	ModelServiceReport   = ModelService{Key: "report"}
 
 	AllModelServices = ModelServices{ModelServiceTeam, ModelServiceSprint, ModelServiceEstimate, ModelServiceStandup, ModelServiceRetro, ModelServiceStory, ModelServiceFeedback, ModelServiceReport}
 )

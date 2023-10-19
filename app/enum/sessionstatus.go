@@ -15,13 +15,13 @@ import (
 
 type SessionStatus struct {
 	Key         string
-	Title       string
+	Name       string
 	Description string
 }
 
 func (s SessionStatus) String() string {
-	if s.Title != "" {
-		return s.Title
+	if s.Name != "" {
+		return s.Name
 	}
 	return s.Key
 }
@@ -69,17 +69,17 @@ func (s *SessionStatus) Scan(value any) error {
 	return errors.Errorf("failed to scan SessionStatus enum from value [%v]", value)
 }
 
+func SessionStatusParse(logger util.Logger, strings ...string) SessionStatuses {
+	return lo.Map(strings, func(x string, _ int) SessionStatus {
+		return AllSessionStatuses.Get(x, logger)
+	})
+}
+
 type SessionStatuses []SessionStatus
 
 func (s SessionStatuses) Keys() []string {
 	return lo.Map(s, func(x SessionStatus, _ int) string {
 		return x.Key
-	})
-}
-
-func (s SessionStatuses) Titles() []string {
-	return lo.Map(s, func(x SessionStatus, _ int) string {
-		return x.Title
 	})
 }
 
@@ -103,7 +103,7 @@ func (s SessionStatuses) Get(key string, logger util.Logger) SessionStatus {
 	if logger != nil {
 		logger.Warn(msg)
 	}
-	return SessionStatus{Key: "_error", Title: "error: " + msg}
+	return SessionStatus{Key: "_error", Name: "error: " + msg}
 }
 
 func (s SessionStatuses) Random() SessionStatus {
@@ -111,9 +111,9 @@ func (s SessionStatuses) Random() SessionStatus {
 }
 
 var (
-	SessionStatusNew      = SessionStatus{Key: "new", Title: "New"}
-	SessionStatusActive   = SessionStatus{Key: "active", Title: "Active"}
-	SessionStatusComplete = SessionStatus{Key: "complete", Title: "Complete"}
+	SessionStatusNew      = SessionStatus{Key: "new"}
+	SessionStatusActive   = SessionStatus{Key: "active"}
+	SessionStatusComplete = SessionStatus{Key: "complete"}
 
 	AllSessionStatuses = SessionStatuses{SessionStatusNew, SessionStatusActive, SessionStatusComplete}
 )
