@@ -14,6 +14,7 @@ import (
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
@@ -22,277 +23,277 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwutil"
 )
 
-//line views/vworkspace/vwsprint/SprintList.html:18
+//line views/vworkspace/vwsprint/SprintList.html:19
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/vwsprint/SprintList.html:18
+//line views/vworkspace/vwsprint/SprintList.html:19
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/vwsprint/SprintList.html:18
+//line views/vworkspace/vwsprint/SprintList.html:19
 type SprintList struct {
 	layout.Basic
 	Sprints sprint.Sprints
 	Teams   team.Teams
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:24
+//line views/vworkspace/vwsprint/SprintList.html:25
 func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintList.html:24
+//line views/vworkspace/vwsprint/SprintList.html:25
 	qw422016.N().S(`
   <div class="card">
     <h3>`)
-//line views/vworkspace/vwsprint/SprintList.html:26
+//line views/vworkspace/vwsprint/SprintList.html:27
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
-//line views/vworkspace/vwsprint/SprintList.html:26
+//line views/vworkspace/vwsprint/SprintList.html:27
 	qw422016.E().S(util.StringPlural(len(p.Sprints), "Sprint"))
-//line views/vworkspace/vwsprint/SprintList.html:26
+//line views/vworkspace/vwsprint/SprintList.html:27
 	qw422016.N().S(`</h3>
     <em>`)
-//line views/vworkspace/vwsprint/SprintList.html:27
+//line views/vworkspace/vwsprint/SprintList.html:28
 	qw422016.E().S(util.KeySprintDesc)
-//line views/vworkspace/vwsprint/SprintList.html:27
+//line views/vworkspace/vwsprint/SprintList.html:28
 	qw422016.N().S(`</em>
     <table class="mt expanded">
       <tbody>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:30
+//line views/vworkspace/vwsprint/SprintList.html:31
 	for _, s := range p.Sprints {
-//line views/vworkspace/vwsprint/SprintList.html:30
+//line views/vworkspace/vwsprint/SprintList.html:31
 		qw422016.N().S(`        <tr>
           <td><a href="`)
-//line views/vworkspace/vwsprint/SprintList.html:32
+//line views/vworkspace/vwsprint/SprintList.html:33
 		qw422016.E().S(s.PublicWebPath())
-//line views/vworkspace/vwsprint/SprintList.html:32
+//line views/vworkspace/vwsprint/SprintList.html:33
 		qw422016.N().S(`">`)
-//line views/vworkspace/vwsprint/SprintList.html:32
+//line views/vworkspace/vwsprint/SprintList.html:33
 		components.StreamSVGRef(qw422016, s.IconSafe(), 16, 16, "icon", ps)
-//line views/vworkspace/vwsprint/SprintList.html:32
+//line views/vworkspace/vwsprint/SprintList.html:33
 		qw422016.E().S(s.TitleString())
-//line views/vworkspace/vwsprint/SprintList.html:32
+//line views/vworkspace/vwsprint/SprintList.html:33
 		qw422016.N().S(`</a></td>
           <td class="text-align-right">`)
-//line views/vworkspace/vwsprint/SprintList.html:33
+//line views/vworkspace/vwsprint/SprintList.html:34
 		components.StreamDisplayTimestamp(qw422016, &s.Created)
-//line views/vworkspace/vwsprint/SprintList.html:33
+//line views/vworkspace/vwsprint/SprintList.html:34
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:35
+//line views/vworkspace/vwsprint/SprintList.html:36
 	}
-//line views/vworkspace/vwsprint/SprintList.html:35
+//line views/vworkspace/vwsprint/SprintList.html:36
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
   <div class="card">
     <h3>`)
-//line views/vworkspace/vwsprint/SprintList.html:40
+//line views/vworkspace/vwsprint/SprintList.html:41
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
-//line views/vworkspace/vwsprint/SprintList.html:40
+//line views/vworkspace/vwsprint/SprintList.html:41
 	qw422016.N().S(`New Sprint</h3>
     `)
-//line views/vworkspace/vwsprint/SprintList.html:41
+//line views/vworkspace/vwsprint/SprintList.html:42
 	StreamSprintForm(qw422016, &sprint.Sprint{}, p.Teams, as, ps)
-//line views/vworkspace/vwsprint/SprintList.html:41
+//line views/vworkspace/vwsprint/SprintList.html:42
 	qw422016.N().S(`
   </div>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 func (p *SprintList) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	p.StreamBody(qw422016, as, ps)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 func (p *SprintList) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	p.WriteBody(qb422016, as, ps)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 	return qs422016
-//line views/vworkspace/vwsprint/SprintList.html:43
+//line views/vworkspace/vwsprint/SprintList.html:44
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:45
+//line views/vworkspace/vwsprint/SprintList.html:46
 func StreamSprintForm(qw422016 *qt422016.Writer, s *sprint.Sprint, teams team.Teams, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintList.html:45
+//line views/vworkspace/vwsprint/SprintList.html:46
 	qw422016.N().S(`
   <form action="" method="post">
     <table class="mt expanded">
       <tbody>
         `)
-//line views/vworkspace/vwsprint/SprintList.html:49
+//line views/vworkspace/vwsprint/SprintList.html:50
 	components.StreamTableInput(qw422016, "title", "", "Sprint Title", s.Title, 5, "The name of your sprint")
-//line views/vworkspace/vwsprint/SprintList.html:49
+//line views/vworkspace/vwsprint/SprintList.html:50
 	qw422016.N().S(`
         `)
-//line views/vworkspace/vwsprint/SprintList.html:50
+//line views/vworkspace/vwsprint/SprintList.html:51
 	components.StreamTableInput(qw422016, "name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called")
-//line views/vworkspace/vwsprint/SprintList.html:50
+//line views/vworkspace/vwsprint/SprintList.html:51
 	qw422016.N().S(`
         `)
-//line views/vworkspace/vwsprint/SprintList.html:51
+//line views/vworkspace/vwsprint/SprintList.html:52
 	components.StreamTableSelect(qw422016, util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this sprint")
-//line views/vworkspace/vwsprint/SprintList.html:51
+//line views/vworkspace/vwsprint/SprintList.html:52
 	qw422016.N().S(`
         <tr><td colspan="2"><button type="submit">Add Sprint</button></td></tr>
       </tbody>
     </table>
   </form>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 func WriteSprintForm(qq422016 qtio422016.Writer, s *sprint.Sprint, teams team.Teams, as *app.State, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	StreamSprintForm(qw422016, s, teams, as, ps)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 func SprintForm(s *sprint.Sprint, teams team.Teams, as *app.State, ps *cutil.PageState) string {
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	WriteSprintForm(qb422016, s, teams, as, ps)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 	return qs422016
-//line views/vworkspace/vwsprint/SprintList.html:56
+//line views/vworkspace/vwsprint/SprintList.html:57
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:58
-func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintList.html:58
+//line views/vworkspace/vwsprint/SprintList.html:59
+func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) {
+//line views/vworkspace/vwsprint/SprintList.html:59
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vworkspace/vwsprint/SprintList.html:60
+//line views/vworkspace/vwsprint/SprintList.html:61
 	vwutil.StreamEditWorkspaceForm(qw422016, util.KeySprint, teamID, nil, "New Sprint")
-//line views/vworkspace/vwsprint/SprintList.html:60
+//line views/vworkspace/vwsprint/SprintList.html:61
 	qw422016.N().S(`</div>
     <h3 title="`)
-//line views/vworkspace/vwsprint/SprintList.html:61
+//line views/vworkspace/vwsprint/SprintList.html:62
 	qw422016.E().S(util.KeySprintDesc)
-//line views/vworkspace/vwsprint/SprintList.html:61
+//line views/vworkspace/vwsprint/SprintList.html:62
 	qw422016.N().S(`">`)
-//line views/vworkspace/vwsprint/SprintList.html:61
+//line views/vworkspace/vwsprint/SprintList.html:62
 	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
-//line views/vworkspace/vwsprint/SprintList.html:61
+//line views/vworkspace/vwsprint/SprintList.html:62
 	qw422016.N().S(`Sprints</h3>
     <table id="sprint-list" class="mt expanded">
       <tbody>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:64
+//line views/vworkspace/vwsprint/SprintList.html:65
 	if len(sprints) == 0 {
-//line views/vworkspace/vwsprint/SprintList.html:64
+//line views/vworkspace/vwsprint/SprintList.html:65
 		qw422016.N().S(`          <tr class="empty"><td><em>no sprints</em></td></tr>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:66
+//line views/vworkspace/vwsprint/SprintList.html:67
 	} else {
-//line views/vworkspace/vwsprint/SprintList.html:67
+//line views/vworkspace/vwsprint/SprintList.html:68
 		for _, x := range sprints {
-//line views/vworkspace/vwsprint/SprintList.html:67
+//line views/vworkspace/vwsprint/SprintList.html:68
 			qw422016.N().S(`          <tr id="sprint-list-`)
-//line views/vworkspace/vwsprint/SprintList.html:68
+//line views/vworkspace/vwsprint/SprintList.html:69
 			qw422016.E().S(x.ID.String())
-//line views/vworkspace/vwsprint/SprintList.html:68
+//line views/vworkspace/vwsprint/SprintList.html:69
 			qw422016.N().S(`">
             <td>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:70
+//line views/vworkspace/vwsprint/SprintList.html:71
 			if showComments {
-//line views/vworkspace/vwsprint/SprintList.html:70
+//line views/vworkspace/vwsprint/SprintList.html:71
 				qw422016.N().S(`              <div class="right">
                 `)
-//line views/vworkspace/vwsprint/SprintList.html:72
+//line views/vworkspace/vwsprint/SprintList.html:73
 				vwutil.StreamComments(qw422016, enum.ModelServiceSprint, x.ID, x.TitleString(), comments, members, "member-icon", ps)
-//line views/vworkspace/vwsprint/SprintList.html:72
+//line views/vworkspace/vwsprint/SprintList.html:73
 				qw422016.N().S(`
               </div>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:74
+//line views/vworkspace/vwsprint/SprintList.html:75
 			}
-//line views/vworkspace/vwsprint/SprintList.html:74
+//line views/vworkspace/vwsprint/SprintList.html:75
 			qw422016.N().S(`              <a href="`)
-//line views/vworkspace/vwsprint/SprintList.html:75
+//line views/vworkspace/vwsprint/SprintList.html:76
 			qw422016.E().S(x.PublicWebPath())
-//line views/vworkspace/vwsprint/SprintList.html:75
+//line views/vworkspace/vwsprint/SprintList.html:76
 			qw422016.N().S(`"><div>
                 <span>`)
-//line views/vworkspace/vwsprint/SprintList.html:76
+//line views/vworkspace/vwsprint/SprintList.html:77
 			components.StreamSVGRef(qw422016, x.IconSafe(), 16, 16, "icon", ps)
-//line views/vworkspace/vwsprint/SprintList.html:76
+//line views/vworkspace/vwsprint/SprintList.html:77
 			qw422016.N().S(`</span><span>`)
-//line views/vworkspace/vwsprint/SprintList.html:76
+//line views/vworkspace/vwsprint/SprintList.html:77
 			qw422016.E().S(x.TitleString())
-//line views/vworkspace/vwsprint/SprintList.html:76
+//line views/vworkspace/vwsprint/SprintList.html:77
 			qw422016.N().S(`</span>
               </div></a>
             </td>
           </tr>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:80
+//line views/vworkspace/vwsprint/SprintList.html:81
 		}
-//line views/vworkspace/vwsprint/SprintList.html:81
+//line views/vworkspace/vwsprint/SprintList.html:82
 	}
-//line views/vworkspace/vwsprint/SprintList.html:81
+//line views/vworkspace/vwsprint/SprintList.html:82
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:85
-func WriteSprintListTable(qq422016 qtio422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) {
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
+func WriteSprintListTable(qq422016 qtio422016.Writer, sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) {
+//line views/vworkspace/vwsprint/SprintList.html:86
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 	StreamSprintListTable(qw422016, sprints, teamID, showComments, comments, members, ps)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 }
 
-//line views/vworkspace/vwsprint/SprintList.html:85
-func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) string {
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
+func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) string {
+//line views/vworkspace/vwsprint/SprintList.html:86
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 	WriteSprintListTable(qb422016, sprints, teamID, showComments, comments, members, ps)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 	return qs422016
-//line views/vworkspace/vwsprint/SprintList.html:85
+//line views/vworkspace/vwsprint/SprintList.html:86
 }

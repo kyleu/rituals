@@ -63,7 +63,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/List.html:24
 		qw422016.E().S(p.SearchQuery)
 //line views/vteam/List.html:24
-		qw422016.N().S(`]</em>
+		qw422016.N().S(`]</em> (<a href="?">clear</a>)
 `)
 //line views/vteam/List.html:25
 	}

@@ -4,11 +4,11 @@
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/enum"
-  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func SelfLink(self *util.Member, ps *cutil.PageState) %}
+{% func SelfLink(self *member.Member, ps *cutil.PageState) %}
   <span id="self-id" style="display: none;">{%s self.UserID.String() %}</span>
   <a id="self-edit-link" href="#modal-member-{%s self.UserID.String() %}"><h3>
     <span id="self-picture">
@@ -20,7 +20,7 @@
     </span>
     <span id="self-name" class="member-{%s self.UserID.String() %}-name">{%s self.Name %}</span>
   </h3></a>
-  <em id="self-role">{%s string(self.Role) %}</em>
+  <em id="self-role">{%s self.Role.String() %}</em>
 {% endfunc %}
 
 {% func SelfModal(id uuid.UUID, name string, picture string, role enum.MemberStatus, formAction string, ps *cutil.PageState) %}

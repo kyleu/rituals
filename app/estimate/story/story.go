@@ -34,7 +34,7 @@ func Random() *Story {
 		Idx:        util.RandomInt(10000),
 		UserID:     util.UUID(),
 		Title:      util.RandomString(12),
-		Status:     enum.SessionStatus(util.RandomString(12)),
+		Status:     enum.AllSessionStatuses.Random(),
 		FinalVote:  util.RandomString(12),
 		Created:    util.TimeCurrent(),
 		Updated:    util.TimeCurrentP(),
@@ -81,7 +81,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Story, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Status = enum.SessionStatus(retStatus)
+	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
 	ret.FinalVote, err = m.ParseString("finalVote", true, true)
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (s *Story) Diff(sx *Story) util.Diffs {
 		diffs = append(diffs, util.NewDiff("title", s.Title, sx.Title))
 	}
 	if s.Status != sx.Status {
-		diffs = append(diffs, util.NewDiff("status", string(s.Status), string(sx.Status)))
+		diffs = append(diffs, util.NewDiff("status", s.Status.Key, sx.Status.Key))
 	}
 	if s.FinalVote != sx.FinalVote {
 		diffs = append(diffs, util.NewDiff("finalVote", s.FinalVote, sx.FinalVote))

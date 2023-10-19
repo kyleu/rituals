@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/estimate/story"
   "github.com/kyleu/rituals/app/lib/filter"
@@ -19,7 +20,7 @@
         {%= components.TableHeaderSimple("story", "idx", "Idx", "Integer", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("story", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("story", "title", "Title", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("story", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("story", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("story", "final_vote", "Final Vote", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("story", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("story", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
@@ -39,7 +40,7 @@
           <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
         <td><strong>{%s model.Title %}</strong></td>
-        <td>{%v model.Status %}</td>
+        <td>{%s model.Status.String() %}</td>
         <td>{%s model.FinalVote %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>

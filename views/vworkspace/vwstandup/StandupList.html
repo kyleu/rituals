@@ -7,6 +7,7 @@
   "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
+  "github.com/kyleu/rituals/app/member"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
@@ -58,7 +59,7 @@
   </form>
 {% endfunc %}
 
-{% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
+{% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
     <h3 title="{%s util.KeyStandupDesc %}">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>

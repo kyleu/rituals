@@ -27,7 +27,7 @@ func New(id uuid.UUID) *Comment {
 func Random() *Comment {
 	return &Comment{
 		ID:      util.UUID(),
-		Svc:     enum.ModelService(util.RandomString(12)),
+		Svc:     enum.AllModelServices.Random(),
 		ModelID: util.UUID(),
 		UserID:  util.UUID(),
 		Content: util.RandomString(12),
@@ -54,7 +54,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Comment, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Svc = enum.ModelService(retSvc)
+	ret.Svc = enum.AllModelServices.Get(retSvc, nil)
 	retModelID, e := m.ParseUUID("modelID", true, true)
 	if e != nil {
 		return nil, e
@@ -104,7 +104,7 @@ func (c *Comment) Diff(cx *Comment) util.Diffs {
 		diffs = append(diffs, util.NewDiff("id", c.ID.String(), cx.ID.String()))
 	}
 	if c.Svc != cx.Svc {
-		diffs = append(diffs, util.NewDiff("svc", string(c.Svc), string(cx.Svc)))
+		diffs = append(diffs, util.NewDiff("svc", c.Svc.Key, cx.Svc.Key))
 	}
 	if c.ModelID != cx.ModelID {
 		diffs = append(diffs, util.NewDiff("modelID", c.ModelID.String(), cx.ModelID.String()))

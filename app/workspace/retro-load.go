@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/retro/feedback"
 	"github.com/kyleu/rituals/app/retro/rhistory"
@@ -24,7 +25,7 @@ type FullRetro struct {
 	Retro       *retro.Retro                 `json:"retro"`
 	Histories   rhistory.RetroHistories      `json:"histories,omitempty"`
 	Members     rmember.RetroMembers         `json:"members,omitempty"`
-	UtilMembers util.Members                 `json:"-"`
+	UtilMembers member.Members               `json:"-"`
 	Self        *rmember.RetroMember         `json:"self,omitempty"`
 	Permissions rpermission.RetroPermissions `json:"permissions,omitempty"`
 	Team        *team.Team                   `json:"team,omitempty"`

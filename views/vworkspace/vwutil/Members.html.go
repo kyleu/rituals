@@ -8,7 +8,7 @@ package vwutil
 import (
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller/cutil"
-	"github.com/kyleu/rituals/app/util"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/views/components"
 )
 
@@ -26,7 +26,7 @@ var (
 )
 
 //line views/vworkspace/vwutil/Members.html:8
-func StreamMemberPanels(qw422016 *qt422016.Writer, ms util.Members, admin bool, path string, ps *cutil.PageState) {
+func StreamMemberPanels(qw422016 *qt422016.Writer, ms member.Members, admin bool, path string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:8
 	qw422016.N().S(`
 `)
@@ -110,7 +110,7 @@ func StreamMemberPanels(qw422016 *qt422016.Writer, ms util.Members, admin bool, 
 }
 
 //line views/vworkspace/vwutil/Members.html:36
-func WriteMemberPanels(qq422016 qtio422016.Writer, ms util.Members, admin bool, path string, ps *cutil.PageState) {
+func WriteMemberPanels(qq422016 qtio422016.Writer, ms member.Members, admin bool, path string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Members.html:36
@@ -121,7 +121,7 @@ func WriteMemberPanels(qq422016 qtio422016.Writer, ms util.Members, admin bool, 
 }
 
 //line views/vworkspace/vwutil/Members.html:36
-func MemberPanels(ms util.Members, admin bool, path string, ps *cutil.PageState) string {
+func MemberPanels(ms member.Members, admin bool, path string, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Members.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Members.html:36
@@ -136,7 +136,7 @@ func MemberPanels(ms util.Members, admin bool, path string, ps *cutil.PageState)
 }
 
 //line views/vworkspace/vwutil/Members.html:38
-func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageState) {
+func StreamMemberRow(qw422016 *qt422016.Writer, m *member.Member, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:38
 	qw422016.N().S(`
 `)
@@ -196,7 +196,7 @@ func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageSt
     </td>
     <td class="shrink text-align-right"><em class="member-role">`)
 //line views/vworkspace/vwutil/Members.html:53
-	qw422016.E().S(string(m.Role))
+	qw422016.E().S(m.Role.String())
 //line views/vworkspace/vwutil/Members.html:53
 	qw422016.N().S(`</em></td>
     <td class="shrink online-status" title="`)
@@ -241,7 +241,7 @@ func StreamMemberRow(qw422016 *qt422016.Writer, m *util.Member, ps *cutil.PageSt
 }
 
 //line views/vworkspace/vwutil/Members.html:62
-func WriteMemberRow(qq422016 qtio422016.Writer, m *util.Member, ps *cutil.PageState) {
+func WriteMemberRow(qq422016 qtio422016.Writer, m *member.Member, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:62
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Members.html:62
@@ -252,7 +252,7 @@ func WriteMemberRow(qq422016 qtio422016.Writer, m *util.Member, ps *cutil.PageSt
 }
 
 //line views/vworkspace/vwutil/Members.html:62
-func MemberRow(m *util.Member, ps *cutil.PageState) string {
+func MemberRow(m *member.Member, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Members.html:62
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Members.html:62
@@ -313,7 +313,7 @@ func InviteModal() string {
 }
 
 //line views/vworkspace/vwutil/Members.html:79
-func StreamMemberModalEdit(qw422016 *qt422016.Writer, m *util.Member, url string, ps *cutil.PageState) {
+func StreamMemberModalEdit(qw422016 *qt422016.Writer, m *member.Member, url string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:79
 	qw422016.N().S(`
   <div id="modal-member-`)
@@ -379,7 +379,7 @@ func StreamMemberModalEdit(qw422016 *qt422016.Writer, m *util.Member, url string
           <em>Role</em><br />
           `)
 //line views/vworkspace/vwutil/Members.html:100
-	components.StreamFormSelect(qw422016, "role", "", string(m.Role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5)
+	components.StreamFormSelect(qw422016, "role", "", m.Role.Key, []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5)
 //line views/vworkspace/vwutil/Members.html:100
 	qw422016.N().S(`
           <hr />
@@ -402,7 +402,7 @@ func StreamMemberModalEdit(qw422016 *qt422016.Writer, m *util.Member, url string
 }
 
 //line views/vworkspace/vwutil/Members.html:108
-func WriteMemberModalEdit(qq422016 qtio422016.Writer, m *util.Member, url string, ps *cutil.PageState) {
+func WriteMemberModalEdit(qq422016 qtio422016.Writer, m *member.Member, url string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:108
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Members.html:108
@@ -413,7 +413,7 @@ func WriteMemberModalEdit(qq422016 qtio422016.Writer, m *util.Member, url string
 }
 
 //line views/vworkspace/vwutil/Members.html:108
-func MemberModalEdit(m *util.Member, url string, ps *cutil.PageState) string {
+func MemberModalEdit(m *member.Member, url string, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Members.html:108
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Members.html:108
@@ -428,7 +428,7 @@ func MemberModalEdit(m *util.Member, url string, ps *cutil.PageState) string {
 }
 
 //line views/vworkspace/vwutil/Members.html:110
-func StreamMemberModalView(qw422016 *qt422016.Writer, m *util.Member, url string, ps *cutil.PageState) {
+func StreamMemberModalView(qw422016 *qt422016.Writer, m *member.Member, url string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:110
 	qw422016.N().S(`
   <div id="modal-member-`)
@@ -484,7 +484,7 @@ func StreamMemberModalView(qw422016 *qt422016.Writer, m *util.Member, url string
         <em>Role</em><br />
         <span class="member-role">`)
 //line views/vworkspace/vwutil/Members.html:129
-	qw422016.E().S(string(m.Role))
+	qw422016.E().S(m.Role.String())
 //line views/vworkspace/vwutil/Members.html:129
 	qw422016.N().S(`</span>
       </div>
@@ -495,7 +495,7 @@ func StreamMemberModalView(qw422016 *qt422016.Writer, m *util.Member, url string
 }
 
 //line views/vworkspace/vwutil/Members.html:133
-func WriteMemberModalView(qq422016 qtio422016.Writer, m *util.Member, url string, ps *cutil.PageState) {
+func WriteMemberModalView(qq422016 qtio422016.Writer, m *member.Member, url string, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Members.html:133
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Members.html:133
@@ -506,7 +506,7 @@ func WriteMemberModalView(qq422016 qtio422016.Writer, m *util.Member, url string
 }
 
 //line views/vworkspace/vwutil/Members.html:133
-func MemberModalView(m *util.Member, url string, ps *cutil.PageState) string {
+func MemberModalView(m *member.Member, url string, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Members.html:133
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Members.html:133

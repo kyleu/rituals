@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
@@ -30,7 +31,7 @@
           {%= components.TableInput("slug", "", "Slug", p.Model.Slug, 5, "String text") %}
           {%= components.TableInput("title", "", "Title", p.Model.Title, 5, "String text") %}
           {%= components.TableInput("icon", "", "Icon", p.Model.Icon, 5, "String text") %}
-          {%= components.TableSelect("status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete"}, []string{"new", "active", "complete"}, 5, "Available options: [new, active, complete]") %}
+          {%= components.TableSelect("status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help()) %}
           {%= components.TableInputUUID("teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
           {%= components.TableInputTimestampDay("startDate", "", "Start Date", p.Model.StartDate, 5, "Calendar date (optional)") %}
           {%= components.TableInputTimestampDay("endDate", "", "End Date", p.Model.EndDate, 5, "Calendar date (optional)") %}

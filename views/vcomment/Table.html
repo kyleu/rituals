@@ -3,6 +3,7 @@
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
@@ -14,7 +15,7 @@
     <thead>
       <tr>
         {%= components.TableHeaderSimple("comment", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("comment", "svc", "Svc", "Available options: [team, sprint, estimate, standup, retro, story, feedback, report]", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("comment", "svc", "Svc", enum.AllModelServices.Help(), prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("comment", "content", "Content", "String text", prms, ps.URI, ps) %}
@@ -25,7 +26,7 @@
       {%- for _, model := range models -%}
       <tr>
         <td><a href="/admin/db/comment/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
-        <td>{%v model.Svc %}</td>
+        <td>{%s model.Svc.String() %}</td>
         <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
         <td class="nowrap">
           {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}

@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/views/components"
@@ -16,7 +17,7 @@
         {%= components.TableHeaderSimple("team", "slug", "Slug", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "title", "Title", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "icon", "Icon", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("team", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("team", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("team", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
       </tr>
@@ -28,7 +29,7 @@
         <td>{%s model.Slug %}</td>
         <td><strong>{%s model.Title %}</strong></td>
         <td>{%s model.Icon %}</td>
-        <td>{%v model.Status %}</td>
+        <td>{%s model.Status.String() %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
       </tr>

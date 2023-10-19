@@ -13,7 +13,7 @@
     <form class="status-new-form-next" action="" method="post">
       <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
       <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
-      <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
+      <input type="hidden" name="status" value="{%s enum.SessionStatusActive.Key %}" />
       {%- if s == nil -%}
         <div class="owned">Your story is available to <a class="link-edit" href="" data-id="">edit</a> and ready to <button type="submit" class="button-link">start voting</button></div>
         <div class="unowned">This story is ready to start voting</div>
@@ -34,7 +34,7 @@
       <form class="status-new-form-next" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
-        <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
+        <input type="hidden" name="status" value="{%s enum.SessionStatusActive.Key %}" />
         <div class="right"><button type="submit">Start Voting</button></div>
       </form>
       {%- if s == nil || ps.Profile.ID == s.UserID -%}
@@ -98,13 +98,13 @@
       <form class="status-active-form-next" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
-        <input type="hidden" name="status" value="{%s string(enum.SessionStatusComplete) %}" />
+        <input type="hidden" name="status" value="{%s enum.SessionStatusComplete.Key %}" />
         <div class="right"><button type="submit">Finish Voting</button></div>
       </form>
       <form class="status-active-form-prev" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
-        <input type="hidden" name="status" value="{%s string(enum.SessionStatusNew) %}" />
+        <input type="hidden" name="status" value="{%s enum.SessionStatusNew.Key %}" />
         <div><button type="submit">Restart</button></div>
       </form>
     </div>
@@ -167,7 +167,7 @@
       <form class="status-complete-form-prev" action="" method="post">
         <input type="hidden" name="storyID" value="{% if s != nil %}{%s s.ID.String() %}{% endif %}" />
         <input type="hidden" name="action" value="{%s string(action.ActChildStatus) %}" />
-        <input type="hidden" name="status" value="{%s string(enum.SessionStatusActive) %}" />
+        <input type="hidden" name="status" value="{%s enum.SessionStatusActive.Key %}" />
         <div><button type="submit">Reopen</button></div>
       </form>
     </div>

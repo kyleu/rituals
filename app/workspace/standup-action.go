@@ -99,7 +99,7 @@ func standupUpdate(p *Params, fu *FullStandup) (*FullStandup, string, string, er
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = sendTeamSprintUpdates(util.KeyStandup, model.TeamID, model.SprintID, model, &fu.Self.UserID, p.Svc, p.Logger)
+		err = sendTeamSprintUpdates(enum.ModelServiceStandup, model.TeamID, model.SprintID, model, &fu.Self.UserID, p.Svc, p.Logger)
 		if err != nil {
 			return nil, "", "", err
 		}

@@ -44,7 +44,7 @@ func StreamPermissionsLink(qw422016 *qt422016.Writer, svc enum.ModelService, id 
 //line views/vworkspace/vwutil/Permissions.html:19
 	qw422016.N().S(`  <a class="permission-link" href="#modal-`)
 //line views/vworkspace/vwutil/Permissions.html:20
-	qw422016.E().S(string(svc))
+	qw422016.E().S(svc.Key)
 //line views/vworkspace/vwutil/Permissions.html:20
 	qw422016.N().S(`-config" title="`)
 //line views/vworkspace/vwutil/Permissions.html:20

@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/retro"
@@ -62,8 +63,8 @@
           <td>{%s p.Model.Icon %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete]">Status</th>
-          <td>{%v p.Model.Status %}</td>
+          <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
+          <td>{%s p.Model.Status.String() %}</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
@@ -100,7 +101,7 @@
         <input id="accordion-EstimatesBySprintID" type="checkbox" hidden />
         <label for="accordion-EstimatesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`estimate`, ps) %}
+          {%= components.SVGRef(`estimate`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEstimatesBySprintID), "Estimate") %} by [Sprint ID]
         </label>
         <div class="bd"><div><div>
@@ -117,7 +118,7 @@
         <input id="accordion-RetrosBySprintID" type="checkbox" hidden />
         <label for="accordion-RetrosBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`retro`, ps) %}
+          {%= components.SVGRef(`retro`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelRetrosBySprintID), "Retro") %} by [Sprint ID]
         </label>
         <div class="bd"><div><div>
@@ -134,7 +135,7 @@
         <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden />
         <label for="accordion-SprintHistoriesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`history`, ps) %}
+          {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelSprintHistoriesBySprintID), "History") %} by [Sprint ID]
         </label>
         <div class="bd"><div><div>
@@ -151,7 +152,7 @@
         <input id="accordion-SprintMembersBySprintID" type="checkbox" hidden />
         <label for="accordion-SprintMembersBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelSprintMembersBySprintID), "Member") %} by [Sprint ID]
         </label>
         <div class="bd"><div><div>
@@ -168,7 +169,7 @@
         <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden />
         <label for="accordion-SprintPermissionsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`permission`, ps) %}
+          {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelSprintPermissionsBySprintID), "Permission") %} by [Sprint ID]
         </label>
         <div class="bd"><div><div>
@@ -185,7 +186,7 @@
         <input id="accordion-StandupsBySprintID" type="checkbox" hidden />
         <label for="accordion-StandupsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`standup`, ps) %}
+          {%= components.SVGRef(`standup`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelStandupsBySprintID), "Standup") %} by [Sprint ID]
         </label>
         <div class="bd"><div><div>

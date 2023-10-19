@@ -10,114 +10,115 @@ package vstory
 import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vestimate/vstory/Edit.html:10
+//line views/vestimate/vstory/Edit.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vestimate/vstory/Edit.html:10
+//line views/vestimate/vstory/Edit.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vestimate/vstory/Edit.html:10
+//line views/vestimate/vstory/Edit.html:11
 type Edit struct {
 	layout.Basic
 	Model *story.Story
 	IsNew bool
 }
 
-//line views/vestimate/vstory/Edit.html:16
+//line views/vestimate/vstory/Edit.html:17
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/Edit.html:16
+//line views/vestimate/vstory/Edit.html:17
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vestimate/vstory/Edit.html:18
+//line views/vestimate/vstory/Edit.html:19
 	if p.IsNew {
-//line views/vestimate/vstory/Edit.html:18
+//line views/vestimate/vstory/Edit.html:19
 		qw422016.N().S(`    <div class="right"><a href="/admin/db/estimate/story/random"><button>Random</button></a></div>
     <h3>`)
-//line views/vestimate/vstory/Edit.html:20
+//line views/vestimate/vstory/Edit.html:21
 		components.StreamSVGRefIcon(qw422016, `story`, ps)
-//line views/vestimate/vstory/Edit.html:20
+//line views/vestimate/vstory/Edit.html:21
 		qw422016.N().S(` New Story</h3>
     <form action="/admin/db/estimate/story/new" class="mt" method="post">
 `)
-//line views/vestimate/vstory/Edit.html:22
+//line views/vestimate/vstory/Edit.html:23
 	} else {
-//line views/vestimate/vstory/Edit.html:22
+//line views/vestimate/vstory/Edit.html:23
 		qw422016.N().S(`    <div class="right"><a href="`)
-//line views/vestimate/vstory/Edit.html:23
+//line views/vestimate/vstory/Edit.html:24
 		qw422016.E().S(p.Model.WebPath())
-//line views/vestimate/vstory/Edit.html:23
+//line views/vestimate/vstory/Edit.html:24
 		qw422016.N().S(`/delete" onclick="return confirm('Are you sure you wish to delete story [`)
-//line views/vestimate/vstory/Edit.html:23
+//line views/vestimate/vstory/Edit.html:24
 		qw422016.E().S(p.Model.String())
-//line views/vestimate/vstory/Edit.html:23
+//line views/vestimate/vstory/Edit.html:24
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
-//line views/vestimate/vstory/Edit.html:24
+//line views/vestimate/vstory/Edit.html:25
 		components.StreamSVGRefIcon(qw422016, `story`, ps)
-//line views/vestimate/vstory/Edit.html:24
+//line views/vestimate/vstory/Edit.html:25
 		qw422016.N().S(` Edit Story [`)
-//line views/vestimate/vstory/Edit.html:24
+//line views/vestimate/vstory/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vestimate/vstory/Edit.html:24
+//line views/vestimate/vstory/Edit.html:25
 		qw422016.N().S(`]</h3>
     <form action="" method="post">
 `)
-//line views/vestimate/vstory/Edit.html:26
+//line views/vestimate/vstory/Edit.html:27
 	}
-//line views/vestimate/vstory/Edit.html:26
+//line views/vestimate/vstory/Edit.html:27
 	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
-//line views/vestimate/vstory/Edit.html:29
+//line views/vestimate/vstory/Edit.html:30
 	if p.IsNew {
-//line views/vestimate/vstory/Edit.html:29
+//line views/vestimate/vstory/Edit.html:30
 		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/vstory/Edit.html:29
+//line views/vestimate/vstory/Edit.html:30
 	}
-//line views/vestimate/vstory/Edit.html:29
+//line views/vestimate/vstory/Edit.html:30
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Edit.html:30
+//line views/vestimate/vstory/Edit.html:31
 	components.StreamTableInputUUID(qw422016, "estimateID", "input-estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/vstory/Edit.html:30
+//line views/vestimate/vstory/Edit.html:31
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Edit.html:31
+//line views/vestimate/vstory/Edit.html:32
 	components.StreamTableInputNumber(qw422016, "idx", "", "Idx", p.Model.Idx, 5, "Integer")
-//line views/vestimate/vstory/Edit.html:31
+//line views/vestimate/vstory/Edit.html:32
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Edit.html:32
+//line views/vestimate/vstory/Edit.html:33
 	components.StreamTableInputUUID(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/vstory/Edit.html:32
+//line views/vestimate/vstory/Edit.html:33
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Edit.html:33
+//line views/vestimate/vstory/Edit.html:34
 	components.StreamTableInput(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
-//line views/vestimate/vstory/Edit.html:33
-	qw422016.N().S(`
-          `)
-//line views/vestimate/vstory/Edit.html:34
-	components.StreamTableSelect(qw422016, "status", "", "Status", string(p.Model.Status), []string{"new", "active", "complete"}, []string{"new", "active", "complete"}, 5, "Available options: [new, active, complete]")
 //line views/vestimate/vstory/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Edit.html:35
+	components.StreamTableSelect(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help())
+//line views/vestimate/vstory/Edit.html:35
+	qw422016.N().S(`
+          `)
+//line views/vestimate/vstory/Edit.html:36
 	components.StreamTableInput(qw422016, "finalVote", "", "Final Vote", p.Model.FinalVote, 5, "String text")
-//line views/vestimate/vstory/Edit.html:35
+//line views/vestimate/vstory/Edit.html:36
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -131,31 +132,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 }
 
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 }
 
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 	return qs422016
-//line views/vestimate/vstory/Edit.html:47
+//line views/vestimate/vstory/Edit.html:48
 }

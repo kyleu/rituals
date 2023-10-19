@@ -24,7 +24,7 @@ func sprintMemberUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string,
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this sprint", userID.String())
 	}
-	curr.Role = enum.MemberStatus(role)
+	curr.Role = enum.AllMemberStatuses.Get(role, nil)
 	err := p.Svc.sm.Update(p.Ctx, nil, curr, p.Logger)
 	if err != nil {
 		return nil, "", "", err

@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/retro"
@@ -63,8 +64,8 @@
           <td>{%s p.Model.Icon %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete]">Status</th>
-          <td>{%v p.Model.Status %}</td>
+          <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
+          <td>{%s p.Model.Status.String() %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
@@ -86,7 +87,7 @@
         <input id="accordion-EstimatesByTeamID" type="checkbox" hidden />
         <label for="accordion-EstimatesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`estimate`, ps) %}
+          {%= components.SVGRef(`estimate`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate") %} by [Team ID]
         </label>
         <div class="bd"><div><div>
@@ -103,7 +104,7 @@
         <input id="accordion-RetrosByTeamID" type="checkbox" hidden />
         <label for="accordion-RetrosByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`retro`, ps) %}
+          {%= components.SVGRef(`retro`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelRetrosByTeamID), "Retro") %} by [Team ID]
         </label>
         <div class="bd"><div><div>
@@ -120,7 +121,7 @@
         <input id="accordion-SprintsByTeamID" type="checkbox" hidden />
         <label for="accordion-SprintsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`sprint`, ps) %}
+          {%= components.SVGRef(`sprint`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelSprintsByTeamID), "Sprint") %} by [Team ID]
         </label>
         <div class="bd"><div><div>
@@ -137,7 +138,7 @@
         <input id="accordion-StandupsByTeamID" type="checkbox" hidden />
         <label for="accordion-StandupsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`standup`, ps) %}
+          {%= components.SVGRef(`standup`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelStandupsByTeamID), "Standup") %} by [Team ID]
         </label>
         <div class="bd"><div><div>
@@ -154,7 +155,7 @@
         <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden />
         <label for="accordion-TeamHistoriesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`history`, ps) %}
+          {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History") %} by [Team ID]
         </label>
         <div class="bd"><div><div>
@@ -171,7 +172,7 @@
         <input id="accordion-TeamMembersByTeamID" type="checkbox" hidden />
         <label for="accordion-TeamMembersByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelTeamMembersByTeamID), "Member") %} by [Team ID]
         </label>
         <div class="bd"><div><div>
@@ -188,7 +189,7 @@
         <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden />
         <label for="accordion-TeamPermissionsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`permission`, ps) %}
+          {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission") %} by [Team ID]
         </label>
         <div class="bd"><div><div>

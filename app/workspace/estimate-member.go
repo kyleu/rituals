@@ -24,7 +24,7 @@ func estimateMemberUpdate(p *Params, fe *FullEstimate) (*FullEstimate, string, s
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this estimate", userID.String())
 	}
-	curr.Role = enum.MemberStatus(role)
+	curr.Role = enum.AllMemberStatuses.Get(role, nil)
 	err := p.Svc.em.Update(p.Ctx, nil, curr, p.Logger)
 	if err != nil {
 		return nil, "", "", err

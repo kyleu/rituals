@@ -1,11 +1,11 @@
 {% import (
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
-  "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/app/member"
   "github.com/kyleu/rituals/views/components"
 ) %}
 
-{% func MemberPanels(ms util.Members, admin bool, path string, ps *cutil.PageState) %}
+{% func MemberPanels(ms member.Members, admin bool, path string, ps *cutil.PageState) %}
   {%- code self, others, _ := ms.Split(ps.Profile.ID) -%}
   <div id="panel-self">
     <div class="card">{%= SelfLink(self, ps) %}</div>
@@ -35,7 +35,7 @@
   </div>
 {% endfunc %}
 
-{% func MemberRow(m *util.Member, ps *cutil.PageState) %}
+{% func MemberRow(m *member.Member, ps *cutil.PageState) %}
   {%- code ps.AddIcon("circle", "check-circle") -%}
   <tr id="member-{%s m.UserID.String() %}" class="member" data-id="{%s m.UserID.String() %}">
     <td>
@@ -50,7 +50,7 @@
         <span class="member-name member-{%s m.UserID.String() %}-name">{%s m.Name %}</span>
       </a>
     </td>
-    <td class="shrink text-align-right"><em class="member-role">{%s string(m.Role) %}</em></td>
+    <td class="shrink text-align-right"><em class="member-role">{%s m.Role.String() %}</em></td>
     <td class="shrink online-status" title="{% if m.Online %}online{% else %}offline{% endif %}">
       {%- if m.Online -%}
       {%= components.SVGRef(`check-circle`, 18, 18, `right`, ps) %}
@@ -76,7 +76,7 @@
   </div>
 {% endfunc %}
 
-{% func MemberModalEdit(m *util.Member, url string, ps *cutil.PageState) %}
+{% func MemberModalEdit(m *member.Member, url string, ps *cutil.PageState) %}
   <div id="modal-member-{%s m.UserID.String() %}" data-id="{%s m.UserID.String() %}" class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -97,7 +97,7 @@
         <form action="{%s url %}" method="post" class="expanded">
           <input type="hidden" name="userID" value="{%s m.UserID.String() %}" />
           <em>Role</em><br />
-          {%= components.FormSelect("role", "", string(m.Role), []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
+          {%= components.FormSelect("role", "", m.Role.Key, []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
           <hr />
           <div class="right"><button class="member-update" type="submit" name="action" value="{%s string(action.ActMemberUpdate) %}">Save</button></div>
           <button type="submit" class="member-remove" name="action" value="{%s string(action.ActMemberRemove) %}" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>
@@ -107,7 +107,7 @@
   </div>
 {% endfunc %}
 
-{% func MemberModalView(m *util.Member, url string, ps *cutil.PageState) %}
+{% func MemberModalView(m *member.Member, url string, ps *cutil.PageState) %}
   <div id="modal-member-{%s m.UserID.String() %}" data-id="{%s m.UserID.String() %}" class="modal modal-member" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -126,7 +126,7 @@
       </div>
       <div class="modal-body">
         <em>Role</em><br />
-        <span class="member-role">{%s string(m.Role) %}</span>
+        <span class="member-role">{%s m.Role.String() %}</span>
       </div>
     </div>
   </div>

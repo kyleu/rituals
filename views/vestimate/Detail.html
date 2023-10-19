@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/estimate/ehistory"
   "github.com/kyleu/rituals/app/estimate/emember"
@@ -58,8 +59,8 @@
           <td>{%s p.Model.Icon %}</td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete]">Status</th>
-          <td>{%v p.Model.Status %}</td>
+          <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
+          <td>{%s p.Model.Status.String() %}</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
@@ -99,7 +100,7 @@
         <input id="accordion-EstimateHistoriesByEstimateID" type="checkbox" hidden />
         <label for="accordion-EstimateHistoriesByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`history`, ps) %}
+          {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEstimateHistoriesByEstimateID), "History") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>
@@ -116,7 +117,7 @@
         <input id="accordion-EstimateMembersByEstimateID" type="checkbox" hidden />
         <label for="accordion-EstimateMembersByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEstimateMembersByEstimateID), "Member") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>
@@ -133,7 +134,7 @@
         <input id="accordion-EstimatePermissionsByEstimateID" type="checkbox" hidden />
         <label for="accordion-EstimatePermissionsByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`permission`, ps) %}
+          {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEstimatePermissionsByEstimateID), "Permission") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>
@@ -150,7 +151,7 @@
         <input id="accordion-StoriesByEstimateID" type="checkbox" hidden />
         <label for="accordion-StoriesByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`story`, ps) %}
+          {%= components.SVGRef(`story`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelStoriesByEstimateID), "Story") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>

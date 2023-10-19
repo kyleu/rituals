@@ -18,7 +18,7 @@ func commentFromForm(frm util.ValueMap, userID uuid.UUID) (*comment.Comment, str
 	if svcStr == "" {
 		return nil, "", errors.New("must provide [svc]")
 	}
-	svc := enum.ModelService(svcStr)
+	svc := enum.AllModelServices.Get(svcStr, nil)
 	modelID, _ := frm.GetUUID("modelID", false)
 	if modelID == nil {
 		return nil, "", errors.New("must provide [modelID]")

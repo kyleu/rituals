@@ -34,7 +34,7 @@ func Random() *Estimate {
 		Slug:     util.RandomString(12),
 		Title:    util.RandomString(12),
 		Icon:     util.RandomString(12),
-		Status:   enum.SessionStatus(util.RandomString(12)),
+		Status:   enum.AllSessionStatuses.Random(),
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
 		Choices:  nil,
@@ -73,7 +73,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Estimate, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Status = enum.SessionStatus(retStatus)
+	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
 	ret.TeamID, err = m.ParseUUID("teamID", true, true)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 		diffs = append(diffs, util.NewDiff("icon", e.Icon, ex.Icon))
 	}
 	if e.Status != ex.Status {
-		diffs = append(diffs, util.NewDiff("status", string(e.Status), string(ex.Status)))
+		diffs = append(diffs, util.NewDiff("status", e.Status.Key, ex.Status.Key))
 	}
 	if (e.TeamID == nil && ex.TeamID != nil) || (e.TeamID != nil && ex.TeamID == nil) || (e.TeamID != nil && ex.TeamID != nil && *e.TeamID != *ex.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(e.TeamID), fmt.Sprint(ex.TeamID))) //nolint:gocritic // it's nullable

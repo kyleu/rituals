@@ -14,6 +14,7 @@ import (
 	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
@@ -23,7 +24,7 @@ type FullEstimate struct {
 	Estimate    *estimate.Estimate              `json:"estimate"`
 	Histories   ehistory.EstimateHistories      `json:"histories,omitempty"`
 	Members     emember.EstimateMembers         `json:"members,omitempty"`
-	UtilMembers util.Members                    `json:"-"`
+	UtilMembers member.Members                  `json:"-"`
 	Self        *emember.EstimateMember         `json:"self,omitempty"`
 	Permissions epermission.EstimatePermissions `json:"permissions,omitempty"`
 	Team        *team.Team                      `json:"team,omitempty"`

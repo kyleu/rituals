@@ -36,7 +36,7 @@ func Random() *EstimateMember {
 		UserID:     util.UUID(),
 		Name:       util.RandomString(12),
 		Picture:    "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Role:       enum.MemberStatus(util.RandomString(12)),
+		Role:       enum.AllMemberStatuses.Random(),
 		Created:    util.TimeCurrent(),
 		Updated:    util.TimeCurrentP(),
 	}
@@ -75,7 +75,7 @@ func FromMap(m util.ValueMap, setPK bool) (*EstimateMember, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Role = enum.MemberStatus(retRole)
+	ret.Role = enum.AllMemberStatuses.Get(retRole, nil)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -119,7 +119,7 @@ func (e *EstimateMember) Diff(ex *EstimateMember) util.Diffs {
 		diffs = append(diffs, util.NewDiff("picture", e.Picture, ex.Picture))
 	}
 	if e.Role != ex.Role {
-		diffs = append(diffs, util.NewDiff("role", string(e.Role), string(ex.Role)))
+		diffs = append(diffs, util.NewDiff("role", e.Role.Key, ex.Role.Key))
 	}
 	if e.Created != ex.Created {
 		diffs = append(diffs, util.NewDiff("created", e.Created.String(), ex.Created.String()))

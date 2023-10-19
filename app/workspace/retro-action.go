@@ -104,7 +104,7 @@ func retroUpdate(p *Params, fr *FullRetro) (*FullRetro, string, string, error) {
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = sendTeamSprintUpdates(util.KeyRetro, model.TeamID, model.SprintID, model, &fr.Self.UserID, p.Svc, p.Logger)
+		err = sendTeamSprintUpdates(enum.ModelServiceRetro, model.TeamID, model.SprintID, model, &fr.Self.UserID, p.Svc, p.Logger)
 		if err != nil {
 			return nil, "", "", err
 		}

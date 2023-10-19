@@ -2,6 +2,7 @@
   "github.com/kyleu/rituals/app/action"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/enum"
+  "github.com/kyleu/rituals/app/member"
   "github.com/kyleu/rituals/app/standup/report"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
@@ -62,7 +63,7 @@
   </div>
 {% endfunc %}
 
-{% func StandupWorkspaceReportModalEdit(r *report.Report, members util.Members) %}
+{% func StandupWorkspaceReportModalEdit(r *report.Report, members member.Members) %}
   <div id="modal-report-{%s r.ID.String() %}" class="modal modal-report-edit" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -83,7 +84,7 @@
   </div>
 {% endfunc %}
 
-{% func StandupWorkspaceReportModalView(r *report.Report, members util.Members) %}
+{% func StandupWorkspaceReportModalView(r *report.Report, members member.Members) %}
   <div id="modal-report-{%s r.ID.String() %}" class="modal modal-report-view" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">

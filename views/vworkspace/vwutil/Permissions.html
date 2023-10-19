@@ -17,7 +17,7 @@
       icon = "unlock"
     }
   -%}
-  <a class="permission-link" href="#modal-{%s string(svc) %}-config" title="{%s title %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
+  <a class="permission-link" href="#modal-{%s svc.Key %}-config" title="{%s title %}">{%= components.SVGRef(icon, 18, 18, "", ps) %}</a>
 {% endfunc %}
 
 {% func PermissionsForm(key string, perms util.Permissions, showTeam bool, teams team.Teams, showSprint bool, sprints sprint.Sprints, ps *cutil.PageState) %}

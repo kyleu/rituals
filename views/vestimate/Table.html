@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/sprint"
@@ -18,7 +19,7 @@
         {%= components.TableHeaderSimple("estimate", "slug", "Slug", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("estimate", "title", "Title", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("estimate", "icon", "Icon", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "status", "Status", "Available options: [new, active, complete]", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("estimate", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("estimate", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("estimate", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("estimate", "choices", "Choices", "Comma-separated list of values", prms, ps.URI, ps) %}
@@ -33,7 +34,7 @@
         <td>{%s model.Slug %}</td>
         <td><strong>{%s model.Title %}</strong></td>
         <td>{%s model.Icon %}</td>
-        <td>{%v model.Status %}</td>
+        <td>{%s model.Status.String() %}</td>
         <td class="nowrap">
           {%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
           {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}

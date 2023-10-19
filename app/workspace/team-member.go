@@ -24,7 +24,7 @@ func teamMemberUpdate(p *Params, ft *FullTeam) (*FullTeam, string, string, error
 	if curr == nil {
 		return nil, "", "", errors.Errorf("user [%s] is not a member of this team", userID.String())
 	}
-	curr.Role = enum.MemberStatus(role)
+	curr.Role = enum.AllMemberStatuses.Get(role, nil)
 	err := p.Svc.tm.Update(p.Ctx, nil, curr, p.Logger)
 	if err != nil {
 		return nil, "", "", err

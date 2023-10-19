@@ -25,7 +25,7 @@
     <h3>{%= components.SVGRefIcon(`standup`, ps) %}{%s ps.Title %} <a href="/admin/db/standup/new"><button>New</button></a></h3>
     <div class="clear"></div>
     {%- if p.SearchQuery != "" -%}
-    <em>Search results for [{%s p.SearchQuery %}]</em>
+    <em>Search results for [{%s p.SearchQuery %}]</em> (<a href="?">clear</a>)
     {%- endif -%}
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No standups available</em></div>

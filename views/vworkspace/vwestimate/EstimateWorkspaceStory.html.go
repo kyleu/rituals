@@ -76,7 +76,7 @@ func StreamEstimateWorkspaceStories(qw422016 *qt422016.Writer, w *workspace.Full
 		qw422016.N().S(`</em></a></td>
         <td class="story-status">`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:27
-		qw422016.E().S(string(s.Status))
+		qw422016.E().S(s.Status.String())
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:27
 		qw422016.N().S(`</td>
         <td class="story-final-vote">`)

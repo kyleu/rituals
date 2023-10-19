@@ -21,7 +21,7 @@
     <h3>{%= components.SVGRefIcon(`team`, ps) %}{%s ps.Title %} <a href="/admin/db/team/new"><button>New</button></a></h3>
     <div class="clear"></div>
     {%- if p.SearchQuery != "" -%}
-    <em>Search results for [{%s p.SearchQuery %}]</em>
+    <em>Search results for [{%s p.SearchQuery %}]</em> (<a href="?">clear</a>)
     {%- endif -%}
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No teams available</em></div>

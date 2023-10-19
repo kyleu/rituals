@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate"
   "github.com/kyleu/rituals/app/estimate/story"
   "github.com/kyleu/rituals/app/estimate/story/vote"
@@ -59,8 +60,8 @@
           <td><strong>{%s p.Model.Title %}</strong></td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [new, active, complete]">Status</th>
-          <td>{%v p.Model.Status %}</td>
+          <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
+          <td>{%s p.Model.Status.String() %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Final Vote</th>
@@ -86,7 +87,7 @@
         <input id="accordion-VotesByStoryID" type="checkbox" hidden />
         <label for="accordion-VotesByStoryID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`vote-yea`, ps) %}
+          {%= components.SVGRef(`vote-yea`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelVotesByStoryID), "Vote") %} by [Story ID]
         </label>
         <div class="bd"><div><div>

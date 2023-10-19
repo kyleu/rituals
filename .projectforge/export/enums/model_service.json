@@ -4,13 +4,37 @@
   "description": "The services available in the system",
   "icon": "star",
   "values": [
-    "team",
-    "sprint",
-    "estimate",
-    "standup",
-    "retro",
-    "story",
-    "feedback",
-    "report"
+    {
+      "key": "team",
+      "title": "Team"
+    },
+    {
+      "key": "sprint",
+      "title": "Sprint"
+    },
+    {
+      "key": "estimate",
+      "title": "Estimate"
+    },
+    {
+      "key": "standup",
+      "title": "Standup"
+    },
+    {
+      "key": "retro",
+      "title": "Retro"
+    },
+    {
+      "key": "story",
+      "title": "Story"
+    },
+    {
+      "key": "feedback",
+      "title": "Feedback"
+    },
+    {
+      "key": "report",
+      "title": "Report"
+    }
   ]
 }

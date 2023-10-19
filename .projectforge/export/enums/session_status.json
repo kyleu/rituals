@@ -4,8 +4,17 @@
   "description": "The available statuses available for sessions",
   "icon": "star",
   "values": [
-    "new",
-    "active",
-    "complete"
+    {
+      "key": "new",
+      "title": "New"
+    },
+    {
+      "key": "active",
+      "title": "Active"
+    },
+    {
+      "key": "complete",
+      "title": "Complete"
+    }
   ]
 }

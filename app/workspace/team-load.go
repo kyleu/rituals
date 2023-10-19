@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
@@ -22,7 +23,7 @@ type FullTeam struct {
 	Team        *team.Team                  `json:"team"`
 	Histories   thistory.TeamHistories      `json:"histories,omitempty"`
 	Members     tmember.TeamMembers         `json:"members,omitempty"`
-	UtilMembers util.Members                `json:"-"`
+	UtilMembers member.Members              `json:"-"`
 	Self        *tmember.TeamMember         `json:"self,omitempty"`
 	Permissions tpermission.TeamPermissions `json:"permissions,omitempty"`
 	Sprints     sprint.Sprints              `json:"sprints,omitempty"`

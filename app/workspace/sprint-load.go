@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/sprint/shistory"
@@ -22,7 +23,7 @@ type FullSprint struct {
 	Sprint      *sprint.Sprint                `json:"sprint"`
 	Histories   shistory.SprintHistories      `json:"histories,omitempty"`
 	Members     smember.SprintMembers         `json:"members,omitempty"`
-	UtilMembers util.Members                  `json:"-"`
+	UtilMembers member.Members                `json:"-"`
 	Self        *smember.SprintMember         `json:"self,omitempty"`
 	Permissions spermission.SprintPermissions `json:"permissions,omitempty"`
 	Team        *team.Team                    `json:"team,omitempty"`

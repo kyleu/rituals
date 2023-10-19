@@ -88,7 +88,7 @@ func sprintUpdate(p *Params, fs *FullSprint) (*FullSprint, string, string, error
 		if err != nil {
 			return nil, "", "", err
 		}
-		err = sendTeamSprintUpdates(util.KeySprint, model.TeamID, nil, model, &fs.Self.UserID, p.Svc, p.Logger)
+		err = sendTeamSprintUpdates(enum.ModelServiceSprint, model.TeamID, nil, model, &fs.Self.UserID, p.Svc, p.Logger)
 		if err != nil {
 			return nil, "", "", err
 		}

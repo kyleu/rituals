@@ -34,7 +34,7 @@ func Random() *Retro {
 		Slug:       util.RandomString(12),
 		Title:      util.RandomString(12),
 		Icon:       util.RandomString(12),
-		Status:     enum.SessionStatus(util.RandomString(12)),
+		Status:     enum.AllSessionStatuses.Random(),
 		TeamID:     util.UUIDP(),
 		SprintID:   util.UUIDP(),
 		Categories: nil,
@@ -73,7 +73,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Retro, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Status = enum.SessionStatus(retStatus)
+	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
 	ret.TeamID, err = m.ParseUUID("teamID", true, true)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (r *Retro) Diff(rx *Retro) util.Diffs {
 		diffs = append(diffs, util.NewDiff("icon", r.Icon, rx.Icon))
 	}
 	if r.Status != rx.Status {
-		diffs = append(diffs, util.NewDiff("status", string(r.Status), string(rx.Status)))
+		diffs = append(diffs, util.NewDiff("status", r.Status.Key, rx.Status.Key))
 	}
 	if (r.TeamID == nil && rx.TeamID != nil) || (r.TeamID != nil && rx.TeamID == nil) || (r.TeamID != nil && rx.TeamID != nil && *r.TeamID != *rx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(r.TeamID), fmt.Sprint(rx.TeamID))) //nolint:gocritic // it's nullable

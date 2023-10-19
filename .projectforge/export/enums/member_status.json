@@ -4,8 +4,17 @@
   "description": "The available statuses for members",
   "icon": "star",
   "values": [
-    "owner",
-    "member",
-    "observer"
+    {
+      "key": "owner",
+      "title": "Owner"
+    },
+    {
+      "key": "member",
+      "title": "Member"
+    },
+    {
+      "key": "observer",
+      "title": "Observer"
+    }
   ]
 }

@@ -34,7 +34,7 @@ func (s *Service) SocketHandler(
 	var msg string
 	p := NewParams(ctx, idStr, action.Act(cmd), frm, conn.Profile, conn.Accounts, s, logger, conn.ID)
 
-	service := enum.ModelService(svc)
+	service := enum.AllModelServices.Get(svc, nil)
 	switch service {
 	case enum.ModelServiceTeam:
 		_, msg, _, err = s.ActionTeam(p)
@@ -70,7 +70,7 @@ func (s *Service) SocketClose(_ *websocket.Service, conn *websocket.Connection, 
 			continue
 		}
 		modelID := util.UUIDFromString(modelIDStr)
-		err := s.send(enum.ModelService(svc), *modelID, "online-update", param, &conn.Profile.ID, logger, conn.ID)
+		err := s.send(enum.AllModelServices.Get(svc, nil), *modelID, "online-update", param, &conn.Profile.ID, logger, conn.ID)
 		if err != nil {
 			return err
 		}

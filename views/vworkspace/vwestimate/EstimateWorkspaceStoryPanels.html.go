@@ -58,7 +58,7 @@ func StreamEstimateWorkspaceStoryPanelNew(qw422016 *qt422016.Writer, w *workspac
 	qw422016.N().S(`" />
       <input type="hidden" name="status" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:16
-	qw422016.E().S(string(enum.SessionStatusActive))
+	qw422016.E().S(enum.SessionStatusActive.Key)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:16
 	qw422016.N().S(`" />
 `)
@@ -130,7 +130,7 @@ func StreamEstimateWorkspaceStoryPanelNew(qw422016 *qt422016.Writer, w *workspac
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:37
-	qw422016.E().S(string(enum.SessionStatusActive))
+	qw422016.E().S(enum.SessionStatusActive.Key)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:37
 	qw422016.N().S(`" />
         <div class="right"><button type="submit">Start Voting</button></div>
@@ -356,7 +356,7 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:101
-	qw422016.E().S(string(enum.SessionStatusComplete))
+	qw422016.E().S(enum.SessionStatusComplete.Key)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:101
 	qw422016.N().S(`" />
         <div class="right"><button type="submit">Finish Voting</button></div>
@@ -378,7 +378,7 @@ func StreamEstimateWorkspaceStoryPanelActive(qw422016 *qt422016.Writer, w *works
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:107
-	qw422016.E().S(string(enum.SessionStatusNew))
+	qw422016.E().S(enum.SessionStatusNew.Key)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:107
 	qw422016.N().S(`" />
         <div><button type="submit">Restart</button></div>
@@ -576,7 +576,7 @@ func StreamEstimateWorkspaceStoryPanelComplete(qw422016 *qt422016.Writer, w *wor
 	qw422016.N().S(`" />
         <input type="hidden" name="status" value="`)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:170
-	qw422016.E().S(string(enum.SessionStatusActive))
+	qw422016.E().S(enum.SessionStatusActive.Key)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStoryPanels.html:170
 	qw422016.N().S(`" />
         <div><button type="submit">Reopen</button></div>

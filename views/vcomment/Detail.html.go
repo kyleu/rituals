@@ -11,56 +11,57 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vcomment/Detail.html:11
+//line views/vcomment/Detail.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vcomment/Detail.html:11
+//line views/vcomment/Detail.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vcomment/Detail.html:11
+//line views/vcomment/Detail.html:12
 type Detail struct {
 	layout.Basic
 	Model        *comment.Comment
 	UserByUserID *user.User
 }
 
-//line views/vcomment/Detail.html:17
+//line views/vcomment/Detail.html:18
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Detail.html:17
+//line views/vcomment/Detail.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-comment"><button type="button">JSON</button></a>
       <a href="`)
-//line views/vcomment/Detail.html:21
+//line views/vcomment/Detail.html:22
 	qw422016.E().S(p.Model.WebPath())
-//line views/vcomment/Detail.html:21
+//line views/vcomment/Detail.html:22
 	qw422016.N().S(`/edit"><button>`)
-//line views/vcomment/Detail.html:21
+//line views/vcomment/Detail.html:22
 	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vcomment/Detail.html:21
+//line views/vcomment/Detail.html:22
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
-//line views/vcomment/Detail.html:23
+//line views/vcomment/Detail.html:24
 	components.StreamSVGRefIcon(qw422016, `comments`, ps)
-//line views/vcomment/Detail.html:23
+//line views/vcomment/Detail.html:24
 	qw422016.N().S(` `)
-//line views/vcomment/Detail.html:23
+//line views/vcomment/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
-//line views/vcomment/Detail.html:23
+//line views/vcomment/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/comment"><em>Comment</em></a></div>
     <table class="mt">
@@ -68,116 +69,120 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
           <td>`)
-//line views/vcomment/Detail.html:29
+//line views/vcomment/Detail.html:30
 	components.StreamDisplayUUID(qw422016, &p.Model.ID)
-//line views/vcomment/Detail.html:29
+//line views/vcomment/Detail.html:30
 	qw422016.N().S(`</td>
         </tr>
         <tr>
-          <th class="shrink" title="Available options: [team, sprint, estimate, standup, retro, story, feedback, report]">Svc</th>
+          <th class="shrink" title="`)
+//line views/vcomment/Detail.html:33
+	qw422016.E().S(enum.AllModelServices.Help())
+//line views/vcomment/Detail.html:33
+	qw422016.N().S(`">Svc</th>
           <td>`)
-//line views/vcomment/Detail.html:33
-	qw422016.E().V(p.Model.Svc)
-//line views/vcomment/Detail.html:33
+//line views/vcomment/Detail.html:34
+	qw422016.E().S(p.Model.Svc.String())
+//line views/vcomment/Detail.html:34
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Model ID</th>
           <td>`)
-//line views/vcomment/Detail.html:37
+//line views/vcomment/Detail.html:38
 	components.StreamDisplayUUID(qw422016, &p.Model.ModelID)
-//line views/vcomment/Detail.html:37
+//line views/vcomment/Detail.html:38
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
             `)
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 	if p.UserByUserID != nil {
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 		qw422016.N().S(` (`)
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 		qw422016.N().S(`)`)
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 	}
-//line views/vcomment/Detail.html:42
+//line views/vcomment/Detail.html:43
 	qw422016.N().S(`
             <a title="User" href="`)
-//line views/vcomment/Detail.html:43
+//line views/vcomment/Detail.html:44
 	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
-//line views/vcomment/Detail.html:43
+//line views/vcomment/Detail.html:44
 	qw422016.N().S(`">`)
-//line views/vcomment/Detail.html:43
+//line views/vcomment/Detail.html:44
 	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
-//line views/vcomment/Detail.html:43
+//line views/vcomment/Detail.html:44
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Content</th>
           <td>`)
-//line views/vcomment/Detail.html:48
+//line views/vcomment/Detail.html:49
 	qw422016.E().S(p.Model.Content)
-//line views/vcomment/Detail.html:48
+//line views/vcomment/Detail.html:49
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
           <td>`)
-//line views/vcomment/Detail.html:52
+//line views/vcomment/Detail.html:53
 	components.StreamFormat(qw422016, p.Model.HTML, "html")
-//line views/vcomment/Detail.html:52
+//line views/vcomment/Detail.html:53
 	qw422016.N().S(`</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vcomment/Detail.html:56
+//line views/vcomment/Detail.html:57
 	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vcomment/Detail.html:56
+//line views/vcomment/Detail.html:57
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vcomment/Detail.html:62
+//line views/vcomment/Detail.html:63
 	qw422016.N().S(`  `)
-//line views/vcomment/Detail.html:63
+//line views/vcomment/Detail.html:64
 	components.StreamJSONModal(qw422016, "comment", "Comment JSON", p.Model, 1)
-//line views/vcomment/Detail.html:63
+//line views/vcomment/Detail.html:64
 	qw422016.N().S(`
 `)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 }
 
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	p.StreamBody(qw422016, as, ps)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 }
 
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	p.WriteBody(qb422016, as, ps)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 	return qs422016
-//line views/vcomment/Detail.html:64
+//line views/vcomment/Detail.html:65
 }

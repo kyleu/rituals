@@ -7,6 +7,7 @@
   "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/enum"
+  "github.com/kyleu/rituals/app/member"
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
@@ -55,7 +56,7 @@
   </form>
 {% endfunc %}
 
-{% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
+{% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
     <h3 title="{%s util.KeySprintDesc %}">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>

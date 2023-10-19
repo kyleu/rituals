@@ -2,6 +2,7 @@
 {% import (
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
+  "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/team/tmember"
@@ -18,7 +19,7 @@
         {%= components.TableHeaderSimple("tmember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("tmember", "name", "Name", "String text", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("tmember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("tmember", "role", "Role", "Available options: [owner, member, observer]", prms, ps.URI, ps) %}
+        {%= components.TableHeaderSimple("tmember", "role", "Role", enum.AllMemberStatuses.Help(), prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("tmember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
         {%= components.TableHeaderSimple("tmember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
       </tr>
@@ -36,7 +37,7 @@
         </td>
         <td><strong>{%s model.Name %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
-        <td>{%v model.Role %}</td>
+        <td>{%s model.Role.String() %}</td>
         <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
         <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
       </tr>

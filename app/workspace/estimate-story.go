@@ -77,7 +77,7 @@ func estimateStoryStatus(p *Params, fe *FullEstimate) (*FullEstimate, string, st
 	if statusStr == "" {
 		return nil, "", "", errors.New("must provide [status]")
 	}
-	status := enum.SessionStatus(statusStr)
+	status := enum.AllSessionStatuses.Get(statusStr, nil)
 	st := &story.Story{
 		ID: *id, EstimateID: fe.Estimate.ID, Idx: curr.Idx, UserID: fe.Self.UserID,
 		Title: curr.Title, Status: status, FinalVote: curr.FinalVote, Created: curr.Created,

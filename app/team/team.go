@@ -30,7 +30,7 @@ func Random() *Team {
 		Slug:    util.RandomString(12),
 		Title:   util.RandomString(12),
 		Icon:    util.RandomString(12),
-		Status:  enum.SessionStatus(util.RandomString(12)),
+		Status:  enum.AllSessionStatuses.Random(),
 		Created: util.TimeCurrent(),
 		Updated: util.TimeCurrentP(),
 	}
@@ -66,7 +66,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Team, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Status = enum.SessionStatus(retStatus)
+	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
 	return ret, nil
@@ -103,7 +103,7 @@ func (t *Team) Diff(tx *Team) util.Diffs {
 		diffs = append(diffs, util.NewDiff("icon", t.Icon, tx.Icon))
 	}
 	if t.Status != tx.Status {
-		diffs = append(diffs, util.NewDiff("status", string(t.Status), string(tx.Status)))
+		diffs = append(diffs, util.NewDiff("status", t.Status.Key, tx.Status.Key))
 	}
 	if t.Created != tx.Created {
 		diffs = append(diffs, util.NewDiff("created", t.Created.String(), tx.Created.String()))

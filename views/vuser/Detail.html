@@ -93,7 +93,7 @@
         <input id="accordion-ActionsByUserID" type="checkbox" hidden />
         <label for="accordion-ActionsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`action`, ps) %}
+          {%= components.SVGRef(`action`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelActionsByUserID), "Action") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -110,7 +110,7 @@
         <input id="accordion-CommentsByUserID" type="checkbox" hidden />
         <label for="accordion-CommentsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`comments`, ps) %}
+          {%= components.SVGRef(`comments`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelCommentsByUserID), "Comment") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -127,7 +127,7 @@
         <input id="accordion-EmailsByUserID" type="checkbox" hidden />
         <label for="accordion-EmailsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`email`, ps) %}
+          {%= components.SVGRef(`email`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEmailsByUserID), "Email") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -144,7 +144,7 @@
         <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden />
         <label for="accordion-EstimateMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelEstimateMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -161,7 +161,7 @@
         <input id="accordion-FeedbacksByUserID" type="checkbox" hidden />
         <label for="accordion-FeedbacksByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`comment`, ps) %}
+          {%= components.SVGRef(`comment`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelFeedbacksByUserID), "Feedback") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -178,7 +178,7 @@
         <input id="accordion-ReportsByUserID" type="checkbox" hidden />
         <label for="accordion-ReportsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`file-alt`, ps) %}
+          {%= components.SVGRef(`file-alt`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelReportsByUserID), "Report") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -195,7 +195,7 @@
         <input id="accordion-RetroMembersByUserID" type="checkbox" hidden />
         <label for="accordion-RetroMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelRetroMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -212,7 +212,7 @@
         <input id="accordion-SprintMembersByUserID" type="checkbox" hidden />
         <label for="accordion-SprintMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelSprintMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -229,7 +229,7 @@
         <input id="accordion-StandupMembersByUserID" type="checkbox" hidden />
         <label for="accordion-StandupMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelStandupMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -246,7 +246,7 @@
         <input id="accordion-StoriesByUserID" type="checkbox" hidden />
         <label for="accordion-StoriesByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`story`, ps) %}
+          {%= components.SVGRef(`story`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelStoriesByUserID), "Story") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -263,7 +263,7 @@
         <input id="accordion-TeamMembersByUserID" type="checkbox" hidden />
         <label for="accordion-TeamMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`users`, ps) %}
+          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelTeamMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -280,7 +280,7 @@
         <input id="accordion-VotesByUserID" type="checkbox" hidden />
         <label for="accordion-VotesByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRefIcon(`vote-yea`, ps) %}
+          {%= components.SVGRef(`vote-yea`, 16, 16, `icon`, ps) %}
           {%s util.StringPlural(len(p.RelVotesByUserID), "Vote") %} by [User ID]
         </label>
         <div class="bd"><div><div>

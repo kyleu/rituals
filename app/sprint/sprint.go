@@ -34,7 +34,7 @@ func Random() *Sprint {
 		Slug:      util.RandomString(12),
 		Title:     util.RandomString(12),
 		Icon:      util.RandomString(12),
-		Status:    enum.SessionStatus(util.RandomString(12)),
+		Status:    enum.AllSessionStatuses.Random(),
 		TeamID:    util.UUIDP(),
 		StartDate: util.TimeCurrentP(),
 		EndDate:   util.TimeCurrentP(),
@@ -73,7 +73,7 @@ func FromMap(m util.ValueMap, setPK bool) (*Sprint, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret.Status = enum.SessionStatus(retStatus)
+	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
 	ret.TeamID, err = m.ParseUUID("teamID", true, true)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (s *Sprint) Diff(sx *Sprint) util.Diffs {
 		diffs = append(diffs, util.NewDiff("icon", s.Icon, sx.Icon))
 	}
 	if s.Status != sx.Status {
-		diffs = append(diffs, util.NewDiff("status", string(s.Status), string(sx.Status)))
+		diffs = append(diffs, util.NewDiff("status", s.Status.Key, sx.Status.Key))
 	}
 	if (s.TeamID == nil && sx.TeamID != nil) || (s.TeamID != nil && sx.TeamID == nil) || (s.TeamID != nil && sx.TeamID != nil && *s.TeamID != *sx.TeamID) {
 		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(s.TeamID), fmt.Sprint(sx.TeamID))) //nolint:gocritic // it's nullable

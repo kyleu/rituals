@@ -7,6 +7,7 @@ import (
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/comment"
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/standup"
 	"github.com/kyleu/rituals/app/standup/report"
@@ -21,7 +22,7 @@ type FullStandup struct {
 	Standup     *standup.Standup               `json:"standup"`
 	Histories   uhistory.StandupHistories      `json:"histories,omitempty"`
 	Members     umember.StandupMembers         `json:"members,omitempty"`
-	UtilMembers util.Members                   `json:"-"`
+	UtilMembers member.Members                 `json:"-"`
 	Self        *umember.StandupMember         `json:"self,omitempty"`
 	Permissions upermission.StandupPermissions `json:"permissions,omitempty"`
 	Team        *team.Team                     `json:"team,omitempty"`

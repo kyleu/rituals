@@ -11,7 +11,7 @@ import (
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
-	"github.com/kyleu/rituals/app/util"
+	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/views/components"
 )
 
@@ -29,7 +29,7 @@ var (
 )
 
 //line views/vworkspace/vwutil/Self.html:11
-func StreamSelfLink(qw422016 *qt422016.Writer, self *util.Member, ps *cutil.PageState) {
+func StreamSelfLink(qw422016 *qt422016.Writer, self *member.Member, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Self.html:11
 	qw422016.N().S(`
   <span id="self-id" style="display: none;">`)
@@ -78,7 +78,7 @@ func StreamSelfLink(qw422016 *qt422016.Writer, self *util.Member, ps *cutil.Page
   </h3></a>
   <em id="self-role">`)
 //line views/vworkspace/vwutil/Self.html:23
-	qw422016.E().S(string(self.Role))
+	qw422016.E().S(self.Role.String())
 //line views/vworkspace/vwutil/Self.html:23
 	qw422016.N().S(`</em>
 `)
@@ -86,7 +86,7 @@ func StreamSelfLink(qw422016 *qt422016.Writer, self *util.Member, ps *cutil.Page
 }
 
 //line views/vworkspace/vwutil/Self.html:24
-func WriteSelfLink(qq422016 qtio422016.Writer, self *util.Member, ps *cutil.PageState) {
+func WriteSelfLink(qq422016 qtio422016.Writer, self *member.Member, ps *cutil.PageState) {
 //line views/vworkspace/vwutil/Self.html:24
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vworkspace/vwutil/Self.html:24
@@ -97,7 +97,7 @@ func WriteSelfLink(qq422016 qtio422016.Writer, self *util.Member, ps *cutil.Page
 }
 
 //line views/vworkspace/vwutil/Self.html:24
-func SelfLink(self *util.Member, ps *cutil.PageState) string {
+func SelfLink(self *member.Member, ps *cutil.PageState) string {
 //line views/vworkspace/vwutil/Self.html:24
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vworkspace/vwutil/Self.html:24

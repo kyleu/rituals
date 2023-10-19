@@ -3,6 +3,7 @@
   "github.com/kyleu/rituals/app/comment"
   "github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
+  "github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
@@ -24,7 +25,7 @@
         {%- for _, t := range p.Teams -%}
         <tr>
           <td><a href="{%s t.PublicWebPath() %}">{%= components.SVGRef(t.IconSafe(), 16, 16, "icon", ps) %}{%s t.TitleString() %}</a></td>
-          <td class="text-align-right">{%s string(t.Status) %}</td>
+          <td class="text-align-right">{%s t.Status.String() %}</td>
           <td class="shrink">{%= components.DisplayTimestamp(&t.Created) %}</td>
         </tr>
         {%- endfor -%}
@@ -49,7 +50,7 @@
   </form>
 {% endfunc %}
 
-{% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, members util.Members, ps *cutil.PageState) %}
+{% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
     <h3 title="{%s util.KeyTeamDesc %}">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
