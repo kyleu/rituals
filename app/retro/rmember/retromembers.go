@@ -23,8 +23,26 @@ func (r RetroMembers) ToPKs() []*PK {
 }
 
 func (r RetroMembers) GetByRetroIDs(retroIDs ...uuid.UUID) RetroMembers {
-	return lo.Filter(r, func(x *RetroMember, _ int) bool {
-		return lo.Contains(retroIDs, x.RetroID)
+	return lo.Filter(r, func(xx *RetroMember, _ int) bool {
+		return lo.Contains(retroIDs, xx.RetroID)
+	})
+}
+
+func (r RetroMembers) GetByRetroID(retroID uuid.UUID) RetroMembers {
+	return lo.Filter(r, func(xx *RetroMember, _ int) bool {
+		return xx.RetroID == retroID
+	})
+}
+
+func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
+	return lo.Filter(r, func(xx *RetroMember, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (r RetroMembers) GetByUserID(userID uuid.UUID) RetroMembers {
+	return lo.Filter(r, func(xx *RetroMember, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 
@@ -43,12 +61,6 @@ func (r RetroMembers) RetroIDStrings(includeNil bool) []string {
 		ret = append(ret, x.RetroID.String())
 	})
 	return ret
-}
-
-func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
-	return lo.Filter(r, func(x *RetroMember, _ int) bool {
-		return lo.Contains(userIDs, x.UserID)
-	})
 }
 
 func (r RetroMembers) UserIDs() []uuid.UUID {

@@ -4,6 +4,7 @@ package thistory
 import (
 	"slices"
 
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
 
@@ -16,8 +17,26 @@ func (t TeamHistories) Get(slug string) *TeamHistory {
 }
 
 func (t TeamHistories) GetBySlugs(slugs ...string) TeamHistories {
-	return lo.Filter(t, func(x *TeamHistory, _ int) bool {
-		return lo.Contains(slugs, x.Slug)
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (t TeamHistories) GetBySlug(slug string) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
+}
+
+func (t TeamHistories) GetByTeamID(teamID uuid.UUID) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return xx.TeamID == teamID
 	})
 }
 

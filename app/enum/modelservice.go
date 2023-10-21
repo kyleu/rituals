@@ -15,7 +15,7 @@ import (
 
 type ModelService struct {
 	Key         string
-	Name       string
+	Name        string
 	Description string
 }
 

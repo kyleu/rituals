@@ -17,7 +17,7 @@ func MenuFor(
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any
-	// $PF_SECTION_START(routes_start)$
+	// $PF_SECTION_START(routes)$
 	ws, data, err := workspaceMenu(ctx, as, params, profile, logger)
 	if err != nil {
 		return nil, nil, err
@@ -27,17 +27,15 @@ func MenuFor(
 	if isAdmin {
 		ret = append(ret, menu.Separator)
 	}
-	// $PF_SECTION_END(routes_start)$
 	if isAdmin {
 		ret = append(ret, generatedMenu()...)
 	}
-	// $PF_SECTION_START(routes_end)$
 	if isAdmin {
 		admin := &menu.Item{Key: "admin", Title: "Settings", Description: "System-wide settings and preferences", Icon: "cog", Route: "/admin"}
 		ret = append(ret, menu.Separator, sandbox.Menu(ctx), menu.Separator, admin)
 	}
 	const aboutDesc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, menu.Separator, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
-	// $PF_SECTION_END(routes_end)$
+	// $PF_SECTION_END(routes)$
 	return ret, data, nil
 }

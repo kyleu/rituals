@@ -15,7 +15,7 @@ import (
 
 type MemberStatus struct {
 	Key         string
-	Name       string
+	Name        string
 	Description string
 }
 

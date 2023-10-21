@@ -23,8 +23,38 @@ func (s StandupPermissions) ToPKs() []*PK {
 }
 
 func (s StandupPermissions) GetByStandupIDs(standupIDs ...uuid.UUID) StandupPermissions {
-	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
-		return lo.Contains(standupIDs, x.StandupID)
+	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
+		return lo.Contains(standupIDs, xx.StandupID)
+	})
+}
+
+func (s StandupPermissions) GetByStandupID(standupID uuid.UUID) StandupPermissions {
+	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
+		return xx.StandupID == standupID
+	})
+}
+
+func (s StandupPermissions) GetByKeys(keys ...string) StandupPermissions {
+	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
+		return lo.Contains(keys, xx.Key)
+	})
+}
+
+func (s StandupPermissions) GetByKey(key string) StandupPermissions {
+	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
+		return xx.Key == key
+	})
+}
+
+func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
+	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
+		return lo.Contains(values, xx.Value)
+	})
+}
+
+func (s StandupPermissions) GetByValue(value string) StandupPermissions {
+	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
+		return xx.Value == value
 	})
 }
 
@@ -45,12 +75,6 @@ func (s StandupPermissions) StandupIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (s StandupPermissions) GetByKeys(keys ...string) StandupPermissions {
-	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
-		return lo.Contains(keys, x.Key)
-	})
-}
-
 func (s StandupPermissions) Keys() []string {
 	return lo.Map(s, func(x *StandupPermission, _ int) string {
 		return x.Key
@@ -66,12 +90,6 @@ func (s StandupPermissions) KeyStrings(includeNil bool) []string {
 		ret = append(ret, x.Key)
 	})
 	return ret
-}
-
-func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
-	return lo.Filter(s, func(x *StandupPermission, _ int) bool {
-		return lo.Contains(values, x.Value)
-	})
 }
 
 func (s StandupPermissions) Values() []string {

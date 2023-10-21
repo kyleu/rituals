@@ -4,6 +4,7 @@ package uhistory
 import (
 	"slices"
 
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
 
@@ -16,8 +17,26 @@ func (s StandupHistories) Get(slug string) *StandupHistory {
 }
 
 func (s StandupHistories) GetBySlugs(slugs ...string) StandupHistories {
-	return lo.Filter(s, func(x *StandupHistory, _ int) bool {
-		return lo.Contains(slugs, x.Slug)
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (s StandupHistories) GetBySlug(slug string) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return lo.Contains(standupIDs, xx.StandupID)
+	})
+}
+
+func (s StandupHistories) GetByStandupID(standupID uuid.UUID) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return xx.StandupID == standupID
 	})
 }
 

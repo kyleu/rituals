@@ -23,8 +23,26 @@ func (e EstimateMembers) ToPKs() []*PK {
 }
 
 func (e EstimateMembers) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateMembers {
-	return lo.Filter(e, func(x *EstimateMember, _ int) bool {
-		return lo.Contains(estimateIDs, x.EstimateID)
+	return lo.Filter(e, func(xx *EstimateMember, _ int) bool {
+		return lo.Contains(estimateIDs, xx.EstimateID)
+	})
+}
+
+func (e EstimateMembers) GetByEstimateID(estimateID uuid.UUID) EstimateMembers {
+	return lo.Filter(e, func(xx *EstimateMember, _ int) bool {
+		return xx.EstimateID == estimateID
+	})
+}
+
+func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
+	return lo.Filter(e, func(xx *EstimateMember, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (e EstimateMembers) GetByUserID(userID uuid.UUID) EstimateMembers {
+	return lo.Filter(e, func(xx *EstimateMember, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 
@@ -43,12 +61,6 @@ func (e EstimateMembers) EstimateIDStrings(includeNil bool) []string {
 		ret = append(ret, x.EstimateID.String())
 	})
 	return ret
-}
-
-func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
-	return lo.Filter(e, func(x *EstimateMember, _ int) bool {
-		return lo.Contains(userIDs, x.UserID)
-	})
 }
 
 func (e EstimateMembers) UserIDs() []uuid.UUID {

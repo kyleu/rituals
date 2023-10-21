@@ -17,8 +17,26 @@ func (e Emails) Get(id uuid.UUID) *Email {
 }
 
 func (e Emails) GetByIDs(ids ...uuid.UUID) Emails {
-	return lo.Filter(e, func(x *Email, _ int) bool {
-		return lo.Contains(ids, x.ID)
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (e Emails) GetByID(id uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (e Emails) GetByUserID(userID uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 

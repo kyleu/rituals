@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/enum"
 )
 
 type Teams []*Team
@@ -17,8 +19,38 @@ func (t Teams) Get(id uuid.UUID) *Team {
 }
 
 func (t Teams) GetByIDs(ids ...uuid.UUID) Teams {
-	return lo.Filter(t, func(x *Team, _ int) bool {
-		return lo.Contains(ids, x.ID)
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (t Teams) GetByID(id uuid.UUID) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (t Teams) GetBySlugs(slugs ...string) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (t Teams) GetBySlug(slug string) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return lo.Contains(statuses, xx.Status)
+	})
+}
+
+func (t Teams) GetByStatus(status enum.SessionStatus) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return xx.Status == status
 	})
 }
 

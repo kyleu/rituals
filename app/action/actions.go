@@ -17,8 +17,26 @@ func (a Actions) Get(id uuid.UUID) *Action {
 }
 
 func (a Actions) GetByIDs(ids ...uuid.UUID) Actions {
-	return lo.Filter(a, func(x *Action, _ int) bool {
-		return lo.Contains(ids, x.ID)
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (a Actions) GetByID(id uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (a Actions) GetByUserID(userID uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 

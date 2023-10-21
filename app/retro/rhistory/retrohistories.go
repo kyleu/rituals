@@ -4,6 +4,7 @@ package rhistory
 import (
 	"slices"
 
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
 
@@ -16,8 +17,26 @@ func (r RetroHistories) Get(slug string) *RetroHistory {
 }
 
 func (r RetroHistories) GetBySlugs(slugs ...string) RetroHistories {
-	return lo.Filter(r, func(x *RetroHistory, _ int) bool {
-		return lo.Contains(slugs, x.Slug)
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (r RetroHistories) GetBySlug(slug string) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return lo.Contains(retroIDs, xx.RetroID)
+	})
+}
+
+func (r RetroHistories) GetByRetroID(retroID uuid.UUID) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return xx.RetroID == retroID
 	})
 }
 

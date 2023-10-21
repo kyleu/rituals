@@ -1,4 +1,4 @@
-// Package user - Content managed by Project Forge, see [projectforge.md] for details.
+// $PF_IGNORE$
 package user
 
 import (
@@ -17,8 +17,8 @@ func (u Users) Get(id uuid.UUID) *User {
 }
 
 func (u Users) GetByIDs(ids ...uuid.UUID) Users {
-	return lo.Filter(u, func(x *User, _ int) bool {
-		return lo.Contains(ids, x.ID)
+	return lo.Filter(u, func(xx *User, _ int) bool {
+		return lo.Contains(ids, xx.ID)
 	})
 }
 

@@ -23,8 +23,26 @@ func (t TeamMembers) ToPKs() []*PK {
 }
 
 func (t TeamMembers) GetByTeamIDs(teamIDs ...uuid.UUID) TeamMembers {
-	return lo.Filter(t, func(x *TeamMember, _ int) bool {
-		return lo.Contains(teamIDs, x.TeamID)
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
+}
+
+func (t TeamMembers) GetByTeamID(teamID uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (t TeamMembers) GetByUserID(userID uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 
@@ -43,12 +61,6 @@ func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
 		ret = append(ret, x.TeamID.String())
 	})
 	return ret
-}
-
-func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
-	return lo.Filter(t, func(x *TeamMember, _ int) bool {
-		return lo.Contains(userIDs, x.UserID)
-	})
 }
 
 func (t TeamMembers) UserIDs() []uuid.UUID {

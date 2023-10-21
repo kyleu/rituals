@@ -37,7 +37,7 @@ func Random() *Estimate {
 		Status:   enum.AllSessionStatuses.Random(),
 		TeamID:   util.UUIDP(),
 		SprintID: util.UUIDP(),
-		Choices:  nil,
+		Choices:  []string{util.RandomString(12), util.RandomString(12)},
 		Created:  util.TimeCurrent(),
 		Updated:  util.TimeCurrentP(),
 	}

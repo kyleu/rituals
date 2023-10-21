@@ -23,8 +23,38 @@ func (s SprintPermissions) ToPKs() []*PK {
 }
 
 func (s SprintPermissions) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintPermissions {
-	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
-		return lo.Contains(sprintIDs, x.SprintID)
+	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
+		return lo.Contains(sprintIDs, xx.SprintID)
+	})
+}
+
+func (s SprintPermissions) GetBySprintID(sprintID uuid.UUID) SprintPermissions {
+	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
+		return xx.SprintID == sprintID
+	})
+}
+
+func (s SprintPermissions) GetByKeys(keys ...string) SprintPermissions {
+	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
+		return lo.Contains(keys, xx.Key)
+	})
+}
+
+func (s SprintPermissions) GetByKey(key string) SprintPermissions {
+	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
+		return xx.Key == key
+	})
+}
+
+func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
+	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
+		return lo.Contains(values, xx.Value)
+	})
+}
+
+func (s SprintPermissions) GetByValue(value string) SprintPermissions {
+	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
+		return xx.Value == value
 	})
 }
 
@@ -45,12 +75,6 @@ func (s SprintPermissions) SprintIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (s SprintPermissions) GetByKeys(keys ...string) SprintPermissions {
-	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
-		return lo.Contains(keys, x.Key)
-	})
-}
-
 func (s SprintPermissions) Keys() []string {
 	return lo.Map(s, func(x *SprintPermission, _ int) string {
 		return x.Key
@@ -66,12 +90,6 @@ func (s SprintPermissions) KeyStrings(includeNil bool) []string {
 		ret = append(ret, x.Key)
 	})
 	return ret
-}
-
-func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
-	return lo.Filter(s, func(x *SprintPermission, _ int) bool {
-		return lo.Contains(values, x.Value)
-	})
 }
 
 func (s SprintPermissions) Values() []string {

@@ -28,7 +28,7 @@ func New(id uuid.UUID) *Email {
 func Random() *Email {
 	return &Email{
 		ID:         util.UUID(),
-		Recipients: nil,
+		Recipients: []string{util.RandomString(12), util.RandomString(12)},
 		Subject:    util.RandomString(12),
 		Data:       util.RandomValueMap(4),
 		Plain:      util.RandomString(12),

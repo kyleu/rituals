@@ -17,8 +17,38 @@ func (f Feedbacks) Get(id uuid.UUID) *Feedback {
 }
 
 func (f Feedbacks) GetByIDs(ids ...uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(x *Feedback, _ int) bool {
-		return lo.Contains(ids, x.ID)
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (f Feedbacks) GetByID(id uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (f Feedbacks) GetByRetroIDs(retroIDs ...uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return lo.Contains(retroIDs, xx.RetroID)
+	})
+}
+
+func (f Feedbacks) GetByRetroID(retroID uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return xx.RetroID == retroID
+	})
+}
+
+func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (f Feedbacks) GetByUserID(userID uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 

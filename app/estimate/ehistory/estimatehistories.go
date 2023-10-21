@@ -4,6 +4,7 @@ package ehistory
 import (
 	"slices"
 
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
 
@@ -16,8 +17,26 @@ func (e EstimateHistories) Get(slug string) *EstimateHistory {
 }
 
 func (e EstimateHistories) GetBySlugs(slugs ...string) EstimateHistories {
-	return lo.Filter(e, func(x *EstimateHistory, _ int) bool {
-		return lo.Contains(slugs, x.Slug)
+	return lo.Filter(e, func(xx *EstimateHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (e EstimateHistories) GetBySlug(slug string) EstimateHistories {
+	return lo.Filter(e, func(xx *EstimateHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (e EstimateHistories) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateHistories {
+	return lo.Filter(e, func(xx *EstimateHistory, _ int) bool {
+		return lo.Contains(estimateIDs, xx.EstimateID)
+	})
+}
+
+func (e EstimateHistories) GetByEstimateID(estimateID uuid.UUID) EstimateHistories {
+	return lo.Filter(e, func(xx *EstimateHistory, _ int) bool {
+		return xx.EstimateID == estimateID
 	})
 }
 

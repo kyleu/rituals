@@ -23,8 +23,38 @@ func (t TeamPermissions) ToPKs() []*PK {
 }
 
 func (t TeamPermissions) GetByTeamIDs(teamIDs ...uuid.UUID) TeamPermissions {
-	return lo.Filter(t, func(x *TeamPermission, _ int) bool {
-		return lo.Contains(teamIDs, x.TeamID)
+	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
+}
+
+func (t TeamPermissions) GetByTeamID(teamID uuid.UUID) TeamPermissions {
+	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (t TeamPermissions) GetByKeys(keys ...string) TeamPermissions {
+	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
+		return lo.Contains(keys, xx.Key)
+	})
+}
+
+func (t TeamPermissions) GetByKey(key string) TeamPermissions {
+	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
+		return xx.Key == key
+	})
+}
+
+func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
+	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
+		return lo.Contains(values, xx.Value)
+	})
+}
+
+func (t TeamPermissions) GetByValue(value string) TeamPermissions {
+	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
+		return xx.Value == value
 	})
 }
 
@@ -45,12 +75,6 @@ func (t TeamPermissions) TeamIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (t TeamPermissions) GetByKeys(keys ...string) TeamPermissions {
-	return lo.Filter(t, func(x *TeamPermission, _ int) bool {
-		return lo.Contains(keys, x.Key)
-	})
-}
-
 func (t TeamPermissions) Keys() []string {
 	return lo.Map(t, func(x *TeamPermission, _ int) string {
 		return x.Key
@@ -66,12 +90,6 @@ func (t TeamPermissions) KeyStrings(includeNil bool) []string {
 		ret = append(ret, x.Key)
 	})
 	return ret
-}
-
-func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
-	return lo.Filter(t, func(x *TeamPermission, _ int) bool {
-		return lo.Contains(values, x.Value)
-	})
 }
 
 func (t TeamPermissions) Values() []string {

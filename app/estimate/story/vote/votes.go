@@ -23,8 +23,26 @@ func (v Votes) ToPKs() []*PK {
 }
 
 func (v Votes) GetByStoryIDs(storyIDs ...uuid.UUID) Votes {
-	return lo.Filter(v, func(x *Vote, _ int) bool {
-		return lo.Contains(storyIDs, x.StoryID)
+	return lo.Filter(v, func(xx *Vote, _ int) bool {
+		return lo.Contains(storyIDs, xx.StoryID)
+	})
+}
+
+func (v Votes) GetByStoryID(storyID uuid.UUID) Votes {
+	return lo.Filter(v, func(xx *Vote, _ int) bool {
+		return xx.StoryID == storyID
+	})
+}
+
+func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
+	return lo.Filter(v, func(xx *Vote, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
+}
+
+func (v Votes) GetByUserID(userID uuid.UUID) Votes {
+	return lo.Filter(v, func(xx *Vote, _ int) bool {
+		return xx.UserID == userID
 	})
 }
 
@@ -43,12 +61,6 @@ func (v Votes) StoryIDStrings(includeNil bool) []string {
 		ret = append(ret, x.StoryID.String())
 	})
 	return ret
-}
-
-func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
-	return lo.Filter(v, func(x *Vote, _ int) bool {
-		return lo.Contains(userIDs, x.UserID)
-	})
 }
 
 func (v Votes) UserIDs() []uuid.UUID {

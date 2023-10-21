@@ -15,7 +15,7 @@ import (
 
 type SessionStatus struct {
 	Key         string
-	Name       string
+	Name        string
 	Description string
 }
 

@@ -23,8 +23,38 @@ func (e EstimatePermissions) ToPKs() []*PK {
 }
 
 func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
-	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
-		return lo.Contains(estimateIDs, x.EstimateID)
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return lo.Contains(estimateIDs, xx.EstimateID)
+	})
+}
+
+func (e EstimatePermissions) GetByEstimateID(estimateID uuid.UUID) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return xx.EstimateID == estimateID
+	})
+}
+
+func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return lo.Contains(keys, xx.Key)
+	})
+}
+
+func (e EstimatePermissions) GetByKey(key string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return xx.Key == key
+	})
+}
+
+func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return lo.Contains(values, xx.Value)
+	})
+}
+
+func (e EstimatePermissions) GetByValue(value string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return xx.Value == value
 	})
 }
 
@@ -45,12 +75,6 @@ func (e EstimatePermissions) EstimateIDStrings(includeNil bool) []string {
 	return ret
 }
 
-func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
-	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
-		return lo.Contains(keys, x.Key)
-	})
-}
-
 func (e EstimatePermissions) Keys() []string {
 	return lo.Map(e, func(x *EstimatePermission, _ int) string {
 		return x.Key
@@ -66,12 +90,6 @@ func (e EstimatePermissions) KeyStrings(includeNil bool) []string {
 		ret = append(ret, x.Key)
 	})
 	return ret
-}
-
-func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
-	return lo.Filter(e, func(x *EstimatePermission, _ int) bool {
-		return lo.Contains(values, x.Value)
-	})
 }
 
 func (e EstimatePermissions) Values() []string {
