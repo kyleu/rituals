@@ -87,6 +87,21 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.
 	return ret.ToSprintMembers(), nil
 }
 
+func (s *Service) GetBySprintIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, sprintIDs ...uuid.UUID) (SprintMembers, error) {
+	if len(sprintIDs) == 0 {
+		return SprintMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("sprint_id", len(sprintIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(sprintIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get SprintMembers for [%d] sprintIDs", len(sprintIDs))
+	}
+	return ret.ToSprintMembers(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (SprintMembers, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -95,6 +110,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get sprint_members by userID [%v]", userID)
+	}
+	return ret.ToSprintMembers(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (SprintMembers, error) {
+	if len(userIDs) == 0 {
+		return SprintMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get SprintMembers for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToSprintMembers(), nil
 }

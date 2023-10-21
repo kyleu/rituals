@@ -38,14 +38,14 @@ func EstimateList(rc *fasthttp.RequestCtx) {
 		teamIDsByTeamID := lo.Map(ret, func(x *estimate.Estimate, _ int) *uuid.UUID {
 			return x.TeamID
 		})
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDereference(teamIDsByTeamID)...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, nil, ps.Logger, util.ArrayDereference(teamIDsByTeamID)...)
 		if err != nil {
 			return "", err
 		}
 		sprintIDsBySprintID := lo.Map(ret, func(x *estimate.Estimate, _ int) *uuid.UUID {
 			return x.SprintID
 		})
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, util.ArrayDereference(sprintIDsBySprintID)...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, nil, ps.Logger, util.ArrayDereference(sprintIDsBySprintID)...)
 		if err != nil {
 			return "", err
 		}

@@ -28,7 +28,7 @@ func StandupHistoryList(rc *fasthttp.RequestCtx) {
 		standupIDsByStandupID := lo.Map(ret, func(x *uhistory.StandupHistory, _ int) uuid.UUID {
 			return x.StandupID
 		})
-		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDsByStandupID...)
+		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, nil, ps.Logger, standupIDsByStandupID...)
 		if err != nil {
 			return "", err
 		}

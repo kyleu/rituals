@@ -99,6 +99,22 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.
 	return ret.ToSprintPermissions(), nil
 }
 
+//nolint:lll
+func (s *Service) GetBySprintIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, sprintIDs ...uuid.UUID) (SprintPermissions, error) {
+	if len(sprintIDs) == 0 {
+		return SprintPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("sprint_id", len(sprintIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(sprintIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get SprintPermissions for [%d] sprintIDs", len(sprintIDs))
+	}
+	return ret.ToSprintPermissions(), nil
+}
+
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (SprintPermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"

@@ -16,33 +16,9 @@ func (a Actions) Get(id uuid.UUID) *Action {
 	})
 }
 
-func (a Actions) GetByIDs(ids ...uuid.UUID) Actions {
-	return lo.Filter(a, func(xx *Action, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (a Actions) GetByID(id uuid.UUID) Actions {
-	return lo.Filter(a, func(xx *Action, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
-	return lo.Filter(a, func(xx *Action, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (a Actions) GetByUserID(userID uuid.UUID) Actions {
-	return lo.Filter(a, func(xx *Action, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (a Actions) IDs() []uuid.UUID {
-	return lo.Map(a, func(x *Action, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(a, func(xx *Action, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -66,6 +42,36 @@ func (a Actions) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (a Actions) GetByID(id uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (a Actions) GetByIDs(ids ...uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (a Actions) UserIDs() []uuid.UUID {
+	return lo.Map(a, func(xx *Action, _ int) uuid.UUID {
+		return xx.UserID
+	})
+}
+
+func (a Actions) GetByUserID(userID uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
+	return lo.Filter(a, func(xx *Action, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (a Actions) Clone() Actions {

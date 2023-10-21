@@ -50,13 +50,14 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, slug string, logger util
 	return ret.ToEstimateHistory(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, slugs ...string) (EstimateHistories, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, slugs ...string) (EstimateHistories, error) {
 	if len(slugs) == 0 {
 		return EstimateHistories{}, nil
 	}
+	params = filters(params)
 	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(slugs)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get EstimateHistories for [%d] slugs", len(slugs))
@@ -73,6 +74,22 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimate_histories by estimateID [%v]", estimateID)
+	}
+	return ret.ToEstimateHistories(), nil
+}
+
+//nolint:lll
+func (s *Service) GetByEstimateIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, estimateIDs ...uuid.UUID) (EstimateHistories, error) {
+	if len(estimateIDs) == 0 {
+		return EstimateHistories{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(estimateIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get EstimateHistories for [%d] estimateIDs", len(estimateIDs))
 	}
 	return ret.ToEstimateHistories(), nil
 }

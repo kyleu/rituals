@@ -16,51 +16,9 @@ func (r RetroPermissions) Get(retroID uuid.UUID, key string, value string) *Retr
 	})
 }
 
-func (r RetroPermissions) ToPKs() []*PK {
-	return lo.Map(r, func(x *RetroPermission, _ int) *PK {
-		return x.ToPK()
-	})
-}
-
-func (r RetroPermissions) GetByRetroIDs(retroIDs ...uuid.UUID) RetroPermissions {
-	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
-		return lo.Contains(retroIDs, xx.RetroID)
-	})
-}
-
-func (r RetroPermissions) GetByRetroID(retroID uuid.UUID) RetroPermissions {
-	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
-		return xx.RetroID == retroID
-	})
-}
-
-func (r RetroPermissions) GetByKeys(keys ...string) RetroPermissions {
-	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
-		return lo.Contains(keys, xx.Key)
-	})
-}
-
-func (r RetroPermissions) GetByKey(key string) RetroPermissions {
-	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
-		return xx.Key == key
-	})
-}
-
-func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
-	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
-		return lo.Contains(values, xx.Value)
-	})
-}
-
-func (r RetroPermissions) GetByValue(value string) RetroPermissions {
-	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
-		return xx.Value == value
-	})
-}
-
 func (r RetroPermissions) RetroIDs() []uuid.UUID {
-	return lo.Map(r, func(x *RetroPermission, _ int) uuid.UUID {
-		return x.RetroID
+	return lo.Map(r, func(xx *RetroPermission, _ int) uuid.UUID {
+		return xx.RetroID
 	})
 }
 
@@ -76,8 +34,8 @@ func (r RetroPermissions) RetroIDStrings(includeNil bool) []string {
 }
 
 func (r RetroPermissions) Keys() []string {
-	return lo.Map(r, func(x *RetroPermission, _ int) string {
-		return x.Key
+	return lo.Map(r, func(xx *RetroPermission, _ int) string {
+		return xx.Key
 	})
 }
 
@@ -93,8 +51,8 @@ func (r RetroPermissions) KeyStrings(includeNil bool) []string {
 }
 
 func (r RetroPermissions) Values() []string {
-	return lo.Map(r, func(x *RetroPermission, _ int) string {
-		return x.Value
+	return lo.Map(r, func(xx *RetroPermission, _ int) string {
+		return xx.Value
 	})
 }
 
@@ -118,6 +76,48 @@ func (r RetroPermissions) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (r RetroPermissions) ToPKs() []*PK {
+	return lo.Map(r, func(x *RetroPermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
+func (r RetroPermissions) GetByRetroID(retroID uuid.UUID) RetroPermissions {
+	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
+		return xx.RetroID == retroID
+	})
+}
+
+func (r RetroPermissions) GetByRetroIDs(retroIDs ...uuid.UUID) RetroPermissions {
+	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
+		return lo.Contains(retroIDs, xx.RetroID)
+	})
+}
+
+func (r RetroPermissions) GetByKey(key string) RetroPermissions {
+	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
+		return xx.Key == key
+	})
+}
+
+func (r RetroPermissions) GetByKeys(keys ...string) RetroPermissions {
+	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
+		return lo.Contains(keys, xx.Key)
+	})
+}
+
+func (r RetroPermissions) GetByValue(value string) RetroPermissions {
+	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
+		return xx.Value == value
+	})
+}
+
+func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
+	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
+		return lo.Contains(values, xx.Value)
+	})
 }
 
 func (r RetroPermissions) Clone() RetroPermissions {

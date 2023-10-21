@@ -29,7 +29,7 @@ func TeamPermissionList(rc *fasthttp.RequestCtx) {
 		teamIDsByTeamID := lo.Map(ret, func(x *tpermission.TeamPermission, _ int) uuid.UUID {
 			return x.TeamID
 		})
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, teamIDsByTeamID...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, nil, ps.Logger, teamIDsByTeamID...)
 		if err != nil {
 			return "", err
 		}

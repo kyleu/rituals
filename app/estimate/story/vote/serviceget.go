@@ -87,6 +87,21 @@ func (s *Service) GetByStoryID(ctx context.Context, tx *sqlx.Tx, storyID uuid.UU
 	return ret.ToVotes(), nil
 }
 
+func (s *Service) GetByStoryIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, storyIDs ...uuid.UUID) (Votes, error) {
+	if len(storyIDs) == 0 {
+		return Votes{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("story_id", len(storyIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(storyIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Votes for [%d] storyIDs", len(storyIDs))
+	}
+	return ret.ToVotes(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (Votes, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -95,6 +110,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get votes by userID [%v]", userID)
+	}
+	return ret.ToVotes(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (Votes, error) {
+	if len(userIDs) == 0 {
+		return Votes{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Votes for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToVotes(), nil
 }

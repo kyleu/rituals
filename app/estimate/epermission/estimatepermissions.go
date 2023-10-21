@@ -16,51 +16,9 @@ func (e EstimatePermissions) Get(estimateID uuid.UUID, key string, value string)
 	})
 }
 
-func (e EstimatePermissions) ToPKs() []*PK {
-	return lo.Map(e, func(x *EstimatePermission, _ int) *PK {
-		return x.ToPK()
-	})
-}
-
-func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
-	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
-		return lo.Contains(estimateIDs, xx.EstimateID)
-	})
-}
-
-func (e EstimatePermissions) GetByEstimateID(estimateID uuid.UUID) EstimatePermissions {
-	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
-		return xx.EstimateID == estimateID
-	})
-}
-
-func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
-	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
-		return lo.Contains(keys, xx.Key)
-	})
-}
-
-func (e EstimatePermissions) GetByKey(key string) EstimatePermissions {
-	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
-		return xx.Key == key
-	})
-}
-
-func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
-	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
-		return lo.Contains(values, xx.Value)
-	})
-}
-
-func (e EstimatePermissions) GetByValue(value string) EstimatePermissions {
-	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
-		return xx.Value == value
-	})
-}
-
 func (e EstimatePermissions) EstimateIDs() []uuid.UUID {
-	return lo.Map(e, func(x *EstimatePermission, _ int) uuid.UUID {
-		return x.EstimateID
+	return lo.Map(e, func(xx *EstimatePermission, _ int) uuid.UUID {
+		return xx.EstimateID
 	})
 }
 
@@ -76,8 +34,8 @@ func (e EstimatePermissions) EstimateIDStrings(includeNil bool) []string {
 }
 
 func (e EstimatePermissions) Keys() []string {
-	return lo.Map(e, func(x *EstimatePermission, _ int) string {
-		return x.Key
+	return lo.Map(e, func(xx *EstimatePermission, _ int) string {
+		return xx.Key
 	})
 }
 
@@ -93,8 +51,8 @@ func (e EstimatePermissions) KeyStrings(includeNil bool) []string {
 }
 
 func (e EstimatePermissions) Values() []string {
-	return lo.Map(e, func(x *EstimatePermission, _ int) string {
-		return x.Value
+	return lo.Map(e, func(xx *EstimatePermission, _ int) string {
+		return xx.Value
 	})
 }
 
@@ -118,6 +76,48 @@ func (e EstimatePermissions) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (e EstimatePermissions) ToPKs() []*PK {
+	return lo.Map(e, func(x *EstimatePermission, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
+func (e EstimatePermissions) GetByEstimateID(estimateID uuid.UUID) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return xx.EstimateID == estimateID
+	})
+}
+
+func (e EstimatePermissions) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return lo.Contains(estimateIDs, xx.EstimateID)
+	})
+}
+
+func (e EstimatePermissions) GetByKey(key string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return xx.Key == key
+	})
+}
+
+func (e EstimatePermissions) GetByKeys(keys ...string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return lo.Contains(keys, xx.Key)
+	})
+}
+
+func (e EstimatePermissions) GetByValue(value string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return xx.Value == value
+	})
+}
+
+func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
+	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
+		return lo.Contains(values, xx.Value)
+	})
 }
 
 func (e EstimatePermissions) Clone() EstimatePermissions {

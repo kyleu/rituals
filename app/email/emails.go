@@ -16,33 +16,9 @@ func (e Emails) Get(id uuid.UUID) *Email {
 	})
 }
 
-func (e Emails) GetByIDs(ids ...uuid.UUID) Emails {
-	return lo.Filter(e, func(xx *Email, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (e Emails) GetByID(id uuid.UUID) Emails {
-	return lo.Filter(e, func(xx *Email, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
-	return lo.Filter(e, func(xx *Email, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (e Emails) GetByUserID(userID uuid.UUID) Emails {
-	return lo.Filter(e, func(xx *Email, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (e Emails) IDs() []uuid.UUID {
-	return lo.Map(e, func(x *Email, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(e, func(xx *Email, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -66,6 +42,36 @@ func (e Emails) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (e Emails) GetByID(id uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (e Emails) GetByIDs(ids ...uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (e Emails) UserIDs() []uuid.UUID {
+	return lo.Map(e, func(xx *Email, _ int) uuid.UUID {
+		return xx.UserID
+	})
+}
+
+func (e Emails) GetByUserID(userID uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
+	return lo.Filter(e, func(xx *Email, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (e Emails) Clone() Emails {

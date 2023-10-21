@@ -16,33 +16,9 @@ func (s SprintHistories) Get(slug string) *SprintHistory {
 	})
 }
 
-func (s SprintHistories) GetBySlugs(slugs ...string) SprintHistories {
-	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (s SprintHistories) GetBySlug(slug string) SprintHistories {
-	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories {
-	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
-		return lo.Contains(sprintIDs, xx.SprintID)
-	})
-}
-
-func (s SprintHistories) GetBySprintID(sprintID uuid.UUID) SprintHistories {
-	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
-		return xx.SprintID == sprintID
-	})
-}
-
 func (s SprintHistories) Slugs() []string {
-	return lo.Map(s, func(x *SprintHistory, _ int) string {
-		return x.Slug
+	return lo.Map(s, func(xx *SprintHistory, _ int) string {
+		return xx.Slug
 	})
 }
 
@@ -66,6 +42,36 @@ func (s SprintHistories) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (s SprintHistories) GetBySlug(slug string) SprintHistories {
+	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (s SprintHistories) GetBySlugs(slugs ...string) SprintHistories {
+	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (s SprintHistories) SprintIDs() []uuid.UUID {
+	return lo.Map(s, func(xx *SprintHistory, _ int) uuid.UUID {
+		return xx.SprintID
+	})
+}
+
+func (s SprintHistories) GetBySprintID(sprintID uuid.UUID) SprintHistories {
+	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
+		return xx.SprintID == sprintID
+	})
+}
+
+func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories {
+	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
+		return lo.Contains(sprintIDs, xx.SprintID)
+	})
 }
 
 func (s SprintHistories) Clone() SprintHistories {

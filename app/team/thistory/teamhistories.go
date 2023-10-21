@@ -16,33 +16,9 @@ func (t TeamHistories) Get(slug string) *TeamHistory {
 	})
 }
 
-func (t TeamHistories) GetBySlugs(slugs ...string) TeamHistories {
-	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (t TeamHistories) GetBySlug(slug string) TeamHistories {
-	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
-	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
-		return lo.Contains(teamIDs, xx.TeamID)
-	})
-}
-
-func (t TeamHistories) GetByTeamID(teamID uuid.UUID) TeamHistories {
-	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
-		return xx.TeamID == teamID
-	})
-}
-
 func (t TeamHistories) Slugs() []string {
-	return lo.Map(t, func(x *TeamHistory, _ int) string {
-		return x.Slug
+	return lo.Map(t, func(xx *TeamHistory, _ int) string {
+		return xx.Slug
 	})
 }
 
@@ -66,6 +42,36 @@ func (t TeamHistories) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (t TeamHistories) GetBySlug(slug string) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (t TeamHistories) GetBySlugs(slugs ...string) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (t TeamHistories) TeamIDs() []uuid.UUID {
+	return lo.Map(t, func(xx *TeamHistory, _ int) uuid.UUID {
+		return xx.TeamID
+	})
+}
+
+func (t TeamHistories) GetByTeamID(teamID uuid.UUID) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
+	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
 }
 
 func (t TeamHistories) Clone() TeamHistories {

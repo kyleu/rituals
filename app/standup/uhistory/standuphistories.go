@@ -16,33 +16,9 @@ func (s StandupHistories) Get(slug string) *StandupHistory {
 	})
 }
 
-func (s StandupHistories) GetBySlugs(slugs ...string) StandupHistories {
-	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (s StandupHistories) GetBySlug(slug string) StandupHistories {
-	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistories {
-	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
-		return lo.Contains(standupIDs, xx.StandupID)
-	})
-}
-
-func (s StandupHistories) GetByStandupID(standupID uuid.UUID) StandupHistories {
-	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
-		return xx.StandupID == standupID
-	})
-}
-
 func (s StandupHistories) Slugs() []string {
-	return lo.Map(s, func(x *StandupHistory, _ int) string {
-		return x.Slug
+	return lo.Map(s, func(xx *StandupHistory, _ int) string {
+		return xx.Slug
 	})
 }
 
@@ -66,6 +42,36 @@ func (s StandupHistories) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (s StandupHistories) GetBySlug(slug string) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (s StandupHistories) GetBySlugs(slugs ...string) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (s StandupHistories) StandupIDs() []uuid.UUID {
+	return lo.Map(s, func(xx *StandupHistory, _ int) uuid.UUID {
+		return xx.StandupID
+	})
+}
+
+func (s StandupHistories) GetByStandupID(standupID uuid.UUID) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return xx.StandupID == standupID
+	})
+}
+
+func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistories {
+	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
+		return lo.Contains(standupIDs, xx.StandupID)
+	})
 }
 
 func (s StandupHistories) Clone() StandupHistories {

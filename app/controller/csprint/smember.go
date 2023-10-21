@@ -29,14 +29,14 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		sprintIDsBySprintID := lo.Map(ret, func(x *smember.SprintMember, _ int) uuid.UUID {
 			return x.SprintID
 		})
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDsBySprintID...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, nil, ps.Logger, sprintIDsBySprintID...)
 		if err != nil {
 			return "", err
 		}
 		userIDsByUserID := lo.Map(ret, func(x *smember.SprintMember, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

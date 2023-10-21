@@ -16,33 +16,9 @@ func (c Comments) Get(id uuid.UUID) *Comment {
 	})
 }
 
-func (c Comments) GetByIDs(ids ...uuid.UUID) Comments {
-	return lo.Filter(c, func(xx *Comment, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (c Comments) GetByID(id uuid.UUID) Comments {
-	return lo.Filter(c, func(xx *Comment, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (c Comments) GetByUserIDs(userIDs ...uuid.UUID) Comments {
-	return lo.Filter(c, func(xx *Comment, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (c Comments) GetByUserID(userID uuid.UUID) Comments {
-	return lo.Filter(c, func(xx *Comment, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (c Comments) IDs() []uuid.UUID {
-	return lo.Map(c, func(x *Comment, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(c, func(xx *Comment, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -66,6 +42,36 @@ func (c Comments) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (c Comments) GetByID(id uuid.UUID) Comments {
+	return lo.Filter(c, func(xx *Comment, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (c Comments) GetByIDs(ids ...uuid.UUID) Comments {
+	return lo.Filter(c, func(xx *Comment, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (c Comments) UserIDs() []uuid.UUID {
+	return lo.Map(c, func(xx *Comment, _ int) uuid.UUID {
+		return xx.UserID
+	})
+}
+
+func (c Comments) GetByUserID(userID uuid.UUID) Comments {
+	return lo.Filter(c, func(xx *Comment, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (c Comments) GetByUserIDs(userIDs ...uuid.UUID) Comments {
+	return lo.Filter(c, func(xx *Comment, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (c Comments) Clone() Comments {

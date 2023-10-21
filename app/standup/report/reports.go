@@ -16,45 +16,9 @@ func (r Reports) Get(id uuid.UUID) *Report {
 	})
 }
 
-func (r Reports) GetByIDs(ids ...uuid.UUID) Reports {
-	return lo.Filter(r, func(xx *Report, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (r Reports) GetByID(id uuid.UUID) Reports {
-	return lo.Filter(r, func(xx *Report, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (r Reports) GetByStandupIDs(standupIDs ...uuid.UUID) Reports {
-	return lo.Filter(r, func(xx *Report, _ int) bool {
-		return lo.Contains(standupIDs, xx.StandupID)
-	})
-}
-
-func (r Reports) GetByStandupID(standupID uuid.UUID) Reports {
-	return lo.Filter(r, func(xx *Report, _ int) bool {
-		return xx.StandupID == standupID
-	})
-}
-
-func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
-	return lo.Filter(r, func(xx *Report, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (r Reports) GetByUserID(userID uuid.UUID) Reports {
-	return lo.Filter(r, func(xx *Report, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (r Reports) IDs() []uuid.UUID {
-	return lo.Map(r, func(x *Report, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(r, func(xx *Report, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -78,6 +42,54 @@ func (r Reports) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (r Reports) GetByID(id uuid.UUID) Reports {
+	return lo.Filter(r, func(xx *Report, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (r Reports) GetByIDs(ids ...uuid.UUID) Reports {
+	return lo.Filter(r, func(xx *Report, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (r Reports) StandupIDs() []uuid.UUID {
+	return lo.Map(r, func(xx *Report, _ int) uuid.UUID {
+		return xx.StandupID
+	})
+}
+
+func (r Reports) GetByStandupID(standupID uuid.UUID) Reports {
+	return lo.Filter(r, func(xx *Report, _ int) bool {
+		return xx.StandupID == standupID
+	})
+}
+
+func (r Reports) GetByStandupIDs(standupIDs ...uuid.UUID) Reports {
+	return lo.Filter(r, func(xx *Report, _ int) bool {
+		return lo.Contains(standupIDs, xx.StandupID)
+	})
+}
+
+func (r Reports) UserIDs() []uuid.UUID {
+	return lo.Map(r, func(xx *Report, _ int) uuid.UUID {
+		return xx.UserID
+	})
+}
+
+func (r Reports) GetByUserID(userID uuid.UUID) Reports {
+	return lo.Filter(r, func(xx *Report, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
+	return lo.Filter(r, func(xx *Report, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (r Reports) Clone() Reports {

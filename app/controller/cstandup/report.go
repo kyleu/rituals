@@ -29,14 +29,14 @@ func ReportList(rc *fasthttp.RequestCtx) {
 		standupIDsByStandupID := lo.Map(ret, func(x *report.Report, _ int) uuid.UUID {
 			return x.StandupID
 		})
-		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, ps.Logger, standupIDsByStandupID...)
+		standupsByStandupID, err := as.Services.Standup.GetMultiple(ps.Context, nil, nil, ps.Logger, standupIDsByStandupID...)
 		if err != nil {
 			return "", err
 		}
 		userIDsByUserID := lo.Map(ret, func(x *report.Report, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

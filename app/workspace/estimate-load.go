@@ -122,7 +122,7 @@ func (s *Service) loadFullEstimate(
 		func() error {
 			var err error
 			prm := p.Params.Get(util.KeyVote, nil, p.Logger).Sanitize(util.KeyVote)
-			ret.Votes, err = s.v.GetByStoryIDs(p.Ctx, p.Tx, prm, p.Logger, ret.Stories.IDStrings(false)...)
+			ret.Votes, err = s.v.GetByStoryIDs(p.Ctx, p.Tx, prm, p.Logger, ret.Stories.IDs()...)
 			return err
 		},
 		func() error {

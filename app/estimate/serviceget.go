@@ -51,13 +51,14 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger uti
 	return ret.ToEstimate(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, ids ...uuid.UUID) (Estimates, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, ids ...uuid.UUID) (Estimates, error) {
 	if len(ids) == 0 {
 		return Estimates{}, nil
 	}
+	params = filters(params)
 	wc := database.SQLInClause("id", len(ids), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(ids)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Estimates for [%d] ids", len(ids))
@@ -76,6 +77,21 @@ func (s *Service) GetBySlug(ctx context.Context, tx *sqlx.Tx, slug string, logge
 	return ret.ToEstimate(), nil
 }
 
+func (s *Service) GetBySlugs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, slugs ...string) (Estimates, error) {
+	if len(slugs) == 0 {
+		return Estimates{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(slugs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Estimates for [%d] slugs", len(slugs))
+	}
+	return ret.ToEstimates(), nil
+}
+
 func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := "\"sprint_id\" = $1"
@@ -84,6 +100,21 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimates by sprintID [%v]", sprintID)
+	}
+	return ret.ToEstimates(), nil
+}
+
+func (s *Service) GetBySprintIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, sprintIDs ...*uuid.UUID) (Estimates, error) {
+	if len(sprintIDs) == 0 {
+		return Estimates{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("sprint_id", len(sprintIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(sprintIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Estimates for [%d] sprintIDs", len(sprintIDs))
 	}
 	return ret.ToEstimates(), nil
 }
@@ -100,6 +131,22 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 	return ret.ToEstimates(), nil
 }
 
+//nolint:lll
+func (s *Service) GetByStatuses(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, statuses ...enum.SessionStatus) (Estimates, error) {
+	if len(statuses) == 0 {
+		return Estimates{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("status", len(statuses), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(statuses)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Estimates for [%d] statuses", len(statuses))
+	}
+	return ret.ToEstimates(), nil
+}
+
 func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUID, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
 	wc := "\"team_id\" = $1"
@@ -108,6 +155,21 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimates by teamID [%v]", teamID)
+	}
+	return ret.ToEstimates(), nil
+}
+
+func (s *Service) GetByTeamIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, teamIDs ...*uuid.UUID) (Estimates, error) {
+	if len(teamIDs) == 0 {
+		return Estimates{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("team_id", len(teamIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(teamIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Estimates for [%d] teamIDs", len(teamIDs))
 	}
 	return ret.ToEstimates(), nil
 }

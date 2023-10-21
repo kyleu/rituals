@@ -87,6 +87,22 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	return ret.ToEstimateMembers(), nil
 }
 
+//nolint:lll
+func (s *Service) GetByEstimateIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, estimateIDs ...uuid.UUID) (EstimateMembers, error) {
+	if len(estimateIDs) == 0 {
+		return EstimateMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(estimateIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get EstimateMembers for [%d] estimateIDs", len(estimateIDs))
+	}
+	return ret.ToEstimateMembers(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (EstimateMembers, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -95,6 +111,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get estimate_members by userID [%v]", userID)
+	}
+	return ret.ToEstimateMembers(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (EstimateMembers, error) {
+	if len(userIDs) == 0 {
+		return EstimateMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get EstimateMembers for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToEstimateMembers(), nil
 }

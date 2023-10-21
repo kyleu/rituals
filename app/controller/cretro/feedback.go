@@ -29,14 +29,14 @@ func FeedbackList(rc *fasthttp.RequestCtx) {
 		retroIDsByRetroID := lo.Map(ret, func(x *feedback.Feedback, _ int) uuid.UUID {
 			return x.RetroID
 		})
-		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, ps.Logger, retroIDsByRetroID...)
+		retrosByRetroID, err := as.Services.Retro.GetMultiple(ps.Context, nil, nil, ps.Logger, retroIDsByRetroID...)
 		if err != nil {
 			return "", err
 		}
 		userIDsByUserID := lo.Map(ret, func(x *feedback.Feedback, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

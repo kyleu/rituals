@@ -87,6 +87,22 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	return ret.ToStandupMembers(), nil
 }
 
+//nolint:lll
+func (s *Service) GetByStandupIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, standupIDs ...uuid.UUID) (StandupMembers, error) {
+	if len(standupIDs) == 0 {
+		return StandupMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("standup_id", len(standupIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(standupIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get StandupMembers for [%d] standupIDs", len(standupIDs))
+	}
+	return ret.ToStandupMembers(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (StandupMembers, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -95,6 +111,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get standup_members by userID [%v]", userID)
+	}
+	return ret.ToStandupMembers(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (StandupMembers, error) {
+	if len(userIDs) == 0 {
+		return StandupMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get StandupMembers for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToStandupMembers(), nil
 }

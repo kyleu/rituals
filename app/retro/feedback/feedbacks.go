@@ -16,45 +16,9 @@ func (f Feedbacks) Get(id uuid.UUID) *Feedback {
 	})
 }
 
-func (f Feedbacks) GetByIDs(ids ...uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(xx *Feedback, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (f Feedbacks) GetByID(id uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(xx *Feedback, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (f Feedbacks) GetByRetroIDs(retroIDs ...uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(xx *Feedback, _ int) bool {
-		return lo.Contains(retroIDs, xx.RetroID)
-	})
-}
-
-func (f Feedbacks) GetByRetroID(retroID uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(xx *Feedback, _ int) bool {
-		return xx.RetroID == retroID
-	})
-}
-
-func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(xx *Feedback, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (f Feedbacks) GetByUserID(userID uuid.UUID) Feedbacks {
-	return lo.Filter(f, func(xx *Feedback, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (f Feedbacks) IDs() []uuid.UUID {
-	return lo.Map(f, func(x *Feedback, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(f, func(xx *Feedback, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -78,6 +42,54 @@ func (f Feedbacks) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (f Feedbacks) GetByID(id uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (f Feedbacks) GetByIDs(ids ...uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (f Feedbacks) RetroIDs() []uuid.UUID {
+	return lo.Map(f, func(xx *Feedback, _ int) uuid.UUID {
+		return xx.RetroID
+	})
+}
+
+func (f Feedbacks) GetByRetroID(retroID uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return xx.RetroID == retroID
+	})
+}
+
+func (f Feedbacks) GetByRetroIDs(retroIDs ...uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return lo.Contains(retroIDs, xx.RetroID)
+	})
+}
+
+func (f Feedbacks) UserIDs() []uuid.UUID {
+	return lo.Map(f, func(xx *Feedback, _ int) uuid.UUID {
+		return xx.UserID
+	})
+}
+
+func (f Feedbacks) GetByUserID(userID uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
+	return lo.Filter(f, func(xx *Feedback, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (f Feedbacks) Clone() Feedbacks {

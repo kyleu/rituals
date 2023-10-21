@@ -16,39 +16,9 @@ func (s SprintMembers) Get(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 	})
 }
 
-func (s SprintMembers) ToPKs() []*PK {
-	return lo.Map(s, func(x *SprintMember, _ int) *PK {
-		return x.ToPK()
-	})
-}
-
-func (s SprintMembers) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintMembers {
-	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
-		return lo.Contains(sprintIDs, xx.SprintID)
-	})
-}
-
-func (s SprintMembers) GetBySprintID(sprintID uuid.UUID) SprintMembers {
-	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
-		return xx.SprintID == sprintID
-	})
-}
-
-func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
-	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (s SprintMembers) GetByUserID(userID uuid.UUID) SprintMembers {
-	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (s SprintMembers) SprintIDs() []uuid.UUID {
-	return lo.Map(s, func(x *SprintMember, _ int) uuid.UUID {
-		return x.SprintID
+	return lo.Map(s, func(xx *SprintMember, _ int) uuid.UUID {
+		return xx.SprintID
 	})
 }
 
@@ -64,8 +34,8 @@ func (s SprintMembers) SprintIDStrings(includeNil bool) []string {
 }
 
 func (s SprintMembers) UserIDs() []uuid.UUID {
-	return lo.Map(s, func(x *SprintMember, _ int) uuid.UUID {
-		return x.UserID
+	return lo.Map(s, func(xx *SprintMember, _ int) uuid.UUID {
+		return xx.UserID
 	})
 }
 
@@ -89,6 +59,36 @@ func (s SprintMembers) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (s SprintMembers) ToPKs() []*PK {
+	return lo.Map(s, func(x *SprintMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
+func (s SprintMembers) GetBySprintID(sprintID uuid.UUID) SprintMembers {
+	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
+		return xx.SprintID == sprintID
+	})
+}
+
+func (s SprintMembers) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintMembers {
+	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
+		return lo.Contains(sprintIDs, xx.SprintID)
+	})
+}
+
+func (s SprintMembers) GetByUserID(userID uuid.UUID) SprintMembers {
+	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
+	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (s SprintMembers) Clone() SprintMembers {

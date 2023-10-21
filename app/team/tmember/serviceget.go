@@ -87,6 +87,21 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID
 	return ret.ToTeamMembers(), nil
 }
 
+func (s *Service) GetByTeamIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, teamIDs ...uuid.UUID) (TeamMembers, error) {
+	if len(teamIDs) == 0 {
+		return TeamMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("team_id", len(teamIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(teamIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get TeamMembers for [%d] teamIDs", len(teamIDs))
+	}
+	return ret.ToTeamMembers(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (TeamMembers, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -95,6 +110,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get team_members by userID [%v]", userID)
+	}
+	return ret.ToTeamMembers(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (TeamMembers, error) {
+	if len(userIDs) == 0 {
+		return TeamMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get TeamMembers for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToTeamMembers(), nil
 }

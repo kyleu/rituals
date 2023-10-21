@@ -18,57 +18,9 @@ func (s Sprints) Get(id uuid.UUID) *Sprint {
 	})
 }
 
-func (s Sprints) GetByIDs(ids ...uuid.UUID) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (s Sprints) GetByID(id uuid.UUID) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (s Sprints) GetBySlugs(slugs ...string) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (s Sprints) GetBySlug(slug string) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (s Sprints) GetByStatuses(statuses ...enum.SessionStatus) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return lo.Contains(statuses, xx.Status)
-	})
-}
-
-func (s Sprints) GetByStatus(status enum.SessionStatus) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return xx.Status == status
-	})
-}
-
-func (s Sprints) GetByTeamIDs(teamIDs ...*uuid.UUID) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return lo.Contains(teamIDs, xx.TeamID)
-	})
-}
-
-func (s Sprints) GetByTeamID(teamID *uuid.UUID) Sprints {
-	return lo.Filter(s, func(xx *Sprint, _ int) bool {
-		return xx.TeamID == teamID
-	})
-}
-
 func (s Sprints) IDs() []uuid.UUID {
-	return lo.Map(s, func(x *Sprint, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(s, func(xx *Sprint, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -92,6 +44,72 @@ func (s Sprints) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (s Sprints) GetByID(id uuid.UUID) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (s Sprints) GetByIDs(ids ...uuid.UUID) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (s Sprints) Slugs() []string {
+	return lo.Map(s, func(xx *Sprint, _ int) string {
+		return xx.Slug
+	})
+}
+
+func (s Sprints) GetBySlug(slug string) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (s Sprints) GetBySlugs(slugs ...string) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (s Sprints) Statuses() []enum.SessionStatus {
+	return lo.Map(s, func(xx *Sprint, _ int) enum.SessionStatus {
+		return xx.Status
+	})
+}
+
+func (s Sprints) GetByStatus(status enum.SessionStatus) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return xx.Status == status
+	})
+}
+
+func (s Sprints) GetByStatuses(statuses ...enum.SessionStatus) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return lo.Contains(statuses, xx.Status)
+	})
+}
+
+func (s Sprints) TeamIDs() []*uuid.UUID {
+	return lo.Map(s, func(xx *Sprint, _ int) *uuid.UUID {
+		return xx.TeamID
+	})
+}
+
+func (s Sprints) GetByTeamID(teamID *uuid.UUID) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (s Sprints) GetByTeamIDs(teamIDs ...*uuid.UUID) Sprints {
+	return lo.Filter(s, func(xx *Sprint, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
 }
 
 func (s Sprints) Clone() Sprints {

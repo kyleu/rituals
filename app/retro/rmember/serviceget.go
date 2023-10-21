@@ -87,6 +87,21 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	return ret.ToRetroMembers(), nil
 }
 
+func (s *Service) GetByRetroIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, retroIDs ...uuid.UUID) (RetroMembers, error) {
+	if len(retroIDs) == 0 {
+		return RetroMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("retro_id", len(retroIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(retroIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get RetroMembers for [%d] retroIDs", len(retroIDs))
+	}
+	return ret.ToRetroMembers(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (RetroMembers, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -95,6 +110,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get retro_members by userID [%v]", userID)
+	}
+	return ret.ToRetroMembers(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (RetroMembers, error) {
+	if len(userIDs) == 0 {
+		return RetroMembers{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get RetroMembers for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToRetroMembers(), nil
 }

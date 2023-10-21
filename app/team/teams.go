@@ -18,45 +18,9 @@ func (t Teams) Get(id uuid.UUID) *Team {
 	})
 }
 
-func (t Teams) GetByIDs(ids ...uuid.UUID) Teams {
-	return lo.Filter(t, func(xx *Team, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (t Teams) GetByID(id uuid.UUID) Teams {
-	return lo.Filter(t, func(xx *Team, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (t Teams) GetBySlugs(slugs ...string) Teams {
-	return lo.Filter(t, func(xx *Team, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (t Teams) GetBySlug(slug string) Teams {
-	return lo.Filter(t, func(xx *Team, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
-	return lo.Filter(t, func(xx *Team, _ int) bool {
-		return lo.Contains(statuses, xx.Status)
-	})
-}
-
-func (t Teams) GetByStatus(status enum.SessionStatus) Teams {
-	return lo.Filter(t, func(xx *Team, _ int) bool {
-		return xx.Status == status
-	})
-}
-
 func (t Teams) IDs() []uuid.UUID {
-	return lo.Map(t, func(x *Team, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(t, func(xx *Team, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -80,6 +44,54 @@ func (t Teams) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (t Teams) GetByID(id uuid.UUID) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (t Teams) GetByIDs(ids ...uuid.UUID) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (t Teams) Slugs() []string {
+	return lo.Map(t, func(xx *Team, _ int) string {
+		return xx.Slug
+	})
+}
+
+func (t Teams) GetBySlug(slug string) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (t Teams) GetBySlugs(slugs ...string) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (t Teams) Statuses() []enum.SessionStatus {
+	return lo.Map(t, func(xx *Team, _ int) enum.SessionStatus {
+		return xx.Status
+	})
+}
+
+func (t Teams) GetByStatus(status enum.SessionStatus) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return xx.Status == status
+	})
+}
+
+func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
+	return lo.Filter(t, func(xx *Team, _ int) bool {
+		return lo.Contains(statuses, xx.Status)
+	})
 }
 
 func (t Teams) Clone() Teams {

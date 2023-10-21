@@ -18,69 +18,9 @@ func (s Standups) Get(id uuid.UUID) *Standup {
 	})
 }
 
-func (s Standups) GetByIDs(ids ...uuid.UUID) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (s Standups) GetByID(id uuid.UUID) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (s Standups) GetBySlugs(slugs ...string) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (s Standups) GetBySlug(slug string) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (s Standups) GetByStatuses(statuses ...enum.SessionStatus) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return lo.Contains(statuses, xx.Status)
-	})
-}
-
-func (s Standups) GetByStatus(status enum.SessionStatus) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return xx.Status == status
-	})
-}
-
-func (s Standups) GetByTeamIDs(teamIDs ...*uuid.UUID) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return lo.Contains(teamIDs, xx.TeamID)
-	})
-}
-
-func (s Standups) GetByTeamID(teamID *uuid.UUID) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return xx.TeamID == teamID
-	})
-}
-
-func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return lo.Contains(sprintIDs, xx.SprintID)
-	})
-}
-
-func (s Standups) GetBySprintID(sprintID *uuid.UUID) Standups {
-	return lo.Filter(s, func(xx *Standup, _ int) bool {
-		return xx.SprintID == sprintID
-	})
-}
-
 func (s Standups) IDs() []uuid.UUID {
-	return lo.Map(s, func(x *Standup, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(s, func(xx *Standup, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -104,6 +44,90 @@ func (s Standups) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (s Standups) GetByID(id uuid.UUID) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (s Standups) GetByIDs(ids ...uuid.UUID) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (s Standups) Slugs() []string {
+	return lo.Map(s, func(xx *Standup, _ int) string {
+		return xx.Slug
+	})
+}
+
+func (s Standups) GetBySlug(slug string) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (s Standups) GetBySlugs(slugs ...string) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (s Standups) Statuses() []enum.SessionStatus {
+	return lo.Map(s, func(xx *Standup, _ int) enum.SessionStatus {
+		return xx.Status
+	})
+}
+
+func (s Standups) GetByStatus(status enum.SessionStatus) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return xx.Status == status
+	})
+}
+
+func (s Standups) GetByStatuses(statuses ...enum.SessionStatus) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return lo.Contains(statuses, xx.Status)
+	})
+}
+
+func (s Standups) TeamIDs() []*uuid.UUID {
+	return lo.Map(s, func(xx *Standup, _ int) *uuid.UUID {
+		return xx.TeamID
+	})
+}
+
+func (s Standups) GetByTeamID(teamID *uuid.UUID) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (s Standups) GetByTeamIDs(teamIDs ...*uuid.UUID) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
+}
+
+func (s Standups) SprintIDs() []*uuid.UUID {
+	return lo.Map(s, func(xx *Standup, _ int) *uuid.UUID {
+		return xx.SprintID
+	})
+}
+
+func (s Standups) GetBySprintID(sprintID *uuid.UUID) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return xx.SprintID == sprintID
+	})
+}
+
+func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
+	return lo.Filter(s, func(xx *Standup, _ int) bool {
+		return lo.Contains(sprintIDs, xx.SprintID)
+	})
 }
 
 func (s Standups) Clone() Standups {

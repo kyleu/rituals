@@ -50,13 +50,14 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, slug string, logger util
 	return ret.ToStandupHistory(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, slugs ...string) (StandupHistories, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, slugs ...string) (StandupHistories, error) {
 	if len(slugs) == 0 {
 		return StandupHistories{}, nil
 	}
+	params = filters(params)
 	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(slugs)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get StandupHistories for [%d] slugs", len(slugs))
@@ -72,6 +73,22 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	err := s.db.Select(ctx, &ret, q, tx, logger, standupID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get standup_histories by standupID [%v]", standupID)
+	}
+	return ret.ToStandupHistories(), nil
+}
+
+//nolint:lll
+func (s *Service) GetByStandupIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, standupIDs ...uuid.UUID) (StandupHistories, error) {
+	if len(standupIDs) == 0 {
+		return StandupHistories{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("standup_id", len(standupIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(standupIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get StandupHistories for [%d] standupIDs", len(standupIDs))
 	}
 	return ret.ToStandupHistories(), nil
 }

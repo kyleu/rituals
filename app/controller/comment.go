@@ -28,7 +28,7 @@ func CommentList(rc *fasthttp.RequestCtx) {
 		userIDsByUserID := lo.Map(ret, func(x *comment.Comment, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

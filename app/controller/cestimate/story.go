@@ -37,14 +37,14 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		estimateIDsByEstimateID := lo.Map(ret, func(x *story.Story, _ int) uuid.UUID {
 			return x.EstimateID
 		})
-		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDsByEstimateID...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, nil, ps.Logger, estimateIDsByEstimateID...)
 		if err != nil {
 			return "", err
 		}
 		userIDsByUserID := lo.Map(ret, func(x *story.Story, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

@@ -28,7 +28,7 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 		estimateIDsByEstimateID := lo.Map(ret, func(x *ehistory.EstimateHistory, _ int) uuid.UUID {
 			return x.EstimateID
 		})
-		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, ps.Logger, estimateIDsByEstimateID...)
+		estimatesByEstimateID, err := as.Services.Estimate.GetMultiple(ps.Context, nil, nil, ps.Logger, estimateIDsByEstimateID...)
 		if err != nil {
 			return "", err
 		}

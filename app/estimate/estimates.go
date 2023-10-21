@@ -18,69 +18,9 @@ func (e Estimates) Get(id uuid.UUID) *Estimate {
 	})
 }
 
-func (e Estimates) GetByIDs(ids ...uuid.UUID) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (e Estimates) GetByID(id uuid.UUID) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (e Estimates) GetBySlugs(slugs ...string) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (e Estimates) GetBySlug(slug string) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (e Estimates) GetByStatuses(statuses ...enum.SessionStatus) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return lo.Contains(statuses, xx.Status)
-	})
-}
-
-func (e Estimates) GetByStatus(status enum.SessionStatus) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return xx.Status == status
-	})
-}
-
-func (e Estimates) GetByTeamIDs(teamIDs ...*uuid.UUID) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return lo.Contains(teamIDs, xx.TeamID)
-	})
-}
-
-func (e Estimates) GetByTeamID(teamID *uuid.UUID) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return xx.TeamID == teamID
-	})
-}
-
-func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return lo.Contains(sprintIDs, xx.SprintID)
-	})
-}
-
-func (e Estimates) GetBySprintID(sprintID *uuid.UUID) Estimates {
-	return lo.Filter(e, func(xx *Estimate, _ int) bool {
-		return xx.SprintID == sprintID
-	})
-}
-
 func (e Estimates) IDs() []uuid.UUID {
-	return lo.Map(e, func(x *Estimate, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(e, func(xx *Estimate, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -104,6 +44,90 @@ func (e Estimates) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (e Estimates) GetByID(id uuid.UUID) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (e Estimates) GetByIDs(ids ...uuid.UUID) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (e Estimates) Slugs() []string {
+	return lo.Map(e, func(xx *Estimate, _ int) string {
+		return xx.Slug
+	})
+}
+
+func (e Estimates) GetBySlug(slug string) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (e Estimates) GetBySlugs(slugs ...string) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (e Estimates) Statuses() []enum.SessionStatus {
+	return lo.Map(e, func(xx *Estimate, _ int) enum.SessionStatus {
+		return xx.Status
+	})
+}
+
+func (e Estimates) GetByStatus(status enum.SessionStatus) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return xx.Status == status
+	})
+}
+
+func (e Estimates) GetByStatuses(statuses ...enum.SessionStatus) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return lo.Contains(statuses, xx.Status)
+	})
+}
+
+func (e Estimates) TeamIDs() []*uuid.UUID {
+	return lo.Map(e, func(xx *Estimate, _ int) *uuid.UUID {
+		return xx.TeamID
+	})
+}
+
+func (e Estimates) GetByTeamID(teamID *uuid.UUID) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (e Estimates) GetByTeamIDs(teamIDs ...*uuid.UUID) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
+}
+
+func (e Estimates) SprintIDs() []*uuid.UUID {
+	return lo.Map(e, func(xx *Estimate, _ int) *uuid.UUID {
+		return xx.SprintID
+	})
+}
+
+func (e Estimates) GetBySprintID(sprintID *uuid.UUID) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return xx.SprintID == sprintID
+	})
+}
+
+func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
+	return lo.Filter(e, func(xx *Estimate, _ int) bool {
+		return lo.Contains(sprintIDs, xx.SprintID)
+	})
 }
 
 func (e Estimates) Clone() Estimates {

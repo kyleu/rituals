@@ -29,7 +29,7 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 		sprintIDsBySprintID := lo.Map(ret, func(x *spermission.SprintPermission, _ int) uuid.UUID {
 			return x.SprintID
 		})
-		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, ps.Logger, sprintIDsBySprintID...)
+		sprintsBySprintID, err := as.Services.Sprint.GetMultiple(ps.Context, nil, nil, ps.Logger, sprintIDsBySprintID...)
 		if err != nil {
 			return "", err
 		}

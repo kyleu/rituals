@@ -29,14 +29,14 @@ func TeamMemberList(rc *fasthttp.RequestCtx) {
 		teamIDsByTeamID := lo.Map(ret, func(x *tmember.TeamMember, _ int) uuid.UUID {
 			return x.TeamID
 		})
-		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, ps.Logger, teamIDsByTeamID...)
+		teamsByTeamID, err := as.Services.Team.GetMultiple(ps.Context, nil, nil, ps.Logger, teamIDsByTeamID...)
 		if err != nil {
 			return "", err
 		}
 		userIDsByUserID := lo.Map(ret, func(x *tmember.TeamMember, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}

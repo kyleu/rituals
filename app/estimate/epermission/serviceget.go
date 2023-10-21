@@ -88,6 +88,22 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	return ret.ToEstimatePermissions(), nil
 }
 
+//nolint:lll
+func (s *Service) GetByEstimateIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, estimateIDs ...uuid.UUID) (EstimatePermissions, error) {
+	if len(estimateIDs) == 0 {
+		return EstimatePermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(estimateIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get EstimatePermissions for [%d] estimateIDs", len(estimateIDs))
+	}
+	return ret.ToEstimatePermissions(), nil
+}
+
 func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
 	params = filters(params)
 	wc := "\"key\" = $1"

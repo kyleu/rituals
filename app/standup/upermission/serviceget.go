@@ -99,6 +99,22 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	return ret.ToStandupPermissions(), nil
 }
 
+//nolint:lll
+func (s *Service) GetByStandupIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, standupIDs ...uuid.UUID) (StandupPermissions, error) {
+	if len(standupIDs) == 0 {
+		return StandupPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("standup_id", len(standupIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(standupIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get StandupPermissions for [%d] standupIDs", len(standupIDs))
+	}
+	return ret.ToStandupPermissions(), nil
+}
+
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (StandupPermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"

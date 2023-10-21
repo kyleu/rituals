@@ -50,13 +50,14 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger uti
 	return ret.ToFeedback(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, ids ...uuid.UUID) (Feedbacks, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, ids ...uuid.UUID) (Feedbacks, error) {
 	if len(ids) == 0 {
 		return Feedbacks{}, nil
 	}
+	params = filters(params)
 	wc := database.SQLInClause("id", len(ids), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(ids)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Feedbacks for [%d] ids", len(ids))
@@ -76,6 +77,21 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	return ret.ToFeedbacks(), nil
 }
 
+func (s *Service) GetByRetroIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, retroIDs ...uuid.UUID) (Feedbacks, error) {
+	if len(retroIDs) == 0 {
+		return Feedbacks{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("retro_id", len(retroIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(retroIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Feedbacks for [%d] retroIDs", len(retroIDs))
+	}
+	return ret.ToFeedbacks(), nil
+}
+
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (Feedbacks, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
@@ -84,6 +100,21 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get feedbacks by userID [%v]", userID)
+	}
+	return ret.ToFeedbacks(), nil
+}
+
+func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, userIDs ...uuid.UUID) (Feedbacks, error) {
+	if len(userIDs) == 0 {
+		return Feedbacks{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Feedbacks for [%d] userIDs", len(userIDs))
 	}
 	return ret.ToFeedbacks(), nil
 }

@@ -16,33 +16,9 @@ func (r RetroHistories) Get(slug string) *RetroHistory {
 	})
 }
 
-func (r RetroHistories) GetBySlugs(slugs ...string) RetroHistories {
-	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
-		return lo.Contains(slugs, xx.Slug)
-	})
-}
-
-func (r RetroHistories) GetBySlug(slug string) RetroHistories {
-	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
-		return xx.Slug == slug
-	})
-}
-
-func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
-	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
-		return lo.Contains(retroIDs, xx.RetroID)
-	})
-}
-
-func (r RetroHistories) GetByRetroID(retroID uuid.UUID) RetroHistories {
-	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
-		return xx.RetroID == retroID
-	})
-}
-
 func (r RetroHistories) Slugs() []string {
-	return lo.Map(r, func(x *RetroHistory, _ int) string {
-		return x.Slug
+	return lo.Map(r, func(xx *RetroHistory, _ int) string {
+		return xx.Slug
 	})
 }
 
@@ -66,6 +42,36 @@ func (r RetroHistories) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (r RetroHistories) GetBySlug(slug string) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return xx.Slug == slug
+	})
+}
+
+func (r RetroHistories) GetBySlugs(slugs ...string) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return lo.Contains(slugs, xx.Slug)
+	})
+}
+
+func (r RetroHistories) RetroIDs() []uuid.UUID {
+	return lo.Map(r, func(xx *RetroHistory, _ int) uuid.UUID {
+		return xx.RetroID
+	})
+}
+
+func (r RetroHistories) GetByRetroID(retroID uuid.UUID) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return xx.RetroID == retroID
+	})
+}
+
+func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
+	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
+		return lo.Contains(retroIDs, xx.RetroID)
+	})
 }
 
 func (r RetroHistories) Clone() RetroHistories {

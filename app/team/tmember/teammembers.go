@@ -16,39 +16,9 @@ func (t TeamMembers) Get(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
 	})
 }
 
-func (t TeamMembers) ToPKs() []*PK {
-	return lo.Map(t, func(x *TeamMember, _ int) *PK {
-		return x.ToPK()
-	})
-}
-
-func (t TeamMembers) GetByTeamIDs(teamIDs ...uuid.UUID) TeamMembers {
-	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
-		return lo.Contains(teamIDs, xx.TeamID)
-	})
-}
-
-func (t TeamMembers) GetByTeamID(teamID uuid.UUID) TeamMembers {
-	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
-		return xx.TeamID == teamID
-	})
-}
-
-func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
-	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
-		return lo.Contains(userIDs, xx.UserID)
-	})
-}
-
-func (t TeamMembers) GetByUserID(userID uuid.UUID) TeamMembers {
-	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
-		return xx.UserID == userID
-	})
-}
-
 func (t TeamMembers) TeamIDs() []uuid.UUID {
-	return lo.Map(t, func(x *TeamMember, _ int) uuid.UUID {
-		return x.TeamID
+	return lo.Map(t, func(xx *TeamMember, _ int) uuid.UUID {
+		return xx.TeamID
 	})
 }
 
@@ -64,8 +34,8 @@ func (t TeamMembers) TeamIDStrings(includeNil bool) []string {
 }
 
 func (t TeamMembers) UserIDs() []uuid.UUID {
-	return lo.Map(t, func(x *TeamMember, _ int) uuid.UUID {
-		return x.UserID
+	return lo.Map(t, func(xx *TeamMember, _ int) uuid.UUID {
+		return xx.UserID
 	})
 }
 
@@ -89,6 +59,36 @@ func (t TeamMembers) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (t TeamMembers) ToPKs() []*PK {
+	return lo.Map(t, func(x *TeamMember, _ int) *PK {
+		return x.ToPK()
+	})
+}
+
+func (t TeamMembers) GetByTeamID(teamID uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return xx.TeamID == teamID
+	})
+}
+
+func (t TeamMembers) GetByTeamIDs(teamIDs ...uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return lo.Contains(teamIDs, xx.TeamID)
+	})
+}
+
+func (t TeamMembers) GetByUserID(userID uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return xx.UserID == userID
+	})
+}
+
+func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
+	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
+		return lo.Contains(userIDs, xx.UserID)
+	})
 }
 
 func (t TeamMembers) Clone() TeamMembers {

@@ -99,6 +99,21 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	return ret.ToRetroPermissions(), nil
 }
 
+func (s *Service) GetByRetroIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, retroIDs ...uuid.UUID) (RetroPermissions, error) {
+	if len(retroIDs) == 0 {
+		return RetroPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("retro_id", len(retroIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(retroIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get RetroPermissions for [%d] retroIDs", len(retroIDs))
+	}
+	return ret.ToRetroPermissions(), nil
+}
+
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (RetroPermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"

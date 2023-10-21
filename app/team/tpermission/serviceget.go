@@ -99,6 +99,21 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID
 	return ret.ToTeamPermissions(), nil
 }
 
+func (s *Service) GetByTeamIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, teamIDs ...uuid.UUID) (TeamPermissions, error) {
+	if len(teamIDs) == 0 {
+		return TeamPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("team_id", len(teamIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(teamIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get TeamPermissions for [%d] teamIDs", len(teamIDs))
+	}
+	return ret.ToTeamPermissions(), nil
+}
+
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (TeamPermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"

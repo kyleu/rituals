@@ -50,13 +50,14 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, slug string, logger util
 	return ret.ToTeamHistory(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, slugs ...string) (TeamHistories, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, slugs ...string) (TeamHistories, error) {
 	if len(slugs) == 0 {
 		return TeamHistories{}, nil
 	}
+	params = filters(params)
 	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(slugs)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get TeamHistories for [%d] slugs", len(slugs))
@@ -72,6 +73,21 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get team_histories by teamID [%v]", teamID)
+	}
+	return ret.ToTeamHistories(), nil
+}
+
+func (s *Service) GetByTeamIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, teamIDs ...uuid.UUID) (TeamHistories, error) {
+	if len(teamIDs) == 0 {
+		return TeamHistories{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("team_id", len(teamIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(teamIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get TeamHistories for [%d] teamIDs", len(teamIDs))
 	}
 	return ret.ToTeamHistories(), nil
 }

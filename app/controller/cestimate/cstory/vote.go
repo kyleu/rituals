@@ -29,14 +29,14 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		storyIDsByStoryID := lo.Map(ret, func(x *vote.Vote, _ int) uuid.UUID {
 			return x.StoryID
 		})
-		storiesByStoryID, err := as.Services.Story.GetMultiple(ps.Context, nil, ps.Logger, storyIDsByStoryID...)
+		storiesByStoryID, err := as.Services.Story.GetMultiple(ps.Context, nil, nil, ps.Logger, storyIDsByStoryID...)
 		if err != nil {
 			return "", err
 		}
 		userIDsByUserID := lo.Map(ret, func(x *vote.Vote, _ int) uuid.UUID {
 			return x.UserID
 		})
-		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, ps.Logger, userIDsByUserID...)
+		usersByUserID, err := as.Services.User.GetMultiple(ps.Context, nil, nil, ps.Logger, userIDsByUserID...)
 		if err != nil {
 			return "", err
 		}
