@@ -30,57 +30,6 @@ func New(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
 	return &TeamMember{TeamID: teamID, UserID: userID}
 }
 
-func Random() *TeamMember {
-	return &TeamMember{
-		TeamID:  util.UUID(),
-		UserID:  util.UUID(),
-		Name:    util.RandomString(12),
-		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
-		Role:    enum.AllMemberStatuses.Random(),
-		Created: util.TimeCurrent(),
-		Updated: util.TimeCurrentP(),
-	}
-}
-
-func FromMap(m util.ValueMap, setPK bool) (*TeamMember, error) {
-	ret := &TeamMember{}
-	var err error
-	if setPK {
-		retTeamID, e := m.ParseUUID("teamID", true, true)
-		if e != nil {
-			return nil, e
-		}
-		if retTeamID != nil {
-			ret.TeamID = *retTeamID
-		}
-		retUserID, e := m.ParseUUID("userID", true, true)
-		if e != nil {
-			return nil, e
-		}
-		if retUserID != nil {
-			ret.UserID = *retUserID
-		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	ret.Name, err = m.ParseString("name", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Picture, err = m.ParseString("picture", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retRole, err := m.ParseString("role", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Role = enum.AllMemberStatuses.Get(retRole, nil)
-	// $PF_SECTION_START(extrachecks)$
-	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
-}
-
 func (t *TeamMember) Clone() *TeamMember {
 	return &TeamMember{t.TeamID, t.UserID, t.Name, t.Picture, t.Role, t.Created, t.Updated}
 }
@@ -100,31 +49,20 @@ func (t *TeamMember) ToPK() *PK {
 	}
 }
 
-func (t *TeamMember) WebPath() string {
-	return "/admin/db/team/member/" + t.TeamID.String() + "/" + t.UserID.String()
+func Random() *TeamMember {
+	return &TeamMember{
+		TeamID:  util.UUID(),
+		UserID:  util.UUID(),
+		Name:    util.RandomString(12),
+		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
+		Role:    enum.AllMemberStatuses.Random(),
+		Created: util.TimeCurrent(),
+		Updated: util.TimeCurrentP(),
+	}
 }
 
-func (t *TeamMember) Diff(tx *TeamMember) util.Diffs {
-	var diffs util.Diffs
-	if t.TeamID != tx.TeamID {
-		diffs = append(diffs, util.NewDiff("teamID", t.TeamID.String(), tx.TeamID.String()))
-	}
-	if t.UserID != tx.UserID {
-		diffs = append(diffs, util.NewDiff("userID", t.UserID.String(), tx.UserID.String()))
-	}
-	if t.Name != tx.Name {
-		diffs = append(diffs, util.NewDiff("name", t.Name, tx.Name))
-	}
-	if t.Picture != tx.Picture {
-		diffs = append(diffs, util.NewDiff("picture", t.Picture, tx.Picture))
-	}
-	if t.Role != tx.Role {
-		diffs = append(diffs, util.NewDiff("role", t.Role.Key, tx.Role.Key))
-	}
-	if t.Created != tx.Created {
-		diffs = append(diffs, util.NewDiff("created", t.Created.String(), tx.Created.String()))
-	}
-	return diffs
+func (t *TeamMember) WebPath() string {
+	return "/admin/db/team/member/" + t.TeamID.String() + "/" + t.UserID.String()
 }
 
 func (t *TeamMember) ToData() []any {

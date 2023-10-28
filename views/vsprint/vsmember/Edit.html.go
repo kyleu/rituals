@@ -45,13 +45,13 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vsprint/vsmember/Edit.html:19
 	if p.IsNew {
 //line views/vsprint/vsmember/Edit.html:19
-		qw422016.N().S(`    <div class="right"><a href="/admin/db/sprint/member/random"><button>Random</button></a></div>
+		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
 //line views/vsprint/vsmember/Edit.html:21
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
 //line views/vsprint/vsmember/Edit.html:21
 		qw422016.N().S(` New Member</h3>
-    <form action="/admin/db/sprint/member/new" class="mt" method="post">
+    <form action="/admin/db/sprint/member/_new" class="mt" method="post">
 `)
 //line views/vsprint/vsmember/Edit.html:23
 	} else {

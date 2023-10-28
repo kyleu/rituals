@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type EstimatePermissions []*EstimatePermission
@@ -118,6 +120,13 @@ func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
 	return lo.Filter(e, func(xx *EstimatePermission, _ int) bool {
 		return lo.Contains(values, xx.Value)
 	})
+}
+
+func (e EstimatePermissions) Random() *EstimatePermission {
+	if len(e) == 0 {
+		return nil
+	}
+	return e[util.RandomInt(len(e))]
 }
 
 func (e EstimatePermissions) Clone() EstimatePermissions {

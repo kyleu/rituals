@@ -23,8 +23,7 @@ func CommentList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Comments"
-		ps.Data = ret
+		ps.SetTitleAndData("Comments", ret)
 		userIDsByUserID := lo.Map(ret, func(x *comment.Comment, _ int) uuid.UUID {
 			return x.UserID
 		})
@@ -43,30 +42,33 @@ func CommentDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Comment)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Comment)", ret)
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(rc, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.String())
+		return Render(rc, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.TitleString()+"**comments")
 	})
 }
 
 func CommentCreateForm(rc *fasthttp.RequestCtx) {
 	Act("comment.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &comment.Comment{}
-		ps.Title = "Create [Comment]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = comment.Random()
+		}
+		ps.SetTitleAndData("Create [Comment]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
 	})
 }
 
-func CommentCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("comment.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := comment.Random()
-		ps.Title = "Create Random Comment"
-		ps.Data = ret
-		return Render(rc, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
+func CommentRandom(rc *fasthttp.RequestCtx) {
+	Act("comment.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Comment.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Comment")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +93,7 @@ func CommentEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vcomment.Edit{Model: ret}, ps, "comment", ret.String())
 	})
 }

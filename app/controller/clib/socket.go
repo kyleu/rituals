@@ -16,20 +16,20 @@ import (
 	"github.com/kyleu/rituals/views/vadmin"
 )
 
+const socketIcon = "eye"
+
 func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, path ...string) (string, error) {
 	bc := func(extra ...string) []string {
 		return append([]string{"admin", "Sockets||/admin/sockets"}, extra...)
 	}
 	if len(path) == 0 {
-		ps.Title = "Sockets"
 		chans, conns, taps := as.Services.Socket.Status()
-		ps.Data = util.ValueMap{"channels": chans, "connections": conns}
+		ps.SetTitleAndData("Sockets", util.ValueMap{"channels": chans, "connections": conns})
 		return controller.Render(rc, as, &vadmin.Sockets{Channels: chans, Connections: conns, Taps: taps}, ps, bc()...)
 	}
 	switch path[0] {
 	case "tap":
-		ps.Title = "WebSocket Tap"
-		ps.Data = ps.Title
+		ps.SetTitleAndData("WebSocket Tap", "tap")
 		ps.DefaultNavIcon = "search"
 		return controller.Render(rc, as, &vadmin.SocketTap{}, ps, bc("Tap")...)
 	case "tap-socket":
@@ -45,7 +45,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 		ch := as.Services.Socket.GetChannel(path[1])
 		members := as.Services.Socket.GetAllMembers(path[1])
 		ps.Data = ch
-		ps.DefaultNavIcon = "eye"
+		ps.DefaultNavIcon = socketIcon
 		return controller.Render(rc, as, &vadmin.Channel{Channel: ch, Members: members}, ps, bc("Channel", ch.Key)...)
 	case "conn":
 		if len(path) == 0 {
@@ -61,7 +61,7 @@ func socketRoute(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState, pa
 				return "", errors.Errorf("no connection with ID [%s]", id.String())
 			}
 			ps.Data = c
-			ps.DefaultNavIcon = "eye"
+			ps.DefaultNavIcon = socketIcon
 			return controller.Render(rc, as, &vadmin.Connection{Connection: c}, ps, bc("Connection", c.ID.String())...)
 		}
 		frm, _ := cutil.ParseForm(rc)

@@ -23,8 +23,7 @@ func ActionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Actions"
-		ps.Data = ret
+		ps.SetTitleAndData("Actions", ret)
 		userIDsByUserID := lo.Map(ret, func(x *action.Action, _ int) uuid.UUID {
 			return x.UserID
 		})
@@ -43,30 +42,33 @@ func ActionDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Action)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Action)", ret)
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(rc, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.String())
+		return Render(rc, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.TitleString()+"**action")
 	})
 }
 
 func ActionCreateForm(rc *fasthttp.RequestCtx) {
 	Act("action.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &action.Action{}
-		ps.Title = "Create [Action]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = action.Random()
+		}
+		ps.SetTitleAndData("Create [Action]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
 	})
 }
 
-func ActionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("action.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := action.Random()
-		ps.Title = "Create Random Action"
-		ps.Data = ret
-		return Render(rc, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
+func ActionRandom(rc *fasthttp.RequestCtx) {
+	Act("action.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Action.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Action")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +93,7 @@ func ActionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vaction.Edit{Model: ret}, ps, "action", ret.String())
 	})
 }

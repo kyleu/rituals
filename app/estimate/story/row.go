@@ -22,15 +22,15 @@ var (
 )
 
 type row struct {
-	ID         uuid.UUID          `db:"id"`
-	EstimateID uuid.UUID          `db:"estimate_id"`
-	Idx        int                `db:"idx"`
-	UserID     uuid.UUID          `db:"user_id"`
-	Title      string             `db:"title"`
-	Status     enum.SessionStatus `db:"status"`
-	FinalVote  string             `db:"final_vote"`
-	Created    time.Time          `db:"created"`
-	Updated    *time.Time         `db:"updated"`
+	ID         uuid.UUID          `db:"id" json:"id"`
+	EstimateID uuid.UUID          `db:"estimate_id" json:"estimate_id"`
+	Idx        int                `db:"idx" json:"idx"`
+	UserID     uuid.UUID          `db:"user_id" json:"user_id"`
+	Title      string             `db:"title" json:"title"`
+	Status     enum.SessionStatus `db:"status" json:"status"`
+	FinalVote  string             `db:"final_vote" json:"final_vote"`
+	Created    time.Time          `db:"created" json:"created"`
+	Updated    *time.Time         `db:"updated" json:"updated"`
 }
 
 func (r *row) ToStory() *Story {

@@ -21,11 +21,11 @@ var (
 )
 
 type row struct {
-	ID      uuid.UUID  `db:"id"`
-	Name    string     `db:"name"`
-	Picture string     `db:"picture"`
-	Created time.Time  `db:"created"`
-	Updated *time.Time `db:"updated"`
+	ID      uuid.UUID  `db:"id" json:"id"`
+	Name    string     `db:"name" json:"name"`
+	Picture string     `db:"picture" json:"picture"`
+	Created time.Time  `db:"created" json:"created"`
+	Updated *time.Time `db:"updated" json:"updated"`
 }
 
 func (r *row) ToUser() *User {

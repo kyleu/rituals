@@ -98,7 +98,7 @@
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-EstimatesBySprintID" type="checkbox" hidden />
+        <input id="accordion-EstimatesBySprintID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`estimate`) %} checked="checked"{% endif %} />
         <label for="accordion-EstimatesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`estimate`, 16, 16, `icon`, ps) %}
@@ -115,7 +115,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetrosBySprintID" type="checkbox" hidden />
+        <input id="accordion-RetrosBySprintID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`retro`) %} checked="checked"{% endif %} />
         <label for="accordion-RetrosBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`retro`, 16, 16, `icon`, ps) %}
@@ -132,7 +132,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden />
+        <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`shistory`) %} checked="checked"{% endif %} />
         <label for="accordion-SprintHistoriesBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
@@ -149,7 +149,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintMembersBySprintID" type="checkbox" hidden />
+        <input id="accordion-SprintMembersBySprintID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`smember`) %} checked="checked"{% endif %} />
         <label for="accordion-SprintMembersBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
@@ -166,7 +166,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden />
+        <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`spermission`) %} checked="checked"{% endif %} />
         <label for="accordion-SprintPermissionsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
@@ -183,7 +183,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupsBySprintID" type="checkbox" hidden />
+        <input id="accordion-StandupsBySprintID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`standup`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupsBySprintID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`standup`, 16, 16, `icon`, ps) %}

@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Comments []*Comment
@@ -72,6 +74,13 @@ func (c Comments) GetByUserIDs(userIDs ...uuid.UUID) Comments {
 	return lo.Filter(c, func(xx *Comment, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (c Comments) Random() *Comment {
+	if len(c) == 0 {
+		return nil
+	}
+	return c[util.RandomInt(len(c))]
 }
 
 func (c Comments) Clone() Comments {

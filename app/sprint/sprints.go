@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Sprints []*Sprint
@@ -110,6 +111,13 @@ func (s Sprints) GetByTeamIDs(teamIDs ...*uuid.UUID) Sprints {
 	return lo.Filter(s, func(xx *Sprint, _ int) bool {
 		return lo.Contains(teamIDs, xx.TeamID)
 	})
+}
+
+func (s Sprints) Random() *Sprint {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s Sprints) Clone() Sprints {

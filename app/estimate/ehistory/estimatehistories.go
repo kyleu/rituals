@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type EstimateHistories []*EstimateHistory
@@ -72,6 +74,13 @@ func (e EstimateHistories) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateHi
 	return lo.Filter(e, func(xx *EstimateHistory, _ int) bool {
 		return lo.Contains(estimateIDs, xx.EstimateID)
 	})
+}
+
+func (e EstimateHistories) Random() *EstimateHistory {
+	if len(e) == 0 {
+		return nil
+	}
+	return e[util.RandomInt(len(e))]
 }
 
 func (e EstimateHistories) Clone() EstimateHistories {

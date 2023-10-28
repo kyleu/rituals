@@ -23,8 +23,7 @@ func TeamHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Histories"
-		ps.Data = ret
+		ps.SetTitleAndData("Histories", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *thistory.TeamHistory, _ int) uuid.UUID {
 			return x.TeamID
 		})
@@ -43,30 +42,33 @@ func TeamHistoryDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (History)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (History)", ret)
 
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 
-		return controller.Render(rc, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.String())
+		return controller.Render(rc, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.TitleString()+"**history")
 	})
 }
 
 func TeamHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("thistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &thistory.TeamHistory{}
-		ps.Title = "Create [TeamHistory]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = thistory.Random()
+		}
+		ps.SetTitleAndData("Create [TeamHistory]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
 	})
 }
 
-func TeamHistoryCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := thistory.Random()
-		ps.Title = "Create Random TeamHistory"
-		ps.Data = ret
-		return controller.Render(rc, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
+func TeamHistoryRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("thistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.TeamHistory.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random TeamHistory")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +93,7 @@ func TeamHistoryEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vthistory.Edit{Model: ret}, ps, "team", "thistory", ret.String())
 	})
 }

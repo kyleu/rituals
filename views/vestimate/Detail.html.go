@@ -234,7 +234,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-EstimateHistoriesByEstimateID" type="checkbox" hidden />
+        <input id="accordion-EstimateHistoriesByEstimateID" type="checkbox" hidden="hidden"`)
+//line views/vestimate/Detail.html:100
+	if p.Params.Specifies(`ehistory`) {
+//line views/vestimate/Detail.html:100
+		qw422016.N().S(` checked="checked"`)
+//line views/vestimate/Detail.html:100
+	}
+//line views/vestimate/Detail.html:100
+	qw422016.N().S(` />
         <label for="accordion-EstimateHistoriesByEstimateID">
           `)
 //line views/vestimate/Detail.html:102
@@ -276,7 +284,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-EstimateMembersByEstimateID" type="checkbox" hidden />
+        <input id="accordion-EstimateMembersByEstimateID" type="checkbox" hidden="hidden"`)
+//line views/vestimate/Detail.html:117
+	if p.Params.Specifies(`emember`) {
+//line views/vestimate/Detail.html:117
+		qw422016.N().S(` checked="checked"`)
+//line views/vestimate/Detail.html:117
+	}
+//line views/vestimate/Detail.html:117
+	qw422016.N().S(` />
         <label for="accordion-EstimateMembersByEstimateID">
           `)
 //line views/vestimate/Detail.html:119
@@ -318,7 +334,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-EstimatePermissionsByEstimateID" type="checkbox" hidden />
+        <input id="accordion-EstimatePermissionsByEstimateID" type="checkbox" hidden="hidden"`)
+//line views/vestimate/Detail.html:134
+	if p.Params.Specifies(`epermission`) {
+//line views/vestimate/Detail.html:134
+		qw422016.N().S(` checked="checked"`)
+//line views/vestimate/Detail.html:134
+	}
+//line views/vestimate/Detail.html:134
+	qw422016.N().S(` />
         <label for="accordion-EstimatePermissionsByEstimateID">
           `)
 //line views/vestimate/Detail.html:136
@@ -360,7 +384,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StoriesByEstimateID" type="checkbox" hidden />
+        <input id="accordion-StoriesByEstimateID" type="checkbox" hidden="hidden"`)
+//line views/vestimate/Detail.html:151
+	if p.Params.Specifies(`story`) {
+//line views/vestimate/Detail.html:151
+		qw422016.N().S(` checked="checked"`)
+//line views/vestimate/Detail.html:151
+	}
+//line views/vestimate/Detail.html:151
+	qw422016.N().S(` />
         <label for="accordion-StoriesByEstimateID">
           `)
 //line views/vestimate/Detail.html:153

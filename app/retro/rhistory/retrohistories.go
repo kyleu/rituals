@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type RetroHistories []*RetroHistory
@@ -72,6 +74,13 @@ func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
 	return lo.Filter(r, func(xx *RetroHistory, _ int) bool {
 		return lo.Contains(retroIDs, xx.RetroID)
 	})
+}
+
+func (r RetroHistories) Random() *RetroHistory {
+	if len(r) == 0 {
+		return nil
+	}
+	return r[util.RandomInt(len(r))]
 }
 
 func (r RetroHistories) Clone() RetroHistories {

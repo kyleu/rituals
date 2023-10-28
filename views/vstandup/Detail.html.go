@@ -226,7 +226,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-ReportsByStandupID" type="checkbox" hidden />
+        <input id="accordion-ReportsByStandupID" type="checkbox" hidden="hidden"`)
+//line views/vstandup/Detail.html:96
+	if p.Params.Specifies(`report`) {
+//line views/vstandup/Detail.html:96
+		qw422016.N().S(` checked="checked"`)
+//line views/vstandup/Detail.html:96
+	}
+//line views/vstandup/Detail.html:96
+	qw422016.N().S(` />
         <label for="accordion-ReportsByStandupID">
           `)
 //line views/vstandup/Detail.html:98
@@ -268,7 +276,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden />
+        <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden="hidden"`)
+//line views/vstandup/Detail.html:113
+	if p.Params.Specifies(`uhistory`) {
+//line views/vstandup/Detail.html:113
+		qw422016.N().S(` checked="checked"`)
+//line views/vstandup/Detail.html:113
+	}
+//line views/vstandup/Detail.html:113
+	qw422016.N().S(` />
         <label for="accordion-StandupHistoriesByStandupID">
           `)
 //line views/vstandup/Detail.html:115
@@ -310,7 +326,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden />
+        <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden="hidden"`)
+//line views/vstandup/Detail.html:130
+	if p.Params.Specifies(`umember`) {
+//line views/vstandup/Detail.html:130
+		qw422016.N().S(` checked="checked"`)
+//line views/vstandup/Detail.html:130
+	}
+//line views/vstandup/Detail.html:130
+	qw422016.N().S(` />
         <label for="accordion-StandupMembersByStandupID">
           `)
 //line views/vstandup/Detail.html:132
@@ -352,7 +376,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden />
+        <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden="hidden"`)
+//line views/vstandup/Detail.html:147
+	if p.Params.Specifies(`upermission`) {
+//line views/vstandup/Detail.html:147
+		qw422016.N().S(` checked="checked"`)
+//line views/vstandup/Detail.html:147
+	}
+//line views/vstandup/Detail.html:147
+	qw422016.N().S(` />
         <label for="accordion-StandupPermissionsByStandupID">
           `)
 //line views/vstandup/Detail.html:149

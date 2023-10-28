@@ -24,8 +24,7 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Permissions"
-		ps.Data = ret
+		ps.SetTitleAndData("Permissions", ret)
 		sprintIDsBySprintID := lo.Map(ret, func(x *spermission.SprintPermission, _ int) uuid.UUID {
 			return x.SprintID
 		})
@@ -38,36 +37,40 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func SprintPermissionDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("spermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := spermissionFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Permission)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Permission)", ret)
 
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 
-		return controller.Render(rc, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.String())
+		return controller.Render(rc, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.TitleString()+"**permission")
 	})
 }
 
 func SprintPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("spermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &spermission.SprintPermission{}
-		ps.Title = "Create [SprintPermission]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = spermission.Random()
+		}
+		ps.SetTitleAndData("Create [SprintPermission]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
 	})
 }
 
-func SprintPermissionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := spermission.Random()
-		ps.Title = "Create Random SprintPermission"
-		ps.Data = ret
-		return controller.Render(rc, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
+func SprintPermissionRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("spermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.SprintPermission.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random SprintPermission")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -92,8 +95,7 @@ func SprintPermissionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vspermission.Edit{Model: ret}, ps, "sprint", "spermission", ret.String())
 	})
 }

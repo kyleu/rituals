@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Emails []*Email
@@ -72,6 +74,13 @@ func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
 	return lo.Filter(e, func(xx *Email, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (e Emails) Random() *Email {
+	if len(e) == 0 {
+		return nil
+	}
+	return e[util.RandomInt(len(e))]
 }
 
 func (e Emails) Clone() Emails {

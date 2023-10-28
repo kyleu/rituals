@@ -23,22 +23,21 @@ var (
 )
 
 type row struct {
-	ID      uuid.UUID         `db:"id"`
-	Svc     enum.ModelService `db:"svc"`
-	ModelID uuid.UUID         `db:"model_id"`
-	UserID  uuid.UUID         `db:"user_id"`
-	Act     string            `db:"act"`
-	Content json.RawMessage   `db:"content"`
-	Note    string            `db:"note"`
-	Created time.Time         `db:"created"`
+	ID      uuid.UUID         `db:"id" json:"id"`
+	Svc     enum.ModelService `db:"svc" json:"svc"`
+	ModelID uuid.UUID         `db:"model_id" json:"model_id"`
+	UserID  uuid.UUID         `db:"user_id" json:"user_id"`
+	Act     string            `db:"act" json:"act"`
+	Content json.RawMessage   `db:"content" json:"content"`
+	Note    string            `db:"note" json:"note"`
+	Created time.Time         `db:"created" json:"created"`
 }
 
 func (r *row) ToAction() *Action {
 	if r == nil {
 		return nil
 	}
-	contentArg := util.ValueMap{}
-	_ = util.FromJSON(r.Content, &contentArg)
+	contentArg, _ := util.FromJSONMap(r.Content)
 	return &Action{
 		ID:      r.ID,
 		Svc:     r.Svc,

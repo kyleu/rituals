@@ -11,7 +11,7 @@
 
 {% func Table(models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("vote", nil, ps.Logger).Sanitize("vote") -%}
-  <table class="mt">
+  <table>
     <thead>
       <tr>
         {%= components.TableHeaderSimple("vote", "story_id", "Story ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}

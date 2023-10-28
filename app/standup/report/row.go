@@ -21,14 +21,14 @@ var (
 )
 
 type row struct {
-	ID        uuid.UUID  `db:"id"`
-	StandupID uuid.UUID  `db:"standup_id"`
-	Day       time.Time  `db:"day"`
-	UserID    uuid.UUID  `db:"user_id"`
-	Content   string     `db:"content"`
-	HTML      string     `db:"html"`
-	Created   time.Time  `db:"created"`
-	Updated   *time.Time `db:"updated"`
+	ID        uuid.UUID  `db:"id" json:"id"`
+	StandupID uuid.UUID  `db:"standup_id" json:"standup_id"`
+	Day       time.Time  `db:"day" json:"day"`
+	UserID    uuid.UUID  `db:"user_id" json:"user_id"`
+	Content   string     `db:"content" json:"content"`
+	HTML      string     `db:"html" json:"html"`
+	Created   time.Time  `db:"created" json:"created"`
+	Updated   *time.Time `db:"updated" json:"updated"`
 }
 
 func (r *row) ToReport() *Report {

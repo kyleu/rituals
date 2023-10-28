@@ -21,11 +21,11 @@ var (
 )
 
 type row struct {
-	SprintID uuid.UUID `db:"sprint_id"`
-	Key      string    `db:"key"`
-	Value    string    `db:"value"`
-	Access   string    `db:"access"`
-	Created  time.Time `db:"created"`
+	SprintID uuid.UUID `db:"sprint_id" json:"sprint_id"`
+	Key      string    `db:"key" json:"key"`
+	Value    string    `db:"value" json:"value"`
+	Access   string    `db:"access" json:"access"`
+	Created  time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToSprintPermission() *SprintPermission {

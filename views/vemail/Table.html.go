@@ -38,7 +38,7 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 	prms := params.Get("email", nil, ps.Logger).Sanitize("email")
 
 //line views/vemail/Table.html:12
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

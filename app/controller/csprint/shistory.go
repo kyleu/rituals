@@ -23,8 +23,7 @@ func SprintHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Histories"
-		ps.Data = ret
+		ps.SetTitleAndData("Histories", ret)
 		sprintIDsBySprintID := lo.Map(ret, func(x *shistory.SprintHistory, _ int) uuid.UUID {
 			return x.SprintID
 		})
@@ -43,30 +42,33 @@ func SprintHistoryDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (History)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (History)", ret)
 
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 
-		return controller.Render(rc, as, &vshistory.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "shistory", ret.String())
+		return controller.Render(rc, as, &vshistory.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "shistory", ret.TitleString()+"**history")
 	})
 }
 
 func SprintHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("shistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &shistory.SprintHistory{}
-		ps.Title = "Create [SprintHistory]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = shistory.Random()
+		}
+		ps.SetTitleAndData("Create [SprintHistory]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vshistory.Edit{Model: ret, IsNew: true}, ps, "sprint", "shistory", "Create")
 	})
 }
 
-func SprintHistoryCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("shistory.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := shistory.Random()
-		ps.Title = "Create Random SprintHistory"
-		ps.Data = ret
-		return controller.Render(rc, as, &vshistory.Edit{Model: ret, IsNew: true}, ps, "sprint", "shistory", "Create")
+func SprintHistoryRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("shistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.SprintHistory.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random SprintHistory")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +93,7 @@ func SprintHistoryEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vshistory.Edit{Model: ret}, ps, "sprint", "shistory", ret.String())
 	})
 }

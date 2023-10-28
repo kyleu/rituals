@@ -23,16 +23,16 @@ var (
 )
 
 type row struct {
-	ID         uuid.UUID          `db:"id"`
-	Slug       string             `db:"slug"`
-	Title      string             `db:"title"`
-	Icon       string             `db:"icon"`
-	Status     enum.SessionStatus `db:"status"`
-	TeamID     *uuid.UUID         `db:"team_id"`
-	SprintID   *uuid.UUID         `db:"sprint_id"`
-	Categories json.RawMessage    `db:"categories"`
-	Created    time.Time          `db:"created"`
-	Updated    *time.Time         `db:"updated"`
+	ID         uuid.UUID          `db:"id" json:"id"`
+	Slug       string             `db:"slug" json:"slug"`
+	Title      string             `db:"title" json:"title"`
+	Icon       string             `db:"icon" json:"icon"`
+	Status     enum.SessionStatus `db:"status" json:"status"`
+	TeamID     *uuid.UUID         `db:"team_id" json:"team_id"`
+	SprintID   *uuid.UUID         `db:"sprint_id" json:"sprint_id"`
+	Categories json.RawMessage    `db:"categories" json:"categories"`
+	Created    time.Time          `db:"created" json:"created"`
+	Updated    *time.Time         `db:"updated" json:"updated"`
 }
 
 func (r *row) ToRetro() *Retro {

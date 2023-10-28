@@ -60,7 +60,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/vrpermission/List.html:25
 	} else {
 //line views/vretro/vrpermission/List.html:25
-		qw422016.N().S(`    <div class="overflow clear">
+		qw422016.N().S(`    <div class="overflow clear mt">
       `)
 //line views/vretro/vrpermission/List.html:27
 		StreamTable(qw422016, p.Models, p.RetrosByRetroID, p.Params, as, ps)

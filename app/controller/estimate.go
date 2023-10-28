@@ -33,8 +33,7 @@ func EstimateList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Estimates"
-		ps.Data = ret
+		ps.SetTitleAndData("Estimates", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *estimate.Estimate, _ int) *uuid.UUID {
 			return x.TeamID
 		})
@@ -61,8 +60,7 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Estimate)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Estimate)", ret)
 
 		var teamByTeamID *team.Team
 		if ret.TeamID != nil {
@@ -103,25 +101,29 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 			RelEstimateMembersByEstimateID:     relEstimateMembersByEstimateID,
 			RelEstimatePermissionsByEstimateID: relEstimatePermissionsByEstimateID,
 			RelStoriesByEstimateID:             relStoriesByEstimateID,
-		}, ps, "estimate", ret.String())
+		}, ps, "estimate", ret.TitleString()+"**estimate")
 	})
 }
 
 func EstimateCreateForm(rc *fasthttp.RequestCtx) {
 	Act("estimate.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &estimate.Estimate{}
-		ps.Title = "Create [Estimate]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = estimate.Random()
+		}
+		ps.SetTitleAndData("Create [Estimate]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
 	})
 }
 
-func EstimateCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("estimate.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := estimate.Random()
-		ps.Title = "Create Random Estimate"
-		ps.Data = ret
-		return Render(rc, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
+func EstimateRandom(rc *fasthttp.RequestCtx) {
+	Act("estimate.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Estimate")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -146,8 +148,7 @@ func EstimateEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vestimate.Edit{Model: ret}, ps, "estimate", ret.String())
 	})
 }

@@ -23,8 +23,7 @@ func EmailList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Emails"
-		ps.Data = ret
+		ps.SetTitleAndData("Emails", ret)
 		userIDsByUserID := lo.Map(ret, func(x *email.Email, _ int) uuid.UUID {
 			return x.UserID
 		})
@@ -43,30 +42,33 @@ func EmailDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Email)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Email)", ret)
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(rc, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.String())
+		return Render(rc, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.TitleString()+"**email")
 	})
 }
 
 func EmailCreateForm(rc *fasthttp.RequestCtx) {
 	Act("email.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &email.Email{}
-		ps.Title = "Create [Email]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = email.Random()
+		}
+		ps.SetTitleAndData("Create [Email]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
 	})
 }
 
-func EmailCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("email.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := email.Random()
-		ps.Title = "Create Random Email"
-		ps.Data = ret
-		return Render(rc, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
+func EmailRandom(rc *fasthttp.RequestCtx) {
+	Act("email.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Email.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Email")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +93,7 @@ func EmailEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vemail.Edit{Model: ret}, ps, "email", ret.String())
 	})
 }

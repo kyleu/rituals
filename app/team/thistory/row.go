@@ -21,10 +21,10 @@ var (
 )
 
 type row struct {
-	Slug     string    `db:"slug"`
-	TeamID   uuid.UUID `db:"team_id"`
-	TeamName string    `db:"team_name"`
-	Created  time.Time `db:"created"`
+	Slug     string    `db:"slug" json:"slug"`
+	TeamID   uuid.UUID `db:"team_id" json:"team_id"`
+	TeamName string    `db:"team_name" json:"team_name"`
+	Created  time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToTeamHistory() *TeamHistory {

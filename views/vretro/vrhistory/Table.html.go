@@ -38,7 +38,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 	prms := params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
 
 //line views/vretro/vrhistory/Table.html:12
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

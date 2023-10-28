@@ -12,7 +12,7 @@
 
 {% func Table(models smember.SprintMembers, sprintsBySprintID sprint.Sprints, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("smember", nil, ps.Logger).Sanitize("smember") -%}
-  <table class="mt">
+  <table>
     <thead>
       <tr>
         {%= components.TableHeaderSimple("smember", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}

@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type StandupPermissions []*StandupPermission
@@ -118,6 +120,13 @@ func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 	return lo.Filter(s, func(xx *StandupPermission, _ int) bool {
 		return lo.Contains(values, xx.Value)
 	})
+}
+
+func (s StandupPermissions) Random() *StandupPermission {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s StandupPermissions) Clone() StandupPermissions {

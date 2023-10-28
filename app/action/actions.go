@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Actions []*Action
@@ -72,6 +74,13 @@ func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
 	return lo.Filter(a, func(xx *Action, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (a Actions) Random() *Action {
+	if len(a) == 0 {
+		return nil
+	}
+	return a[util.RandomInt(len(a))]
 }
 
 func (a Actions) Clone() Actions {

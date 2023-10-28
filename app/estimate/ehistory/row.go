@@ -21,10 +21,10 @@ var (
 )
 
 type row struct {
-	Slug         string    `db:"slug"`
-	EstimateID   uuid.UUID `db:"estimate_id"`
-	EstimateName string    `db:"estimate_name"`
-	Created      time.Time `db:"created"`
+	Slug         string    `db:"slug" json:"slug"`
+	EstimateID   uuid.UUID `db:"estimate_id" json:"estimate_id"`
+	EstimateName string    `db:"estimate_name" json:"estimate_name"`
+	Created      time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToEstimateHistory() *EstimateHistory {

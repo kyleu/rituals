@@ -23,8 +23,7 @@ func RetroHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Histories"
-		ps.Data = ret
+		ps.SetTitleAndData("Histories", ret)
 		retroIDsByRetroID := lo.Map(ret, func(x *rhistory.RetroHistory, _ int) uuid.UUID {
 			return x.RetroID
 		})
@@ -43,30 +42,33 @@ func RetroHistoryDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (History)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (History)", ret)
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 
-		return controller.Render(rc, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.String())
+		return controller.Render(rc, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.TitleString()+"**history")
 	})
 }
 
 func RetroHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("rhistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rhistory.RetroHistory{}
-		ps.Title = "Create [RetroHistory]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = rhistory.Random()
+		}
+		ps.SetTitleAndData("Create [RetroHistory]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
 	})
 }
 
-func RetroHistoryCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := rhistory.Random()
-		ps.Title = "Create Random RetroHistory"
-		ps.Data = ret
-		return controller.Render(rc, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
+func RetroHistoryRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("rhistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.RetroHistory.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random RetroHistory")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +93,7 @@ func RetroHistoryEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vrhistory.Edit{Model: ret}, ps, "retro", "rhistory", ret.String())
 	})
 }

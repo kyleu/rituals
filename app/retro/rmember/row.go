@@ -22,13 +22,13 @@ var (
 )
 
 type row struct {
-	RetroID uuid.UUID         `db:"retro_id"`
-	UserID  uuid.UUID         `db:"user_id"`
-	Name    string            `db:"name"`
-	Picture string            `db:"picture"`
-	Role    enum.MemberStatus `db:"role"`
-	Created time.Time         `db:"created"`
-	Updated *time.Time        `db:"updated"`
+	RetroID uuid.UUID         `db:"retro_id" json:"retro_id"`
+	UserID  uuid.UUID         `db:"user_id" json:"user_id"`
+	Name    string            `db:"name" json:"name"`
+	Picture string            `db:"picture" json:"picture"`
+	Role    enum.MemberStatus `db:"role" json:"role"`
+	Created time.Time         `db:"created" json:"created"`
+	Updated *time.Time        `db:"updated" json:"updated"`
 }
 
 func (r *row) ToRetroMember() *RetroMember {

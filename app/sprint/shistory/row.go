@@ -21,10 +21,10 @@ var (
 )
 
 type row struct {
-	Slug       string    `db:"slug"`
-	SprintID   uuid.UUID `db:"sprint_id"`
-	SprintName string    `db:"sprint_name"`
-	Created    time.Time `db:"created"`
+	Slug       string    `db:"slug" json:"slug"`
+	SprintID   uuid.UUID `db:"sprint_id" json:"sprint_id"`
+	SprintName string    `db:"sprint_name" json:"sprint_name"`
+	Created    time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToSprintHistory() *SprintHistory {

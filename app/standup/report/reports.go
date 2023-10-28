@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Reports []*Report
@@ -90,6 +92,13 @@ func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
 	return lo.Filter(r, func(xx *Report, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (r Reports) Random() *Report {
+	if len(r) == 0 {
+		return nil
+	}
+	return r[util.RandomInt(len(r))]
 }
 
 func (r Reports) Clone() Reports {

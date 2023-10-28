@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Teams []*Team
@@ -92,6 +93,13 @@ func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
 	return lo.Filter(t, func(xx *Team, _ int) bool {
 		return lo.Contains(statuses, xx.Status)
 	})
+}
+
+func (t Teams) Random() *Team {
+	if len(t) == 0 {
+		return nil
+	}
+	return t[util.RandomInt(len(t))]
 }
 
 func (t Teams) Clone() Teams {

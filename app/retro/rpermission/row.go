@@ -21,11 +21,11 @@ var (
 )
 
 type row struct {
-	RetroID uuid.UUID `db:"retro_id"`
-	Key     string    `db:"key"`
-	Value   string    `db:"value"`
-	Access  string    `db:"access"`
-	Created time.Time `db:"created"`
+	RetroID uuid.UUID `db:"retro_id" json:"retro_id"`
+	Key     string    `db:"key" json:"key"`
+	Value   string    `db:"value" json:"value"`
+	Access  string    `db:"access" json:"access"`
+	Created time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToRetroPermission() *RetroPermission {

@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Standups []*Standup
@@ -128,6 +129,13 @@ func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
 	return lo.Filter(s, func(xx *Standup, _ int) bool {
 		return lo.Contains(sprintIDs, xx.SprintID)
 	})
+}
+
+func (s Standups) Random() *Standup {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s Standups) Clone() Standups {

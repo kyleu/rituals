@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type SprintMembers []*SprintMember
@@ -89,6 +91,13 @@ func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 	return lo.Filter(s, func(xx *SprintMember, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (s SprintMembers) Random() *SprintMember {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s SprintMembers) Clone() SprintMembers {

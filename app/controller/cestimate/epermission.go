@@ -24,8 +24,7 @@ func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Permissions"
-		ps.Data = ret
+		ps.SetTitleAndData("Permissions", ret)
 		estimateIDsByEstimateID := lo.Map(ret, func(x *epermission.EstimatePermission, _ int) uuid.UUID {
 			return x.EstimateID
 		})
@@ -38,36 +37,40 @@ func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func EstimatePermissionDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("epermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := epermissionFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Permission)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Permission)", ret)
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 
-		return controller.Render(rc, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.String())
+		return controller.Render(rc, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.TitleString()+"**permission")
 	})
 }
 
 func EstimatePermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("epermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &epermission.EstimatePermission{}
-		ps.Title = "Create [EstimatePermission]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = epermission.Random()
+		}
+		ps.SetTitleAndData("Create [EstimatePermission]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
 	})
 }
 
-func EstimatePermissionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := epermission.Random()
-		ps.Title = "Create Random EstimatePermission"
-		ps.Data = ret
-		return controller.Render(rc, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
+func EstimatePermissionRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("epermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.EstimatePermission.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random EstimatePermission")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -92,8 +95,7 @@ func EstimatePermissionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vepermission.Edit{Model: ret}, ps, "estimate", "epermission", ret.String())
 	})
 }

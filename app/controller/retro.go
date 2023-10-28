@@ -33,8 +33,7 @@ func RetroList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Retros"
-		ps.Data = ret
+		ps.SetTitleAndData("Retros", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *retro.Retro, _ int) *uuid.UUID {
 			return x.TeamID
 		})
@@ -60,8 +59,7 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Retro)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Retro)", ret)
 
 		var teamByTeamID *team.Team
 		if ret.TeamID != nil {
@@ -102,25 +100,29 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 			RelRetroHistoriesByRetroID:   relRetroHistoriesByRetroID,
 			RelRetroMembersByRetroID:     relRetroMembersByRetroID,
 			RelRetroPermissionsByRetroID: relRetroPermissionsByRetroID,
-		}, ps, "retro", ret.String())
+		}, ps, "retro", ret.TitleString()+"**retro")
 	})
 }
 
 func RetroCreateForm(rc *fasthttp.RequestCtx) {
 	Act("retro.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &retro.Retro{}
-		ps.Title = "Create [Retro]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = retro.Random()
+		}
+		ps.SetTitleAndData("Create [Retro]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
 	})
 }
 
-func RetroCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("retro.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := retro.Random()
-		ps.Title = "Create Random Retro"
-		ps.Data = ret
-		return Render(rc, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
+func RetroRandom(rc *fasthttp.RequestCtx) {
+	Act("retro.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Retro")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -145,8 +147,7 @@ func RetroEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vretro.Edit{Model: ret}, ps, "retro", ret.String())
 	})
 }

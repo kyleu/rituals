@@ -23,8 +23,7 @@ func StandupHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Histories"
-		ps.Data = ret
+		ps.SetTitleAndData("Histories", ret)
 		standupIDsByStandupID := lo.Map(ret, func(x *uhistory.StandupHistory, _ int) uuid.UUID {
 			return x.StandupID
 		})
@@ -37,36 +36,40 @@ func StandupHistoryList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func StandupHistoryDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("uhistory.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := uhistoryFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (History)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (History)", ret)
 
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 
-		return controller.Render(rc, as, &vuhistory.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "uhistory", ret.String())
+		return controller.Render(rc, as, &vuhistory.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "uhistory", ret.TitleString()+"**history")
 	})
 }
 
 func StandupHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("uhistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &uhistory.StandupHistory{}
-		ps.Title = "Create [StandupHistory]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = uhistory.Random()
+		}
+		ps.SetTitleAndData("Create [StandupHistory]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vuhistory.Edit{Model: ret, IsNew: true}, ps, "standup", "uhistory", "Create")
 	})
 }
 
-func StandupHistoryCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("uhistory.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := uhistory.Random()
-		ps.Title = "Create Random StandupHistory"
-		ps.Data = ret
-		return controller.Render(rc, as, &vuhistory.Edit{Model: ret, IsNew: true}, ps, "standup", "uhistory", "Create")
+func StandupHistoryRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("uhistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.StandupHistory.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random StandupHistory")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +94,7 @@ func StandupHistoryEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vuhistory.Edit{Model: ret}, ps, "standup", "uhistory", ret.String())
 	})
 }

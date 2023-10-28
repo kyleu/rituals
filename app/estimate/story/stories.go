@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Stories []*Story
@@ -90,6 +92,13 @@ func (s Stories) GetByUserIDs(userIDs ...uuid.UUID) Stories {
 	return lo.Filter(s, func(xx *Story, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (s Stories) Random() *Story {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s Stories) Clone() Stories {

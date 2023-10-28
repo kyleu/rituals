@@ -44,13 +44,13 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vepermission/Edit.html:18
 	if p.IsNew {
 //line views/vestimate/vepermission/Edit.html:18
-		qw422016.N().S(`    <div class="right"><a href="/admin/db/estimate/permission/random"><button>Random</button></a></div>
+		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
 //line views/vestimate/vepermission/Edit.html:20
 		components.StreamSVGRefIcon(qw422016, `permission`, ps)
 //line views/vestimate/vepermission/Edit.html:20
 		qw422016.N().S(` New Permission</h3>
-    <form action="/admin/db/estimate/permission/new" class="mt" method="post">
+    <form action="/admin/db/estimate/permission/_new" class="mt" method="post">
 `)
 //line views/vestimate/vepermission/Edit.html:22
 	} else {

@@ -2,7 +2,6 @@
 package standup
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -27,6 +26,18 @@ func New(id uuid.UUID) *Standup {
 	return &Standup{ID: id}
 }
 
+func (s *Standup) Clone() *Standup {
+	return &Standup{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
+}
+
+func (s *Standup) String() string {
+	return s.ID.String()
+}
+
+func (s *Standup) TitleString() string {
+	return s.Title
+}
+
 func Random() *Standup {
 	return &Standup{
 		ID:       util.UUID(),
@@ -41,94 +52,8 @@ func Random() *Standup {
 	}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Standup, error) {
-	ret := &Standup{}
-	var err error
-	if setPK {
-		retID, e := m.ParseUUID("id", true, true)
-		if e != nil {
-			return nil, e
-		}
-		if retID != nil {
-			ret.ID = *retID
-		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	ret.Slug, err = m.ParseString("slug", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Title, err = m.ParseString("title", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Icon, err = m.ParseString("icon", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retStatus, err := m.ParseString("status", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
-	ret.TeamID, err = m.ParseUUID("teamID", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.SprintID, err = m.ParseUUID("sprintID", true, true)
-	if err != nil {
-		return nil, err
-	}
-	// $PF_SECTION_START(extrachecks)$
-	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
-}
-
-func (s *Standup) Clone() *Standup {
-	return &Standup{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
-}
-
-func (s *Standup) String() string {
-	return s.ID.String()
-}
-
-func (s *Standup) TitleString() string {
-	return s.Title
-}
-
 func (s *Standup) WebPath() string {
 	return "/admin/db/standup/" + s.ID.String()
-}
-
-//nolint:lll,gocognit
-func (s *Standup) Diff(sx *Standup) util.Diffs {
-	var diffs util.Diffs
-	if s.ID != sx.ID {
-		diffs = append(diffs, util.NewDiff("id", s.ID.String(), sx.ID.String()))
-	}
-	if s.Slug != sx.Slug {
-		diffs = append(diffs, util.NewDiff("slug", s.Slug, sx.Slug))
-	}
-	if s.Title != sx.Title {
-		diffs = append(diffs, util.NewDiff("title", s.Title, sx.Title))
-	}
-	if s.Icon != sx.Icon {
-		diffs = append(diffs, util.NewDiff("icon", s.Icon, sx.Icon))
-	}
-	if s.Status != sx.Status {
-		diffs = append(diffs, util.NewDiff("status", s.Status.Key, sx.Status.Key))
-	}
-	if (s.TeamID == nil && sx.TeamID != nil) || (s.TeamID != nil && sx.TeamID == nil) || (s.TeamID != nil && sx.TeamID != nil && *s.TeamID != *sx.TeamID) {
-		diffs = append(diffs, util.NewDiff("teamID", fmt.Sprint(s.TeamID), fmt.Sprint(sx.TeamID))) //nolint:gocritic // it's nullable
-	}
-	if (s.SprintID == nil && sx.SprintID != nil) || (s.SprintID != nil && sx.SprintID == nil) || (s.SprintID != nil && sx.SprintID != nil && *s.SprintID != *sx.SprintID) {
-		diffs = append(diffs, util.NewDiff("sprintID", fmt.Sprint(s.SprintID), fmt.Sprint(sx.SprintID))) //nolint:gocritic // it's nullable
-	}
-	if s.Created != sx.Created {
-		diffs = append(diffs, util.NewDiff("created", s.Created.String(), sx.Created.String()))
-	}
-	return diffs
 }
 
 func (s *Standup) ToData() []any {

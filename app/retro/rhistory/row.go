@@ -21,10 +21,10 @@ var (
 )
 
 type row struct {
-	Slug      string    `db:"slug"`
-	RetroID   uuid.UUID `db:"retro_id"`
-	RetroName string    `db:"retro_name"`
-	Created   time.Time `db:"created"`
+	Slug      string    `db:"slug" json:"slug"`
+	RetroID   uuid.UUID `db:"retro_id" json:"retro_id"`
+	RetroName string    `db:"retro_name" json:"retro_name"`
+	Created   time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToRetroHistory() *RetroHistory {

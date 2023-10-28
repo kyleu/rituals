@@ -29,8 +29,7 @@ func TeamList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Teams"
-		ps.Data = ret
+		ps.SetTitleAndData("Teams", ret)
 		page := &vteam.List{Models: ret, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "team")
 	})
@@ -42,8 +41,7 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Team)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Team)", ret)
 
 		relEstimatesByTeamIDPrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
 		relEstimatesByTeamID, err := as.Services.Estimate.GetByTeamID(ps.Context, nil, &ret.ID, relEstimatesByTeamIDPrms, ps.Logger)
@@ -91,25 +89,29 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 			RelTeamHistoriesByTeamID:   relTeamHistoriesByTeamID,
 			RelTeamMembersByTeamID:     relTeamMembersByTeamID,
 			RelTeamPermissionsByTeamID: relTeamPermissionsByTeamID,
-		}, ps, "team", ret.String())
+		}, ps, "team", ret.TitleString()+"**team")
 	})
 }
 
 func TeamCreateForm(rc *fasthttp.RequestCtx) {
 	Act("team.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &team.Team{}
-		ps.Title = "Create [Team]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = team.Random()
+		}
+		ps.SetTitleAndData("Create [Team]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
 	})
 }
 
-func TeamCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("team.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := team.Random()
-		ps.Title = "Create Random Team"
-		ps.Data = ret
-		return Render(rc, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
+func TeamRandom(rc *fasthttp.RequestCtx) {
+	Act("team.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Team")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -134,8 +136,7 @@ func TeamEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vteam.Edit{Model: ret}, ps, "team", ret.String())
 	})
 }

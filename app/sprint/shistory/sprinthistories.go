@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type SprintHistories []*SprintHistory
@@ -72,6 +74,13 @@ func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories 
 	return lo.Filter(s, func(xx *SprintHistory, _ int) bool {
 		return lo.Contains(sprintIDs, xx.SprintID)
 	})
+}
+
+func (s SprintHistories) Random() *SprintHistory {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s SprintHistories) Clone() SprintHistories {

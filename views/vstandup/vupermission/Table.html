@@ -10,7 +10,7 @@
 
 {% func Table(models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("upermission", nil, ps.Logger).Sanitize("upermission") -%}
-  <table class="mt">
+  <table>
     <thead>
       <tr>
         {%= components.TableHeaderSimple("upermission", "standup_id", "Standup ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}

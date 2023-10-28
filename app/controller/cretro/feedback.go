@@ -24,8 +24,7 @@ func FeedbackList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Feedbacks"
-		ps.Data = ret
+		ps.SetTitleAndData("Feedbacks", ret)
 		retroIDsByRetroID := lo.Map(ret, func(x *feedback.Feedback, _ int) uuid.UUID {
 			return x.RetroID
 		})
@@ -51,8 +50,7 @@ func FeedbackDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Feedback)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Feedback)", ret)
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func FeedbackDetail(rc *fasthttp.RequestCtx) {
 			Model:          ret,
 			RetroByRetroID: retroByRetroID,
 			UserByUserID:   userByUserID,
-		}, ps, "retro", "feedback", ret.String())
+		}, ps, "retro", "feedback", ret.TitleString()+"**comment")
 	})
 }
 
 func FeedbackCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("feedback.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &feedback.Feedback{}
-		ps.Title = "Create [Feedback]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = feedback.Random()
+		}
+		ps.SetTitleAndData("Create [Feedback]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
 	})
 }
 
-func FeedbackCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := feedback.Random()
-		ps.Title = "Create Random Feedback"
-		ps.Data = ret
-		return controller.Render(rc, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
+func FeedbackRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("feedback.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Feedback.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Feedback")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func FeedbackEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vfeedback.Edit{Model: ret}, ps, "retro", "feedback", ret.String())
 	})
 }

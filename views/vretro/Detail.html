@@ -97,7 +97,7 @@
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden />
+        <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`feedback`) %} checked="checked"{% endif %} />
         <label for="accordion-FeedbacksByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`comment`, 16, 16, `icon`, ps) %}
@@ -114,7 +114,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden />
+        <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rhistory`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroHistoriesByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
@@ -131,7 +131,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden />
+        <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rmember`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroMembersByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
@@ -148,7 +148,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden />
+        <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rpermission`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroPermissionsByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}

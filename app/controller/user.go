@@ -29,8 +29,7 @@ func UserList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Users"
-		ps.Data = ret
+		ps.SetTitleAndData("Users", ret)
 		page := &vuser.List{Models: ret, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "user")
 	})
@@ -42,8 +41,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (User)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (User)", ret)
 
 		relActionsByUserIDPrms := ps.Params.Get("action", nil, ps.Logger).Sanitize("action")
 		relActionsByUserID, err := as.Services.Action.GetByUserID(ps.Context, nil, ret.ID, relActionsByUserIDPrms, ps.Logger)
@@ -121,25 +119,29 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 			RelStoriesByUserID:         relStoriesByUserID,
 			RelTeamMembersByUserID:     relTeamMembersByUserID,
 			RelVotesByUserID:           relVotesByUserID,
-		}, ps, "user", ret.String())
+		}, ps, "user", ret.TitleString()+"**profile")
 	})
 }
 
 func UserCreateForm(rc *fasthttp.RequestCtx) {
 	Act("user.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &user.User{}
-		ps.Title = "Create [User]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = user.Random()
+		}
+		ps.SetTitleAndData("Create [User]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
 	})
 }
 
-func UserCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("user.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := user.Random()
-		ps.Title = "Create Random User"
-		ps.Data = ret
-		return Render(rc, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
+func UserRandom(rc *fasthttp.RequestCtx) {
+	Act("user.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random User")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -164,8 +166,7 @@ func UserEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vuser.Edit{Model: ret}, ps, "user", ret.String())
 	})
 }

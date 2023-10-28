@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Retros []*Retro
@@ -128,6 +129,13 @@ func (r Retros) GetBySprintIDs(sprintIDs ...*uuid.UUID) Retros {
 	return lo.Filter(r, func(xx *Retro, _ int) bool {
 		return lo.Contains(sprintIDs, xx.SprintID)
 	})
+}
+
+func (r Retros) Random() *Retro {
+	if len(r) == 0 {
+		return nil
+	}
+	return r[util.RandomInt(len(r))]
 }
 
 func (r Retros) Clone() Retros {

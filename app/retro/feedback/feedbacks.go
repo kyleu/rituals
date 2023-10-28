@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Feedbacks []*Feedback
@@ -90,6 +92,13 @@ func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
 	return lo.Filter(f, func(xx *Feedback, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (f Feedbacks) Random() *Feedback {
+	if len(f) == 0 {
+		return nil
+	}
+	return f[util.RandomInt(len(f))]
 }
 
 func (f Feedbacks) Clone() Feedbacks {

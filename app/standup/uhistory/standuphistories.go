@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type StandupHistories []*StandupHistory
@@ -72,6 +74,13 @@ func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistor
 	return lo.Filter(s, func(xx *StandupHistory, _ int) bool {
 		return lo.Contains(standupIDs, xx.StandupID)
 	})
+}
+
+func (s StandupHistories) Random() *StandupHistory {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s StandupHistories) Clone() StandupHistories {

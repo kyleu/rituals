@@ -93,7 +93,7 @@
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-ReportsByStandupID" type="checkbox" hidden />
+        <input id="accordion-ReportsByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`report`) %} checked="checked"{% endif %} />
         <label for="accordion-ReportsByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`file-alt`, 16, 16, `icon`, ps) %}
@@ -110,7 +110,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden />
+        <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`uhistory`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupHistoriesByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
@@ -127,7 +127,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden />
+        <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`umember`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupMembersByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
@@ -144,7 +144,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden />
+        <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`upermission`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupPermissionsByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}

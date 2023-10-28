@@ -8,6 +8,7 @@ import (
 	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Estimates []*Estimate
@@ -128,6 +129,13 @@ func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
 	return lo.Filter(e, func(xx *Estimate, _ int) bool {
 		return lo.Contains(sprintIDs, xx.SprintID)
 	})
+}
+
+func (e Estimates) Random() *Estimate {
+	if len(e) == 0 {
+		return nil
+	}
+	return e[util.RandomInt(len(e))]
 }
 
 func (e Estimates) Clone() Estimates {

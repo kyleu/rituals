@@ -33,8 +33,7 @@ func StandupList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Standups"
-		ps.Data = ret
+		ps.SetTitleAndData("Standups", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *standup.Standup, _ int) *uuid.UUID {
 			return x.TeamID
 		})
@@ -61,8 +60,7 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Standup)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Standup)", ret)
 
 		var teamByTeamID *team.Team
 		if ret.TeamID != nil {
@@ -103,25 +101,29 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 			RelStandupHistoriesByStandupID:   relStandupHistoriesByStandupID,
 			RelStandupMembersByStandupID:     relStandupMembersByStandupID,
 			RelStandupPermissionsByStandupID: relStandupPermissionsByStandupID,
-		}, ps, "standup", ret.String())
+		}, ps, "standup", ret.TitleString()+"**standup")
 	})
 }
 
 func StandupCreateForm(rc *fasthttp.RequestCtx) {
 	Act("standup.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &standup.Standup{}
-		ps.Title = "Create [Standup]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = standup.Random()
+		}
+		ps.SetTitleAndData("Create [Standup]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
 	})
 }
 
-func StandupCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("standup.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := standup.Random()
-		ps.Title = "Create Random Standup"
-		ps.Data = ret
-		return Render(rc, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
+func StandupRandom(rc *fasthttp.RequestCtx) {
+	Act("standup.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Standup")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -146,8 +148,7 @@ func StandupEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vstandup.Edit{Model: ret}, ps, "standup", ret.String())
 	})
 }

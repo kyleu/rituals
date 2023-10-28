@@ -234,7 +234,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden />
+        <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden="hidden"`)
+//line views/vretro/Detail.html:100
+	if p.Params.Specifies(`feedback`) {
+//line views/vretro/Detail.html:100
+		qw422016.N().S(` checked="checked"`)
+//line views/vretro/Detail.html:100
+	}
+//line views/vretro/Detail.html:100
+	qw422016.N().S(` />
         <label for="accordion-FeedbacksByRetroID">
           `)
 //line views/vretro/Detail.html:102
@@ -276,7 +284,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden />
+        <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden="hidden"`)
+//line views/vretro/Detail.html:117
+	if p.Params.Specifies(`rhistory`) {
+//line views/vretro/Detail.html:117
+		qw422016.N().S(` checked="checked"`)
+//line views/vretro/Detail.html:117
+	}
+//line views/vretro/Detail.html:117
+	qw422016.N().S(` />
         <label for="accordion-RetroHistoriesByRetroID">
           `)
 //line views/vretro/Detail.html:119
@@ -318,7 +334,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden />
+        <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden="hidden"`)
+//line views/vretro/Detail.html:134
+	if p.Params.Specifies(`rmember`) {
+//line views/vretro/Detail.html:134
+		qw422016.N().S(` checked="checked"`)
+//line views/vretro/Detail.html:134
+	}
+//line views/vretro/Detail.html:134
+	qw422016.N().S(` />
         <label for="accordion-RetroMembersByRetroID">
           `)
 //line views/vretro/Detail.html:136
@@ -360,7 +384,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden />
+        <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden="hidden"`)
+//line views/vretro/Detail.html:151
+	if p.Params.Specifies(`rpermission`) {
+//line views/vretro/Detail.html:151
+		qw422016.N().S(` checked="checked"`)
+//line views/vretro/Detail.html:151
+	}
+//line views/vretro/Detail.html:151
+	qw422016.N().S(` />
         <label for="accordion-RetroPermissionsByRetroID">
           `)
 //line views/vretro/Detail.html:153

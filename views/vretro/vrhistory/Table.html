@@ -10,7 +10,7 @@
 
 {% func Table(models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory") -%}
-  <table class="mt">
+  <table>
     <thead>
       <tr>
         {%= components.TableHeaderSimple("rhistory", "slug", "Slug", "String text", prms, ps.URI, ps) %}

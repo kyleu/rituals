@@ -17,6 +17,7 @@ type SessionStatus struct {
 	Key         string
 	Name        string
 	Description string
+	Icon        string
 }
 
 func (s SessionStatus) String() string {
@@ -39,13 +40,13 @@ func (s *SessionStatus) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (s SessionStatus) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	return e.EncodeElement(s.Key, start)
+func (s SessionStatus) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
+	return enc.EncodeElement(s.Key, start)
 }
 
-func (s *SessionStatus) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (s *SessionStatus) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error {
 	var key string
-	if err := d.DecodeElement(&key, &start); err != nil {
+	if err := dec.DecodeElement(&key, &start); err != nil {
 		return err
 	}
 	*s = AllSessionStatuses.Get(key, nil)
@@ -99,7 +100,20 @@ func (s SessionStatuses) Get(key string, logger util.Logger) SessionStatus {
 			return value
 		}
 	}
-	msg := fmt.Sprintf("unable to find [SessionStatus] enum with key [%s]", key)
+	msg := fmt.Sprintf("unable to find [SessionStatus] with key [%s]", key)
+	if logger != nil {
+		logger.Warn(msg)
+	}
+	return SessionStatus{Key: "_error", Name: "error: " + msg}
+}
+
+func (s SessionStatuses) GetByName(name string, logger util.Logger) SessionStatus {
+	for _, value := range s {
+		if value.Name == name {
+			return value
+		}
+	}
+	msg := fmt.Sprintf("unable to find [SessionStatus] with name [%s]", name)
 	if logger != nil {
 		logger.Warn(msg)
 	}

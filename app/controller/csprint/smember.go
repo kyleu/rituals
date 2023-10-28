@@ -24,8 +24,7 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Members"
-		ps.Data = ret
+		ps.SetTitleAndData("Members", ret)
 		sprintIDsBySprintID := lo.Map(ret, func(x *smember.SprintMember, _ int) uuid.UUID {
 			return x.SprintID
 		})
@@ -51,8 +50,7 @@ func SprintMemberDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Member)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Member)", ret)
 
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func SprintMemberDetail(rc *fasthttp.RequestCtx) {
 			Model:            ret,
 			SprintBySprintID: sprintBySprintID,
 			UserByUserID:     userByUserID,
-		}, ps, "sprint", "smember", ret.String())
+		}, ps, "sprint", "smember", ret.TitleString()+"**users")
 	})
 }
 
 func SprintMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("smember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &smember.SprintMember{}
-		ps.Title = "Create [SprintMember]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = smember.Random()
+		}
+		ps.SetTitleAndData("Create [SprintMember]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
 	})
 }
 
-func SprintMemberCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := smember.Random()
-		ps.Title = "Create Random SprintMember"
-		ps.Data = ret
-		return controller.Render(rc, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
+func SprintMemberRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("smember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.SprintMember.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random SprintMember")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func SprintMemberEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vsmember.Edit{Model: ret}, ps, "sprint", "smember", ret.String())
 	})
 }

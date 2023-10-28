@@ -17,6 +17,7 @@ type MemberStatus struct {
 	Key         string
 	Name        string
 	Description string
+	Icon        string
 }
 
 func (m MemberStatus) String() string {
@@ -39,13 +40,13 @@ func (m *MemberStatus) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (m MemberStatus) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	return e.EncodeElement(m.Key, start)
+func (m MemberStatus) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
+	return enc.EncodeElement(m.Key, start)
 }
 
-func (m *MemberStatus) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (m *MemberStatus) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error {
 	var key string
-	if err := d.DecodeElement(&key, &start); err != nil {
+	if err := dec.DecodeElement(&key, &start); err != nil {
 		return err
 	}
 	*m = AllMemberStatuses.Get(key, nil)
@@ -99,7 +100,20 @@ func (m MemberStatuses) Get(key string, logger util.Logger) MemberStatus {
 			return value
 		}
 	}
-	msg := fmt.Sprintf("unable to find [MemberStatus] enum with key [%s]", key)
+	msg := fmt.Sprintf("unable to find [MemberStatus] with key [%s]", key)
+	if logger != nil {
+		logger.Warn(msg)
+	}
+	return MemberStatus{Key: "_error", Name: "error: " + msg}
+}
+
+func (m MemberStatuses) GetByName(name string, logger util.Logger) MemberStatus {
+	for _, value := range m {
+		if value.Name == name {
+			return value
+		}
+	}
+	msg := fmt.Sprintf("unable to find [MemberStatus] with name [%s]", name)
 	if logger != nil {
 		logger.Warn(msg)
 	}

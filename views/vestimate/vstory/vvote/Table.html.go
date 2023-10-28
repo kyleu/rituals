@@ -39,7 +39,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 	prms := params.Get("vote", nil, ps.Logger).Sanitize("vote")
 
 //line views/vestimate/vstory/vvote/Table.html:13
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

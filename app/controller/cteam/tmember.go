@@ -24,8 +24,7 @@ func TeamMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Members"
-		ps.Data = ret
+		ps.SetTitleAndData("Members", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *tmember.TeamMember, _ int) uuid.UUID {
 			return x.TeamID
 		})
@@ -51,8 +50,7 @@ func TeamMemberDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Member)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Member)", ret)
 
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func TeamMemberDetail(rc *fasthttp.RequestCtx) {
 			Model:        ret,
 			TeamByTeamID: teamByTeamID,
 			UserByUserID: userByUserID,
-		}, ps, "team", "tmember", ret.String())
+		}, ps, "team", "tmember", ret.TitleString()+"**users")
 	})
 }
 
 func TeamMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("tmember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tmember.TeamMember{}
-		ps.Title = "Create [TeamMember]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = tmember.Random()
+		}
+		ps.SetTitleAndData("Create [TeamMember]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
 	})
 }
 
-func TeamMemberCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := tmember.Random()
-		ps.Title = "Create Random TeamMember"
-		ps.Data = ret
-		return controller.Render(rc, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
+func TeamMemberRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("tmember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.TeamMember.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random TeamMember")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func TeamMemberEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vtmember.Edit{Model: ret}, ps, "team", "tmember", ret.String())
 	})
 }

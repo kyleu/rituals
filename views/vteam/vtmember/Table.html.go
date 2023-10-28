@@ -40,7 +40,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teamsByT
 	prms := params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
 
 //line views/vteam/vtmember/Table.html:14
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

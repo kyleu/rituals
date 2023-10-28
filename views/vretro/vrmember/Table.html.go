@@ -40,7 +40,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 	prms := params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
 
 //line views/vretro/vrmember/Table.html:14
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

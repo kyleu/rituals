@@ -84,7 +84,7 @@
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-VotesByStoryID" type="checkbox" hidden />
+        <input id="accordion-VotesByStoryID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`vote`) %} checked="checked"{% endif %} />
         <label for="accordion-VotesByStoryID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`vote-yea`, 16, 16, `icon`, ps) %}

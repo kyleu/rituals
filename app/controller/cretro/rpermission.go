@@ -24,8 +24,7 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Permissions"
-		ps.Data = ret
+		ps.SetTitleAndData("Permissions", ret)
 		retroIDsByRetroID := lo.Map(ret, func(x *rpermission.RetroPermission, _ int) uuid.UUID {
 			return x.RetroID
 		})
@@ -38,36 +37,40 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func RetroPermissionDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("rpermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := rpermissionFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Permission)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Permission)", ret)
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 
-		return controller.Render(rc, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.String())
+		return controller.Render(rc, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.TitleString()+"**permission")
 	})
 }
 
 func RetroPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("rpermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rpermission.RetroPermission{}
-		ps.Title = "Create [RetroPermission]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = rpermission.Random()
+		}
+		ps.SetTitleAndData("Create [RetroPermission]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
 	})
 }
 
-func RetroPermissionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := rpermission.Random()
-		ps.Title = "Create Random RetroPermission"
-		ps.Data = ret
-		return controller.Render(rc, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
+func RetroPermissionRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("rpermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.RetroPermission.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random RetroPermission")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -92,8 +95,7 @@ func RetroPermissionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vrpermission.Edit{Model: ret}, ps, "retro", "rpermission", ret.String())
 	})
 }

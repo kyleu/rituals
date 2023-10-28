@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type TeamMembers []*TeamMember
@@ -89,6 +91,13 @@ func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
 	return lo.Filter(t, func(xx *TeamMember, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (t TeamMembers) Random() *TeamMember {
+	if len(t) == 0 {
+		return nil
+	}
+	return t[util.RandomInt(len(t))]
 }
 
 func (t TeamMembers) Clone() TeamMembers {

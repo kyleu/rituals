@@ -84,7 +84,7 @@
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-EstimatesByTeamID" type="checkbox" hidden />
+        <input id="accordion-EstimatesByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`estimate`) %} checked="checked"{% endif %} />
         <label for="accordion-EstimatesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`estimate`, 16, 16, `icon`, ps) %}
@@ -101,7 +101,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetrosByTeamID" type="checkbox" hidden />
+        <input id="accordion-RetrosByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`retro`) %} checked="checked"{% endif %} />
         <label for="accordion-RetrosByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`retro`, 16, 16, `icon`, ps) %}
@@ -118,7 +118,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintsByTeamID" type="checkbox" hidden />
+        <input id="accordion-SprintsByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`sprint`) %} checked="checked"{% endif %} />
         <label for="accordion-SprintsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`sprint`, 16, 16, `icon`, ps) %}
@@ -135,7 +135,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupsByTeamID" type="checkbox" hidden />
+        <input id="accordion-StandupsByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`standup`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`standup`, 16, 16, `icon`, ps) %}
@@ -152,7 +152,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden />
+        <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`thistory`) %} checked="checked"{% endif %} />
         <label for="accordion-TeamHistoriesByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
@@ -169,7 +169,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-TeamMembersByTeamID" type="checkbox" hidden />
+        <input id="accordion-TeamMembersByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`tmember`) %} checked="checked"{% endif %} />
         <label for="accordion-TeamMembersByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
@@ -186,7 +186,7 @@
         </div></div></div>
       </li>
       <li>
-        <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden />
+        <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`tpermission`) %} checked="checked"{% endif %} />
         <label for="accordion-TeamPermissionsByTeamID">
           {%= components.ExpandCollapse(3, ps) %}
           {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}

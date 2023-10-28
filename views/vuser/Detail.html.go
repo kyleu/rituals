@@ -155,7 +155,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-ActionsByUserID" type="checkbox" hidden />
+        <input id="accordion-ActionsByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:93
+	if p.Params.Specifies(`action`) {
+//line views/vuser/Detail.html:93
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:93
+	}
+//line views/vuser/Detail.html:93
+	qw422016.N().S(` />
         <label for="accordion-ActionsByUserID">
           `)
 //line views/vuser/Detail.html:95
@@ -197,7 +205,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-CommentsByUserID" type="checkbox" hidden />
+        <input id="accordion-CommentsByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:110
+	if p.Params.Specifies(`comment`) {
+//line views/vuser/Detail.html:110
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:110
+	}
+//line views/vuser/Detail.html:110
+	qw422016.N().S(` />
         <label for="accordion-CommentsByUserID">
           `)
 //line views/vuser/Detail.html:112
@@ -239,7 +255,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-EmailsByUserID" type="checkbox" hidden />
+        <input id="accordion-EmailsByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:127
+	if p.Params.Specifies(`email`) {
+//line views/vuser/Detail.html:127
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:127
+	}
+//line views/vuser/Detail.html:127
+	qw422016.N().S(` />
         <label for="accordion-EmailsByUserID">
           `)
 //line views/vuser/Detail.html:129
@@ -281,7 +305,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden />
+        <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:144
+	if p.Params.Specifies(`emember`) {
+//line views/vuser/Detail.html:144
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:144
+	}
+//line views/vuser/Detail.html:144
+	qw422016.N().S(` />
         <label for="accordion-EstimateMembersByUserID">
           `)
 //line views/vuser/Detail.html:146
@@ -323,7 +355,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-FeedbacksByUserID" type="checkbox" hidden />
+        <input id="accordion-FeedbacksByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:161
+	if p.Params.Specifies(`feedback`) {
+//line views/vuser/Detail.html:161
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:161
+	}
+//line views/vuser/Detail.html:161
+	qw422016.N().S(` />
         <label for="accordion-FeedbacksByUserID">
           `)
 //line views/vuser/Detail.html:163
@@ -365,7 +405,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-ReportsByUserID" type="checkbox" hidden />
+        <input id="accordion-ReportsByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:178
+	if p.Params.Specifies(`report`) {
+//line views/vuser/Detail.html:178
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:178
+	}
+//line views/vuser/Detail.html:178
+	qw422016.N().S(` />
         <label for="accordion-ReportsByUserID">
           `)
 //line views/vuser/Detail.html:180
@@ -407,7 +455,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetroMembersByUserID" type="checkbox" hidden />
+        <input id="accordion-RetroMembersByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:195
+	if p.Params.Specifies(`rmember`) {
+//line views/vuser/Detail.html:195
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:195
+	}
+//line views/vuser/Detail.html:195
+	qw422016.N().S(` />
         <label for="accordion-RetroMembersByUserID">
           `)
 //line views/vuser/Detail.html:197
@@ -449,7 +505,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintMembersByUserID" type="checkbox" hidden />
+        <input id="accordion-SprintMembersByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:212
+	if p.Params.Specifies(`smember`) {
+//line views/vuser/Detail.html:212
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:212
+	}
+//line views/vuser/Detail.html:212
+	qw422016.N().S(` />
         <label for="accordion-SprintMembersByUserID">
           `)
 //line views/vuser/Detail.html:214
@@ -491,7 +555,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupMembersByUserID" type="checkbox" hidden />
+        <input id="accordion-StandupMembersByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:229
+	if p.Params.Specifies(`umember`) {
+//line views/vuser/Detail.html:229
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:229
+	}
+//line views/vuser/Detail.html:229
+	qw422016.N().S(` />
         <label for="accordion-StandupMembersByUserID">
           `)
 //line views/vuser/Detail.html:231
@@ -533,7 +605,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StoriesByUserID" type="checkbox" hidden />
+        <input id="accordion-StoriesByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:246
+	if p.Params.Specifies(`story`) {
+//line views/vuser/Detail.html:246
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:246
+	}
+//line views/vuser/Detail.html:246
+	qw422016.N().S(` />
         <label for="accordion-StoriesByUserID">
           `)
 //line views/vuser/Detail.html:248
@@ -575,7 +655,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-TeamMembersByUserID" type="checkbox" hidden />
+        <input id="accordion-TeamMembersByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:263
+	if p.Params.Specifies(`tmember`) {
+//line views/vuser/Detail.html:263
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:263
+	}
+//line views/vuser/Detail.html:263
+	qw422016.N().S(` />
         <label for="accordion-TeamMembersByUserID">
           `)
 //line views/vuser/Detail.html:265
@@ -617,7 +705,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-VotesByUserID" type="checkbox" hidden />
+        <input id="accordion-VotesByUserID" type="checkbox" hidden="hidden"`)
+//line views/vuser/Detail.html:280
+	if p.Params.Specifies(`vote`) {
+//line views/vuser/Detail.html:280
+		qw422016.N().S(` checked="checked"`)
+//line views/vuser/Detail.html:280
+	}
+//line views/vuser/Detail.html:280
+	qw422016.N().S(` />
         <label for="accordion-VotesByUserID">
           `)
 //line views/vuser/Detail.html:282

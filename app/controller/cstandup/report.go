@@ -24,8 +24,7 @@ func ReportList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Reports"
-		ps.Data = ret
+		ps.SetTitleAndData("Reports", ret)
 		standupIDsByStandupID := lo.Map(ret, func(x *report.Report, _ int) uuid.UUID {
 			return x.StandupID
 		})
@@ -51,8 +50,7 @@ func ReportDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Report)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Report)", ret)
 
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func ReportDetail(rc *fasthttp.RequestCtx) {
 			Model:              ret,
 			StandupByStandupID: standupByStandupID,
 			UserByUserID:       userByUserID,
-		}, ps, "standup", "report", ret.String())
+		}, ps, "standup", "report", ret.TitleString()+"**file-alt")
 	})
 }
 
 func ReportCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("report.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &report.Report{}
-		ps.Title = "Create [Report]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = report.Random()
+		}
+		ps.SetTitleAndData("Create [Report]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
 	})
 }
 
-func ReportCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("report.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := report.Random()
-		ps.Title = "Create Random Report"
-		ps.Data = ret
-		return controller.Render(rc, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
+func ReportRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("report.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Report.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Report")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func ReportEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vreport.Edit{Model: ret}, ps, "standup", "report", ret.String())
 	})
 }

@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type TeamHistories []*TeamHistory
@@ -72,6 +74,13 @@ func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
 	return lo.Filter(t, func(xx *TeamHistory, _ int) bool {
 		return lo.Contains(teamIDs, xx.TeamID)
 	})
+}
+
+func (t TeamHistories) Random() *TeamHistory {
+	if len(t) == 0 {
+		return nil
+	}
+	return t[util.RandomInt(len(t))]
 }
 
 func (t TeamHistories) Clone() TeamHistories {

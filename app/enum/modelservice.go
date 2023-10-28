@@ -17,6 +17,7 @@ type ModelService struct {
 	Key         string
 	Name        string
 	Description string
+	Icon        string
 }
 
 func (m ModelService) String() string {
@@ -39,13 +40,13 @@ func (m *ModelService) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (m ModelService) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	return e.EncodeElement(m.Key, start)
+func (m ModelService) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
+	return enc.EncodeElement(m.Key, start)
 }
 
-func (m *ModelService) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (m *ModelService) UnmarshalXML(dec *xml.Decoder, start xml.StartElement) error {
 	var key string
-	if err := d.DecodeElement(&key, &start); err != nil {
+	if err := dec.DecodeElement(&key, &start); err != nil {
 		return err
 	}
 	*m = AllModelServices.Get(key, nil)
@@ -99,7 +100,20 @@ func (m ModelServices) Get(key string, logger util.Logger) ModelService {
 			return value
 		}
 	}
-	msg := fmt.Sprintf("unable to find [ModelService] enum with key [%s]", key)
+	msg := fmt.Sprintf("unable to find [ModelService] with key [%s]", key)
+	if logger != nil {
+		logger.Warn(msg)
+	}
+	return ModelService{Key: "_error", Name: "error: " + msg}
+}
+
+func (m ModelServices) GetByName(name string, logger util.Logger) ModelService {
+	for _, value := range m {
+		if value.Name == name {
+			return value
+		}
+	}
+	msg := fmt.Sprintf("unable to find [ModelService] with name [%s]", name)
 	if logger != nil {
 		logger.Warn(msg)
 	}

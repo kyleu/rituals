@@ -24,8 +24,7 @@ func RetroMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Members"
-		ps.Data = ret
+		ps.SetTitleAndData("Members", ret)
 		retroIDsByRetroID := lo.Map(ret, func(x *rmember.RetroMember, _ int) uuid.UUID {
 			return x.RetroID
 		})
@@ -51,8 +50,7 @@ func RetroMemberDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Member)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Member)", ret)
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func RetroMemberDetail(rc *fasthttp.RequestCtx) {
 			Model:          ret,
 			RetroByRetroID: retroByRetroID,
 			UserByUserID:   userByUserID,
-		}, ps, "retro", "rmember", ret.String())
+		}, ps, "retro", "rmember", ret.TitleString()+"**users")
 	})
 }
 
 func RetroMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("rmember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rmember.RetroMember{}
-		ps.Title = "Create [RetroMember]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = rmember.Random()
+		}
+		ps.SetTitleAndData("Create [RetroMember]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
 	})
 }
 
-func RetroMemberCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := rmember.Random()
-		ps.Title = "Create Random RetroMember"
-		ps.Data = ret
-		return controller.Render(rc, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
+func RetroMemberRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("rmember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.RetroMember.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random RetroMember")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func RetroMemberEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vrmember.Edit{Model: ret}, ps, "retro", "rmember", ret.String())
 	})
 }

@@ -209,7 +209,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
-        <input id="accordion-EstimatesBySprintID" type="checkbox" hidden />
+        <input id="accordion-EstimatesBySprintID" type="checkbox" hidden="hidden"`)
+//line views/vsprint/Detail.html:101
+	if p.Params.Specifies(`estimate`) {
+//line views/vsprint/Detail.html:101
+		qw422016.N().S(` checked="checked"`)
+//line views/vsprint/Detail.html:101
+	}
+//line views/vsprint/Detail.html:101
+	qw422016.N().S(` />
         <label for="accordion-EstimatesBySprintID">
           `)
 //line views/vsprint/Detail.html:103
@@ -251,7 +259,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-RetrosBySprintID" type="checkbox" hidden />
+        <input id="accordion-RetrosBySprintID" type="checkbox" hidden="hidden"`)
+//line views/vsprint/Detail.html:118
+	if p.Params.Specifies(`retro`) {
+//line views/vsprint/Detail.html:118
+		qw422016.N().S(` checked="checked"`)
+//line views/vsprint/Detail.html:118
+	}
+//line views/vsprint/Detail.html:118
+	qw422016.N().S(` />
         <label for="accordion-RetrosBySprintID">
           `)
 //line views/vsprint/Detail.html:120
@@ -293,7 +309,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden />
+        <input id="accordion-SprintHistoriesBySprintID" type="checkbox" hidden="hidden"`)
+//line views/vsprint/Detail.html:135
+	if p.Params.Specifies(`shistory`) {
+//line views/vsprint/Detail.html:135
+		qw422016.N().S(` checked="checked"`)
+//line views/vsprint/Detail.html:135
+	}
+//line views/vsprint/Detail.html:135
+	qw422016.N().S(` />
         <label for="accordion-SprintHistoriesBySprintID">
           `)
 //line views/vsprint/Detail.html:137
@@ -335,7 +359,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintMembersBySprintID" type="checkbox" hidden />
+        <input id="accordion-SprintMembersBySprintID" type="checkbox" hidden="hidden"`)
+//line views/vsprint/Detail.html:152
+	if p.Params.Specifies(`smember`) {
+//line views/vsprint/Detail.html:152
+		qw422016.N().S(` checked="checked"`)
+//line views/vsprint/Detail.html:152
+	}
+//line views/vsprint/Detail.html:152
+	qw422016.N().S(` />
         <label for="accordion-SprintMembersBySprintID">
           `)
 //line views/vsprint/Detail.html:154
@@ -377,7 +409,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden />
+        <input id="accordion-SprintPermissionsBySprintID" type="checkbox" hidden="hidden"`)
+//line views/vsprint/Detail.html:169
+	if p.Params.Specifies(`spermission`) {
+//line views/vsprint/Detail.html:169
+		qw422016.N().S(` checked="checked"`)
+//line views/vsprint/Detail.html:169
+	}
+//line views/vsprint/Detail.html:169
+	qw422016.N().S(` />
         <label for="accordion-SprintPermissionsBySprintID">
           `)
 //line views/vsprint/Detail.html:171
@@ -419,7 +459,15 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
-        <input id="accordion-StandupsBySprintID" type="checkbox" hidden />
+        <input id="accordion-StandupsBySprintID" type="checkbox" hidden="hidden"`)
+//line views/vsprint/Detail.html:186
+	if p.Params.Specifies(`standup`) {
+//line views/vsprint/Detail.html:186
+		qw422016.N().S(` checked="checked"`)
+//line views/vsprint/Detail.html:186
+	}
+//line views/vsprint/Detail.html:186
+	qw422016.N().S(` />
         <label for="accordion-StandupsBySprintID">
           `)
 //line views/vsprint/Detail.html:188

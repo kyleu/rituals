@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type TeamPermissions []*TeamPermission
@@ -118,6 +120,13 @@ func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
 	return lo.Filter(t, func(xx *TeamPermission, _ int) bool {
 		return lo.Contains(values, xx.Value)
 	})
+}
+
+func (t TeamPermissions) Random() *TeamPermission {
+	if len(t) == 0 {
+		return nil
+	}
+	return t[util.RandomInt(len(t))]
 }
 
 func (t TeamPermissions) Clone() TeamPermissions {

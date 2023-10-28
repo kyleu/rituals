@@ -24,8 +24,7 @@ func VoteList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Votes"
-		ps.Data = ret
+		ps.SetTitleAndData("Votes", ret)
 		storyIDsByStoryID := lo.Map(ret, func(x *vote.Vote, _ int) uuid.UUID {
 			return x.StoryID
 		})
@@ -51,8 +50,7 @@ func VoteDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Vote)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Vote)", ret)
 
 		storyByStoryID, _ := as.Services.Story.Get(ps.Context, nil, ret.StoryID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func VoteDetail(rc *fasthttp.RequestCtx) {
 			Model:          ret,
 			StoryByStoryID: storyByStoryID,
 			UserByUserID:   userByUserID,
-		}, ps, "estimate", "story", "vote", ret.String())
+		}, ps, "estimate", "story", "vote", ret.TitleString()+"**vote-yea")
 	})
 }
 
 func VoteCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("vote.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &vote.Vote{}
-		ps.Title = "Create [Vote]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = vote.Random()
+		}
+		ps.SetTitleAndData("Create [Vote]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
 	})
 }
 
-func VoteCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := vote.Random()
-		ps.Title = "Create Random Vote"
-		ps.Data = ret
-		return controller.Render(rc, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
+func VoteRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("vote.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Vote.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Vote")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func VoteEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vvote.Edit{Model: ret}, ps, "estimate", "story", "vote", ret.String())
 	})
 }

@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type RetroPermissions []*RetroPermission
@@ -118,6 +120,13 @@ func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 	return lo.Filter(r, func(xx *RetroPermission, _ int) bool {
 		return lo.Contains(values, xx.Value)
 	})
+}
+
+func (r RetroPermissions) Random() *RetroPermission {
+	if len(r) == 0 {
+		return nil
+	}
+	return r[util.RandomInt(len(r))]
 }
 
 func (r RetroPermissions) Clone() RetroPermissions {

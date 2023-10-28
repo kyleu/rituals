@@ -39,7 +39,7 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, usersByUserID
 	prms := params.Get("action", nil, ps.Logger).Sanitize("action")
 
 //line views/vaction/Table.html:13
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

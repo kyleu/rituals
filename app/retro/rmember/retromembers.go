@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type RetroMembers []*RetroMember
@@ -89,6 +91,13 @@ func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
 	return lo.Filter(r, func(xx *RetroMember, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (r RetroMembers) Random() *RetroMember {
+	if len(r) == 0 {
+		return nil
+	}
+	return r[util.RandomInt(len(r))]
 }
 
 func (r RetroMembers) Clone() RetroMembers {

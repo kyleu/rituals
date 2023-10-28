@@ -23,7 +23,7 @@
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No permissions available</em></div>
     {%- else -%}
-    <div class="overflow clear">
+    <div class="overflow clear mt">
       {%= Table(p.Models, p.SprintsBySprintID, p.Params, as, ps) %}
     </div>
     {%- endif -%}

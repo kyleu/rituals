@@ -32,8 +32,7 @@ func SprintList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Sprints"
-		ps.Data = ret
+		ps.SetTitleAndData("Sprints", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *sprint.Sprint, _ int) *uuid.UUID {
 			return x.TeamID
 		})
@@ -52,8 +51,7 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Sprint)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Sprint)", ret)
 
 		var teamByTeamID *team.Team
 		if ret.TeamID != nil {
@@ -101,25 +99,29 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 			RelSprintMembersBySprintID:     relSprintMembersBySprintID,
 			RelSprintPermissionsBySprintID: relSprintPermissionsBySprintID,
 			RelStandupsBySprintID:          relStandupsBySprintID,
-		}, ps, "sprint", ret.String())
+		}, ps, "sprint", ret.TitleString()+"**sprint")
 	})
 }
 
 func SprintCreateForm(rc *fasthttp.RequestCtx) {
 	Act("sprint.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &sprint.Sprint{}
-		ps.Title = "Create [Sprint]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = sprint.Random()
+		}
+		ps.SetTitleAndData("Create [Sprint]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
 	})
 }
 
-func SprintCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("sprint.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := sprint.Random()
-		ps.Title = "Create Random Sprint"
-		ps.Data = ret
-		return Render(rc, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
+func SprintRandom(rc *fasthttp.RequestCtx) {
+	Act("sprint.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Sprint")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -144,8 +146,7 @@ func SprintEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vsprint.Edit{Model: ret}, ps, "sprint", ret.String())
 	})
 }

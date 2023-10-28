@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Votes []*Vote
@@ -89,6 +91,13 @@ func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
 	return lo.Filter(v, func(xx *Vote, _ int) bool {
 		return lo.Contains(userIDs, xx.UserID)
 	})
+}
+
+func (v Votes) Random() *Vote {
+	if len(v) == 0 {
+		return nil
+	}
+	return v[util.RandomInt(len(v))]
 }
 
 func (v Votes) Clone() Votes {

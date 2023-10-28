@@ -21,11 +21,11 @@ var (
 )
 
 type row struct {
-	EstimateID uuid.UUID `db:"estimate_id"`
-	Key        string    `db:"key"`
-	Value      string    `db:"value"`
-	Access     string    `db:"access"`
-	Created    time.Time `db:"created"`
+	EstimateID uuid.UUID `db:"estimate_id" json:"estimate_id"`
+	Key        string    `db:"key" json:"key"`
+	Value      string    `db:"value" json:"value"`
+	Access     string    `db:"access" json:"access"`
+	Created    time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToEstimatePermission() *EstimatePermission {

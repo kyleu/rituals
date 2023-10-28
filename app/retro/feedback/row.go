@@ -21,15 +21,15 @@ var (
 )
 
 type row struct {
-	ID       uuid.UUID  `db:"id"`
-	RetroID  uuid.UUID  `db:"retro_id"`
-	Idx      int        `db:"idx"`
-	UserID   uuid.UUID  `db:"user_id"`
-	Category string     `db:"category"`
-	Content  string     `db:"content"`
-	HTML     string     `db:"html"`
-	Created  time.Time  `db:"created"`
-	Updated  *time.Time `db:"updated"`
+	ID       uuid.UUID  `db:"id" json:"id"`
+	RetroID  uuid.UUID  `db:"retro_id" json:"retro_id"`
+	Idx      int        `db:"idx" json:"idx"`
+	UserID   uuid.UUID  `db:"user_id" json:"user_id"`
+	Category string     `db:"category" json:"category"`
+	Content  string     `db:"content" json:"content"`
+	HTML     string     `db:"html" json:"html"`
+	Created  time.Time  `db:"created" json:"created"`
+	Updated  *time.Time `db:"updated" json:"updated"`
 }
 
 func (r *row) ToFeedback() *Feedback {

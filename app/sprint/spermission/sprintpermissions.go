@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type SprintPermissions []*SprintPermission
@@ -118,6 +120,13 @@ func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 	return lo.Filter(s, func(xx *SprintPermission, _ int) bool {
 		return lo.Contains(values, xx.Value)
 	})
+}
+
+func (s SprintPermissions) Random() *SprintPermission {
+	if len(s) == 0 {
+		return nil
+	}
+	return s[util.RandomInt(len(s))]
 }
 
 func (s SprintPermissions) Clone() SprintPermissions {

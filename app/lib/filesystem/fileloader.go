@@ -2,6 +2,7 @@
 package filesystem
 
 import (
+	"context"
 	"io"
 
 	"github.com/kyleu/rituals/app/util"
@@ -16,7 +17,7 @@ type FileLoader interface {
 	FileReader(fn string) (io.Reader, error)
 	CreateDirectory(path string) error
 	WriteFile(path string, content []byte, mode FileMode, overwrite bool) error
-	FileWriter(fn string, createIfNeeded bool) (io.Writer, error)
+	FileWriter(fn string, createIfNeeded bool, appendMode bool) (io.Writer, error)
 	CopyFile(src string, tgt string) error
 	CopyRecursive(src string, tgt string, ignore []string, logger util.Logger) error
 	Move(src string, tgt string) error
@@ -33,5 +34,6 @@ type FileLoader interface {
 	IsDir(path string) bool
 	Remove(path string, logger util.Logger) error
 	RemoveRecursive(pt string, logger util.Logger) error
+	Download(ctx context.Context, url string, path string, overwrite bool, logger util.Logger) (int, error)
 	String() string
 }

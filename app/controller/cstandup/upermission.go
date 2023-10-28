@@ -24,8 +24,7 @@ func StandupPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Permissions"
-		ps.Data = ret
+		ps.SetTitleAndData("Permissions", ret)
 		standupIDsByStandupID := lo.Map(ret, func(x *upermission.StandupPermission, _ int) uuid.UUID {
 			return x.StandupID
 		})
@@ -38,36 +37,40 @@ func StandupPermissionList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func StandupPermissionDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("upermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := upermissionFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Permission)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Permission)", ret)
 
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 
-		return controller.Render(rc, as, &vupermission.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "upermission", ret.String())
+		return controller.Render(rc, as, &vupermission.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "upermission", ret.TitleString()+"**permission")
 	})
 }
 
 func StandupPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("upermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &upermission.StandupPermission{}
-		ps.Title = "Create [StandupPermission]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = upermission.Random()
+		}
+		ps.SetTitleAndData("Create [StandupPermission]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vupermission.Edit{Model: ret, IsNew: true}, ps, "standup", "upermission", "Create")
 	})
 }
 
-func StandupPermissionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("upermission.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := upermission.Random()
-		ps.Title = "Create Random StandupPermission"
-		ps.Data = ret
-		return controller.Render(rc, as, &vupermission.Edit{Model: ret, IsNew: true}, ps, "standup", "upermission", "Create")
+func StandupPermissionRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("upermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.StandupPermission.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random StandupPermission")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -92,8 +95,7 @@ func StandupPermissionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vupermission.Edit{Model: ret}, ps, "standup", "upermission", ret.String())
 	})
 }

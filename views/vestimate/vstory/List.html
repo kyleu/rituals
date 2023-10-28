@@ -22,15 +22,20 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= components.SearchForm("", "q", "Search stories", p.SearchQuery, ps) %}</div>
-    <h3>{%= components.SVGRefIcon(`story`, ps) %}{%s ps.Title %} <a href="/admin/db/estimate/story/new"><button>New</button></a></h3>
+    <div class="right mrs large-buttons">
+      {%- if len(p.Models) > 0 -%}<a href="/admin/db/estimate/story/_random"><button>Random</button></a>{%- endif -%}
+      <a href="/admin/db/estimate/story/_new"><button>New</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`story`, ps) %}{%s ps.Title %}</h3>
     <div class="clear"></div>
     {%- if p.SearchQuery != "" -%}
+    <hr />
     <em>Search results for [{%s p.SearchQuery %}]</em> (<a href="?">clear</a>)
     {%- endif -%}
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No stories available</em></div>
     {%- else -%}
-    <div class="overflow clear">
+    <div class="overflow clear mt">
       {%= Table(p.Models, p.EstimatesByEstimateID, p.UsersByUserID, p.Params, as, ps) %}
     </div>
     {%- endif -%}

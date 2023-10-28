@@ -24,8 +24,7 @@ func TeamPermissionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Permissions"
-		ps.Data = ret
+		ps.SetTitleAndData("Permissions", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *tpermission.TeamPermission, _ int) uuid.UUID {
 			return x.TeamID
 		})
@@ -44,30 +43,33 @@ func TeamPermissionDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Permission)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Permission)", ret)
 
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 
-		return controller.Render(rc, as, &vtpermission.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "tpermission", ret.String())
+		return controller.Render(rc, as, &vtpermission.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "tpermission", ret.TitleString()+"**permission")
 	})
 }
 
 func TeamPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("tpermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tpermission.TeamPermission{}
-		ps.Title = "Create [TeamPermission]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = tpermission.Random()
+		}
+		ps.SetTitleAndData("Create [TeamPermission]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vtpermission.Edit{Model: ret, IsNew: true}, ps, "team", "tpermission", "Create")
 	})
 }
 
-func TeamPermissionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("tpermission.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := tpermission.Random()
-		ps.Title = "Create Random TeamPermission"
-		ps.Data = ret
-		return controller.Render(rc, as, &vtpermission.Edit{Model: ret, IsNew: true}, ps, "team", "tpermission", "Create")
+func TeamPermissionRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("tpermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.TeamPermission.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random TeamPermission")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -92,8 +94,7 @@ func TeamPermissionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vtpermission.Edit{Model: ret}, ps, "team", "tpermission", ret.String())
 	})
 }

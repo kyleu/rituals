@@ -24,8 +24,7 @@ func StandupMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Members"
-		ps.Data = ret
+		ps.SetTitleAndData("Members", ret)
 		standupIDsByStandupID := lo.Map(ret, func(x *umember.StandupMember, _ int) uuid.UUID {
 			return x.StandupID
 		})
@@ -51,8 +50,7 @@ func StandupMemberDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Member)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Member)", ret)
 
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func StandupMemberDetail(rc *fasthttp.RequestCtx) {
 			Model:              ret,
 			StandupByStandupID: standupByStandupID,
 			UserByUserID:       userByUserID,
-		}, ps, "standup", "umember", ret.String())
+		}, ps, "standup", "umember", ret.TitleString()+"**users")
 	})
 }
 
 func StandupMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("umember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &umember.StandupMember{}
-		ps.Title = "Create [StandupMember]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = umember.Random()
+		}
+		ps.SetTitleAndData("Create [StandupMember]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vumember.Edit{Model: ret, IsNew: true}, ps, "standup", "umember", "Create")
 	})
 }
 
-func StandupMemberCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("umember.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := umember.Random()
-		ps.Title = "Create Random StandupMember"
-		ps.Data = ret
-		return controller.Render(rc, as, &vumember.Edit{Model: ret, IsNew: true}, ps, "standup", "umember", "Create")
+func StandupMemberRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("umember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.StandupMember.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random StandupMember")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func StandupMemberEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vumember.Edit{Model: ret}, ps, "standup", "umember", ret.String())
 	})
 }

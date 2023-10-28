@@ -24,8 +24,7 @@ func EstimateMemberList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Members"
-		ps.Data = ret
+		ps.SetTitleAndData("Members", ret)
 		estimateIDsByEstimateID := lo.Map(ret, func(x *emember.EstimateMember, _ int) uuid.UUID {
 			return x.EstimateID
 		})
@@ -51,8 +50,7 @@ func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Member)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Member)", ret)
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -61,25 +59,29 @@ func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
 			Model:                ret,
 			EstimateByEstimateID: estimateByEstimateID,
 			UserByUserID:         userByUserID,
-		}, ps, "estimate", "emember", ret.String())
+		}, ps, "estimate", "emember", ret.TitleString()+"**users")
 	})
 }
 
 func EstimateMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("emember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &emember.EstimateMember{}
-		ps.Title = "Create [EstimateMember]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = emember.Random()
+		}
+		ps.SetTitleAndData("Create [EstimateMember]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
 	})
 }
 
-func EstimateMemberCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := emember.Random()
-		ps.Title = "Create Random EstimateMember"
-		ps.Data = ret
-		return controller.Render(rc, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
+func EstimateMemberRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("emember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.EstimateMember.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random EstimateMember")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -104,8 +106,7 @@ func EstimateMemberEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vemember.Edit{Model: ret}, ps, "estimate", "emember", ret.String())
 	})
 }

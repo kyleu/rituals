@@ -22,13 +22,13 @@ var (
 )
 
 type row struct {
-	ID      uuid.UUID         `db:"id"`
-	Svc     enum.ModelService `db:"svc"`
-	ModelID uuid.UUID         `db:"model_id"`
-	UserID  uuid.UUID         `db:"user_id"`
-	Content string            `db:"content"`
-	HTML    string            `db:"html"`
-	Created time.Time         `db:"created"`
+	ID      uuid.UUID         `db:"id" json:"id"`
+	Svc     enum.ModelService `db:"svc" json:"svc"`
+	ModelID uuid.UUID         `db:"model_id" json:"model_id"`
+	UserID  uuid.UUID         `db:"user_id" json:"user_id"`
+	Content string            `db:"content" json:"content"`
+	HTML    string            `db:"html" json:"html"`
+	Created time.Time         `db:"created" json:"created"`
 }
 
 func (r *row) ToComment() *Comment {

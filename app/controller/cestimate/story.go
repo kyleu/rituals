@@ -32,8 +32,7 @@ func StoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Stories"
-		ps.Data = ret
+		ps.SetTitleAndData("Stories", ret)
 		estimateIDsByEstimateID := lo.Map(ret, func(x *story.Story, _ int) uuid.UUID {
 			return x.EstimateID
 		})
@@ -59,8 +58,7 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Story)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Story)", ret)
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
@@ -77,25 +75,29 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 			Params:               ps.Params,
 
 			RelVotesByStoryID: relVotesByStoryID,
-		}, ps, "estimate", "story", ret.String())
+		}, ps, "estimate", "story", ret.TitleString()+"**story")
 	})
 }
 
 func StoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("story.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &story.Story{}
-		ps.Title = "Create [Story]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = story.Random()
+		}
+		ps.SetTitleAndData("Create [Story]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vstory.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "Create")
 	})
 }
 
-func StoryCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("story.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := story.Random()
-		ps.Title = "Create Random Story"
-		ps.Data = ret
-		return controller.Render(rc, as, &vstory.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "Create")
+func StoryRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("story.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Story.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Story")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -120,8 +122,7 @@ func StoryEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vstory.Edit{Model: ret}, ps, "estimate", "story", ret.String())
 	})
 }

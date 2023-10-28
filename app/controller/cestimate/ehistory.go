@@ -23,8 +23,7 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Histories"
-		ps.Data = ret
+		ps.SetTitleAndData("Histories", ret)
 		estimateIDsByEstimateID := lo.Map(ret, func(x *ehistory.EstimateHistory, _ int) uuid.UUID {
 			return x.EstimateID
 		})
@@ -37,36 +36,40 @@ func EstimateHistoryList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func EstimateHistoryDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("ehistory.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := ehistoryFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (History)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (History)", ret)
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 
-		return controller.Render(rc, as, &vehistory.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "ehistory", ret.String())
+		return controller.Render(rc, as, &vehistory.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "ehistory", ret.TitleString()+"**history")
 	})
 }
 
 func EstimateHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("ehistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &ehistory.EstimateHistory{}
-		ps.Title = "Create [EstimateHistory]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = ehistory.Random()
+		}
+		ps.SetTitleAndData("Create [EstimateHistory]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vehistory.Edit{Model: ret, IsNew: true}, ps, "estimate", "ehistory", "Create")
 	})
 }
 
-func EstimateHistoryCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("ehistory.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := ehistory.Random()
-		ps.Title = "Create Random EstimateHistory"
-		ps.Data = ret
-		return controller.Render(rc, as, &vehistory.Edit{Model: ret, IsNew: true}, ps, "estimate", "ehistory", "Create")
+func EstimateHistoryRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("ehistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.EstimateHistory.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random EstimateHistory")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -91,8 +94,7 @@ func EstimateHistoryEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vehistory.Edit{Model: ret}, ps, "estimate", "ehistory", ret.String())
 	})
 }

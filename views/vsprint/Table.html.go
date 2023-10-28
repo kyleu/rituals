@@ -39,7 +39,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID
 	prms := params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
 
 //line views/vsprint/Table.html:13
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)

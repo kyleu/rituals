@@ -21,11 +21,11 @@ var (
 )
 
 type row struct {
-	StoryID uuid.UUID  `db:"story_id"`
-	UserID  uuid.UUID  `db:"user_id"`
-	Choice  string     `db:"choice"`
-	Created time.Time  `db:"created"`
-	Updated *time.Time `db:"updated"`
+	StoryID uuid.UUID  `db:"story_id" json:"story_id"`
+	UserID  uuid.UUID  `db:"user_id" json:"user_id"`
+	Choice  string     `db:"choice" json:"choice"`
+	Created time.Time  `db:"created" json:"created"`
+	Updated *time.Time `db:"updated" json:"updated"`
 }
 
 func (r *row) ToVote() *Vote {
