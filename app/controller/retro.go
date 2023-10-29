@@ -107,7 +107,7 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 func RetroCreateForm(rc *fasthttp.RequestCtx) {
 	Act("retro.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &retro.Retro{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = retro.Random()
 		}
 		ps.SetTitleAndData("Create [Retro]", ret)

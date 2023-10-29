@@ -70,8 +70,8 @@ func (s *SessionStatus) Scan(value any) error {
 	return errors.Errorf("failed to scan SessionStatus enum from value [%v]", value)
 }
 
-func SessionStatusParse(logger util.Logger, strings ...string) SessionStatuses {
-	return lo.Map(strings, func(x string, _ int) SessionStatus {
+func SessionStatusParse(logger util.Logger, keys ...string) SessionStatuses {
+	return lo.Map(keys, func(x string, _ int) SessionStatus {
 		return AllSessionStatuses.Get(x, logger)
 	})
 }

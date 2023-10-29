@@ -66,7 +66,7 @@ func VoteDetail(rc *fasthttp.RequestCtx) {
 func VoteCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("vote.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &vote.Vote{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = vote.Random()
 		}
 		ps.SetTitleAndData("Create [Vote]", ret)

@@ -53,7 +53,7 @@ func EmailDetail(rc *fasthttp.RequestCtx) {
 func EmailCreateForm(rc *fasthttp.RequestCtx) {
 	Act("email.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &email.Email{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = email.Random()
 		}
 		ps.SetTitleAndData("Create [Email]", ret)

@@ -13,6 +13,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/team/thistory"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vteam/vthistory"
 )
 
@@ -53,7 +54,7 @@ func TeamHistoryDetail(rc *fasthttp.RequestCtx) {
 func TeamHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("thistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &thistory.TeamHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = thistory.Random()
 		}
 		ps.SetTitleAndData("Create [TeamHistory]", ret)

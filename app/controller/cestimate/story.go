@@ -82,7 +82,7 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 func StoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("story.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &story.Story{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = story.Random()
 		}
 		ps.SetTitleAndData("Create [Story]", ret)

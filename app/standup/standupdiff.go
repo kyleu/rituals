@@ -7,7 +7,7 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-//nolint:lll,gocognit
+//nolint:lll
 func (s *Standup) Diff(sx *Standup) util.Diffs {
 	var diffs util.Diffs
 	if s.ID != sx.ID {

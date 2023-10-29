@@ -66,7 +66,7 @@ func SprintMemberDetail(rc *fasthttp.RequestCtx) {
 func SprintMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("smember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &smember.SprintMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = smember.Random()
 		}
 		ps.SetTitleAndData("Create [SprintMember]", ret)

@@ -13,6 +13,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/standup/uhistory"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vstandup/vuhistory"
 )
 
@@ -54,7 +55,7 @@ func StandupHistoryDetail(rc *fasthttp.RequestCtx) {
 func StandupHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("uhistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &uhistory.StandupHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = uhistory.Random()
 		}
 		ps.SetTitleAndData("Create [StandupHistory]", ret)

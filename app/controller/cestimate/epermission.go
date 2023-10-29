@@ -55,7 +55,7 @@ func EstimatePermissionDetail(rc *fasthttp.RequestCtx) {
 func EstimatePermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("epermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &epermission.EstimatePermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = epermission.Random()
 		}
 		ps.SetTitleAndData("Create [EstimatePermission]", ret)

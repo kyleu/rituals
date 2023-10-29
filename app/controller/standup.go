@@ -108,7 +108,7 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 func StandupCreateForm(rc *fasthttp.RequestCtx) {
 	Act("standup.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &standup.Standup{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = standup.Random()
 		}
 		ps.SetTitleAndData("Create [Standup]", ret)

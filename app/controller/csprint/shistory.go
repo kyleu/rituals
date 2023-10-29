@@ -13,6 +13,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/sprint/shistory"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vsprint/vshistory"
 )
 
@@ -53,7 +54,7 @@ func SprintHistoryDetail(rc *fasthttp.RequestCtx) {
 func SprintHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("shistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &shistory.SprintHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = shistory.Random()
 		}
 		ps.SetTitleAndData("Create [SprintHistory]", ret)

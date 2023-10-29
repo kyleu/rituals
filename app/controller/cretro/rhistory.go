@@ -13,6 +13,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/retro/rhistory"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vretro/vrhistory"
 )
 
@@ -53,7 +54,7 @@ func RetroHistoryDetail(rc *fasthttp.RequestCtx) {
 func RetroHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("rhistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rhistory.RetroHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = rhistory.Random()
 		}
 		ps.SetTitleAndData("Create [RetroHistory]", ret)

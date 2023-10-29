@@ -55,7 +55,7 @@ func RetroPermissionDetail(rc *fasthttp.RequestCtx) {
 func RetroPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("rpermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rpermission.RetroPermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = rpermission.Random()
 		}
 		ps.SetTitleAndData("Create [RetroPermission]", ret)

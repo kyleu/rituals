@@ -55,7 +55,7 @@ func StandupPermissionDetail(rc *fasthttp.RequestCtx) {
 func StandupPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("upermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &upermission.StandupPermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = upermission.Random()
 		}
 		ps.SetTitleAndData("Create [StandupPermission]", ret)

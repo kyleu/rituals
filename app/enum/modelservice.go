@@ -70,8 +70,8 @@ func (m *ModelService) Scan(value any) error {
 	return errors.Errorf("failed to scan ModelService enum from value [%v]", value)
 }
 
-func ModelServiceParse(logger util.Logger, strings ...string) ModelServices {
-	return lo.Map(strings, func(x string, _ int) ModelService {
+func ModelServiceParse(logger util.Logger, keys ...string) ModelServices {
+	return lo.Map(keys, func(x string, _ int) ModelService {
 		return AllModelServices.Get(x, logger)
 	})
 }

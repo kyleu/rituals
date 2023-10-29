@@ -66,7 +66,7 @@ func ReportDetail(rc *fasthttp.RequestCtx) {
 func ReportCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("report.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &report.Report{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = report.Random()
 		}
 		ps.SetTitleAndData("Create [Report]", ret)

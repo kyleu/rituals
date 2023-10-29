@@ -66,7 +66,7 @@ func StandupMemberDetail(rc *fasthttp.RequestCtx) {
 func StandupMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("umember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &umember.StandupMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = umember.Random()
 		}
 		ps.SetTitleAndData("Create [StandupMember]", ret)

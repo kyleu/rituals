@@ -96,7 +96,7 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 func TeamCreateForm(rc *fasthttp.RequestCtx) {
 	Act("team.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &team.Team{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = team.Random()
 		}
 		ps.SetTitleAndData("Create [Team]", ret)

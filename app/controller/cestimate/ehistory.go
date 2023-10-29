@@ -13,6 +13,7 @@ import (
 	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/estimate/ehistory"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/vestimate/vehistory"
 )
 
@@ -54,7 +55,7 @@ func EstimateHistoryDetail(rc *fasthttp.RequestCtx) {
 func EstimateHistoryCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("ehistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &ehistory.EstimateHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = ehistory.Random()
 		}
 		ps.SetTitleAndData("Create [EstimateHistory]", ret)

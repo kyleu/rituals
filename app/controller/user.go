@@ -126,7 +126,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 func UserCreateForm(rc *fasthttp.RequestCtx) {
 	Act("user.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &user.User{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = user.Random()
 		}
 		ps.SetTitleAndData("Create [User]", ret)

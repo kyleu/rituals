@@ -53,7 +53,7 @@ func CommentDetail(rc *fasthttp.RequestCtx) {
 func CommentCreateForm(rc *fasthttp.RequestCtx) {
 	Act("comment.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &comment.Comment{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = comment.Random()
 		}
 		ps.SetTitleAndData("Create [Comment]", ret)

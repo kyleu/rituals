@@ -106,7 +106,7 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 func SprintCreateForm(rc *fasthttp.RequestCtx) {
 	Act("sprint.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &sprint.Sprint{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = sprint.Random()
 		}
 		ps.SetTitleAndData("Create [Sprint]", ret)

@@ -108,7 +108,7 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 func EstimateCreateForm(rc *fasthttp.RequestCtx) {
 	Act("estimate.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &estimate.Estimate{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = estimate.Random()
 		}
 		ps.SetTitleAndData("Create [Estimate]", ret)

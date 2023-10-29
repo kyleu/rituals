@@ -55,7 +55,7 @@ func SprintPermissionDetail(rc *fasthttp.RequestCtx) {
 func SprintPermissionCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("spermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &spermission.SprintPermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = spermission.Random()
 		}
 		ps.SetTitleAndData("Create [SprintPermission]", ret)

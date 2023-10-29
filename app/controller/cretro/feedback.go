@@ -66,7 +66,7 @@ func FeedbackDetail(rc *fasthttp.RequestCtx) {
 func FeedbackCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("feedback.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &feedback.Feedback{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = feedback.Random()
 		}
 		ps.SetTitleAndData("Create [Feedback]", ret)

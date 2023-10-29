@@ -53,7 +53,7 @@ func ActionDetail(rc *fasthttp.RequestCtx) {
 func ActionCreateForm(rc *fasthttp.RequestCtx) {
 	Act("action.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &action.Action{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = action.Random()
 		}
 		ps.SetTitleAndData("Create [Action]", ret)

@@ -70,8 +70,8 @@ func (m *MemberStatus) Scan(value any) error {
 	return errors.Errorf("failed to scan MemberStatus enum from value [%v]", value)
 }
 
-func MemberStatusParse(logger util.Logger, strings ...string) MemberStatuses {
-	return lo.Map(strings, func(x string, _ int) MemberStatus {
+func MemberStatusParse(logger util.Logger, keys ...string) MemberStatuses {
+	return lo.Map(keys, func(x string, _ int) MemberStatus {
 		return AllMemberStatuses.Get(x, logger)
 	})
 }

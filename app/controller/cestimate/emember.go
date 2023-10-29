@@ -66,7 +66,7 @@ func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
 func EstimateMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("emember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &emember.EstimateMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = emember.Random()
 		}
 		ps.SetTitleAndData("Create [EstimateMember]", ret)

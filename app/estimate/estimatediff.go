@@ -7,7 +7,7 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-//nolint:lll,gocognit
+//nolint:lll
 func (e *Estimate) Diff(ex *Estimate) util.Diffs {
 	var diffs util.Diffs
 	if e.ID != ex.ID {

@@ -66,7 +66,7 @@ func TeamMemberDetail(rc *fasthttp.RequestCtx) {
 func TeamMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("tmember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tmember.TeamMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = tmember.Random()
 		}
 		ps.SetTitleAndData("Create [TeamMember]", ret)

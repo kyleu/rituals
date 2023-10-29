@@ -66,7 +66,7 @@ func RetroMemberDetail(rc *fasthttp.RequestCtx) {
 func RetroMemberCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("rmember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rmember.RetroMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = rmember.Random()
 		}
 		ps.SetTitleAndData("Create [RetroMember]", ret)
