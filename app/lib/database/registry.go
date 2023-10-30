@@ -2,7 +2,6 @@
 package database
 
 import (
-	"slices"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -38,7 +37,5 @@ func RegistryGet(key string) (*Service, error) {
 }
 
 func RegistryKeys() []string {
-	ret := lo.Keys(serviceRegistry)
-	slices.Sort(ret)
-	return ret
+	return util.ArraySorted(lo.Keys(serviceRegistry))
 }

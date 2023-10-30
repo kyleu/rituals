@@ -98,8 +98,7 @@ func initAvailable() {
 			"yandex":          "Yandex",
 			"zoom":            "Zoom",
 		}
-		AvailableProviderKeys = lo.Keys(AvailableProviderNames)
-		slices.Sort(AvailableProviderKeys)
+		AvailableProviderKeys = util.ArraySorted(lo.Keys(AvailableProviderNames))
 	}
 }
 
