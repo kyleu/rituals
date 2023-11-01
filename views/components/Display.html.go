@@ -349,15 +349,15 @@ func StreamDisplayDiffs(qw422016 *qt422016.Writer, value util.Diffs) {
 //line views/components/Display.html:69
 		for _, d := range value {
 //line views/components/Display.html:69
-			qw422016.N().S(`<tr><td><code>`)
+			qw422016.N().S(`<tr><td style="width: 30%;"><code>`)
 //line views/components/Display.html:71
 			qw422016.E().S(d.Path)
 //line views/components/Display.html:71
-			qw422016.N().S(`</code></td><td><code class="error">`)
+			qw422016.N().S(`</code></td><td style="width: 30%;"><code class="error">`)
 //line views/components/Display.html:72
 			qw422016.E().S(d.Old)
 //line views/components/Display.html:72
-			qw422016.N().S(`</code></td><td>→</td><td><code class="success">`)
+			qw422016.N().S(`</code></td><td style="width: 10%;">→</td><td style="width: 30%;"><code class="success">`)
 //line views/components/Display.html:74
 			qw422016.E().S(d.New)
 //line views/components/Display.html:74

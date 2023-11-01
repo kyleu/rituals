@@ -71,6 +71,9 @@ func (m *MemberStatus) Scan(value any) error {
 }
 
 func MemberStatusParse(logger util.Logger, keys ...string) MemberStatuses {
+	if len(keys) == 0 {
+		return nil
+	}
 	return lo.Map(keys, func(x string, _ int) MemberStatus {
 		return AllMemberStatuses.Get(x, logger)
 	})

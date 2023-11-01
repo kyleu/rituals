@@ -85,7 +85,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	qw422016.N().S(`    <div class="mt">
       <ul class="accordion">
         <li>
-          <input id="accordion-sql" type="checkbox" hidden />
+          <input id="accordion-sql" type="checkbox" hidden="hidden" />
           <label for="accordion-sql">`)
 //line views/vdatabase/Statement.html:30
 	components.StreamExpandCollapse(qw422016, 3, ps)
@@ -104,7 +104,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	if len(s.Values) > 0 {
 //line views/vdatabase/Statement.html:35
 		qw422016.N().S(`        <li>
-          <input id="accordion-values" type="checkbox" hidden />
+          <input id="accordion-values" type="checkbox" hidden="hidden" />
           <label for="accordion-values">`)
 //line views/vdatabase/Statement.html:38
 		components.StreamExpandCollapse(qw422016, 3, ps)
@@ -123,7 +123,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	}
 //line views/vdatabase/Statement.html:43
 	qw422016.N().S(`        <li>
-          <input id="accordion-out" type="checkbox" hidden />
+          <input id="accordion-out" type="checkbox" hidden="hidden" />
           <label for="accordion-out">`)
 //line views/vdatabase/Statement.html:46
 	components.StreamExpandCollapse(qw422016, 3, ps)
@@ -142,7 +142,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 	if len(s.Extra) > 0 {
 //line views/vdatabase/Statement.html:51
 		qw422016.N().S(`        <li>
-          <input id="accordion-extra" type="checkbox" hidden />
+          <input id="accordion-extra" type="checkbox" hidden="hidden" />
           <label for="accordion-extra">`)
 //line views/vdatabase/Statement.html:54
 		components.StreamExpandCollapse(qw422016, 3, ps)

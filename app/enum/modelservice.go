@@ -71,6 +71,9 @@ func (m *ModelService) Scan(value any) error {
 }
 
 func ModelServiceParse(logger util.Logger, keys ...string) ModelServices {
+	if len(keys) == 0 {
+		return nil
+	}
 	return lo.Map(keys, func(x string, _ int) ModelService {
 		return AllModelServices.Get(x, logger)
 	})
