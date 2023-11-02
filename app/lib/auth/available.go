@@ -3,7 +3,6 @@ package auth
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/samber/lo"
 
