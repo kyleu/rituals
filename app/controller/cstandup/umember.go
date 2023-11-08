@@ -68,6 +68,14 @@ func StandupMemberCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &umember.StandupMember{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = umember.Random()
+			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomStandup != nil {
+				ret.StandupID = randomStandup.ID
+			}
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [StandupMember]", ret)
 		ps.Data = ret

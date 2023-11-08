@@ -55,6 +55,10 @@ func CommentCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &comment.Comment{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = comment.Random()
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Comment]", ret)
 		ps.Data = ret

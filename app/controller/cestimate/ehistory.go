@@ -57,6 +57,10 @@ func EstimateHistoryCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &ehistory.EstimateHistory{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = ehistory.Random()
+			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomEstimate != nil {
+				ret.EstimateID = randomEstimate.ID
+			}
 		}
 		ps.SetTitleAndData("Create [EstimateHistory]", ret)
 		ps.Data = ret

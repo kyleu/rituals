@@ -56,6 +56,10 @@ func RetroHistoryCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &rhistory.RetroHistory{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = rhistory.Random()
+			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomRetro != nil {
+				ret.RetroID = randomRetro.ID
+			}
 		}
 		ps.SetTitleAndData("Create [RetroHistory]", ret)
 		ps.Data = ret

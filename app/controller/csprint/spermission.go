@@ -57,6 +57,10 @@ func SprintPermissionCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &spermission.SprintPermission{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = spermission.Random()
+			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomSprint != nil {
+				ret.SprintID = randomSprint.ID
+			}
 		}
 		ps.SetTitleAndData("Create [SprintPermission]", ret)
 		ps.Data = ret

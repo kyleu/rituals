@@ -56,6 +56,10 @@ func TeamPermissionCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &tpermission.TeamPermission{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = tpermission.Random()
+			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomTeam != nil {
+				ret.TeamID = randomTeam.ID
+			}
 		}
 		ps.SetTitleAndData("Create [TeamPermission]", ret)
 		ps.Data = ret

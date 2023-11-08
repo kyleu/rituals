@@ -57,6 +57,10 @@ func RetroPermissionCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &rpermission.RetroPermission{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = rpermission.Random()
+			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomRetro != nil {
+				ret.RetroID = randomRetro.ID
+			}
 		}
 		ps.SetTitleAndData("Create [RetroPermission]", ret)
 		ps.Data = ret

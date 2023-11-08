@@ -55,6 +55,10 @@ func ActionCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &action.Action{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = action.Random()
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Action]", ret)
 		ps.Data = ret

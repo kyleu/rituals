@@ -84,6 +84,14 @@ func StoryCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &story.Story{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = story.Random()
+			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomEstimate != nil {
+				ret.EstimateID = randomEstimate.ID
+			}
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Story]", ret)
 		ps.Data = ret

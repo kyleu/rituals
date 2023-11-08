@@ -68,6 +68,14 @@ func SprintMemberCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &smember.SprintMember{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = smember.Random()
+			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomSprint != nil {
+				ret.SprintID = randomSprint.ID
+			}
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [SprintMember]", ret)
 		ps.Data = ret

@@ -57,6 +57,10 @@ func StandupHistoryCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &uhistory.StandupHistory{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = uhistory.Random()
+			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomStandup != nil {
+				ret.StandupID = randomStandup.ID
+			}
 		}
 		ps.SetTitleAndData("Create [StandupHistory]", ret)
 		ps.Data = ret

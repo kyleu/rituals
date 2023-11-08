@@ -56,6 +56,10 @@ func SprintHistoryCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &shistory.SprintHistory{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = shistory.Random()
+			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomSprint != nil {
+				ret.SprintID = randomSprint.ID
+			}
 		}
 		ps.SetTitleAndData("Create [SprintHistory]", ret)
 		ps.Data = ret

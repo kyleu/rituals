@@ -109,6 +109,14 @@ func RetroCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &retro.Retro{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = retro.Random()
+			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomTeam != nil {
+				ret.TeamID = randomTeam.ID
+			}
+			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomSprint != nil {
+				ret.SprintID = randomSprint.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Retro]", ret)
 		ps.Data = ret

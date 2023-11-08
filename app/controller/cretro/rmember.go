@@ -68,6 +68,14 @@ func RetroMemberCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &rmember.RetroMember{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = rmember.Random()
+			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomRetro != nil {
+				ret.RetroID = randomRetro.ID
+			}
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [RetroMember]", ret)
 		ps.Data = ret

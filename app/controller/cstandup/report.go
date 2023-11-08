@@ -68,6 +68,14 @@ func ReportCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &report.Report{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = report.Random()
+			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomStandup != nil {
+				ret.StandupID = randomStandup.ID
+			}
+			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomUser != nil {
+				ret.UserID = randomUser.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Report]", ret)
 		ps.Data = ret

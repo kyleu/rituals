@@ -57,6 +57,10 @@ func StandupPermissionCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &upermission.StandupPermission{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = upermission.Random()
+			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomStandup != nil {
+				ret.StandupID = randomStandup.ID
+			}
 		}
 		ps.SetTitleAndData("Create [StandupPermission]", ret)
 		ps.Data = ret

@@ -108,6 +108,10 @@ func SprintCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &sprint.Sprint{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = sprint.Random()
+			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomTeam != nil {
+				ret.TeamID = randomTeam.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Sprint]", ret)
 		ps.Data = ret
