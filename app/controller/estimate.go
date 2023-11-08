@@ -112,11 +112,11 @@ func EstimateCreateForm(rc *fasthttp.RequestCtx) {
 			ret = estimate.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
-				ret.TeamID = randomTeam.ID
+				ret.TeamID = &randomTeam.ID
 			}
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {
-				ret.SprintID = randomSprint.ID
+				ret.SprintID = &randomSprint.ID
 			}
 		}
 		ps.SetTitleAndData("Create [Estimate]", ret)
