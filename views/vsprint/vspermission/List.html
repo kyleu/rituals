@@ -18,7 +18,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/admin/db/sprint/permission/new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/sprint/permission/_new"><button>New</button></a></div>
     <h3>{%= components.SVGRefIcon(`permission`, ps) %}{%s ps.Title %}</h3>
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No permissions available</em></div>

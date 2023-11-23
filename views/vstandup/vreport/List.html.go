@@ -45,7 +45,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vstandup/vreport/List.html:21
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/admin/db/standup/report/new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/standup/report/_new"><button>New</button></a></div>
     <h3>`)
 //line views/vstandup/vreport/List.html:24
 	components.StreamSVGRefIcon(qw422016, `file-alt`, ps)
