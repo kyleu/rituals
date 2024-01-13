@@ -18,6 +18,7 @@
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vaction"
   "github.com/kyleu/rituals/views/vcomment"
@@ -63,11 +64,11 @@
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Name</th>
-          <td><strong>{%s p.Model.Name %}</strong></td>
+          <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
         </tr>
         <tr>
           <th class="shrink" title="URL in string form">Picture</th>
@@ -75,11 +76,11 @@
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
         </tr>
       </tbody>
     </table>

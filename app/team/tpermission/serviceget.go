@@ -82,7 +82,7 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get team_permissions by key [%v]", key)
+		return nil, errors.Wrapf(err, "unable to get Permissions by key [%v]", key)
 	}
 	return ret.ToTeamPermissions(), nil
 }
@@ -94,7 +94,7 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get team_permissions by teamID [%v]", teamID)
+		return nil, errors.Wrapf(err, "unable to get Permissions by teamID [%v]", teamID)
 	}
 	return ret.ToTeamPermissions(), nil
 }
@@ -121,7 +121,7 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get team_permissions by value [%v]", value)
+		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
 	}
 	return ret.ToTeamPermissions(), nil
 }

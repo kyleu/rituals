@@ -14,6 +14,7 @@
   "github.com/kyleu/rituals/app/team/tpermission"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vestimate"
   "github.com/kyleu/rituals/views/vretro"
@@ -49,19 +50,19 @@
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Slug</th>
-          <td>{%s p.Model.Slug %}</td>
+          <td>{%= view.String(p.Model.Slug) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Title</th>
-          <td><strong>{%s p.Model.Title %}</strong></td>
+          <td><strong>{%= view.String(p.Model.Title) %}</strong></td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Icon</th>
-          <td>{%s p.Model.Icon %}</td>
+          <td>{%= view.String(p.Model.Icon) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
@@ -69,11 +70,11 @@
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
         </tr>
       </tbody>
     </table>

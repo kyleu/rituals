@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -22,11 +23,11 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/admin/db/user/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
-        <td><strong>{%s model.Name %}</strong></td>
+        <td><a href="/admin/db/user/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+        <td><strong>{%= view.String(model.Name) %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
-        <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
+        <td>{%= view.Timestamp(model.Updated) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

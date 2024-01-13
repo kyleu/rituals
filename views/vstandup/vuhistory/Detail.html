@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/standup/uhistory"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -26,22 +27,22 @@
       <tbody>
         <tr>
           <th class="shrink" title="String text">Slug</th>
-          <td>{%s p.Model.Slug %}</td>
+          <td>{%= view.String(p.Model.Slug) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.StandupID) %}{% if p.StandupByStandupID != nil %} ({%s p.StandupByStandupID.TitleString() %}){% endif %}
+            {%= view.UUID(&p.Model.StandupID) %}{% if p.StandupByStandupID != nil %} ({%s p.StandupByStandupID.TitleString() %}){% endif %}
             <a title="Standup" href="{%s `/admin/db/standup`+`/`+p.Model.StandupID.String() %}">{%= components.SVGRef("standup", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Standup Name</th>
-          <td>{%s p.Model.StandupName %}</td>
+          <td>{%= view.String(p.Model.StandupName) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
       </tbody>
     </table>

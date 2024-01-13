@@ -7,6 +7,7 @@
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -21,7 +22,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right">{%= components.SearchForm("", "q", "Search standups", p.SearchQuery, ps) %}</div>
+    <div class="right">{%= edit.SearchForm("", "q", "Search Standups", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
       {%- if len(p.Models) > 0 -%}<a href="/admin/db/standup/_random"><button>Random</button></a>{%- endif -%}
       <a href="/admin/db/standup/_new"><button>New</button></a>

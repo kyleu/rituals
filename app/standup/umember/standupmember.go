@@ -16,6 +16,10 @@ type PK struct {
 	UserID    uuid.UUID `json:"userID,omitempty"`
 }
 
+func (p *PK) String() string {
+	return fmt.Sprintf("%v::%v", p.StandupID, p.UserID)
+}
+
 type StandupMember struct {
 	StandupID uuid.UUID         `json:"standupID,omitempty"`
 	UserID    uuid.UUID         `json:"userID,omitempty"`

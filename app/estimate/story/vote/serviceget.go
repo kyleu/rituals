@@ -82,7 +82,7 @@ func (s *Service) GetByStoryID(ctx context.Context, tx *sqlx.Tx, storyID uuid.UU
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, storyID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get votes by storyID [%v]", storyID)
+		return nil, errors.Wrapf(err, "unable to get Votes by storyID [%v]", storyID)
 	}
 	return ret.ToVotes(), nil
 }
@@ -109,7 +109,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get votes by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Votes by userID [%v]", userID)
 	}
 	return ret.ToVotes(), nil
 }

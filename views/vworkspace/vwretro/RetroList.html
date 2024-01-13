@@ -13,6 +13,8 @@
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
@@ -33,7 +35,7 @@
         {%- for _, r := range p.Retros -%}
         <tr>
           <td><a href="{%s r.PublicWebPath() %}">{%= components.SVGRef(r.IconSafe(), 16, 16, "icon", ps) %}{%s r.TitleString() %}</a></td>
-          <td class="text-align-right">{%= components.DisplayTimestamp(&r.Created) %}</td>
+          <td class="text-align-right">{%= view.Timestamp(&r.Created) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>
@@ -49,10 +51,10 @@
   <form action="" method="post">
     <table class="mt expanded">
       <tbody>
-        {%= components.TableInput("title", "", "Retro Title", s.Title, 5, "The name of your retro") %}
-        {%= components.TableInput("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
-        {%= components.TableSelect(util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this retro") %}
-        {%= components.TableSelect(util.KeySprint, "", "Sprint", fmt.Sprint(s.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this retro") %}
+        {%= edit.StringTable("title", "", "Retro Title", s.Title, 5, "The name of your retro") %}
+        {%= edit.StringTable("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
+        {%= edit.SelectTable(util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this retro") %}
+        {%= edit.SelectTable(util.KeySprint, "", "Sprint", fmt.Sprint(s.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5, "The sprint associated to this retro") %}
         <tr><td colspan="2"><button type="submit">Add Retro</button></td></tr>
       </tbody>
     </table>

@@ -7,6 +7,8 @@
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
@@ -26,7 +28,7 @@
         <tr>
           <td><a href="{%s t.PublicWebPath() %}">{%= components.SVGRef(t.IconSafe(), 16, 16, "icon", ps) %}{%s t.TitleString() %}</a></td>
           <td class="text-align-right">{%s t.Status.String() %}</td>
-          <td class="shrink">{%= components.DisplayTimestamp(&t.Created) %}</td>
+          <td class="shrink">{%= view.Timestamp(&t.Created) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>
@@ -42,8 +44,8 @@
   <form action="" method="post">
     <table class="mt expanded">
       <tbody>
-        {%= components.TableInput("title", "", "Team Title", m.Title, 5, "The name of your team") %}
-        {%= components.TableInput("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
+        {%= edit.StringTable("title", "", "Team Title", m.Title, 5, "The name of your team") %}
+        {%= edit.StringTable("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
         <tr><td colspan="2"><button type="submit">Add Team</button></td></tr>
       </tbody>
     </table>

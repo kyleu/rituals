@@ -12,6 +12,8 @@
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
@@ -31,7 +33,7 @@
         {%- for _, s := range p.Sprints -%}
         <tr>
           <td><a href="{%s s.PublicWebPath() %}">{%= components.SVGRef(s.IconSafe(), 16, 16, "icon", ps) %}{%s s.TitleString() %}</a></td>
-          <td class="text-align-right">{%= components.DisplayTimestamp(&s.Created) %}</td>
+          <td class="text-align-right">{%= view.Timestamp(&s.Created) %}</td>
         </tr>
         {%- endfor -%}
       </tbody>
@@ -47,9 +49,9 @@
   <form action="" method="post">
     <table class="mt expanded">
       <tbody>
-        {%= components.TableInput("title", "", "Sprint Title", s.Title, 5, "The name of your sprint") %}
-        {%= components.TableInput("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
-        {%= components.TableSelect(util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this sprint") %}
+        {%= edit.StringTable("title", "", "Sprint Title", s.Title, 5, "The name of your sprint") %}
+        {%= edit.StringTable("name", "", "Your Name", ps.Username(), 5, "Whatever you prefer to be called") %}
+        {%= edit.SelectTable(util.KeyTeam, "", "Team", fmt.Sprint(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5, "The team associated to this sprint") %}
         <tr><td colspan="2"><button type="submit">Add Sprint</button></td></tr>
       </tbody>
     </table>

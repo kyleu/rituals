@@ -73,7 +73,7 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_histories by estimateID [%v]", estimateID)
+		return nil, errors.Wrapf(err, "unable to get Histories by estimateID [%v]", estimateID)
 	}
 	return ret.ToEstimateHistories(), nil
 }

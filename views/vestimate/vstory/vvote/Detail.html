@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/estimate/story/vote"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -29,28 +30,28 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Story ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.StoryID) %}{% if p.StoryByStoryID != nil %} ({%s p.StoryByStoryID.TitleString() %}){% endif %}
+            {%= view.UUID(&p.Model.StoryID) %}{% if p.StoryByStoryID != nil %} ({%s p.StoryByStoryID.TitleString() %}){% endif %}
             <a title="Story" href="{%s `/admin/db/estimate/story`+`/`+p.Model.StoryID.String() %}">{%= components.SVGRef("story", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
+            {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
             <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Choice</th>
-          <td>{%s p.Model.Choice %}</td>
+          <td>{%= view.String(p.Model.Choice) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
         </tr>
       </tbody>
     </table>

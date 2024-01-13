@@ -82,7 +82,7 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_members by estimateID [%v]", estimateID)
+		return nil, errors.Wrapf(err, "unable to get Members by estimateID [%v]", estimateID)
 	}
 	return ret.ToEstimateMembers(), nil
 }
@@ -110,7 +110,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_members by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Members by userID [%v]", userID)
 	}
 	return ret.ToEstimateMembers(), nil
 }

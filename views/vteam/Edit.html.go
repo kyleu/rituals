@@ -13,102 +13,103 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vteam/Edit.html:11
+//line views/vteam/Edit.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vteam/Edit.html:11
+//line views/vteam/Edit.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vteam/Edit.html:11
+//line views/vteam/Edit.html:12
 type Edit struct {
 	layout.Basic
 	Model *team.Team
 	IsNew bool
 }
 
-//line views/vteam/Edit.html:17
+//line views/vteam/Edit.html:18
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Edit.html:17
+//line views/vteam/Edit.html:18
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vteam/Edit.html:19
+//line views/vteam/Edit.html:20
 	if p.IsNew {
-//line views/vteam/Edit.html:19
+//line views/vteam/Edit.html:20
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vteam/Edit.html:21
+//line views/vteam/Edit.html:22
 		components.StreamSVGRefIcon(qw422016, `team`, ps)
-//line views/vteam/Edit.html:21
+//line views/vteam/Edit.html:22
 		qw422016.N().S(` New Team</h3>
     <form action="/admin/db/team/_new" class="mt" method="post">
 `)
-//line views/vteam/Edit.html:23
+//line views/vteam/Edit.html:24
 	} else {
-//line views/vteam/Edit.html:23
+//line views/vteam/Edit.html:24
 		qw422016.N().S(`    <div class="right"><a href="`)
-//line views/vteam/Edit.html:24
+//line views/vteam/Edit.html:25
 		qw422016.E().S(p.Model.WebPath())
-//line views/vteam/Edit.html:24
+//line views/vteam/Edit.html:25
 		qw422016.N().S(`/delete" onclick="return confirm('Are you sure you wish to delete team [`)
-//line views/vteam/Edit.html:24
+//line views/vteam/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vteam/Edit.html:24
+//line views/vteam/Edit.html:25
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
-//line views/vteam/Edit.html:25
+//line views/vteam/Edit.html:26
 		components.StreamSVGRefIcon(qw422016, `team`, ps)
-//line views/vteam/Edit.html:25
+//line views/vteam/Edit.html:26
 		qw422016.N().S(` Edit Team [`)
-//line views/vteam/Edit.html:25
+//line views/vteam/Edit.html:26
 		qw422016.E().S(p.Model.String())
-//line views/vteam/Edit.html:25
+//line views/vteam/Edit.html:26
 		qw422016.N().S(`]</h3>
     <form action="" method="post">
 `)
-//line views/vteam/Edit.html:27
+//line views/vteam/Edit.html:28
 	}
-//line views/vteam/Edit.html:27
+//line views/vteam/Edit.html:28
 	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
-//line views/vteam/Edit.html:30
+//line views/vteam/Edit.html:31
 	if p.IsNew {
-//line views/vteam/Edit.html:30
-		components.StreamTableInputUUID(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vteam/Edit.html:30
+//line views/vteam/Edit.html:31
+		edit.StreamUUIDTable(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+//line views/vteam/Edit.html:31
 	}
-//line views/vteam/Edit.html:30
-	qw422016.N().S(`
-          `)
-//line views/vteam/Edit.html:31
-	components.StreamTableInput(qw422016, "slug", "", "Slug", p.Model.Slug, 5, "String text")
 //line views/vteam/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vteam/Edit.html:32
-	components.StreamTableInput(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
+	edit.StreamStringTable(qw422016, "slug", "", "Slug", p.Model.Slug, 5, "String text")
 //line views/vteam/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vteam/Edit.html:33
-	components.StreamTableInput(qw422016, "icon", "", "Icon", p.Model.Icon, 5, "String text")
+	edit.StreamStringTable(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
 //line views/vteam/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vteam/Edit.html:34
-	components.StreamTableSelect(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help())
+	edit.StreamStringTable(qw422016, "icon", "", "Icon", p.Model.Icon, 5, "String text")
 //line views/vteam/Edit.html:34
+	qw422016.N().S(`
+          `)
+//line views/vteam/Edit.html:35
+	edit.StreamSelectTable(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help())
+//line views/vteam/Edit.html:35
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -116,31 +117,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     </form>
   </div>
 `)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 }
 
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 }
 
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	qs422016 := string(qb422016.B)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 	return qs422016
-//line views/vteam/Edit.html:40
+//line views/vteam/Edit.html:41
 }

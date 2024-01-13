@@ -4,7 +4,7 @@
   "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/estimate/story"
   "github.com/kyleu/rituals/app/workspace"
-  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
@@ -52,7 +52,7 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="action" value="{%s string(action.ActChildAdd) %}" />
-          {%= components.FormVerticalInput("title", "story-add-title", "Title", "", 5, "Story title") %}
+          {%= edit.StringVertical("title", "story-add-title", "Title", "", 5, "Story title") %}
           <div class="mt">
             <button class="right" type="submit">Add Story</button>
             <a href="#"><button type="button">Cancel</button></a>
@@ -114,7 +114,7 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="storyID" value="{%s id %}" />
-          {%= components.FormVerticalInput("title", "", "Title", title, 5, "Story title") %}
+          {%= edit.StringVertical("title", "", "Title", title, 5, "Story title") %}
           <div class="mt">
             <div class="right"><button type="submit" name="action" value="{%s string(action.ActChildUpdate) %}">Save Changes</button></div>
             <button class="story-delete-button" data-id="{%s id %}" type="submit" name="action" value="{%s string(action.ActChildRemove) %}" onclick="return confirm('Are you sure you want to delete this story?');">Delete</button>

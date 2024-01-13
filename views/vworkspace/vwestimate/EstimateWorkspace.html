@@ -11,6 +11,7 @@
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
@@ -76,11 +77,11 @@
       <div class="modal-body">
         <form action="{%s e.PublicWebPath() %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
-          {%= components.FormVerticalInput("title", "", "Title", e.TitleString(), 5, "The name of your estimate") %}
-          {%= components.FormVerticalIconPicker("icon", "Icon", e.IconSafe(), ps, 5) %}
-          {%= components.FormVerticalInputTags("choices", "", "Choices", e.Choices, ps, 5, "The available options for stories in this estimate") %}
-          {%= components.FormVerticalSelect(util.KeyTeam, "config-team-input", "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
-          {%= components.FormVerticalSelect(util.KeySprint, "config-sprint-input", "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          {%= edit.StringVertical("title", "", "Title", e.TitleString(), 5, "The name of your estimate") %}
+          {%= edit.IconPickerVertical("icon", "Icon", e.IconSafe(), ps, 5) %}
+          {%= edit.TagsVertical("choices", "", "Choices", e.Choices, ps, 5, "The available options for stories in this estimate") %}
+          {%= edit.SelectVertical(util.KeyTeam, "config-team-input", "Team", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= edit.SelectVertical(util.KeySprint, "config-sprint-input", "Sprint", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
           <hr />
           {%= vwutil.PermissionsForm(util.KeyEstimate, perms, true, teams, true, sprints, ps) %}
           <hr />
@@ -106,9 +107,9 @@
       </div>
       <div class="modal-body">
         <div style="display: none;">
-          {%= components.IconPicker("icon", e.IconSafe(), ps, 5) %}
-          {%= components.FormSelect(util.KeyTeam, "config-team-input", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
-          {%= components.FormSelect(util.KeySprint, "config-sprint-input", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
+          {%= edit.IconPicker("icon", e.IconSafe(), ps, 5) %}
+          {%= edit.Select(util.KeyTeam, "config-team-input", util.UUIDString(e.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= edit.Select(util.KeySprint, "config-sprint-input", util.UUIDString(e.SprintID), sprints.IDStrings(true), sprints.TitleStrings("- no sprint -"), 5) %}
         </div>
         <table>
           <tbody>

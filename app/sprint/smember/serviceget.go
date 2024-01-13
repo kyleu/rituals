@@ -82,7 +82,7 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get sprint_members by sprintID [%v]", sprintID)
+		return nil, errors.Wrapf(err, "unable to get Members by sprintID [%v]", sprintID)
 	}
 	return ret.ToSprintMembers(), nil
 }
@@ -109,7 +109,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get sprint_members by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Members by userID [%v]", userID)
 	}
 	return ret.ToSprintMembers(), nil
 }

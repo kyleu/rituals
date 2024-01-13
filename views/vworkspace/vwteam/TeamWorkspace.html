@@ -7,6 +7,7 @@
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vworkspace/vwestimate"
   "github.com/kyleu/rituals/views/vworkspace/vwretro"
@@ -70,8 +71,8 @@
       <div class="modal-body">
         <form action="{%s t.PublicWebPath() %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
-          {%= components.FormVerticalInput("title", "", "Title", t.TitleString(), 5, "The name of your team") %}
-          {%= components.FormVerticalIconPicker("icon", "Icon", t.IconSafe(), ps, 5) %}
+          {%= edit.StringVertical("title", "", "Title", t.TitleString(), 5, "The name of your team") %}
+          {%= edit.IconPickerVertical("icon", "Icon", t.IconSafe(), ps, 5) %}
           <hr />
           {%= vwutil.PermissionsForm(util.KeyTeam, perms, false, nil, false, nil, ps) %}
           <hr />
@@ -96,7 +97,7 @@
       </div>
       <div class="modal-body">
         <div style="display: none;">
-          {%= components.IconPicker("icon", t.IconSafe(), ps, 5) %}
+          {%= edit.IconPicker("icon", t.IconSafe(), ps, 5) %}
         </div>
         <table>
           <tbody>

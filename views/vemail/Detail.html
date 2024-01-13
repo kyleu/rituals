@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/email"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -26,15 +27,15 @@
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Comma-separated list of values">Recipients</th>
-          <td>{%= components.DisplayStringArray(p.Model.Recipients) %}</td>
+          <td>{%= view.StringArray(p.Model.Recipients) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Subject</th>
-          <td>{%s p.Model.Subject %}</td>
+          <td>{%= view.String(p.Model.Subject) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="JSON object">Data</th>
@@ -42,26 +43,26 @@
         </tr>
         <tr>
           <th class="shrink" title="String text">Plain</th>
-          <td>{%s p.Model.Plain %}</td>
+          <td>{%= view.String(p.Model.Plain) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">HTML</th>
-          <td>{%= components.Format(p.Model.HTML, "html") %}</pre></td>
+          <td>{%= view.Format(p.Model.HTML, "html") %}</pre></td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
+            {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
             <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Status</th>
-          <td>{%s p.Model.Status %}</td>
+          <td>{%= view.String(p.Model.Status) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
       </tbody>
     </table>

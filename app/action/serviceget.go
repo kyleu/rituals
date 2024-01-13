@@ -72,7 +72,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get actions by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Actions by userID [%v]", userID)
 	}
 	return ret.ToActions(), nil
 }

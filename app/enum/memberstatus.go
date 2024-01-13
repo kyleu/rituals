@@ -27,7 +27,7 @@ func (m MemberStatus) String() string {
 	return m.Key
 }
 
-func (m *MemberStatus) MarshalJSON() ([]byte, error) {
+func (m MemberStatus) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(m.Key, false), nil
 }
 
@@ -61,9 +61,9 @@ func (m *MemberStatus) Scan(value any) error {
 	if value == nil {
 		return nil
 	}
-	if sv, err := driver.String.ConvertValue(value); err == nil {
-		if v, ok := sv.(string); ok {
-			*m = AllMemberStatuses.Get(v, nil)
+	if converted, err := driver.String.ConvertValue(value); err == nil {
+		if str, ok := converted.(string); ok {
+			*m = AllMemberStatuses.Get(str, nil)
 			return nil
 		}
 	}

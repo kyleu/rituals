@@ -72,7 +72,7 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID uuid.
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get sprint_histories by sprintID [%v]", sprintID)
+		return nil, errors.Wrapf(err, "unable to get Histories by sprintID [%v]", sprintID)
 	}
 	return ret.ToSprintHistories(), nil
 }

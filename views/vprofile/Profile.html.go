@@ -14,25 +14,26 @@ import (
 	"github.com/kyleu/rituals/app/lib/theme"
 	"github.com/kyleu/rituals/app/lib/user"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/layout"
 	"github.com/kyleu/rituals/views/vauth"
 	"github.com/kyleu/rituals/views/vtheme"
 )
 
-//line views/vprofile/Profile.html:14
+//line views/vprofile/Profile.html:15
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vprofile/Profile.html:14
+//line views/vprofile/Profile.html:15
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vprofile/Profile.html:14
+//line views/vprofile/Profile.html:15
 type Profile struct {
 	layout.Basic
 	Profile   *user.Profile
@@ -41,20 +42,20 @@ type Profile struct {
 	Referrer  string
 }
 
-//line views/vprofile/Profile.html:22
+//line views/vprofile/Profile.html:23
 func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vprofile/Profile.html:22
+//line views/vprofile/Profile.html:23
 	qw422016.N().S(`
   `)
-//line views/vprofile/Profile.html:23
+//line views/vprofile/Profile.html:24
 	vauth.StreamSigninTable(qw422016, p.Providers, p.Referrer, as, ps)
-//line views/vprofile/Profile.html:23
+//line views/vprofile/Profile.html:24
 	qw422016.N().S(`
   <form action="" method="post">
     <input name="referrer" type="hidden" value="`)
-//line views/vprofile/Profile.html:25
+//line views/vprofile/Profile.html:26
 	qw422016.E().S(p.Referrer)
-//line views/vprofile/Profile.html:25
+//line views/vprofile/Profile.html:26
 	qw422016.N().S(`" />
     <div class="card">
       <div class="right">
@@ -66,70 +67,70 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
         <table class="mt expanded">
           <tbody>
             `)
-//line views/vprofile/Profile.html:35
-	components.StreamTableInput(qw422016, "name", "", "Name", ps.Username(), 5)
-//line views/vprofile/Profile.html:35
+//line views/vprofile/Profile.html:36
+	edit.StreamStringTable(qw422016, "name", "", "Name", ps.Username(), 5)
+//line views/vprofile/Profile.html:36
 	qw422016.N().S(`
             <tr>
               <th class="shrink"><label>Mode</label></th>
               <td>
                 <label>
 `)
-//line views/vprofile/Profile.html:40
+//line views/vprofile/Profile.html:41
 	if p.Profile.Mode == "" {
-//line views/vprofile/Profile.html:40
+//line views/vprofile/Profile.html:41
 		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="" checked="checked" />
 `)
-//line views/vprofile/Profile.html:42
+//line views/vprofile/Profile.html:43
 	} else {
-//line views/vprofile/Profile.html:42
+//line views/vprofile/Profile.html:43
 		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="" />
 `)
-//line views/vprofile/Profile.html:44
+//line views/vprofile/Profile.html:45
 	}
-//line views/vprofile/Profile.html:44
+//line views/vprofile/Profile.html:45
 	qw422016.N().S(`                  System Default
                 </label>
                 <label>
 `)
-//line views/vprofile/Profile.html:48
+//line views/vprofile/Profile.html:49
 	if p.Profile.Mode == "light" {
-//line views/vprofile/Profile.html:48
+//line views/vprofile/Profile.html:49
 		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="light" checked="checked" />
 `)
-//line views/vprofile/Profile.html:50
+//line views/vprofile/Profile.html:51
 	} else {
-//line views/vprofile/Profile.html:50
+//line views/vprofile/Profile.html:51
 		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="light" />
 `)
-//line views/vprofile/Profile.html:52
+//line views/vprofile/Profile.html:53
 	}
-//line views/vprofile/Profile.html:52
+//line views/vprofile/Profile.html:53
 	qw422016.N().S(`                  Light
                 </label>
                 <label>
 `)
-//line views/vprofile/Profile.html:56
+//line views/vprofile/Profile.html:57
 	if p.Profile.Mode == "dark" {
-//line views/vprofile/Profile.html:56
+//line views/vprofile/Profile.html:57
 		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="dark" checked="checked" />
 `)
-//line views/vprofile/Profile.html:58
+//line views/vprofile/Profile.html:59
 	} else {
-//line views/vprofile/Profile.html:58
+//line views/vprofile/Profile.html:59
 		qw422016.N().S(`                  <input type="radio" class="mode-input" name="mode" value="dark" />
 `)
-//line views/vprofile/Profile.html:60
+//line views/vprofile/Profile.html:61
 	}
-//line views/vprofile/Profile.html:60
+//line views/vprofile/Profile.html:61
 	qw422016.N().S(`                  Dark
                 </label>
               </td>
             </tr>
             `)
-//line views/vprofile/Profile.html:65
+//line views/vprofile/Profile.html:66
 	vtheme.StreamChoicePanel(qw422016, as.Themes.All(ps.Logger), "app", 5, ps)
-//line views/vprofile/Profile.html:65
+//line views/vprofile/Profile.html:66
 	qw422016.N().S(`
           </tbody>
         </table>
@@ -142,41 +143,41 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
   </form>
 
   `)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:77
 	components.StreamJSONModal(qw422016, "profile", "Profile JSON", p.Profile, 1)
-//line views/vprofile/Profile.html:76
+//line views/vprofile/Profile.html:77
 	qw422016.N().S(`
   `)
-//line views/vprofile/Profile.html:77
+//line views/vprofile/Profile.html:78
 	components.StreamJSONModal(qw422016, "theme", "Theme JSON", p.Theme, 1)
-//line views/vprofile/Profile.html:77
+//line views/vprofile/Profile.html:78
 	qw422016.N().S(`
 `)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 }
 
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 func (p *Profile) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	p.StreamBody(qw422016, as, ps)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	qt422016.ReleaseWriter(qw422016)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 }
 
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 func (p *Profile) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	p.WriteBody(qb422016, as, ps)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	qs422016 := string(qb422016.B)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 	return qs422016
-//line views/vprofile/Profile.html:78
+//line views/vprofile/Profile.html:79
 }

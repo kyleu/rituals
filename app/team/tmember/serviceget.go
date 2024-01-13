@@ -82,7 +82,7 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get team_members by teamID [%v]", teamID)
+		return nil, errors.Wrapf(err, "unable to get Members by teamID [%v]", teamID)
 	}
 	return ret.ToTeamMembers(), nil
 }
@@ -109,7 +109,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get team_members by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Members by userID [%v]", userID)
 	}
 	return ret.ToTeamMembers(), nil
 }

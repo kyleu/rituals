@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/retro"
   "github.com/kyleu/rituals/app/retro/rpermission"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models rpermission.RetroPermissions, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -24,13 +25,13 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/retro/permission/{%= view.UUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
         </td>
-        <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
-        <td><a href="/admin/db/retro/permission/{%= components.DisplayUUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>
-        <td>{%s model.Access %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td><a href="/admin/db/retro/permission/{%= view.UUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
+        <td><a href="/admin/db/retro/permission/{%= view.UUID(&model.RetroID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
+        <td>{%= view.String(model.Access) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

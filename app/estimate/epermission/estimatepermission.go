@@ -17,6 +17,10 @@ type PK struct {
 	Value      string    `json:"value,omitempty"`
 }
 
+func (p *PK) String() string {
+	return fmt.Sprintf("%v::%s::%s", p.EstimateID, p.Key, p.Value)
+}
+
 type EstimatePermission struct {
 	EstimateID uuid.UUID `json:"estimateID,omitempty"`
 	Key        string    `json:"key,omitempty"`

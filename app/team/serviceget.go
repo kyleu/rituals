@@ -99,7 +99,7 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, status)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get teams by status [%v]", status)
+		return nil, errors.Wrapf(err, "unable to get Teams by status [%v]", status)
 	}
 	return ret.ToTeams(), nil
 }

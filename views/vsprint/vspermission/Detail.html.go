@@ -13,54 +13,55 @@ import (
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/sprint/spermission"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/view"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vsprint/vspermission/Detail.html:11
+//line views/vsprint/vspermission/Detail.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsprint/vspermission/Detail.html:11
+//line views/vsprint/vspermission/Detail.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsprint/vspermission/Detail.html:11
+//line views/vsprint/vspermission/Detail.html:12
 type Detail struct {
 	layout.Basic
 	Model            *spermission.SprintPermission
 	SprintBySprintID *sprint.Sprint
 }
 
-//line views/vsprint/vspermission/Detail.html:17
+//line views/vsprint/vspermission/Detail.html:18
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vspermission/Detail.html:17
+//line views/vsprint/vspermission/Detail.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-sprintPermission"><button type="button">JSON</button></a>
       <a href="`)
-//line views/vsprint/vspermission/Detail.html:21
+//line views/vsprint/vspermission/Detail.html:22
 	qw422016.E().S(p.Model.WebPath())
-//line views/vsprint/vspermission/Detail.html:21
+//line views/vsprint/vspermission/Detail.html:22
 	qw422016.N().S(`/edit"><button>`)
-//line views/vsprint/vspermission/Detail.html:21
+//line views/vsprint/vspermission/Detail.html:22
 	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vsprint/vspermission/Detail.html:21
+//line views/vsprint/vspermission/Detail.html:22
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
-//line views/vsprint/vspermission/Detail.html:23
+//line views/vsprint/vspermission/Detail.html:24
 	components.StreamSVGRefIcon(qw422016, `permission`, ps)
-//line views/vsprint/vspermission/Detail.html:23
+//line views/vsprint/vspermission/Detail.html:24
 	qw422016.N().S(` `)
-//line views/vsprint/vspermission/Detail.html:23
+//line views/vsprint/vspermission/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
-//line views/vsprint/vspermission/Detail.html:23
+//line views/vsprint/vspermission/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/sprint/permission"><em>Permission</em></a></div>
     <table class="mt">
@@ -69,99 +70,99 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
           <td class="nowrap">
             `)
-//line views/vsprint/vspermission/Detail.html:30
-	components.StreamDisplayUUID(qw422016, &p.Model.SprintID)
-//line views/vsprint/vspermission/Detail.html:30
+//line views/vsprint/vspermission/Detail.html:31
+	view.StreamUUID(qw422016, &p.Model.SprintID)
+//line views/vsprint/vspermission/Detail.html:31
 	if p.SprintBySprintID != nil {
-//line views/vsprint/vspermission/Detail.html:30
+//line views/vsprint/vspermission/Detail.html:31
 		qw422016.N().S(` (`)
-//line views/vsprint/vspermission/Detail.html:30
+//line views/vsprint/vspermission/Detail.html:31
 		qw422016.E().S(p.SprintBySprintID.TitleString())
-//line views/vsprint/vspermission/Detail.html:30
+//line views/vsprint/vspermission/Detail.html:31
 		qw422016.N().S(`)`)
-//line views/vsprint/vspermission/Detail.html:30
+//line views/vsprint/vspermission/Detail.html:31
 	}
-//line views/vsprint/vspermission/Detail.html:30
+//line views/vsprint/vspermission/Detail.html:31
 	qw422016.N().S(`
             <a title="Sprint" href="`)
-//line views/vsprint/vspermission/Detail.html:31
+//line views/vsprint/vspermission/Detail.html:32
 	qw422016.E().S(`/admin/db/sprint` + `/` + p.Model.SprintID.String())
-//line views/vsprint/vspermission/Detail.html:31
+//line views/vsprint/vspermission/Detail.html:32
 	qw422016.N().S(`">`)
-//line views/vsprint/vspermission/Detail.html:31
+//line views/vsprint/vspermission/Detail.html:32
 	components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
-//line views/vsprint/vspermission/Detail.html:31
+//line views/vsprint/vspermission/Detail.html:32
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Key</th>
           <td>`)
-//line views/vsprint/vspermission/Detail.html:36
-	qw422016.E().S(p.Model.Key)
-//line views/vsprint/vspermission/Detail.html:36
+//line views/vsprint/vspermission/Detail.html:37
+	view.StreamString(qw422016, p.Model.Key)
+//line views/vsprint/vspermission/Detail.html:37
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Value</th>
           <td>`)
-//line views/vsprint/vspermission/Detail.html:40
-	qw422016.E().S(p.Model.Value)
-//line views/vsprint/vspermission/Detail.html:40
+//line views/vsprint/vspermission/Detail.html:41
+	view.StreamString(qw422016, p.Model.Value)
+//line views/vsprint/vspermission/Detail.html:41
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Access</th>
           <td>`)
-//line views/vsprint/vspermission/Detail.html:44
-	qw422016.E().S(p.Model.Access)
-//line views/vsprint/vspermission/Detail.html:44
+//line views/vsprint/vspermission/Detail.html:45
+	view.StreamString(qw422016, p.Model.Access)
+//line views/vsprint/vspermission/Detail.html:45
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vsprint/vspermission/Detail.html:48
-	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vsprint/vspermission/Detail.html:48
+//line views/vsprint/vspermission/Detail.html:49
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vsprint/vspermission/Detail.html:49
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vsprint/vspermission/Detail.html:54
+//line views/vsprint/vspermission/Detail.html:55
 	qw422016.N().S(`  `)
-//line views/vsprint/vspermission/Detail.html:55
+//line views/vsprint/vspermission/Detail.html:56
 	components.StreamJSONModal(qw422016, "sprintPermission", "Permission JSON", p.Model, 1)
-//line views/vsprint/vspermission/Detail.html:55
+//line views/vsprint/vspermission/Detail.html:56
 	qw422016.N().S(`
 `)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 }
 
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 }
 
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	qs422016 := string(qb422016.B)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 	return qs422016
-//line views/vsprint/vspermission/Detail.html:56
+//line views/vsprint/vspermission/Detail.html:57
 }

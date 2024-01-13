@@ -14,23 +14,24 @@ import (
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vsprint/List.html:12
+//line views/vsprint/List.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsprint/List.html:12
+//line views/vsprint/List.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsprint/List.html:12
+//line views/vsprint/List.html:13
 type List struct {
 	layout.Basic
 	Models        sprint.Sprints
@@ -39,94 +40,94 @@ type List struct {
 	SearchQuery   string
 }
 
-//line views/vsprint/List.html:20
+//line views/vsprint/List.html:21
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/List.html:20
+//line views/vsprint/List.html:21
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vsprint/List.html:22
-	components.StreamSearchForm(qw422016, "", "q", "Search sprints", p.SearchQuery, ps)
-//line views/vsprint/List.html:22
+//line views/vsprint/List.html:23
+	edit.StreamSearchForm(qw422016, "", "q", "Search Sprints", p.SearchQuery, ps)
+//line views/vsprint/List.html:23
 	qw422016.N().S(`</div>
     <div class="right mrs large-buttons">
 `)
-//line views/vsprint/List.html:24
+//line views/vsprint/List.html:25
 	if len(p.Models) > 0 {
-//line views/vsprint/List.html:24
+//line views/vsprint/List.html:25
 		qw422016.N().S(`<a href="/admin/db/sprint/_random"><button>Random</button></a>`)
-//line views/vsprint/List.html:24
+//line views/vsprint/List.html:25
 	}
-//line views/vsprint/List.html:24
+//line views/vsprint/List.html:25
 	qw422016.N().S(`      <a href="/admin/db/sprint/_new"><button>New</button></a>
     </div>
     <h3>`)
-//line views/vsprint/List.html:27
+//line views/vsprint/List.html:28
 	components.StreamSVGRefIcon(qw422016, `sprint`, ps)
-//line views/vsprint/List.html:27
+//line views/vsprint/List.html:28
 	qw422016.E().S(ps.Title)
-//line views/vsprint/List.html:27
+//line views/vsprint/List.html:28
 	qw422016.N().S(`</h3>
     <div class="clear"></div>
 `)
-//line views/vsprint/List.html:29
+//line views/vsprint/List.html:30
 	if p.SearchQuery != "" {
-//line views/vsprint/List.html:29
+//line views/vsprint/List.html:30
 		qw422016.N().S(`    <hr />
     <em>Search results for [`)
-//line views/vsprint/List.html:31
+//line views/vsprint/List.html:32
 		qw422016.E().S(p.SearchQuery)
-//line views/vsprint/List.html:31
+//line views/vsprint/List.html:32
 		qw422016.N().S(`]</em> (<a href="?">clear</a>)
 `)
-//line views/vsprint/List.html:32
+//line views/vsprint/List.html:33
 	}
-//line views/vsprint/List.html:33
+//line views/vsprint/List.html:34
 	if len(p.Models) == 0 {
-//line views/vsprint/List.html:33
+//line views/vsprint/List.html:34
 		qw422016.N().S(`    <div class="mt"><em>No sprints available</em></div>
 `)
-//line views/vsprint/List.html:35
+//line views/vsprint/List.html:36
 	} else {
-//line views/vsprint/List.html:35
+//line views/vsprint/List.html:36
 		qw422016.N().S(`    <div class="overflow clear mt">
       `)
-//line views/vsprint/List.html:37
+//line views/vsprint/List.html:38
 		StreamTable(qw422016, p.Models, p.TeamsByTeamID, p.Params, as, ps)
-//line views/vsprint/List.html:37
+//line views/vsprint/List.html:38
 		qw422016.N().S(`
     </div>
 `)
-//line views/vsprint/List.html:39
+//line views/vsprint/List.html:40
 	}
-//line views/vsprint/List.html:39
+//line views/vsprint/List.html:40
 	qw422016.N().S(`  </div>
 `)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 }
 
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 }
 
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	qs422016 := string(qb422016.B)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 	return qs422016
-//line views/vsprint/List.html:41
+//line views/vsprint/List.html:42
 }

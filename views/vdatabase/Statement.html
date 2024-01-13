@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/lib/database"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -53,7 +54,7 @@
           <input id="accordion-extra" type="checkbox" hidden="hidden" />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
           <div class="bd"><div><div>
-            {%= components.DisplayMaps(s.Extra, nil, true, ps) %}
+            {%= view.MapArray(s.Extra, nil, true, ps) %}
           </div></div></div>
         </li>
         {%- endif -%}

@@ -13,233 +13,234 @@ import (
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/view"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vdatabase/Statement.html:11
+//line views/vdatabase/Statement.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vdatabase/Statement.html:11
+//line views/vdatabase/Statement.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vdatabase/Statement.html:11
+//line views/vdatabase/Statement.html:12
 type Statement struct {
 	layout.Basic
 	Statement *database.DebugStatement
 }
 
-//line views/vdatabase/Statement.html:16
+//line views/vdatabase/Statement.html:17
 func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Statement.html:16
+//line views/vdatabase/Statement.html:17
 	qw422016.N().S(`
 `)
-//line views/vdatabase/Statement.html:17
+//line views/vdatabase/Statement.html:18
 	s := p.Statement
 
-//line views/vdatabase/Statement.html:17
+//line views/vdatabase/Statement.html:18
 	qw422016.N().S(`  <div class="card">
     <div class="right">`)
-//line views/vdatabase/Statement.html:19
+//line views/vdatabase/Statement.html:20
 	qw422016.E().S(util.MicrosToMillis(s.Timing))
-//line views/vdatabase/Statement.html:19
+//line views/vdatabase/Statement.html:20
 	qw422016.N().S(` elapsed</div>
     <h3>`)
-//line views/vdatabase/Statement.html:20
+//line views/vdatabase/Statement.html:21
 	components.StreamSVGRefIcon(qw422016, `database`, ps)
-//line views/vdatabase/Statement.html:20
+//line views/vdatabase/Statement.html:21
 	qw422016.N().S(`Statement [`)
-//line views/vdatabase/Statement.html:20
+//line views/vdatabase/Statement.html:21
 	qw422016.N().D(p.Statement.Index)
-//line views/vdatabase/Statement.html:20
+//line views/vdatabase/Statement.html:21
 	qw422016.N().S(`]</h3>
     <div class="right">`)
-//line views/vdatabase/Statement.html:21
+//line views/vdatabase/Statement.html:22
 	qw422016.N().D(s.Count)
-//line views/vdatabase/Statement.html:21
+//line views/vdatabase/Statement.html:22
 	qw422016.N().S(` rows returned</div>
     <em>`)
-//line views/vdatabase/Statement.html:22
+//line views/vdatabase/Statement.html:23
 	qw422016.E().S(s.Message)
-//line views/vdatabase/Statement.html:22
+//line views/vdatabase/Statement.html:23
 	qw422016.N().S(`</em>
 `)
-//line views/vdatabase/Statement.html:23
+//line views/vdatabase/Statement.html:24
 	if s.Error != "" {
-//line views/vdatabase/Statement.html:23
+//line views/vdatabase/Statement.html:24
 		qw422016.N().S(`    <div class="mt error">`)
-//line views/vdatabase/Statement.html:24
+//line views/vdatabase/Statement.html:25
 		qw422016.E().S(s.Error)
-//line views/vdatabase/Statement.html:24
+//line views/vdatabase/Statement.html:25
 		qw422016.N().S(`</div>
 `)
-//line views/vdatabase/Statement.html:25
+//line views/vdatabase/Statement.html:26
 	}
-//line views/vdatabase/Statement.html:25
+//line views/vdatabase/Statement.html:26
 	qw422016.N().S(`    <div class="mt">
       <ul class="accordion">
         <li>
           <input id="accordion-sql" type="checkbox" hidden="hidden" />
           <label for="accordion-sql">`)
-//line views/vdatabase/Statement.html:30
+//line views/vdatabase/Statement.html:31
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vdatabase/Statement.html:30
+//line views/vdatabase/Statement.html:31
 	qw422016.N().S(` SQL</label>
           <div class="bd"><div><div>
             `)
-//line views/vdatabase/Statement.html:32
+//line views/vdatabase/Statement.html:33
 	streamstatementSQL(qw422016, s)
-//line views/vdatabase/Statement.html:32
+//line views/vdatabase/Statement.html:33
 	qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vdatabase/Statement.html:35
+//line views/vdatabase/Statement.html:36
 	if len(s.Values) > 0 {
-//line views/vdatabase/Statement.html:35
+//line views/vdatabase/Statement.html:36
 		qw422016.N().S(`        <li>
           <input id="accordion-values" type="checkbox" hidden="hidden" />
           <label for="accordion-values">`)
-//line views/vdatabase/Statement.html:38
+//line views/vdatabase/Statement.html:39
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vdatabase/Statement.html:38
+//line views/vdatabase/Statement.html:39
 		qw422016.N().S(` Values</label>
           <div class="bd"><div><div>
             `)
-//line views/vdatabase/Statement.html:40
+//line views/vdatabase/Statement.html:41
 		streamstatementValues(qw422016, s)
-//line views/vdatabase/Statement.html:40
+//line views/vdatabase/Statement.html:41
 		qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vdatabase/Statement.html:43
+//line views/vdatabase/Statement.html:44
 	}
-//line views/vdatabase/Statement.html:43
+//line views/vdatabase/Statement.html:44
 	qw422016.N().S(`        <li>
           <input id="accordion-out" type="checkbox" hidden="hidden" />
           <label for="accordion-out">`)
-//line views/vdatabase/Statement.html:46
+//line views/vdatabase/Statement.html:47
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vdatabase/Statement.html:46
+//line views/vdatabase/Statement.html:47
 	qw422016.N().S(` Result</label>
           <div class="bd"><div><div>
             `)
-//line views/vdatabase/Statement.html:48
+//line views/vdatabase/Statement.html:49
 	streamstatementOut(qw422016, s)
-//line views/vdatabase/Statement.html:48
+//line views/vdatabase/Statement.html:49
 	qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vdatabase/Statement.html:51
+//line views/vdatabase/Statement.html:52
 	if len(s.Extra) > 0 {
-//line views/vdatabase/Statement.html:51
+//line views/vdatabase/Statement.html:52
 		qw422016.N().S(`        <li>
           <input id="accordion-extra" type="checkbox" hidden="hidden" />
           <label for="accordion-extra">`)
-//line views/vdatabase/Statement.html:54
+//line views/vdatabase/Statement.html:55
 		components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vdatabase/Statement.html:54
+//line views/vdatabase/Statement.html:55
 		qw422016.N().S(` Query Plan</label>
           <div class="bd"><div><div>
             `)
-//line views/vdatabase/Statement.html:56
-		components.StreamDisplayMaps(qw422016, s.Extra, nil, true, ps)
-//line views/vdatabase/Statement.html:56
+//line views/vdatabase/Statement.html:57
+		view.StreamMapArray(qw422016, s.Extra, nil, true, ps)
+//line views/vdatabase/Statement.html:57
 		qw422016.N().S(`
           </div></div></div>
         </li>
 `)
-//line views/vdatabase/Statement.html:59
+//line views/vdatabase/Statement.html:60
 	}
-//line views/vdatabase/Statement.html:59
+//line views/vdatabase/Statement.html:60
 	qw422016.N().S(`      </ul>
     </div>
   </div>
 `)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 }
 
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 func (p *Statement) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	p.StreamBody(qw422016, as, ps)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 }
 
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 func (p *Statement) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	p.WriteBody(qb422016, as, ps)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 	return qs422016
-//line views/vdatabase/Statement.html:63
+//line views/vdatabase/Statement.html:64
 }
 
-//line views/vdatabase/Statement.html:65
+//line views/vdatabase/Statement.html:66
 func streamstatementSQL(qw422016 *qt422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:65
+//line views/vdatabase/Statement.html:66
 	qw422016.N().S(`
 `)
-//line views/vdatabase/Statement.html:66
+//line views/vdatabase/Statement.html:67
 	out, _ := cutil.FormatLang(s.SQL, "sql")
 
-//line views/vdatabase/Statement.html:66
+//line views/vdatabase/Statement.html:67
 	qw422016.N().S(`  `)
-//line views/vdatabase/Statement.html:67
+//line views/vdatabase/Statement.html:68
 	qw422016.N().S(out)
-//line views/vdatabase/Statement.html:67
+//line views/vdatabase/Statement.html:68
 	qw422016.N().S(`
 `)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 }
 
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 func writestatementSQL(qq422016 qtio422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	streamstatementSQL(qw422016, s)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 }
 
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 func statementSQL(s *database.DebugStatement) string {
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	writestatementSQL(qb422016, s)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 	return qs422016
-//line views/vdatabase/Statement.html:68
+//line views/vdatabase/Statement.html:69
 }
 
-//line views/vdatabase/Statement.html:70
+//line views/vdatabase/Statement.html:71
 func streamstatementValues(qw422016 *qt422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:70
+//line views/vdatabase/Statement.html:71
 	qw422016.N().S(`
   <div class="overflow full-width">
     <table>
@@ -251,71 +252,71 @@ func streamstatementValues(qw422016 *qt422016.Writer, s *database.DebugStatement
       </thead>
       <tbody>
 `)
-//line views/vdatabase/Statement.html:80
+//line views/vdatabase/Statement.html:81
 	for idx, v := range s.Values {
-//line views/vdatabase/Statement.html:80
+//line views/vdatabase/Statement.html:81
 		qw422016.N().S(`        <tr>
           <td>`)
-//line views/vdatabase/Statement.html:82
+//line views/vdatabase/Statement.html:83
 		qw422016.N().D(idx + 1)
-//line views/vdatabase/Statement.html:82
+//line views/vdatabase/Statement.html:83
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vdatabase/Statement.html:83
+//line views/vdatabase/Statement.html:84
 		components.StreamJSON(qw422016, v)
-//line views/vdatabase/Statement.html:83
+//line views/vdatabase/Statement.html:84
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vdatabase/Statement.html:85
+//line views/vdatabase/Statement.html:86
 	}
-//line views/vdatabase/Statement.html:85
+//line views/vdatabase/Statement.html:86
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 }
 
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 func writestatementValues(qq422016 qtio422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	streamstatementValues(qw422016, s)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 }
 
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 func statementValues(s *database.DebugStatement) string {
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	writestatementValues(qb422016, s)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 	return qs422016
-//line views/vdatabase/Statement.html:89
+//line views/vdatabase/Statement.html:90
 }
 
-//line views/vdatabase/Statement.html:91
+//line views/vdatabase/Statement.html:92
 func streamstatementOut(qw422016 *qt422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:91
+//line views/vdatabase/Statement.html:92
 	qw422016.N().S(`
 `)
-//line views/vdatabase/Statement.html:92
+//line views/vdatabase/Statement.html:93
 	if len(s.Out) == 0 {
-//line views/vdatabase/Statement.html:92
+//line views/vdatabase/Statement.html:93
 		qw422016.N().S(`  <em>no results</em>
 `)
-//line views/vdatabase/Statement.html:94
+//line views/vdatabase/Statement.html:95
 	} else {
-//line views/vdatabase/Statement.html:94
+//line views/vdatabase/Statement.html:95
 		qw422016.N().S(`  <div class="overflow full-width">
     <table>
       <thead>
@@ -326,69 +327,69 @@ func streamstatementOut(qw422016 *qt422016.Writer, s *database.DebugStatement) {
       </thead>
       <tbody>
 `)
-//line views/vdatabase/Statement.html:104
+//line views/vdatabase/Statement.html:105
 		for idx, v := range s.Out {
-//line views/vdatabase/Statement.html:104
+//line views/vdatabase/Statement.html:105
 			qw422016.N().S(`        <tr>
           <td>`)
-//line views/vdatabase/Statement.html:106
+//line views/vdatabase/Statement.html:107
 			qw422016.N().D(idx + 1)
-//line views/vdatabase/Statement.html:106
+//line views/vdatabase/Statement.html:107
 			qw422016.N().S(`</td>
           <td>`)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:108
 			components.StreamJSON(qw422016, v)
-//line views/vdatabase/Statement.html:107
+//line views/vdatabase/Statement.html:108
 			qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vdatabase/Statement.html:109
+//line views/vdatabase/Statement.html:110
 		}
-//line views/vdatabase/Statement.html:110
+//line views/vdatabase/Statement.html:111
 		if s.Count > len(s.Out) {
-//line views/vdatabase/Statement.html:110
+//line views/vdatabase/Statement.html:111
 			qw422016.N().S(`        <tr>
           <td colspan="2">...and `)
-//line views/vdatabase/Statement.html:112
+//line views/vdatabase/Statement.html:113
 			qw422016.N().D(s.Count - len(s.Out))
-//line views/vdatabase/Statement.html:112
+//line views/vdatabase/Statement.html:113
 			qw422016.N().S(` additional rows</td>
         </tr>
 `)
-//line views/vdatabase/Statement.html:114
+//line views/vdatabase/Statement.html:115
 		}
-//line views/vdatabase/Statement.html:114
+//line views/vdatabase/Statement.html:115
 		qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vdatabase/Statement.html:118
+//line views/vdatabase/Statement.html:119
 	}
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 }
 
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 func writestatementOut(qq422016 qtio422016.Writer, s *database.DebugStatement) {
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	streamstatementOut(qw422016, s)
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 }
 
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 func statementOut(s *database.DebugStatement) string {
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	writestatementOut(qb422016, s)
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 	return qs422016
-//line views/vdatabase/Statement.html:119
+//line views/vdatabase/Statement.html:120
 }

@@ -99,7 +99,7 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, status)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get sprints by status [%v]", status)
+		return nil, errors.Wrapf(err, "unable to get Sprints by status [%v]", status)
 	}
 	return ret.ToSprints(), nil
 }
@@ -126,7 +126,7 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get sprints by teamID [%v]", teamID)
+		return nil, errors.Wrapf(err, "unable to get Sprints by teamID [%v]", teamID)
 	}
 	return ret.ToSprints(), nil
 }

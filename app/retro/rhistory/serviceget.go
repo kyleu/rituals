@@ -72,7 +72,7 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, retroID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retro_histories by retroID [%v]", retroID)
+		return nil, errors.Wrapf(err, "unable to get Histories by retroID [%v]", retroID)
 	}
 	return ret.ToRetroHistories(), nil
 }

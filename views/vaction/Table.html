@@ -7,6 +7,7 @@
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -27,17 +28,17 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/admin/db/action/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
+        <td><a href="/admin/db/action/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
         <td>{%s model.Svc.String() %}</td>
-        <td>{%= components.DisplayUUID(&model.ModelID) %}</td>
+        <td>{%= view.UUID(&model.ModelID) %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
-        <td>{%s model.Act %}</td>
+        <td>{%= view.String(model.Act) %}</td>
         <td>{%= components.JSON(model.Content) %}</td>
-        <td>{%s model.Note %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td>{%= view.String(model.Note) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

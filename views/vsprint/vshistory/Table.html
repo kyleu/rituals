@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/sprint"
   "github.com/kyleu/rituals/app/sprint/shistory"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models shistory.SprintHistories, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -22,13 +23,13 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/admin/db/sprint/history/{%u model.Slug %}">{%s model.Slug %}</a></td>
+        <td><a href="/admin/db/sprint/history/{%u model.Slug %}">{%= view.String(model.Slug) %}</a></td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= view.UUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
         </td>
-        <td>{%s model.SprintName %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td>{%= view.String(model.SprintName) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

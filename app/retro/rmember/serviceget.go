@@ -82,7 +82,7 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, retroID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retro_members by retroID [%v]", retroID)
+		return nil, errors.Wrapf(err, "unable to get Members by retroID [%v]", retroID)
 	}
 	return ret.ToRetroMembers(), nil
 }
@@ -109,7 +109,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retro_members by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Members by userID [%v]", userID)
 	}
 	return ret.ToRetroMembers(), nil
 }

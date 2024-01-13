@@ -72,7 +72,7 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get team_histories by teamID [%v]", teamID)
+		return nil, errors.Wrapf(err, "unable to get Histories by teamID [%v]", teamID)
 	}
 	return ret.ToTeamHistories(), nil
 }

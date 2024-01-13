@@ -11,7 +11,7 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/vworkspace/vwutil"
 )
 
@@ -172,7 +172,7 @@ func StreamEstimateWorkspaceStoryModalAdd(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`" />
           `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:55
-	components.StreamFormVerticalInput(qw422016, "title", "story-add-title", "Title", "", 5, "Story title")
+	edit.StreamStringVertical(qw422016, "title", "story-add-title", "Title", "", 5, "Story title")
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:55
 	qw422016.N().S(`
           <div class="mt">
@@ -430,7 +430,7 @@ func StreamEstimateWorkspaceStoryModalEditPanel(qw422016 *qt422016.Writer, id st
 	qw422016.N().S(`" />
           `)
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:117
-	components.StreamFormVerticalInput(qw422016, "title", "", "Title", title, 5, "Story title")
+	edit.StreamStringVertical(qw422016, "title", "", "Title", title, 5, "Story title")
 //line views/vworkspace/vwestimate/EstimateWorkspaceStory.html:117
 	qw422016.N().S(`
           <div class="mt">

@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/standup/upermission"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -24,13 +25,13 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= components.DisplayUUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/standup/permission/{%= view.UUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGRef("standup", 18, 18, "", ps) %}</a>
         </td>
-        <td><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Key %}</a></td>
-        <td><a href="/admin/db/standup/permission/{%= components.DisplayUUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%s model.Value %}</a></td>
-        <td>{%s model.Access %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td><a href="/admin/db/standup/permission/{%= view.UUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
+        <td><a href="/admin/db/standup/permission/{%= view.UUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
+        <td>{%= view.String(model.Access) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

@@ -72,7 +72,7 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, retroID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get feedbacks by retroID [%v]", retroID)
+		return nil, errors.Wrapf(err, "unable to get Feedbacks by retroID [%v]", retroID)
 	}
 	return ret.ToFeedbacks(), nil
 }
@@ -99,7 +99,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get feedbacks by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Feedbacks by userID [%v]", userID)
 	}
 	return ret.ToFeedbacks(), nil
 }

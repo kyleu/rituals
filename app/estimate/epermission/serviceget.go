@@ -83,7 +83,7 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_permissions by estimateID [%v]", estimateID)
+		return nil, errors.Wrapf(err, "unable to get Permissions by estimateID [%v]", estimateID)
 	}
 	return ret.ToEstimatePermissions(), nil
 }
@@ -111,7 +111,7 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_permissions by key [%v]", key)
+		return nil, errors.Wrapf(err, "unable to get Permissions by key [%v]", key)
 	}
 	return ret.ToEstimatePermissions(), nil
 }
@@ -123,7 +123,7 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimate_permissions by value [%v]", value)
+		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
 	}
 	return ret.ToEstimatePermissions(), nil
 }

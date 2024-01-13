@@ -72,7 +72,7 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, standupID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get standup_histories by standupID [%v]", standupID)
+		return nil, errors.Wrapf(err, "unable to get Histories by standupID [%v]", standupID)
 	}
 	return ret.ToStandupHistories(), nil
 }

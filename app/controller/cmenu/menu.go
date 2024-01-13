@@ -17,7 +17,7 @@ func MenuFor(
 ) (menu.Items, any, error) {
 	var ret menu.Items
 	var data any
-	// $PF_SECTION_START(routes)$
+	// $PF_SECTION_START(menu)$
 	ws, data, err := workspaceMenu(ctx, as, params, profile, logger)
 	if err != nil {
 		return nil, nil, err
@@ -36,6 +36,6 @@ func MenuFor(
 	}
 	const aboutDesc = "Get assistance and advice for using " + util.AppName
 	ret = append(ret, menu.Separator, &menu.Item{Key: "about", Title: "About", Description: aboutDesc, Icon: "question", Route: "/about"})
-	// $PF_SECTION_END(routes)$
+	// $PF_SECTION_END(menu)$
 	return ret, data, nil
 }

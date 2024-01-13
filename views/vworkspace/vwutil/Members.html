@@ -3,6 +3,7 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/member"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
 ) %}
 
 {% func MemberPanels(ms member.Members, admin bool, path string, ps *cutil.PageState) %}
@@ -97,7 +98,7 @@
         <form action="{%s url %}" method="post" class="expanded">
           <input type="hidden" name="userID" value="{%s m.UserID.String() %}" />
           <em>Role</em><br />
-          {%= components.FormSelect("role", "", m.Role.Key, []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
+          {%= edit.Select("role", "", m.Role.Key, []string{"owner", "member", "observer"}, []string{"Owner", "Member", "Observer"}, 5) %}
           <hr />
           <div class="right"><button class="member-update" type="submit" name="action" value="{%s string(action.ActMemberUpdate) %}">Save</button></div>
           <button type="submit" class="member-remove" name="action" value="{%s string(action.ActMemberRemove) %}" onclick="return confirm('Are you sure you wish to remove this user?');">Remove</button>

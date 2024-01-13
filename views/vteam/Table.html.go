@@ -14,161 +14,162 @@ import (
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/view"
 )
 
-//line views/vteam/Table.html:11
+//line views/vteam/Table.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vteam/Table.html:11
+//line views/vteam/Table.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vteam/Table.html:11
+//line views/vteam/Table.html:12
 func StreamTable(qw422016 *qt422016.Writer, models team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Table.html:11
+//line views/vteam/Table.html:12
 	qw422016.N().S(`
 `)
-//line views/vteam/Table.html:12
+//line views/vteam/Table.html:13
 	prms := params.Get("team", nil, ps.Logger).Sanitize("team")
 
-//line views/vteam/Table.html:12
+//line views/vteam/Table.html:13
 	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)
-//line views/vteam/Table.html:16
+//line views/vteam/Table.html:17
 	components.StreamTableHeaderSimple(qw422016, "team", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vteam/Table.html:16
+//line views/vteam/Table.html:17
 	qw422016.N().S(`
         `)
-//line views/vteam/Table.html:17
+//line views/vteam/Table.html:18
 	components.StreamTableHeaderSimple(qw422016, "team", "slug", "Slug", "String text", prms, ps.URI, ps)
-//line views/vteam/Table.html:17
+//line views/vteam/Table.html:18
 	qw422016.N().S(`
         `)
-//line views/vteam/Table.html:18
+//line views/vteam/Table.html:19
 	components.StreamTableHeaderSimple(qw422016, "team", "title", "Title", "String text", prms, ps.URI, ps)
-//line views/vteam/Table.html:18
+//line views/vteam/Table.html:19
 	qw422016.N().S(`
         `)
-//line views/vteam/Table.html:19
+//line views/vteam/Table.html:20
 	components.StreamTableHeaderSimple(qw422016, "team", "icon", "Icon", "String text", prms, ps.URI, ps)
-//line views/vteam/Table.html:19
+//line views/vteam/Table.html:20
 	qw422016.N().S(`
         `)
-//line views/vteam/Table.html:20
+//line views/vteam/Table.html:21
 	components.StreamTableHeaderSimple(qw422016, "team", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps)
-//line views/vteam/Table.html:20
+//line views/vteam/Table.html:21
 	qw422016.N().S(`
         `)
-//line views/vteam/Table.html:21
+//line views/vteam/Table.html:22
 	components.StreamTableHeaderSimple(qw422016, "team", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vteam/Table.html:21
+//line views/vteam/Table.html:22
 	qw422016.N().S(`
         `)
-//line views/vteam/Table.html:22
+//line views/vteam/Table.html:23
 	components.StreamTableHeaderSimple(qw422016, "team", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
-//line views/vteam/Table.html:22
+//line views/vteam/Table.html:23
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vteam/Table.html:26
+//line views/vteam/Table.html:27
 	for _, model := range models {
-//line views/vteam/Table.html:26
+//line views/vteam/Table.html:27
 		qw422016.N().S(`      <tr>
         <td><a href="/admin/db/team/`)
-//line views/vteam/Table.html:28
-		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vteam/Table.html:28
+//line views/vteam/Table.html:29
+		view.StreamUUID(qw422016, &model.ID)
+//line views/vteam/Table.html:29
 		qw422016.N().S(`">`)
-//line views/vteam/Table.html:28
-		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vteam/Table.html:28
+//line views/vteam/Table.html:29
+		view.StreamUUID(qw422016, &model.ID)
+//line views/vteam/Table.html:29
 		qw422016.N().S(`</a></td>
         <td>`)
-//line views/vteam/Table.html:29
-		qw422016.E().S(model.Slug)
-//line views/vteam/Table.html:29
+//line views/vteam/Table.html:30
+		view.StreamString(qw422016, model.Slug)
+//line views/vteam/Table.html:30
 		qw422016.N().S(`</td>
         <td><strong>`)
-//line views/vteam/Table.html:30
-		qw422016.E().S(model.Title)
-//line views/vteam/Table.html:30
+//line views/vteam/Table.html:31
+		view.StreamString(qw422016, model.Title)
+//line views/vteam/Table.html:31
 		qw422016.N().S(`</strong></td>
         <td>`)
-//line views/vteam/Table.html:31
-		qw422016.E().S(model.Icon)
-//line views/vteam/Table.html:31
+//line views/vteam/Table.html:32
+		view.StreamString(qw422016, model.Icon)
+//line views/vteam/Table.html:32
 		qw422016.N().S(`</td>
         <td>`)
-//line views/vteam/Table.html:32
+//line views/vteam/Table.html:33
 		qw422016.E().S(model.Status.String())
-//line views/vteam/Table.html:32
-		qw422016.N().S(`</td>
-        <td>`)
-//line views/vteam/Table.html:33
-		components.StreamDisplayTimestamp(qw422016, &model.Created)
 //line views/vteam/Table.html:33
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vteam/Table.html:34
-		components.StreamDisplayTimestamp(qw422016, model.Updated)
+		view.StreamTimestamp(qw422016, &model.Created)
 //line views/vteam/Table.html:34
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vteam/Table.html:35
+		view.StreamTimestamp(qw422016, model.Updated)
+//line views/vteam/Table.html:35
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vteam/Table.html:36
+//line views/vteam/Table.html:37
 	}
-//line views/vteam/Table.html:37
+//line views/vteam/Table.html:38
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vteam/Table.html:37
+//line views/vteam/Table.html:38
 		qw422016.N().S(`      <tr>
         <td colspan="7">`)
-//line views/vteam/Table.html:39
+//line views/vteam/Table.html:40
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vteam/Table.html:39
+//line views/vteam/Table.html:40
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vteam/Table.html:41
+//line views/vteam/Table.html:42
 	}
-//line views/vteam/Table.html:41
+//line views/vteam/Table.html:42
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 }
 
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 func WriteTable(qq422016 qtio422016.Writer, models team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	StreamTable(qw422016, models, params, as, ps)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 }
 
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 func Table(models team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	WriteTable(qb422016, models, params, as, ps)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	qs422016 := string(qb422016.B)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 	return qs422016
-//line views/vteam/Table.html:44
+//line views/vteam/Table.html:45
 }

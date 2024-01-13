@@ -72,7 +72,7 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, standupID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get reports by standupID [%v]", standupID)
+		return nil, errors.Wrapf(err, "unable to get Reports by standupID [%v]", standupID)
 	}
 	return ret.ToReports(), nil
 }
@@ -99,7 +99,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get reports by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Reports by userID [%v]", userID)
 	}
 	return ret.ToReports(), nil
 }

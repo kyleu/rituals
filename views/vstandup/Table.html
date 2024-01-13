@@ -8,6 +8,7 @@
   "github.com/kyleu/rituals/app/standup"
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -29,21 +30,21 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/admin/db/standup/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
-        <td>{%s model.Slug %}</td>
-        <td><strong>{%s model.Title %}</strong></td>
-        <td>{%s model.Icon %}</td>
+        <td><a href="/admin/db/standup/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+        <td>{%= view.String(model.Slug) %}</td>
+        <td><strong>{%= view.String(model.Title) %}</strong></td>
+        <td>{%= view.String(model.Icon) %}</td>
         <td>{%s model.Status.String() %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+          {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
           {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
         </td>
         <td class="nowrap">
-          {%= components.DisplayUUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+          {%= view.UUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
           {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
         </td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
-        <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
+        <td>{%= view.Timestamp(model.Updated) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

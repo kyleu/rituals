@@ -72,7 +72,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get comments by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Comments by userID [%v]", userID)
 	}
 	return ret.ToComments(), nil
 }

@@ -27,7 +27,7 @@ func (s SessionStatus) String() string {
 	return s.Key
 }
 
-func (s *SessionStatus) MarshalJSON() ([]byte, error) {
+func (s SessionStatus) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(s.Key, false), nil
 }
 
@@ -61,9 +61,9 @@ func (s *SessionStatus) Scan(value any) error {
 	if value == nil {
 		return nil
 	}
-	if sv, err := driver.String.ConvertValue(value); err == nil {
-		if v, ok := sv.(string); ok {
-			*s = AllSessionStatuses.Get(v, nil)
+	if converted, err := driver.String.ConvertValue(value); err == nil {
+		if str, ok := converted.(string); ok {
+			*s = AllSessionStatuses.Get(str, nil)
 			return nil
 		}
 	}

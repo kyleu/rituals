@@ -72,7 +72,7 @@ func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID u
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get stories by estimateID [%v]", estimateID)
+		return nil, errors.Wrapf(err, "unable to get Stories by estimateID [%v]", estimateID)
 	}
 	return ret.ToStories(), nil
 }
@@ -99,7 +99,7 @@ func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get stories by userID [%v]", userID)
+		return nil, errors.Wrapf(err, "unable to get Stories by userID [%v]", userID)
 	}
 	return ret.ToStories(), nil
 }

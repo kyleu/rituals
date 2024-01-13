@@ -82,7 +82,7 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retro_permissions by key [%v]", key)
+		return nil, errors.Wrapf(err, "unable to get Permissions by key [%v]", key)
 	}
 	return ret.ToRetroPermissions(), nil
 }
@@ -94,7 +94,7 @@ func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UU
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, retroID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retro_permissions by retroID [%v]", retroID)
+		return nil, errors.Wrapf(err, "unable to get Permissions by retroID [%v]", retroID)
 	}
 	return ret.ToRetroPermissions(), nil
 }
@@ -121,7 +121,7 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get retro_permissions by value [%v]", value)
+		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
 	}
 	return ret.ToRetroPermissions(), nil
 }

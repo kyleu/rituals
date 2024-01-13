@@ -15,23 +15,24 @@ import (
 	"github.com/kyleu/rituals/app/team/tmember"
 	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/view"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vteam/vtmember/Detail.html:13
+//line views/vteam/vtmember/Detail.html:14
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vteam/vtmember/Detail.html:13
+//line views/vteam/vtmember/Detail.html:14
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vteam/vtmember/Detail.html:13
+//line views/vteam/vtmember/Detail.html:14
 type Detail struct {
 	layout.Basic
 	Model        *tmember.TeamMember
@@ -39,31 +40,31 @@ type Detail struct {
 	UserByUserID *user.User
 }
 
-//line views/vteam/vtmember/Detail.html:20
+//line views/vteam/vtmember/Detail.html:21
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/vtmember/Detail.html:20
+//line views/vteam/vtmember/Detail.html:21
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-teamMember"><button type="button">JSON</button></a>
       <a href="`)
-//line views/vteam/vtmember/Detail.html:24
+//line views/vteam/vtmember/Detail.html:25
 	qw422016.E().S(p.Model.WebPath())
-//line views/vteam/vtmember/Detail.html:24
+//line views/vteam/vtmember/Detail.html:25
 	qw422016.N().S(`/edit"><button>`)
-//line views/vteam/vtmember/Detail.html:24
+//line views/vteam/vtmember/Detail.html:25
 	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
-//line views/vteam/vtmember/Detail.html:24
+//line views/vteam/vtmember/Detail.html:25
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
-//line views/vteam/vtmember/Detail.html:26
+//line views/vteam/vtmember/Detail.html:27
 	components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vteam/vtmember/Detail.html:26
+//line views/vteam/vtmember/Detail.html:27
 	qw422016.N().S(` `)
-//line views/vteam/vtmember/Detail.html:26
+//line views/vteam/vtmember/Detail.html:27
 	qw422016.E().S(p.Model.TitleString())
-//line views/vteam/vtmember/Detail.html:26
+//line views/vteam/vtmember/Detail.html:27
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/team/member"><em>Member</em></a></div>
     <table class="mt">
@@ -72,28 +73,28 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
           <td class="nowrap">
             `)
-//line views/vteam/vtmember/Detail.html:33
-	components.StreamDisplayUUID(qw422016, &p.Model.TeamID)
-//line views/vteam/vtmember/Detail.html:33
+//line views/vteam/vtmember/Detail.html:34
+	view.StreamUUID(qw422016, &p.Model.TeamID)
+//line views/vteam/vtmember/Detail.html:34
 	if p.TeamByTeamID != nil {
-//line views/vteam/vtmember/Detail.html:33
+//line views/vteam/vtmember/Detail.html:34
 		qw422016.N().S(` (`)
-//line views/vteam/vtmember/Detail.html:33
+//line views/vteam/vtmember/Detail.html:34
 		qw422016.E().S(p.TeamByTeamID.TitleString())
-//line views/vteam/vtmember/Detail.html:33
+//line views/vteam/vtmember/Detail.html:34
 		qw422016.N().S(`)`)
-//line views/vteam/vtmember/Detail.html:33
+//line views/vteam/vtmember/Detail.html:34
 	}
-//line views/vteam/vtmember/Detail.html:33
+//line views/vteam/vtmember/Detail.html:34
 	qw422016.N().S(`
             <a title="Team" href="`)
-//line views/vteam/vtmember/Detail.html:34
+//line views/vteam/vtmember/Detail.html:35
 	qw422016.E().S(`/admin/db/team` + `/` + p.Model.TeamID.String())
-//line views/vteam/vtmember/Detail.html:34
+//line views/vteam/vtmember/Detail.html:35
 	qw422016.N().S(`">`)
-//line views/vteam/vtmember/Detail.html:34
+//line views/vteam/vtmember/Detail.html:35
 	components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
-//line views/vteam/vtmember/Detail.html:34
+//line views/vteam/vtmember/Detail.html:35
 	qw422016.N().S(`</a>
           </td>
         </tr>
@@ -101,115 +102,115 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
             `)
-//line views/vteam/vtmember/Detail.html:40
-	components.StreamDisplayUUID(qw422016, &p.Model.UserID)
-//line views/vteam/vtmember/Detail.html:40
+//line views/vteam/vtmember/Detail.html:41
+	view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vteam/vtmember/Detail.html:41
 	if p.UserByUserID != nil {
-//line views/vteam/vtmember/Detail.html:40
+//line views/vteam/vtmember/Detail.html:41
 		qw422016.N().S(` (`)
-//line views/vteam/vtmember/Detail.html:40
+//line views/vteam/vtmember/Detail.html:41
 		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vteam/vtmember/Detail.html:40
+//line views/vteam/vtmember/Detail.html:41
 		qw422016.N().S(`)`)
-//line views/vteam/vtmember/Detail.html:40
+//line views/vteam/vtmember/Detail.html:41
 	}
-//line views/vteam/vtmember/Detail.html:40
+//line views/vteam/vtmember/Detail.html:41
 	qw422016.N().S(`
             <a title="User" href="`)
-//line views/vteam/vtmember/Detail.html:41
+//line views/vteam/vtmember/Detail.html:42
 	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
-//line views/vteam/vtmember/Detail.html:41
+//line views/vteam/vtmember/Detail.html:42
 	qw422016.N().S(`">`)
-//line views/vteam/vtmember/Detail.html:41
+//line views/vteam/vtmember/Detail.html:42
 	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
-//line views/vteam/vtmember/Detail.html:41
+//line views/vteam/vtmember/Detail.html:42
 	qw422016.N().S(`</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Name</th>
           <td><strong>`)
-//line views/vteam/vtmember/Detail.html:46
-	qw422016.E().S(p.Model.Name)
-//line views/vteam/vtmember/Detail.html:46
+//line views/vteam/vtmember/Detail.html:47
+	view.StreamString(qw422016, p.Model.Name)
+//line views/vteam/vtmember/Detail.html:47
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
           <th class="shrink" title="URL in string form">Picture</th>
           <td><a href="`)
-//line views/vteam/vtmember/Detail.html:50
+//line views/vteam/vtmember/Detail.html:51
 	qw422016.E().S(p.Model.Picture)
-//line views/vteam/vtmember/Detail.html:50
+//line views/vteam/vtmember/Detail.html:51
 	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vteam/vtmember/Detail.html:50
+//line views/vteam/vtmember/Detail.html:51
 	qw422016.E().S(p.Model.Picture)
-//line views/vteam/vtmember/Detail.html:50
+//line views/vteam/vtmember/Detail.html:51
 	qw422016.N().S(`</a></td>
         </tr>
         <tr>
           <th class="shrink" title="`)
-//line views/vteam/vtmember/Detail.html:53
+//line views/vteam/vtmember/Detail.html:54
 	qw422016.E().S(enum.AllMemberStatuses.Help())
-//line views/vteam/vtmember/Detail.html:53
+//line views/vteam/vtmember/Detail.html:54
 	qw422016.N().S(`">Role</th>
           <td>`)
-//line views/vteam/vtmember/Detail.html:54
+//line views/vteam/vtmember/Detail.html:55
 	qw422016.E().S(p.Model.Role.String())
-//line views/vteam/vtmember/Detail.html:54
+//line views/vteam/vtmember/Detail.html:55
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vteam/vtmember/Detail.html:58
-	components.StreamDisplayTimestamp(qw422016, &p.Model.Created)
-//line views/vteam/vtmember/Detail.html:58
+//line views/vteam/vtmember/Detail.html:59
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vteam/vtmember/Detail.html:59
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vteam/vtmember/Detail.html:62
-	components.StreamDisplayTimestamp(qw422016, p.Model.Updated)
-//line views/vteam/vtmember/Detail.html:62
+//line views/vteam/vtmember/Detail.html:63
+	view.StreamTimestamp(qw422016, p.Model.Updated)
+//line views/vteam/vtmember/Detail.html:63
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vteam/vtmember/Detail.html:68
+//line views/vteam/vtmember/Detail.html:69
 	qw422016.N().S(`  `)
-//line views/vteam/vtmember/Detail.html:69
+//line views/vteam/vtmember/Detail.html:70
 	components.StreamJSONModal(qw422016, "teamMember", "Member JSON", p.Model, 1)
-//line views/vteam/vtmember/Detail.html:69
+//line views/vteam/vtmember/Detail.html:70
 	qw422016.N().S(`
 `)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 }
 
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 }
 
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	qs422016 := string(qb422016.B)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 	return qs422016
-//line views/vteam/vtmember/Detail.html:70
+//line views/vteam/vtmember/Detail.html:71
 }

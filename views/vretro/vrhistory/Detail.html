@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/retro"
   "github.com/kyleu/rituals/app/retro/rhistory"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -26,22 +27,22 @@
       <tbody>
         <tr>
           <th class="shrink" title="String text">Slug</th>
-          <td>{%s p.Model.Slug %}</td>
+          <td>{%= view.String(p.Model.Slug) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
+            {%= view.UUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
             <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Retro Name</th>
-          <td>{%s p.Model.RetroName %}</td>
+          <td>{%= view.String(p.Model.RetroName) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
       </tbody>
     </table>

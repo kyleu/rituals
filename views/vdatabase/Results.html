@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -28,6 +29,6 @@
     {%- if p.Error != nil -%}
     <div class="mt error">{%s p.Error.Error() %}</div>
     {%- endif -%}
-    <div class="mt overflow">{%= components.DisplayMaps(p.Results, p.Params, true, ps) %}</div>
+    <div class="mt overflow">{%= view.MapArray(p.Results, p.Params, true, ps) %}</div>
   </div>
 {% endfunc %}

@@ -13,6 +13,7 @@
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vretro/vfeedback"
   "github.com/kyleu/rituals/views/vretro/vrhistory"
@@ -44,19 +45,19 @@
       <tbody>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Slug</th>
-          <td>{%s p.Model.Slug %}</td>
+          <td>{%= view.String(p.Model.Slug) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Title</th>
-          <td><strong>{%s p.Model.Title %}</strong></td>
+          <td><strong>{%= view.String(p.Model.Title) %}</strong></td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Icon</th>
-          <td>{%s p.Model.Icon %}</td>
+          <td>{%= view.String(p.Model.Icon) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
@@ -65,28 +66,28 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
+            {%= view.UUID(p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
             {% if p.Model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td class="nowrap">
-            {%= components.DisplayUUID(p.Model.SprintID) %}{% if p.SprintBySprintID != nil %} ({%s p.SprintBySprintID.TitleString() %}){% endif %}
+            {%= view.UUID(p.Model.SprintID) %}{% if p.SprintBySprintID != nil %} ({%s p.SprintBySprintID.TitleString() %}){% endif %}
             {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Comma-separated list of values">Categories</th>
-          <td>{%= components.DisplayStringArray(p.Model.Categories) %}</td>
+          <td>{%= view.StringArray(p.Model.Categories) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-          <td>{%= components.DisplayTimestamp(p.Model.Updated) %}</td>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
         </tr>
       </tbody>
     </table>

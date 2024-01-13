@@ -13,7 +13,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/database/migrate"
-	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/view"
 	"github.com/kyleu/rituals/views/layout"
 )
 
@@ -64,7 +64,7 @@ func (p *Migrations) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vadmin/Migrations.html:28
 			qw422016.N().S(`      Applied `)
 //line views/vadmin/Migrations.html:29
-			components.StreamDisplayTimestamp(qw422016, &curr.Created)
+			view.StreamTimestamp(qw422016, &curr.Created)
 //line views/vadmin/Migrations.html:29
 			qw422016.N().S(`
 `)

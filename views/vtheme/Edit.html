@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app/lib/theme"
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -31,7 +32,7 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {%= components.TableInput("key", "", "Key", p.Theme.Key, 5) %}
+            {%= edit.StringTable("key", "", "Key", p.Theme.Key, 5) %}
           </tbody>
         </table>
       </div>

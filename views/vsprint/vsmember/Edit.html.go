@@ -13,106 +13,107 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/sprint/smember"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vsprint/vsmember/Edit.html:11
+//line views/vsprint/vsmember/Edit.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsprint/vsmember/Edit.html:11
+//line views/vsprint/vsmember/Edit.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsprint/vsmember/Edit.html:11
+//line views/vsprint/vsmember/Edit.html:12
 type Edit struct {
 	layout.Basic
 	Model *smember.SprintMember
 	IsNew bool
 }
 
-//line views/vsprint/vsmember/Edit.html:17
+//line views/vsprint/vsmember/Edit.html:18
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vsmember/Edit.html:17
+//line views/vsprint/vsmember/Edit.html:18
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vsprint/vsmember/Edit.html:19
+//line views/vsprint/vsmember/Edit.html:20
 	if p.IsNew {
-//line views/vsprint/vsmember/Edit.html:19
+//line views/vsprint/vsmember/Edit.html:20
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vsprint/vsmember/Edit.html:21
+//line views/vsprint/vsmember/Edit.html:22
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vsprint/vsmember/Edit.html:21
+//line views/vsprint/vsmember/Edit.html:22
 		qw422016.N().S(` New Member</h3>
     <form action="/admin/db/sprint/member/_new" class="mt" method="post">
 `)
-//line views/vsprint/vsmember/Edit.html:23
+//line views/vsprint/vsmember/Edit.html:24
 	} else {
-//line views/vsprint/vsmember/Edit.html:23
+//line views/vsprint/vsmember/Edit.html:24
 		qw422016.N().S(`    <div class="right"><a href="`)
-//line views/vsprint/vsmember/Edit.html:24
+//line views/vsprint/vsmember/Edit.html:25
 		qw422016.E().S(p.Model.WebPath())
-//line views/vsprint/vsmember/Edit.html:24
+//line views/vsprint/vsmember/Edit.html:25
 		qw422016.N().S(`/delete" onclick="return confirm('Are you sure you wish to delete member [`)
-//line views/vsprint/vsmember/Edit.html:24
+//line views/vsprint/vsmember/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vsprint/vsmember/Edit.html:24
+//line views/vsprint/vsmember/Edit.html:25
 		qw422016.N().S(`]?')"><button>Delete</button></a></div>
     <h3>`)
-//line views/vsprint/vsmember/Edit.html:25
+//line views/vsprint/vsmember/Edit.html:26
 		components.StreamSVGRefIcon(qw422016, `users`, ps)
-//line views/vsprint/vsmember/Edit.html:25
+//line views/vsprint/vsmember/Edit.html:26
 		qw422016.N().S(` Edit Member [`)
-//line views/vsprint/vsmember/Edit.html:25
+//line views/vsprint/vsmember/Edit.html:26
 		qw422016.E().S(p.Model.String())
-//line views/vsprint/vsmember/Edit.html:25
+//line views/vsprint/vsmember/Edit.html:26
 		qw422016.N().S(`]</h3>
     <form action="" method="post">
 `)
-//line views/vsprint/vsmember/Edit.html:27
+//line views/vsprint/vsmember/Edit.html:28
 	}
-//line views/vsprint/vsmember/Edit.html:27
+//line views/vsprint/vsmember/Edit.html:28
 	qw422016.N().S(`      <table class="mt expanded">
         <tbody>
           `)
-//line views/vsprint/vsmember/Edit.html:30
-	if p.IsNew {
-//line views/vsprint/vsmember/Edit.html:30
-		components.StreamTableInputUUID(qw422016, "sprintID", "input-sprintID", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vsprint/vsmember/Edit.html:30
-	}
-//line views/vsprint/vsmember/Edit.html:30
-	qw422016.N().S(`
-          `)
 //line views/vsprint/vsmember/Edit.html:31
 	if p.IsNew {
 //line views/vsprint/vsmember/Edit.html:31
-		components.StreamTableInputUUID(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+		edit.StreamUUIDTable(qw422016, "sprintID", "input-sprintID", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vsprint/vsmember/Edit.html:31
 	}
 //line views/vsprint/vsmember/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vsprint/vsmember/Edit.html:32
-	components.StreamTableInput(qw422016, "name", "", "Name", p.Model.Name, 5, "String text")
+	if p.IsNew {
+//line views/vsprint/vsmember/Edit.html:32
+		edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
+//line views/vsprint/vsmember/Edit.html:32
+	}
 //line views/vsprint/vsmember/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vsprint/vsmember/Edit.html:33
-	components.StreamTableInput(qw422016, "picture", "", "Picture", p.Model.Picture, 5, "URL in string form")
+	edit.StreamStringTable(qw422016, "name", "", "Name", p.Model.Name, 5, "String text")
 //line views/vsprint/vsmember/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vsprint/vsmember/Edit.html:34
-	components.StreamTableSelect(qw422016, "role", "", "Role", p.Model.Role.Key, enum.AllMemberStatuses.Keys(), enum.AllMemberStatuses.Strings(), 5, enum.AllMemberStatuses.Help())
+	edit.StreamStringTable(qw422016, "picture", "", "Picture", p.Model.Picture, 5, "URL in string form")
 //line views/vsprint/vsmember/Edit.html:34
+	qw422016.N().S(`
+          `)
+//line views/vsprint/vsmember/Edit.html:35
+	edit.StreamSelectTable(qw422016, "role", "", "Role", p.Model.Role.Key, enum.AllMemberStatuses.Keys(), enum.AllMemberStatuses.Strings(), 5, enum.AllMemberStatuses.Help())
+//line views/vsprint/vsmember/Edit.html:35
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -126,31 +127,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 }
 
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 }
 
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	qs422016 := string(qb422016.B)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 	return qs422016
-//line views/vsprint/vsmember/Edit.html:46
+//line views/vsprint/vsmember/Edit.html:47
 }

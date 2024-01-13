@@ -7,6 +7,7 @@
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/vworkspace/vwutil"
 ) %}
 
@@ -54,8 +55,8 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="action" value="{%s string(action.ActChildAdd) %}" />
-          {%= components.FormVerticalInputTimestampDay("day", "report-add-day", "Day", util.TimeToday(), 5, ) %}
-          {%= components.FormVerticalTextarea("content", "report-add-content", "Content", 8, "", 5, "HTML and Markdown supported") %}
+          {%= edit.TimestampDayVertical("day", "report-add-day", "Day", util.TimeToday(), 5, ) %}
+          {%= edit.TextareaVertical("content", "report-add-content", "Content", 8, "", 5, "HTML and Markdown supported") %}
           <div class="right"><button type="submit">Add Report</button></div>
         </form>
       </div>
@@ -74,8 +75,8 @@
       <div class="modal-body">
         <form action="#" method="post">
           <input type="hidden" name="reportID" value="{%s r.ID.String() %}" />
-          {%= components.FormVerticalInputTimestampDay("day", "", "Day", &r.Day, 5, ) %}
-          {%= components.FormVerticalTextarea("content", "input-content-"+r.ID.String(), "Content", 8, r.Content, 5, "HTML and Markdown supported") %}
+          {%= edit.TimestampDayVertical("day", "", "Day", &r.Day, 5, ) %}
+          {%= edit.TextareaVertical("content", "input-content-"+r.ID.String(), "Content", 8, r.Content, 5, "HTML and Markdown supported") %}
           <div class="right"><button class="report-edit-save" type="submit" name="action" value="{%s string(action.ActChildUpdate) %}">Save Changes</button></div>
           <button class="report-edit-delete" type="submit" name="action" value="{%s string(action.ActChildRemove) %}" onclick="return confirm('Are you sure you want to delete this report?');">Delete</button>
         </form>

@@ -8,6 +8,8 @@
   "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/app/workspace"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
   "github.com/kyleu/rituals/views/vworkspace/vwestimate"
   "github.com/kyleu/rituals/views/vworkspace/vwretro"
@@ -25,14 +27,14 @@
   <span>
     {% if s.StartDate != nil %}
       starts{% space %}
-      {%= components.DisplayTimestampDay(s.StartDate) %}
+      {%= view.TimestampDay(s.StartDate) %}
       {% if s.EndDate != nil %}
         ,{% space %}
       {% endif %}
     {% endif %}
     {% if s.EndDate != nil %}
       ends{% space %}
-      {%= components.DisplayTimestampDay(s.EndDate) %}
+      {%= view.TimestampDay(s.EndDate) %}
     {% endif %}
   </span>
 {% endstripspace %}{% endfunc %}
@@ -54,7 +56,7 @@
           <span id="model-title">{%s s.TitleString() %}</span>
         </h3></a>
         <div class="clear"></div>
-        <div class="right" id="model-summary">{% if s.StartDate != nil %}starts {%= components.DisplayTimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= components.DisplayTimestampDay(s.EndDate) %}{% endif %}</div>
+        <div class="right" id="model-summary">{% if s.StartDate != nil %}starts {%= view.TimestampDay(s.StartDate) %}{% if s.EndDate != nil %}, {% endif %}{% endif %}{% if s.EndDate != nil %}ends {%= view.TimestampDay(s.EndDate) %}{% endif %}</div>
         {%= vwutil.Banner(w.Team, nil, util.KeySprint) %}
         {%- if w.Admin() -%}
         {%= SprintWorkspaceModalEdit(s, p.Teams, w.Permissions.ToPermissions(), ps) %}
@@ -88,11 +90,11 @@
       <div class="modal-body">
         <form action="{%s s.PublicWebPath() %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActUpdate) %}" />
-          {%= components.FormVerticalInput("title", "", "Title", s.TitleString(), 5, "The name of your sprint") %}
-          {%= components.FormVerticalIconPicker("icon", "Icon", s.IconSafe(), ps, 5) %}
-          {%= components.FormVerticalInputTimestampDay("startDate", "", "Start Date", s.StartDate, 5, "The day your sprint begins") %}
-          {%= components.FormVerticalInputTimestampDay("endDate", "", "End Date", s.EndDate, 5, "The day your sprint ends") %}
-          {%= components.FormVerticalSelect(util.KeyTeam, "config-team-input", "Team", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= edit.StringVertical("title", "", "Title", s.TitleString(), 5, "The name of your sprint") %}
+          {%= edit.IconPickerVertical("icon", "Icon", s.IconSafe(), ps, 5) %}
+          {%= edit.TimestampDayVertical("startDate", "", "Start Date", s.StartDate, 5, "The day your sprint begins") %}
+          {%= edit.TimestampDayVertical("endDate", "", "End Date", s.EndDate, 5, "The day your sprint ends") %}
+          {%= edit.SelectVertical(util.KeyTeam, "config-team-input", "Team", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
           <hr />
           {%= vwutil.PermissionsForm(util.KeySprint, perms, true, teams, false, nil, ps) %}
           <hr />
@@ -117,8 +119,8 @@
       </div>
       <div class="modal-body">
         <div style="display: none;">
-          {%= components.IconPicker("icon", s.IconSafe(), ps, 5) %}
-          {%= components.FormSelect(util.KeyTeam, "config-team-input", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
+          {%= edit.IconPicker("icon", s.IconSafe(), ps, 5) %}
+          {%= edit.Select(util.KeyTeam, "config-team-input", util.UUIDString(s.TeamID), teams.IDStrings(true), teams.TitleStrings("- no team -"), 5) %}
         </div>
         <table>
           <tbody>

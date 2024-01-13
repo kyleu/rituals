@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/enum"
   "github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
 ) %}
 
 {% func SelfLink(self *member.Member, ps *cutil.PageState) %}
@@ -35,7 +36,7 @@
         <form action="{%s formAction %}" method="post" class="expanded">
           <input type="hidden" name="action" value="{%s string(action.ActMemberSelf) %}" />
           <em>Name</em><br />
-          {%= components.FormInput("name", "self-name-input", name, "The name you wish to be called") %}
+          {%= edit.String("name", "self-name-input", name, "The name you wish to be called") %}
           <div class="mt"><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>
           <div><label><input type="radio" name="choice" value="global"> Change global default</label></div>
           <hr />

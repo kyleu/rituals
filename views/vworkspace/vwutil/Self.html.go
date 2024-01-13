@@ -13,112 +13,113 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/member"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 )
 
-//line views/vworkspace/vwutil/Self.html:11
+//line views/vworkspace/vwutil/Self.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vworkspace/vwutil/Self.html:11
+//line views/vworkspace/vwutil/Self.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vworkspace/vwutil/Self.html:11
+//line views/vworkspace/vwutil/Self.html:12
 func StreamSelfLink(qw422016 *qt422016.Writer, self *member.Member, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Self.html:11
+//line views/vworkspace/vwutil/Self.html:12
 	qw422016.N().S(`
   <span id="self-id" style="display: none;">`)
-//line views/vworkspace/vwutil/Self.html:12
+//line views/vworkspace/vwutil/Self.html:13
 	qw422016.E().S(self.UserID.String())
-//line views/vworkspace/vwutil/Self.html:12
+//line views/vworkspace/vwutil/Self.html:13
 	qw422016.N().S(`</span>
   <a id="self-edit-link" href="#modal-member-`)
-//line views/vworkspace/vwutil/Self.html:13
+//line views/vworkspace/vwutil/Self.html:14
 	qw422016.E().S(self.UserID.String())
-//line views/vworkspace/vwutil/Self.html:13
+//line views/vworkspace/vwutil/Self.html:14
 	qw422016.N().S(`"><h3>
     <span id="self-picture">
 `)
-//line views/vworkspace/vwutil/Self.html:15
+//line views/vworkspace/vwutil/Self.html:16
 	if self.Picture == "" {
-//line views/vworkspace/vwutil/Self.html:15
+//line views/vworkspace/vwutil/Self.html:16
 		qw422016.N().S(`      `)
-//line views/vworkspace/vwutil/Self.html:16
+//line views/vworkspace/vwutil/Self.html:17
 		components.StreamSVGRefIcon(qw422016, `profile`, ps)
-//line views/vworkspace/vwutil/Self.html:16
+//line views/vworkspace/vwutil/Self.html:17
 		qw422016.N().S(`
 `)
-//line views/vworkspace/vwutil/Self.html:17
+//line views/vworkspace/vwutil/Self.html:18
 	} else {
-//line views/vworkspace/vwutil/Self.html:17
+//line views/vworkspace/vwutil/Self.html:18
 		qw422016.N().S(`      <img class="icon" style="width: 20px; height: 20px;" src="`)
-//line views/vworkspace/vwutil/Self.html:18
+//line views/vworkspace/vwutil/Self.html:19
 		qw422016.E().S(self.Picture)
-//line views/vworkspace/vwutil/Self.html:18
+//line views/vworkspace/vwutil/Self.html:19
 		qw422016.N().S(`" />
 `)
-//line views/vworkspace/vwutil/Self.html:19
+//line views/vworkspace/vwutil/Self.html:20
 	}
-//line views/vworkspace/vwutil/Self.html:19
+//line views/vworkspace/vwutil/Self.html:20
 	qw422016.N().S(`    </span>
     <span id="self-name" class="member-`)
-//line views/vworkspace/vwutil/Self.html:21
+//line views/vworkspace/vwutil/Self.html:22
 	qw422016.E().S(self.UserID.String())
-//line views/vworkspace/vwutil/Self.html:21
+//line views/vworkspace/vwutil/Self.html:22
 	qw422016.N().S(`-name">`)
-//line views/vworkspace/vwutil/Self.html:21
+//line views/vworkspace/vwutil/Self.html:22
 	qw422016.E().S(self.Name)
-//line views/vworkspace/vwutil/Self.html:21
+//line views/vworkspace/vwutil/Self.html:22
 	qw422016.N().S(`</span>
   </h3></a>
   <em id="self-role">`)
-//line views/vworkspace/vwutil/Self.html:23
+//line views/vworkspace/vwutil/Self.html:24
 	qw422016.E().S(self.Role.String())
-//line views/vworkspace/vwutil/Self.html:23
+//line views/vworkspace/vwutil/Self.html:24
 	qw422016.N().S(`</em>
 `)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 }
 
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 func WriteSelfLink(qq422016 qtio422016.Writer, self *member.Member, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	StreamSelfLink(qw422016, self, ps)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 }
 
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 func SelfLink(self *member.Member, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	WriteSelfLink(qb422016, self, ps)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 	return qs422016
-//line views/vworkspace/vwutil/Self.html:24
+//line views/vworkspace/vwutil/Self.html:25
 }
 
-//line views/vworkspace/vwutil/Self.html:26
+//line views/vworkspace/vwutil/Self.html:27
 func StreamSelfModal(qw422016 *qt422016.Writer, id uuid.UUID, name string, picture string, role enum.MemberStatus, formAction string, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Self.html:26
+//line views/vworkspace/vwutil/Self.html:27
 	qw422016.N().S(`
   <div id="modal-member-`)
-//line views/vworkspace/vwutil/Self.html:27
+//line views/vworkspace/vwutil/Self.html:28
 	qw422016.E().S(id.String())
-//line views/vworkspace/vwutil/Self.html:27
+//line views/vworkspace/vwutil/Self.html:28
 	qw422016.N().S(`" class="modal self" style="display: none;">
     <a class="backdrop" href="#"></a>
     <div class="modal-content">
@@ -128,103 +129,103 @@ func StreamSelfModal(qw422016 *qt422016.Writer, id uuid.UUID, name string, pictu
       </div>
       <div class="modal-body">
         <form action="`)
-//line views/vworkspace/vwutil/Self.html:35
+//line views/vworkspace/vwutil/Self.html:36
 	qw422016.E().S(formAction)
-//line views/vworkspace/vwutil/Self.html:35
+//line views/vworkspace/vwutil/Self.html:36
 	qw422016.N().S(`" method="post" class="expanded">
           <input type="hidden" name="action" value="`)
-//line views/vworkspace/vwutil/Self.html:36
+//line views/vworkspace/vwutil/Self.html:37
 	qw422016.E().S(string(action.ActMemberSelf))
-//line views/vworkspace/vwutil/Self.html:36
+//line views/vworkspace/vwutil/Self.html:37
 	qw422016.N().S(`" />
           <em>Name</em><br />
           `)
-//line views/vworkspace/vwutil/Self.html:38
-	components.StreamFormInput(qw422016, "name", "self-name-input", name, "The name you wish to be called")
-//line views/vworkspace/vwutil/Self.html:38
+//line views/vworkspace/vwutil/Self.html:39
+	edit.StreamString(qw422016, "name", "self-name-input", name, "The name you wish to be called")
+//line views/vworkspace/vwutil/Self.html:39
 	qw422016.N().S(`
           <div class="mt"><label><input type="radio" name="choice" value="local" checked="checked"> Change for this session only</label></div>
           <div><label><input type="radio" name="choice" value="global"> Change global default</label></div>
           <hr />
           <em>Picture</em>
 `)
-//line views/vworkspace/vwutil/Self.html:43
+//line views/vworkspace/vwutil/Self.html:44
 	if images := ps.Accounts.Images(); len(images) > 0 {
-//line views/vworkspace/vwutil/Self.html:43
+//line views/vworkspace/vwutil/Self.html:44
 		qw422016.N().S(`          <div class="choice">
             <label title="no picture">
 `)
-//line views/vworkspace/vwutil/Self.html:46
+//line views/vworkspace/vwutil/Self.html:47
 		if picture == "" {
-//line views/vworkspace/vwutil/Self.html:46
+//line views/vworkspace/vwutil/Self.html:47
 			qw422016.N().S(`              <input type="radio" name="picture" value="" checked="checked">
 `)
-//line views/vworkspace/vwutil/Self.html:48
+//line views/vworkspace/vwutil/Self.html:49
 		} else {
-//line views/vworkspace/vwutil/Self.html:48
+//line views/vworkspace/vwutil/Self.html:49
 			qw422016.N().S(`              <input type="radio" name="picture" value="">
 `)
-//line views/vworkspace/vwutil/Self.html:50
+//line views/vworkspace/vwutil/Self.html:51
 		}
-//line views/vworkspace/vwutil/Self.html:50
+//line views/vworkspace/vwutil/Self.html:51
 		qw422016.N().S(`              `)
-//line views/vworkspace/vwutil/Self.html:51
+//line views/vworkspace/vwutil/Self.html:52
 		components.StreamSVGRef(qw422016, "times", 32, 32, "", ps)
-//line views/vworkspace/vwutil/Self.html:51
+//line views/vworkspace/vwutil/Self.html:52
 		qw422016.N().S(`
             </label>
 `)
-//line views/vworkspace/vwutil/Self.html:53
+//line views/vworkspace/vwutil/Self.html:54
 		for _, i := range images {
-//line views/vworkspace/vwutil/Self.html:53
+//line views/vworkspace/vwutil/Self.html:54
 			qw422016.N().S(`            <label title="`)
-//line views/vworkspace/vwutil/Self.html:54
+//line views/vworkspace/vwutil/Self.html:55
 			qw422016.E().S(i)
-//line views/vworkspace/vwutil/Self.html:54
+//line views/vworkspace/vwutil/Self.html:55
 			qw422016.N().S(`">
 `)
-//line views/vworkspace/vwutil/Self.html:55
+//line views/vworkspace/vwutil/Self.html:56
 			if i == picture {
-//line views/vworkspace/vwutil/Self.html:55
+//line views/vworkspace/vwutil/Self.html:56
 				qw422016.N().S(`              <input type="radio" name="picture" value="`)
-//line views/vworkspace/vwutil/Self.html:56
+//line views/vworkspace/vwutil/Self.html:57
 				qw422016.E().S(i)
-//line views/vworkspace/vwutil/Self.html:56
+//line views/vworkspace/vwutil/Self.html:57
 				qw422016.N().S(`" checked="checked">
 `)
-//line views/vworkspace/vwutil/Self.html:57
+//line views/vworkspace/vwutil/Self.html:58
 			} else {
-//line views/vworkspace/vwutil/Self.html:57
+//line views/vworkspace/vwutil/Self.html:58
 				qw422016.N().S(`              <input type="radio" name="picture" value="`)
-//line views/vworkspace/vwutil/Self.html:58
+//line views/vworkspace/vwutil/Self.html:59
 				qw422016.E().S(i)
-//line views/vworkspace/vwutil/Self.html:58
+//line views/vworkspace/vwutil/Self.html:59
 				qw422016.N().S(`">
 `)
-//line views/vworkspace/vwutil/Self.html:59
+//line views/vworkspace/vwutil/Self.html:60
 			}
-//line views/vworkspace/vwutil/Self.html:59
+//line views/vworkspace/vwutil/Self.html:60
 			qw422016.N().S(`              <img style="width: 32px; height: 32px;" src="`)
-//line views/vworkspace/vwutil/Self.html:60
+//line views/vworkspace/vwutil/Self.html:61
 			qw422016.E().S(i)
-//line views/vworkspace/vwutil/Self.html:60
+//line views/vworkspace/vwutil/Self.html:61
 			qw422016.N().S(`" />
             </label>
 `)
-//line views/vworkspace/vwutil/Self.html:62
+//line views/vworkspace/vwutil/Self.html:63
 		}
-//line views/vworkspace/vwutil/Self.html:62
+//line views/vworkspace/vwutil/Self.html:63
 		qw422016.N().S(`            <div class="clear"></div>
           </div>
 `)
-//line views/vworkspace/vwutil/Self.html:65
+//line views/vworkspace/vwutil/Self.html:66
 	} else {
-//line views/vworkspace/vwutil/Self.html:65
+//line views/vworkspace/vwutil/Self.html:66
 		qw422016.N().S(`          <div>To set a profile picture, <a href="/profile">sign in</a></div>
 `)
-//line views/vworkspace/vwutil/Self.html:67
+//line views/vworkspace/vwutil/Self.html:68
 	}
-//line views/vworkspace/vwutil/Self.html:67
+//line views/vworkspace/vwutil/Self.html:68
 	qw422016.N().S(`          <hr />
           <div class="right"><button type="submit">Save</button></div>
           <a href="#"><button type="button">Leave</button></a>
@@ -233,31 +234,31 @@ func StreamSelfModal(qw422016 *qt422016.Writer, id uuid.UUID, name string, pictu
     </div>
   </div>
 `)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 }
 
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 func WriteSelfModal(qq422016 qtio422016.Writer, id uuid.UUID, name string, picture string, role enum.MemberStatus, formAction string, ps *cutil.PageState) {
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	StreamSelfModal(qw422016, id, name, picture, role, formAction, ps)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	qt422016.ReleaseWriter(qw422016)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 }
 
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 func SelfModal(id uuid.UUID, name string, picture string, role enum.MemberStatus, formAction string, ps *cutil.PageState) string {
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	WriteSelfModal(qb422016, id, name, picture, role, formAction, ps)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	qs422016 := string(qb422016.B)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 	return qs422016
-//line views/vworkspace/vwutil/Self.html:75
+//line views/vworkspace/vwutil/Self.html:76
 }

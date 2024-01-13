@@ -8,6 +8,7 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/lib/websocket"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -118,10 +119,10 @@
       <div class="overflow full-width">
         <table class="mt expanded">
           <tbody>
-            {%= components.TableInput("from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}
-            {%= components.TableInput("channel", "", "Channel", "", 5, "The channel this message is for") %}
-            {%= components.TableInput("cmd", "", "Command", "", 5, "The command for this message") %}
-            {%= components.TableTextarea("param", "", "Parameter", 8, "", 5, "JSON object message payload") %}
+            {%= edit.StringTable("from", "", "From", ps.Profile.ID.String(), 5, "The user this message is from") %}
+            {%= edit.StringTable("channel", "", "Channel", "", 5, "The channel this message is for") %}
+            {%= edit.StringTable("cmd", "", "Command", "", 5, "The command for this message") %}
+            {%= edit.TextareaTable("param", "", "Parameter", 8, "", 5, "JSON object message payload") %}
             <tr><td colspan="2"><button type="submit">Send</button></td></tr>
           </tbody>
         </table>

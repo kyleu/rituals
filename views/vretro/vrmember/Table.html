@@ -8,6 +8,7 @@
   "github.com/kyleu/rituals/app/retro/rmember"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -28,18 +29,18 @@
       {%- for _, model := range models -%}
       <tr>
         <td class="nowrap">
-          <a href="/admin/db/retro/member/{%= components.DisplayUUID(&model.RetroID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/retro/member/{%= view.UUID(&model.RetroID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
         </td>
         <td class="nowrap">
-          <a href="/admin/db/retro/member/{%= components.DisplayUUID(&model.RetroID) %}/{%= components.DisplayUUID(&model.UserID) %}">{%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+          <a href="/admin/db/retro/member/{%= view.UUID(&model.RetroID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
           <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
-        <td><strong>{%s model.Name %}</strong></td>
+        <td><strong>{%= view.String(model.Name) %}</strong></td>
         <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
         <td>{%s model.Role.String() %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
-        <td>{%= components.DisplayTimestamp(model.Updated) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
+        <td>{%= view.Timestamp(model.Updated) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

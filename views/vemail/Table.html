@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/lib/filter"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -26,17 +27,17 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/admin/db/email/{%= components.DisplayUUID(&model.ID) %}">{%= components.DisplayUUID(&model.ID) %}</a></td>
-        <td>{%= components.DisplayStringArray(model.Recipients) %}</td>
-        <td>{%s model.Subject %}</td>
+        <td><a href="/admin/db/email/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+        <td>{%= view.StringArray(model.Recipients) %}</td>
+        <td>{%= view.String(model.Subject) %}</td>
         <td>{%= components.JSON(model.Data) %}</td>
-        <td>{%s model.Plain %}</td>
+        <td>{%= view.String(model.Plain) %}</td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
         </td>
-        <td>{%s model.Status %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td>{%= view.String(model.Status) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

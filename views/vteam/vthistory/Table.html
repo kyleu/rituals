@@ -6,6 +6,7 @@
   "github.com/kyleu/rituals/app/team"
   "github.com/kyleu/rituals/app/team/thistory"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
 ) %}
 
 {% func Table(models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
@@ -22,13 +23,13 @@
     <tbody>
       {%- for _, model := range models -%}
       <tr>
-        <td><a href="/admin/db/team/history/{%u model.Slug %}">{%s model.Slug %}</a></td>
+        <td><a href="/admin/db/team/history/{%u model.Slug %}">{%= view.String(model.Slug) %}</a></td>
         <td class="nowrap">
-          {%= components.DisplayUUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}
+          {%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}
           <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
         </td>
-        <td>{%s model.TeamName %}</td>
-        <td>{%= components.DisplayTimestamp(&model.Created) %}</td>
+        <td>{%= view.String(model.TeamName) %}</td>
+        <td>{%= view.Timestamp(&model.Created) %}</td>
       </tr>
       {%- endfor -%}
       {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}

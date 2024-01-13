@@ -82,7 +82,7 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get standup_permissions by key [%v]", key)
+		return nil, errors.Wrapf(err, "unable to get Permissions by key [%v]", key)
 	}
 	return ret.ToStandupPermissions(), nil
 }
@@ -94,7 +94,7 @@ func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uui
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, standupID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get standup_permissions by standupID [%v]", standupID)
+		return nil, errors.Wrapf(err, "unable to get Permissions by standupID [%v]", standupID)
 	}
 	return ret.ToStandupPermissions(), nil
 }
@@ -122,7 +122,7 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get standup_permissions by value [%v]", value)
+		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
 	}
 	return ret.ToStandupPermissions(), nil
 }

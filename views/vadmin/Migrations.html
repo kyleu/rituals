@@ -5,7 +5,7 @@
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/lib/database/migrate"
-  "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/view"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -26,7 +26,7 @@
       {%- if curr == nil -%}
       <em>Not Applied</em>
       {%- else -%}
-      Applied {%= components.DisplayTimestamp(&curr.Created) %}
+      Applied {%= view.Timestamp(&curr.Created) %}
       {%- endif -%}
     </div>
     <h3>{%s mf.Title %}</h3>

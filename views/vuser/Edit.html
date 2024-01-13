@@ -4,6 +4,7 @@
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/user"
   "github.com/kyleu/rituals/views/components"
+  "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -26,9 +27,9 @@
     {%- endif -%}
       <table class="mt expanded">
         <tbody>
-          {% if p.IsNew %}{%= components.TableInputUUID("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
-          {%= components.TableInput("name", "", "Name", p.Model.Name, 5, "String text") %}
-          {%= components.TableInput("picture", "", "Picture", p.Model.Picture, 5, "URL in string form") %}
+          {% if p.IsNew %}{%= edit.UUIDTable("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {%= edit.StringTable("name", "", "Name", p.Model.Name, 5, "String text") %}
+          {%= edit.StringTable("picture", "", "Picture", p.Model.Picture, 5, "URL in string form") %}
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
       </table>

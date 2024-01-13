@@ -16,219 +16,220 @@ import (
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/view"
 )
 
-//line views/vestimate/vemember/Table.html:13
+//line views/vestimate/vemember/Table.html:14
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vestimate/vemember/Table.html:13
+//line views/vestimate/vemember/Table.html:14
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vestimate/vemember/Table.html:13
+//line views/vestimate/vemember/Table.html:14
 func StreamTable(qw422016 *qt422016.Writer, models emember.EstimateMembers, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vemember/Table.html:13
+//line views/vestimate/vemember/Table.html:14
 	qw422016.N().S(`
 `)
-//line views/vestimate/vemember/Table.html:14
+//line views/vestimate/vemember/Table.html:15
 	prms := params.Get("emember", nil, ps.Logger).Sanitize("emember")
 
-//line views/vestimate/vemember/Table.html:14
+//line views/vestimate/vemember/Table.html:15
 	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)
-//line views/vestimate/vemember/Table.html:18
+//line views/vestimate/vemember/Table.html:19
 	components.StreamTableHeaderSimple(qw422016, "emember", "estimate_id", "Estimate ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:18
+//line views/vestimate/vemember/Table.html:19
 	qw422016.N().S(`
         `)
-//line views/vestimate/vemember/Table.html:19
+//line views/vestimate/vemember/Table.html:20
 	components.StreamTableHeaderSimple(qw422016, "emember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:19
+//line views/vestimate/vemember/Table.html:20
 	qw422016.N().S(`
         `)
-//line views/vestimate/vemember/Table.html:20
+//line views/vestimate/vemember/Table.html:21
 	components.StreamTableHeaderSimple(qw422016, "emember", "name", "Name", "String text", prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:20
+//line views/vestimate/vemember/Table.html:21
 	qw422016.N().S(`
         `)
-//line views/vestimate/vemember/Table.html:21
+//line views/vestimate/vemember/Table.html:22
 	components.StreamTableHeaderSimple(qw422016, "emember", "picture", "Picture", "URL in string form", prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:21
+//line views/vestimate/vemember/Table.html:22
 	qw422016.N().S(`
         `)
-//line views/vestimate/vemember/Table.html:22
+//line views/vestimate/vemember/Table.html:23
 	components.StreamTableHeaderSimple(qw422016, "emember", "role", "Role", enum.AllMemberStatuses.Help(), prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:22
+//line views/vestimate/vemember/Table.html:23
 	qw422016.N().S(`
         `)
-//line views/vestimate/vemember/Table.html:23
+//line views/vestimate/vemember/Table.html:24
 	components.StreamTableHeaderSimple(qw422016, "emember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:23
+//line views/vestimate/vemember/Table.html:24
 	qw422016.N().S(`
         `)
-//line views/vestimate/vemember/Table.html:24
+//line views/vestimate/vemember/Table.html:25
 	components.StreamTableHeaderSimple(qw422016, "emember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
-//line views/vestimate/vemember/Table.html:24
+//line views/vestimate/vemember/Table.html:25
 	qw422016.N().S(`
       </tr>
     </thead>
     <tbody>
 `)
-//line views/vestimate/vemember/Table.html:28
+//line views/vestimate/vemember/Table.html:29
 	for _, model := range models {
-//line views/vestimate/vemember/Table.html:28
+//line views/vestimate/vemember/Table.html:29
 		qw422016.N().S(`      <tr>
         <td class="nowrap">
           <a href="/admin/db/estimate/member/`)
-//line views/vestimate/vemember/Table.html:31
-		components.StreamDisplayUUID(qw422016, &model.EstimateID)
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
+		view.StreamUUID(qw422016, &model.EstimateID)
+//line views/vestimate/vemember/Table.html:32
 		qw422016.N().S(`/`)
-//line views/vestimate/vemember/Table.html:31
-		components.StreamDisplayUUID(qw422016, &model.UserID)
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
+		view.StreamUUID(qw422016, &model.UserID)
+//line views/vestimate/vemember/Table.html:32
 		qw422016.N().S(`">`)
-//line views/vestimate/vemember/Table.html:31
-		components.StreamDisplayUUID(qw422016, &model.EstimateID)
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
+		view.StreamUUID(qw422016, &model.EstimateID)
+//line views/vestimate/vemember/Table.html:32
 		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
 			qw422016.N().S(` (`)
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
 			qw422016.E().S(x.TitleString())
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
 			qw422016.N().S(`)`)
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
 		}
-//line views/vestimate/vemember/Table.html:31
+//line views/vestimate/vemember/Table.html:32
 		qw422016.N().S(`</a>
           <a title="Estimate" href="`)
-//line views/vestimate/vemember/Table.html:32
+//line views/vestimate/vemember/Table.html:33
 		qw422016.E().S(`/admin/db/estimate` + `/` + model.EstimateID.String())
-//line views/vestimate/vemember/Table.html:32
+//line views/vestimate/vemember/Table.html:33
 		qw422016.N().S(`">`)
-//line views/vestimate/vemember/Table.html:32
+//line views/vestimate/vemember/Table.html:33
 		components.StreamSVGRef(qw422016, "estimate", 18, 18, "", ps)
-//line views/vestimate/vemember/Table.html:32
+//line views/vestimate/vemember/Table.html:33
 		qw422016.N().S(`</a>
         </td>
         <td class="nowrap">
           <a href="/admin/db/estimate/member/`)
-//line views/vestimate/vemember/Table.html:35
-		components.StreamDisplayUUID(qw422016, &model.EstimateID)
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
+		view.StreamUUID(qw422016, &model.EstimateID)
+//line views/vestimate/vemember/Table.html:36
 		qw422016.N().S(`/`)
-//line views/vestimate/vemember/Table.html:35
-		components.StreamDisplayUUID(qw422016, &model.UserID)
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
+		view.StreamUUID(qw422016, &model.UserID)
+//line views/vestimate/vemember/Table.html:36
 		qw422016.N().S(`">`)
-//line views/vestimate/vemember/Table.html:35
-		components.StreamDisplayUUID(qw422016, &model.UserID)
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
+		view.StreamUUID(qw422016, &model.UserID)
+//line views/vestimate/vemember/Table.html:36
 		if x := usersByUserID.Get(model.UserID); x != nil {
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
 			qw422016.N().S(` (`)
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
 			qw422016.E().S(x.TitleString())
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
 			qw422016.N().S(`)`)
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
 		}
-//line views/vestimate/vemember/Table.html:35
+//line views/vestimate/vemember/Table.html:36
 		qw422016.N().S(`</a>
           <a title="User" href="`)
-//line views/vestimate/vemember/Table.html:36
+//line views/vestimate/vemember/Table.html:37
 		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
-//line views/vestimate/vemember/Table.html:36
+//line views/vestimate/vemember/Table.html:37
 		qw422016.N().S(`">`)
-//line views/vestimate/vemember/Table.html:36
+//line views/vestimate/vemember/Table.html:37
 		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
-//line views/vestimate/vemember/Table.html:36
+//line views/vestimate/vemember/Table.html:37
 		qw422016.N().S(`</a>
         </td>
         <td><strong>`)
-//line views/vestimate/vemember/Table.html:38
-		qw422016.E().S(model.Name)
-//line views/vestimate/vemember/Table.html:38
+//line views/vestimate/vemember/Table.html:39
+		view.StreamString(qw422016, model.Name)
+//line views/vestimate/vemember/Table.html:39
 		qw422016.N().S(`</strong></td>
         <td><a href="`)
-//line views/vestimate/vemember/Table.html:39
+//line views/vestimate/vemember/Table.html:40
 		qw422016.E().S(model.Picture)
-//line views/vestimate/vemember/Table.html:39
+//line views/vestimate/vemember/Table.html:40
 		qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vestimate/vemember/Table.html:39
+//line views/vestimate/vemember/Table.html:40
 		qw422016.E().S(model.Picture)
-//line views/vestimate/vemember/Table.html:39
+//line views/vestimate/vemember/Table.html:40
 		qw422016.N().S(`</a></td>
         <td>`)
-//line views/vestimate/vemember/Table.html:40
+//line views/vestimate/vemember/Table.html:41
 		qw422016.E().S(model.Role.String())
-//line views/vestimate/vemember/Table.html:40
-		qw422016.N().S(`</td>
-        <td>`)
-//line views/vestimate/vemember/Table.html:41
-		components.StreamDisplayTimestamp(qw422016, &model.Created)
 //line views/vestimate/vemember/Table.html:41
 		qw422016.N().S(`</td>
         <td>`)
 //line views/vestimate/vemember/Table.html:42
-		components.StreamDisplayTimestamp(qw422016, model.Updated)
+		view.StreamTimestamp(qw422016, &model.Created)
 //line views/vestimate/vemember/Table.html:42
+		qw422016.N().S(`</td>
+        <td>`)
+//line views/vestimate/vemember/Table.html:43
+		view.StreamTimestamp(qw422016, model.Updated)
+//line views/vestimate/vemember/Table.html:43
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vestimate/vemember/Table.html:44
+//line views/vestimate/vemember/Table.html:45
 	}
-//line views/vestimate/vemember/Table.html:45
+//line views/vestimate/vemember/Table.html:46
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vestimate/vemember/Table.html:45
+//line views/vestimate/vemember/Table.html:46
 		qw422016.N().S(`      <tr>
         <td colspan="7">`)
-//line views/vestimate/vemember/Table.html:47
+//line views/vestimate/vemember/Table.html:48
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vestimate/vemember/Table.html:47
+//line views/vestimate/vemember/Table.html:48
 		qw422016.N().S(`</td>
       </tr>
 `)
-//line views/vestimate/vemember/Table.html:49
+//line views/vestimate/vemember/Table.html:50
 	}
-//line views/vestimate/vemember/Table.html:49
+//line views/vestimate/vemember/Table.html:50
 	qw422016.N().S(`    </tbody>
   </table>
 `)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 }
 
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 func WriteTable(qq422016 qtio422016.Writer, models emember.EstimateMembers, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	StreamTable(qw422016, models, estimatesByEstimateID, usersByUserID, params, as, ps)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 }
 
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 func Table(models emember.EstimateMembers, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	WriteTable(qb422016, models, estimatesByEstimateID, usersByUserID, params, as, ps)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 	return qs422016
-//line views/vestimate/vemember/Table.html:52
+//line views/vestimate/vemember/Table.html:53
 }

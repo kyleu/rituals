@@ -15,7 +15,7 @@ import (
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/retro/feedback"
 	"github.com/kyleu/rituals/app/workspace"
-	"github.com/kyleu/rituals/views/components"
+	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/vworkspace/vwutil"
 )
 
@@ -222,12 +222,12 @@ func StreamRetroWorkspaceFeedbackModalAdd(qw422016 *qt422016.Writer, categories 
 	qw422016.N().S(`" />
           `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:64
-	components.StreamFormVerticalSelect(qw422016, "category", "", "Category", category, categories, categories, 5)
+	edit.StreamSelectVertical(qw422016, "category", "", "Category", category, categories, categories, 5)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:64
 	qw422016.N().S(`
           `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:65
-	components.StreamFormVerticalTextarea(qw422016, "content", "feedback-add-content-"+category, "Content", 8, "", 5, "HTML and Markdown supported")
+	edit.StreamTextareaVertical(qw422016, "content", "feedback-add-content-"+category, "Content", 8, "", 5, "HTML and Markdown supported")
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:65
 	qw422016.N().S(`
           <div class="right"><button type="submit">Add Feedback</button></div>
@@ -312,12 +312,12 @@ func StreamRetroWorkspaceFeedbackModalEdit(qw422016 *qt422016.Writer, f *feedbac
             <tbody>
               `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:89
-	components.StreamFormVerticalSelect(qw422016, "category", "", "Category", string(f.Category), categories, categories, 5)
+	edit.StreamSelectVertical(qw422016, "category", "", "Category", string(f.Category), categories, categories, 5)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:89
 	qw422016.N().S(`
               `)
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:90
-	components.StreamFormVerticalTextarea(qw422016, "content", "input-content-"+f.ID.String(), "Content", 8, f.Content, 5, "HTML and Markdown supported")
+	edit.StreamTextareaVertical(qw422016, "content", "input-content-"+f.ID.String(), "Content", 8, f.Content, 5, "HTML and Markdown supported")
 //line views/vworkspace/vwretro/RetroWorkspaceFeedback.html:90
 	qw422016.N().S(`
               <tr><td colspan="2">

@@ -99,7 +99,7 @@ func (s *Service) GetBySprintID(ctx context.Context, tx *sqlx.Tx, sprintID *uuid
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, sprintID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimates by sprintID [%v]", sprintID)
+		return nil, errors.Wrapf(err, "unable to get Estimates by sprintID [%v]", sprintID)
 	}
 	return ret.ToEstimates(), nil
 }
@@ -126,7 +126,7 @@ func (s *Service) GetByStatus(ctx context.Context, tx *sqlx.Tx, status enum.Sess
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, status)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimates by status [%v]", status)
+		return nil, errors.Wrapf(err, "unable to get Estimates by status [%v]", status)
 	}
 	return ret.ToEstimates(), nil
 }
@@ -154,7 +154,7 @@ func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID *uuid.UUI
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, teamID)
 	if err != nil {
-		return nil, errors.Wrapf(err, "unable to get estimates by teamID [%v]", teamID)
+		return nil, errors.Wrapf(err, "unable to get Estimates by teamID [%v]", teamID)
 	}
 	return ret.ToEstimates(), nil
 }
