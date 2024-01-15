@@ -58,3 +58,15 @@ func (f *Feedback) WebPath() string {
 func (f *Feedback) ToData() []any {
 	return []any{f.ID, f.RetroID, f.Idx, f.UserID, f.Category, f.Content, f.HTML, f.Created, f.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
+	{Key: "idx", Title: "Idx", Description: "", Type: "int"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "category", Title: "Category", Description: "", Type: "string"},
+	{Key: "content", Title: "Content", Description: "", Type: "string"},
+	{Key: "html", Title: "HTML", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

@@ -72,3 +72,13 @@ func (s *SprintMember) WebPath() string {
 func (s *SprintMember) ToData() []any {
 	return []any{s.SprintID, s.UserID, s.Name, s.Picture, s.Role, s.Created, s.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "name", Title: "Name", Description: "", Type: "string"},
+	{Key: "picture", Title: "Picture", Description: "", Type: "string"},
+	{Key: "role", Title: "Role", Description: "", Type: "enum(member_status)"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

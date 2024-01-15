@@ -8,7 +8,7 @@ export function snippetStory(s: Story, memberName: string): HTMLElement {
     <td><a href={"#modal-story-" + s.id }><div class="story-title">{ s.title }</div></a></td>
     <td class="story-author nowrap"><a href={ "#modal-member-" + s.userID}><em class={ "member-" + s.userID + "-name"}>{ memberName }</em></a></td>
     <td class="story-status">{ s.status }</td>
-    <td class="story-final-vote">{ s.finalVote === "" ? "-" : s.finalVote }</td>
+    <td class="story-final-vote">{ ((!s.hasOwnProperty("finalVote")) || s.finalVote === "") ? "-" : s.finalVote }</td>
     <td>
       { snippetCommentsModalLink("story", s.id)}
       { snippetCommentsModal("story", s.id, s.title)}

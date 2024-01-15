@@ -61,3 +61,16 @@ func (r *Retro) WebPath() string {
 func (r *Retro) ToData() []any {
 	return []any{r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Categories, r.Created, r.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
+	{Key: "title", Title: "Title", Description: "", Type: "string"},
+	{Key: "icon", Title: "Icon", Description: "", Type: "string"},
+	{Key: "status", Title: "Status", Description: "", Type: "enum(session_status)"},
+	{Key: "teamID", Title: "Team ID", Description: "", Type: "uuid"},
+	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
+	{Key: "categories", Title: "Categories", Description: "", Type: "[]string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

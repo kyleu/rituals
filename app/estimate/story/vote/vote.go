@@ -67,3 +67,11 @@ func (v *Vote) WebPath() string {
 func (v *Vote) ToData() []any {
 	return []any{v.StoryID, v.UserID, v.Choice, v.Created, v.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "storyID", Title: "Story ID", Description: "", Type: "uuid"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "choice", Title: "Choice", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

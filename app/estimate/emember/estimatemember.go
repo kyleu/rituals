@@ -72,3 +72,13 @@ func (e *EstimateMember) WebPath() string {
 func (e *EstimateMember) ToData() []any {
 	return []any{e.EstimateID, e.UserID, e.Name, e.Picture, e.Role, e.Created, e.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "name", Title: "Name", Description: "", Type: "string"},
+	{Key: "picture", Title: "Picture", Description: "", Type: "string"},
+	{Key: "role", Title: "Role", Description: "", Type: "enum(member_status)"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

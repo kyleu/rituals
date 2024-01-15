@@ -49,3 +49,10 @@ func (s *SprintHistory) WebPath() string {
 func (s *SprintHistory) ToData() []any {
 	return []any{s.Slug, s.SprintID, s.SprintName, s.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
+	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
+	{Key: "sprintName", Title: "Sprint Name", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

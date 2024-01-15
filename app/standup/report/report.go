@@ -56,3 +56,14 @@ func (r *Report) WebPath() string {
 func (r *Report) ToData() []any {
 	return []any{r.ID, r.StandupID, r.Day, r.UserID, r.Content, r.HTML, r.Created, r.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
+	{Key: "day", Title: "Day", Description: "", Type: "date"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "content", Title: "Content", Description: "", Type: "string"},
+	{Key: "html", Title: "HTML", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

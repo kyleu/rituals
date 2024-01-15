@@ -70,3 +70,11 @@ func (s *StandupPermission) WebPath() string {
 func (s *StandupPermission) ToData() []any {
 	return []any{s.StandupID, s.Key, s.Value, s.Access, s.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
+	{Key: "key", Title: "Key", Description: "", Type: "string"},
+	{Key: "value", Title: "Value", Description: "", Type: "string"},
+	{Key: "access", Title: "Access", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

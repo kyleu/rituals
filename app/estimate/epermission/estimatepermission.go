@@ -70,3 +70,11 @@ func (e *EstimatePermission) WebPath() string {
 func (e *EstimatePermission) ToData() []any {
 	return []any{e.EstimateID, e.Key, e.Value, e.Access, e.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
+	{Key: "key", Title: "Key", Description: "", Type: "string"},
+	{Key: "value", Title: "Value", Description: "", Type: "string"},
+	{Key: "access", Title: "Access", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

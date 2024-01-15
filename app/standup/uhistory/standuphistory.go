@@ -49,3 +49,10 @@ func (s *StandupHistory) WebPath() string {
 func (s *StandupHistory) ToData() []any {
 	return []any{s.Slug, s.StandupID, s.StandupName, s.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
+	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
+	{Key: "standupName", Title: "Standup Name", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

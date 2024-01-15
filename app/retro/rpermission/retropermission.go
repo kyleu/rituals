@@ -70,3 +70,11 @@ func (r *RetroPermission) WebPath() string {
 func (r *RetroPermission) ToData() []any {
 	return []any{r.RetroID, r.Key, r.Value, r.Access, r.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
+	{Key: "key", Title: "Key", Description: "", Type: "string"},
+	{Key: "value", Title: "Value", Description: "", Type: "string"},
+	{Key: "access", Title: "Access", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

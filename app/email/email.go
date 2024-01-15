@@ -58,3 +58,15 @@ func (e *Email) WebPath() string {
 func (e *Email) ToData() []any {
 	return []any{e.ID, e.Recipients, e.Subject, e.Data, e.Plain, e.HTML, e.UserID, e.Status, e.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "recipients", Title: "Recipients", Description: "", Type: "[]string"},
+	{Key: "subject", Title: "Subject", Description: "", Type: "string"},
+	{Key: "data", Title: "Data", Description: "", Type: "map[string]any"},
+	{Key: "plain", Title: "Plain", Description: "", Type: "string"},
+	{Key: "html", Title: "HTML", Description: "", Type: "string"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "status", Title: "Status", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

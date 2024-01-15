@@ -55,3 +55,13 @@ func (t *Team) WebPath() string {
 func (t *Team) ToData() []any {
 	return []any{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Created, t.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
+	{Key: "title", Title: "Title", Description: "", Type: "string"},
+	{Key: "icon", Title: "Icon", Description: "", Type: "string"},
+	{Key: "status", Title: "Status", Description: "", Type: "enum(session_status)"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}

@@ -49,3 +49,10 @@ func (r *RetroHistory) WebPath() string {
 func (r *RetroHistory) ToData() []any {
 	return []any{r.Slug, r.RetroID, r.RetroName, r.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
+	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
+	{Key: "retroName", Title: "Retro Name", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

@@ -57,3 +57,14 @@ func (a *Action) WebPath() string {
 func (a *Action) ToData() []any {
 	return []any{a.ID, a.Svc, a.ModelID, a.UserID, a.Act, a.Content, a.Note, a.Created}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "svc", Title: "Svc", Description: "", Type: "enum(model_service)"},
+	{Key: "modelID", Title: "Model ID", Description: "", Type: "uuid"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "act", Title: "Act", Description: "", Type: "string"},
+	{Key: "content", Title: "Content", Description: "", Type: "map[string]any"},
+	{Key: "note", Title: "Note", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+}

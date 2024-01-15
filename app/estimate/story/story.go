@@ -59,3 +59,15 @@ func (s *Story) WebPath() string {
 func (s *Story) ToData() []any {
 	return []any{s.ID, s.EstimateID, s.Idx, s.UserID, s.Title, s.Status, s.FinalVote, s.Created, s.Updated}
 }
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
+	{Key: "idx", Title: "Idx", Description: "", Type: "int"},
+	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
+	{Key: "title", Title: "Title", Description: "", Type: "string"},
+	{Key: "status", Title: "Status", Description: "", Type: "enum(session_status)"},
+	{Key: "finalVote", Title: "Final Vote", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+}
