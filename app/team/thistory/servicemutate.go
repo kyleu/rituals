@@ -26,6 +26,18 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 	return s.db.Insert(ctx, q, tx, logger, vals...)
 }
 
+func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*TeamHistory) error {
+	for idx, chunk := range lo.Chunk(models, chunkSize) {
+		if logger != nil {
+			logger.Infof("saving histories [%d-%d]", idx*chunkSize, ((idx+1)*chunkSize)-1)
+		}
+		if err := s.Create(ctx, tx, logger, chunk...); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *TeamHistory, logger util.Logger) error {
 	curr, err := s.Get(ctx, tx, model.Slug, logger)
 	if err != nil {
@@ -59,7 +71,11 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*TeamHistory) error {
 	for idx, chunk := range lo.Chunk(models, chunkSize) {
 		if logger != nil {
-			logger.Infof("saving histories [%d-%d]", idx*chunkSize, ((idx+1)*chunkSize)-1)
+			count := ((idx + 1) * chunkSize) - 1
+			if len(models) < count {
+				count = len(models)
+			}
+			logger.Infof("saving histories [%d-%d]", idx*chunkSize, count)
 		}
 		if err := s.Save(ctx, tx, logger, chunk...); err != nil {
 			return err

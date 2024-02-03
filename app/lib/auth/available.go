@@ -48,7 +48,7 @@ func initAvailable() {
 			"facebook":        "Facebook",
 			"fitbit":          "Fitbit",
 			"gitea":           "Gitea",
-			"github":          "Github",
+			"github":          "GitHub",
 			"gitlab":          "Gitlab",
 			"google":          "Google",
 			"gplus":           "Google Plus",

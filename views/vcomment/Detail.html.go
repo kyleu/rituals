@@ -138,7 +138,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcomment/Detail.html:54
 	view.StreamFormat(qw422016, p.Model.HTML, "html")
 //line views/vcomment/Detail.html:54
-	qw422016.N().S(`</pre></td>
+	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>

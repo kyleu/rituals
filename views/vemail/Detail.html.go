@@ -112,7 +112,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vemail/Detail.html:50
 	view.StreamFormat(qw422016, p.Model.HTML, "html")
 //line views/vemail/Detail.html:50
-	qw422016.N().S(`</pre></td>
+	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
