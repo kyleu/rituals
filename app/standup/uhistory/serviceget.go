@@ -18,7 +18,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (StandupHistories, error) {
 	params = filters(params)
 	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
@@ -31,7 +31,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
 		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
 	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Placeholder(), whereClause)
+	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Type, whereClause)
 	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
 	if err != nil {
 		return 0, errors.Wrap(err, "unable to get count of histories")
@@ -42,7 +42,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, slug string, logger util.Logger) (*StandupHistory, error) {
 	wc := defaultWC(0)
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, slug)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get standupHistory by slug [%v]", slug)
@@ -55,8 +55,8 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.P
 		return StandupHistories{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Placeholder())
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("slug", len(slugs), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(slugs)...)
 	if err != nil {
@@ -68,7 +68,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.P
 func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uuid.UUID, params *filter.Params, logger util.Logger) (StandupHistories, error) {
 	params = filters(params)
 	wc := "\"standup_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, standupID)
 	if err != nil {
@@ -83,8 +83,8 @@ func (s *Service) GetByStandupIDs(ctx context.Context, tx *sqlx.Tx, params *filt
 		return StandupHistories{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("standup_id", len(standupIDs), 0, s.db.Placeholder())
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("standup_id", len(standupIDs), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(standupIDs)...)
 	if err != nil {
@@ -104,7 +104,7 @@ func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger u
 
 func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*StandupHistory, error) {
 	ret := &row{}
-	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Type)
 	err := s.db.Get(ctx, ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get random histories")

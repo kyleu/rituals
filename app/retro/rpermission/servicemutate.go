@@ -20,7 +20,7 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 	lo.ForEach(models, func(model *RetroPermission, _ int) {
 		model.Created = util.TimeCurrent()
 	})
-	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Placeholder())
+	q := database.SQLInsert(tableQuoted, columnsQuoted, len(models), s.db.Type)
 	vals := lo.FlatMap(models, func(arg *RetroPermission, _ int) []any {
 		return arg.ToData()
 	})
@@ -45,7 +45,7 @@ func (s *Service) Update(ctx context.Context, tx *sqlx.Tx, model *RetroPermissio
 		return errors.Wrapf(err, "can't get original permission [%s]", model.String())
 	}
 	model.Created = curr.Created
-	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"retro_id\" = $6 and \"key\" = $7 and \"value\" = $8", s.db.Placeholder())
+	q := database.SQLUpdate(tableQuoted, columnsQuoted, "\"retro_id\" = $6 and \"key\" = $7 and \"value\" = $8", s.db.Type)
 	data := model.ToData()
 	data = append(data, model.RetroID, model.Key, model.Value)
 	_, err = s.db.Update(ctx, q, tx, 1, logger, data...)
@@ -62,7 +62,7 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 	lo.ForEach(models, func(model *RetroPermission, _ int) {
 		model.Created = util.TimeCurrent()
 	})
-	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"retro_id", "key", "value"}, columnsQuoted, s.db.Placeholder())
+	q := database.SQLUpsert(tableQuoted, columnsQuoted, len(models), []string{"retro_id", "key", "value"}, columnsQuoted, s.db.Type)
 	data := lo.FlatMap(models, func(model *RetroPermission, _ int) []any {
 		return model.ToData()
 	})
@@ -86,13 +86,13 @@ func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, l
 }
 
 func (s *Service) Delete(ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, key string, value string, logger util.Logger) error {
-	q := database.SQLDelete(tableQuoted, defaultWC(0), s.db.Placeholder())
+	q := database.SQLDelete(tableQuoted, defaultWC(0), s.db.Type)
 	_, err := s.db.Delete(ctx, q, tx, 1, logger, retroID, key, value)
 	return err
 }
 
 func (s *Service) DeleteWhere(ctx context.Context, tx *sqlx.Tx, wc string, expected int, logger util.Logger, values ...any) error {
-	q := database.SQLDelete(tableQuoted, wc, s.db.Placeholder())
+	q := database.SQLDelete(tableQuoted, wc, s.db.Type)
 	_, err := s.db.Delete(ctx, q, tx, expected, logger, values...)
 	return err
 }

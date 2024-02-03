@@ -18,7 +18,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Stories, error) {
 	params = filters(params)
 	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
@@ -31,7 +31,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
 		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
 	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Placeholder(), whereClause)
+	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Type, whereClause)
 	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
 	if err != nil {
 		return 0, errors.Wrap(err, "unable to get count of stories")
@@ -42,7 +42,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger util.Logger) (*Story, error) {
 	wc := defaultWC(0)
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, id)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get story by id [%v]", id)
@@ -55,8 +55,8 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.P
 		return Stories{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("id", len(ids), 0, s.db.Placeholder())
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("id", len(ids), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(ids)...)
 	if err != nil {
@@ -68,7 +68,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.P
 func (s *Service) GetByEstimateID(ctx context.Context, tx *sqlx.Tx, estimateID uuid.UUID, params *filter.Params, logger util.Logger) (Stories, error) {
 	params = filters(params)
 	wc := "\"estimate_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, estimateID)
 	if err != nil {
@@ -82,8 +82,8 @@ func (s *Service) GetByEstimateIDs(ctx context.Context, tx *sqlx.Tx, params *fil
 		return Stories{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0, s.db.Placeholder())
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("estimate_id", len(estimateIDs), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(estimateIDs)...)
 	if err != nil {
@@ -95,7 +95,7 @@ func (s *Service) GetByEstimateIDs(ctx context.Context, tx *sqlx.Tx, params *fil
 func (s *Service) GetByUserID(ctx context.Context, tx *sqlx.Tx, userID uuid.UUID, params *filter.Params, logger util.Logger) (Stories, error) {
 	params = filters(params)
 	wc := "\"user_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, userID)
 	if err != nil {
@@ -109,8 +109,8 @@ func (s *Service) GetByUserIDs(ctx context.Context, tx *sqlx.Tx, params *filter.
 		return Stories{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Placeholder())
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("user_id", len(userIDs), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(userIDs)...)
 	if err != nil {
@@ -124,7 +124,7 @@ const searchClause = "(lower(id::text) like $1 or lower(title) like $1)"
 func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Stories, error) {
 	params = filters(params)
 	wc := searchClause
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, "%"+strings.ToLower(query)+"%")
 	if err != nil {
@@ -144,7 +144,7 @@ func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger u
 
 func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*Story, error) {
 	ret := &row{}
-	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Type)
 	err := s.db.Get(ctx, ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get random stories")

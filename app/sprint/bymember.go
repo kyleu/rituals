@@ -15,7 +15,7 @@ import (
 func (s *Service) GetByMember(ctx context.Context, tx *sqlx.Tx, u uuid.UUID, params *filter.Params, logger util.Logger) (Sprints, error) {
 	params = filters(params)
 	wc := "id in (select sprint_id from sprint_member where user_id = $1)"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, u)
 	if err != nil {

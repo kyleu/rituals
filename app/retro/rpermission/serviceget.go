@@ -19,7 +19,7 @@ import (
 func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (RetroPermissions, error) {
 	params = filters(params)
 	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger)
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
 		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
 	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Placeholder(), whereClause)
+	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Type, whereClause)
 	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
 	if err != nil {
 		return 0, errors.Wrap(err, "unable to get count of permissions")
@@ -43,7 +43,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, key string, value string, logger util.Logger) (*RetroPermission, error) {
 	wc := defaultWC(0)
 	ret := &row{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc)
 	err := s.db.Get(ctx, ret, q, tx, logger, retroID, key, value)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get retroPermission by retroID [%v], key [%v], value [%v]", retroID, key, value)
@@ -64,7 +64,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	})
 	wc += ")"
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
+	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc)
 	vals := lo.FlatMap(pks, func(x *PK, _ int) []any {
 		return []any{x.RetroID, x.Key, x.Value}
 	})
@@ -78,7 +78,7 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params *filter.Params, logger util.Logger) (RetroPermissions, error) {
 	params = filters(params)
 	wc := "\"key\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, key)
 	if err != nil {
@@ -90,7 +90,7 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 func (s *Service) GetByRetroID(ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, params *filter.Params, logger util.Logger) (RetroPermissions, error) {
 	params = filters(params)
 	wc := "\"retro_id\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, retroID)
 	if err != nil {
@@ -104,8 +104,8 @@ func (s *Service) GetByRetroIDs(ctx context.Context, tx *sqlx.Tx, params *filter
 		return RetroPermissions{}, nil
 	}
 	params = filters(params)
-	wc := database.SQLInClause("retro_id", len(retroIDs), 0, s.db.Placeholder())
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	wc := database.SQLInClause("retro_id", len(retroIDs), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(retroIDs)...)
 	if err != nil {
@@ -117,7 +117,7 @@ func (s *Service) GetByRetroIDs(ctx context.Context, tx *sqlx.Tx, params *filter
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (RetroPermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	ret := rows{}
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
@@ -137,7 +137,7 @@ func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger u
 
 func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*RetroPermission, error) {
 	ret := &row{}
-	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Type)
 	err := s.db.Get(ctx, ret, q, tx, logger)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get random permissions")
