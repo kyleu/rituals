@@ -51,7 +51,7 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID, key st
 	return ret.ToTeamPermission(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, pks ...*PK) (TeamPermissions, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, pks ...*PK) (TeamPermissions, error) {
 	if len(pks) == 0 {
 		return TeamPermissions{}, nil
 	}
@@ -64,7 +64,8 @@ func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logg
 	})
 	wc += ")"
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Type, wc)
+	params = filters(params)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
 	vals := lo.FlatMap(pks, func(x *PK, _ int) []any {
 		return []any{x.TeamID, x.Key, x.Value}
 	})
