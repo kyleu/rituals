@@ -64,7 +64,7 @@ var FieldDescs = util.FieldDescs{
 	{Key: "modelID", Title: "Model ID", Description: "", Type: "uuid"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
 	{Key: "act", Title: "Act", Description: "", Type: "string"},
-	{Key: "content", Title: "Content", Description: "", Type: "map[string]any"},
+	{Key: "content", Title: "Content", Description: "", Type: "map"},
 	{Key: "note", Title: "Note", Description: "", Type: "string"},
 	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
 }

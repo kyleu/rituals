@@ -37,7 +37,7 @@ func (r *row) ToEmail() *Email {
 	if r == nil {
 		return nil
 	}
-	recipientsArg := []string{}
+	var recipientsArg []string
 	_ = util.FromJSON(r.Recipients, &recipientsArg)
 	dataArg, _ := util.FromJSONMap(r.Data)
 	return &Email{

@@ -39,7 +39,7 @@ func (r *row) ToEstimate() *Estimate {
 	if r == nil {
 		return nil
 	}
-	choicesArg := []string{}
+	var choicesArg []string
 	_ = util.FromJSON(r.Choices, &choicesArg)
 	return &Estimate{
 		ID:       r.ID,

@@ -63,7 +63,7 @@ var FieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "recipients", Title: "Recipients", Description: "", Type: "[]string"},
 	{Key: "subject", Title: "Subject", Description: "", Type: "string"},
-	{Key: "data", Title: "Data", Description: "", Type: "map[string]any"},
+	{Key: "data", Title: "Data", Description: "", Type: "map"},
 	{Key: "plain", Title: "Plain", Description: "", Type: "string"},
 	{Key: "html", Title: "HTML", Description: "", Type: "string"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},

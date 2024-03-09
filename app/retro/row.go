@@ -39,7 +39,7 @@ func (r *row) ToRetro() *Retro {
 	if r == nil {
 		return nil
 	}
-	categoriesArg := []string{}
+	var categoriesArg []string
 	_ = util.FromJSON(r.Categories, &categoriesArg)
 	return &Retro{
 		ID:         r.ID,
