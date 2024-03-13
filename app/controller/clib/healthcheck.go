@@ -5,9 +5,10 @@ import (
 	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/controller/cutil"
+	"github.com/kyleu/rituals/app/util"
 )
 
 func Healthcheck(rc *fasthttp.RequestCtx) {
-	x := map[string]string{"status": "OK"}
+	x := util.ValueMap{"status": "OK"}
 	_, _ = cutil.RespondJSON(rc, "", x)
 }

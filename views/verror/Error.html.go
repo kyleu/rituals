@@ -38,7 +38,7 @@ func streamerrorStack(qw422016 *qt422016.Writer, ed *util.ErrorDetail) {
         <tbody>
 `)
 //line views/verror/Error.html:16
-	for _, f := range util.TraceDetail(ed.StackTrace) {
+	for _, f := range ed.Stack {
 //line views/verror/Error.html:16
 		qw422016.N().S(`          <tr>
             <td>
