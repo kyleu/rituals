@@ -122,6 +122,12 @@ func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
 	})
 }
 
+func (e EstimatePermissions) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(e, func(x *EstimatePermission, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (e EstimatePermissions) Random() *EstimatePermission {
 	if len(e) == 0 {
 		return nil

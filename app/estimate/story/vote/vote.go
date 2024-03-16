@@ -60,6 +60,14 @@ func Random() *Vote {
 	}
 }
 
+func (v *Vote) Strings() []string {
+	return []string{v.StoryID.String(), v.UserID.String(), v.Choice, util.TimeToFull(&v.Created), util.TimeToFull(v.Updated)}
+}
+
+func (v *Vote) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{v.Strings()}
+}
+
 func (v *Vote) WebPath() string {
 	return "/admin/db/estimate/story/vote/" + v.StoryID.String() + "/" + v.UserID.String()
 }

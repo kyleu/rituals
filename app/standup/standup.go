@@ -52,6 +52,15 @@ func Random() *Standup {
 	}
 }
 
+//nolint:lll
+func (s *Standup) Strings() []string {
+	return []string{s.ID.String(), s.Slug, s.Title, s.Icon, s.Status.String(), util.StringNullable(s.TeamID), util.StringNullable(s.SprintID), util.TimeToFull(&s.Created), util.TimeToFull(s.Updated)}
+}
+
+func (s *Standup) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *Standup) WebPath() string {
 	return "/admin/db/standup/" + s.ID.String()
 }

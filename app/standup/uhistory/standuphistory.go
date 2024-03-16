@@ -42,6 +42,14 @@ func Random() *StandupHistory {
 	}
 }
 
+func (s *StandupHistory) Strings() []string {
+	return []string{s.Slug, s.StandupID.String(), s.StandupName, util.TimeToFull(&s.Created)}
+}
+
+func (s *StandupHistory) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *StandupHistory) WebPath() string {
 	return "/admin/db/standup/history/" + url.QueryEscape(s.Slug)
 }

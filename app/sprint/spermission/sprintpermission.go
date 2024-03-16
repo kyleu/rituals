@@ -63,6 +63,14 @@ func Random() *SprintPermission {
 	}
 }
 
+func (s *SprintPermission) Strings() []string {
+	return []string{s.SprintID.String(), s.Key, s.Value, s.Access, util.TimeToFull(&s.Created)}
+}
+
+func (s *SprintPermission) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *SprintPermission) WebPath() string {
 	return "/admin/db/sprint/permission/" + s.SprintID.String() + "/" + url.QueryEscape(s.Key) + "/" + url.QueryEscape(s.Value)
 }

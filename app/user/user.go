@@ -43,6 +43,14 @@ func Random() *User {
 	}
 }
 
+func (u *User) Strings() []string {
+	return []string{u.ID.String(), u.Name, u.Picture, util.TimeToFull(&u.Created), util.TimeToFull(u.Updated)}
+}
+
+func (u *User) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{u.Strings()}
+}
+
 func (u *User) WebPath() string {
 	return "/admin/db/user/" + u.ID.String()
 }

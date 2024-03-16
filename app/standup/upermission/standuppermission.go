@@ -63,6 +63,14 @@ func Random() *StandupPermission {
 	}
 }
 
+func (s *StandupPermission) Strings() []string {
+	return []string{s.StandupID.String(), s.Key, s.Value, s.Access, util.TimeToFull(&s.Created)}
+}
+
+func (s *StandupPermission) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *StandupPermission) WebPath() string {
 	return "/admin/db/standup/permission/" + s.StandupID.String() + "/" + url.QueryEscape(s.Key) + "/" + url.QueryEscape(s.Value)
 }

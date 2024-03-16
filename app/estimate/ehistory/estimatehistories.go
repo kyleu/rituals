@@ -76,6 +76,12 @@ func (e EstimateHistories) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateHi
 	})
 }
 
+func (e EstimateHistories) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(e, func(x *EstimateHistory, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (e EstimateHistories) Random() *EstimateHistory {
 	if len(e) == 0 {
 		return nil

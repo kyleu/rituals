@@ -93,6 +93,12 @@ func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
 	})
 }
 
+func (e EstimateMembers) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(e, func(x *EstimateMember, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (e EstimateMembers) Random() *EstimateMember {
 	if len(e) == 0 {
 		return nil

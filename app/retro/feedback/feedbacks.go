@@ -94,6 +94,12 @@ func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
 	})
 }
 
+func (f Feedbacks) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(f, func(x *Feedback, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (f Feedbacks) Random() *Feedback {
 	if len(f) == 0 {
 		return nil

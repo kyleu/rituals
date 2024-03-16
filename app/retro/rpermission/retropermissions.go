@@ -122,6 +122,12 @@ func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 	})
 }
 
+func (r RetroPermissions) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(r, func(x *RetroPermission, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (r RetroPermissions) Random() *RetroPermission {
 	if len(r) == 0 {
 		return nil

@@ -65,6 +65,14 @@ func Random() *RetroMember {
 	}
 }
 
+func (r *RetroMember) Strings() []string {
+	return []string{r.RetroID.String(), r.UserID.String(), r.Name, r.Picture, r.Role.String(), util.TimeToFull(&r.Created), util.TimeToFull(r.Updated)}
+}
+
+func (r *RetroMember) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{r.Strings()}
+}
+
 func (r *RetroMember) WebPath() string {
 	return "/admin/db/retro/member/" + r.RetroID.String() + "/" + r.UserID.String()
 }

@@ -63,6 +63,14 @@ func Random() *RetroPermission {
 	}
 }
 
+func (r *RetroPermission) Strings() []string {
+	return []string{r.RetroID.String(), r.Key, r.Value, r.Access, util.TimeToFull(&r.Created)}
+}
+
+func (r *RetroPermission) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{r.Strings()}
+}
+
 func (r *RetroPermission) WebPath() string {
 	return "/admin/db/retro/permission/" + r.RetroID.String() + "/" + url.QueryEscape(r.Key) + "/" + url.QueryEscape(r.Value)
 }

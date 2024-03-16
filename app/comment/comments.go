@@ -76,6 +76,12 @@ func (c Comments) GetByUserIDs(userIDs ...uuid.UUID) Comments {
 	})
 }
 
+func (c Comments) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(c, func(x *Comment, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (c Comments) Random() *Comment {
 	if len(c) == 0 {
 		return nil

@@ -131,6 +131,12 @@ func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
 	})
 }
 
+func (s Standups) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(s, func(x *Standup, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (s Standups) Random() *Standup {
 	if len(s) == 0 {
 		return nil

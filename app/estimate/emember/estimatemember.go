@@ -65,6 +65,14 @@ func Random() *EstimateMember {
 	}
 }
 
+func (e *EstimateMember) Strings() []string {
+	return []string{e.EstimateID.String(), e.UserID.String(), e.Name, e.Picture, e.Role.String(), util.TimeToFull(&e.Created), util.TimeToFull(e.Updated)}
+}
+
+func (e *EstimateMember) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{e.Strings()}
+}
+
 func (e *EstimateMember) WebPath() string {
 	return "/admin/db/estimate/member/" + e.EstimateID.String() + "/" + e.UserID.String()
 }

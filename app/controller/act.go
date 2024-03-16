@@ -19,11 +19,13 @@ import (
 func Act(key string, rc *fasthttp.RequestCtx, f func(as *app.State, ps *cutil.PageState) (string, error)) {
 	as := _currentAppState
 	ps := cutil.LoadPageState(as, rc, key, _currentAppRootLogger)
-	if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
-		f = Unauthorized(rc, reason, ps.Accounts)
-	}
 	if err := initAppRequest(as, ps); err != nil {
 		ps.Logger.Warnf("%+v", err)
+	}
+	if !ps.Admin {
+		if allowed, reason := user.Check(string(ps.URI.Path()), ps.Accounts); !allowed {
+			f = Unauthorized(rc, reason, ps.Accounts)
+		}
 	}
 	actComplete(key, as, ps, rc, f)
 }

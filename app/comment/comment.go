@@ -48,6 +48,14 @@ func Random() *Comment {
 	}
 }
 
+func (c *Comment) Strings() []string {
+	return []string{c.ID.String(), c.Svc.String(), c.ModelID.String(), c.UserID.String(), c.Content, c.HTML, util.TimeToFull(&c.Created)}
+}
+
+func (c *Comment) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{c.Strings()}
+}
+
 func (c *Comment) WebPath() string {
 	return "/admin/db/comment/" + c.ID.String()
 }

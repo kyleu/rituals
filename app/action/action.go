@@ -50,6 +50,14 @@ func Random() *Action {
 	}
 }
 
+func (a *Action) Strings() []string {
+	return []string{a.ID.String(), a.Svc.String(), a.ModelID.String(), a.UserID.String(), a.Act, a.Content.String(), a.Note, util.TimeToFull(&a.Created)}
+}
+
+func (a *Action) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{a.Strings()}
+}
+
 func (a *Action) WebPath() string {
 	return "/admin/db/action/" + a.ID.String()
 }

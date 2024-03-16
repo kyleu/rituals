@@ -42,6 +42,14 @@ func Random() *SprintHistory {
 	}
 }
 
+func (s *SprintHistory) Strings() []string {
+	return []string{s.Slug, s.SprintID.String(), s.SprintName, util.TimeToFull(&s.Created)}
+}
+
+func (s *SprintHistory) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *SprintHistory) WebPath() string {
 	return "/admin/db/sprint/history/" + url.QueryEscape(s.Slug)
 }

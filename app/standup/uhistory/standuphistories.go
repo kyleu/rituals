@@ -76,6 +76,12 @@ func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistor
 	})
 }
 
+func (s StandupHistories) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(s, func(x *StandupHistory, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (s StandupHistories) Random() *StandupHistory {
 	if len(s) == 0 {
 		return nil

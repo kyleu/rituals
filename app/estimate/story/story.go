@@ -2,6 +2,7 @@
 package story
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,6 +51,15 @@ func Random() *Story {
 		Created:    util.TimeCurrent(),
 		Updated:    util.TimeCurrentP(),
 	}
+}
+
+//nolint:lll
+func (s *Story) Strings() []string {
+	return []string{s.ID.String(), s.EstimateID.String(), fmt.Sprint(s.Idx), s.UserID.String(), s.Title, s.Status.String(), s.FinalVote, util.TimeToFull(&s.Created), util.TimeToFull(s.Updated)}
+}
+
+func (s *Story) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *Story) WebPath() string {

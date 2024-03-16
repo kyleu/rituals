@@ -48,6 +48,14 @@ func Random() *Team {
 	}
 }
 
+func (t *Team) Strings() []string {
+	return []string{t.ID.String(), t.Slug, t.Title, t.Icon, t.Status.String(), util.TimeToFull(&t.Created), util.TimeToFull(t.Updated)}
+}
+
+func (t *Team) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{t.Strings()}
+}
+
 func (t *Team) WebPath() string {
 	return "/admin/db/team/" + t.ID.String()
 }

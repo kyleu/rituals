@@ -93,6 +93,12 @@ func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
 	})
 }
 
+func (v Votes) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(v, func(x *Vote, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (v Votes) Random() *Vote {
 	if len(v) == 0 {
 		return nil

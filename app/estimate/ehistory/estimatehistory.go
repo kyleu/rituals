@@ -42,6 +42,14 @@ func Random() *EstimateHistory {
 	}
 }
 
+func (e *EstimateHistory) Strings() []string {
+	return []string{e.Slug, e.EstimateID.String(), e.EstimateName, util.TimeToFull(&e.Created)}
+}
+
+func (e *EstimateHistory) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{e.Strings()}
+}
+
 func (e *EstimateHistory) WebPath() string {
 	return "/admin/db/estimate/history/" + url.QueryEscape(e.Slug)
 }

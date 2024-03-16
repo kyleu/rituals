@@ -122,6 +122,12 @@ func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 	})
 }
 
+func (s StandupPermissions) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(s, func(x *StandupPermission, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (s StandupPermissions) Random() *StandupPermission {
 	if len(s) == 0 {
 		return nil

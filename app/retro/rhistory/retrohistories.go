@@ -76,6 +76,12 @@ func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
 	})
 }
 
+func (r RetroHistories) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(r, func(x *RetroHistory, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (r RetroHistories) Random() *RetroHistory {
 	if len(r) == 0 {
 		return nil

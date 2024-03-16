@@ -42,6 +42,14 @@ func Random() *TeamHistory {
 	}
 }
 
+func (t *TeamHistory) Strings() []string {
+	return []string{t.Slug, t.TeamID.String(), t.TeamName, util.TimeToFull(&t.Created)}
+}
+
+func (t *TeamHistory) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{t.Strings()}
+}
+
 func (t *TeamHistory) WebPath() string {
 	return "/admin/db/team/history/" + url.QueryEscape(t.Slug)
 }

@@ -122,6 +122,12 @@ func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 	})
 }
 
+func (s SprintPermissions) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(s, func(x *SprintPermission, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (s SprintPermissions) Random() *SprintPermission {
 	if len(s) == 0 {
 		return nil

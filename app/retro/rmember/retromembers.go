@@ -93,6 +93,12 @@ func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
 	})
 }
 
+func (r RetroMembers) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(r, func(x *RetroMember, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (r RetroMembers) Random() *RetroMember {
 	if len(r) == 0 {
 		return nil

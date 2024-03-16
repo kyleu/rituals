@@ -94,6 +94,12 @@ func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
 	})
 }
 
+func (r Reports) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(r, func(x *Report, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (r Reports) Random() *Report {
 	if len(r) == 0 {
 		return nil

@@ -76,6 +76,12 @@ func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
 	})
 }
 
+func (e Emails) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(e, func(x *Email, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (e Emails) Random() *Email {
 	if len(e) == 0 {
 		return nil

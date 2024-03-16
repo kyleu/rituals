@@ -76,6 +76,12 @@ func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
 	})
 }
 
+func (a Actions) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(a, func(x *Action, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (a Actions) Random() *Action {
 	if len(a) == 0 {
 		return nil

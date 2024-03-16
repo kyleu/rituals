@@ -2,6 +2,7 @@
 package feedback
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,6 +50,15 @@ func Random() *Feedback {
 		Created:  util.TimeCurrent(),
 		Updated:  util.TimeCurrentP(),
 	}
+}
+
+//nolint:lll
+func (f *Feedback) Strings() []string {
+	return []string{f.ID.String(), f.RetroID.String(), fmt.Sprint(f.Idx), f.UserID.String(), f.Category, f.Content, f.HTML, util.TimeToFull(&f.Created), util.TimeToFull(f.Updated)}
+}
+
+func (f *Feedback) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{f.Strings()}
 }
 
 func (f *Feedback) WebPath() string {

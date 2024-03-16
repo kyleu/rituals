@@ -76,6 +76,12 @@ func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
 	})
 }
 
+func (t TeamHistories) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(t, func(x *TeamHistory, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (t TeamHistories) Random() *TeamHistory {
 	if len(t) == 0 {
 		return nil

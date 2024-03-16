@@ -131,6 +131,12 @@ func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
 	})
 }
 
+func (e Estimates) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(e, func(x *Estimate, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (e Estimates) Random() *Estimate {
 	if len(e) == 0 {
 		return nil

@@ -65,6 +65,14 @@ func Random() *SprintMember {
 	}
 }
 
+func (s *SprintMember) Strings() []string {
+	return []string{s.SprintID.String(), s.UserID.String(), s.Name, s.Picture, s.Role.String(), util.TimeToFull(&s.Created), util.TimeToFull(s.Updated)}
+}
+
+func (s *SprintMember) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *SprintMember) WebPath() string {
 	return "/admin/db/sprint/member/" + s.SprintID.String() + "/" + s.UserID.String()
 }

@@ -63,6 +63,14 @@ func Random() *EstimatePermission {
 	}
 }
 
+func (e *EstimatePermission) Strings() []string {
+	return []string{e.EstimateID.String(), e.Key, e.Value, e.Access, util.TimeToFull(&e.Created)}
+}
+
+func (e *EstimatePermission) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{e.Strings()}
+}
+
 func (e *EstimatePermission) WebPath() string {
 	return "/admin/db/estimate/permission/" + e.EstimateID.String() + "/" + url.QueryEscape(e.Key) + "/" + url.QueryEscape(e.Value)
 }

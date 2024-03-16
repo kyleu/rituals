@@ -93,6 +93,12 @@ func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
 	})
 }
 
+func (t TeamMembers) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(t, func(x *TeamMember, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (t TeamMembers) Random() *TeamMember {
 	if len(t) == 0 {
 		return nil

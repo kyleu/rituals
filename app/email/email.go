@@ -51,6 +51,15 @@ func Random() *Email {
 	}
 }
 
+//nolint:lll
+func (e *Email) Strings() []string {
+	return []string{e.ID.String(), util.ToJSON(&e.Recipients), e.Subject, e.Data.String(), e.Plain, e.HTML, e.UserID.String(), e.Status, util.TimeToFull(&e.Created)}
+}
+
+func (e *Email) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{e.Strings()}
+}
+
 func (e *Email) WebPath() string {
 	return "/admin/db/email/" + e.ID.String()
 }

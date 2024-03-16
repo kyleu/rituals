@@ -63,6 +63,14 @@ func Random() *TeamPermission {
 	}
 }
 
+func (t *TeamPermission) Strings() []string {
+	return []string{t.TeamID.String(), t.Key, t.Value, t.Access, util.TimeToFull(&t.Created)}
+}
+
+func (t *TeamPermission) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{t.Strings()}
+}
+
 func (t *TeamPermission) WebPath() string {
 	return "/admin/db/team/permission/" + t.TeamID.String() + "/" + url.QueryEscape(t.Key) + "/" + url.QueryEscape(t.Value)
 }

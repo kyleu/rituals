@@ -76,6 +76,12 @@ func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories 
 	})
 }
 
+func (s SprintHistories) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(s, func(x *SprintHistory, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (s SprintHistories) Random() *SprintHistory {
 	if len(s) == 0 {
 		return nil

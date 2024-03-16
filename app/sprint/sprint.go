@@ -54,6 +54,15 @@ func Random() *Sprint {
 	}
 }
 
+//nolint:lll
+func (s *Sprint) Strings() []string {
+	return []string{s.ID.String(), s.Slug, s.Title, s.Icon, s.Status.String(), util.StringNullable(s.TeamID), util.TimeToYMD(s.StartDate), util.TimeToYMD(s.EndDate), util.TimeToFull(&s.Created), util.TimeToFull(s.Updated)}
+}
+
+func (s *Sprint) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *Sprint) WebPath() string {
 	return "/admin/db/sprint/" + s.ID.String()
 }

@@ -65,6 +65,14 @@ func Random() *StandupMember {
 	}
 }
 
+func (s *StandupMember) Strings() []string {
+	return []string{s.StandupID.String(), s.UserID.String(), s.Name, s.Picture, s.Role.String(), util.TimeToFull(&s.Created), util.TimeToFull(s.Updated)}
+}
+
+func (s *StandupMember) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{s.Strings()}
+}
+
 func (s *StandupMember) WebPath() string {
 	return "/admin/db/standup/member/" + s.StandupID.String() + "/" + s.UserID.String()
 }

@@ -95,6 +95,12 @@ func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
 	})
 }
 
+func (t Teams) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(t, func(x *Team, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (t Teams) Random() *Team {
 	if len(t) == 0 {
 		return nil

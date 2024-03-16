@@ -42,6 +42,14 @@ func Random() *RetroHistory {
 	}
 }
 
+func (r *RetroHistory) Strings() []string {
+	return []string{r.Slug, r.RetroID.String(), r.RetroName, util.TimeToFull(&r.Created)}
+}
+
+func (r *RetroHistory) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{r.Strings()}
+}
+
 func (r *RetroHistory) WebPath() string {
 	return "/admin/db/retro/history/" + url.QueryEscape(r.Slug)
 }

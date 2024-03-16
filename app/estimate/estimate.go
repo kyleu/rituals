@@ -54,6 +54,15 @@ func Random() *Estimate {
 	}
 }
 
+//nolint:lll
+func (e *Estimate) Strings() []string {
+	return []string{e.ID.String(), e.Slug, e.Title, e.Icon, e.Status.String(), util.StringNullable(e.TeamID), util.StringNullable(e.SprintID), util.ToJSON(&e.Choices), util.TimeToFull(&e.Created), util.TimeToFull(e.Updated)}
+}
+
+func (e *Estimate) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{e.Strings()}
+}
+
 func (e *Estimate) WebPath() string {
 	return "/admin/db/estimate/" + e.ID.String()
 }

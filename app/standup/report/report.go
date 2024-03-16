@@ -49,6 +49,15 @@ func Random() *Report {
 	}
 }
 
+//nolint:lll
+func (r *Report) Strings() []string {
+	return []string{r.ID.String(), r.StandupID.String(), util.TimeToYMD(&r.Day), r.UserID.String(), r.Content, r.HTML, util.TimeToFull(&r.Created), util.TimeToFull(r.Updated)}
+}
+
+func (r *Report) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{r.Strings()}
+}
+
 func (r *Report) WebPath() string {
 	return "/admin/db/standup/report/" + r.ID.String()
 }

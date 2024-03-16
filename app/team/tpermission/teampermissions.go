@@ -122,6 +122,12 @@ func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
 	})
 }
 
+func (t TeamPermissions) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(t, func(x *TeamPermission, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (t TeamPermissions) Random() *TeamPermission {
 	if len(t) == 0 {
 		return nil

@@ -93,6 +93,12 @@ func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 	})
 }
 
+func (s SprintMembers) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(s, func(x *SprintMember, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (s SprintMembers) Random() *SprintMember {
 	if len(s) == 0 {
 		return nil
