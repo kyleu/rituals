@@ -58,15 +58,15 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/Edit.html:25
 	} else {
 //line views/vretro/Edit.html:25
-		qw422016.N().S(`    <div class="right"><a href="`)
+		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
 //line views/vretro/Edit.html:26
 		qw422016.E().S(p.Model.WebPath())
 //line views/vretro/Edit.html:26
-		qw422016.N().S(`/delete" onclick="return confirm('Are you sure you wish to delete retro [`)
+		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete retro [`)
 //line views/vretro/Edit.html:26
 		qw422016.E().S(p.Model.String())
 //line views/vretro/Edit.html:26
-		qw422016.N().S(`]?')"><button>Delete</button></a></div>
+		qw422016.N().S(`]?"><button>Delete</button></a></div>
     <h3>`)
 //line views/vretro/Edit.html:27
 		components.StreamSVGRefIcon(qw422016, `retro`, ps)

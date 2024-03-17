@@ -41,7 +41,7 @@
         <ul id="comment-list-{%s svc.Key %}-{%s id.String() %}" class="comment-list">
           {%- for _, c := range comments -%}
           <li>
-            <div class="right">{%= view.TimestampRelative(&c.Created) %}</div>
+            <div class="right">{%= view.TimestampRelative(&c.Created, false) %}</div>
             <div>{%s= c.HTML %}</div>
             <div><em class="member-{%s c.UserID.String() %}-name">{%s members.Name(&c.UserID) %}</em></div>
           </li>

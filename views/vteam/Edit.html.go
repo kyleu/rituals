@@ -57,15 +57,15 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/Edit.html:24
 	} else {
 //line views/vteam/Edit.html:24
-		qw422016.N().S(`    <div class="right"><a href="`)
+		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
 //line views/vteam/Edit.html:25
 		qw422016.E().S(p.Model.WebPath())
 //line views/vteam/Edit.html:25
-		qw422016.N().S(`/delete" onclick="return confirm('Are you sure you wish to delete team [`)
+		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete team [`)
 //line views/vteam/Edit.html:25
 		qw422016.E().S(p.Model.String())
 //line views/vteam/Edit.html:25
-		qw422016.N().S(`]?')"><button>Delete</button></a></div>
+		qw422016.N().S(`]?"><button>Delete</button></a></div>
     <h3>`)
 //line views/vteam/Edit.html:26
 		components.StreamSVGRefIcon(qw422016, `team`, ps)

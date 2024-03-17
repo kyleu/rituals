@@ -195,7 +195,7 @@ func StreamCommentsModal(qw422016 *qt422016.Writer, svc enum.ModelService, id uu
 		qw422016.N().S(`          <li>
             <div class="right">`)
 //line views/vworkspace/vwutil/Comments.html:44
-		view.StreamTimestampRelative(qw422016, &c.Created)
+		view.StreamTimestampRelative(qw422016, &c.Created, false)
 //line views/vworkspace/vwutil/Comments.html:44
 		qw422016.N().S(`</div>
             <div>`)
