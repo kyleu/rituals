@@ -17,10 +17,10 @@ import (
 )
 
 type Services struct {
+	CoreServices
 	GeneratedServices
 
 	Workspace *workspace.Service
-	Socket    *websocket.Service
 }
 
 func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services, error) {
@@ -30,7 +30,9 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		return nil, errors.Wrap(err, "unable to run database migrations")
 	}
 
-	gen := initGeneratedServices(ctx, st.DB, logger)
+	core := initCoreServices(ctx, st, logger)
+	gen := initGeneratedServices(ctx, st, logger)
+
 	w := workspace.NewService(
 		gen.Team, gen.TeamHistory, gen.TeamMember, gen.TeamPermission,
 		gen.Sprint, gen.SprintHistory, gen.SprintMember, gen.SprintPermission,
@@ -39,18 +41,20 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		gen.Retro, gen.RetroHistory, gen.RetroMember, gen.RetroPermission, gen.Feedback,
 		gen.User, gen.Action, gen.Comment, gen.Email, st.DB,
 	)
-	ws := websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose)
+
+	core.Socket = websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose)
 	w.RegisterSend(func(svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error {
 		ch := fmt.Sprintf("%s:%s", svc.Key, id.String())
 		msg := websocket.NewMessage(userID, ch, string(act), param)
-		return ws.WriteChannel(msg, logger, except...)
+		return core.Socket.WriteChannel(msg, logger, except...)
 	}, func(connID uuid.UUID, svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger) error {
 		ch := fmt.Sprintf("%s:%s", svc.Key, id.String())
 		msg := websocket.NewMessage(userID, ch, string(act), param)
-		return ws.WriteMessage(connID, msg, logger)
+		return core.Socket.WriteMessage(connID, msg, logger)
 	})
-	w.RegisterOnline(ws.GetOnline)
-	return &Services{GeneratedServices: gen, Workspace: w, Socket: ws}, nil
+	w.RegisterOnline(core.Socket.GetOnline)
+
+	return &Services{CoreServices: core, GeneratedServices: gen, Workspace: w}, nil
 }
 
 func (s *Services) Close(_ context.Context, _ util.Logger) error {

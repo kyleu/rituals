@@ -13,7 +13,6 @@ import (
 	"github.com/kyleu/rituals/app/estimate/epermission"
 	"github.com/kyleu/rituals/app/estimate/story"
 	"github.com/kyleu/rituals/app/estimate/story/vote"
-	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/retro"
 	"github.com/kyleu/rituals/app/retro/feedback"
 	"github.com/kyleu/rituals/app/retro/rhistory"
@@ -67,35 +66,35 @@ type GeneratedServices struct {
 	Vote               *vote.Service
 }
 
-func initGeneratedServices(ctx context.Context, dbSvc *database.Service, logger util.Logger) GeneratedServices {
+func initGeneratedServices(ctx context.Context, st *State, logger util.Logger) GeneratedServices {
 	return GeneratedServices{
-		Action:             action.NewService(dbSvc),
-		Comment:            comment.NewService(dbSvc),
-		Email:              email.NewService(dbSvc),
-		Estimate:           estimate.NewService(dbSvc),
-		EstimateHistory:    ehistory.NewService(dbSvc),
-		EstimateMember:     emember.NewService(dbSvc),
-		EstimatePermission: epermission.NewService(dbSvc),
-		Feedback:           feedback.NewService(dbSvc),
-		Report:             report.NewService(dbSvc),
-		Retro:              retro.NewService(dbSvc),
-		RetroHistory:       rhistory.NewService(dbSvc),
-		RetroMember:        rmember.NewService(dbSvc),
-		RetroPermission:    rpermission.NewService(dbSvc),
-		Sprint:             sprint.NewService(dbSvc),
-		SprintHistory:      shistory.NewService(dbSvc),
-		SprintMember:       smember.NewService(dbSvc),
-		SprintPermission:   spermission.NewService(dbSvc),
-		Standup:            standup.NewService(dbSvc),
-		StandupHistory:     uhistory.NewService(dbSvc),
-		StandupMember:      umember.NewService(dbSvc),
-		StandupPermission:  upermission.NewService(dbSvc),
-		Story:              story.NewService(dbSvc),
-		Team:               team.NewService(dbSvc),
-		TeamHistory:        thistory.NewService(dbSvc),
-		TeamMember:         tmember.NewService(dbSvc),
-		TeamPermission:     tpermission.NewService(dbSvc),
-		User:               user.NewService(dbSvc),
-		Vote:               vote.NewService(dbSvc),
+		Action:             action.NewService(st.DB),
+		Comment:            comment.NewService(st.DB),
+		Email:              email.NewService(st.DB),
+		Estimate:           estimate.NewService(st.DB),
+		EstimateHistory:    ehistory.NewService(st.DB),
+		EstimateMember:     emember.NewService(st.DB),
+		EstimatePermission: epermission.NewService(st.DB),
+		Feedback:           feedback.NewService(st.DB),
+		Report:             report.NewService(st.DB),
+		Retro:              retro.NewService(st.DB),
+		RetroHistory:       rhistory.NewService(st.DB),
+		RetroMember:        rmember.NewService(st.DB),
+		RetroPermission:    rpermission.NewService(st.DB),
+		Sprint:             sprint.NewService(st.DB),
+		SprintHistory:      shistory.NewService(st.DB),
+		SprintMember:       smember.NewService(st.DB),
+		SprintPermission:   spermission.NewService(st.DB),
+		Standup:            standup.NewService(st.DB),
+		StandupHistory:     uhistory.NewService(st.DB),
+		StandupMember:      umember.NewService(st.DB),
+		StandupPermission:  upermission.NewService(st.DB),
+		Story:              story.NewService(st.DB),
+		Team:               team.NewService(st.DB),
+		TeamHistory:        thistory.NewService(st.DB),
+		TeamMember:         tmember.NewService(st.DB),
+		TeamPermission:     tpermission.NewService(st.DB),
+		User:               user.NewService(st.DB),
+		Vote:               vote.NewService(st.DB),
 	}
 }
