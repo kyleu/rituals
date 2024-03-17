@@ -35,7 +35,6 @@ var (
 	menuItemUser                = &menu.Item{Key: "user", Title: "Users", Description: "A user of the system", Icon: "profile", Route: "/admin/db/user"}
 )
 
-//nolint:unused
 func generatedMenu() menu.Items {
 	return menu.Items{
 		menuItemAction,
