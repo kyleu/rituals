@@ -64,105 +64,107 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/standup/permission"><em>Permission</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
-          <td class="nowrap">
-            `)
-//line views/vstandup/vupermission/Detail.html:31
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
+            <td class="nowrap">
+              `)
+//line views/vstandup/vupermission/Detail.html:32
 	view.StreamUUID(qw422016, &p.Model.StandupID)
-//line views/vstandup/vupermission/Detail.html:31
+//line views/vstandup/vupermission/Detail.html:32
 	if p.StandupByStandupID != nil {
-//line views/vstandup/vupermission/Detail.html:31
+//line views/vstandup/vupermission/Detail.html:32
 		qw422016.N().S(` (`)
-//line views/vstandup/vupermission/Detail.html:31
+//line views/vstandup/vupermission/Detail.html:32
 		qw422016.E().S(p.StandupByStandupID.TitleString())
-//line views/vstandup/vupermission/Detail.html:31
+//line views/vstandup/vupermission/Detail.html:32
 		qw422016.N().S(`)`)
-//line views/vstandup/vupermission/Detail.html:31
+//line views/vstandup/vupermission/Detail.html:32
 	}
-//line views/vstandup/vupermission/Detail.html:31
+//line views/vstandup/vupermission/Detail.html:32
 	qw422016.N().S(`
-            <a title="Standup" href="`)
-//line views/vstandup/vupermission/Detail.html:32
+              <a title="Standup" href="`)
+//line views/vstandup/vupermission/Detail.html:33
 	qw422016.E().S(`/admin/db/standup` + `/` + p.Model.StandupID.String())
-//line views/vstandup/vupermission/Detail.html:32
+//line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`">`)
-//line views/vstandup/vupermission/Detail.html:32
+//line views/vstandup/vupermission/Detail.html:33
 	components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
-//line views/vstandup/vupermission/Detail.html:32
+//line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Key</th>
-          <td>`)
-//line views/vstandup/vupermission/Detail.html:37
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Key</th>
+            <td>`)
+//line views/vstandup/vupermission/Detail.html:38
 	view.StreamString(qw422016, p.Model.Key)
-//line views/vstandup/vupermission/Detail.html:37
+//line views/vstandup/vupermission/Detail.html:38
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Value</th>
-          <td>`)
-//line views/vstandup/vupermission/Detail.html:41
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Value</th>
+            <td>`)
+//line views/vstandup/vupermission/Detail.html:42
 	view.StreamString(qw422016, p.Model.Value)
-//line views/vstandup/vupermission/Detail.html:41
+//line views/vstandup/vupermission/Detail.html:42
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Access</th>
-          <td>`)
-//line views/vstandup/vupermission/Detail.html:45
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Access</th>
+            <td>`)
+//line views/vstandup/vupermission/Detail.html:46
 	view.StreamString(qw422016, p.Model.Access)
-//line views/vstandup/vupermission/Detail.html:45
+//line views/vstandup/vupermission/Detail.html:46
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>`)
-//line views/vstandup/vupermission/Detail.html:49
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>`)
+//line views/vstandup/vupermission/Detail.html:50
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vstandup/vupermission/Detail.html:49
+//line views/vstandup/vupermission/Detail.html:50
 	qw422016.N().S(`</td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vstandup/vupermission/Detail.html:55
+//line views/vstandup/vupermission/Detail.html:57
 	qw422016.N().S(`  `)
-//line views/vstandup/vupermission/Detail.html:56
+//line views/vstandup/vupermission/Detail.html:58
 	components.StreamJSONModal(qw422016, "standupPermission", "Permission JSON", p.Model, 1)
-//line views/vstandup/vupermission/Detail.html:56
+//line views/vstandup/vupermission/Detail.html:58
 	qw422016.N().S(`
 `)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 }
 
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 }
 
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 	return qs422016
-//line views/vstandup/vupermission/Detail.html:57
+//line views/vstandup/vupermission/Detail.html:59
 }

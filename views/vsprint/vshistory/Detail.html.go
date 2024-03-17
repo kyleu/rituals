@@ -64,97 +64,99 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vsprint/vshistory/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/sprint/history"><em>History</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="String text">Slug</th>
-          <td>`)
-//line views/vsprint/vshistory/Detail.html:30
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="String text">Slug</th>
+            <td>`)
+//line views/vsprint/vshistory/Detail.html:31
 	view.StreamString(qw422016, p.Model.Slug)
-//line views/vsprint/vshistory/Detail.html:30
+//line views/vsprint/vshistory/Detail.html:31
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
-          <td class="nowrap">
-            `)
-//line views/vsprint/vshistory/Detail.html:35
+          </tr>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
+            <td class="nowrap">
+              `)
+//line views/vsprint/vshistory/Detail.html:36
 	view.StreamUUID(qw422016, &p.Model.SprintID)
-//line views/vsprint/vshistory/Detail.html:35
+//line views/vsprint/vshistory/Detail.html:36
 	if p.SprintBySprintID != nil {
-//line views/vsprint/vshistory/Detail.html:35
+//line views/vsprint/vshistory/Detail.html:36
 		qw422016.N().S(` (`)
-//line views/vsprint/vshistory/Detail.html:35
+//line views/vsprint/vshistory/Detail.html:36
 		qw422016.E().S(p.SprintBySprintID.TitleString())
-//line views/vsprint/vshistory/Detail.html:35
+//line views/vsprint/vshistory/Detail.html:36
 		qw422016.N().S(`)`)
-//line views/vsprint/vshistory/Detail.html:35
+//line views/vsprint/vshistory/Detail.html:36
 	}
-//line views/vsprint/vshistory/Detail.html:35
+//line views/vsprint/vshistory/Detail.html:36
 	qw422016.N().S(`
-            <a title="Sprint" href="`)
-//line views/vsprint/vshistory/Detail.html:36
+              <a title="Sprint" href="`)
+//line views/vsprint/vshistory/Detail.html:37
 	qw422016.E().S(`/admin/db/sprint` + `/` + p.Model.SprintID.String())
-//line views/vsprint/vshistory/Detail.html:36
+//line views/vsprint/vshistory/Detail.html:37
 	qw422016.N().S(`">`)
-//line views/vsprint/vshistory/Detail.html:36
+//line views/vsprint/vshistory/Detail.html:37
 	components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
-//line views/vsprint/vshistory/Detail.html:36
+//line views/vsprint/vshistory/Detail.html:37
 	qw422016.N().S(`</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Sprint Name</th>
-          <td>`)
-//line views/vsprint/vshistory/Detail.html:41
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Sprint Name</th>
+            <td>`)
+//line views/vsprint/vshistory/Detail.html:42
 	view.StreamString(qw422016, p.Model.SprintName)
-//line views/vsprint/vshistory/Detail.html:41
+//line views/vsprint/vshistory/Detail.html:42
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>`)
-//line views/vsprint/vshistory/Detail.html:45
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>`)
+//line views/vsprint/vshistory/Detail.html:46
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vsprint/vshistory/Detail.html:45
+//line views/vsprint/vshistory/Detail.html:46
 	qw422016.N().S(`</td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vsprint/vshistory/Detail.html:51
+//line views/vsprint/vshistory/Detail.html:53
 	qw422016.N().S(`  `)
-//line views/vsprint/vshistory/Detail.html:52
+//line views/vsprint/vshistory/Detail.html:54
 	components.StreamJSONModal(qw422016, "sprintHistory", "History JSON", p.Model, 1)
-//line views/vsprint/vshistory/Detail.html:52
+//line views/vsprint/vshistory/Detail.html:54
 	qw422016.N().S(`
 `)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 }
 
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 }
 
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	qs422016 := string(qb422016.B)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 	return qs422016
-//line views/vsprint/vshistory/Detail.html:53
+//line views/vsprint/vshistory/Detail.html:55
 }

@@ -25,52 +25,54 @@
     </div>
     <h3>{%= components.SVGRefIcon(`comment`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/retro/feedback"><em>Feedback</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>{%= view.UUID(&p.Model.ID) %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
-          <td class="nowrap">
-            {%= view.UUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
-            <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Integer">Idx</th>
-          <td>{%d p.Model.Idx %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td class="nowrap">
-            {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Category</th>
-          <td>{%= view.String(p.Model.Category) %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Content</th>
-          <td>{%= view.String(p.Model.Content) %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">HTML</th>
-          <td>{%= view.Format(p.Model.HTML, "html") %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+            <td>{%= view.UUID(&p.Model.ID) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
+            <td class="nowrap">
+              {%= view.UUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
+              <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="Integer">Idx</th>
+            <td>{%d p.Model.Idx %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+            <td class="nowrap">
+              {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
+              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Category</th>
+            <td>{%= view.String(p.Model.Category) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Content</th>
+            <td>{%= view.String(p.Model.Content) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">HTML</th>
+            <td>{%= view.Format(p.Model.HTML, "html") %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+            <td>{%= view.Timestamp(p.Model.Updated) %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}

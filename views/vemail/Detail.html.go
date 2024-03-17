@@ -64,137 +64,139 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vemail/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/email"><em>Email</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>`)
-//line views/vemail/Detail.html:30
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+            <td>`)
+//line views/vemail/Detail.html:31
 	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vemail/Detail.html:30
+//line views/vemail/Detail.html:31
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Comma-separated list of values">Recipients</th>
-          <td>`)
-//line views/vemail/Detail.html:34
+          </tr>
+          <tr>
+            <th class="shrink" title="Comma-separated list of values">Recipients</th>
+            <td>`)
+//line views/vemail/Detail.html:35
 	view.StreamStringArray(qw422016, p.Model.Recipients)
-//line views/vemail/Detail.html:34
+//line views/vemail/Detail.html:35
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Subject</th>
-          <td>`)
-//line views/vemail/Detail.html:38
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Subject</th>
+            <td>`)
+//line views/vemail/Detail.html:39
 	view.StreamString(qw422016, p.Model.Subject)
-//line views/vemail/Detail.html:38
+//line views/vemail/Detail.html:39
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="JSON object">Data</th>
-          <td>`)
-//line views/vemail/Detail.html:42
+          </tr>
+          <tr>
+            <th class="shrink" title="JSON object">Data</th>
+            <td>`)
+//line views/vemail/Detail.html:43
 	components.StreamJSON(qw422016, p.Model.Data)
-//line views/vemail/Detail.html:42
+//line views/vemail/Detail.html:43
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Plain</th>
-          <td>`)
-//line views/vemail/Detail.html:46
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Plain</th>
+            <td>`)
+//line views/vemail/Detail.html:47
 	view.StreamString(qw422016, p.Model.Plain)
-//line views/vemail/Detail.html:46
+//line views/vemail/Detail.html:47
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">HTML</th>
-          <td>`)
-//line views/vemail/Detail.html:50
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">HTML</th>
+            <td>`)
+//line views/vemail/Detail.html:51
 	view.StreamFormat(qw422016, p.Model.HTML, "html")
-//line views/vemail/Detail.html:50
+//line views/vemail/Detail.html:51
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td class="nowrap">
-            `)
-//line views/vemail/Detail.html:55
+          </tr>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+            <td class="nowrap">
+              `)
+//line views/vemail/Detail.html:56
 	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vemail/Detail.html:55
+//line views/vemail/Detail.html:56
 	if p.UserByUserID != nil {
-//line views/vemail/Detail.html:55
+//line views/vemail/Detail.html:56
 		qw422016.N().S(` (`)
-//line views/vemail/Detail.html:55
+//line views/vemail/Detail.html:56
 		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vemail/Detail.html:55
+//line views/vemail/Detail.html:56
 		qw422016.N().S(`)`)
-//line views/vemail/Detail.html:55
+//line views/vemail/Detail.html:56
 	}
-//line views/vemail/Detail.html:55
+//line views/vemail/Detail.html:56
 	qw422016.N().S(`
-            <a title="User" href="`)
-//line views/vemail/Detail.html:56
+              <a title="User" href="`)
+//line views/vemail/Detail.html:57
 	qw422016.E().S(`/admin/db/user` + `/` + p.Model.UserID.String())
-//line views/vemail/Detail.html:56
+//line views/vemail/Detail.html:57
 	qw422016.N().S(`">`)
-//line views/vemail/Detail.html:56
+//line views/vemail/Detail.html:57
 	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
-//line views/vemail/Detail.html:56
+//line views/vemail/Detail.html:57
 	qw422016.N().S(`</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Status</th>
-          <td>`)
-//line views/vemail/Detail.html:61
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Status</th>
+            <td>`)
+//line views/vemail/Detail.html:62
 	view.StreamString(qw422016, p.Model.Status)
-//line views/vemail/Detail.html:61
+//line views/vemail/Detail.html:62
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>`)
-//line views/vemail/Detail.html:65
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>`)
+//line views/vemail/Detail.html:66
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vemail/Detail.html:65
+//line views/vemail/Detail.html:66
 	qw422016.N().S(`</td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vemail/Detail.html:71
+//line views/vemail/Detail.html:73
 	qw422016.N().S(`  `)
-//line views/vemail/Detail.html:72
+//line views/vemail/Detail.html:74
 	components.StreamJSONModal(qw422016, "email", "Email JSON", p.Model, 1)
-//line views/vemail/Detail.html:72
+//line views/vemail/Detail.html:74
 	qw422016.N().S(`
 `)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 }
 
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	p.StreamBody(qw422016, as, ps)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	qt422016.ReleaseWriter(qw422016)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 }
 
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	p.WriteBody(qb422016, as, ps)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	qs422016 := string(qb422016.B)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 	return qs422016
-//line views/vemail/Detail.html:73
+//line views/vemail/Detail.html:75
 }

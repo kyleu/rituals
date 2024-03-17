@@ -26,44 +26,46 @@
     </div>
     <h3>{%= components.SVGRefIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/estimate/member"><em>Member</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
-          <td class="nowrap">
-            {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
-            <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-          <td class="nowrap">
-            {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Name</th>
-          <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
-        </tr>
-        <tr>
-          <th class="shrink" title="URL in string form">Picture</th>
-          <td><a href="{%s p.Model.Picture %}" target="_blank" rel="noopener noreferrer">{%s p.Model.Picture %}</a></td>
-        </tr>
-        <tr>
-          <th class="shrink" title="{%s enum.AllMemberStatuses.Help() %}">Role</th>
-          <td>{%s p.Model.Role.String() %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
+            <td class="nowrap">
+              {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
+              <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+            <td class="nowrap">
+              {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
+              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Name</th>
+            <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
+          </tr>
+          <tr>
+            <th class="shrink" title="URL in string form">Picture</th>
+            <td><a href="{%s p.Model.Picture %}" target="_blank" rel="noopener noreferrer">{%s p.Model.Picture %}</a></td>
+          </tr>
+          <tr>
+            <th class="shrink" title="{%s enum.AllMemberStatuses.Help() %}">Role</th>
+            <td>{%s p.Model.Role.String() %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+            <td>{%= view.Timestamp(p.Model.Updated) %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}

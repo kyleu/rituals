@@ -64,105 +64,107 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vteam/vtpermission/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/team/permission"><em>Permission</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
-          <td class="nowrap">
-            `)
-//line views/vteam/vtpermission/Detail.html:31
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
+            <td class="nowrap">
+              `)
+//line views/vteam/vtpermission/Detail.html:32
 	view.StreamUUID(qw422016, &p.Model.TeamID)
-//line views/vteam/vtpermission/Detail.html:31
+//line views/vteam/vtpermission/Detail.html:32
 	if p.TeamByTeamID != nil {
-//line views/vteam/vtpermission/Detail.html:31
+//line views/vteam/vtpermission/Detail.html:32
 		qw422016.N().S(` (`)
-//line views/vteam/vtpermission/Detail.html:31
+//line views/vteam/vtpermission/Detail.html:32
 		qw422016.E().S(p.TeamByTeamID.TitleString())
-//line views/vteam/vtpermission/Detail.html:31
+//line views/vteam/vtpermission/Detail.html:32
 		qw422016.N().S(`)`)
-//line views/vteam/vtpermission/Detail.html:31
+//line views/vteam/vtpermission/Detail.html:32
 	}
-//line views/vteam/vtpermission/Detail.html:31
+//line views/vteam/vtpermission/Detail.html:32
 	qw422016.N().S(`
-            <a title="Team" href="`)
-//line views/vteam/vtpermission/Detail.html:32
+              <a title="Team" href="`)
+//line views/vteam/vtpermission/Detail.html:33
 	qw422016.E().S(`/admin/db/team` + `/` + p.Model.TeamID.String())
-//line views/vteam/vtpermission/Detail.html:32
+//line views/vteam/vtpermission/Detail.html:33
 	qw422016.N().S(`">`)
-//line views/vteam/vtpermission/Detail.html:32
+//line views/vteam/vtpermission/Detail.html:33
 	components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
-//line views/vteam/vtpermission/Detail.html:32
+//line views/vteam/vtpermission/Detail.html:33
 	qw422016.N().S(`</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Key</th>
-          <td>`)
-//line views/vteam/vtpermission/Detail.html:37
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Key</th>
+            <td>`)
+//line views/vteam/vtpermission/Detail.html:38
 	view.StreamString(qw422016, p.Model.Key)
-//line views/vteam/vtpermission/Detail.html:37
+//line views/vteam/vtpermission/Detail.html:38
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Value</th>
-          <td>`)
-//line views/vteam/vtpermission/Detail.html:41
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Value</th>
+            <td>`)
+//line views/vteam/vtpermission/Detail.html:42
 	view.StreamString(qw422016, p.Model.Value)
-//line views/vteam/vtpermission/Detail.html:41
+//line views/vteam/vtpermission/Detail.html:42
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Access</th>
-          <td>`)
-//line views/vteam/vtpermission/Detail.html:45
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Access</th>
+            <td>`)
+//line views/vteam/vtpermission/Detail.html:46
 	view.StreamString(qw422016, p.Model.Access)
-//line views/vteam/vtpermission/Detail.html:45
+//line views/vteam/vtpermission/Detail.html:46
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>`)
-//line views/vteam/vtpermission/Detail.html:49
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>`)
+//line views/vteam/vtpermission/Detail.html:50
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vteam/vtpermission/Detail.html:49
+//line views/vteam/vtpermission/Detail.html:50
 	qw422016.N().S(`</td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vteam/vtpermission/Detail.html:55
+//line views/vteam/vtpermission/Detail.html:57
 	qw422016.N().S(`  `)
-//line views/vteam/vtpermission/Detail.html:56
+//line views/vteam/vtpermission/Detail.html:58
 	components.StreamJSONModal(qw422016, "teamPermission", "Permission JSON", p.Model, 1)
-//line views/vteam/vtpermission/Detail.html:56
+//line views/vteam/vtpermission/Detail.html:58
 	qw422016.N().S(`
 `)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 }
 
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 }
 
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	qs422016 := string(qb422016.B)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 	return qs422016
-//line views/vteam/vtpermission/Detail.html:57
+//line views/vteam/vtpermission/Detail.html:59
 }

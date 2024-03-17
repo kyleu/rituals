@@ -64,105 +64,107 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vrpermission/Detail.html:24
 	qw422016.N().S(`</h3>
     <div><a href="/admin/db/retro/permission"><em>Permission</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
-          <td class="nowrap">
-            `)
-//line views/vretro/vrpermission/Detail.html:31
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
+            <td class="nowrap">
+              `)
+//line views/vretro/vrpermission/Detail.html:32
 	view.StreamUUID(qw422016, &p.Model.RetroID)
-//line views/vretro/vrpermission/Detail.html:31
+//line views/vretro/vrpermission/Detail.html:32
 	if p.RetroByRetroID != nil {
-//line views/vretro/vrpermission/Detail.html:31
+//line views/vretro/vrpermission/Detail.html:32
 		qw422016.N().S(` (`)
-//line views/vretro/vrpermission/Detail.html:31
+//line views/vretro/vrpermission/Detail.html:32
 		qw422016.E().S(p.RetroByRetroID.TitleString())
-//line views/vretro/vrpermission/Detail.html:31
+//line views/vretro/vrpermission/Detail.html:32
 		qw422016.N().S(`)`)
-//line views/vretro/vrpermission/Detail.html:31
+//line views/vretro/vrpermission/Detail.html:32
 	}
-//line views/vretro/vrpermission/Detail.html:31
+//line views/vretro/vrpermission/Detail.html:32
 	qw422016.N().S(`
-            <a title="Retro" href="`)
-//line views/vretro/vrpermission/Detail.html:32
+              <a title="Retro" href="`)
+//line views/vretro/vrpermission/Detail.html:33
 	qw422016.E().S(`/admin/db/retro` + `/` + p.Model.RetroID.String())
-//line views/vretro/vrpermission/Detail.html:32
+//line views/vretro/vrpermission/Detail.html:33
 	qw422016.N().S(`">`)
-//line views/vretro/vrpermission/Detail.html:32
+//line views/vretro/vrpermission/Detail.html:33
 	components.StreamSVGRef(qw422016, "retro", 18, 18, "", ps)
-//line views/vretro/vrpermission/Detail.html:32
+//line views/vretro/vrpermission/Detail.html:33
 	qw422016.N().S(`</a>
-          </td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Key</th>
-          <td>`)
-//line views/vretro/vrpermission/Detail.html:37
+            </td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Key</th>
+            <td>`)
+//line views/vretro/vrpermission/Detail.html:38
 	view.StreamString(qw422016, p.Model.Key)
-//line views/vretro/vrpermission/Detail.html:37
+//line views/vretro/vrpermission/Detail.html:38
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Value</th>
-          <td>`)
-//line views/vretro/vrpermission/Detail.html:41
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Value</th>
+            <td>`)
+//line views/vretro/vrpermission/Detail.html:42
 	view.StreamString(qw422016, p.Model.Value)
-//line views/vretro/vrpermission/Detail.html:41
+//line views/vretro/vrpermission/Detail.html:42
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Access</th>
-          <td>`)
-//line views/vretro/vrpermission/Detail.html:45
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Access</th>
+            <td>`)
+//line views/vretro/vrpermission/Detail.html:46
 	view.StreamString(qw422016, p.Model.Access)
-//line views/vretro/vrpermission/Detail.html:45
+//line views/vretro/vrpermission/Detail.html:46
 	qw422016.N().S(`</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>`)
-//line views/vretro/vrpermission/Detail.html:49
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>`)
+//line views/vretro/vrpermission/Detail.html:50
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vretro/vrpermission/Detail.html:49
+//line views/vretro/vrpermission/Detail.html:50
 	qw422016.N().S(`</td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 `)
-//line views/vretro/vrpermission/Detail.html:55
+//line views/vretro/vrpermission/Detail.html:57
 	qw422016.N().S(`  `)
-//line views/vretro/vrpermission/Detail.html:56
+//line views/vretro/vrpermission/Detail.html:58
 	components.StreamJSONModal(qw422016, "retroPermission", "Permission JSON", p.Model, 1)
-//line views/vretro/vrpermission/Detail.html:56
+//line views/vretro/vrpermission/Detail.html:58
 	qw422016.N().S(`
 `)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 }
 
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	p.StreamBody(qw422016, as, ps)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 }
 
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	p.WriteBody(qb422016, as, ps)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	qs422016 := string(qb422016.B)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 	return qs422016
-//line views/vretro/vrpermission/Detail.html:57
+//line views/vretro/vrpermission/Detail.html:59
 }
