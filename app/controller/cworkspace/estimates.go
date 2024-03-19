@@ -1,7 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
@@ -13,47 +13,47 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwestimate"
 )
 
-func EstimateList(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.estimate.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.FromAny(ps.Data)
+func EstimateList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.estimate.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = "Estimates"
-		ps.Data = w.Estimates
-		return controller.Render(rc, as, &vwestimate.EstimateList{Estimates: w.Estimates, Teams: w.Teams, Sprints: w.Sprints}, ps, "estimates")
+		ps.Data = ws.Estimates
+		return controller.Render(w, r, as, &vwestimate.EstimateList{Estimates: ws.Estimates, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "estimates")
 	})
 }
 
-func EstimateDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.estimate", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func EstimateDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.estimate", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		w, err := workspace.FromAny(ps.Data)
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
 		fe, err := as.Services.Workspace.LoadEstimate(p, func() (team.Teams, error) {
-			return w.Teams, nil
+			return ws.Teams, nil
 		}, func() (sprint.Sprints, error) {
-			return w.Sprints, nil
+			return ws.Sprints, nil
 		})
 		if err != nil {
 			return "", err
 		}
 		ps.Title = fe.Estimate.TitleString()
 		ps.Data = fe
-		page := &vwestimate.EstimateWorkspace{FullEstimate: fe, Teams: w.Teams, Sprints: w.Sprints}
-		return controller.Render(rc, as, page, ps, "estimates", fe.Estimate.ID.String())
+		page := &vwestimate.EstimateWorkspace{FullEstimate: fe, Teams: ws.Teams, Sprints: ws.Sprints}
+		return controller.Render(w, r, as, page, ps, "estimates", fe.Estimate.ID.String())
 	})
 }
 
-func EstimateCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.estimate.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Username())
+func EstimateCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.estimate.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := parseRequestForm(r, ps.RequestBody, ps.Username())
 		if err != nil {
 			return "", err
 		}
@@ -63,13 +63,13 @@ func EstimateCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New estimate created", model.PublicWebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "New estimate created", model.PublicWebPath(), w, ps)
 	})
 }
 
-func EstimateDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.estimate.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func EstimateDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.estimate.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -82,17 +82,17 @@ func EstimateDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Estimate deleted", "/", rc, ps)
+		return controller.FlashAndRedir(true, "Estimate deleted", "/", w, ps)
 	})
 }
 
-func EstimateAction(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.estimate.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func EstimateAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.estimate.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -102,6 +102,6 @@ func EstimateAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }

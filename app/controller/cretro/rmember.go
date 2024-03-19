@@ -3,11 +3,11 @@ package cretro
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vretro/vrmember"
 )
 
-func RetroMemberList(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroMemberList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
 		ret, err := as.Services.RetroMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func RetroMemberList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vrmember.List{Models: ret, RetrosByRetroID: retrosByRetroID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "retro", "rmember")
+		return controller.Render(w, r, as, page, ps, "retro", "rmember")
 	})
 }
 
-func RetroMemberDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rmemberFromPath(rc, as, ps)
+func RetroMemberDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func RetroMemberDetail(rc *fasthttp.RequestCtx) {
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vrmember.Detail{
+		return controller.Render(w, r, as, &vrmember.Detail{
 			Model:          ret,
 			RetroByRetroID: retroByRetroID,
 			UserByUserID:   userByUserID,
@@ -63,10 +63,10 @@ func RetroMemberDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func RetroMemberCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroMemberCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rmember.RetroMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = rmember.Random()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
@@ -79,12 +79,12 @@ func RetroMemberCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [RetroMember]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
+		return controller.Render(w, r, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
 	})
 }
 
-func RetroMemberRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroMemberRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.RetroMember.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random RetroMember")
@@ -93,9 +93,9 @@ func RetroMemberRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func RetroMemberCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rmemberFromForm(rc, true)
+func RetroMemberCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rmemberFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse RetroMember from form")
 		}
@@ -104,28 +104,28 @@ func RetroMemberCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created RetroMember")
 		}
 		msg := fmt.Sprintf("RetroMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func RetroMemberEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rmemberFromPath(rc, as, ps)
+func RetroMemberEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vrmember.Edit{Model: ret}, ps, "retro", "rmember", ret.String())
+		return controller.Render(w, r, as, &vrmember.Edit{Model: ret}, ps, "retro", "rmember", ret.String())
 	})
 }
 
-func RetroMemberEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rmemberFromPath(rc, as, ps)
+func RetroMemberEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := rmemberFromForm(rc, false)
+		frm, err := rmemberFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse RetroMember from form")
 		}
@@ -136,13 +136,13 @@ func RetroMemberEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update RetroMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("RetroMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func RetroMemberDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("rmember.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rmemberFromPath(rc, as, ps)
+func RetroMemberDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rmember.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -151,12 +151,12 @@ func RetroMemberDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/member", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/member", w, ps)
 	})
 }
 
-func rmemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*rmember.RetroMember, error) {
-	retroIDArgStr, err := cutil.RCRequiredString(rc, "retroID", false)
+func rmemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rmember.RetroMember, error) {
+	retroIDArgStr, err := cutil.RCRequiredString(r, "retroID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [retroID] as an argument")
 	}
@@ -165,7 +165,7 @@ func rmemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 		return nil, errors.Errorf("argument [retroID] (%s) is not a valid UUID", retroIDArgStr)
 	}
 	retroIDArg := *retroIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(rc, "userID", false)
+	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}
@@ -177,8 +177,8 @@ func rmemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 	return as.Services.RetroMember.Get(ps.Context, nil, retroIDArg, userIDArg, ps.Logger)
 }
 
-func rmemberFromForm(rc *fasthttp.RequestCtx, setPK bool) (*rmember.RetroMember, error) {
-	frm, err := cutil.ParseForm(rc)
+func rmemberFromForm(r *http.Request, b []byte, setPK bool) (*rmember.RetroMember, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

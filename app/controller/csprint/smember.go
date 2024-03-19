@@ -3,11 +3,11 @@ package csprint
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vsprint/vsmember"
 )
 
-func SprintMemberList(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintMemberList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
 		ret, err := as.Services.SprintMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func SprintMemberList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vsmember.List{Models: ret, SprintsBySprintID: sprintsBySprintID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "sprint", "smember")
+		return controller.Render(w, r, as, page, ps, "sprint", "smember")
 	})
 }
 
-func SprintMemberDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := smemberFromPath(rc, as, ps)
+func SprintMemberDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := smemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func SprintMemberDetail(rc *fasthttp.RequestCtx) {
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vsmember.Detail{
+		return controller.Render(w, r, as, &vsmember.Detail{
 			Model:            ret,
 			SprintBySprintID: sprintBySprintID,
 			UserByUserID:     userByUserID,
@@ -63,10 +63,10 @@ func SprintMemberDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func SprintMemberCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintMemberCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &smember.SprintMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = smember.Random()
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {
@@ -79,12 +79,12 @@ func SprintMemberCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [SprintMember]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
+		return controller.Render(w, r, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
 	})
 }
 
-func SprintMemberRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintMemberRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.SprintMember.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random SprintMember")
@@ -93,9 +93,9 @@ func SprintMemberRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func SprintMemberCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := smemberFromForm(rc, true)
+func SprintMemberCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := smemberFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse SprintMember from form")
 		}
@@ -104,28 +104,28 @@ func SprintMemberCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created SprintMember")
 		}
 		msg := fmt.Sprintf("SprintMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func SprintMemberEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := smemberFromPath(rc, as, ps)
+func SprintMemberEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := smemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vsmember.Edit{Model: ret}, ps, "sprint", "smember", ret.String())
+		return controller.Render(w, r, as, &vsmember.Edit{Model: ret}, ps, "sprint", "smember", ret.String())
 	})
 }
 
-func SprintMemberEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := smemberFromPath(rc, as, ps)
+func SprintMemberEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := smemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := smemberFromForm(rc, false)
+		frm, err := smemberFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse SprintMember from form")
 		}
@@ -136,13 +136,13 @@ func SprintMemberEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update SprintMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("SprintMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func SprintMemberDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("smember.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := smemberFromPath(rc, as, ps)
+func SprintMemberDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("smember.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := smemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -151,12 +151,12 @@ func SprintMemberDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/member", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/member", w, ps)
 	})
 }
 
-func smemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*smember.SprintMember, error) {
-	sprintIDArgStr, err := cutil.RCRequiredString(rc, "sprintID", false)
+func smemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*smember.SprintMember, error) {
+	sprintIDArgStr, err := cutil.RCRequiredString(r, "sprintID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [sprintID] as an argument")
 	}
@@ -165,7 +165,7 @@ func smemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 		return nil, errors.Errorf("argument [sprintID] (%s) is not a valid UUID", sprintIDArgStr)
 	}
 	sprintIDArg := *sprintIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(rc, "userID", false)
+	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}
@@ -177,8 +177,8 @@ func smemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 	return as.Services.SprintMember.Get(ps.Context, nil, sprintIDArg, userIDArg, ps.Logger)
 }
 
-func smemberFromForm(rc *fasthttp.RequestCtx, setPK bool) (*smember.SprintMember, error) {
-	frm, err := cutil.ParseForm(rc)
+func smemberFromForm(r *http.Request, b []byte, setPK bool) (*smember.SprintMember, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

@@ -3,11 +3,11 @@ package cteam
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vteam/vthistory"
 )
 
-func TeamHistoryList(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamHistoryList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
 		ret, err := as.Services.TeamHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -33,13 +33,13 @@ func TeamHistoryList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vthistory.List{Models: ret, TeamsByTeamID: teamsByTeamID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "team", "thistory")
+		return controller.Render(w, r, as, page, ps, "team", "thistory")
 	})
 }
 
-func TeamHistoryDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := thistoryFromPath(rc, as, ps)
+func TeamHistoryDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := thistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -47,14 +47,14 @@ func TeamHistoryDetail(rc *fasthttp.RequestCtx) {
 
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 
-		return controller.Render(rc, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.TitleString()+"**history")
+		return controller.Render(w, r, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.TitleString()+"**history")
 	})
 }
 
-func TeamHistoryCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &thistory.TeamHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = thistory.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
@@ -63,12 +63,12 @@ func TeamHistoryCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [TeamHistory]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
+		return controller.Render(w, r, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
 	})
 }
 
-func TeamHistoryRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamHistoryRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.TeamHistory.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random TeamHistory")
@@ -77,9 +77,9 @@ func TeamHistoryRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func TeamHistoryCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := thistoryFromForm(rc, true)
+func TeamHistoryCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := thistoryFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse TeamHistory from form")
 		}
@@ -88,28 +88,28 @@ func TeamHistoryCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created TeamHistory")
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func TeamHistoryEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := thistoryFromPath(rc, as, ps)
+func TeamHistoryEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := thistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vthistory.Edit{Model: ret}, ps, "team", "thistory", ret.String())
+		return controller.Render(w, r, as, &vthistory.Edit{Model: ret}, ps, "team", "thistory", ret.String())
 	})
 }
 
-func TeamHistoryEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := thistoryFromPath(rc, as, ps)
+func TeamHistoryEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := thistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := thistoryFromForm(rc, false)
+		frm, err := thistoryFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse TeamHistory from form")
 		}
@@ -119,13 +119,13 @@ func TeamHistoryEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update TeamHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func TeamHistoryDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("thistory.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := thistoryFromPath(rc, as, ps)
+func TeamHistoryDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("thistory.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := thistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -134,20 +134,20 @@ func TeamHistoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/team/history", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/team/history", w, ps)
 	})
 }
 
-func thistoryFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*thistory.TeamHistory, error) {
-	slugArg, err := cutil.RCRequiredString(rc, "slug", false)
+func thistoryFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*thistory.TeamHistory, error) {
+	slugArg, err := cutil.RCRequiredString(r, "slug", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}
 	return as.Services.TeamHistory.Get(ps.Context, nil, slugArg, ps.Logger)
 }
 
-func thistoryFromForm(rc *fasthttp.RequestCtx, setPK bool) (*thistory.TeamHistory, error) {
-	frm, err := cutil.ParseForm(rc)
+func thistoryFromForm(r *http.Request, b []byte, setPK bool) (*thistory.TeamHistory, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

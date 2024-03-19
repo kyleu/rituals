@@ -3,11 +3,11 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
@@ -16,8 +16,8 @@ import (
 	"github.com/kyleu/rituals/views/vaction"
 )
 
-func ActionList(rc *fasthttp.RequestCtx) {
-	Act("action.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ActionList(w http.ResponseWriter, r *http.Request) {
+	Act("action.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("action", nil, ps.Logger).Sanitize("action")
 		ret, err := as.Services.Action.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -32,13 +32,13 @@ func ActionList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vaction.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
-		return Render(rc, as, page, ps, "action")
+		return Render(w, r, as, page, ps, "action")
 	})
 }
 
-func ActionDetail(rc *fasthttp.RequestCtx) {
-	Act("action.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := actionFromPath(rc, as, ps)
+func ActionDetail(w http.ResponseWriter, r *http.Request) {
+	Act("action.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := actionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -46,14 +46,14 @@ func ActionDetail(rc *fasthttp.RequestCtx) {
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(rc, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.TitleString()+"**action")
+		return Render(w, r, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.TitleString()+"**action")
 	})
 }
 
-func ActionCreateForm(rc *fasthttp.RequestCtx) {
-	Act("action.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ActionCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("action.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &action.Action{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = action.Random()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
@@ -62,12 +62,12 @@ func ActionCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Action]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
+		return Render(w, r, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
 	})
 }
 
-func ActionRandom(rc *fasthttp.RequestCtx) {
-	Act("action.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ActionRandom(w http.ResponseWriter, r *http.Request) {
+	Act("action.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Action.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Action")
@@ -76,9 +76,9 @@ func ActionRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func ActionCreate(rc *fasthttp.RequestCtx) {
-	Act("action.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := actionFromForm(rc, true)
+func ActionCreate(w http.ResponseWriter, r *http.Request) {
+	Act("action.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := actionFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Action from form")
 		}
@@ -87,28 +87,28 @@ func ActionCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Action")
 		}
 		msg := fmt.Sprintf("Action [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func ActionEditForm(rc *fasthttp.RequestCtx) {
-	Act("action.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := actionFromPath(rc, as, ps)
+func ActionEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("action.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := actionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vaction.Edit{Model: ret}, ps, "action", ret.String())
+		return Render(w, r, as, &vaction.Edit{Model: ret}, ps, "action", ret.String())
 	})
 }
 
-func ActionEdit(rc *fasthttp.RequestCtx) {
-	Act("action.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := actionFromPath(rc, as, ps)
+func ActionEdit(w http.ResponseWriter, r *http.Request) {
+	Act("action.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := actionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := actionFromForm(rc, false)
+		frm, err := actionFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Action from form")
 		}
@@ -118,13 +118,13 @@ func ActionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Action [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Action [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func ActionDelete(rc *fasthttp.RequestCtx) {
-	Act("action.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := actionFromPath(rc, as, ps)
+func ActionDelete(w http.ResponseWriter, r *http.Request) {
+	Act("action.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := actionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -133,12 +133,12 @@ func ActionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete action [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Action [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/action", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/action", w, ps)
 	})
 }
 
-func actionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*action.Action, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func actionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*action.Action, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -150,8 +150,8 @@ func actionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	return as.Services.Action.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func actionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*action.Action, error) {
-	frm, err := cutil.ParseForm(rc)
+func actionFromForm(r *http.Request, b []byte, setPK bool) (*action.Action, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

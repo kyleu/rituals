@@ -9,6 +9,7 @@ All variable names can be set in uppercase or lowercase
 | `app_display_name_append`     | string | added to the end of the UI title                                                 |
 | `app_nav_color_dark`          | string | sets the navigation color for users with dark mode, defaults to theme color      |
 | `app_nav_color_light`         | string | sets the navigation color for users with light mode, defaults to theme color     |
+| `compression_enabled`         | bool   | when set, compresses HTTP responses based on the request headers                 |
 | `controller_metrics_disabled` | bool   | when set, skips metrics for controller methods                                   |
 | `db_database`                 | string | database for the default PostgreSQL connection                                   |
 | `db_debug`                    | bool   | when set, logs all database interactions                                         |

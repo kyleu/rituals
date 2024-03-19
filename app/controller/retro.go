@@ -3,12 +3,12 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -19,9 +19,9 @@ import (
 	"github.com/kyleu/rituals/views/vretro"
 )
 
-func RetroList(rc *fasthttp.RequestCtx) {
-	Act("retro.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func RetroList(w http.ResponseWriter, r *http.Request) {
+	Act("retro.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
 		var ret retro.Retros
 		var err error
@@ -49,13 +49,13 @@ func RetroList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vretro.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "retro")
+		return Render(w, r, as, page, ps, "retro")
 	})
 }
 
-func RetroDetail(rc *fasthttp.RequestCtx) {
-	Act("retro.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := retroFromPath(rc, as, ps)
+func RetroDetail(w http.ResponseWriter, r *http.Request) {
+	Act("retro.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := retroFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -90,7 +90,7 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		return Render(rc, as, &vretro.Detail{
+		return Render(w, r, as, &vretro.Detail{
 			Model:            ret,
 			TeamByTeamID:     teamByTeamID,
 			SprintBySprintID: sprintBySprintID,
@@ -104,10 +104,10 @@ func RetroDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func RetroCreateForm(rc *fasthttp.RequestCtx) {
-	Act("retro.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("retro.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &retro.Retro{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = retro.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
@@ -120,12 +120,12 @@ func RetroCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Retro]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
+		return Render(w, r, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
 	})
 }
 
-func RetroRandom(rc *fasthttp.RequestCtx) {
-	Act("retro.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroRandom(w http.ResponseWriter, r *http.Request) {
+	Act("retro.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Retro")
@@ -134,9 +134,9 @@ func RetroRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func RetroCreate(rc *fasthttp.RequestCtx) {
-	Act("retro.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := retroFromForm(rc, true)
+func RetroCreate(w http.ResponseWriter, r *http.Request) {
+	Act("retro.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := retroFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Retro from form")
 		}
@@ -145,28 +145,28 @@ func RetroCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Retro")
 		}
 		msg := fmt.Sprintf("Retro [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func RetroEditForm(rc *fasthttp.RequestCtx) {
-	Act("retro.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := retroFromPath(rc, as, ps)
+func RetroEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("retro.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := retroFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vretro.Edit{Model: ret}, ps, "retro", ret.String())
+		return Render(w, r, as, &vretro.Edit{Model: ret}, ps, "retro", ret.String())
 	})
 }
 
-func RetroEdit(rc *fasthttp.RequestCtx) {
-	Act("retro.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := retroFromPath(rc, as, ps)
+func RetroEdit(w http.ResponseWriter, r *http.Request) {
+	Act("retro.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := retroFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := retroFromForm(rc, false)
+		frm, err := retroFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Retro from form")
 		}
@@ -176,13 +176,13 @@ func RetroEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Retro [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Retro [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func RetroDelete(rc *fasthttp.RequestCtx) {
-	Act("retro.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := retroFromPath(rc, as, ps)
+func RetroDelete(w http.ResponseWriter, r *http.Request) {
+	Act("retro.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := retroFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -191,12 +191,12 @@ func RetroDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete retro [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Retro [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/retro", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/retro", w, ps)
 	})
 }
 
-func retroFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*retro.Retro, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func retroFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*retro.Retro, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -208,8 +208,8 @@ func retroFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	return as.Services.Retro.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func retroFromForm(rc *fasthttp.RequestCtx, setPK bool) (*retro.Retro, error) {
-	frm, err := cutil.ParseForm(rc)
+func retroFromForm(r *http.Request, b []byte, setPK bool) (*retro.Retro, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

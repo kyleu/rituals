@@ -3,11 +3,11 @@ package cstandup
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vstandup/vreport"
 )
 
-func ReportList(rc *fasthttp.RequestCtx) {
-	controller.Act("report.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ReportList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
 		ret, err := as.Services.Report.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func ReportList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vreport.List{Models: ret, StandupsByStandupID: standupsByStandupID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "standup", "report")
+		return controller.Render(w, r, as, page, ps, "standup", "report")
 	})
 }
 
-func ReportDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("report.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := reportFromPath(rc, as, ps)
+func ReportDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := reportFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func ReportDetail(rc *fasthttp.RequestCtx) {
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vreport.Detail{
+		return controller.Render(w, r, as, &vreport.Detail{
 			Model:              ret,
 			StandupByStandupID: standupByStandupID,
 			UserByUserID:       userByUserID,
@@ -63,10 +63,10 @@ func ReportDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func ReportCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("report.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ReportCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &report.Report{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = report.Random()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {
@@ -79,12 +79,12 @@ func ReportCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Report]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
+		return controller.Render(w, r, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
 	})
 }
 
-func ReportRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("report.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ReportRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Report.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Report")
@@ -93,9 +93,9 @@ func ReportRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func ReportCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("report.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := reportFromForm(rc, true)
+func ReportCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := reportFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Report from form")
 		}
@@ -104,28 +104,28 @@ func ReportCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Report")
 		}
 		msg := fmt.Sprintf("Report [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func ReportEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("report.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := reportFromPath(rc, as, ps)
+func ReportEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := reportFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vreport.Edit{Model: ret}, ps, "standup", "report", ret.String())
+		return controller.Render(w, r, as, &vreport.Edit{Model: ret}, ps, "standup", "report", ret.String())
 	})
 }
 
-func ReportEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("report.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := reportFromPath(rc, as, ps)
+func ReportEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := reportFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := reportFromForm(rc, false)
+		frm, err := reportFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Report from form")
 		}
@@ -135,13 +135,13 @@ func ReportEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Report [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Report [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func ReportDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("report.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := reportFromPath(rc, as, ps)
+func ReportDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("report.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := reportFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -150,12 +150,12 @@ func ReportDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete report [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Report [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/standup/report", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/standup/report", w, ps)
 	})
 }
 
-func reportFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*report.Report, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func reportFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*report.Report, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -167,8 +167,8 @@ func reportFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	return as.Services.Report.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func reportFromForm(rc *fasthttp.RequestCtx, setPK bool) (*report.Report, error) {
-	frm, err := cutil.ParseForm(rc)
+func reportFromForm(r *http.Request, b []byte, setPK bool) (*report.Report, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

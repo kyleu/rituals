@@ -3,12 +3,12 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -19,9 +19,9 @@ import (
 	"github.com/kyleu/rituals/views/vestimate"
 )
 
-func EstimateList(rc *fasthttp.RequestCtx) {
-	Act("estimate.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func EstimateList(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
 		var ret estimate.Estimates
 		var err error
@@ -49,14 +49,14 @@ func EstimateList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vestimate.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "estimate")
+		return Render(w, r, as, page, ps, "estimate")
 	})
 }
 
 //nolint:lll
-func EstimateDetail(rc *fasthttp.RequestCtx) {
-	Act("estimate.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := estimateFromPath(rc, as, ps)
+func EstimateDetail(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := estimateFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -91,7 +91,7 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
 		}
-		return Render(rc, as, &vestimate.Detail{
+		return Render(w, r, as, &vestimate.Detail{
 			Model:            ret,
 			TeamByTeamID:     teamByTeamID,
 			SprintBySprintID: sprintBySprintID,
@@ -105,10 +105,10 @@ func EstimateDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func EstimateCreateForm(rc *fasthttp.RequestCtx) {
-	Act("estimate.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimateCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &estimate.Estimate{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = estimate.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
@@ -121,12 +121,12 @@ func EstimateCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Estimate]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
+		return Render(w, r, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
 	})
 }
 
-func EstimateRandom(rc *fasthttp.RequestCtx) {
-	Act("estimate.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimateRandom(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Estimate")
@@ -135,9 +135,9 @@ func EstimateRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func EstimateCreate(rc *fasthttp.RequestCtx) {
-	Act("estimate.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := estimateFromForm(rc, true)
+func EstimateCreate(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := estimateFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Estimate from form")
 		}
@@ -146,28 +146,28 @@ func EstimateCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Estimate")
 		}
 		msg := fmt.Sprintf("Estimate [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func EstimateEditForm(rc *fasthttp.RequestCtx) {
-	Act("estimate.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := estimateFromPath(rc, as, ps)
+func EstimateEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := estimateFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vestimate.Edit{Model: ret}, ps, "estimate", ret.String())
+		return Render(w, r, as, &vestimate.Edit{Model: ret}, ps, "estimate", ret.String())
 	})
 }
 
-func EstimateEdit(rc *fasthttp.RequestCtx) {
-	Act("estimate.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := estimateFromPath(rc, as, ps)
+func EstimateEdit(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := estimateFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := estimateFromForm(rc, false)
+		frm, err := estimateFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Estimate from form")
 		}
@@ -177,13 +177,13 @@ func EstimateEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Estimate [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Estimate [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func EstimateDelete(rc *fasthttp.RequestCtx) {
-	Act("estimate.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := estimateFromPath(rc, as, ps)
+func EstimateDelete(w http.ResponseWriter, r *http.Request) {
+	Act("estimate.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := estimateFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -192,12 +192,12 @@ func EstimateDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete estimate [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Estimate [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/estimate", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/estimate", w, ps)
 	})
 }
 
-func estimateFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*estimate.Estimate, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func estimateFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*estimate.Estimate, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -209,8 +209,8 @@ func estimateFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageStat
 	return as.Services.Estimate.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func estimateFromForm(rc *fasthttp.RequestCtx, setPK bool) (*estimate.Estimate, error) {
-	frm, err := cutil.ParseForm(rc)
+func estimateFromForm(r *http.Request, b []byte, setPK bool) (*estimate.Estimate, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

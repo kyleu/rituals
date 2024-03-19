@@ -1,44 +1,46 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals/app/controller/cworkspace"
 )
 
-func workspaceRoutes(r *router.Router) {
-	r.GET("/team", cworkspace.TeamList)
-	r.POST("/team", cworkspace.TeamCreate)
-	r.GET("/team/{slug}", cworkspace.TeamDetail)
-	r.POST("/team/{slug}", cworkspace.TeamAction)
-	r.GET("/team/{slug}/delete", cworkspace.TeamDelete)
-	r.GET("/team/{id}/connect", cworkspace.TeamSocket)
+func workspaceRoutes(r *mux.Router) {
+	makeRoute(r, http.MethodGet, "/team", cworkspace.TeamList)
+	makeRoute(r, http.MethodPost, "/team", cworkspace.TeamCreate)
+	makeRoute(r, http.MethodGet, "/team/{slug}", cworkspace.TeamDetail)
+	makeRoute(r, http.MethodPost, "/team/{slug}", cworkspace.TeamAction)
+	makeRoute(r, http.MethodGet, "/team/{slug}/delete", cworkspace.TeamDelete)
+	makeRoute(r, http.MethodGet, "/team/{id}/connect", cworkspace.TeamSocket)
 
-	r.GET("/sprint", cworkspace.SprintList)
-	r.POST("/sprint", cworkspace.SprintCreate)
-	r.GET("/sprint/{slug}", cworkspace.SprintDetail)
-	r.POST("/sprint/{slug}", cworkspace.SprintAction)
-	r.GET("/sprint/{slug}/delete", cworkspace.SprintDelete)
-	r.GET("/sprint/{id}/connect", cworkspace.SprintSocket)
+	makeRoute(r, http.MethodGet, "/sprint", cworkspace.SprintList)
+	makeRoute(r, http.MethodPost, "/sprint", cworkspace.SprintCreate)
+	makeRoute(r, http.MethodGet, "/sprint/{slug}", cworkspace.SprintDetail)
+	makeRoute(r, http.MethodPost, "/sprint/{slug}", cworkspace.SprintAction)
+	makeRoute(r, http.MethodGet, "/sprint/{slug}/delete", cworkspace.SprintDelete)
+	makeRoute(r, http.MethodGet, "/sprint/{id}/connect", cworkspace.SprintSocket)
 
-	r.GET("/estimate", cworkspace.EstimateList)
-	r.POST("/estimate", cworkspace.EstimateCreate)
-	r.GET("/estimate/{slug}", cworkspace.EstimateDetail)
-	r.POST("/estimate/{slug}", cworkspace.EstimateAction)
-	r.GET("/estimate/{slug}/delete", cworkspace.EstimateDelete)
-	r.GET("/estimate/{id}/connect", cworkspace.EstimateSocket)
+	makeRoute(r, http.MethodGet, "/estimate", cworkspace.EstimateList)
+	makeRoute(r, http.MethodPost, "/estimate", cworkspace.EstimateCreate)
+	makeRoute(r, http.MethodGet, "/estimate/{slug}", cworkspace.EstimateDetail)
+	makeRoute(r, http.MethodPost, "/estimate/{slug}", cworkspace.EstimateAction)
+	makeRoute(r, http.MethodGet, "/estimate/{slug}/delete", cworkspace.EstimateDelete)
+	makeRoute(r, http.MethodGet, "/estimate/{id}/connect", cworkspace.EstimateSocket)
 
-	r.GET("/standup", cworkspace.StandupList)
-	r.POST("/standup", cworkspace.StandupCreate)
-	r.GET("/standup/{slug}", cworkspace.StandupDetail)
-	r.POST("/standup/{slug}", cworkspace.StandupAction)
-	r.GET("/standup/{slug}/delete", cworkspace.StandupDelete)
-	r.GET("/standup/{id}/connect", cworkspace.StandupSocket)
+	makeRoute(r, http.MethodGet, "/standup", cworkspace.StandupList)
+	makeRoute(r, http.MethodPost, "/standup", cworkspace.StandupCreate)
+	makeRoute(r, http.MethodGet, "/standup/{slug}", cworkspace.StandupDetail)
+	makeRoute(r, http.MethodPost, "/standup/{slug}", cworkspace.StandupAction)
+	makeRoute(r, http.MethodGet, "/standup/{slug}/delete", cworkspace.StandupDelete)
+	makeRoute(r, http.MethodGet, "/standup/{id}/connect", cworkspace.StandupSocket)
 
-	r.GET("/retro", cworkspace.RetroList)
-	r.POST("/retro", cworkspace.RetroCreate)
-	r.GET("/retro/{slug}", cworkspace.RetroDetail)
-	r.POST("/retro/{slug}", cworkspace.RetroAction)
-	r.GET("/retro/{slug}/delete", cworkspace.RetroDelete)
-	r.GET("/retro/{id}/connect", cworkspace.RetroSocket)
+	makeRoute(r, http.MethodGet, "/retro", cworkspace.RetroList)
+	makeRoute(r, http.MethodPost, "/retro", cworkspace.RetroCreate)
+	makeRoute(r, http.MethodGet, "/retro/{slug}", cworkspace.RetroDetail)
+	makeRoute(r, http.MethodPost, "/retro/{slug}", cworkspace.RetroAction)
+	makeRoute(r, http.MethodGet, "/retro/{slug}/delete", cworkspace.RetroDelete)
+	makeRoute(r, http.MethodGet, "/retro/{id}/connect", cworkspace.RetroSocket)
 }

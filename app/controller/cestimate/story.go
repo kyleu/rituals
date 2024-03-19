@@ -3,12 +3,12 @@ package cestimate
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -18,9 +18,9 @@ import (
 	"github.com/kyleu/rituals/views/vestimate/vstory"
 )
 
-func StoryList(rc *fasthttp.RequestCtx) {
-	controller.Act("story.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func StoryList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
 		var ret story.Stories
 		var err error
@@ -48,13 +48,13 @@ func StoryList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vstory.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, UsersByUserID: usersByUserID, Params: ps.Params, SearchQuery: q}
-		return controller.Render(rc, as, page, ps, "estimate", "story")
+		return controller.Render(w, r, as, page, ps, "estimate", "story")
 	})
 }
 
-func StoryDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("story.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := storyFromPath(rc, as, ps)
+func StoryDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := storyFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -68,7 +68,7 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
-		return controller.Render(rc, as, &vstory.Detail{
+		return controller.Render(w, r, as, &vstory.Detail{
 			Model:                ret,
 			EstimateByEstimateID: estimateByEstimateID,
 			UserByUserID:         userByUserID,
@@ -79,10 +79,10 @@ func StoryDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func StoryCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("story.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func StoryCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &story.Story{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = story.Random()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {
@@ -95,12 +95,12 @@ func StoryCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Story]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vstory.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "Create")
+		return controller.Render(w, r, as, &vstory.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "Create")
 	})
 }
 
-func StoryRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("story.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func StoryRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Story.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Story")
@@ -109,9 +109,9 @@ func StoryRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func StoryCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("story.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := storyFromForm(rc, true)
+func StoryCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := storyFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Story from form")
 		}
@@ -120,28 +120,28 @@ func StoryCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Story")
 		}
 		msg := fmt.Sprintf("Story [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func StoryEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("story.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := storyFromPath(rc, as, ps)
+func StoryEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := storyFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vstory.Edit{Model: ret}, ps, "estimate", "story", ret.String())
+		return controller.Render(w, r, as, &vstory.Edit{Model: ret}, ps, "estimate", "story", ret.String())
 	})
 }
 
-func StoryEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("story.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := storyFromPath(rc, as, ps)
+func StoryEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := storyFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := storyFromForm(rc, false)
+		frm, err := storyFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Story from form")
 		}
@@ -151,13 +151,13 @@ func StoryEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Story [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Story [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func StoryDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("story.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := storyFromPath(rc, as, ps)
+func StoryDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("story.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := storyFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -166,12 +166,12 @@ func StoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete story [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Story [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story", w, ps)
 	})
 }
 
-func storyFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*story.Story, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func storyFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*story.Story, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -183,8 +183,8 @@ func storyFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	return as.Services.Story.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func storyFromForm(rc *fasthttp.RequestCtx, setPK bool) (*story.Story, error) {
-	frm, err := cutil.ParseForm(rc)
+func storyFromForm(r *http.Request, b []byte, setPK bool) (*story.Story, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

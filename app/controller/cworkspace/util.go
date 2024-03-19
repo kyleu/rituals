@@ -1,11 +1,11 @@
 package cworkspace
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/util"
@@ -20,8 +20,8 @@ type requestForm struct {
 	Sprint *uuid.UUID    `json:"sprint"`
 }
 
-func parseRequestForm(rc *fasthttp.RequestCtx, defaultName string) (*requestForm, error) {
-	frm, err := cutil.ParseForm(rc)
+func parseRequestForm(r *http.Request, b []byte, defaultName string) (*requestForm, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "no form provided")
 	}

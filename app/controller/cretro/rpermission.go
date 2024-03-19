@@ -3,11 +3,11 @@ package cretro
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vretro/vrpermission"
 )
 
-func RetroPermissionList(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroPermissionList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
 		ret, err := as.Services.RetroPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -33,14 +33,14 @@ func RetroPermissionList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vrpermission.List{Models: ret, RetrosByRetroID: retrosByRetroID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "retro", "rpermission")
+		return controller.Render(w, r, as, page, ps, "retro", "rpermission")
 	})
 }
 
 //nolint:lll
-func RetroPermissionDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rpermissionFromPath(rc, as, ps)
+func RetroPermissionDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rpermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -48,14 +48,14 @@ func RetroPermissionDetail(rc *fasthttp.RequestCtx) {
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 
-		return controller.Render(rc, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.TitleString()+"**permission")
+		return controller.Render(w, r, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.TitleString()+"**permission")
 	})
 }
 
-func RetroPermissionCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rpermission.RetroPermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = rpermission.Random()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
@@ -64,12 +64,12 @@ func RetroPermissionCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [RetroPermission]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
+		return controller.Render(w, r, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
 	})
 }
 
-func RetroPermissionRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroPermissionRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.RetroPermission.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random RetroPermission")
@@ -78,9 +78,9 @@ func RetroPermissionRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func RetroPermissionCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rpermissionFromForm(rc, true)
+func RetroPermissionCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rpermissionFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse RetroPermission from form")
 		}
@@ -89,28 +89,28 @@ func RetroPermissionCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created RetroPermission")
 		}
 		msg := fmt.Sprintf("RetroPermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func RetroPermissionEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rpermissionFromPath(rc, as, ps)
+func RetroPermissionEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rpermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vrpermission.Edit{Model: ret}, ps, "retro", "rpermission", ret.String())
+		return controller.Render(w, r, as, &vrpermission.Edit{Model: ret}, ps, "retro", "rpermission", ret.String())
 	})
 }
 
-func RetroPermissionEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rpermissionFromPath(rc, as, ps)
+func RetroPermissionEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rpermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := rpermissionFromForm(rc, false)
+		frm, err := rpermissionFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse RetroPermission from form")
 		}
@@ -122,13 +122,13 @@ func RetroPermissionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update RetroPermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("RetroPermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func RetroPermissionDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("rpermission.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rpermissionFromPath(rc, as, ps)
+func RetroPermissionDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rpermission.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rpermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -137,12 +137,12 @@ func RetroPermissionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroPermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/permission", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/permission", w, ps)
 	})
 }
 
-func rpermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*rpermission.RetroPermission, error) {
-	retroIDArgStr, err := cutil.RCRequiredString(rc, "retroID", false)
+func rpermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rpermission.RetroPermission, error) {
+	retroIDArgStr, err := cutil.RCRequiredString(r, "retroID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [retroID] as an argument")
 	}
@@ -151,19 +151,19 @@ func rpermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 		return nil, errors.Errorf("argument [retroID] (%s) is not a valid UUID", retroIDArgStr)
 	}
 	retroIDArg := *retroIDArgP
-	keyArg, err := cutil.RCRequiredString(rc, "key", false)
+	keyArg, err := cutil.RCRequiredString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(rc, "value", false)
+	valueArg, err := cutil.RCRequiredString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}
 	return as.Services.RetroPermission.Get(ps.Context, nil, retroIDArg, keyArg, valueArg, ps.Logger)
 }
 
-func rpermissionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*rpermission.RetroPermission, error) {
-	frm, err := cutil.ParseForm(rc)
+func rpermissionFromForm(r *http.Request, b []byte, setPK bool) (*rpermission.RetroPermission, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

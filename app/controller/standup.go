@@ -3,12 +3,12 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -19,9 +19,9 @@ import (
 	"github.com/kyleu/rituals/views/vstandup"
 )
 
-func StandupList(rc *fasthttp.RequestCtx) {
-	Act("standup.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func StandupList(w http.ResponseWriter, r *http.Request) {
+	Act("standup.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
 		var ret standup.Standups
 		var err error
@@ -49,14 +49,14 @@ func StandupList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vstandup.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "standup")
+		return Render(w, r, as, page, ps, "standup")
 	})
 }
 
 //nolint:lll
-func StandupDetail(rc *fasthttp.RequestCtx) {
-	Act("standup.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := standupFromPath(rc, as, ps)
+func StandupDetail(w http.ResponseWriter, r *http.Request) {
+	Act("standup.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := standupFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -91,7 +91,7 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		return Render(rc, as, &vstandup.Detail{
+		return Render(w, r, as, &vstandup.Detail{
 			Model:            ret,
 			TeamByTeamID:     teamByTeamID,
 			SprintBySprintID: sprintBySprintID,
@@ -105,10 +105,10 @@ func StandupDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func StandupCreateForm(rc *fasthttp.RequestCtx) {
-	Act("standup.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func StandupCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("standup.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &standup.Standup{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = standup.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
@@ -121,12 +121,12 @@ func StandupCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Standup]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
+		return Render(w, r, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
 	})
 }
 
-func StandupRandom(rc *fasthttp.RequestCtx) {
-	Act("standup.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func StandupRandom(w http.ResponseWriter, r *http.Request) {
+	Act("standup.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Standup")
@@ -135,9 +135,9 @@ func StandupRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func StandupCreate(rc *fasthttp.RequestCtx) {
-	Act("standup.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := standupFromForm(rc, true)
+func StandupCreate(w http.ResponseWriter, r *http.Request) {
+	Act("standup.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := standupFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Standup from form")
 		}
@@ -146,28 +146,28 @@ func StandupCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Standup")
 		}
 		msg := fmt.Sprintf("Standup [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func StandupEditForm(rc *fasthttp.RequestCtx) {
-	Act("standup.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := standupFromPath(rc, as, ps)
+func StandupEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("standup.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := standupFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vstandup.Edit{Model: ret}, ps, "standup", ret.String())
+		return Render(w, r, as, &vstandup.Edit{Model: ret}, ps, "standup", ret.String())
 	})
 }
 
-func StandupEdit(rc *fasthttp.RequestCtx) {
-	Act("standup.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := standupFromPath(rc, as, ps)
+func StandupEdit(w http.ResponseWriter, r *http.Request) {
+	Act("standup.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := standupFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := standupFromForm(rc, false)
+		frm, err := standupFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Standup from form")
 		}
@@ -177,13 +177,13 @@ func StandupEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Standup [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Standup [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func StandupDelete(rc *fasthttp.RequestCtx) {
-	Act("standup.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := standupFromPath(rc, as, ps)
+func StandupDelete(w http.ResponseWriter, r *http.Request) {
+	Act("standup.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := standupFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -192,12 +192,12 @@ func StandupDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete standup [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Standup [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/standup", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/standup", w, ps)
 	})
 }
 
-func standupFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*standup.Standup, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func standupFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*standup.Standup, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -209,8 +209,8 @@ func standupFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 	return as.Services.Standup.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func standupFromForm(rc *fasthttp.RequestCtx, setPK bool) (*standup.Standup, error) {
-	frm, err := cutil.ParseForm(rc)
+func standupFromForm(r *http.Request, b []byte, setPK bool) (*standup.Standup, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

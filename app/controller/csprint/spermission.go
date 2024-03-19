@@ -3,11 +3,11 @@ package csprint
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vsprint/vspermission"
 )
 
-func SprintPermissionList(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintPermissionList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
 		ret, err := as.Services.SprintPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -33,14 +33,14 @@ func SprintPermissionList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vspermission.List{Models: ret, SprintsBySprintID: sprintsBySprintID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "sprint", "spermission")
+		return controller.Render(w, r, as, page, ps, "sprint", "spermission")
 	})
 }
 
 //nolint:lll
-func SprintPermissionDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := spermissionFromPath(rc, as, ps)
+func SprintPermissionDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := spermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -48,14 +48,14 @@ func SprintPermissionDetail(rc *fasthttp.RequestCtx) {
 
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 
-		return controller.Render(rc, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.TitleString()+"**permission")
+		return controller.Render(w, r, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.TitleString()+"**permission")
 	})
 }
 
-func SprintPermissionCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &spermission.SprintPermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = spermission.Random()
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {
@@ -64,12 +64,12 @@ func SprintPermissionCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [SprintPermission]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
+		return controller.Render(w, r, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
 	})
 }
 
-func SprintPermissionRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintPermissionRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.SprintPermission.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random SprintPermission")
@@ -78,9 +78,9 @@ func SprintPermissionRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func SprintPermissionCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := spermissionFromForm(rc, true)
+func SprintPermissionCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := spermissionFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse SprintPermission from form")
 		}
@@ -89,28 +89,28 @@ func SprintPermissionCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created SprintPermission")
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func SprintPermissionEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := spermissionFromPath(rc, as, ps)
+func SprintPermissionEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := spermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vspermission.Edit{Model: ret}, ps, "sprint", "spermission", ret.String())
+		return controller.Render(w, r, as, &vspermission.Edit{Model: ret}, ps, "sprint", "spermission", ret.String())
 	})
 }
 
-func SprintPermissionEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := spermissionFromPath(rc, as, ps)
+func SprintPermissionEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := spermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := spermissionFromForm(rc, false)
+		frm, err := spermissionFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse SprintPermission from form")
 		}
@@ -122,13 +122,13 @@ func SprintPermissionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update SprintPermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func SprintPermissionDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("spermission.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := spermissionFromPath(rc, as, ps)
+func SprintPermissionDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("spermission.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := spermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -137,12 +137,12 @@ func SprintPermissionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/permission", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/permission", w, ps)
 	})
 }
 
-func spermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*spermission.SprintPermission, error) {
-	sprintIDArgStr, err := cutil.RCRequiredString(rc, "sprintID", false)
+func spermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*spermission.SprintPermission, error) {
+	sprintIDArgStr, err := cutil.RCRequiredString(r, "sprintID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [sprintID] as an argument")
 	}
@@ -151,19 +151,19 @@ func spermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 		return nil, errors.Errorf("argument [sprintID] (%s) is not a valid UUID", sprintIDArgStr)
 	}
 	sprintIDArg := *sprintIDArgP
-	keyArg, err := cutil.RCRequiredString(rc, "key", false)
+	keyArg, err := cutil.RCRequiredString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(rc, "value", false)
+	valueArg, err := cutil.RCRequiredString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}
 	return as.Services.SprintPermission.Get(ps.Context, nil, sprintIDArg, keyArg, valueArg, ps.Logger)
 }
 
-func spermissionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*spermission.SprintPermission, error) {
-	frm, err := cutil.ParseForm(rc)
+func spermissionFromForm(r *http.Request, b []byte, setPK bool) (*spermission.SprintPermission, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

@@ -2,12 +2,14 @@
 package cutil
 
 import (
+	"bytes"
 	"context"
+	"io"
+	"net/http"
 	"slices"
 	"strings"
 
 	"github.com/mileusna/useragent"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/csession"
@@ -17,18 +19,21 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-var initialIcons = []string{"searchbox"}
+var (
+	initialIcons = []string{"searchbox"}
+	MaxBodySize  = int64(1024 * 1024 * 128) // 128MB
+)
 
-func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger util.Logger) *PageState {
-	parentCtx, logger := httpmetrics.ExtractHeaders(rc, logger)
+func LoadPageState(as *app.State, w http.ResponseWriter, r *http.Request, key string, logger util.Logger) *PageState {
+	parentCtx, logger := httpmetrics.ExtractHeaders(r, logger)
 	ctx, span, logger := telemetry.StartSpan(parentCtx, "http:"+key, logger)
-	span.Attribute("path", string(rc.Request.URI().Path()))
+	span.Attribute("path", r.URL.Path)
 	if !telemetry.SkipControllerMetrics {
-		httpmetrics.InjectHTTP(rc, span)
+		httpmetrics.InjectHTTP(200, r, span)
 	}
-	session, flashes, prof, accts := loadSession(ctx, as, rc, logger)
-	params := ParamSetFromRequest(rc)
-	ua := useragent.Parse(string(rc.Request.Header.Peek("User-Agent")))
+	session, flashes, prof, accts := loadSession(ctx, as, w, r, logger)
+	params := ParamSetFromRequest(r)
+	ua := useragent.Parse(r.Header.Get("User-Agent"))
 	os := strings.ToLower(ua.OS)
 	browser := strings.ToLower(ua.Name)
 	platform := "unknown"
@@ -47,35 +52,38 @@ func LoadPageState(as *app.State, rc *fasthttp.RequestCtx, key string, logger ut
 
 	isAuthed, _ := user.Check("/", accts)
 	isAdmin, _ := user.Check("/admin", accts)
+	b, _ := io.ReadAll(http.MaxBytesReader(w, r.Body, MaxBodySize))
+	r.Body = io.NopCloser(bytes.NewBuffer(b))
 
 	u, _ := as.User(ctx, prof.ID, logger)
 
 	return &PageState{
-		Action: key, Method: string(rc.Method()), URI: rc.Request.URI(), Flashes: flashes, Session: session,
+		Action: key, Method: r.Method, URI: r.URL, Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		User: u, Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
-		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span,
+		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b,
 	}
 }
 
-func loadSession(_ context.Context, _ *app.State, rc *fasthttp.RequestCtx, logger util.Logger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
-	sessionBytes := rc.Request.Header.Cookie(util.AppKey)
-	session := util.ValueMap{}
-	if len(sessionBytes) > 0 {
-		dec, err := util.DecryptMessage(nil, string(sessionBytes), logger)
-		if err != nil {
-			logger.Warnf("error decrypting session: %+v", err)
-		}
-		err = util.FromJSON([]byte(dec), &session)
-		if err != nil {
-			session = util.ValueMap{}
-		}
+func loadSession(_ context.Context, _ *app.State, w http.ResponseWriter, r *http.Request, logger util.Logger) (util.ValueMap, []string, *user.Profile, user.Accounts) {
+	c, _ := r.Cookie(util.AppKey)
+	if c == nil || c.Value == "" {
+		return util.ValueMap{}, nil, user.DefaultProfile.Clone(), nil
+	}
+
+	dec, err := util.DecryptMessage(nil, c.Value, logger)
+	if err != nil {
+		logger.Warnf("error decrypting session: %+v", err)
+	}
+	session, err := util.FromJSONMap([]byte(dec))
+	if err != nil {
+		session = util.ValueMap{}
 	}
 
 	flashes := util.StringSplitAndTrim(session.GetStringOpt(csession.WebFlashKey), ";")
 	if len(flashes) > 0 {
 		delete(session, csession.WebFlashKey)
-		err := csession.SaveSession(rc, session, logger)
+		err := csession.SaveSession(w, session, logger)
 		if err != nil {
 			logger.Warnf("can't save session: %+v", err)
 		}
@@ -98,7 +106,7 @@ func loadSession(_ context.Context, _ *app.State, rc *fasthttp.RequestCtx, logge
 	if prof.ID == util.UUIDDefault {
 		prof.ID = util.UUID()
 		session["profile"] = prof
-		err = csession.SaveSession(rc, session, logger)
+		err = csession.SaveSession(w, session, logger)
 		if err != nil {
 			logger.Warnf("unable to save session for user [%s]", prof.ID.String())
 			return nil, nil, prof, nil

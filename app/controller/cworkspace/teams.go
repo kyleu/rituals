@@ -1,7 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
@@ -11,21 +11,21 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwteam"
 )
 
-func TeamList(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.team.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.FromAny(ps.Data)
+func TeamList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.team.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = "Teams"
-		ps.Data = w.Teams
-		return controller.Render(rc, as, &vwteam.TeamList{Teams: w.Teams}, ps, "teams")
+		ps.Data = ws.Teams
+		return controller.Render(w, r, as, &vwteam.TeamList{Teams: ws.Teams}, ps, "teams")
 	})
 }
 
-func TeamDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.team", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func TeamDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.team", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -36,13 +36,13 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		}
 		ps.Title = ft.Team.TitleString()
 		ps.Data = ft
-		return controller.Render(rc, as, &vwteam.TeamWorkspace{FullTeam: ft}, ps, "teams", ft.Team.ID.String())
+		return controller.Render(w, r, as, &vwteam.TeamWorkspace{FullTeam: ft}, ps, "teams", ft.Team.ID.String())
 	})
 }
 
-func TeamCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.team.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Username())
+func TeamCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.team.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := parseRequestForm(r, ps.RequestBody, ps.Username())
 		if err != nil {
 			return "", err
 		}
@@ -52,13 +52,13 @@ func TeamCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New team created", model.PublicWebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "New team created", model.PublicWebPath(), w, ps)
 	})
 }
 
-func TeamDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.team.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func TeamDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.team.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -71,17 +71,17 @@ func TeamDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Team deleted", "/", rc, ps)
+		return controller.FlashAndRedir(true, "Team deleted", "/", w, ps)
 	})
 }
 
-func TeamAction(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.team.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func TeamAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.team.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -91,6 +91,6 @@ func TeamAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }

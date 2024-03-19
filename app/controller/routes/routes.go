@@ -2,8 +2,9 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
-	"github.com/valyala/fasthttp"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -12,20 +13,26 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+func makeRoute(x *mux.Router, method string, path string, f http.HandlerFunc) {
+	cutil.AddRoute(method, path)
+	x.HandleFunc(path, f).Methods(method)
+}
+
 //nolint:revive
-func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
-	r := router.New()
+func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
+	r := mux.NewRouter()
 
-	r.GET("/", controller.Home)
-	r.GET("/healthcheck", clib.Healthcheck)
-	r.GET("/about", clib.About)
+	makeRoute(r, http.MethodGet, "/", controller.Home)
+	makeRoute(r, http.MethodGet, "/healthcheck", clib.Healthcheck)
+	makeRoute(r, http.MethodGet, "/about", clib.About)
 
-	r.GET(cutil.DefaultProfilePath, clib.Profile)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
-	r.GET("/auth/{key}", clib.AuthDetail)
-	r.GET("/auth/callback/{key}", clib.AuthCallback)
-	r.GET("/auth/logout/{key}", clib.AuthLogout)
-	r.GET(cutil.DefaultSearchPath, clib.Search)
+	makeRoute(r, http.MethodGet, cutil.DefaultProfilePath, clib.Profile)
+	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave)
+	makeRoute(r, http.MethodGet, "/auth/{key}", clib.AuthDetail)
+	makeRoute(r, http.MethodGet, "/auth/callback/{key}", clib.AuthCallback)
+	makeRoute(r, http.MethodGet, "/auth/logout/{key}", clib.AuthLogout)
+	makeRoute(r, http.MethodGet, cutil.DefaultSearchPath, clib.Search)
+
 	themeRoutes(r)
 	generatedRoutes(r)
 
@@ -33,24 +40,23 @@ func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
 	workspaceRoutes(r)
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/admin", clib.Admin)
-	r.GET("/admin/database", clib.DatabaseList)
-	r.GET("/admin/database/{key}", clib.DatabaseDetail)
-	r.GET("/admin/database/{key}/{act}", clib.DatabaseAction)
-	r.GET("/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView)
-	r.POST("/admin/database/{key}/sql", clib.DatabaseSQLRun)
-	r.GET("/admin/sandbox", controller.SandboxList)
-	r.GET("/admin/sandbox/{key}", controller.SandboxRun)
-	r.GET("/admin/{path:*}", clib.Admin)
-	r.POST("/admin/{path:*}", clib.Admin)
+	makeRoute(r, http.MethodGet, "/admin", clib.Admin)
+	makeRoute(r, http.MethodGet, "/admin/", clib.Admin)
+	makeRoute(r, http.MethodPost, "/admin/", clib.Admin)
+	makeRoute(r, http.MethodGet, "/admin/database", clib.DatabaseList)
+	makeRoute(r, http.MethodGet, "/admin/database/{key}", clib.DatabaseDetail)
+	makeRoute(r, http.MethodGet, "/admin/database/{key}/{act}", clib.DatabaseAction)
+	makeRoute(r, http.MethodGet, "/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView)
+	makeRoute(r, http.MethodPost, "/admin/database/{key}/sql", clib.DatabaseSQLRun)
+	makeRoute(r, http.MethodGet, "/admin/sandbox", controller.SandboxList)
+	makeRoute(r, http.MethodGet, "/admin/sandbox/{key}", controller.SandboxRun)
 
-	r.GET("/favicon.ico", clib.Favicon)
-	r.GET("/robots.txt", clib.RobotsTxt)
-	r.GET("/assets/{_:*}", clib.Static)
+	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
+	makeRoute(r, http.MethodGet, "/robots.txt", clib.RobotsTxt)
+	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
-	r.OPTIONS("/", controller.Options)
-	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFoundAction
+	makeRoute(r, http.MethodOptions, "/", controller.Options)
+	r.HandleFunc("/", controller.NotFoundAction)
 
-	return clib.WireRouter(r, logger)
+	return cutil.WireRouter(r, logger)
 }

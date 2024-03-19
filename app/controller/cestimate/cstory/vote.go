@@ -3,11 +3,11 @@ package cstory
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vestimate/vstory/vvote"
 )
 
-func VoteList(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func VoteList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
 		ret, err := as.Services.Vote.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func VoteList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vvote.List{Models: ret, StoriesByStoryID: storiesByStoryID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "estimate", "story", "vote")
+		return controller.Render(w, r, as, page, ps, "estimate", "story", "vote")
 	})
 }
 
-func VoteDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := voteFromPath(rc, as, ps)
+func VoteDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := voteFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func VoteDetail(rc *fasthttp.RequestCtx) {
 		storyByStoryID, _ := as.Services.Story.Get(ps.Context, nil, ret.StoryID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vvote.Detail{
+		return controller.Render(w, r, as, &vvote.Detail{
 			Model:          ret,
 			StoryByStoryID: storyByStoryID,
 			UserByUserID:   userByUserID,
@@ -63,10 +63,10 @@ func VoteDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func VoteCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func VoteCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &vote.Vote{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = vote.Random()
 			randomStory, err := as.Services.Story.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStory != nil {
@@ -79,12 +79,12 @@ func VoteCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Vote]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
+		return controller.Render(w, r, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
 	})
 }
 
-func VoteRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func VoteRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Vote.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Vote")
@@ -93,9 +93,9 @@ func VoteRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func VoteCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := voteFromForm(rc, true)
+func VoteCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := voteFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Vote from form")
 		}
@@ -104,28 +104,28 @@ func VoteCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Vote")
 		}
 		msg := fmt.Sprintf("Vote [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func VoteEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := voteFromPath(rc, as, ps)
+func VoteEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := voteFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vvote.Edit{Model: ret}, ps, "estimate", "story", "vote", ret.String())
+		return controller.Render(w, r, as, &vvote.Edit{Model: ret}, ps, "estimate", "story", "vote", ret.String())
 	})
 }
 
-func VoteEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := voteFromPath(rc, as, ps)
+func VoteEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := voteFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := voteFromForm(rc, false)
+		frm, err := voteFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Vote from form")
 		}
@@ -136,13 +136,13 @@ func VoteEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Vote [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Vote [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func VoteDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("vote.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := voteFromPath(rc, as, ps)
+func VoteDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("vote.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := voteFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -151,12 +151,12 @@ func VoteDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete vote [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Vote [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story/vote", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story/vote", w, ps)
 	})
 }
 
-func voteFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*vote.Vote, error) {
-	storyIDArgStr, err := cutil.RCRequiredString(rc, "storyID", false)
+func voteFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*vote.Vote, error) {
+	storyIDArgStr, err := cutil.RCRequiredString(r, "storyID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [storyID] as an argument")
 	}
@@ -165,7 +165,7 @@ func voteFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (
 		return nil, errors.Errorf("argument [storyID] (%s) is not a valid UUID", storyIDArgStr)
 	}
 	storyIDArg := *storyIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(rc, "userID", false)
+	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}
@@ -177,8 +177,8 @@ func voteFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (
 	return as.Services.Vote.Get(ps.Context, nil, storyIDArg, userIDArg, ps.Logger)
 }
 
-func voteFromForm(rc *fasthttp.RequestCtx, setPK bool) (*vote.Vote, error) {
-	frm, err := cutil.ParseForm(rc)
+func voteFromForm(r *http.Request, b []byte, setPK bool) (*vote.Vote, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

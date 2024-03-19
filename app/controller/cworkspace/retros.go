@@ -1,8 +1,9 @@
 package cworkspace
 
 import (
+	"net/http"
+
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
@@ -14,47 +15,47 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwretro"
 )
 
-func RetroList(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.retro.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.FromAny(ps.Data)
+func RetroList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.retro.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = "Retros"
-		ps.Data = w.Retros
-		return controller.Render(rc, as, &vwretro.RetroList{Retros: w.Retros, Teams: w.Teams, Sprints: w.Sprints}, ps, "retros")
+		ps.Data = ws.Retros
+		return controller.Render(w, r, as, &vwretro.RetroList{Retros: ws.Retros, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "retros")
 	})
 }
 
-func RetroDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.retro", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func RetroDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.retro", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		w, err := workspace.FromAny(ps.Data)
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
 		fr, err := as.Services.Workspace.LoadRetro(p, func() (team.Teams, error) {
-			return w.Teams, nil
+			return ws.Teams, nil
 		}, func() (sprint.Sprints, error) {
-			return w.Sprints, nil
+			return ws.Sprints, nil
 		})
 		if err != nil {
 			return "", err
 		}
 		ps.Title = fr.Retro.TitleString()
 		ps.Data = fr
-		v := &vwretro.RetroWorkspace{FullRetro: fr, Teams: w.Teams, Sprints: w.Sprints}
-		return controller.Render(rc, as, v, ps, "retros", fr.Retro.ID.String())
+		v := &vwretro.RetroWorkspace{FullRetro: fr, Teams: ws.Teams, Sprints: ws.Sprints}
+		return controller.Render(w, r, as, v, ps, "retros", fr.Retro.ID.String())
 	})
 }
 
-func RetroCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.retro.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Username())
+func RetroCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.retro.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := parseRequestForm(r, ps.RequestBody, ps.Username())
 		if err != nil {
 			return "", err
 		}
@@ -64,13 +65,13 @@ func RetroCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save retro")
 		}
-		return controller.FlashAndRedir(true, "New retro created", model.PublicWebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "New retro created", model.PublicWebPath(), w, ps)
 	})
 }
 
-func RetroDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.retro.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func RetroDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.retro.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -83,17 +84,17 @@ func RetroDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Retrospective deleted", "/", rc, ps)
+		return controller.FlashAndRedir(true, "Retrospective deleted", "/", w, ps)
 	})
 }
 
-func RetroAction(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.retro.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func RetroAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.retro.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -103,6 +104,6 @@ func RetroAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }

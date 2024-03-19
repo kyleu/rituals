@@ -3,11 +3,11 @@ package cteam
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vteam/vtmember"
 )
 
-func TeamMemberList(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamMemberList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("tmember", nil, ps.Logger).Sanitize("tmember")
 		ret, err := as.Services.TeamMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func TeamMemberList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vtmember.List{Models: ret, TeamsByTeamID: teamsByTeamID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "team", "tmember")
+		return controller.Render(w, r, as, page, ps, "team", "tmember")
 	})
 }
 
-func TeamMemberDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := tmemberFromPath(rc, as, ps)
+func TeamMemberDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := tmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func TeamMemberDetail(rc *fasthttp.RequestCtx) {
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vtmember.Detail{
+		return controller.Render(w, r, as, &vtmember.Detail{
 			Model:        ret,
 			TeamByTeamID: teamByTeamID,
 			UserByUserID: userByUserID,
@@ -63,10 +63,10 @@ func TeamMemberDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func TeamMemberCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamMemberCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tmember.TeamMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = tmember.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
@@ -79,12 +79,12 @@ func TeamMemberCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [TeamMember]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
+		return controller.Render(w, r, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
 	})
 }
 
-func TeamMemberRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamMemberRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.TeamMember.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random TeamMember")
@@ -93,9 +93,9 @@ func TeamMemberRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func TeamMemberCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := tmemberFromForm(rc, true)
+func TeamMemberCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := tmemberFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse TeamMember from form")
 		}
@@ -104,28 +104,28 @@ func TeamMemberCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created TeamMember")
 		}
 		msg := fmt.Sprintf("TeamMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func TeamMemberEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := tmemberFromPath(rc, as, ps)
+func TeamMemberEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := tmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vtmember.Edit{Model: ret}, ps, "team", "tmember", ret.String())
+		return controller.Render(w, r, as, &vtmember.Edit{Model: ret}, ps, "team", "tmember", ret.String())
 	})
 }
 
-func TeamMemberEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := tmemberFromPath(rc, as, ps)
+func TeamMemberEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := tmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := tmemberFromForm(rc, false)
+		frm, err := tmemberFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse TeamMember from form")
 		}
@@ -136,13 +136,13 @@ func TeamMemberEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update TeamMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("TeamMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func TeamMemberDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("tmember.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := tmemberFromPath(rc, as, ps)
+func TeamMemberDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("tmember.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := tmemberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -151,12 +151,12 @@ func TeamMemberDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("TeamMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/team/member", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/team/member", w, ps)
 	})
 }
 
-func tmemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*tmember.TeamMember, error) {
-	teamIDArgStr, err := cutil.RCRequiredString(rc, "teamID", false)
+func tmemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*tmember.TeamMember, error) {
+	teamIDArgStr, err := cutil.RCRequiredString(r, "teamID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [teamID] as an argument")
 	}
@@ -165,7 +165,7 @@ func tmemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 		return nil, errors.Errorf("argument [teamID] (%s) is not a valid UUID", teamIDArgStr)
 	}
 	teamIDArg := *teamIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(rc, "userID", false)
+	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}
@@ -177,8 +177,8 @@ func tmemberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 	return as.Services.TeamMember.Get(ps.Context, nil, teamIDArg, userIDArg, ps.Logger)
 }
 
-func tmemberFromForm(rc *fasthttp.RequestCtx, setPK bool) (*tmember.TeamMember, error) {
-	frm, err := cutil.ParseForm(rc)
+func tmemberFromForm(r *http.Request, b []byte, setPK bool) (*tmember.TeamMember, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

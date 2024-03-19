@@ -3,11 +3,11 @@ package cretro
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vretro/vfeedback"
 )
 
-func FeedbackList(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func FeedbackList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
 		ret, err := as.Services.Feedback.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func FeedbackList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vfeedback.List{Models: ret, RetrosByRetroID: retrosByRetroID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "retro", "feedback")
+		return controller.Render(w, r, as, page, ps, "retro", "feedback")
 	})
 }
 
-func FeedbackDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := feedbackFromPath(rc, as, ps)
+func FeedbackDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := feedbackFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func FeedbackDetail(rc *fasthttp.RequestCtx) {
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vfeedback.Detail{
+		return controller.Render(w, r, as, &vfeedback.Detail{
 			Model:          ret,
 			RetroByRetroID: retroByRetroID,
 			UserByUserID:   userByUserID,
@@ -63,10 +63,10 @@ func FeedbackDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func FeedbackCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func FeedbackCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &feedback.Feedback{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = feedback.Random()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
@@ -79,12 +79,12 @@ func FeedbackCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Feedback]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
+		return controller.Render(w, r, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
 	})
 }
 
-func FeedbackRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func FeedbackRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Feedback.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Feedback")
@@ -93,9 +93,9 @@ func FeedbackRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func FeedbackCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := feedbackFromForm(rc, true)
+func FeedbackCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := feedbackFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Feedback from form")
 		}
@@ -104,28 +104,28 @@ func FeedbackCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Feedback")
 		}
 		msg := fmt.Sprintf("Feedback [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func FeedbackEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := feedbackFromPath(rc, as, ps)
+func FeedbackEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := feedbackFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vfeedback.Edit{Model: ret}, ps, "retro", "feedback", ret.String())
+		return controller.Render(w, r, as, &vfeedback.Edit{Model: ret}, ps, "retro", "feedback", ret.String())
 	})
 }
 
-func FeedbackEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := feedbackFromPath(rc, as, ps)
+func FeedbackEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := feedbackFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := feedbackFromForm(rc, false)
+		frm, err := feedbackFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Feedback from form")
 		}
@@ -135,13 +135,13 @@ func FeedbackEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Feedback [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Feedback [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func FeedbackDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("feedback.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := feedbackFromPath(rc, as, ps)
+func FeedbackDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("feedback.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := feedbackFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -150,12 +150,12 @@ func FeedbackDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete feedback [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Feedback [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/feedback", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/feedback", w, ps)
 	})
 }
 
-func feedbackFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*feedback.Feedback, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func feedbackFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*feedback.Feedback, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -167,8 +167,8 @@ func feedbackFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageStat
 	return as.Services.Feedback.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func feedbackFromForm(rc *fasthttp.RequestCtx, setPK bool) (*feedback.Feedback, error) {
-	frm, err := cutil.ParseForm(rc)
+func feedbackFromForm(r *http.Request, b []byte, setPK bool) (*feedback.Feedback, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

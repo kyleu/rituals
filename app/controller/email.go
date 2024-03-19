@@ -3,11 +3,11 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -16,8 +16,8 @@ import (
 	"github.com/kyleu/rituals/views/vemail"
 )
 
-func EmailList(rc *fasthttp.RequestCtx) {
-	Act("email.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EmailList(w http.ResponseWriter, r *http.Request) {
+	Act("email.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("email", nil, ps.Logger).Sanitize("email")
 		ret, err := as.Services.Email.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -32,13 +32,13 @@ func EmailList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vemail.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
-		return Render(rc, as, page, ps, "email")
+		return Render(w, r, as, page, ps, "email")
 	})
 }
 
-func EmailDetail(rc *fasthttp.RequestCtx) {
-	Act("email.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := emailFromPath(rc, as, ps)
+func EmailDetail(w http.ResponseWriter, r *http.Request) {
+	Act("email.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := emailFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -46,14 +46,14 @@ func EmailDetail(rc *fasthttp.RequestCtx) {
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(rc, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.TitleString()+"**email")
+		return Render(w, r, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.TitleString()+"**email")
 	})
 }
 
-func EmailCreateForm(rc *fasthttp.RequestCtx) {
-	Act("email.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EmailCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("email.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &email.Email{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = email.Random()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
@@ -62,12 +62,12 @@ func EmailCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Email]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
+		return Render(w, r, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
 	})
 }
 
-func EmailRandom(rc *fasthttp.RequestCtx) {
-	Act("email.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EmailRandom(w http.ResponseWriter, r *http.Request) {
+	Act("email.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Email.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Email")
@@ -76,9 +76,9 @@ func EmailRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func EmailCreate(rc *fasthttp.RequestCtx) {
-	Act("email.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := emailFromForm(rc, true)
+func EmailCreate(w http.ResponseWriter, r *http.Request) {
+	Act("email.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := emailFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Email from form")
 		}
@@ -87,28 +87,28 @@ func EmailCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Email")
 		}
 		msg := fmt.Sprintf("Email [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func EmailEditForm(rc *fasthttp.RequestCtx) {
-	Act("email.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := emailFromPath(rc, as, ps)
+func EmailEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("email.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := emailFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vemail.Edit{Model: ret}, ps, "email", ret.String())
+		return Render(w, r, as, &vemail.Edit{Model: ret}, ps, "email", ret.String())
 	})
 }
 
-func EmailEdit(rc *fasthttp.RequestCtx) {
-	Act("email.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := emailFromPath(rc, as, ps)
+func EmailEdit(w http.ResponseWriter, r *http.Request) {
+	Act("email.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := emailFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := emailFromForm(rc, false)
+		frm, err := emailFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Email from form")
 		}
@@ -118,13 +118,13 @@ func EmailEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Email [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Email [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func EmailDelete(rc *fasthttp.RequestCtx) {
-	Act("email.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := emailFromPath(rc, as, ps)
+func EmailDelete(w http.ResponseWriter, r *http.Request) {
+	Act("email.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := emailFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -133,12 +133,12 @@ func EmailDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete email [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Email [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/email", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/email", w, ps)
 	})
 }
 
-func emailFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*email.Email, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func emailFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*email.Email, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -150,8 +150,8 @@ func emailFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) 
 	return as.Services.Email.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func emailFromForm(rc *fasthttp.RequestCtx, setPK bool) (*email.Email, error) {
-	frm, err := cutil.ParseForm(rc)
+func emailFromForm(r *http.Request, b []byte, setPK bool) (*email.Email, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

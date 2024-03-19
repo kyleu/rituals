@@ -1,7 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
@@ -12,44 +12,44 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwsprint"
 )
 
-func SprintList(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.sprint.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.FromAny(ps.Data)
+func SprintList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.sprint.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = "Sprints"
-		ps.Data = w.Sprints
-		return controller.Render(rc, as, &vwsprint.SprintList{Sprints: w.Sprints, Teams: w.Teams}, ps, "sprints")
+		ps.Data = ws.Sprints
+		return controller.Render(w, r, as, &vwsprint.SprintList{Sprints: ws.Sprints, Teams: ws.Teams}, ps, "sprints")
 	})
 }
 
-func SprintDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.sprint", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func SprintDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.sprint", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		w, err := workspace.FromAny(ps.Data)
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
 		fs, err := as.Services.Workspace.LoadSprint(p, func() (team.Teams, error) {
-			return w.Teams, nil
+			return ws.Teams, nil
 		})
 		if err != nil {
 			return "", err
 		}
 		ps.Title = fs.Sprint.TitleString()
 		ps.Data = fs
-		return controller.Render(rc, as, &vwsprint.SprintWorkspace{FullSprint: fs, Teams: w.Teams}, ps, "sprints", fs.Sprint.ID.String())
+		return controller.Render(w, r, as, &vwsprint.SprintWorkspace{FullSprint: fs, Teams: ws.Teams}, ps, "sprints", fs.Sprint.ID.String())
 	})
 }
 
-func SprintCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.sprint.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Username())
+func SprintCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.sprint.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := parseRequestForm(r, ps.RequestBody, ps.Username())
 		if err != nil {
 			return "", err
 		}
@@ -59,13 +59,13 @@ func SprintCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New sprint created", model.PublicWebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "New sprint created", model.PublicWebPath(), w, ps)
 	})
 }
 
-func SprintDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.sprint.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func SprintDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.sprint.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -78,17 +78,17 @@ func SprintDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Sprint deleted", "/", rc, ps)
+		return controller.FlashAndRedir(true, "Sprint deleted", "/", w, ps)
 	})
 }
 
-func SprintAction(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.sprint.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func SprintAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.sprint.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -98,6 +98,6 @@ func SprintAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }

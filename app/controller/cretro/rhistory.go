@@ -3,11 +3,11 @@ package cretro
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vretro/vrhistory"
 )
 
-func RetroHistoryList(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroHistoryList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
 		ret, err := as.Services.RetroHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -33,13 +33,13 @@ func RetroHistoryList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vrhistory.List{Models: ret, RetrosByRetroID: retrosByRetroID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "retro", "rhistory")
+		return controller.Render(w, r, as, page, ps, "retro", "rhistory")
 	})
 }
 
-func RetroHistoryDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rhistoryFromPath(rc, as, ps)
+func RetroHistoryDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rhistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -47,14 +47,14 @@ func RetroHistoryDetail(rc *fasthttp.RequestCtx) {
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 
-		return controller.Render(rc, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.TitleString()+"**history")
+		return controller.Render(w, r, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.TitleString()+"**history")
 	})
 }
 
-func RetroHistoryCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rhistory.RetroHistory{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = rhistory.Random()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
@@ -63,12 +63,12 @@ func RetroHistoryCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [RetroHistory]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
+		return controller.Render(w, r, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
 	})
 }
 
-func RetroHistoryRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func RetroHistoryRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.RetroHistory.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random RetroHistory")
@@ -77,9 +77,9 @@ func RetroHistoryRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func RetroHistoryCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rhistoryFromForm(rc, true)
+func RetroHistoryCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rhistoryFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse RetroHistory from form")
 		}
@@ -88,28 +88,28 @@ func RetroHistoryCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created RetroHistory")
 		}
 		msg := fmt.Sprintf("RetroHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func RetroHistoryEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rhistoryFromPath(rc, as, ps)
+func RetroHistoryEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rhistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vrhistory.Edit{Model: ret}, ps, "retro", "rhistory", ret.String())
+		return controller.Render(w, r, as, &vrhistory.Edit{Model: ret}, ps, "retro", "rhistory", ret.String())
 	})
 }
 
-func RetroHistoryEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rhistoryFromPath(rc, as, ps)
+func RetroHistoryEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rhistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := rhistoryFromForm(rc, false)
+		frm, err := rhistoryFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse RetroHistory from form")
 		}
@@ -119,13 +119,13 @@ func RetroHistoryEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update RetroHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("RetroHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func RetroHistoryDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("rhistory.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := rhistoryFromPath(rc, as, ps)
+func RetroHistoryDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("rhistory.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := rhistoryFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -134,20 +134,20 @@ func RetroHistoryDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/history", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/history", w, ps)
 	})
 }
 
-func rhistoryFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*rhistory.RetroHistory, error) {
-	slugArg, err := cutil.RCRequiredString(rc, "slug", false)
+func rhistoryFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rhistory.RetroHistory, error) {
+	slugArg, err := cutil.RCRequiredString(r, "slug", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}
 	return as.Services.RetroHistory.Get(ps.Context, nil, slugArg, ps.Logger)
 }
 
-func rhistoryFromForm(rc *fasthttp.RequestCtx, setPK bool) (*rhistory.RetroHistory, error) {
-	frm, err := cutil.ParseForm(rc)
+func rhistoryFromForm(r *http.Request, b []byte, setPK bool) (*rhistory.RetroHistory, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

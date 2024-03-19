@@ -2,20 +2,20 @@
 package auth
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app/controller/csession"
 	"github.com/kyleu/rituals/app/lib/user"
 	"github.com/kyleu/rituals/app/util"
 )
 
-func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) (string, error) {
-	g, err := gothFor(rc, prv)
+func getAuthURL(prv *Provider, w http.ResponseWriter, r *http.Request, websess util.ValueMap, logger util.Logger) (string, error) {
+	g, err := gothFor(r, prv)
 	if err != nil {
 		return "", err
 	}
 
-	sess, err := g.BeginAuth(setState(rc))
+	sess, err := g.BeginAuth(getState(r))
 	if err != nil {
 		return "", err
 	}
@@ -25,7 +25,7 @@ func getAuthURL(prv *Provider, rc *fasthttp.RequestCtx, websess util.ValueMap, l
 		return "", err
 	}
 
-	err = csession.StoreInSession(prv.ID, sess.Marshal(), rc, websess, logger)
+	err = csession.StoreInSession(prv.ID, sess.Marshal(), w, websess, logger)
 	if err != nil {
 		return "", err
 	}
@@ -42,10 +42,10 @@ func getCurrentAuths(websess util.ValueMap) user.Accounts {
 	return ret
 }
 
-func setCurrentAuths(s user.Accounts, rc *fasthttp.RequestCtx, websess util.ValueMap, logger util.Logger) error {
+func setCurrentAuths(s user.Accounts, w http.ResponseWriter, websess util.ValueMap, logger util.Logger) error {
 	s.Sort()
 	if len(s) == 0 {
-		return csession.RemoveFromSession(WebAuthKey, rc, websess, logger)
+		return csession.RemoveFromSession(WebAuthKey, w, websess, logger)
 	}
-	return csession.StoreInSession(WebAuthKey, s.String(), rc, websess, logger)
+	return csession.StoreInSession(WebAuthKey, s.String(), w, websess, logger)
 }

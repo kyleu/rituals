@@ -3,11 +3,11 @@ package cestimate
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vestimate/vepermission"
 )
 
-func EstimatePermissionList(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimatePermissionList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
 		ret, err := as.Services.EstimatePermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -33,14 +33,14 @@ func EstimatePermissionList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vepermission.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "estimate", "epermission")
+		return controller.Render(w, r, as, page, ps, "estimate", "epermission")
 	})
 }
 
 //nolint:lll
-func EstimatePermissionDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := epermissionFromPath(rc, as, ps)
+func EstimatePermissionDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := epermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -48,14 +48,14 @@ func EstimatePermissionDetail(rc *fasthttp.RequestCtx) {
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 
-		return controller.Render(rc, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.TitleString()+"**permission")
+		return controller.Render(w, r, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.TitleString()+"**permission")
 	})
 }
 
-func EstimatePermissionCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimatePermissionCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &epermission.EstimatePermission{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = epermission.Random()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {
@@ -64,12 +64,12 @@ func EstimatePermissionCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [EstimatePermission]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
+		return controller.Render(w, r, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
 	})
 }
 
-func EstimatePermissionRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimatePermissionRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.EstimatePermission.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random EstimatePermission")
@@ -78,9 +78,9 @@ func EstimatePermissionRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func EstimatePermissionCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := epermissionFromForm(rc, true)
+func EstimatePermissionCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := epermissionFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse EstimatePermission from form")
 		}
@@ -89,28 +89,28 @@ func EstimatePermissionCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created EstimatePermission")
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func EstimatePermissionEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := epermissionFromPath(rc, as, ps)
+func EstimatePermissionEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := epermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vepermission.Edit{Model: ret}, ps, "estimate", "epermission", ret.String())
+		return controller.Render(w, r, as, &vepermission.Edit{Model: ret}, ps, "estimate", "epermission", ret.String())
 	})
 }
 
-func EstimatePermissionEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := epermissionFromPath(rc, as, ps)
+func EstimatePermissionEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := epermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := epermissionFromForm(rc, false)
+		frm, err := epermissionFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse EstimatePermission from form")
 		}
@@ -122,13 +122,13 @@ func EstimatePermissionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update EstimatePermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func EstimatePermissionDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("epermission.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := epermissionFromPath(rc, as, ps)
+func EstimatePermissionDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("epermission.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := epermissionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -137,12 +137,12 @@ func EstimatePermissionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/permission", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/permission", w, ps)
 	})
 }
 
-func epermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*epermission.EstimatePermission, error) {
-	estimateIDArgStr, err := cutil.RCRequiredString(rc, "estimateID", false)
+func epermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*epermission.EstimatePermission, error) {
+	estimateIDArgStr, err := cutil.RCRequiredString(r, "estimateID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [estimateID] as an argument")
 	}
@@ -151,19 +151,19 @@ func epermissionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageS
 		return nil, errors.Errorf("argument [estimateID] (%s) is not a valid UUID", estimateIDArgStr)
 	}
 	estimateIDArg := *estimateIDArgP
-	keyArg, err := cutil.RCRequiredString(rc, "key", false)
+	keyArg, err := cutil.RCRequiredString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(rc, "value", false)
+	valueArg, err := cutil.RCRequiredString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}
 	return as.Services.EstimatePermission.Get(ps.Context, nil, estimateIDArg, keyArg, valueArg, ps.Logger)
 }
 
-func epermissionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*epermission.EstimatePermission, error) {
-	frm, err := cutil.ParseForm(rc)
+func epermissionFromForm(r *http.Request, b []byte, setPK bool) (*epermission.EstimatePermission, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

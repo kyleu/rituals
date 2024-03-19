@@ -6,14 +6,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"slices"
 	"strings"
 	"sync"
 
-	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/lib/user"
@@ -117,28 +117,31 @@ func (s *Service) Close() {
 	})
 }
 
-var upgrader = websocket.FastHTTPUpgrader{EnableCompression: true}
+var upgrader = websocket.Upgrader{EnableCompression: true}
 
 func (s *Service) Upgrade(
-	ctx context.Context, rc *fasthttp.RequestCtx, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger,
+	ctx context.Context, w http.ResponseWriter, r *http.Request, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, logger util.Logger,
 ) error {
-	return upgrader.Upgrade(rc, func(conn *websocket.Conn) {
-		cx, err := s.Register(u, profile, accts, conn, logger)
-		if err != nil {
-			logger.Warn("unable to register websocket connection")
-			return
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		return err
+	}
+	cx, err := s.Register(u, profile, accts, conn, logger)
+	if err != nil {
+		logger.Warnf("unable to register websocket connection: %+v", err)
+		return nil
+	}
+	joined, err := s.Join(cx.ID, channel, logger)
+	if err != nil {
+		logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
+		return nil
+	}
+	err = s.ReadLoop(ctx, cx.ID, logger)
+	if err != nil {
+		if !strings.Contains(err.Error(), "1001") {
+			logger.Error(fmt.Sprintf("error processing socket read loop for connection [%s]: %+v", cx.ID.String(), err))
 		}
-		joined, err := s.Join(cx.ID, channel, logger)
-		if err != nil {
-			logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
-			return
-		}
-		err = s.ReadLoop(ctx, cx.ID, logger)
-		if err != nil {
-			if !strings.Contains(err.Error(), "1001") {
-				logger.Error(fmt.Sprintf("error processing socket read loop for connection [%s]: %+v", cx.ID.String(), err))
-			}
-			return
-		}
-	})
+		return nil
+	}
+	return nil
 }

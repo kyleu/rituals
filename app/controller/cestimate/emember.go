@@ -3,11 +3,11 @@ package cestimate
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -17,8 +17,8 @@ import (
 	"github.com/kyleu/rituals/views/vestimate/vemember"
 )
 
-func EstimateMemberList(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimateMemberList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
 		ret, err := as.Services.EstimateMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -40,13 +40,13 @@ func EstimateMemberList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vemember.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(rc, as, page, ps, "estimate", "emember")
+		return controller.Render(w, r, as, page, ps, "estimate", "emember")
 	})
 }
 
-func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := ememberFromPath(rc, as, ps)
+func EstimateMemberDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := ememberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -55,7 +55,7 @@ func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(rc, as, &vemember.Detail{
+		return controller.Render(w, r, as, &vemember.Detail{
 			Model:                ret,
 			EstimateByEstimateID: estimateByEstimateID,
 			UserByUserID:         userByUserID,
@@ -63,10 +63,10 @@ func EstimateMemberDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func EstimateMemberCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimateMemberCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &emember.EstimateMember{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = emember.Random()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {
@@ -79,12 +79,12 @@ func EstimateMemberCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [EstimateMember]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
+		return controller.Render(w, r, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
 	})
 }
 
-func EstimateMemberRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func EstimateMemberRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.EstimateMember.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random EstimateMember")
@@ -93,9 +93,9 @@ func EstimateMemberRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func EstimateMemberCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := ememberFromForm(rc, true)
+func EstimateMemberCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := ememberFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse EstimateMember from form")
 		}
@@ -104,28 +104,28 @@ func EstimateMemberCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created EstimateMember")
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func EstimateMemberEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := ememberFromPath(rc, as, ps)
+func EstimateMemberEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := ememberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vemember.Edit{Model: ret}, ps, "estimate", "emember", ret.String())
+		return controller.Render(w, r, as, &vemember.Edit{Model: ret}, ps, "estimate", "emember", ret.String())
 	})
 }
 
-func EstimateMemberEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := ememberFromPath(rc, as, ps)
+func EstimateMemberEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := ememberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := ememberFromForm(rc, false)
+		frm, err := ememberFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse EstimateMember from form")
 		}
@@ -136,13 +136,13 @@ func EstimateMemberEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update EstimateMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func EstimateMemberDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("emember.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := ememberFromPath(rc, as, ps)
+func EstimateMemberDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("emember.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := ememberFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -151,12 +151,12 @@ func EstimateMemberDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/member", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/member", w, ps)
 	})
 }
 
-func ememberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*emember.EstimateMember, error) {
-	estimateIDArgStr, err := cutil.RCRequiredString(rc, "estimateID", false)
+func ememberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*emember.EstimateMember, error) {
+	estimateIDArgStr, err := cutil.RCRequiredString(r, "estimateID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [estimateID] as an argument")
 	}
@@ -165,7 +165,7 @@ func ememberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 		return nil, errors.Errorf("argument [estimateID] (%s) is not a valid UUID", estimateIDArgStr)
 	}
 	estimateIDArg := *estimateIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(rc, "userID", false)
+	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}
@@ -177,8 +177,8 @@ func ememberFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 	return as.Services.EstimateMember.Get(ps.Context, nil, estimateIDArg, userIDArg, ps.Logger)
 }
 
-func ememberFromForm(rc *fasthttp.RequestCtx, setPK bool) (*emember.EstimateMember, error) {
-	frm, err := cutil.ParseForm(rc)
+func ememberFromForm(r *http.Request, b []byte, setPK bool) (*emember.EstimateMember, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

@@ -3,11 +3,11 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/comment"
@@ -16,8 +16,8 @@ import (
 	"github.com/kyleu/rituals/views/vcomment"
 )
 
-func CommentList(rc *fasthttp.RequestCtx) {
-	Act("comment.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func CommentList(w http.ResponseWriter, r *http.Request) {
+	Act("comment.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		prms := ps.Params.Get("comment", nil, ps.Logger).Sanitize("comment")
 		ret, err := as.Services.Comment.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
@@ -32,13 +32,13 @@ func CommentList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vcomment.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
-		return Render(rc, as, page, ps, "comment")
+		return Render(w, r, as, page, ps, "comment")
 	})
 }
 
-func CommentDetail(rc *fasthttp.RequestCtx) {
-	Act("comment.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := commentFromPath(rc, as, ps)
+func CommentDetail(w http.ResponseWriter, r *http.Request) {
+	Act("comment.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := commentFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -46,14 +46,14 @@ func CommentDetail(rc *fasthttp.RequestCtx) {
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(rc, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.TitleString()+"**comments")
+		return Render(w, r, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.TitleString()+"**comments")
 	})
 }
 
-func CommentCreateForm(rc *fasthttp.RequestCtx) {
-	Act("comment.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func CommentCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("comment.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &comment.Comment{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = comment.Random()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
@@ -62,12 +62,12 @@ func CommentCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Comment]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
+		return Render(w, r, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
 	})
 }
 
-func CommentRandom(rc *fasthttp.RequestCtx) {
-	Act("comment.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func CommentRandom(w http.ResponseWriter, r *http.Request) {
+	Act("comment.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Comment.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Comment")
@@ -76,9 +76,9 @@ func CommentRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func CommentCreate(rc *fasthttp.RequestCtx) {
-	Act("comment.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := commentFromForm(rc, true)
+func CommentCreate(w http.ResponseWriter, r *http.Request) {
+	Act("comment.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := commentFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Comment from form")
 		}
@@ -87,28 +87,28 @@ func CommentCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Comment")
 		}
 		msg := fmt.Sprintf("Comment [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func CommentEditForm(rc *fasthttp.RequestCtx) {
-	Act("comment.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := commentFromPath(rc, as, ps)
+func CommentEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("comment.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := commentFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vcomment.Edit{Model: ret}, ps, "comment", ret.String())
+		return Render(w, r, as, &vcomment.Edit{Model: ret}, ps, "comment", ret.String())
 	})
 }
 
-func CommentEdit(rc *fasthttp.RequestCtx) {
-	Act("comment.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := commentFromPath(rc, as, ps)
+func CommentEdit(w http.ResponseWriter, r *http.Request) {
+	Act("comment.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := commentFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := commentFromForm(rc, false)
+		frm, err := commentFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Comment from form")
 		}
@@ -118,13 +118,13 @@ func CommentEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Comment [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Comment [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func CommentDelete(rc *fasthttp.RequestCtx) {
-	Act("comment.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := commentFromPath(rc, as, ps)
+func CommentDelete(w http.ResponseWriter, r *http.Request) {
+	Act("comment.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := commentFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -133,12 +133,12 @@ func CommentDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete comment [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Comment [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/comment", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/comment", w, ps)
 	})
 }
 
-func commentFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*comment.Comment, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func commentFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*comment.Comment, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -150,8 +150,8 @@ func commentFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState
 	return as.Services.Comment.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func commentFromForm(rc *fasthttp.RequestCtx, setPK bool) (*comment.Comment, error) {
-	frm, err := cutil.ParseForm(rc)
+func commentFromForm(r *http.Request, b []byte, setPK bool) (*comment.Comment, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

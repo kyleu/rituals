@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -9,13 +9,13 @@ import (
 	"github.com/kyleu/rituals/views"
 )
 
-func Home(rc *fasthttp.RequestCtx) {
-	Act("home", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.FromAny(ps.Data)
+func Home(w http.ResponseWriter, r *http.Request) {
+	Act("home", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
-		ps.Data = w
-		return Render(rc, as, &views.Home{Teams: w.Teams, Sprints: w.Sprints, Estimates: w.Estimates, Standups: w.Standups, Retros: w.Retros}, ps)
+		ps.Data = ws
+		return Render(w, r, as, &views.Home{Teams: ws.Teams, Sprints: ws.Sprints, Estimates: ws.Estimates, Standups: ws.Standups, Retros: ws.Retros}, ps)
 	})
 }

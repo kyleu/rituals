@@ -1,7 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
@@ -13,46 +13,46 @@ import (
 	"github.com/kyleu/rituals/views/vworkspace/vwstandup"
 )
 
-func StandupList(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.standup.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		w, err := workspace.FromAny(ps.Data)
+func StandupList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.standup.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		ps.Title = "Standups"
-		ps.Data = w.Standups
-		return controller.Render(rc, as, &vwstandup.StandupList{Standups: w.Standups, Teams: w.Teams, Sprints: w.Sprints}, ps, "standups")
+		ps.Data = ws.Standups
+		return controller.Render(w, r, as, &vwstandup.StandupList{Standups: ws.Standups, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups")
 	})
 }
 
-func StandupDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.standup", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func StandupDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.standup", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		w, err := workspace.FromAny(ps.Data)
+		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
 		}
 		p := workspace.NewLoadParams(ps.Context, slug, ps.Profile, ps.Accounts, nil, ps.Params, ps.Logger)
 		fu, err := as.Services.Workspace.LoadStandup(p, func() (team.Teams, error) {
-			return w.Teams, nil
+			return ws.Teams, nil
 		}, func() (sprint.Sprints, error) {
-			return w.Sprints, nil
+			return ws.Sprints, nil
 		})
 		if err != nil {
 			return "", err
 		}
 		ps.Title = fu.Standup.TitleString()
 		ps.Data = fu
-		return controller.Render(rc, as, &vwstandup.StandupWorkspace{FullStandup: fu, Teams: w.Teams, Sprints: w.Sprints}, ps, "standups", fu.Standup.ID.String())
+		return controller.Render(w, r, as, &vwstandup.StandupWorkspace{FullStandup: fu, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups", fu.Standup.ID.String())
 	})
 }
 
-func StandupCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.standup.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		frm, err := parseRequestForm(rc, ps.Username())
+func StandupCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.standup.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		frm, err := parseRequestForm(r, ps.RequestBody, ps.Username())
 		if err != nil {
 			return "", err
 		}
@@ -62,13 +62,13 @@ func StandupCreate(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New standup created", model.PublicWebPath(), rc, ps)
+		return controller.FlashAndRedir(true, "New standup created", model.PublicWebPath(), w, ps)
 	})
 }
 
-func StandupDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.standup.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func StandupDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.standup.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -81,17 +81,17 @@ func StandupDelete(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Standup deleted", "/", rc, ps)
+		return controller.FlashAndRedir(true, "Standup deleted", "/", w, ps)
 	})
 }
 
-func StandupAction(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.standup.action", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(rc, "slug", false)
+func StandupAction(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.standup.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		slug, err := cutil.RCRequiredString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
-		frm, err := cutil.ParseForm(rc)
+		frm, err := cutil.ParseForm(r, ps.RequestBody)
 		if err != nil {
 			return "", err
 		}
@@ -101,6 +101,6 @@ func StandupAction(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, rc, ps)
+		return controller.FlashAndRedir(true, msg, u, w, ps)
 	})
 }

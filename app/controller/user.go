@@ -3,10 +3,10 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -15,9 +15,9 @@ import (
 	"github.com/kyleu/rituals/views/vuser"
 )
 
-func UserList(rc *fasthttp.RequestCtx) {
-	Act("user.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func UserList(w http.ResponseWriter, r *http.Request) {
+	Act("user.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("user", nil, ps.Logger).Sanitize("user")
 		var ret user.Users
 		var err error
@@ -31,13 +31,13 @@ func UserList(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Users", ret)
 		page := &vuser.List{Models: ret, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "user")
+		return Render(w, r, as, page, ps, "user")
 	})
 }
 
-func UserDetail(rc *fasthttp.RequestCtx) {
-	Act("user.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := userFromPath(rc, as, ps)
+func UserDetail(w http.ResponseWriter, r *http.Request) {
+	Act("user.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := userFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -103,7 +103,7 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
-		return Render(rc, as, &vuser.Detail{
+		return Render(w, r, as, &vuser.Detail{
 			Model:  ret,
 			Params: ps.Params,
 
@@ -123,20 +123,20 @@ func UserDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func UserCreateForm(rc *fasthttp.RequestCtx) {
-	Act("user.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func UserCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("user.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &user.User{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = user.Random()
 		}
 		ps.SetTitleAndData("Create [User]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
+		return Render(w, r, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
 	})
 }
 
-func UserRandom(rc *fasthttp.RequestCtx) {
-	Act("user.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func UserRandom(w http.ResponseWriter, r *http.Request) {
+	Act("user.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random User")
@@ -145,9 +145,9 @@ func UserRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func UserCreate(rc *fasthttp.RequestCtx) {
-	Act("user.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := userFromForm(rc, true)
+func UserCreate(w http.ResponseWriter, r *http.Request) {
+	Act("user.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := userFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse User from form")
 		}
@@ -156,28 +156,28 @@ func UserCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created User")
 		}
 		msg := fmt.Sprintf("User [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func UserEditForm(rc *fasthttp.RequestCtx) {
-	Act("user.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := userFromPath(rc, as, ps)
+func UserEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("user.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := userFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vuser.Edit{Model: ret}, ps, "user", ret.String())
+		return Render(w, r, as, &vuser.Edit{Model: ret}, ps, "user", ret.String())
 	})
 }
 
-func UserEdit(rc *fasthttp.RequestCtx) {
-	Act("user.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := userFromPath(rc, as, ps)
+func UserEdit(w http.ResponseWriter, r *http.Request) {
+	Act("user.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := userFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := userFromForm(rc, false)
+		frm, err := userFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse User from form")
 		}
@@ -187,13 +187,13 @@ func UserEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update User [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("User [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func UserDelete(rc *fasthttp.RequestCtx) {
-	Act("user.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := userFromPath(rc, as, ps)
+func UserDelete(w http.ResponseWriter, r *http.Request) {
+	Act("user.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := userFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -202,12 +202,12 @@ func UserDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete user [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("User [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/user", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/user", w, ps)
 	})
 }
 
-func userFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*user.User, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func userFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*user.User, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -219,8 +219,8 @@ func userFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (
 	return as.Services.User.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func userFromForm(rc *fasthttp.RequestCtx, setPK bool) (*user.User, error) {
-	frm, err := cutil.ParseForm(rc)
+func userFromForm(r *http.Request, b []byte, setPK bool) (*user.User, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

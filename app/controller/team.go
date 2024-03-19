@@ -3,10 +3,10 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -15,9 +15,9 @@ import (
 	"github.com/kyleu/rituals/views/vteam"
 )
 
-func TeamList(rc *fasthttp.RequestCtx) {
-	Act("team.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func TeamList(w http.ResponseWriter, r *http.Request) {
+	Act("team.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("team", nil, ps.Logger).Sanitize("team")
 		var ret team.Teams
 		var err error
@@ -31,13 +31,13 @@ func TeamList(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Teams", ret)
 		page := &vteam.List{Models: ret, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "team")
+		return Render(w, r, as, page, ps, "team")
 	})
 }
 
-func TeamDetail(rc *fasthttp.RequestCtx) {
-	Act("team.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := teamFromPath(rc, as, ps)
+func TeamDetail(w http.ResponseWriter, r *http.Request) {
+	Act("team.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := teamFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -78,7 +78,7 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		return Render(rc, as, &vteam.Detail{
+		return Render(w, r, as, &vteam.Detail{
 			Model:  ret,
 			Params: ps.Params,
 
@@ -93,20 +93,20 @@ func TeamDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func TeamCreateForm(rc *fasthttp.RequestCtx) {
-	Act("team.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("team.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &team.Team{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = team.Random()
 		}
 		ps.SetTitleAndData("Create [Team]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
+		return Render(w, r, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
 	})
 }
 
-func TeamRandom(rc *fasthttp.RequestCtx) {
-	Act("team.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func TeamRandom(w http.ResponseWriter, r *http.Request) {
+	Act("team.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Team")
@@ -115,9 +115,9 @@ func TeamRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func TeamCreate(rc *fasthttp.RequestCtx) {
-	Act("team.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := teamFromForm(rc, true)
+func TeamCreate(w http.ResponseWriter, r *http.Request) {
+	Act("team.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := teamFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Team from form")
 		}
@@ -126,28 +126,28 @@ func TeamCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Team")
 		}
 		msg := fmt.Sprintf("Team [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func TeamEditForm(rc *fasthttp.RequestCtx) {
-	Act("team.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := teamFromPath(rc, as, ps)
+func TeamEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("team.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := teamFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vteam.Edit{Model: ret}, ps, "team", ret.String())
+		return Render(w, r, as, &vteam.Edit{Model: ret}, ps, "team", ret.String())
 	})
 }
 
-func TeamEdit(rc *fasthttp.RequestCtx) {
-	Act("team.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := teamFromPath(rc, as, ps)
+func TeamEdit(w http.ResponseWriter, r *http.Request) {
+	Act("team.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := teamFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := teamFromForm(rc, false)
+		frm, err := teamFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Team from form")
 		}
@@ -157,13 +157,13 @@ func TeamEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Team [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Team [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func TeamDelete(rc *fasthttp.RequestCtx) {
-	Act("team.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := teamFromPath(rc, as, ps)
+func TeamDelete(w http.ResponseWriter, r *http.Request) {
+	Act("team.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := teamFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -172,12 +172,12 @@ func TeamDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete team [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Team [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/team", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/team", w, ps)
 	})
 }
 
-func teamFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*team.Team, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func teamFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*team.Team, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -189,8 +189,8 @@ func teamFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (
 	return as.Services.Team.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func teamFromForm(rc *fasthttp.RequestCtx, setPK bool) (*team.Team, error) {
-	frm, err := cutil.ParseForm(rc)
+func teamFromForm(r *http.Request, b []byte, setPK bool) (*team.Team, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

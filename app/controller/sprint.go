@@ -3,12 +3,12 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller/cutil"
@@ -18,9 +18,9 @@ import (
 	"github.com/kyleu/rituals/views/vsprint"
 )
 
-func SprintList(rc *fasthttp.RequestCtx) {
-	Act("sprint.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
+func SprintList(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
 		prms := ps.Params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
 		var ret sprint.Sprints
 		var err error
@@ -41,13 +41,13 @@ func SprintList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vsprint.List{Models: ret, TeamsByTeamID: teamsByTeamID, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "sprint")
+		return Render(w, r, as, page, ps, "sprint")
 	})
 }
 
-func SprintDetail(rc *fasthttp.RequestCtx) {
-	Act("sprint.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := sprintFromPath(rc, as, ps)
+func SprintDetail(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := sprintFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -88,7 +88,7 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
-		return Render(rc, as, &vsprint.Detail{
+		return Render(w, r, as, &vsprint.Detail{
 			Model:        ret,
 			TeamByTeamID: teamByTeamID,
 			Params:       ps.Params,
@@ -103,10 +103,10 @@ func SprintDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func SprintCreateForm(rc *fasthttp.RequestCtx) {
-	Act("sprint.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &sprint.Sprint{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = sprint.Random()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
@@ -115,12 +115,12 @@ func SprintCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Sprint]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
+		return Render(w, r, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
 	})
 }
 
-func SprintRandom(rc *fasthttp.RequestCtx) {
-	Act("sprint.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func SprintRandom(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Sprint")
@@ -129,9 +129,9 @@ func SprintRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func SprintCreate(rc *fasthttp.RequestCtx) {
-	Act("sprint.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := sprintFromForm(rc, true)
+func SprintCreate(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := sprintFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Sprint from form")
 		}
@@ -140,28 +140,28 @@ func SprintCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Sprint")
 		}
 		msg := fmt.Sprintf("Sprint [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func SprintEditForm(rc *fasthttp.RequestCtx) {
-	Act("sprint.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := sprintFromPath(rc, as, ps)
+func SprintEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := sprintFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vsprint.Edit{Model: ret}, ps, "sprint", ret.String())
+		return Render(w, r, as, &vsprint.Edit{Model: ret}, ps, "sprint", ret.String())
 	})
 }
 
-func SprintEdit(rc *fasthttp.RequestCtx) {
-	Act("sprint.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := sprintFromPath(rc, as, ps)
+func SprintEdit(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := sprintFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := sprintFromForm(rc, false)
+		frm, err := sprintFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Sprint from form")
 		}
@@ -171,13 +171,13 @@ func SprintEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Sprint [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Sprint [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func SprintDelete(rc *fasthttp.RequestCtx) {
-	Act("sprint.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := sprintFromPath(rc, as, ps)
+func SprintDelete(w http.ResponseWriter, r *http.Request) {
+	Act("sprint.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := sprintFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -186,12 +186,12 @@ func SprintDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete sprint [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Sprint [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/sprint", rc, ps)
+		return FlashAndRedir(true, msg, "/admin/db/sprint", w, ps)
 	})
 }
 
-func sprintFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*sprint.Sprint, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func sprintFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*sprint.Sprint, error) {
+	idArgStr, err := cutil.RCRequiredString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -203,8 +203,8 @@ func sprintFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState)
 	return as.Services.Sprint.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func sprintFromForm(rc *fasthttp.RequestCtx, setPK bool) (*sprint.Sprint, error) {
-	frm, err := cutil.ParseForm(rc)
+func sprintFromForm(r *http.Request, b []byte, setPK bool) (*sprint.Sprint, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

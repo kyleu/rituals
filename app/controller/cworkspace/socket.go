@@ -1,7 +1,7 @@
 package cworkspace
 
 import (
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/controller"
@@ -9,42 +9,42 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func TeamSocket(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.team.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return Socket(rc, util.KeyTeam, as, ps)
+func TeamSocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.team.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(w, r, util.KeyTeam, as, ps)
 	})
 }
 
-func SprintSocket(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.sprint.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return Socket(rc, util.KeySprint, as, ps)
+func SprintSocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.sprint.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(w, r, util.KeySprint, as, ps)
 	})
 }
 
-func EstimateSocket(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.estimate.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return Socket(rc, util.KeyEstimate, as, ps)
+func EstimateSocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.estimate.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(w, r, util.KeyEstimate, as, ps)
 	})
 }
 
-func StandupSocket(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.standup.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return Socket(rc, util.KeyStandup, as, ps)
+func StandupSocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.standup.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(w, r, util.KeyStandup, as, ps)
 	})
 }
 
-func RetroSocket(rc *fasthttp.RequestCtx) {
-	controller.Act("workspace.retro.socket", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return Socket(rc, util.KeyRetro, as, ps)
+func RetroSocket(w http.ResponseWriter, r *http.Request) {
+	controller.Act("workspace.retro.socket", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		return Socket(w, r, util.KeyRetro, as, ps)
 	})
 }
 
-func Socket(rc *fasthttp.RequestCtx, svc string, as *app.State, ps *cutil.PageState) (string, error) {
-	id, err := cutil.RCRequiredUUID(rc, "id")
+func Socket(w http.ResponseWriter, r *http.Request, svc string, as *app.State, ps *cutil.PageState) (string, error) {
+	id, err := cutil.RCRequiredUUID(r, "id")
 	if err != nil {
 		return "", err
 	}
-	err = as.Services.Socket.Upgrade(ps.Context, rc, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, ps.Logger)
+	err = as.Services.Socket.Upgrade(ps.Context, w, r, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, ps.Logger)
 	if err != nil {
 		ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
 		return "", err
