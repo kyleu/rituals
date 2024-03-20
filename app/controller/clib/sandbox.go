@@ -1,10 +1,11 @@
-// Package controller - Content managed by Project Forge, see [projectforge.md] for details.
-package controller
+// Package clib - Content managed by Project Forge, see [projectforge.md] for details.
+package clib
 
 import (
 	"net/http"
 
 	"github.com/kyleu/rituals/app"
+	"github.com/kyleu/rituals/app/controller"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/sandbox"
 	"github.com/kyleu/rituals/app/lib/telemetry"
@@ -12,14 +13,14 @@ import (
 )
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
-	Act("sandbox.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("sandbox.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ps.SetTitleAndData("Sandboxes", sandbox.AllSandboxes)
-		return Render(w, r, as, &vsandbox.List{}, ps, "sandbox")
+		return controller.Render(w, r, as, &vsandbox.List{}, ps, "sandbox")
 	})
 }
 
 func SandboxRun(w http.ResponseWriter, r *http.Request) {
-	Act("sandbox.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+	controller.Act("sandbox.run", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		key, err := cutil.RCRequiredString(r, "key", false)
 		if err != nil {
 			return "", err
@@ -27,7 +28,7 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 
 		sb := sandbox.AllSandboxes.Get(key)
 		if sb == nil {
-			return ERsp("no sandbox with key [%s]", key)
+			return controller.ERsp("no sandbox with key [%s]", key)
 		}
 
 		ctx, span, logger := telemetry.StartSpan(ps.Context, "sandbox."+key, ps.Logger)
@@ -39,8 +40,8 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData(sb.Title, ret)
 		if sb.Key == "testbed" {
-			return Render(w, r, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
+			return controller.Render(w, r, as, &vsandbox.Testbed{}, ps, "sandbox", sb.Key)
 		}
-		return Render(w, r, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
+		return controller.Render(w, r, as, &vsandbox.Run{Key: key, Title: sb.Title, Icon: sb.Icon, Result: ret}, ps, "sandbox", sb.Key)
 	})
 }

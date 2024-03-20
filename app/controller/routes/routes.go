@@ -40,16 +40,7 @@ func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
 	workspaceRoutes(r)
 	// $PF_SECTION_END(routes)$
 
-	makeRoute(r, http.MethodGet, "/admin", clib.Admin)
-	makeRoute(r, http.MethodGet, "/admin/", clib.Admin)
-	makeRoute(r, http.MethodPost, "/admin/", clib.Admin)
-	makeRoute(r, http.MethodGet, "/admin/database", clib.DatabaseList)
-	makeRoute(r, http.MethodGet, "/admin/database/{key}", clib.DatabaseDetail)
-	makeRoute(r, http.MethodGet, "/admin/database/{key}/{act}", clib.DatabaseAction)
-	makeRoute(r, http.MethodGet, "/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView)
-	makeRoute(r, http.MethodPost, "/admin/database/{key}/sql", clib.DatabaseSQLRun)
-	makeRoute(r, http.MethodGet, "/admin/sandbox", controller.SandboxList)
-	makeRoute(r, http.MethodGet, "/admin/sandbox/{key}", controller.SandboxRun)
+	adminRoutes(r)
 
 	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
 	makeRoute(r, http.MethodGet, "/robots.txt", clib.RobotsTxt)
