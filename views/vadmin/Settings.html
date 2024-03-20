@@ -30,12 +30,6 @@
   </div>
 
   <div class="card">
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>
-    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}
-    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}
-  </div>
-
-  <div class="card">
     <h3>{%= components.SVGRefIcon(`archive`, ps) %}Admin Functions</h3>
     {%= settingsLink("/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps) %}
     {%= settingsLink("/admin/modules", "archive", "Go Modules", "The Go modules used by " + util.AppName, ps) %}
@@ -60,6 +54,11 @@
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
     <div class="clear"></div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>
+    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}
+    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}
   </div>
 
   {%= vauth.Authentication(as, ps) %}
