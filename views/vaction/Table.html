@@ -11,7 +11,7 @@
 ) %}
 
 {% func Table(models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("action", nil, ps.Logger).Sanitize("action") -%}
+  {%- code prms := params.Sanitized("action", ps.Logger) -%}
   <table>
     <thead>
       <tr>

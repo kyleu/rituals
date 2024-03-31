@@ -21,16 +21,22 @@ import (
 func StoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("story.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := strings.TrimSpace(r.URL.Query().Get("q"))
-		prms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
+		prms := ps.Params.Sanitized("story", ps.Logger)
 		var ret story.Stories
 		var err error
 		if q == "" {
 			ret, err = as.Services.Story.List(ps.Context, nil, prms, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		} else {
 			ret, err = as.Services.Story.Search(ps.Context, q, nil, prms, ps.Logger)
-		}
-		if err != nil {
-			return "", err
+			if err != nil {
+				return "", err
+			}
+			if len(ret) == 1 {
+				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+			}
 		}
 		ps.SetTitleAndData("Stories", ret)
 		estimateIDsByEstimateID := lo.Map(ret, func(x *story.Story, _ int) uuid.UUID {
@@ -63,7 +69,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		relVotesByStoryIDPrms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		relVotesByStoryIDPrms := ps.Params.Sanitized("vote", ps.Logger)
 		relVotesByStoryID, err := as.Services.Vote.GetByStoryID(ps.Context, nil, ret.ID, relVotesByStoryIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")

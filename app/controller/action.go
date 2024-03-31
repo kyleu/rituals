@@ -18,7 +18,7 @@ import (
 
 func ActionList(w http.ResponseWriter, r *http.Request) {
 	Act("action.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("action", nil, ps.Logger).Sanitize("action")
+		prms := ps.Params.Sanitized("action", ps.Logger)
 		ret, err := as.Services.Action.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

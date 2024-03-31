@@ -19,7 +19,7 @@ import (
 
 func ReportList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("report.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("report", nil, ps.Logger).Sanitize("report")
+		prms := ps.Params.Sanitized("report", ps.Logger)
 		ret, err := as.Services.Report.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

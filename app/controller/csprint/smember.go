@@ -19,7 +19,7 @@ import (
 
 func SprintMemberList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("smember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
+		prms := ps.Params.Sanitized("smember", ps.Logger)
 		ret, err := as.Services.SprintMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

@@ -21,16 +21,22 @@ import (
 func SprintList(w http.ResponseWriter, r *http.Request) {
 	Act("sprint.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := strings.TrimSpace(r.URL.Query().Get("q"))
-		prms := ps.Params.Get("sprint", nil, ps.Logger).Sanitize("sprint")
+		prms := ps.Params.Sanitized("sprint", ps.Logger)
 		var ret sprint.Sprints
 		var err error
 		if q == "" {
 			ret, err = as.Services.Sprint.List(ps.Context, nil, prms, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		} else {
 			ret, err = as.Services.Sprint.Search(ps.Context, q, nil, prms, ps.Logger)
-		}
-		if err != nil {
-			return "", err
+			if err != nil {
+				return "", err
+			}
+			if len(ret) == 1 {
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+			}
 		}
 		ps.SetTitleAndData("Sprints", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *sprint.Sprint, _ int) *uuid.UUID {
@@ -58,32 +64,32 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 			teamByTeamID, _ = as.Services.Team.Get(ps.Context, nil, *ret.TeamID, ps.Logger)
 		}
 
-		relEstimatesBySprintIDPrms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
+		relEstimatesBySprintIDPrms := ps.Params.Sanitized("estimate", ps.Logger)
 		relEstimatesBySprintID, err := as.Services.Estimate.GetBySprintID(ps.Context, nil, &ret.ID, relEstimatesBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child estimates")
 		}
-		relRetrosBySprintIDPrms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
+		relRetrosBySprintIDPrms := ps.Params.Sanitized("retro", ps.Logger)
 		relRetrosBySprintID, err := as.Services.Retro.GetBySprintID(ps.Context, nil, &ret.ID, relRetrosBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child retros")
 		}
-		relSprintHistoriesBySprintIDPrms := ps.Params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
+		relSprintHistoriesBySprintIDPrms := ps.Params.Sanitized("shistory", ps.Logger)
 		relSprintHistoriesBySprintID, err := as.Services.SprintHistory.GetBySprintID(ps.Context, nil, ret.ID, relSprintHistoriesBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		relSprintMembersBySprintIDPrms := ps.Params.Get("smember", nil, ps.Logger).Sanitize("smember")
+		relSprintMembersBySprintIDPrms := ps.Params.Sanitized("smember", ps.Logger)
 		relSprintMembersBySprintID, err := as.Services.SprintMember.GetBySprintID(ps.Context, nil, ret.ID, relSprintMembersBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		relSprintPermissionsBySprintIDPrms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
+		relSprintPermissionsBySprintIDPrms := ps.Params.Sanitized("spermission", ps.Logger)
 		relSprintPermissionsBySprintID, err := as.Services.SprintPermission.GetBySprintID(ps.Context, nil, ret.ID, relSprintPermissionsBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		relStandupsBySprintIDPrms := ps.Params.Get("standup", nil, ps.Logger).Sanitize("standup")
+		relStandupsBySprintIDPrms := ps.Params.Sanitized("standup", ps.Logger)
 		relStandupsBySprintID, err := as.Services.Standup.GetBySprintID(ps.Context, nil, &ret.ID, relStandupsBySprintIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")

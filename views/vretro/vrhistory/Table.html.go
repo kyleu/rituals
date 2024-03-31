@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
 	qw422016.N().S(`
 `)
 //line views/vretro/vrhistory/Table.html:13
-	prms := params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
+	prms := params.Sanitized("rhistory", ps.Logger)
 
 //line views/vretro/vrhistory/Table.html:13
 	qw422016.N().S(`  <table>

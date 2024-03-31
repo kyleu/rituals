@@ -10,7 +10,7 @@
 ) %}
 
 {% func Table(models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("thistory", nil, ps.Logger).Sanitize("thistory") -%}
+  {%- code prms := params.Sanitized("thistory", ps.Logger) -%}
   <table>
     <thead>
       <tr>

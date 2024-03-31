@@ -19,7 +19,7 @@ import (
 
 func EstimateHistoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("ehistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
+		prms := ps.Params.Sanitized("ehistory", ps.Logger)
 		ret, err := as.Services.EstimateHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

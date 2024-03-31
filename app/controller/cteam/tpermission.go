@@ -19,7 +19,7 @@ import (
 
 func TeamPermissionList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("tpermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
+		prms := ps.Params.Sanitized("tpermission", ps.Logger)
 		ret, err := as.Services.TeamPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

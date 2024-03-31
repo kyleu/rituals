@@ -10,7 +10,7 @@
 ) %}
 
 {% func Table(models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission") -%}
+  {%- code prms := params.Sanitized("tpermission", ps.Logger) -%}
   <table>
     <thead>
       <tr>

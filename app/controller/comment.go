@@ -18,7 +18,7 @@ import (
 
 func CommentList(w http.ResponseWriter, r *http.Request) {
 	Act("comment.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("comment", nil, ps.Logger).Sanitize("comment")
+		prms := ps.Params.Sanitized("comment", ps.Logger)
 		ret, err := as.Services.Comment.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

@@ -19,7 +19,7 @@ import (
 
 func TeamHistoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("thistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("thistory", nil, ps.Logger).Sanitize("thistory")
+		prms := ps.Params.Sanitized("thistory", ps.Logger)
 		ret, err := as.Services.TeamHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

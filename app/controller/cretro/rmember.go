@@ -19,7 +19,7 @@ import (
 
 func RetroMemberList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rmember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
+		prms := ps.Params.Sanitized("rmember", ps.Logger)
 		ret, err := as.Services.RetroMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

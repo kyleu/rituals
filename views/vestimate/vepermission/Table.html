@@ -10,7 +10,7 @@
 ) %}
 
 {% func Table(models epermission.EstimatePermissions, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("epermission", nil, ps.Logger).Sanitize("epermission") -%}
+  {%- code prms := params.Sanitized("epermission", ps.Logger) -%}
   <table>
     <thead>
       <tr>

@@ -11,7 +11,7 @@
 ) %}
 
 {% func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("feedback", nil, ps.Logger).Sanitize("feedback") -%}
+  {%- code prms := params.Sanitized("feedback", ps.Logger) -%}
   <table>
     <thead>
       <tr>

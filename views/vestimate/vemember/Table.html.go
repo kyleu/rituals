@@ -38,7 +38,7 @@ func StreamTable(qw422016 *qt422016.Writer, models emember.EstimateMembers, esti
 	qw422016.N().S(`
 `)
 //line views/vestimate/vemember/Table.html:15
-	prms := params.Get("emember", nil, ps.Logger).Sanitize("emember")
+	prms := params.Sanitized("emember", ps.Logger)
 
 //line views/vestimate/vemember/Table.html:15
 	qw422016.N().S(`  <table>

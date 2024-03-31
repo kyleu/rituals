@@ -19,7 +19,7 @@ import (
 
 func RetroPermissionList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rpermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
+		prms := ps.Params.Sanitized("rpermission", ps.Logger)
 		ret, err := as.Services.RetroPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

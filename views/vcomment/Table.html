@@ -11,7 +11,7 @@
 ) %}
 
 {% func Table(models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("comment", nil, ps.Logger).Sanitize("comment") -%}
+  {%- code prms := params.Sanitized("comment", ps.Logger) -%}
   <table>
     <thead>
       <tr>

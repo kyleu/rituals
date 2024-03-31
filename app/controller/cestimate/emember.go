@@ -19,7 +19,7 @@ import (
 
 func EstimateMemberList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("emember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
+		prms := ps.Params.Sanitized("emember", ps.Logger)
 		ret, err := as.Services.EstimateMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

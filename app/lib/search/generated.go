@@ -24,7 +24,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("estimate", nil, logger).Sanitize("estimate").WithLimit(5)
+		prm := params.PS.Sanitized("estimate", logger).WithLimit(5)
 		models, err := as.Services.Estimate.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -37,7 +37,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("retro", nil, logger).Sanitize("retro").WithLimit(5)
+		prm := params.PS.Sanitized("retro", logger).WithLimit(5)
 		models, err := as.Services.Retro.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -50,7 +50,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("sprint", nil, logger).Sanitize("sprint").WithLimit(5)
+		prm := params.PS.Sanitized("sprint", logger).WithLimit(5)
 		models, err := as.Services.Sprint.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -63,7 +63,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("standup", nil, logger).Sanitize("standup").WithLimit(5)
+		prm := params.PS.Sanitized("standup", logger).WithLimit(5)
 		models, err := as.Services.Standup.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -76,7 +76,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("story", nil, logger).Sanitize("story").WithLimit(5)
+		prm := params.PS.Sanitized("story", logger).WithLimit(5)
 		models, err := as.Services.Story.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -89,7 +89,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("team", nil, logger).Sanitize("team").WithLimit(5)
+		prm := params.PS.Sanitized("team", logger).WithLimit(5)
 		models, err := as.Services.Team.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -102,7 +102,7 @@ func generatedSearch() []Provider {
 		if !page.Admin {
 			return nil, nil
 		}
-		prm := params.PS.Get("user", nil, logger).Sanitize("user").WithLimit(5)
+		prm := params.PS.Sanitized("user", logger).WithLimit(5)
 		models, err := as.Services.User.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err

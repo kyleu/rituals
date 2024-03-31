@@ -19,7 +19,7 @@ import (
 
 func EstimatePermissionList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("epermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
+		prms := ps.Params.Sanitized("epermission", ps.Logger)
 		ret, err := as.Services.EstimatePermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

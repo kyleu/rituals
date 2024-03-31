@@ -37,7 +37,7 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUser
 	qw422016.N().S(`
 `)
 //line views/vcomment/Table.html:14
-	prms := params.Get("comment", nil, ps.Logger).Sanitize("comment")
+	prms := params.Sanitized("comment", ps.Logger)
 
 //line views/vcomment/Table.html:14
 	qw422016.N().S(`  <table>

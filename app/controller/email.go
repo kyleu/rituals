@@ -18,7 +18,7 @@ import (
 
 func EmailList(w http.ResponseWriter, r *http.Request) {
 	Act("email.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("email", nil, ps.Logger).Sanitize("email")
+		prms := ps.Params.Sanitized("email", ps.Logger)
 		ret, err := as.Services.Email.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

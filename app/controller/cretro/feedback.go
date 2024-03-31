@@ -19,7 +19,7 @@ import (
 
 func FeedbackList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("feedback.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+		prms := ps.Params.Sanitized("feedback", ps.Logger)
 		ret, err := as.Services.Feedback.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

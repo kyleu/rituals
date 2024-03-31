@@ -19,7 +19,7 @@ import (
 
 func SprintHistoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("shistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
+		prms := ps.Params.Sanitized("shistory", ps.Logger)
 		ret, err := as.Services.SprintHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

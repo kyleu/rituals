@@ -19,7 +19,7 @@ import (
 
 func StandupMemberList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("umember.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("umember", nil, ps.Logger).Sanitize("umember")
+		prms := ps.Params.Sanitized("umember", ps.Logger)
 		ret, err := as.Services.StandupMember.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

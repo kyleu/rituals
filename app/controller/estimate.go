@@ -22,16 +22,22 @@ import (
 func EstimateList(w http.ResponseWriter, r *http.Request) {
 	Act("estimate.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := strings.TrimSpace(r.URL.Query().Get("q"))
-		prms := ps.Params.Get("estimate", nil, ps.Logger).Sanitize("estimate")
+		prms := ps.Params.Sanitized("estimate", ps.Logger)
 		var ret estimate.Estimates
 		var err error
 		if q == "" {
 			ret, err = as.Services.Estimate.List(ps.Context, nil, prms, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		} else {
 			ret, err = as.Services.Estimate.Search(ps.Context, q, nil, prms, ps.Logger)
-		}
-		if err != nil {
-			return "", err
+			if err != nil {
+				return "", err
+			}
+			if len(ret) == 1 {
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+			}
 		}
 		ps.SetTitleAndData("Estimates", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *estimate.Estimate, _ int) *uuid.UUID {
@@ -71,22 +77,22 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 			sprintBySprintID, _ = as.Services.Sprint.Get(ps.Context, nil, *ret.SprintID, ps.Logger)
 		}
 
-		relEstimateHistoriesByEstimateIDPrms := ps.Params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
+		relEstimateHistoriesByEstimateIDPrms := ps.Params.Sanitized("ehistory", ps.Logger)
 		relEstimateHistoriesByEstimateID, err := as.Services.EstimateHistory.GetByEstimateID(ps.Context, nil, ret.ID, relEstimateHistoriesByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		relEstimateMembersByEstimateIDPrms := ps.Params.Get("emember", nil, ps.Logger).Sanitize("emember")
+		relEstimateMembersByEstimateIDPrms := ps.Params.Sanitized("emember", ps.Logger)
 		relEstimateMembersByEstimateID, err := as.Services.EstimateMember.GetByEstimateID(ps.Context, nil, ret.ID, relEstimateMembersByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		relEstimatePermissionsByEstimateIDPrms := ps.Params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
+		relEstimatePermissionsByEstimateIDPrms := ps.Params.Sanitized("epermission", ps.Logger)
 		relEstimatePermissionsByEstimateID, err := as.Services.EstimatePermission.GetByEstimateID(ps.Context, nil, ret.ID, relEstimatePermissionsByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		relStoriesByEstimateIDPrms := ps.Params.Get("story", nil, ps.Logger).Sanitize("story")
+		relStoriesByEstimateIDPrms := ps.Params.Sanitized("story", ps.Logger)
 		relStoriesByEstimateID, err := as.Services.Story.GetByEstimateID(ps.Context, nil, ret.ID, relStoriesByEstimateIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")

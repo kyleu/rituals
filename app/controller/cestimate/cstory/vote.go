@@ -19,7 +19,7 @@ import (
 
 func VoteList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("vote.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("vote", nil, ps.Logger).Sanitize("vote")
+		prms := ps.Params.Sanitized("vote", ps.Logger)
 		ret, err := as.Services.Vote.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

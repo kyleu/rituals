@@ -19,7 +19,7 @@ import (
 
 func RetroHistoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rhistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
+		prms := ps.Params.Sanitized("rhistory", ps.Logger)
 		ret, err := as.Services.RetroHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

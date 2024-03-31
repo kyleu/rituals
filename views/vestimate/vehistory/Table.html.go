@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 	qw422016.N().S(`
 `)
 //line views/vestimate/vehistory/Table.html:13
-	prms := params.Get("ehistory", nil, ps.Logger).Sanitize("ehistory")
+	prms := params.Sanitized("ehistory", ps.Logger)
 
 //line views/vestimate/vehistory/Table.html:13
 	qw422016.N().S(`  <table>

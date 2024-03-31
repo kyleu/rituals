@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 	qw422016.N().S(`
 `)
 //line views/vestimate/vepermission/Table.html:13
-	prms := params.Get("epermission", nil, ps.Logger).Sanitize("epermission")
+	prms := params.Sanitized("epermission", ps.Logger)
 
 //line views/vestimate/vepermission/Table.html:13
 	qw422016.N().S(`  <table>

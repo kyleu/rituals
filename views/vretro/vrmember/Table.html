@@ -12,7 +12,7 @@
 ) %}
 
 {% func Table(models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("rmember", nil, ps.Logger).Sanitize("rmember") -%}
+  {%- code prms := params.Sanitized("rmember", ps.Logger) -%}
   <table>
     <thead>
       <tr>

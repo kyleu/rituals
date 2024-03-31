@@ -19,7 +19,7 @@ import (
 
 func StandupPermissionList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("upermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("upermission", nil, ps.Logger).Sanitize("upermission")
+		prms := ps.Params.Sanitized("upermission", ps.Logger)
 		ret, err := as.Services.StandupPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

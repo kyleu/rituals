@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, st
 	qw422016.N().S(`
 `)
 //line views/vstandup/vuhistory/Table.html:13
-	prms := params.Get("uhistory", nil, ps.Logger).Sanitize("uhistory")
+	prms := params.Sanitized("uhistory", ps.Logger)
 
 //line views/vstandup/vuhistory/Table.html:13
 	qw422016.N().S(`  <table>

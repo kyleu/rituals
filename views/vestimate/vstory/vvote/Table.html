@@ -11,7 +11,7 @@
 ) %}
 
 {% func Table(models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("vote", nil, ps.Logger).Sanitize("vote") -%}
+  {%- code prms := params.Sanitized("vote", ps.Logger) -%}
   <table>
     <thead>
       <tr>

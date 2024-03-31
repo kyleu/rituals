@@ -12,7 +12,7 @@
 ) %}
 
 {% func Table(models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
-  {%- code prms := params.Get("standup", nil, ps.Logger).Sanitize("standup") -%}
+  {%- code prms := params.Sanitized("standup", ps.Logger) -%}
   <table>
     <thead>
       <tr>

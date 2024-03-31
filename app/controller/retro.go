@@ -22,16 +22,22 @@ import (
 func RetroList(w http.ResponseWriter, r *http.Request) {
 	Act("retro.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		q := strings.TrimSpace(r.URL.Query().Get("q"))
-		prms := ps.Params.Get("retro", nil, ps.Logger).Sanitize("retro")
+		prms := ps.Params.Sanitized("retro", ps.Logger)
 		var ret retro.Retros
 		var err error
 		if q == "" {
 			ret, err = as.Services.Retro.List(ps.Context, nil, prms, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		} else {
 			ret, err = as.Services.Retro.Search(ps.Context, q, nil, prms, ps.Logger)
-		}
-		if err != nil {
-			return "", err
+			if err != nil {
+				return "", err
+			}
+			if len(ret) == 1 {
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+			}
 		}
 		ps.SetTitleAndData("Retros", ret)
 		teamIDsByTeamID := lo.Map(ret, func(x *retro.Retro, _ int) *uuid.UUID {
@@ -70,22 +76,22 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 			sprintBySprintID, _ = as.Services.Sprint.Get(ps.Context, nil, *ret.SprintID, ps.Logger)
 		}
 
-		relFeedbacksByRetroIDPrms := ps.Params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+		relFeedbacksByRetroIDPrms := ps.Params.Sanitized("feedback", ps.Logger)
 		relFeedbacksByRetroID, err := as.Services.Feedback.GetByRetroID(ps.Context, nil, ret.ID, relFeedbacksByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child feedbacks")
 		}
-		relRetroHistoriesByRetroIDPrms := ps.Params.Get("rhistory", nil, ps.Logger).Sanitize("rhistory")
+		relRetroHistoriesByRetroIDPrms := ps.Params.Sanitized("rhistory", ps.Logger)
 		relRetroHistoriesByRetroID, err := as.Services.RetroHistory.GetByRetroID(ps.Context, nil, ret.ID, relRetroHistoriesByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child histories")
 		}
-		relRetroMembersByRetroIDPrms := ps.Params.Get("rmember", nil, ps.Logger).Sanitize("rmember")
+		relRetroMembersByRetroIDPrms := ps.Params.Sanitized("rmember", ps.Logger)
 		relRetroMembersByRetroID, err := as.Services.RetroMember.GetByRetroID(ps.Context, nil, ret.ID, relRetroMembersByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child members")
 		}
-		relRetroPermissionsByRetroIDPrms := ps.Params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
+		relRetroPermissionsByRetroIDPrms := ps.Params.Sanitized("rpermission", ps.Logger)
 		relRetroPermissionsByRetroID, err := as.Services.RetroPermission.GetByRetroID(ps.Context, nil, ret.ID, relRetroPermissionsByRetroIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")

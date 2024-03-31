@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 	qw422016.N().S(`
 `)
 //line views/vteam/vtpermission/Table.html:13
-	prms := params.Get("tpermission", nil, ps.Logger).Sanitize("tpermission")
+	prms := params.Sanitized("tpermission", ps.Logger)
 
 //line views/vteam/vtpermission/Table.html:13
 	qw422016.N().S(`  <table>

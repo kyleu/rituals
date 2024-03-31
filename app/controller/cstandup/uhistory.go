@@ -19,7 +19,7 @@ import (
 
 func StandupHistoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("uhistory.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("uhistory", nil, ps.Logger).Sanitize("uhistory")
+		prms := ps.Params.Sanitized("uhistory", ps.Logger)
 		ret, err := as.Services.StandupHistory.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

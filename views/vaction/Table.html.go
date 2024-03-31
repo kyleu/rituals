@@ -37,7 +37,7 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, usersByUserID
 	qw422016.N().S(`
 `)
 //line views/vaction/Table.html:14
-	prms := params.Get("action", nil, ps.Logger).Sanitize("action")
+	prms := params.Sanitized("action", ps.Logger)
 
 //line views/vaction/Table.html:14
 	qw422016.N().S(`  <table>

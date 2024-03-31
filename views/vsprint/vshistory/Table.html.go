@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
 	qw422016.N().S(`
 `)
 //line views/vsprint/vshistory/Table.html:13
-	prms := params.Get("shistory", nil, ps.Logger).Sanitize("shistory")
+	prms := params.Sanitized("shistory", ps.Logger)
 
 //line views/vsprint/vshistory/Table.html:13
 	qw422016.N().S(`  <table>

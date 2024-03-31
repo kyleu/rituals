@@ -19,7 +19,7 @@ import (
 
 func SprintPermissionList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("spermission.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		prms := ps.Params.Get("spermission", nil, ps.Logger).Sanitize("spermission")
+		prms := ps.Params.Sanitized("spermission", ps.Logger)
 		ret, err := as.Services.SprintPermission.List(ps.Context, nil, prms, ps.Logger)
 		if err != nil {
 			return "", err

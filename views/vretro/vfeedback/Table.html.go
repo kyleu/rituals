@@ -37,7 +37,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 	qw422016.N().S(`
 `)
 //line views/vretro/vfeedback/Table.html:14
-	prms := params.Get("feedback", nil, ps.Logger).Sanitize("feedback")
+	prms := params.Sanitized("feedback", ps.Logger)
 
 //line views/vretro/vfeedback/Table.html:14
 	qw422016.N().S(`  <table>

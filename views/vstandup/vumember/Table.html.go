@@ -38,7 +38,7 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 	qw422016.N().S(`
 `)
 //line views/vstandup/vumember/Table.html:15
-	prms := params.Get("umember", nil, ps.Logger).Sanitize("umember")
+	prms := params.Sanitized("umember", ps.Logger)
 
 //line views/vstandup/vumember/Table.html:15
 	qw422016.N().S(`  <table>

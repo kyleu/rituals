@@ -36,7 +36,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 	qw422016.N().S(`
 `)
 //line views/vretro/vrpermission/Table.html:13
-	prms := params.Get("rpermission", nil, ps.Logger).Sanitize("rpermission")
+	prms := params.Sanitized("rpermission", ps.Logger)
 
 //line views/vretro/vrpermission/Table.html:13
 	qw422016.N().S(`  <table>
