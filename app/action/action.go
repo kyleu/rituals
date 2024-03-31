@@ -51,7 +51,7 @@ func Random() *Action {
 }
 
 func (a *Action) Strings() []string {
-	return []string{a.ID.String(), a.Svc.String(), a.ModelID.String(), a.UserID.String(), a.Act, a.Content.String(), a.Note, util.TimeToFull(&a.Created)}
+	return []string{a.ID.String(), a.Svc.String(), a.ModelID.String(), a.UserID.String(), a.Act, util.ToJSON(a.Content), a.Note, util.TimeToFull(&a.Created)}
 }
 
 func (a *Action) ToCSV() ([]string, [][]string) {

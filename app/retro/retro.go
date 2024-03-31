@@ -56,7 +56,7 @@ func Random() *Retro {
 
 //nolint:lll
 func (r *Retro) Strings() []string {
-	return []string{r.ID.String(), r.Slug, r.Title, r.Icon, r.Status.String(), util.StringNullable(r.TeamID), util.StringNullable(r.SprintID), util.ToJSON(&r.Categories), util.TimeToFull(&r.Created), util.TimeToFull(r.Updated)}
+	return []string{r.ID.String(), r.Slug, r.Title, r.Icon, r.Status.String(), util.StringNullable(r.TeamID), util.StringNullable(r.SprintID), util.ToJSON(r.Categories), util.TimeToFull(&r.Created), util.TimeToFull(r.Updated)}
 }
 
 func (r *Retro) ToCSV() ([]string, [][]string) {

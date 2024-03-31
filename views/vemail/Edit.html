@@ -31,7 +31,7 @@
           {% if p.IsNew %}{%= edit.UUIDTable("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
           {%= edit.TextareaTable("recipients", "", "Recipients", 8, util.ToJSON(p.Model.Recipients), 5, "Comma-separated list of values") %}
           {%= edit.StringTable("subject", "", "Subject", p.Model.Subject, 5, "String text") %}
-          {%= edit.TextareaTable("data", "", "Data", 8, util.ToJSON(p.Model.Data.String()), 5, "JSON object") %}
+          {%= edit.TextareaTable("data", "", "Data", 8, util.ToJSON(p.Model.Data), 5, "JSON object") %}
           {%= edit.StringTable("plain", "", "Plain", p.Model.Plain, 5, "String text") %}
           {%= edit.TextareaTable("html", "", "HTML", 8, p.Model.HTML, 5, "String text") %}
           {%= edit.UUIDTable("userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}

@@ -53,7 +53,7 @@ func Random() *Email {
 
 //nolint:lll
 func (e *Email) Strings() []string {
-	return []string{e.ID.String(), util.ToJSON(&e.Recipients), e.Subject, e.Data.String(), e.Plain, e.HTML, e.UserID.String(), e.Status, util.TimeToFull(&e.Created)}
+	return []string{e.ID.String(), util.ToJSON(e.Recipients), e.Subject, util.ToJSON(e.Data), e.Plain, e.HTML, e.UserID.String(), e.Status, util.TimeToFull(&e.Created)}
 }
 
 func (e *Email) ToCSV() ([]string, [][]string) {
