@@ -38,121 +38,123 @@ func StreamTable(qw422016 *qt422016.Writer, models user.Users, params filter.Par
 	prms := params.Sanitized("user", ps.Logger)
 
 //line views/vuser/Table.html:12
-	qw422016.N().S(`  <table>
-    <thead>
-      <tr>
-        `)
-//line views/vuser/Table.html:16
+	qw422016.N().S(`  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          `)
+//line views/vuser/Table.html:17
 	components.StreamTableHeaderSimple(qw422016, "user", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vuser/Table.html:16
-	qw422016.N().S(`
-        `)
 //line views/vuser/Table.html:17
+	qw422016.N().S(`
+          `)
+//line views/vuser/Table.html:18
 	components.StreamTableHeaderSimple(qw422016, "user", "name", "Name", "String text", prms, ps.URI, ps)
-//line views/vuser/Table.html:17
-	qw422016.N().S(`
-        `)
 //line views/vuser/Table.html:18
+	qw422016.N().S(`
+          `)
+//line views/vuser/Table.html:19
 	components.StreamTableHeaderSimple(qw422016, "user", "picture", "Picture", "URL in string form", prms, ps.URI, ps)
-//line views/vuser/Table.html:18
-	qw422016.N().S(`
-        `)
 //line views/vuser/Table.html:19
+	qw422016.N().S(`
+          `)
+//line views/vuser/Table.html:20
 	components.StreamTableHeaderSimple(qw422016, "user", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vuser/Table.html:19
-	qw422016.N().S(`
-        `)
 //line views/vuser/Table.html:20
+	qw422016.N().S(`
+          `)
+//line views/vuser/Table.html:21
 	components.StreamTableHeaderSimple(qw422016, "user", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
-//line views/vuser/Table.html:20
+//line views/vuser/Table.html:21
 	qw422016.N().S(`
-      </tr>
-    </thead>
-    <tbody>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vuser/Table.html:24
+//line views/vuser/Table.html:25
 	for _, model := range models {
-//line views/vuser/Table.html:24
-		qw422016.N().S(`      <tr>
-        <td><a href="/admin/db/user/`)
-//line views/vuser/Table.html:26
+//line views/vuser/Table.html:25
+		qw422016.N().S(`        <tr>
+          <td><a href="/admin/db/user/`)
+//line views/vuser/Table.html:27
 		view.StreamUUID(qw422016, &model.ID)
-//line views/vuser/Table.html:26
+//line views/vuser/Table.html:27
 		qw422016.N().S(`">`)
-//line views/vuser/Table.html:26
+//line views/vuser/Table.html:27
 		view.StreamUUID(qw422016, &model.ID)
-//line views/vuser/Table.html:26
-		qw422016.N().S(`</a></td>
-        <td><strong>`)
 //line views/vuser/Table.html:27
+		qw422016.N().S(`</a></td>
+          <td><strong>`)
+//line views/vuser/Table.html:28
 		view.StreamString(qw422016, model.Name)
-//line views/vuser/Table.html:27
+//line views/vuser/Table.html:28
 		qw422016.N().S(`</strong></td>
-        <td><a href="`)
-//line views/vuser/Table.html:28
+          <td><a href="`)
+//line views/vuser/Table.html:29
 		qw422016.E().S(model.Picture)
-//line views/vuser/Table.html:28
+//line views/vuser/Table.html:29
 		qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vuser/Table.html:28
+//line views/vuser/Table.html:29
 		qw422016.E().S(model.Picture)
-//line views/vuser/Table.html:28
+//line views/vuser/Table.html:29
 		qw422016.N().S(`</a></td>
-        <td>`)
-//line views/vuser/Table.html:29
+          <td>`)
+//line views/vuser/Table.html:30
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vuser/Table.html:29
-		qw422016.N().S(`</td>
-        <td>`)
 //line views/vuser/Table.html:30
+		qw422016.N().S(`</td>
+          <td>`)
+//line views/vuser/Table.html:31
 		view.StreamTimestamp(qw422016, model.Updated)
-//line views/vuser/Table.html:30
+//line views/vuser/Table.html:31
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vuser/Table.html:32
+//line views/vuser/Table.html:33
 	}
 //line views/vuser/Table.html:33
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
+`)
+//line views/vuser/Table.html:37
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vuser/Table.html:33
-		qw422016.N().S(`      <tr>
-        <td colspan="5">`)
-//line views/vuser/Table.html:35
+//line views/vuser/Table.html:37
+		qw422016.N().S(`  <hr />
+  `)
+//line views/vuser/Table.html:39
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vuser/Table.html:35
-		qw422016.N().S(`</td>
-      </tr>
+//line views/vuser/Table.html:39
+		qw422016.N().S(`
+  <div class="clear"></div>
 `)
-//line views/vuser/Table.html:37
+//line views/vuser/Table.html:41
 	}
-//line views/vuser/Table.html:37
-	qw422016.N().S(`    </tbody>
-  </table>
-`)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 }
 
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 func WriteTable(qq422016 qtio422016.Writer, models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	StreamTable(qw422016, models, params, as, ps)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	qt422016.ReleaseWriter(qw422016)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 }
 
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 func Table(models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	WriteTable(qb422016, models, params, as, ps)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	qs422016 := string(qb422016.B)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 	return qs422016
-//line views/vuser/Table.html:40
+//line views/vuser/Table.html:42
 }

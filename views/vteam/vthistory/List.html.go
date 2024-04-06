@@ -60,7 +60,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/vthistory/List.html:25
 	} else {
 //line views/vteam/vthistory/List.html:25
-		qw422016.N().S(`    <div class="overflow clear mt">
+		qw422016.N().S(`    <div class="mt">
       `)
 //line views/vteam/vthistory/List.html:27
 		StreamTable(qw422016, p.Models, p.TeamsByTeamID, p.Params, as, ps)

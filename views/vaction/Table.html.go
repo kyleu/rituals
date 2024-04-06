@@ -40,168 +40,170 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, usersByUserID
 	prms := params.Sanitized("action", ps.Logger)
 
 //line views/vaction/Table.html:14
-	qw422016.N().S(`  <table>
-    <thead>
-      <tr>
-        `)
-//line views/vaction/Table.html:18
-	components.StreamTableHeaderSimple(qw422016, "action", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vaction/Table.html:18
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:19
-	components.StreamTableHeaderSimple(qw422016, "action", "svc", "Svc", enum.AllModelServices.Help(), prms, ps.URI, ps)
-//line views/vaction/Table.html:19
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:20
-	components.StreamTableHeaderSimple(qw422016, "action", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vaction/Table.html:20
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:21
-	components.StreamTableHeaderSimple(qw422016, "action", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vaction/Table.html:21
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:22
-	components.StreamTableHeaderSimple(qw422016, "action", "act", "Act", "String text", prms, ps.URI, ps)
-//line views/vaction/Table.html:22
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:23
-	components.StreamTableHeaderSimple(qw422016, "action", "content", "Content", "JSON object", prms, ps.URI, ps)
-//line views/vaction/Table.html:23
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:24
-	components.StreamTableHeaderSimple(qw422016, "action", "note", "Note", "String text", prms, ps.URI, ps)
-//line views/vaction/Table.html:24
-	qw422016.N().S(`
-        `)
-//line views/vaction/Table.html:25
-	components.StreamTableHeaderSimple(qw422016, "action", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vaction/Table.html:25
-	qw422016.N().S(`
-      </tr>
-    </thead>
-    <tbody>
-`)
-//line views/vaction/Table.html:29
-	for _, model := range models {
-//line views/vaction/Table.html:29
-		qw422016.N().S(`      <tr>
-        <td><a href="/admin/db/action/`)
-//line views/vaction/Table.html:31
-		view.StreamUUID(qw422016, &model.ID)
-//line views/vaction/Table.html:31
-		qw422016.N().S(`">`)
-//line views/vaction/Table.html:31
-		view.StreamUUID(qw422016, &model.ID)
-//line views/vaction/Table.html:31
-		qw422016.N().S(`</a></td>
-        <td>`)
-//line views/vaction/Table.html:32
-		qw422016.E().S(model.Svc.String())
-//line views/vaction/Table.html:32
-		qw422016.N().S(`</td>
-        <td>`)
-//line views/vaction/Table.html:33
-		view.StreamUUID(qw422016, &model.ModelID)
-//line views/vaction/Table.html:33
-		qw422016.N().S(`</td>
-        <td class="nowrap">
+	qw422016.N().S(`  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
           `)
-//line views/vaction/Table.html:35
-		view.StreamUUID(qw422016, &model.UserID)
-//line views/vaction/Table.html:35
-		if x := usersByUserID.Get(model.UserID); x != nil {
-//line views/vaction/Table.html:35
-			qw422016.N().S(` (`)
-//line views/vaction/Table.html:35
-			qw422016.E().S(x.TitleString())
-//line views/vaction/Table.html:35
-			qw422016.N().S(`)`)
-//line views/vaction/Table.html:35
-		}
-//line views/vaction/Table.html:35
-		qw422016.N().S(`
-          <a title="User" href="`)
-//line views/vaction/Table.html:36
-		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
-//line views/vaction/Table.html:36
+//line views/vaction/Table.html:19
+	components.StreamTableHeaderSimple(qw422016, "action", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
+//line views/vaction/Table.html:19
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:20
+	components.StreamTableHeaderSimple(qw422016, "action", "svc", "Svc", enum.AllModelServices.Help(), prms, ps.URI, ps)
+//line views/vaction/Table.html:20
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:21
+	components.StreamTableHeaderSimple(qw422016, "action", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
+//line views/vaction/Table.html:21
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:22
+	components.StreamTableHeaderSimple(qw422016, "action", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
+//line views/vaction/Table.html:22
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:23
+	components.StreamTableHeaderSimple(qw422016, "action", "act", "Act", "String text", prms, ps.URI, ps)
+//line views/vaction/Table.html:23
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:24
+	components.StreamTableHeaderSimple(qw422016, "action", "content", "Content", "JSON object", prms, ps.URI, ps)
+//line views/vaction/Table.html:24
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:25
+	components.StreamTableHeaderSimple(qw422016, "action", "note", "Note", "String text", prms, ps.URI, ps)
+//line views/vaction/Table.html:25
+	qw422016.N().S(`
+          `)
+//line views/vaction/Table.html:26
+	components.StreamTableHeaderSimple(qw422016, "action", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
+//line views/vaction/Table.html:26
+	qw422016.N().S(`
+        </tr>
+      </thead>
+      <tbody>
+`)
+//line views/vaction/Table.html:30
+	for _, model := range models {
+//line views/vaction/Table.html:30
+		qw422016.N().S(`        <tr>
+          <td><a href="/admin/db/action/`)
+//line views/vaction/Table.html:32
+		view.StreamUUID(qw422016, &model.ID)
+//line views/vaction/Table.html:32
 		qw422016.N().S(`">`)
+//line views/vaction/Table.html:32
+		view.StreamUUID(qw422016, &model.ID)
+//line views/vaction/Table.html:32
+		qw422016.N().S(`</a></td>
+          <td>`)
+//line views/vaction/Table.html:33
+		qw422016.E().S(model.Svc.String())
+//line views/vaction/Table.html:33
+		qw422016.N().S(`</td>
+          <td>`)
+//line views/vaction/Table.html:34
+		view.StreamUUID(qw422016, &model.ModelID)
+//line views/vaction/Table.html:34
+		qw422016.N().S(`</td>
+          <td class="nowrap">
+            `)
 //line views/vaction/Table.html:36
+		view.StreamUUID(qw422016, &model.UserID)
+//line views/vaction/Table.html:36
+		if x := usersByUserID.Get(model.UserID); x != nil {
+//line views/vaction/Table.html:36
+			qw422016.N().S(` (`)
+//line views/vaction/Table.html:36
+			qw422016.E().S(x.TitleString())
+//line views/vaction/Table.html:36
+			qw422016.N().S(`)`)
+//line views/vaction/Table.html:36
+		}
+//line views/vaction/Table.html:36
+		qw422016.N().S(`
+            <a title="User" href="`)
+//line views/vaction/Table.html:37
+		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
+//line views/vaction/Table.html:37
+		qw422016.N().S(`">`)
+//line views/vaction/Table.html:37
 		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
-//line views/vaction/Table.html:36
+//line views/vaction/Table.html:37
 		qw422016.N().S(`</a>
-        </td>
-        <td>`)
-//line views/vaction/Table.html:38
+          </td>
+          <td>`)
+//line views/vaction/Table.html:39
 		view.StreamString(qw422016, model.Act)
-//line views/vaction/Table.html:38
-		qw422016.N().S(`</td>
-        <td>`)
 //line views/vaction/Table.html:39
+		qw422016.N().S(`</td>
+          <td>`)
+//line views/vaction/Table.html:40
 		components.StreamJSON(qw422016, model.Content)
-//line views/vaction/Table.html:39
-		qw422016.N().S(`</td>
-        <td>`)
 //line views/vaction/Table.html:40
+		qw422016.N().S(`</td>
+          <td>`)
+//line views/vaction/Table.html:41
 		view.StreamString(qw422016, model.Note)
-//line views/vaction/Table.html:40
-		qw422016.N().S(`</td>
-        <td>`)
 //line views/vaction/Table.html:41
+		qw422016.N().S(`</td>
+          <td>`)
+//line views/vaction/Table.html:42
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vaction/Table.html:41
+//line views/vaction/Table.html:42
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vaction/Table.html:43
+//line views/vaction/Table.html:44
 	}
 //line views/vaction/Table.html:44
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
+`)
+//line views/vaction/Table.html:48
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vaction/Table.html:44
-		qw422016.N().S(`      <tr>
-        <td colspan="8">`)
-//line views/vaction/Table.html:46
+//line views/vaction/Table.html:48
+		qw422016.N().S(`  <hr />
+  `)
+//line views/vaction/Table.html:50
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vaction/Table.html:46
-		qw422016.N().S(`</td>
-      </tr>
+//line views/vaction/Table.html:50
+		qw422016.N().S(`
+  <div class="clear"></div>
 `)
-//line views/vaction/Table.html:48
+//line views/vaction/Table.html:52
 	}
-//line views/vaction/Table.html:48
-	qw422016.N().S(`    </tbody>
-  </table>
-`)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 }
 
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 func WriteTable(qq422016 qtio422016.Writer, models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	StreamTable(qw422016, models, usersByUserID, params, as, ps)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 }
 
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 func Table(models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	WriteTable(qb422016, models, usersByUserID, params, as, ps)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	qs422016 := string(qb422016.B)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 	return qs422016
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:53
 }
