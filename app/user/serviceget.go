@@ -88,6 +88,12 @@ func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger u
 	return ret.ToUsers(), nil
 }
 
+func (s *Service) ListWhere(ctx context.Context, tx *sqlx.Tx, where string, params *filter.Params, logger util.Logger, values ...any) (Users, error) {
+	params = filters(params)
+	sql := database.SQLSelect(columnsString, tableQuoted, where, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	return s.ListSQL(ctx, tx, sql, logger, values...)
+}
+
 func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*User, error) {
 	ret := &row{}
 	q := database.SQLSelect(columnsString, tableQuoted, "", "random()", 1, 0, s.db.Type)

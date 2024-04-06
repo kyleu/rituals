@@ -48,11 +48,11 @@ func (p *Run) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 	qw422016.E().S(p.Title)
 //line views/vsandbox/Run.html:19
 	qw422016.N().S(`</h3>
-    `)
+    <div class="mt">`)
 //line views/vsandbox/Run.html:20
 	components.StreamJSON(qw422016, p.Result)
 //line views/vsandbox/Run.html:20
-	qw422016.N().S(`
+	qw422016.N().S(`</div>
   </div>
 `)
 //line views/vsandbox/Run.html:22
