@@ -8,7 +8,7 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func Healthcheck(w http.ResponseWriter, r *http.Request) {
+func Healthcheck(w http.ResponseWriter, _ *http.Request) {
 	x := util.ValueMap{"status": "OK"}
 	_, _ = cutil.RespondJSON(w, "", x)
 }

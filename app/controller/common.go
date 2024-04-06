@@ -11,7 +11,7 @@ import (
 	"github.com/kyleu/rituals/views/verror"
 )
 
-func Options(w http.ResponseWriter, r *http.Request) {
+func Options(w http.ResponseWriter, _ *http.Request) {
 	cutil.WriteCORS(w)
 	w.WriteHeader(http.StatusOK)
 }
