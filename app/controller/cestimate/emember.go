@@ -156,7 +156,7 @@ func EstimateMemberDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func ememberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*emember.EstimateMember, error) {
-	estimateIDArgStr, err := cutil.RCRequiredString(r, "estimateID", false)
+	estimateIDArgStr, err := cutil.PathString(r, "estimateID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [estimateID] as an argument")
 	}
@@ -165,7 +165,7 @@ func ememberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*emem
 		return nil, errors.Errorf("argument [estimateID] (%s) is not a valid UUID", estimateIDArgStr)
 	}
 	estimateIDArg := *estimateIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
+	userIDArgStr, err := cutil.PathString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}

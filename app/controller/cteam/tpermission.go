@@ -141,7 +141,7 @@ func TeamPermissionDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func tpermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*tpermission.TeamPermission, error) {
-	teamIDArgStr, err := cutil.RCRequiredString(r, "teamID", false)
+	teamIDArgStr, err := cutil.PathString(r, "teamID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [teamID] as an argument")
 	}
@@ -150,11 +150,11 @@ func tpermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*
 		return nil, errors.Errorf("argument [teamID] (%s) is not a valid UUID", teamIDArgStr)
 	}
 	teamIDArg := *teamIDArgP
-	keyArg, err := cutil.RCRequiredString(r, "key", false)
+	keyArg, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(r, "value", false)
+	valueArg, err := cutil.PathString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}

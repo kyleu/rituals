@@ -29,7 +29,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 
 func RetroDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.retro", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -71,7 +71,7 @@ func RetroCreate(w http.ResponseWriter, r *http.Request) {
 
 func RetroDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.retro.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -90,7 +90,7 @@ func RetroDelete(w http.ResponseWriter, r *http.Request) {
 
 func RetroAction(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.retro.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}

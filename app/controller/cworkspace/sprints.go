@@ -26,7 +26,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 
 func SprintDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.sprint", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -65,7 +65,7 @@ func SprintCreate(w http.ResponseWriter, r *http.Request) {
 
 func SprintDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.sprint.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -84,7 +84,7 @@ func SprintDelete(w http.ResponseWriter, r *http.Request) {
 
 func SprintAction(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.sprint.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}

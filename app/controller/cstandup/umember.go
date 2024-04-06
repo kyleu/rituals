@@ -156,7 +156,7 @@ func StandupMemberDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func umemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*umember.StandupMember, error) {
-	standupIDArgStr, err := cutil.RCRequiredString(r, "standupID", false)
+	standupIDArgStr, err := cutil.PathString(r, "standupID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [standupID] as an argument")
 	}
@@ -165,7 +165,7 @@ func umemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*umem
 		return nil, errors.Errorf("argument [standupID] (%s) is not a valid UUID", standupIDArgStr)
 	}
 	standupIDArg := *standupIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
+	userIDArgStr, err := cutil.PathString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}

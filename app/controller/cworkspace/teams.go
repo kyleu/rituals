@@ -25,7 +25,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 
 func TeamDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.team", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -58,7 +58,7 @@ func TeamCreate(w http.ResponseWriter, r *http.Request) {
 
 func TeamDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.team.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -77,7 +77,7 @@ func TeamDelete(w http.ResponseWriter, r *http.Request) {
 
 func TeamAction(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.team.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}

@@ -156,7 +156,7 @@ func TeamMemberDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func tmemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*tmember.TeamMember, error) {
-	teamIDArgStr, err := cutil.RCRequiredString(r, "teamID", false)
+	teamIDArgStr, err := cutil.PathString(r, "teamID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [teamID] as an argument")
 	}
@@ -165,7 +165,7 @@ func tmemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*tmem
 		return nil, errors.Errorf("argument [teamID] (%s) is not a valid UUID", teamIDArgStr)
 	}
 	teamIDArg := *teamIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
+	userIDArgStr, err := cutil.PathString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}

@@ -139,7 +139,7 @@ func RetroHistoryDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func rhistoryFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rhistory.RetroHistory, error) {
-	slugArg, err := cutil.RCRequiredString(r, "slug", false)
+	slugArg, err := cutil.PathString(r, "slug", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [slug] as a string argument")
 	}

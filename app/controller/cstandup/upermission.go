@@ -142,7 +142,7 @@ func StandupPermissionDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func upermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*upermission.StandupPermission, error) {
-	standupIDArgStr, err := cutil.RCRequiredString(r, "standupID", false)
+	standupIDArgStr, err := cutil.PathString(r, "standupID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [standupID] as an argument")
 	}
@@ -151,11 +151,11 @@ func upermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*
 		return nil, errors.Errorf("argument [standupID] (%s) is not a valid UUID", standupIDArgStr)
 	}
 	standupIDArg := *standupIDArgP
-	keyArg, err := cutil.RCRequiredString(r, "key", false)
+	keyArg, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(r, "value", false)
+	valueArg, err := cutil.PathString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}

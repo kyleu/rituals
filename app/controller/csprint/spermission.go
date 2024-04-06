@@ -142,7 +142,7 @@ func SprintPermissionDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func spermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*spermission.SprintPermission, error) {
-	sprintIDArgStr, err := cutil.RCRequiredString(r, "sprintID", false)
+	sprintIDArgStr, err := cutil.PathString(r, "sprintID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [sprintID] as an argument")
 	}
@@ -151,11 +151,11 @@ func spermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*
 		return nil, errors.Errorf("argument [sprintID] (%s) is not a valid UUID", sprintIDArgStr)
 	}
 	sprintIDArg := *sprintIDArgP
-	keyArg, err := cutil.RCRequiredString(r, "key", false)
+	keyArg, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(r, "value", false)
+	valueArg, err := cutil.PathString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}

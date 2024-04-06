@@ -142,7 +142,7 @@ func RetroPermissionDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func rpermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rpermission.RetroPermission, error) {
-	retroIDArgStr, err := cutil.RCRequiredString(r, "retroID", false)
+	retroIDArgStr, err := cutil.PathString(r, "retroID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [retroID] as an argument")
 	}
@@ -151,11 +151,11 @@ func rpermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*
 		return nil, errors.Errorf("argument [retroID] (%s) is not a valid UUID", retroIDArgStr)
 	}
 	retroIDArg := *retroIDArgP
-	keyArg, err := cutil.RCRequiredString(r, "key", false)
+	keyArg, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(r, "value", false)
+	valueArg, err := cutil.PathString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}

@@ -40,7 +40,7 @@ func RetroSocket(w http.ResponseWriter, r *http.Request) {
 }
 
 func Socket(w http.ResponseWriter, r *http.Request, svc string, as *app.State, ps *cutil.PageState) (string, error) {
-	id, err := cutil.RCRequiredUUID(r, "id")
+	id, err := cutil.PathUUID(r, "id")
 	if err != nil {
 		return "", err
 	}

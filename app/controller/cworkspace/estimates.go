@@ -27,7 +27,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 
 func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.estimate", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -69,7 +69,7 @@ func EstimateCreate(w http.ResponseWriter, r *http.Request) {
 
 func EstimateDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.estimate.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -88,7 +88,7 @@ func EstimateDelete(w http.ResponseWriter, r *http.Request) {
 
 func EstimateAction(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.estimate.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}

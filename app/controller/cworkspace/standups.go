@@ -27,7 +27,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 
 func StandupDetail(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.standup", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -68,7 +68,7 @@ func StandupCreate(w http.ResponseWriter, r *http.Request) {
 
 func StandupDelete(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.standup.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}
@@ -87,7 +87,7 @@ func StandupDelete(w http.ResponseWriter, r *http.Request) {
 
 func StandupAction(w http.ResponseWriter, r *http.Request) {
 	controller.Act("workspace.standup.action", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		slug, err := cutil.RCRequiredString(r, "slug", false)
+		slug, err := cutil.PathString(r, "slug", false)
 		if err != nil {
 			return "", err
 		}

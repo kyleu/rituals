@@ -156,7 +156,7 @@ func VoteDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func voteFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*vote.Vote, error) {
-	storyIDArgStr, err := cutil.RCRequiredString(r, "storyID", false)
+	storyIDArgStr, err := cutil.PathString(r, "storyID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [storyID] as an argument")
 	}
@@ -165,7 +165,7 @@ func voteFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*vote.Vo
 		return nil, errors.Errorf("argument [storyID] (%s) is not a valid UUID", storyIDArgStr)
 	}
 	storyIDArg := *storyIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
+	userIDArgStr, err := cutil.PathString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}

@@ -156,7 +156,7 @@ func RetroMemberDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func rmemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rmember.RetroMember, error) {
-	retroIDArgStr, err := cutil.RCRequiredString(r, "retroID", false)
+	retroIDArgStr, err := cutil.PathString(r, "retroID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [retroID] as an argument")
 	}
@@ -165,7 +165,7 @@ func rmemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*rmem
 		return nil, errors.Errorf("argument [retroID] (%s) is not a valid UUID", retroIDArgStr)
 	}
 	retroIDArg := *retroIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
+	userIDArgStr, err := cutil.PathString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}

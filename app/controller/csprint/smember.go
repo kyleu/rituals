@@ -156,7 +156,7 @@ func SprintMemberDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func smemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*smember.SprintMember, error) {
-	sprintIDArgStr, err := cutil.RCRequiredString(r, "sprintID", false)
+	sprintIDArgStr, err := cutil.PathString(r, "sprintID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [sprintID] as an argument")
 	}
@@ -165,7 +165,7 @@ func smemberFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*smem
 		return nil, errors.Errorf("argument [sprintID] (%s) is not a valid UUID", sprintIDArgStr)
 	}
 	sprintIDArg := *sprintIDArgP
-	userIDArgStr, err := cutil.RCRequiredString(r, "userID", false)
+	userIDArgStr, err := cutil.PathString(r, "userID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [userID] as an argument")
 	}

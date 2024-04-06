@@ -142,7 +142,7 @@ func EstimatePermissionDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 func epermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*epermission.EstimatePermission, error) {
-	estimateIDArgStr, err := cutil.RCRequiredString(r, "estimateID", false)
+	estimateIDArgStr, err := cutil.PathString(r, "estimateID", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [estimateID] as an argument")
 	}
@@ -151,11 +151,11 @@ func epermissionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*
 		return nil, errors.Errorf("argument [estimateID] (%s) is not a valid UUID", estimateIDArgStr)
 	}
 	estimateIDArg := *estimateIDArgP
-	keyArg, err := cutil.RCRequiredString(r, "key", false)
+	keyArg, err := cutil.PathString(r, "key", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [key] as a string argument")
 	}
-	valueArg, err := cutil.RCRequiredString(r, "value", false)
+	valueArg, err := cutil.PathString(r, "value", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [value] as a string argument")
 	}
