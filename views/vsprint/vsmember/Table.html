@@ -13,41 +13,43 @@
 
 {% func Table(models smember.SprintMembers, sprintsBySprintID sprint.Sprints, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Sanitized("smember", ps.Logger) -%}
-  <table>
-    <thead>
-      <tr>
-        {%= components.TableHeaderSimple("smember", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("smember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("smember", "name", "Name", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("smember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("smember", "role", "Role", enum.AllMemberStatuses.Help(), prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("smember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("smember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, model := range models -%}
-      <tr>
-        <td class="nowrap">
-          <a href="/admin/db/sprint/member/{%= view.UUID(&model.SprintID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
-        </td>
-        <td class="nowrap">
-          <a href="/admin/db/sprint/member/{%= view.UUID(&model.SprintID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-        </td>
-        <td><strong>{%= view.String(model.Name) %}</strong></td>
-        <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
-        <td>{%s model.Role.String() %}</td>
-        <td>{%= view.Timestamp(&model.Created) %}</td>
-        <td>{%= view.Timestamp(model.Updated) %}</td>
-      </tr>
-      {%- endfor -%}
-      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
-      <tr>
-        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          {%= components.TableHeaderSimple("smember", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("smember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("smember", "name", "Name", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("smember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("smember", "role", "Role", enum.AllMemberStatuses.Help(), prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("smember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("smember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, model := range models -%}
+        <tr>
+          <td class="nowrap">
+            <a href="/admin/db/sprint/member/{%= view.UUID(&model.SprintID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>
+          </td>
+          <td class="nowrap">
+            <a href="/admin/db/sprint/member/{%= view.UUID(&model.SprintID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+          </td>
+          <td><strong>{%= view.String(model.Name) %}</strong></td>
+          <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
+          <td>{%s model.Role.String() %}</td>
+          <td>{%= view.Timestamp(&model.Created) %}</td>
+          <td>{%= view.Timestamp(model.Updated) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+  <hr />
+  {%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}
+  <div class="clear"></div>
+  {%- endif -%}
 {% endfunc %}

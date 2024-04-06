@@ -13,47 +13,49 @@
 
 {% func Table(models estimate.Estimates, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Sanitized("estimate", ps.Logger) -%}
-  <table>
-    <thead>
-      <tr>
-        {%= components.TableHeaderSimple("estimate", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "slug", "Slug", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "title", "Title", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "icon", "Icon", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "choices", "Choices", "Comma-separated list of values", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("estimate", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, model := range models -%}
-      <tr>
-        <td><a href="/admin/db/estimate/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
-        <td>{%= view.String(model.Slug) %}</td>
-        <td><strong>{%= view.String(model.Title) %}</strong></td>
-        <td>{%= view.String(model.Icon) %}</td>
-        <td>{%s model.Status.String() %}</td>
-        <td class="nowrap">
-          {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-          {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
-        </td>
-        <td class="nowrap">
-          {%= view.UUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-          {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
-        </td>
-        <td>{%= view.StringArray(model.Choices) %}</td>
-        <td>{%= view.Timestamp(&model.Created) %}</td>
-        <td>{%= view.Timestamp(model.Updated) %}</td>
-      </tr>
-      {%- endfor -%}
-      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
-      <tr>
-        <td colspan="10">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          {%= components.TableHeaderSimple("estimate", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "slug", "Slug", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "title", "Title", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "icon", "Icon", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "choices", "Choices", "Comma-separated list of values", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("estimate", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, model := range models -%}
+        <tr>
+          <td><a href="/admin/db/estimate/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td>{%= view.String(model.Slug) %}</td>
+          <td><strong>{%= view.String(model.Title) %}</strong></td>
+          <td>{%= view.String(model.Icon) %}</td>
+          <td>{%s model.Status.String() %}</td>
+          <td class="nowrap">
+            {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+            {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>{% endif %}
+          </td>
+          <td class="nowrap">
+            {%= view.UUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
+            {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGRef("sprint", 18, 18, "", ps) %}</a>{% endif %}
+          </td>
+          <td>{%= view.StringArray(model.Choices) %}</td>
+          <td>{%= view.Timestamp(&model.Created) %}</td>
+          <td>{%= view.Timestamp(model.Updated) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+  <hr />
+  {%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}
+  <div class="clear"></div>
+  {%- endif -%}
 {% endfunc %}

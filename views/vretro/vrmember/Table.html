@@ -13,41 +13,43 @@
 
 {% func Table(models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Sanitized("rmember", ps.Logger) -%}
-  <table>
-    <thead>
-      <tr>
-        {%= components.TableHeaderSimple("rmember", "retro_id", "Retro ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("rmember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("rmember", "name", "Name", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("rmember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("rmember", "role", "Role", enum.AllMemberStatuses.Help(), prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("rmember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("rmember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, model := range models -%}
-      <tr>
-        <td class="nowrap">
-          <a href="/admin/db/retro/member/{%= view.UUID(&model.RetroID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
-        </td>
-        <td class="nowrap">
-          <a href="/admin/db/retro/member/{%= view.UUID(&model.RetroID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-        </td>
-        <td><strong>{%= view.String(model.Name) %}</strong></td>
-        <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
-        <td>{%s model.Role.String() %}</td>
-        <td>{%= view.Timestamp(&model.Created) %}</td>
-        <td>{%= view.Timestamp(model.Updated) %}</td>
-      </tr>
-      {%- endfor -%}
-      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
-      <tr>
-        <td colspan="7">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          {%= components.TableHeaderSimple("rmember", "retro_id", "Retro ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("rmember", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("rmember", "name", "Name", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("rmember", "picture", "Picture", "URL in string form", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("rmember", "role", "Role", enum.AllMemberStatuses.Help(), prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("rmember", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("rmember", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps) %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, model := range models -%}
+        <tr>
+          <td class="nowrap">
+            <a href="/admin/db/retro/member/{%= view.UUID(&model.RetroID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
+          </td>
+          <td class="nowrap">
+            <a href="/admin/db/retro/member/{%= view.UUID(&model.RetroID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+          </td>
+          <td><strong>{%= view.String(model.Name) %}</strong></td>
+          <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
+          <td>{%s model.Role.String() %}</td>
+          <td>{%= view.Timestamp(&model.Created) %}</td>
+          <td>{%= view.Timestamp(model.Updated) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+  <hr />
+  {%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}
+  <div class="clear"></div>
+  {%- endif -%}
 {% endfunc %}

@@ -12,40 +12,42 @@
 
 {% func Table(models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Sanitized("action", ps.Logger) -%}
-  <table>
-    <thead>
-      <tr>
-        {%= components.TableHeaderSimple("action", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "svc", "Svc", enum.AllModelServices.Help(), prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "act", "Act", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "content", "Content", "JSON object", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "note", "Note", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("action", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, model := range models -%}
-      <tr>
-        <td><a href="/admin/db/action/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
-        <td>{%s model.Svc.String() %}</td>
-        <td>{%= view.UUID(&model.ModelID) %}</td>
-        <td class="nowrap">
-          {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-          <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
-        </td>
-        <td>{%= view.String(model.Act) %}</td>
-        <td>{%= components.JSON(model.Content) %}</td>
-        <td>{%= view.String(model.Note) %}</td>
-        <td>{%= view.Timestamp(&model.Created) %}</td>
-      </tr>
-      {%- endfor -%}
-      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
-      <tr>
-        <td colspan="8">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          {%= components.TableHeaderSimple("action", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "svc", "Svc", enum.AllModelServices.Help(), prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "model_id", "Model ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "act", "Act", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "content", "Content", "JSON object", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "note", "Note", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("action", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, model := range models -%}
+        <tr>
+          <td><a href="/admin/db/action/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td>{%s model.Svc.String() %}</td>
+          <td>{%= view.UUID(&model.ModelID) %}</td>
+          <td class="nowrap">
+            {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
+            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+          </td>
+          <td>{%= view.String(model.Act) %}</td>
+          <td>{%= components.JSON(model.Content) %}</td>
+          <td>{%= view.String(model.Note) %}</td>
+          <td>{%= view.Timestamp(&model.Created) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+  <hr />
+  {%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}
+  <div class="clear"></div>
+  {%- endif -%}
 {% endfunc %}

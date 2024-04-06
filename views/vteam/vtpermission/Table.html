@@ -11,34 +11,36 @@
 
 {% func Table(models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Sanitized("tpermission", ps.Logger) -%}
-  <table>
-    <thead>
-      <tr>
-        {%= components.TableHeaderSimple("tpermission", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("tpermission", "key", "Key", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("tpermission", "value", "Value", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("tpermission", "access", "Access", "String text", prms, ps.URI, ps) %}
-        {%= components.TableHeaderSimple("tpermission", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
-      </tr>
-    </thead>
-    <tbody>
-      {%- for _, model := range models -%}
-      <tr>
-        <td class="nowrap">
-          <a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-          <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
-        </td>
-        <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
-        <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
-        <td>{%= view.String(model.Access) %}</td>
-        <td>{%= view.Timestamp(&model.Created) %}</td>
-      </tr>
-      {%- endfor -%}
-      {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
-      <tr>
-        <td colspan="5">{%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}</td>
-      </tr>
-      {%- endif -%}
-    </tbody>
-  </table>
+  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          {%= components.TableHeaderSimple("tpermission", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("tpermission", "key", "Key", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("tpermission", "value", "Value", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("tpermission", "access", "Access", "String text", prms, ps.URI, ps) %}
+          {%= components.TableHeaderSimple("tpermission", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps) %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for _, model := range models -%}
+        <tr>
+          <td class="nowrap">
+            <a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGRef("team", 18, 18, "", ps) %}</a>
+          </td>
+          <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
+          <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
+          <td>{%= view.String(model.Access) %}</td>
+          <td>{%= view.Timestamp(&model.Created) %}</td>
+        </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  </div>
+  {%- if prms.HasNextPage(len(models) + prms.Offset) || prms.HasPreviousPage() -%}
+  <hr />
+  {%= components.Pagination(len(models) + prms.Offset, prms, ps.URI) %}
+  <div class="clear"></div>
+  {%- endif -%}
 {% endfunc %}
