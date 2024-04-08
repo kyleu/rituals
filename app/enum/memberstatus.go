@@ -13,6 +13,14 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+var (
+	MemberStatusOwner    = MemberStatus{Key: "owner"}
+	MemberStatusMember   = MemberStatus{Key: "member"}
+	MemberStatusObserver = MemberStatus{Key: "observer"}
+
+	AllMemberStatuses = MemberStatuses{MemberStatusOwner, MemberStatusMember, MemberStatusObserver}
+)
+
 type MemberStatus struct {
 	Key         string
 	Name        string
@@ -126,11 +134,3 @@ func (m MemberStatuses) GetByName(name string, logger util.Logger) MemberStatus 
 func (m MemberStatuses) Random() MemberStatus {
 	return m[util.RandomInt(len(m))]
 }
-
-var (
-	MemberStatusOwner    = MemberStatus{Key: "owner"}
-	MemberStatusMember   = MemberStatus{Key: "member"}
-	MemberStatusObserver = MemberStatus{Key: "observer"}
-
-	AllMemberStatuses = MemberStatuses{MemberStatusOwner, MemberStatusMember, MemberStatusObserver}
-)

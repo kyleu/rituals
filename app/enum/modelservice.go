@@ -13,6 +13,20 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+//nolint:lll
+var (
+	ModelServiceTeam     = ModelService{Key: "team"}
+	ModelServiceSprint   = ModelService{Key: "sprint"}
+	ModelServiceEstimate = ModelService{Key: "estimate"}
+	ModelServiceStandup  = ModelService{Key: "standup"}
+	ModelServiceRetro    = ModelService{Key: "retro"}
+	ModelServiceStory    = ModelService{Key: "story"}
+	ModelServiceFeedback = ModelService{Key: "feedback"}
+	ModelServiceReport   = ModelService{Key: "report"}
+
+	AllModelServices = ModelServices{ModelServiceTeam, ModelServiceSprint, ModelServiceEstimate, ModelServiceStandup, ModelServiceRetro, ModelServiceStory, ModelServiceFeedback, ModelServiceReport}
+)
+
 type ModelService struct {
 	Key         string
 	Name        string
@@ -126,17 +140,3 @@ func (m ModelServices) GetByName(name string, logger util.Logger) ModelService {
 func (m ModelServices) Random() ModelService {
 	return m[util.RandomInt(len(m))]
 }
-
-//nolint:lll
-var (
-	ModelServiceTeam     = ModelService{Key: "team"}
-	ModelServiceSprint   = ModelService{Key: "sprint"}
-	ModelServiceEstimate = ModelService{Key: "estimate"}
-	ModelServiceStandup  = ModelService{Key: "standup"}
-	ModelServiceRetro    = ModelService{Key: "retro"}
-	ModelServiceStory    = ModelService{Key: "story"}
-	ModelServiceFeedback = ModelService{Key: "feedback"}
-	ModelServiceReport   = ModelService{Key: "report"}
-
-	AllModelServices = ModelServices{ModelServiceTeam, ModelServiceSprint, ModelServiceEstimate, ModelServiceStandup, ModelServiceRetro, ModelServiceStory, ModelServiceFeedback, ModelServiceReport}
-)

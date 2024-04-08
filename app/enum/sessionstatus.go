@@ -13,6 +13,14 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+var (
+	SessionStatusNew      = SessionStatus{Key: "new"}
+	SessionStatusActive   = SessionStatus{Key: "active"}
+	SessionStatusComplete = SessionStatus{Key: "complete"}
+
+	AllSessionStatuses = SessionStatuses{SessionStatusNew, SessionStatusActive, SessionStatusComplete}
+)
+
 type SessionStatus struct {
 	Key         string
 	Name        string
@@ -126,11 +134,3 @@ func (s SessionStatuses) GetByName(name string, logger util.Logger) SessionStatu
 func (s SessionStatuses) Random() SessionStatus {
 	return s[util.RandomInt(len(s))]
 }
-
-var (
-	SessionStatusNew      = SessionStatus{Key: "new"}
-	SessionStatusActive   = SessionStatus{Key: "active"}
-	SessionStatusComplete = SessionStatus{Key: "complete"}
-
-	AllSessionStatuses = SessionStatuses{SessionStatusNew, SessionStatusActive, SessionStatusComplete}
-)
