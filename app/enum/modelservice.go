@@ -41,6 +41,10 @@ func (m ModelService) String() string {
 	return m.Key
 }
 
+func (m ModelService) Matches(xx ModelService) bool {
+	return m.Key == xx.Key
+}
+
 func (m ModelService) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(m.Key, false), nil
 }

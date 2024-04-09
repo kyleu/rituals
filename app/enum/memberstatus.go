@@ -35,6 +35,10 @@ func (m MemberStatus) String() string {
 	return m.Key
 }
 
+func (m MemberStatus) Matches(xx MemberStatus) bool {
+	return m.Key == xx.Key
+}
+
 func (m MemberStatus) MarshalJSON() ([]byte, error) {
 	return util.ToJSONBytes(m.Key, false), nil
 }

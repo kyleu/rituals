@@ -16,7 +16,7 @@ import (
 
 const defaultPostgreSQLSchema = "public"
 
-var typePostgres = &DBType{Key: "postgres", Title: "PostgreSQL", Quote: `"`, Placeholder: "$", SupportsReturning: true}
+var TypePostgres = &DBType{Key: "postgres", Title: "PostgreSQL", Quote: `"`, Placeholder: "$", SupportsReturning: true}
 
 type PostgresParams struct {
 	Host     string `json:"host"`
@@ -115,7 +115,7 @@ func OpenPostgresDatabase(ctx context.Context, key string, params *PostgresParam
 
 	logger = logger.With("svc", "database", "db", key)
 
-	return NewService(typePostgres, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
+	return NewService(TypePostgres, key, params.Database, params.Schema, params.Username, params.Debug, db, logger)
 }
 
 func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams, sp *PostgresServiceParams, logger util.Logger) (*Service, error) {
@@ -147,5 +147,5 @@ func OpenPostgresDatabaseSSL(ctx context.Context, key string, ep *PostgresParams
 
 	logger = logger.With("svc", "database", "db", key)
 
-	return NewService(typePostgres, key, dbname, ep.Schema, sp.Username, ep.Debug, db, logger)
+	return NewService(TypePostgres, key, dbname, ep.Schema, sp.Username, ep.Debug, db, logger)
 }
