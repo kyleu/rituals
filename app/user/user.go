@@ -6,8 +6,11 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*User)(nil)
 
 type User struct {
 	ID      uuid.UUID  `json:"id,omitempty"`

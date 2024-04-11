@@ -2,8 +2,16 @@
 package retro
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
+	"github.com/kyleu/rituals/app/lib/svc"
+)
+
+var (
+	_ svc.ServiceID[*Retro, Retros, uuid.UUID] = (*Service)(nil)
+	_ svc.ServiceSearch[Retros]                = (*Service)(nil)
 )
 
 type Service struct {

@@ -8,8 +8,11 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*TeamMember)(nil)
 
 type PK struct {
 	TeamID uuid.UUID `json:"teamID,omitempty"`

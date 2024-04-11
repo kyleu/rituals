@@ -8,8 +8,11 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*EstimatePermission)(nil)
 
 type PK struct {
 	EstimateID uuid.UUID `json:"estimateID,omitempty"`

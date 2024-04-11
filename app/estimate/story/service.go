@@ -2,8 +2,16 @@
 package story
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
+	"github.com/kyleu/rituals/app/lib/svc"
+)
+
+var (
+	_ svc.ServiceID[*Story, Stories, uuid.UUID] = (*Service)(nil)
+	_ svc.ServiceSearch[Stories]                = (*Service)(nil)
 )
 
 type Service struct {

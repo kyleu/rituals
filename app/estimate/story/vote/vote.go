@@ -7,8 +7,11 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*Vote)(nil)
 
 type PK struct {
 	StoryID uuid.UUID `json:"storyID,omitempty"`

@@ -7,8 +7,11 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*StandupHistory)(nil)
 
 type StandupHistory struct {
 	Slug        string    `json:"slug,omitempty"`

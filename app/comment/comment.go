@@ -7,8 +7,11 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*Comment)(nil)
 
 type Comment struct {
 	ID      uuid.UUID         `json:"id,omitempty"`

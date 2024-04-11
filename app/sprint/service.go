@@ -2,8 +2,16 @@
 package sprint
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
+	"github.com/kyleu/rituals/app/lib/svc"
+)
+
+var (
+	_ svc.ServiceID[*Sprint, Sprints, uuid.UUID] = (*Service)(nil)
+	_ svc.ServiceSearch[Sprints]                 = (*Service)(nil)
 )
 
 type Service struct {

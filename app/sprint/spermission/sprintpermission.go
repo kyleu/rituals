@@ -8,8 +8,11 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*SprintPermission)(nil)
 
 type PK struct {
 	SprintID uuid.UUID `json:"sprintID,omitempty"`

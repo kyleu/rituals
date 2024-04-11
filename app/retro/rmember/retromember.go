@@ -8,8 +8,11 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/kyleu/rituals/app/enum"
+	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+var _ svc.Model = (*RetroMember)(nil)
 
 type PK struct {
 	RetroID uuid.UUID `json:"retroID,omitempty"`
