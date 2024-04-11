@@ -4,7 +4,6 @@ package rpermission
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -15,30 +14,6 @@ import (
 	"github.com/kyleu/rituals/app/lib/filter"
 	"github.com/kyleu/rituals/app/util"
 )
-
-func (s *Service) List(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (RetroPermissions, error) {
-	params = filters(params)
-	wc := ""
-	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
-	ret := rows{}
-	err := s.db.Select(ctx, &ret, q, tx, logger)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to get permissions")
-	}
-	return ret.ToRetroPermissions(), nil
-}
-
-func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, logger util.Logger, args ...any) (int, error) {
-	if strings.Contains(whereClause, "'") || strings.Contains(whereClause, ";") {
-		return 0, errors.Errorf("invalid where clause [%s]", whereClause)
-	}
-	q := database.SQLSelectSimple("count(*) as x", tableQuoted, s.db.Type, whereClause)
-	ret, err := s.db.SingleInt(ctx, q, tx, logger, args...)
-	if err != nil {
-		return 0, errors.Wrap(err, "unable to get count of permissions")
-	}
-	return int(ret), nil
-}
 
 func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, retroID uuid.UUID, key string, value string, logger util.Logger) (*RetroPermission, error) {
 	wc := defaultWC(0)
@@ -125,22 +100,6 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
 	}
 	return ret.ToRetroPermissions(), nil
-}
-
-func (s *Service) ListSQL(ctx context.Context, tx *sqlx.Tx, sql string, logger util.Logger, values ...any) (RetroPermissions, error) {
-	ret := rows{}
-	err := s.db.Select(ctx, &ret, sql, tx, logger, values...)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to get permissions using custom SQL")
-	}
-	return ret.ToRetroPermissions(), nil
-}
-
-//nolint:lll
-func (s *Service) ListWhere(ctx context.Context, tx *sqlx.Tx, where string, params *filter.Params, logger util.Logger, values ...any) (RetroPermissions, error) {
-	params = filters(params)
-	sql := database.SQLSelect(columnsString, tableQuoted, where, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
-	return s.ListSQL(ctx, tx, sql, logger, values...)
 }
 
 func (s *Service) Random(ctx context.Context, tx *sqlx.Tx, logger util.Logger) (*RetroPermission, error) {
