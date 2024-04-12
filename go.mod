@@ -12,7 +12,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gertd/go-pluralize v0.2.1
 	github.com/go-ini/ini v1.67.0
-	github.com/gomarkdown/markdown v0.0.0-20231222211730-1d6d20845b47
+	github.com/gomarkdown/markdown v0.0.0-20240328165702-4d01890c35c0
 	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
@@ -40,7 +40,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.25.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8
-	golang.org/x/oauth2 v0.18.0
+	golang.org/x/oauth2 v0.19.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -52,7 +52,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
 	github.com/dlclark/regexp2 v1.11.0 // indirect
 	github.com/dsoprea/go-logging v0.0.0-20200710184922-b02d349568dd // indirect
 	github.com/dsoprea/go-utility/v2 v2.0.0-20221003172846-a3e1774ef349 // indirect
@@ -63,7 +63,6 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/golang/geo v0.0.0-20230421003525-6adc56603217 // indirect
-	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1 // indirect
@@ -86,7 +85,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
-	github.com/prometheus/common v0.52.2 // indirect
+	github.com/prometheus/common v0.52.3 // indirect
 	github.com/prometheus/procfs v0.13.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -98,7 +97,6 @@ require (
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240401170217-c3f982113cda // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
 	google.golang.org/grpc v1.63.2 // indirect
