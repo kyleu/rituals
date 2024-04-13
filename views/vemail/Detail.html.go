@@ -108,7 +108,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</td>
           </tr>
           <tr>
-            <th class="shrink" title="String text">HTML</th>
+            <th class="shrink" title="HTML code, in string form">HTML</th>
             <td>`)
 //line views/vemail/Detail.html:51
 	view.StreamFormat(qw422016, p.Model.HTML, "html")

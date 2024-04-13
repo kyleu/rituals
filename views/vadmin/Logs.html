@@ -5,6 +5,7 @@
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/util"
+  "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -15,7 +16,7 @@
 
 {% func (p *Logs) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Recent Logs</h3>
+    <h3>{%= components.SVGRefIcon(`filter`, ps) %}Recent Logs</h3>
     {%= logTable(p.Logs) %}
   </div>
 {% endfunc %}

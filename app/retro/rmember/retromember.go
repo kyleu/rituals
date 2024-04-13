@@ -61,7 +61,7 @@ func Random() *RetroMember {
 		RetroID: util.UUID(),
 		UserID:  util.UUID(),
 		Name:    util.RandomString(12),
-		Picture: "https://" + util.RandomString(6) + ".com/" + util.RandomString(6),
+		Picture: util.RandomURL().String(),
 		Role:    enum.AllMemberStatuses.Random(),
 		Created: util.TimeCurrent(),
 		Updated: util.TimeCurrentP(),

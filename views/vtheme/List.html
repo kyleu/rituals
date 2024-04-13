@@ -3,6 +3,7 @@
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/lib/theme"
+  "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/layout"
 ) %}
 
@@ -13,13 +14,13 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Add Theme</h3>
+    <h3>{%= components.SVGRefIcon(`eye`, ps) %}Add Theme</h3>
     <div class="mt">
       <a href="/theme/new" title="add new theme"><button>New Theme</button></a>
     </div>
   </div>
   <div class="card">
-    <h3>Current Themes</h3>
+    <h3>{%= components.SVGRefIcon(`play`, ps) %}Current Themes</h3>
     <div class="overflow full-width">
       <div class="theme-container mt">
         {%- for _, t := range p.Themes -%}
