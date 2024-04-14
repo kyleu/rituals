@@ -55,48 +55,56 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 `)
 //line views/vdatabase/List.html:22
 	for _, key := range p.Keys {
-//line views/vdatabase/List.html:22
+//line views/vdatabase/List.html:23
+		svc := p.Services[key]
+
+//line views/vdatabase/List.html:23
 		qw422016.N().S(`  <div class="card">
+    <div class="right"><em>`)
+//line views/vdatabase/List.html:25
+		qw422016.E().S(svc.Type.Title)
+//line views/vdatabase/List.html:25
+		qw422016.N().S(`</em></div>
     <h3><a href="/admin/database/`)
-//line views/vdatabase/List.html:24
+//line views/vdatabase/List.html:26
 		qw422016.E().S(key)
-//line views/vdatabase/List.html:24
+//line views/vdatabase/List.html:26
 		qw422016.N().S(`">`)
-//line views/vdatabase/List.html:24
+//line views/vdatabase/List.html:26
 		components.StreamSVGRefIcon(qw422016, `database`, ps)
-//line views/vdatabase/List.html:24
-		qw422016.E().S(key)
-//line views/vdatabase/List.html:24
+//line views/vdatabase/List.html:26
+		qw422016.E().S(svc.Key)
+//line views/vdatabase/List.html:26
 		qw422016.N().S(`</a></h3>
   </div>
 `)
-//line views/vdatabase/List.html:26
+//line views/vdatabase/List.html:28
 	}
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 }
 
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	p.StreamBody(qw422016, as, ps)
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	qt422016.ReleaseWriter(qw422016)
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 }
 
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	p.WriteBody(qb422016, as, ps)
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	qs422016 := string(qb422016.B)
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 	return qs422016
-//line views/vdatabase/List.html:27
+//line views/vdatabase/List.html:29
 }
