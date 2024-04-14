@@ -11,7 +11,6 @@ require (
 	github.com/dsoprea/go-exif/v3 v3.0.1
 	github.com/dustin/go-humanize v1.0.1
 	github.com/gertd/go-pluralize v0.2.1
-	github.com/go-ini/ini v1.67.0
 	github.com/gomarkdown/markdown v0.0.0-20240328165702-4d01890c35c0
 	github.com/google/go-github/v39 v39.2.0
 	github.com/google/uuid v1.6.0
