@@ -67,7 +67,7 @@ func (s *Service) Healthcheck(dbName string, db *sqlx.DB) error {
 		if strings.Contains(err.Error(), "does not exist") {
 			return errors.Wrapf(err, "database [%s] does not exist; run the following:\n"+schema.CreateDatabase(), dbName)
 		}
-		return errors.Wrapf(err, "unable to run healthcheck [%s]", q)
+		return errors.Wrapf(err, "unable to run healthcheck [%s] for database [%s]", q, dbName)
 	}
 	defer func() { _ = res.Close() }()
 	return nil
@@ -107,7 +107,7 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger uti
 		logger.Debugf("%s {\n  SQL: %s\n  Values: %s\n}", msg, strings.TrimSpace(q), valueStrings(values))
 	}
 	if s.tracing == "" {
-		return func(count int, msg string, err error, output ...any) {}
+		return func(int, string, error, ...any) {}
 	}
 	t := util.TimerStart()
 	return func(count int, msg string, err error, output ...any) {

@@ -13,6 +13,8 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+const dbPrefix = "db:"
+
 func (s *Service) Insert(ctx context.Context, q string, tx *sqlx.Tx, logger util.Logger, values ...any) error {
 	if s.ReadOnly {
 		return errors.Errorf("cannot run [insert] statements in read-only database [%s]", q)
@@ -58,7 +60,7 @@ func (s *Service) execUnknown(ctx context.Context, op string, q string, tx *sqlx
 	if op == "" {
 		op = "unknown"
 	}
-	now, ctx, span, logger := s.newSpan(ctx, "db:"+op, q, logger)
+	now, ctx, span, logger := s.newSpan(ctx, dbPrefix+op, q, logger)
 	var err error
 	defer s.complete(q, op, span, now, logger, err)
 	var ret sql.Result
