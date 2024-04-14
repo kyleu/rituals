@@ -106,7 +106,7 @@ func (m MemberStatuses) Strings() []string {
 }
 
 func (m MemberStatuses) Help() string {
-	return "Available options: [" + strings.Join(m.Strings(), ", ") + "]"
+	return "Available member status options: [" + strings.Join(m.Strings(), ", ") + "]"
 }
 
 func (m MemberStatuses) Get(key string, logger util.Logger) MemberStatus {
