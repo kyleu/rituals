@@ -27,8 +27,6 @@ func RequestCtxToMap(r *http.Request, _ *app.State, ps *PageState) util.ValueMap
 		"description": ps.Description, "title": ps.Title, "started": ps.Started,
 	}
 	ret := util.ValueMap{"action": action, "data": ps.Data, "request": req}
-	// $PF_SECTION_START(debugstuff)$
-	// $PF_SECTION_END(debugstuff)$
 	return ret
 }
 
