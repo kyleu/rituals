@@ -19,7 +19,7 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = "Teams"
 		ps.Data = ws.Teams
-		return controller.Render(w, r, as, &vwteam.TeamList{Teams: ws.Teams}, ps, "teams")
+		return controller.Render(r, as, &vwteam.TeamList{Teams: ws.Teams}, ps, "teams")
 	})
 }
 
@@ -36,7 +36,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = ft.Team.TitleString()
 		ps.Data = ft
-		return controller.Render(w, r, as, &vwteam.TeamWorkspace{FullTeam: ft}, ps, "teams", ft.Team.ID.String())
+		return controller.Render(r, as, &vwteam.TeamWorkspace{FullTeam: ft}, ps, "teams", ft.Team.ID.String())
 	})
 }
 
@@ -52,7 +52,7 @@ func TeamCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New team created", model.PublicWebPath(), w, ps)
+		return controller.FlashAndRedir(true, "New team created", model.PublicWebPath(), ps)
 	})
 }
 
@@ -71,7 +71,7 @@ func TeamDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Team deleted", "/", w, ps)
+		return controller.FlashAndRedir(true, "Team deleted", "/", ps)
 	})
 }
 
@@ -91,6 +91,6 @@ func TeamAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }

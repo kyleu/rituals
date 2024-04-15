@@ -33,7 +33,7 @@ func SprintHistoryList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vshistory.List{Models: ret, SprintsBySprintID: sprintsBySprintID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "sprint", "shistory")
+		return controller.Render(r, as, page, ps, "sprint", "shistory")
 	})
 }
 
@@ -47,7 +47,7 @@ func SprintHistoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 
-		return controller.Render(w, r, as, &vshistory.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "shistory", ret.TitleString()+"**history")
+		return controller.Render(r, as, &vshistory.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "shistory", ret.TitleString()+"**history")
 	})
 }
 
@@ -63,7 +63,7 @@ func SprintHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [SprintHistory]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vshistory.Edit{Model: ret, IsNew: true}, ps, "sprint", "shistory", "Create")
+		return controller.Render(r, as, &vshistory.Edit{Model: ret, IsNew: true}, ps, "sprint", "shistory", "Create")
 	})
 }
 
@@ -88,7 +88,7 @@ func SprintHistoryCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created SprintHistory")
 		}
 		msg := fmt.Sprintf("SprintHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -99,7 +99,7 @@ func SprintHistoryEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vshistory.Edit{Model: ret}, ps, "sprint", "shistory", ret.String())
+		return controller.Render(r, as, &vshistory.Edit{Model: ret}, ps, "sprint", "shistory", ret.String())
 	})
 }
 
@@ -119,7 +119,7 @@ func SprintHistoryEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update SprintHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("SprintHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -134,7 +134,7 @@ func SprintHistoryDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/history", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/history", ps)
 	})
 }
 

@@ -35,7 +35,7 @@ func StoryList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Stories", ret)
@@ -54,7 +54,7 @@ func StoryList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vstory.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, UsersByUserID: usersByUserID, Params: ps.Params, SearchQuery: q}
-		return controller.Render(w, r, as, page, ps, "estimate", "story")
+		return controller.Render(r, as, page, ps, "estimate", "story")
 	})
 }
 
@@ -74,7 +74,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
-		return controller.Render(w, r, as, &vstory.Detail{
+		return controller.Render(r, as, &vstory.Detail{
 			Model:                ret,
 			EstimateByEstimateID: estimateByEstimateID,
 			UserByUserID:         userByUserID,
@@ -101,7 +101,7 @@ func StoryCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Story]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vstory.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "Create")
+		return controller.Render(r, as, &vstory.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "Create")
 	})
 }
 
@@ -126,7 +126,7 @@ func StoryCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Story")
 		}
 		msg := fmt.Sprintf("Story [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -137,7 +137,7 @@ func StoryEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vstory.Edit{Model: ret}, ps, "estimate", "story", ret.String())
+		return controller.Render(r, as, &vstory.Edit{Model: ret}, ps, "estimate", "story", ret.String())
 	})
 }
 
@@ -157,7 +157,7 @@ func StoryEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Story [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Story [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -172,7 +172,7 @@ func StoryDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete story [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Story [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story", ps)
 	})
 }
 

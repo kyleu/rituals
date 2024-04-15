@@ -23,7 +23,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = "Retros"
 		ps.Data = ws.Retros
-		return controller.Render(w, r, as, &vwretro.RetroList{Retros: ws.Retros, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "retros")
+		return controller.Render(r, as, &vwretro.RetroList{Retros: ws.Retros, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "retros")
 	})
 }
 
@@ -49,7 +49,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		ps.Title = fr.Retro.TitleString()
 		ps.Data = fr
 		v := &vwretro.RetroWorkspace{FullRetro: fr, Teams: ws.Teams, Sprints: ws.Sprints}
-		return controller.Render(w, r, as, v, ps, "retros", fr.Retro.ID.String())
+		return controller.Render(r, as, v, ps, "retros", fr.Retro.ID.String())
 	})
 }
 
@@ -65,7 +65,7 @@ func RetroCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save retro")
 		}
-		return controller.FlashAndRedir(true, "New retro created", model.PublicWebPath(), w, ps)
+		return controller.FlashAndRedir(true, "New retro created", model.PublicWebPath(), ps)
 	})
 }
 
@@ -84,7 +84,7 @@ func RetroDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Retrospective deleted", "/", w, ps)
+		return controller.FlashAndRedir(true, "Retrospective deleted", "/", ps)
 	})
 }
 
@@ -104,6 +104,6 @@ func RetroAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }

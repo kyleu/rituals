@@ -36,7 +36,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Retros", ret)
@@ -55,7 +55,7 @@ func RetroList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vretro.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "retro")
+		return Render(r, as, page, ps, "retro")
 	})
 }
 
@@ -96,7 +96,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		return Render(w, r, as, &vretro.Detail{
+		return Render(r, as, &vretro.Detail{
 			Model:            ret,
 			TeamByTeamID:     teamByTeamID,
 			SprintBySprintID: sprintBySprintID,
@@ -126,7 +126,7 @@ func RetroCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Retro]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
+		return Render(r, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
 	})
 }
 
@@ -151,7 +151,7 @@ func RetroCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Retro")
 		}
 		msg := fmt.Sprintf("Retro [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -162,7 +162,7 @@ func RetroEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vretro.Edit{Model: ret}, ps, "retro", ret.String())
+		return Render(r, as, &vretro.Edit{Model: ret}, ps, "retro", ret.String())
 	})
 }
 
@@ -182,7 +182,7 @@ func RetroEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Retro [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Retro [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -197,7 +197,7 @@ func RetroDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete retro [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Retro [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/retro", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/retro", ps)
 	})
 }
 

@@ -33,7 +33,7 @@ func StandupPermissionList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vupermission.List{Models: ret, StandupsByStandupID: standupsByStandupID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "standup", "upermission")
+		return controller.Render(r, as, page, ps, "standup", "upermission")
 	})
 }
 
@@ -48,7 +48,7 @@ func StandupPermissionDetail(w http.ResponseWriter, r *http.Request) {
 
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 
-		return controller.Render(w, r, as, &vupermission.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "upermission", ret.TitleString()+"**permission")
+		return controller.Render(r, as, &vupermission.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "upermission", ret.TitleString()+"**permission")
 	})
 }
 
@@ -64,7 +64,7 @@ func StandupPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [StandupPermission]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vupermission.Edit{Model: ret, IsNew: true}, ps, "standup", "upermission", "Create")
+		return controller.Render(r, as, &vupermission.Edit{Model: ret, IsNew: true}, ps, "standup", "upermission", "Create")
 	})
 }
 
@@ -89,7 +89,7 @@ func StandupPermissionCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created StandupPermission")
 		}
 		msg := fmt.Sprintf("StandupPermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func StandupPermissionEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vupermission.Edit{Model: ret}, ps, "standup", "upermission", ret.String())
+		return controller.Render(r, as, &vupermission.Edit{Model: ret}, ps, "standup", "upermission", ret.String())
 	})
 }
 
@@ -122,7 +122,7 @@ func StandupPermissionEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update StandupPermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("StandupPermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -137,7 +137,7 @@ func StandupPermissionDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("StandupPermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/standup/permission", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/standup/permission", ps)
 	})
 }
 

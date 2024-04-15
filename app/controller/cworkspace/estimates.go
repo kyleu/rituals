@@ -21,7 +21,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = "Estimates"
 		ps.Data = ws.Estimates
-		return controller.Render(w, r, as, &vwestimate.EstimateList{Estimates: ws.Estimates, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "estimates")
+		return controller.Render(r, as, &vwestimate.EstimateList{Estimates: ws.Estimates, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "estimates")
 	})
 }
 
@@ -47,7 +47,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		ps.Title = fe.Estimate.TitleString()
 		ps.Data = fe
 		page := &vwestimate.EstimateWorkspace{FullEstimate: fe, Teams: ws.Teams, Sprints: ws.Sprints}
-		return controller.Render(w, r, as, page, ps, "estimates", fe.Estimate.ID.String())
+		return controller.Render(r, as, page, ps, "estimates", fe.Estimate.ID.String())
 	})
 }
 
@@ -63,7 +63,7 @@ func EstimateCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New estimate created", model.PublicWebPath(), w, ps)
+		return controller.FlashAndRedir(true, "New estimate created", model.PublicWebPath(), ps)
 	})
 }
 
@@ -82,7 +82,7 @@ func EstimateDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Estimate deleted", "/", w, ps)
+		return controller.FlashAndRedir(true, "Estimate deleted", "/", ps)
 	})
 }
 
@@ -102,6 +102,6 @@ func EstimateAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }

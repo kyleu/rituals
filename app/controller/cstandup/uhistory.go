@@ -33,7 +33,7 @@ func StandupHistoryList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vuhistory.List{Models: ret, StandupsByStandupID: standupsByStandupID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "standup", "uhistory")
+		return controller.Render(r, as, page, ps, "standup", "uhistory")
 	})
 }
 
@@ -48,7 +48,7 @@ func StandupHistoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 
-		return controller.Render(w, r, as, &vuhistory.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "uhistory", ret.TitleString()+"**history")
+		return controller.Render(r, as, &vuhistory.Detail{Model: ret, StandupByStandupID: standupByStandupID}, ps, "standup", "uhistory", ret.TitleString()+"**history")
 	})
 }
 
@@ -64,7 +64,7 @@ func StandupHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [StandupHistory]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vuhistory.Edit{Model: ret, IsNew: true}, ps, "standup", "uhistory", "Create")
+		return controller.Render(r, as, &vuhistory.Edit{Model: ret, IsNew: true}, ps, "standup", "uhistory", "Create")
 	})
 }
 
@@ -89,7 +89,7 @@ func StandupHistoryCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created StandupHistory")
 		}
 		msg := fmt.Sprintf("StandupHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func StandupHistoryEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vuhistory.Edit{Model: ret}, ps, "standup", "uhistory", ret.String())
+		return controller.Render(r, as, &vuhistory.Edit{Model: ret}, ps, "standup", "uhistory", ret.String())
 	})
 }
 
@@ -120,7 +120,7 @@ func StandupHistoryEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update StandupHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("StandupHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -135,7 +135,7 @@ func StandupHistoryDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("StandupHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/standup/history", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/standup/history", ps)
 	})
 }
 

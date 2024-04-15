@@ -40,7 +40,7 @@ func FeedbackList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vfeedback.List{Models: ret, RetrosByRetroID: retrosByRetroID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "retro", "feedback")
+		return controller.Render(r, as, page, ps, "retro", "feedback")
 	})
 }
 
@@ -55,7 +55,7 @@ func FeedbackDetail(w http.ResponseWriter, r *http.Request) {
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vfeedback.Detail{
+		return controller.Render(r, as, &vfeedback.Detail{
 			Model:          ret,
 			RetroByRetroID: retroByRetroID,
 			UserByUserID:   userByUserID,
@@ -79,7 +79,7 @@ func FeedbackCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Feedback]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
+		return controller.Render(r, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func FeedbackCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Feedback")
 		}
 		msg := fmt.Sprintf("Feedback [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func FeedbackEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vfeedback.Edit{Model: ret}, ps, "retro", "feedback", ret.String())
+		return controller.Render(r, as, &vfeedback.Edit{Model: ret}, ps, "retro", "feedback", ret.String())
 	})
 }
 
@@ -135,7 +135,7 @@ func FeedbackEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Feedback [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Feedback [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -150,7 +150,7 @@ func FeedbackDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete feedback [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Feedback [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/feedback", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/feedback", ps)
 	})
 }
 

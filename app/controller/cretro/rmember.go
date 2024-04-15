@@ -40,7 +40,7 @@ func RetroMemberList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vrmember.List{Models: ret, RetrosByRetroID: retrosByRetroID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "retro", "rmember")
+		return controller.Render(r, as, page, ps, "retro", "rmember")
 	})
 }
 
@@ -55,7 +55,7 @@ func RetroMemberDetail(w http.ResponseWriter, r *http.Request) {
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vrmember.Detail{
+		return controller.Render(r, as, &vrmember.Detail{
 			Model:          ret,
 			RetroByRetroID: retroByRetroID,
 			UserByUserID:   userByUserID,
@@ -79,7 +79,7 @@ func RetroMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [RetroMember]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
+		return controller.Render(r, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func RetroMemberCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created RetroMember")
 		}
 		msg := fmt.Sprintf("RetroMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func RetroMemberEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vrmember.Edit{Model: ret}, ps, "retro", "rmember", ret.String())
+		return controller.Render(r, as, &vrmember.Edit{Model: ret}, ps, "retro", "rmember", ret.String())
 	})
 }
 
@@ -136,7 +136,7 @@ func RetroMemberEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update RetroMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("RetroMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -151,7 +151,7 @@ func RetroMemberDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/member", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/member", ps)
 	})
 }
 

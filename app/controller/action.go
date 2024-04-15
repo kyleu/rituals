@@ -32,7 +32,7 @@ func ActionList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vaction.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
-		return Render(w, r, as, page, ps, "action")
+		return Render(r, as, page, ps, "action")
 	})
 }
 
@@ -46,7 +46,7 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(w, r, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.TitleString()+"**action")
+		return Render(r, as, &vaction.Detail{Model: ret, UserByUserID: userByUserID}, ps, "action", ret.TitleString()+"**action")
 	})
 }
 
@@ -62,7 +62,7 @@ func ActionCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Action]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
+		return Render(r, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
 	})
 }
 
@@ -87,7 +87,7 @@ func ActionCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Action")
 		}
 		msg := fmt.Sprintf("Action [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -98,7 +98,7 @@ func ActionEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vaction.Edit{Model: ret}, ps, "action", ret.String())
+		return Render(r, as, &vaction.Edit{Model: ret}, ps, "action", ret.String())
 	})
 }
 
@@ -118,7 +118,7 @@ func ActionEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Action [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Action [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -133,7 +133,7 @@ func ActionDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete action [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Action [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/action", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/action", ps)
 	})
 }
 

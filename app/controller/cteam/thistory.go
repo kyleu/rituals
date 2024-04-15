@@ -33,7 +33,7 @@ func TeamHistoryList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vthistory.List{Models: ret, TeamsByTeamID: teamsByTeamID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "team", "thistory")
+		return controller.Render(r, as, page, ps, "team", "thistory")
 	})
 }
 
@@ -47,7 +47,7 @@ func TeamHistoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 
-		return controller.Render(w, r, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.TitleString()+"**history")
+		return controller.Render(r, as, &vthistory.Detail{Model: ret, TeamByTeamID: teamByTeamID}, ps, "team", "thistory", ret.TitleString()+"**history")
 	})
 }
 
@@ -63,7 +63,7 @@ func TeamHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [TeamHistory]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
+		return controller.Render(r, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
 	})
 }
 
@@ -88,7 +88,7 @@ func TeamHistoryCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created TeamHistory")
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -99,7 +99,7 @@ func TeamHistoryEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vthistory.Edit{Model: ret}, ps, "team", "thistory", ret.String())
+		return controller.Render(r, as, &vthistory.Edit{Model: ret}, ps, "team", "thistory", ret.String())
 	})
 }
 
@@ -119,7 +119,7 @@ func TeamHistoryEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update TeamHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -134,7 +134,7 @@ func TeamHistoryDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("TeamHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/team/history", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/team/history", ps)
 	})
 }
 

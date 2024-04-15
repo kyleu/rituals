@@ -33,7 +33,7 @@ func SprintPermissionList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vspermission.List{Models: ret, SprintsBySprintID: sprintsBySprintID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "sprint", "spermission")
+		return controller.Render(r, as, page, ps, "sprint", "spermission")
 	})
 }
 
@@ -48,7 +48,7 @@ func SprintPermissionDetail(w http.ResponseWriter, r *http.Request) {
 
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 
-		return controller.Render(w, r, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.TitleString()+"**permission")
+		return controller.Render(r, as, &vspermission.Detail{Model: ret, SprintBySprintID: sprintBySprintID}, ps, "sprint", "spermission", ret.TitleString()+"**permission")
 	})
 }
 
@@ -64,7 +64,7 @@ func SprintPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [SprintPermission]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
+		return controller.Render(r, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
 	})
 }
 
@@ -89,7 +89,7 @@ func SprintPermissionCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created SprintPermission")
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func SprintPermissionEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vspermission.Edit{Model: ret}, ps, "sprint", "spermission", ret.String())
+		return controller.Render(r, as, &vspermission.Edit{Model: ret}, ps, "sprint", "spermission", ret.String())
 	})
 }
 
@@ -122,7 +122,7 @@ func SprintPermissionEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update SprintPermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -137,7 +137,7 @@ func SprintPermissionDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintPermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/permission", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/permission", ps)
 	})
 }
 

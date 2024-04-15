@@ -40,7 +40,7 @@ func ReportList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vreport.List{Models: ret, StandupsByStandupID: standupsByStandupID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "standup", "report")
+		return controller.Render(r, as, page, ps, "standup", "report")
 	})
 }
 
@@ -55,7 +55,7 @@ func ReportDetail(w http.ResponseWriter, r *http.Request) {
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vreport.Detail{
+		return controller.Render(r, as, &vreport.Detail{
 			Model:              ret,
 			StandupByStandupID: standupByStandupID,
 			UserByUserID:       userByUserID,
@@ -79,7 +79,7 @@ func ReportCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Report]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
+		return controller.Render(r, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func ReportCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Report")
 		}
 		msg := fmt.Sprintf("Report [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func ReportEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vreport.Edit{Model: ret}, ps, "standup", "report", ret.String())
+		return controller.Render(r, as, &vreport.Edit{Model: ret}, ps, "standup", "report", ret.String())
 	})
 }
 
@@ -135,7 +135,7 @@ func ReportEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Report [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Report [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -150,7 +150,7 @@ func ReportDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete report [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Report [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/standup/report", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/standup/report", ps)
 	})
 }
 

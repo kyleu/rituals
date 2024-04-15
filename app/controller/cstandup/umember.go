@@ -40,7 +40,7 @@ func StandupMemberList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vumember.List{Models: ret, StandupsByStandupID: standupsByStandupID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "standup", "umember")
+		return controller.Render(r, as, page, ps, "standup", "umember")
 	})
 }
 
@@ -55,7 +55,7 @@ func StandupMemberDetail(w http.ResponseWriter, r *http.Request) {
 		standupByStandupID, _ := as.Services.Standup.Get(ps.Context, nil, ret.StandupID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vumember.Detail{
+		return controller.Render(r, as, &vumember.Detail{
 			Model:              ret,
 			StandupByStandupID: standupByStandupID,
 			UserByUserID:       userByUserID,
@@ -79,7 +79,7 @@ func StandupMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [StandupMember]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vumember.Edit{Model: ret, IsNew: true}, ps, "standup", "umember", "Create")
+		return controller.Render(r, as, &vumember.Edit{Model: ret, IsNew: true}, ps, "standup", "umember", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func StandupMemberCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created StandupMember")
 		}
 		msg := fmt.Sprintf("StandupMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func StandupMemberEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vumember.Edit{Model: ret}, ps, "standup", "umember", ret.String())
+		return controller.Render(r, as, &vumember.Edit{Model: ret}, ps, "standup", "umember", ret.String())
 	})
 }
 
@@ -136,7 +136,7 @@ func StandupMemberEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update StandupMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("StandupMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -151,7 +151,7 @@ func StandupMemberDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("StandupMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/standup/member", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/standup/member", ps)
 	})
 }
 

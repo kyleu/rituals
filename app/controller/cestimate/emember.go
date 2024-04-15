@@ -40,7 +40,7 @@ func EstimateMemberList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vemember.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "estimate", "emember")
+		return controller.Render(r, as, page, ps, "estimate", "emember")
 	})
 }
 
@@ -55,7 +55,7 @@ func EstimateMemberDetail(w http.ResponseWriter, r *http.Request) {
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vemember.Detail{
+		return controller.Render(r, as, &vemember.Detail{
 			Model:                ret,
 			EstimateByEstimateID: estimateByEstimateID,
 			UserByUserID:         userByUserID,
@@ -79,7 +79,7 @@ func EstimateMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [EstimateMember]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
+		return controller.Render(r, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func EstimateMemberCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created EstimateMember")
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func EstimateMemberEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vemember.Edit{Model: ret}, ps, "estimate", "emember", ret.String())
+		return controller.Render(r, as, &vemember.Edit{Model: ret}, ps, "estimate", "emember", ret.String())
 	})
 }
 
@@ -136,7 +136,7 @@ func EstimateMemberEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update EstimateMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -151,7 +151,7 @@ func EstimateMemberDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimateMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/member", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/member", ps)
 	})
 }
 

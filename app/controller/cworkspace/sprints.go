@@ -20,7 +20,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = "Sprints"
 		ps.Data = ws.Sprints
-		return controller.Render(w, r, as, &vwsprint.SprintList{Sprints: ws.Sprints, Teams: ws.Teams}, ps, "sprints")
+		return controller.Render(r, as, &vwsprint.SprintList{Sprints: ws.Sprints, Teams: ws.Teams}, ps, "sprints")
 	})
 }
 
@@ -43,7 +43,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = fs.Sprint.TitleString()
 		ps.Data = fs
-		return controller.Render(w, r, as, &vwsprint.SprintWorkspace{FullSprint: fs, Teams: ws.Teams}, ps, "sprints", fs.Sprint.ID.String())
+		return controller.Render(r, as, &vwsprint.SprintWorkspace{FullSprint: fs, Teams: ws.Teams}, ps, "sprints", fs.Sprint.ID.String())
 	})
 }
 
@@ -59,7 +59,7 @@ func SprintCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New sprint created", model.PublicWebPath(), w, ps)
+		return controller.FlashAndRedir(true, "New sprint created", model.PublicWebPath(), ps)
 	})
 }
 
@@ -78,7 +78,7 @@ func SprintDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Sprint deleted", "/", w, ps)
+		return controller.FlashAndRedir(true, "Sprint deleted", "/", ps)
 	})
 }
 
@@ -98,6 +98,6 @@ func SprintAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }

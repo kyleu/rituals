@@ -35,7 +35,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Sprints", ret)
@@ -47,7 +47,7 @@ func SprintList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vsprint.List{Models: ret, TeamsByTeamID: teamsByTeamID, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "sprint")
+		return Render(r, as, page, ps, "sprint")
 	})
 }
 
@@ -94,7 +94,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child standups")
 		}
-		return Render(w, r, as, &vsprint.Detail{
+		return Render(r, as, &vsprint.Detail{
 			Model:        ret,
 			TeamByTeamID: teamByTeamID,
 			Params:       ps.Params,
@@ -121,7 +121,7 @@ func SprintCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Sprint]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
+		return Render(r, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
 	})
 }
 
@@ -146,7 +146,7 @@ func SprintCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Sprint")
 		}
 		msg := fmt.Sprintf("Sprint [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -157,7 +157,7 @@ func SprintEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vsprint.Edit{Model: ret}, ps, "sprint", ret.String())
+		return Render(r, as, &vsprint.Edit{Model: ret}, ps, "sprint", ret.String())
 	})
 }
 
@@ -177,7 +177,7 @@ func SprintEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Sprint [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Sprint [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -192,7 +192,7 @@ func SprintDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete sprint [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Sprint [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/sprint", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/sprint", ps)
 	})
 }
 

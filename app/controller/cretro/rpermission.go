@@ -33,7 +33,7 @@ func RetroPermissionList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vrpermission.List{Models: ret, RetrosByRetroID: retrosByRetroID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "retro", "rpermission")
+		return controller.Render(r, as, page, ps, "retro", "rpermission")
 	})
 }
 
@@ -48,7 +48,7 @@ func RetroPermissionDetail(w http.ResponseWriter, r *http.Request) {
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 
-		return controller.Render(w, r, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.TitleString()+"**permission")
+		return controller.Render(r, as, &vrpermission.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rpermission", ret.TitleString()+"**permission")
 	})
 }
 
@@ -64,7 +64,7 @@ func RetroPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [RetroPermission]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
+		return controller.Render(r, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
 	})
 }
 
@@ -89,7 +89,7 @@ func RetroPermissionCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created RetroPermission")
 		}
 		msg := fmt.Sprintf("RetroPermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func RetroPermissionEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vrpermission.Edit{Model: ret}, ps, "retro", "rpermission", ret.String())
+		return controller.Render(r, as, &vrpermission.Edit{Model: ret}, ps, "retro", "rpermission", ret.String())
 	})
 }
 
@@ -122,7 +122,7 @@ func RetroPermissionEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update RetroPermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("RetroPermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -137,7 +137,7 @@ func RetroPermissionDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroPermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/permission", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/permission", ps)
 	})
 }
 

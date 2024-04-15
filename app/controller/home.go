@@ -16,6 +16,6 @@ func Home(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.Data = ws
-		return Render(w, r, as, &views.Home{Teams: ws.Teams, Sprints: ws.Sprints, Estimates: ws.Estimates, Standups: ws.Standups, Retros: ws.Retros}, ps)
+		return Render(r, as, &views.Home{Teams: ws.Teams, Sprints: ws.Sprints, Estimates: ws.Estimates, Standups: ws.Standups, Retros: ws.Retros}, ps)
 	})
 }

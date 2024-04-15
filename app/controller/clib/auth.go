@@ -25,7 +25,7 @@ func AuthDetail(w http.ResponseWriter, r *http.Request) {
 		u, _, err := auth.CompleteUserAuth(prv, w, r, ps.Session, ps.Logger)
 		if err == nil {
 			msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-			return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, w, ps)
+			return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, ps)
 		}
 		return auth.BeginAuthHandler(prv, w, r, ps.Session, ps.Logger)
 	})
@@ -42,7 +42,7 @@ func AuthCallback(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		msg := fmt.Sprintf(signinMsg, auth.AvailableProviderNames[prv.ID], u.Email)
-		return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, w, ps)
+		return controller.ReturnToReferrer(msg, cutil.DefaultProfilePath, ps)
 	})
 }
 

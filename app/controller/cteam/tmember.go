@@ -40,7 +40,7 @@ func TeamMemberList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vtmember.List{Models: ret, TeamsByTeamID: teamsByTeamID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "team", "tmember")
+		return controller.Render(r, as, page, ps, "team", "tmember")
 	})
 }
 
@@ -55,7 +55,7 @@ func TeamMemberDetail(w http.ResponseWriter, r *http.Request) {
 		teamByTeamID, _ := as.Services.Team.Get(ps.Context, nil, ret.TeamID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vtmember.Detail{
+		return controller.Render(r, as, &vtmember.Detail{
 			Model:        ret,
 			TeamByTeamID: teamByTeamID,
 			UserByUserID: userByUserID,
@@ -79,7 +79,7 @@ func TeamMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [TeamMember]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
+		return controller.Render(r, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func TeamMemberCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created TeamMember")
 		}
 		msg := fmt.Sprintf("TeamMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func TeamMemberEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vtmember.Edit{Model: ret}, ps, "team", "tmember", ret.String())
+		return controller.Render(r, as, &vtmember.Edit{Model: ret}, ps, "team", "tmember", ret.String())
 	})
 }
 
@@ -136,7 +136,7 @@ func TeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update TeamMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("TeamMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -151,7 +151,7 @@ func TeamMemberDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("TeamMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/team/member", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/team/member", ps)
 	})
 }
 

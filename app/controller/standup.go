@@ -36,7 +36,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Standups", ret)
@@ -55,7 +55,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vstandup.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "standup")
+		return Render(r, as, page, ps, "standup")
 	})
 }
 
@@ -97,7 +97,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		return Render(w, r, as, &vstandup.Detail{
+		return Render(r, as, &vstandup.Detail{
 			Model:            ret,
 			TeamByTeamID:     teamByTeamID,
 			SprintBySprintID: sprintBySprintID,
@@ -127,7 +127,7 @@ func StandupCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Standup]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
+		return Render(r, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
 	})
 }
 
@@ -152,7 +152,7 @@ func StandupCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Standup")
 		}
 		msg := fmt.Sprintf("Standup [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -163,7 +163,7 @@ func StandupEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vstandup.Edit{Model: ret}, ps, "standup", ret.String())
+		return Render(r, as, &vstandup.Edit{Model: ret}, ps, "standup", ret.String())
 	})
 }
 
@@ -183,7 +183,7 @@ func StandupEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Standup [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Standup [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -198,7 +198,7 @@ func StandupDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete standup [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Standup [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/standup", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/standup", ps)
 	})
 }
 

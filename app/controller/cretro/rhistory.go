@@ -33,7 +33,7 @@ func RetroHistoryList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vrhistory.List{Models: ret, RetrosByRetroID: retrosByRetroID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "retro", "rhistory")
+		return controller.Render(r, as, page, ps, "retro", "rhistory")
 	})
 }
 
@@ -47,7 +47,7 @@ func RetroHistoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		retroByRetroID, _ := as.Services.Retro.Get(ps.Context, nil, ret.RetroID, ps.Logger)
 
-		return controller.Render(w, r, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.TitleString()+"**history")
+		return controller.Render(r, as, &vrhistory.Detail{Model: ret, RetroByRetroID: retroByRetroID}, ps, "retro", "rhistory", ret.TitleString()+"**history")
 	})
 }
 
@@ -63,7 +63,7 @@ func RetroHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [RetroHistory]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
+		return controller.Render(r, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
 	})
 }
 
@@ -88,7 +88,7 @@ func RetroHistoryCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created RetroHistory")
 		}
 		msg := fmt.Sprintf("RetroHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -99,7 +99,7 @@ func RetroHistoryEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vrhistory.Edit{Model: ret}, ps, "retro", "rhistory", ret.String())
+		return controller.Render(r, as, &vrhistory.Edit{Model: ret}, ps, "retro", "rhistory", ret.String())
 	})
 }
 
@@ -119,7 +119,7 @@ func RetroHistoryEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update RetroHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("RetroHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -134,7 +134,7 @@ func RetroHistoryDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("RetroHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/retro/history", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/retro/history", ps)
 	})
 }
 

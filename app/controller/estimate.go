@@ -36,7 +36,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Estimates", ret)
@@ -55,7 +55,7 @@ func EstimateList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vestimate.List{Models: ret, TeamsByTeamID: teamsByTeamID, SprintsBySprintID: sprintsBySprintID, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "estimate")
+		return Render(r, as, page, ps, "estimate")
 	})
 }
 
@@ -97,7 +97,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child stories")
 		}
-		return Render(w, r, as, &vestimate.Detail{
+		return Render(r, as, &vestimate.Detail{
 			Model:            ret,
 			TeamByTeamID:     teamByTeamID,
 			SprintBySprintID: sprintBySprintID,
@@ -127,7 +127,7 @@ func EstimateCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Estimate]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
+		return Render(r, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
 	})
 }
 
@@ -152,7 +152,7 @@ func EstimateCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Estimate")
 		}
 		msg := fmt.Sprintf("Estimate [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -163,7 +163,7 @@ func EstimateEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vestimate.Edit{Model: ret}, ps, "estimate", ret.String())
+		return Render(r, as, &vestimate.Edit{Model: ret}, ps, "estimate", ret.String())
 	})
 }
 
@@ -183,7 +183,7 @@ func EstimateEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Estimate [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Estimate [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -198,7 +198,7 @@ func EstimateDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete estimate [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Estimate [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/estimate", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/estimate", ps)
 	})
 }
 

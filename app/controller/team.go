@@ -32,12 +32,12 @@ func TeamList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Teams", ret)
 		page := &vteam.List{Models: ret, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "team")
+		return Render(r, as, page, ps, "team")
 	})
 }
 
@@ -84,7 +84,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child permissions")
 		}
-		return Render(w, r, as, &vteam.Detail{
+		return Render(r, as, &vteam.Detail{
 			Model:  ret,
 			Params: ps.Params,
 
@@ -107,7 +107,7 @@ func TeamCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Team]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
+		return Render(r, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
 	})
 }
 
@@ -132,7 +132,7 @@ func TeamCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Team")
 		}
 		msg := fmt.Sprintf("Team [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -143,7 +143,7 @@ func TeamEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vteam.Edit{Model: ret}, ps, "team", ret.String())
+		return Render(r, as, &vteam.Edit{Model: ret}, ps, "team", ret.String())
 	})
 }
 
@@ -163,7 +163,7 @@ func TeamEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Team [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Team [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -178,7 +178,7 @@ func TeamDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete team [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Team [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/team", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/team", ps)
 	})
 }
 

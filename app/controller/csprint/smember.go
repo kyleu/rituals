@@ -40,7 +40,7 @@ func SprintMemberList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vsmember.List{Models: ret, SprintsBySprintID: sprintsBySprintID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "sprint", "smember")
+		return controller.Render(r, as, page, ps, "sprint", "smember")
 	})
 }
 
@@ -55,7 +55,7 @@ func SprintMemberDetail(w http.ResponseWriter, r *http.Request) {
 		sprintBySprintID, _ := as.Services.Sprint.Get(ps.Context, nil, ret.SprintID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vsmember.Detail{
+		return controller.Render(r, as, &vsmember.Detail{
 			Model:            ret,
 			SprintBySprintID: sprintBySprintID,
 			UserByUserID:     userByUserID,
@@ -79,7 +79,7 @@ func SprintMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [SprintMember]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
+		return controller.Render(r, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func SprintMemberCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created SprintMember")
 		}
 		msg := fmt.Sprintf("SprintMember [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func SprintMemberEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vsmember.Edit{Model: ret}, ps, "sprint", "smember", ret.String())
+		return controller.Render(r, as, &vsmember.Edit{Model: ret}, ps, "sprint", "smember", ret.String())
 	})
 }
 
@@ -136,7 +136,7 @@ func SprintMemberEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update SprintMember [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("SprintMember [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -151,7 +151,7 @@ func SprintMemberDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("SprintMember [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/member", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/member", ps)
 	})
 }
 

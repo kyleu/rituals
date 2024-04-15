@@ -40,7 +40,7 @@ func VoteList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vvote.List{Models: ret, StoriesByStoryID: storiesByStoryID, UsersByUserID: usersByUserID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "estimate", "story", "vote")
+		return controller.Render(r, as, page, ps, "estimate", "story", "vote")
 	})
 }
 
@@ -55,7 +55,7 @@ func VoteDetail(w http.ResponseWriter, r *http.Request) {
 		storyByStoryID, _ := as.Services.Story.Get(ps.Context, nil, ret.StoryID, ps.Logger)
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return controller.Render(w, r, as, &vvote.Detail{
+		return controller.Render(r, as, &vvote.Detail{
 			Model:          ret,
 			StoryByStoryID: storyByStoryID,
 			UserByUserID:   userByUserID,
@@ -79,7 +79,7 @@ func VoteCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Vote]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
+		return controller.Render(r, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
 	})
 }
 
@@ -104,7 +104,7 @@ func VoteCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Vote")
 		}
 		msg := fmt.Sprintf("Vote [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -115,7 +115,7 @@ func VoteEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vvote.Edit{Model: ret}, ps, "estimate", "story", "vote", ret.String())
+		return controller.Render(r, as, &vvote.Edit{Model: ret}, ps, "estimate", "story", "vote", ret.String())
 	})
 }
 
@@ -136,7 +136,7 @@ func VoteEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Vote [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Vote [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -151,7 +151,7 @@ func VoteDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete vote [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Vote [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story/vote", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story/vote", ps)
 	})
 }
 

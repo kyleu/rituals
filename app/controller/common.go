@@ -18,7 +18,7 @@ func Options(w http.ResponseWriter, _ *http.Request) {
 
 func NotFoundAction(w http.ResponseWriter, r *http.Request) {
 	Act("notfound", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		return NotFoundResponse(w, r)(as, ps)
+		return NotFoundResponse(ps.W, r)(as, ps)
 	})
 }
 
@@ -33,7 +33,7 @@ func NotFoundResponse(w http.ResponseWriter, r *http.Request) func(as *app.State
 		ps.Data = util.ValueMap{"status": "notfound", "statusCode": http.StatusNotFound, "message": ps.Title}
 		bc := util.StringSplitAndTrim(r.URL.Path, "/")
 		bc = append(bc, "Not Found")
-		return Render(w, r, as, &verror.NotFound{Path: r.URL.Path}, ps, bc...)
+		return Render(r, as, &verror.NotFound{Path: r.URL.Path}, ps, bc...)
 	}
 }
 
@@ -56,6 +56,6 @@ func Unauthorized(w http.ResponseWriter, r *http.Request, reason string, account
 			}
 		}
 		ps.Data = util.ValueMap{"status": "unauthorized", "statusCode": http.StatusUnauthorized, "message": reason}
-		return Render(w, r, as, &verror.Unauthorized{Path: path, Message: reason, Accounts: accounts}, ps, bc...)
+		return Render(r, as, &verror.Unauthorized{Path: path, Message: reason, Accounts: accounts}, ps, bc...)
 	}
 }

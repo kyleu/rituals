@@ -33,7 +33,7 @@ func EstimatePermissionList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vepermission.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "estimate", "epermission")
+		return controller.Render(r, as, page, ps, "estimate", "epermission")
 	})
 }
 
@@ -48,7 +48,7 @@ func EstimatePermissionDetail(w http.ResponseWriter, r *http.Request) {
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 
-		return controller.Render(w, r, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.TitleString()+"**permission")
+		return controller.Render(r, as, &vepermission.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "epermission", ret.TitleString()+"**permission")
 	})
 }
 
@@ -64,7 +64,7 @@ func EstimatePermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [EstimatePermission]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
+		return controller.Render(r, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
 	})
 }
 
@@ -89,7 +89,7 @@ func EstimatePermissionCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created EstimatePermission")
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func EstimatePermissionEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vepermission.Edit{Model: ret}, ps, "estimate", "epermission", ret.String())
+		return controller.Render(r, as, &vepermission.Edit{Model: ret}, ps, "estimate", "epermission", ret.String())
 	})
 }
 
@@ -122,7 +122,7 @@ func EstimatePermissionEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update EstimatePermission [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -137,7 +137,7 @@ func EstimatePermissionDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimatePermission [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/permission", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/permission", ps)
 	})
 }
 

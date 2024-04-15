@@ -32,7 +32,7 @@ func CommentList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vcomment.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
-		return Render(w, r, as, page, ps, "comment")
+		return Render(r, as, page, ps, "comment")
 	})
 }
 
@@ -46,7 +46,7 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(w, r, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.TitleString()+"**comments")
+		return Render(r, as, &vcomment.Detail{Model: ret, UserByUserID: userByUserID}, ps, "comment", ret.TitleString()+"**comments")
 	})
 }
 
@@ -62,7 +62,7 @@ func CommentCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Comment]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
+		return Render(r, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
 	})
 }
 
@@ -87,7 +87,7 @@ func CommentCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Comment")
 		}
 		msg := fmt.Sprintf("Comment [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -98,7 +98,7 @@ func CommentEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vcomment.Edit{Model: ret}, ps, "comment", ret.String())
+		return Render(r, as, &vcomment.Edit{Model: ret}, ps, "comment", ret.String())
 	})
 }
 
@@ -118,7 +118,7 @@ func CommentEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Comment [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Comment [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -133,7 +133,7 @@ func CommentDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete comment [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Comment [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/comment", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/comment", ps)
 	})
 }
 

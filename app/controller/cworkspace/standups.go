@@ -21,7 +21,7 @@ func StandupList(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = "Standups"
 		ps.Data = ws.Standups
-		return controller.Render(w, r, as, &vwstandup.StandupList{Standups: ws.Standups, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups")
+		return controller.Render(r, as, &vwstandup.StandupList{Standups: ws.Standups, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups")
 	})
 }
 
@@ -46,7 +46,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = fu.Standup.TitleString()
 		ps.Data = fu
-		return controller.Render(w, r, as, &vwstandup.StandupWorkspace{FullStandup: fu, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups", fu.Standup.ID.String())
+		return controller.Render(r, as, &vwstandup.StandupWorkspace{FullStandup: fu, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups", fu.Standup.ID.String())
 	})
 }
 
@@ -62,7 +62,7 @@ func StandupCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "New standup created", model.PublicWebPath(), w, ps)
+		return controller.FlashAndRedir(true, "New standup created", model.PublicWebPath(), ps)
 	})
 }
 
@@ -81,7 +81,7 @@ func StandupDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, "Standup deleted", "/", w, ps)
+		return controller.FlashAndRedir(true, "Standup deleted", "/", ps)
 	})
 }
 
@@ -101,6 +101,6 @@ func StandupAction(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return controller.FlashAndRedir(true, msg, u, w, ps)
+		return controller.FlashAndRedir(true, msg, u, ps)
 	})
 }

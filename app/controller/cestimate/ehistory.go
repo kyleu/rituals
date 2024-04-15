@@ -33,7 +33,7 @@ func EstimateHistoryList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vehistory.List{Models: ret, EstimatesByEstimateID: estimatesByEstimateID, Params: ps.Params}
-		return controller.Render(w, r, as, page, ps, "estimate", "ehistory")
+		return controller.Render(r, as, page, ps, "estimate", "ehistory")
 	})
 }
 
@@ -48,7 +48,7 @@ func EstimateHistoryDetail(w http.ResponseWriter, r *http.Request) {
 
 		estimateByEstimateID, _ := as.Services.Estimate.Get(ps.Context, nil, ret.EstimateID, ps.Logger)
 
-		return controller.Render(w, r, as, &vehistory.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "ehistory", ret.TitleString()+"**history")
+		return controller.Render(r, as, &vehistory.Detail{Model: ret, EstimateByEstimateID: estimateByEstimateID}, ps, "estimate", "ehistory", ret.TitleString()+"**history")
 	})
 }
 
@@ -64,7 +64,7 @@ func EstimateHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [EstimateHistory]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vehistory.Edit{Model: ret, IsNew: true}, ps, "estimate", "ehistory", "Create")
+		return controller.Render(r, as, &vehistory.Edit{Model: ret, IsNew: true}, ps, "estimate", "ehistory", "Create")
 	})
 }
 
@@ -89,7 +89,7 @@ func EstimateHistoryCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created EstimateHistory")
 		}
 		msg := fmt.Sprintf("EstimateHistory [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -100,7 +100,7 @@ func EstimateHistoryEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vehistory.Edit{Model: ret}, ps, "estimate", "ehistory", ret.String())
+		return controller.Render(r, as, &vehistory.Edit{Model: ret}, ps, "estimate", "ehistory", ret.String())
 	})
 }
 
@@ -120,7 +120,7 @@ func EstimateHistoryEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update EstimateHistory [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("EstimateHistory [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -135,7 +135,7 @@ func EstimateHistoryDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("EstimateHistory [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/history", w, ps)
+		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/history", ps)
 	})
 }
 

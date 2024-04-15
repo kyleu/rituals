@@ -32,12 +32,12 @@ func UserList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Users", ret)
 		page := &vuser.List{Models: ret, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "user")
+		return Render(r, as, page, ps, "user")
 	})
 }
 
@@ -109,7 +109,7 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child votes")
 		}
-		return Render(w, r, as, &vuser.Detail{
+		return Render(r, as, &vuser.Detail{
 			Model:  ret,
 			Params: ps.Params,
 
@@ -137,7 +137,7 @@ func UserCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [User]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
+		return Render(r, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
 	})
 }
 
@@ -162,7 +162,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created User")
 		}
 		msg := fmt.Sprintf("User [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -173,7 +173,7 @@ func UserEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vuser.Edit{Model: ret}, ps, "user", ret.String())
+		return Render(r, as, &vuser.Edit{Model: ret}, ps, "user", ret.String())
 	})
 }
 
@@ -193,7 +193,7 @@ func UserEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update User [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("User [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -208,7 +208,7 @@ func UserDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete user [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("User [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/user", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/user", ps)
 	})
 }
 

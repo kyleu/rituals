@@ -32,7 +32,7 @@ func EmailList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vemail.List{Models: ret, UsersByUserID: usersByUserID, Params: ps.Params}
-		return Render(w, r, as, page, ps, "email")
+		return Render(r, as, page, ps, "email")
 	})
 }
 
@@ -46,7 +46,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 
 		userByUserID, _ := as.Services.User.Get(ps.Context, nil, ret.UserID, ps.Logger)
 
-		return Render(w, r, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.TitleString()+"**email")
+		return Render(r, as, &vemail.Detail{Model: ret, UserByUserID: userByUserID}, ps, "email", ret.TitleString()+"**email")
 	})
 }
 
@@ -62,7 +62,7 @@ func EmailCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Email]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
+		return Render(r, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
 	})
 }
 
@@ -87,7 +87,7 @@ func EmailCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Email")
 		}
 		msg := fmt.Sprintf("Email [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -98,7 +98,7 @@ func EmailEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vemail.Edit{Model: ret}, ps, "email", ret.String())
+		return Render(r, as, &vemail.Edit{Model: ret}, ps, "email", ret.String())
 	})
 }
 
@@ -118,7 +118,7 @@ func EmailEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Email [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Email [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -133,7 +133,7 @@ func EmailDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete email [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Email [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/admin/db/email", w, ps)
+		return FlashAndRedir(true, msg, "/admin/db/email", ps)
 	})
 }
 
