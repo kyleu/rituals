@@ -10,11 +10,13 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-const explainPrefix = "explain analyze "
-
 func (s *Service) Explain(ctx context.Context, q string, values []any, _ util.Logger) ([]util.ValueMap, error) {
 	q = strings.TrimSpace(q)
+	explainPrefix := "explain "
 	if !strings.HasPrefix(q, explainPrefix) {
+		if s.Type.Key == TypePostgres.Key {
+			explainPrefix += "analyze "
+		}
 		q = explainPrefix + q
 	}
 	res, err := s.db.QueryxContext(ctx, q, values...)

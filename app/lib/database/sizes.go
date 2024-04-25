@@ -62,7 +62,7 @@ func (ts sizeRows) ToSizes() TableSizes {
 }
 
 func (s *Service) Sizes(ctx context.Context, logger util.Logger) (TableSizes, error) {
-	q := schema.SizeInfo()
+	q := schema.SizeInfo(s.Type.Key)
 	ret := sizeRows{}
 	err := s.Select(ctx, &ret, q, nil, logger)
 	if err != nil {

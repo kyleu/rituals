@@ -1,5 +1,7 @@
 -- Content managed by Project Forge, see [projectforge.md] for details.
--- {% func SizeInfo() %}
+-- {% func SizeInfo(dbType string) %}
+-- {% switch dbType %}
+-- {% case "postgres" %}
 with recursive
   pg_inherit(inhrelid, inhparent) as (
     select inhrelid, inhparent
@@ -44,4 +46,7 @@ from (
   where oid = parent
 ) a
 order by total_bytes desc;
+-- {% default %}
+select 'unhandled database type [{%s dbType %}]';
+-- {% endswitch %}
 -- {% endfunc %}

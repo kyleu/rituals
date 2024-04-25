@@ -57,7 +57,7 @@
   ],
   "relations": [
     {
-      "name": "comment_user_id_fk",
+      "name": "action_user_id_fk",
       "src": [
         "user_id"
       ],

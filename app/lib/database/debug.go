@@ -27,12 +27,6 @@ var (
 	statements   = map[string]DebugStatements{}
 	statementsMu = sync.Mutex{}
 	lastIndex    = 0
-	debugExample = &DebugStatement{
-		Index: -1, SQL: "select * from test where a = $1 and b = $2",
-		Values: []any{util.ValueMap{"a": true}, util.ValueMap{"b": true}, util.ValueMap{"c": true}},
-		Extra:  []util.ValueMap{{"example": "[example plan]"}}, Timing: 1,
-		Message: "test query run without issue", Count: 2, Out: []any{1, 2},
-	}
 )
 
 type DebugStatement struct {
@@ -91,9 +85,6 @@ func GetDebugStatements(key string) DebugStatements {
 }
 
 func GetDebugStatement(key string, idx int) *DebugStatement {
-	if idx == -1 {
-		return debugExample
-	}
 	statementsMu.Lock()
 	defer statementsMu.Unlock()
 	return lo.FindOrElse(statements[key], nil, func(st *DebugStatement) bool {
