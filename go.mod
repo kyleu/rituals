@@ -26,6 +26,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/mileusna/useragent v1.3.4
 	github.com/muesli/coral v1.0.0
+	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.19.0
 	github.com/russross/blackfriday v1.6.0
