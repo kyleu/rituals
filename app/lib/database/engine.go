@@ -3,6 +3,8 @@ package database
 
 import (
 	"fmt"
+
+	"github.com/samber/lo"
 )
 
 type DBType struct {
@@ -26,4 +28,14 @@ func (t *DBType) PlaceholderFor(idx int) string {
 
 func (t *DBType) Quoted(s string) string {
 	return fmt.Sprintf("%s%s%s", t.Quote, s, t.Quote)
+}
+
+var AllTypes = []*DBType{
+	TypePostgres,
+}
+
+func TypeByKey(key string) *DBType {
+	return lo.FindOrElse(AllTypes, nil, func(x *DBType) bool {
+		return x.Key == key
+	})
 }
