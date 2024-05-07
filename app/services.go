@@ -42,7 +42,7 @@ func NewServices(ctx context.Context, st *State, logger util.Logger) (*Services,
 		gen.User, gen.Action, gen.Comment, gen.Email, st.DB,
 	)
 
-	core.Socket = websocket.NewService(w.SocketOpen, w.SocketHandler, w.SocketClose)
+	core.Socket = websocket.NewService(w.SocketOpen, w.SocketClose)
 	w.RegisterSend(func(svc enum.ModelService, id uuid.UUID, act action.Act, param any, userID *uuid.UUID, logger util.Logger, except ...uuid.UUID) error {
 		ch := fmt.Sprintf("%s:%s", svc.Key, id.String())
 		msg := websocket.NewMessage(userID, ch, string(act), param)

@@ -24,12 +24,13 @@ type Connection struct {
 	ModelID  *uuid.UUID    `json:"modelID,omitempty"`
 	Channels []string      `json:"channels,omitempty"`
 	Started  time.Time     `json:"started,omitempty"`
+	handler  Handler
 	socket   *websocket.Conn
 	mu       sync.Mutex
 }
 
-func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn) *Connection {
-	return &Connection{ID: util.UUID(), User: usr, Profile: profile, Accounts: accounts, Svc: svc, Started: util.TimeCurrent(), socket: socket}
+func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn, handler Handler) *Connection {
+	return &Connection{ID: util.UUID(), User: usr, Profile: profile, Accounts: accounts, Svc: svc, Started: util.TimeCurrent(), handler: handler, socket: socket}
 }
 
 func (c *Connection) ToStatus() *Status {

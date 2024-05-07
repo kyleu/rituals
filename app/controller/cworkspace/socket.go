@@ -44,7 +44,8 @@ func Socket(w http.ResponseWriter, r *http.Request, svc string, as *app.State, p
 	if err != nil {
 		return "", err
 	}
-	err = as.Services.Socket.Upgrade(ps.Context, w, r, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, ps.Logger)
+	h := as.Services.Workspace.SocketHandler
+	_, err = as.Services.Socket.Upgrade(ps.Context, w, r, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, h, ps.Logger)
 	if err != nil {
 		ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
 		return "", err

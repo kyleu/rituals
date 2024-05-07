@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/pkg/errors"
 
@@ -17,7 +16,7 @@ func (s *Service) SocketOpen(_ *websocket.Service, _ *websocket.Connection, _ ut
 }
 
 func (s *Service) SocketHandler(
-	ctx context.Context, _ *websocket.Service, conn *websocket.Connection, svc string, cmd string, param json.RawMessage, logger util.Logger,
+	ctx context.Context, _ *websocket.Service, conn *websocket.Connection, svc string, cmd string, param []byte, logger util.Logger,
 ) error {
 	logger.Infof("processing [%s] message of type [%s]", svc, cmd)
 	svc, idStr := util.StringSplit(svc, ':', true)

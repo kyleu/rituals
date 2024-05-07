@@ -14,8 +14,8 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) Register(u *dbuser.User, profile *user.Profile, accts user.Accounts, c *websocket.Conn, logger util.Logger) (*Connection, error) {
-	conn := NewConnection("system", u, profile, accts, c)
+func (s *Service) Register(u *dbuser.User, profile *user.Profile, accts user.Accounts, c *websocket.Conn, h Handler, logger util.Logger) (*Connection, error) {
+	conn := NewConnection("system", u, profile, accts, c, h)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	s.connections[conn.ID] = conn
@@ -44,7 +44,11 @@ func OnMessage(ctx context.Context, s *Service, connID uuid.UUID, message *Messa
 		return invalidConnection(connID)
 	}
 	s.WriteTap(message, logger)
-	return s.handler(ctx, s, c, message.Channel, message.Cmd, message.Param, logger)
+	if c.handler == nil {
+		return nil
+	} else {
+		return c.handler(ctx, s, c, message.Channel, message.Cmd, message.Param, logger)
+	}
 }
 
 func (s *Service) Disconnect(connID uuid.UUID, logger util.Logger) (bool, error) {
