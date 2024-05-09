@@ -10,14 +10,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/robert-nix/ansihtml"
 	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/lib/user"
 	dbuser "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
 )
-
-type Handler func(ctx context.Context, s *Service, conn *Connection, svc string, cmd string, param []byte, logger util.Logger) error
 
 type ConnectEvent func(s *Service, conn *Connection, logger util.Logger) error
 
@@ -65,7 +64,8 @@ func (s *Service) Close() {
 var upgrader = websocket.Upgrader{EnableCompression: true}
 
 func (s *Service) Upgrade(
-	ctx context.Context, w http.ResponseWriter, r *http.Request, channel string, u *dbuser.User, profile *user.Profile, accts user.Accounts, handler Handler, logger util.Logger,
+	ctx context.Context, w http.ResponseWriter, r *http.Request, channel string,
+	u *dbuser.User, profile *user.Profile, accts user.Accounts, handler Handler, logger util.Logger,
 ) (uuid.UUID, error) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -81,12 +81,14 @@ func (s *Service) Upgrade(
 		logger.Error(fmt.Sprintf("error processing socket join (%v): %+v", joined, err))
 		return uuid.Nil, nil
 	}
-	err = s.ReadLoop(ctx, cx.ID, logger)
-	if err != nil {
-		if !strings.Contains(err.Error(), "1001") {
-			logger.Error(fmt.Sprintf("error processing socket read loop for connection [%s]: %+v", cx.ID.String(), err))
-		}
-		return uuid.Nil, nil
-	}
 	return cx.ID, nil
+}
+
+func (s *Service) Terminal(ch string, logger util.Logger) func(key string, b []byte) error {
+	return func(key string, b []byte) error {
+		html := string(ansihtml.ConvertToHTML(b))
+		m := util.ValueMap{"msg": string(b), "html": strings.TrimSpace(html)}
+		msg := NewMessage(nil, ch, "output", m)
+		return s.WriteChannel(msg, logger)
+	}
 }

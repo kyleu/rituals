@@ -45,10 +45,10 @@ func Socket(w http.ResponseWriter, r *http.Request, svc string, as *app.State, p
 		return "", err
 	}
 	h := as.Services.Workspace.SocketHandler
-	_, err = as.Services.Socket.Upgrade(ps.Context, w, r, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, h, ps.Logger)
+	sockID, err := as.Services.Socket.Upgrade(ps.Context, w, r, svc+":"+id.String(), ps.User, ps.Profile, ps.Accounts, h, ps.Logger)
 	if err != nil {
 		ps.Logger.Warnf("unable to upgrade connection to WebSocket: %s", err.Error())
 		return "", err
 	}
-	return "", nil
+	return "", as.Services.Socket.ReadLoop(ps.Context, sockID, ps.Logger)
 }
