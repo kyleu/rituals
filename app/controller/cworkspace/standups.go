@@ -6,6 +6,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cmenu"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
@@ -45,6 +46,9 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.Title = fu.Standup.TitleString()
+		if fu.Registered {
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+		}
 		ps.Data = fu
 		return controller.Render(r, as, &vwstandup.StandupWorkspace{FullStandup: fu, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups", fu.Standup.ID.String())
 	})

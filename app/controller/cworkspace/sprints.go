@@ -6,6 +6,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cmenu"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/team"
 	"github.com/kyleu/rituals/app/workspace"
@@ -42,6 +43,9 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.Title = fs.Sprint.TitleString()
+		if fs.Registered {
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+		}
 		ps.Data = fs
 		return controller.Render(r, as, &vwsprint.SprintWorkspace{FullSprint: fs, Teams: ws.Teams}, ps, "sprints", fs.Sprint.ID.String())
 	})

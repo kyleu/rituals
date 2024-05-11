@@ -21,6 +21,9 @@ func (s *Service) Register(
 	if err != nil {
 		return nil, err
 	}
+	if name == "" {
+		name = "Guest"
+	}
 	m := &StandupMember{StandupID: u, UserID: userID, Name: name, Picture: picture, Role: role, Created: time.Now()}
 	err = s.Save(ctx, tx, logger, m)
 	if err != nil {

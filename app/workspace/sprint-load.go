@@ -152,12 +152,12 @@ func (s *Service) membersSprint(p *LoadParams, sprintID uuid.UUID) (smember.Spri
 	if err != nil {
 		return nil, nil, false, err
 	}
-	if self := members.Get(sprintID, p.Profile.ID); self != nil {
-		return members, self, false, nil
-	}
 	err = s.us.CreateIfNeeded(p.Ctx, p.Profile.ID, p.Profile.Name, p.Tx, p.Logger)
 	if err != nil {
 		return nil, nil, false, err
+	}
+	if self := members.Get(sprintID, p.Profile.ID); self != nil {
+		return members, self, false, nil
 	}
 	role := enum.MemberStatusMember
 	if len(members) == 0 {

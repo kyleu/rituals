@@ -6,6 +6,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cmenu"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/workspace"
 	"github.com/kyleu/rituals/views/vworkspace/vwteam"
@@ -35,6 +36,9 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.Title = ft.Team.TitleString()
+		if ft.Registered {
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+		}
 		ps.Data = ft
 		return controller.Render(r, as, &vwteam.TeamWorkspace{FullTeam: ft}, ps, "teams", ft.Team.ID.String())
 	})

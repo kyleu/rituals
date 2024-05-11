@@ -8,6 +8,7 @@ import (
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cmenu"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
@@ -47,6 +48,9 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.Title = fr.Retro.TitleString()
+		if fr.Registered {
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+		}
 		ps.Data = fr
 		v := &vwretro.RetroWorkspace{FullRetro: fr, Teams: ws.Teams, Sprints: ws.Sprints}
 		return controller.Render(r, as, v, ps, "retros", fr.Retro.ID.String())

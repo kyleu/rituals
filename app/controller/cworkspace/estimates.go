@@ -3,12 +3,17 @@ package cworkspace
 import (
 	"net/http"
 
+	"github.com/google/uuid"
+
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/action"
 	"github.com/kyleu/rituals/app/controller"
+	"github.com/kyleu/rituals/app/controller/cmenu"
+	"github.com/kyleu/rituals/app/controller/csession"
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/sprint"
 	"github.com/kyleu/rituals/app/team"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/app/workspace"
 	"github.com/kyleu/rituals/views/vworkspace/vwestimate"
 )
@@ -31,6 +36,13 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
+		if ps.Profile.ID == util.UUIDDefault {
+			ps.Profile.ID = util.UUID()
+			err = csession.SaveProfile(ps.Profile, w, ps.Session, ps.Logger)
+			if err != nil {
+				return "", err
+			}
+		}
 		ws, err := workspace.FromAny(ps.Data)
 		if err != nil {
 			return "", err
@@ -45,7 +57,13 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.Title = fe.Estimate.TitleString()
+		if fe.Registered {
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+		}
 		ps.Data = fe
+		if err != nil {
+			return "", err
+		}
 		page := &vwestimate.EstimateWorkspace{FullEstimate: fe, Teams: ws.Teams, Sprints: ws.Sprints}
 		return controller.Render(r, as, page, ps, "estimates", fe.Estimate.ID.String())
 	})
@@ -56,6 +74,13 @@ func EstimateCreate(w http.ResponseWriter, r *http.Request) {
 		frm, err := parseRequestForm(r, ps.RequestBody, ps.Username())
 		if err != nil {
 			return "", err
+		}
+		if ps.Profile.ID == uuid.Nil {
+			ps.Profile.ID = util.UUID()
+			err = csession.SaveProfile(ps.Profile, w, ps.Session, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		}
 		model, _, err := as.Services.Workspace.CreateEstimate(
 			ps.Context, frm.ID, frm.Title, ps.Profile.ID, frm.Name, ps.Accounts.Image(), frm.Team, frm.Sprint, ps.Logger,
