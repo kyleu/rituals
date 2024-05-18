@@ -45,7 +45,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
-      <a href="#modal-vote"><button type="button">JSON</button></a>
+      <a href="#modal-vote"><button type="button">`)
+//line views/vestimate/vstory/vvote/Detail.html:23
+	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+//line views/vestimate/vstory/vvote/Detail.html:23
+	qw422016.N().S(`JSON</button></a>
       <a href="`)
 //line views/vestimate/vstory/vvote/Detail.html:24
 	qw422016.E().S(p.Model.WebPath())

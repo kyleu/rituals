@@ -20,8 +20,8 @@
   <div class="card">
     <div class="right">{%= edit.SearchForm("", "q", "Search Users", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
-      {%- if len(p.Models) > 0 -%}<a href="/admin/db/user/_random"><button>Random</button></a>{%- endif -%}
-      <a href="/admin/db/user/_new"><button>New</button></a>
+      {%- if len(p.Models) > 0 -%}<a href="/admin/db/user/_random"><button>{%= components.SVGRef("gift", 15, 15, "icon", ps) %}Random</button></a>{%- endif -%}
+      <a href="/admin/db/user/_new"><button>{%= components.SVGRef("plus", 15, 15, "icon", ps) %}New</button></a>
     </div>
     <h3>{%= components.SVGRefIcon(`profile`, ps) %}{%s ps.Title %}</h3>
     <div class="clear"></div>

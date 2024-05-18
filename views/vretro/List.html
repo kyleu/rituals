@@ -24,8 +24,8 @@
   <div class="card">
     <div class="right">{%= edit.SearchForm("", "q", "Search Retros", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
-      {%- if len(p.Models) > 0 -%}<a href="/admin/db/retro/_random"><button>Random</button></a>{%- endif -%}
-      <a href="/admin/db/retro/_new"><button>New</button></a>
+      {%- if len(p.Models) > 0 -%}<a href="/admin/db/retro/_random"><button>{%= components.SVGRef("gift", 15, 15, "icon", ps) %}Random</button></a>{%- endif -%}
+      <a href="/admin/db/retro/_new"><button>{%= components.SVGRef("plus", 15, 15, "icon", ps) %}New</button></a>
     </div>
     <h3>{%= components.SVGRefIcon(`retro`, ps) %}{%s ps.Title %}</h3>
     <div class="clear"></div>

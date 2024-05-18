@@ -45,7 +45,11 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/vfeedback/List.html:21
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/admin/db/retro/feedback/_new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/retro/feedback/_new"><button>`)
+//line views/vretro/vfeedback/List.html:23
+	components.StreamSVGRef(qw422016, "plus", 15, 15, "icon", ps)
+//line views/vretro/vfeedback/List.html:23
+	qw422016.N().S(`New</button></a></div>
     <h3>`)
 //line views/vretro/vfeedback/List.html:24
 	components.StreamSVGRefIcon(qw422016, `comment`, ps)

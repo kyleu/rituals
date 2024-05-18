@@ -43,7 +43,11 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/vtpermission/List.html:19
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/admin/db/team/permission/_new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/team/permission/_new"><button>`)
+//line views/vteam/vtpermission/List.html:21
+	components.StreamSVGRef(qw422016, "plus", 15, 15, "icon", ps)
+//line views/vteam/vtpermission/List.html:21
+	qw422016.N().S(`New</button></a></div>
     <h3>`)
 //line views/vteam/vtpermission/List.html:22
 	components.StreamSVGRefIcon(qw422016, `permission`, ps)

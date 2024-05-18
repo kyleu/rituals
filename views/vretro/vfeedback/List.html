@@ -20,7 +20,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/admin/db/retro/feedback/_new"><button>New</button></a></div>
+    <div class="right"><a href="/admin/db/retro/feedback/_new"><button>{%= components.SVGRef("plus", 15, 15, "icon", ps) %}New</button></a></div>
     <h3>{%= components.SVGRefIcon(`comment`, ps) %}{%s ps.Title %}</h3>
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No feedbacks available</em></div>
