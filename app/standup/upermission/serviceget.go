@@ -63,6 +63,21 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	return ret.ToStandupPermissions(), nil
 }
 
+func (s *Service) GetByKeys(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, keys ...string) (StandupPermissions, error) {
+	if len(keys) == 0 {
+		return StandupPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("key", len(keys), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(keys)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get StandupPermissions for [%d] keys", len(keys))
+	}
+	return ret.ToStandupPermissions(), nil
+}
+
 func (s *Service) GetByStandupID(ctx context.Context, tx *sqlx.Tx, standupID uuid.UUID, params *filter.Params, logger util.Logger) (StandupPermissions, error) {
 	params = filters(params)
 	wc := "\"standup_id\" = $1"
@@ -99,6 +114,21 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
+	}
+	return ret.ToStandupPermissions(), nil
+}
+
+func (s *Service) GetByValues(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, values ...string) (StandupPermissions, error) {
+	if len(values) == 0 {
+		return StandupPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("value", len(values), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(values)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get StandupPermissions for [%d] values", len(values))
 	}
 	return ret.ToStandupPermissions(), nil
 }

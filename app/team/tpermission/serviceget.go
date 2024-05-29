@@ -63,6 +63,21 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	return ret.ToTeamPermissions(), nil
 }
 
+func (s *Service) GetByKeys(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, keys ...string) (TeamPermissions, error) {
+	if len(keys) == 0 {
+		return TeamPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("key", len(keys), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(keys)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get TeamPermissions for [%d] keys", len(keys))
+	}
+	return ret.ToTeamPermissions(), nil
+}
+
 func (s *Service) GetByTeamID(ctx context.Context, tx *sqlx.Tx, teamID uuid.UUID, params *filter.Params, logger util.Logger) (TeamPermissions, error) {
 	params = filters(params)
 	wc := "\"team_id\" = $1"
@@ -98,6 +113,21 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
+	}
+	return ret.ToTeamPermissions(), nil
+}
+
+func (s *Service) GetByValues(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, values ...string) (TeamPermissions, error) {
+	if len(values) == 0 {
+		return TeamPermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("value", len(values), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(values)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get TeamPermissions for [%d] values", len(values))
 	}
 	return ret.ToTeamPermissions(), nil
 }

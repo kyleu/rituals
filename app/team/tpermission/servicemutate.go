@@ -30,7 +30,11 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*TeamPermission) error {
 	for idx, chunk := range lo.Chunk(models, chunkSize) {
 		if logger != nil {
-			logger.Infof("saving permissions [%d-%d]", idx*chunkSize, ((idx+1)*chunkSize)-1)
+			count := ((idx + 1) * chunkSize) - 1
+			if len(models) < count {
+				count = len(models)
+			}
+			logger.Infof("creating permissions [%d-%d]", idx*chunkSize, count)
 		}
 		if err := s.Create(ctx, tx, logger, chunk...); err != nil {
 			return err

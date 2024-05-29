@@ -92,6 +92,21 @@ func (s *Service) GetByKey(ctx context.Context, tx *sqlx.Tx, key string, params 
 	return ret.ToEstimatePermissions(), nil
 }
 
+func (s *Service) GetByKeys(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, keys ...string) (EstimatePermissions, error) {
+	if len(keys) == 0 {
+		return EstimatePermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("key", len(keys), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(keys)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get EstimatePermissions for [%d] keys", len(keys))
+	}
+	return ret.ToEstimatePermissions(), nil
+}
+
 func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, params *filter.Params, logger util.Logger) (EstimatePermissions, error) {
 	params = filters(params)
 	wc := "\"value\" = $1"
@@ -100,6 +115,21 @@ func (s *Service) GetByValue(ctx context.Context, tx *sqlx.Tx, value string, par
 	err := s.db.Select(ctx, &ret, q, tx, logger, value)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Permissions by value [%v]", value)
+	}
+	return ret.ToEstimatePermissions(), nil
+}
+
+func (s *Service) GetByValues(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, values ...string) (EstimatePermissions, error) {
+	if len(values) == 0 {
+		return EstimatePermissions{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("value", len(values), 0, s.db.Type)
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Type)
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(values)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get EstimatePermissions for [%d] values", len(values))
 	}
 	return ret.ToEstimatePermissions(), nil
 }
