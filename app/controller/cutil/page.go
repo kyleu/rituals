@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"slices"
 	"time"
 
 	"github.com/samber/lo"
@@ -87,7 +86,6 @@ func (p *PageState) AddIcon(keys ...string) {
 			p.Icons = append(p.Icons, k)
 		}
 	})
-	slices.Sort(p.Icons)
 }
 
 func (p *PageState) TitleString() string {
