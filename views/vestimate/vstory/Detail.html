@@ -83,6 +83,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := story.Stories{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -98,7 +99,7 @@
           <em>no related Votes</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vvote.Table(p.RelVotesByStoryID, nil, nil, p.Params, as, ps) %}
+            {%= vvote.Table(p.RelVotesByStoryID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>

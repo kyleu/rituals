@@ -203,93 +203,96 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
   </div>
 `)
-//line views/vestimate/vstory/Detail.html:85
+//line views/vestimate/vstory/Detail.html:86
+	relationHelper := story.Stories{p.Model}
+
+//line views/vestimate/vstory/Detail.html:86
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-VotesByStoryID" type="checkbox" hidden="hidden"`)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:91
 	if p.Params.Specifies(`vote`) {
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:91
 		qw422016.N().S(` checked="checked"`)
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:91
 	}
-//line views/vestimate/vstory/Detail.html:90
+//line views/vestimate/vstory/Detail.html:91
 	qw422016.N().S(` />
         <label for="accordion-VotesByStoryID">
           `)
-//line views/vestimate/vstory/Detail.html:92
+//line views/vestimate/vstory/Detail.html:93
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vestimate/vstory/Detail.html:92
+//line views/vestimate/vstory/Detail.html:93
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Detail.html:93
+//line views/vestimate/vstory/Detail.html:94
 	components.StreamSVGRef(qw422016, `vote-yea`, 16, 16, `icon`, ps)
-//line views/vestimate/vstory/Detail.html:93
+//line views/vestimate/vstory/Detail.html:94
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Detail.html:94
+//line views/vestimate/vstory/Detail.html:95
 	qw422016.E().S(util.StringPlural(len(p.RelVotesByStoryID), "Vote"))
-//line views/vestimate/vstory/Detail.html:94
+//line views/vestimate/vstory/Detail.html:95
 	qw422016.N().S(` by [Story ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vestimate/vstory/Detail.html:97
+//line views/vestimate/vstory/Detail.html:98
 	if len(p.RelVotesByStoryID) == 0 {
-//line views/vestimate/vstory/Detail.html:97
+//line views/vestimate/vstory/Detail.html:98
 		qw422016.N().S(`          <em>no related Votes</em>
 `)
-//line views/vestimate/vstory/Detail.html:99
+//line views/vestimate/vstory/Detail.html:100
 	} else {
-//line views/vestimate/vstory/Detail.html:99
+//line views/vestimate/vstory/Detail.html:100
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vestimate/vstory/Detail.html:101
-		vvote.StreamTable(qw422016, p.RelVotesByStoryID, nil, nil, p.Params, as, ps)
-//line views/vestimate/vstory/Detail.html:101
+//line views/vestimate/vstory/Detail.html:102
+		vvote.StreamTable(qw422016, p.RelVotesByStoryID, relationHelper, nil, p.Params, as, ps)
+//line views/vestimate/vstory/Detail.html:102
 		qw422016.N().S(`
           </div>
 `)
-//line views/vestimate/vstory/Detail.html:103
+//line views/vestimate/vstory/Detail.html:104
 	}
-//line views/vestimate/vstory/Detail.html:103
+//line views/vestimate/vstory/Detail.html:104
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
   `)
-//line views/vestimate/vstory/Detail.html:108
+//line views/vestimate/vstory/Detail.html:109
 	components.StreamJSONModal(qw422016, "story", "Story JSON", p.Model, 1)
-//line views/vestimate/vstory/Detail.html:108
+//line views/vestimate/vstory/Detail.html:109
 	qw422016.N().S(`
 `)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 }
 
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 }
 
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 	return qs422016
-//line views/vestimate/vstory/Detail.html:109
+//line views/vestimate/vstory/Detail.html:110
 }

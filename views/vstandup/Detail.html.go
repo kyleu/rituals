@@ -228,243 +228,246 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
   </div>
 `)
-//line views/vstandup/Detail.html:94
+//line views/vstandup/Detail.html:95
+	relationHelper := standup.Standups{p.Model}
+
+//line views/vstandup/Detail.html:95
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-ReportsByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:99
+//line views/vstandup/Detail.html:100
 	if p.Params.Specifies(`report`) {
-//line views/vstandup/Detail.html:99
+//line views/vstandup/Detail.html:100
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:99
+//line views/vstandup/Detail.html:100
 	}
-//line views/vstandup/Detail.html:99
+//line views/vstandup/Detail.html:100
 	qw422016.N().S(` />
         <label for="accordion-ReportsByStandupID">
           `)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:102
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:102
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:102
+//line views/vstandup/Detail.html:103
 	components.StreamSVGRef(qw422016, `file-alt`, 16, 16, `icon`, ps)
-//line views/vstandup/Detail.html:102
+//line views/vstandup/Detail.html:103
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:103
+//line views/vstandup/Detail.html:104
 	qw422016.E().S(util.StringPlural(len(p.RelReportsByStandupID), "Report"))
-//line views/vstandup/Detail.html:103
+//line views/vstandup/Detail.html:104
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:106
+//line views/vstandup/Detail.html:107
 	if len(p.RelReportsByStandupID) == 0 {
-//line views/vstandup/Detail.html:106
+//line views/vstandup/Detail.html:107
 		qw422016.N().S(`          <em>no related Reports</em>
 `)
-//line views/vstandup/Detail.html:108
+//line views/vstandup/Detail.html:109
 	} else {
-//line views/vstandup/Detail.html:108
+//line views/vstandup/Detail.html:109
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:110
-		vreport.StreamTable(qw422016, p.RelReportsByStandupID, nil, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:110
+//line views/vstandup/Detail.html:111
+		vreport.StreamTable(qw422016, p.RelReportsByStandupID, relationHelper, nil, p.Params, as, ps)
+//line views/vstandup/Detail.html:111
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:112
+//line views/vstandup/Detail.html:113
 	}
-//line views/vstandup/Detail.html:112
+//line views/vstandup/Detail.html:113
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:116
+//line views/vstandup/Detail.html:117
 	if p.Params.Specifies(`uhistory`) {
-//line views/vstandup/Detail.html:116
+//line views/vstandup/Detail.html:117
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:116
+//line views/vstandup/Detail.html:117
 	}
-//line views/vstandup/Detail.html:116
+//line views/vstandup/Detail.html:117
 	qw422016.N().S(` />
         <label for="accordion-StandupHistoriesByStandupID">
           `)
-//line views/vstandup/Detail.html:118
+//line views/vstandup/Detail.html:119
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:118
+//line views/vstandup/Detail.html:119
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:119
+//line views/vstandup/Detail.html:120
 	components.StreamSVGRef(qw422016, `history`, 16, 16, `icon`, ps)
-//line views/vstandup/Detail.html:119
+//line views/vstandup/Detail.html:120
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:120
+//line views/vstandup/Detail.html:121
 	qw422016.E().S(util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History"))
-//line views/vstandup/Detail.html:120
+//line views/vstandup/Detail.html:121
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:123
+//line views/vstandup/Detail.html:124
 	if len(p.RelStandupHistoriesByStandupID) == 0 {
-//line views/vstandup/Detail.html:123
+//line views/vstandup/Detail.html:124
 		qw422016.N().S(`          <em>no related Histories</em>
 `)
-//line views/vstandup/Detail.html:125
+//line views/vstandup/Detail.html:126
 	} else {
-//line views/vstandup/Detail.html:125
+//line views/vstandup/Detail.html:126
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:127
-		vuhistory.StreamTable(qw422016, p.RelStandupHistoriesByStandupID, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:127
+//line views/vstandup/Detail.html:128
+		vuhistory.StreamTable(qw422016, p.RelStandupHistoriesByStandupID, relationHelper, p.Params, as, ps)
+//line views/vstandup/Detail.html:128
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:129
+//line views/vstandup/Detail.html:130
 	}
-//line views/vstandup/Detail.html:129
+//line views/vstandup/Detail.html:130
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:133
+//line views/vstandup/Detail.html:134
 	if p.Params.Specifies(`umember`) {
-//line views/vstandup/Detail.html:133
+//line views/vstandup/Detail.html:134
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:133
+//line views/vstandup/Detail.html:134
 	}
-//line views/vstandup/Detail.html:133
+//line views/vstandup/Detail.html:134
 	qw422016.N().S(` />
         <label for="accordion-StandupMembersByStandupID">
           `)
-//line views/vstandup/Detail.html:135
+//line views/vstandup/Detail.html:136
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:135
+//line views/vstandup/Detail.html:136
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:136
+//line views/vstandup/Detail.html:137
 	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
-//line views/vstandup/Detail.html:136
+//line views/vstandup/Detail.html:137
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:137
+//line views/vstandup/Detail.html:138
 	qw422016.E().S(util.StringPlural(len(p.RelStandupMembersByStandupID), "Member"))
-//line views/vstandup/Detail.html:137
+//line views/vstandup/Detail.html:138
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:140
+//line views/vstandup/Detail.html:141
 	if len(p.RelStandupMembersByStandupID) == 0 {
-//line views/vstandup/Detail.html:140
+//line views/vstandup/Detail.html:141
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vstandup/Detail.html:142
+//line views/vstandup/Detail.html:143
 	} else {
-//line views/vstandup/Detail.html:142
+//line views/vstandup/Detail.html:143
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:144
-		vumember.StreamTable(qw422016, p.RelStandupMembersByStandupID, nil, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:144
+//line views/vstandup/Detail.html:145
+		vumember.StreamTable(qw422016, p.RelStandupMembersByStandupID, relationHelper, nil, p.Params, as, ps)
+//line views/vstandup/Detail.html:145
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:146
+//line views/vstandup/Detail.html:147
 	}
-//line views/vstandup/Detail.html:146
+//line views/vstandup/Detail.html:147
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:150
+//line views/vstandup/Detail.html:151
 	if p.Params.Specifies(`upermission`) {
-//line views/vstandup/Detail.html:150
+//line views/vstandup/Detail.html:151
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:150
+//line views/vstandup/Detail.html:151
 	}
-//line views/vstandup/Detail.html:150
+//line views/vstandup/Detail.html:151
 	qw422016.N().S(` />
         <label for="accordion-StandupPermissionsByStandupID">
           `)
-//line views/vstandup/Detail.html:152
+//line views/vstandup/Detail.html:153
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:152
+//line views/vstandup/Detail.html:153
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:153
+//line views/vstandup/Detail.html:154
 	components.StreamSVGRef(qw422016, `permission`, 16, 16, `icon`, ps)
-//line views/vstandup/Detail.html:153
+//line views/vstandup/Detail.html:154
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:154
+//line views/vstandup/Detail.html:155
 	qw422016.E().S(util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission"))
-//line views/vstandup/Detail.html:154
+//line views/vstandup/Detail.html:155
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:157
+//line views/vstandup/Detail.html:158
 	if len(p.RelStandupPermissionsByStandupID) == 0 {
-//line views/vstandup/Detail.html:157
+//line views/vstandup/Detail.html:158
 		qw422016.N().S(`          <em>no related Permissions</em>
 `)
-//line views/vstandup/Detail.html:159
+//line views/vstandup/Detail.html:160
 	} else {
-//line views/vstandup/Detail.html:159
+//line views/vstandup/Detail.html:160
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:161
-		vupermission.StreamTable(qw422016, p.RelStandupPermissionsByStandupID, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:161
+//line views/vstandup/Detail.html:162
+		vupermission.StreamTable(qw422016, p.RelStandupPermissionsByStandupID, relationHelper, p.Params, as, ps)
+//line views/vstandup/Detail.html:162
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:163
+//line views/vstandup/Detail.html:164
 	}
-//line views/vstandup/Detail.html:163
+//line views/vstandup/Detail.html:164
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
   `)
-//line views/vstandup/Detail.html:168
+//line views/vstandup/Detail.html:169
 	components.StreamJSONModal(qw422016, "standup", "Standup JSON", p.Model, 1)
-//line views/vstandup/Detail.html:168
+//line views/vstandup/Detail.html:169
 	qw422016.N().S(`
 `)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 }
 
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 }
 
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	qs422016 := string(qb422016.B)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 	return qs422016
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:170
 }

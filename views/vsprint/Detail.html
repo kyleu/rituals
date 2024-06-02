@@ -97,6 +97,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := sprint.Sprints{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -112,7 +113,7 @@
           <em>no related Estimates</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vestimate.Table(p.RelEstimatesBySprintID, nil, nil, p.Params, as, ps) %}
+            {%= vestimate.Table(p.RelEstimatesBySprintID, nil, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -129,7 +130,7 @@
           <em>no related Retros</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vretro.Table(p.RelRetrosBySprintID, nil, nil, p.Params, as, ps) %}
+            {%= vretro.Table(p.RelRetrosBySprintID, nil, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -146,7 +147,7 @@
           <em>no related Histories</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vshistory.Table(p.RelSprintHistoriesBySprintID, nil, p.Params, as, ps) %}
+            {%= vshistory.Table(p.RelSprintHistoriesBySprintID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -163,7 +164,7 @@
           <em>no related Members</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vsmember.Table(p.RelSprintMembersBySprintID, nil, nil, p.Params, as, ps) %}
+            {%= vsmember.Table(p.RelSprintMembersBySprintID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -180,7 +181,7 @@
           <em>no related Permissions</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vspermission.Table(p.RelSprintPermissionsBySprintID, nil, p.Params, as, ps) %}
+            {%= vspermission.Table(p.RelSprintPermissionsBySprintID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -197,7 +198,7 @@
           <em>no related Standups</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vstandup.Table(p.RelStandupsBySprintID, nil, nil, p.Params, as, ps) %}
+            {%= vstandup.Table(p.RelStandupsBySprintID, nil, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>

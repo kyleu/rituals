@@ -96,6 +96,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := estimate.Estimates{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -111,7 +112,7 @@
           <em>no related Histories</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vehistory.Table(p.RelEstimateHistoriesByEstimateID, nil, p.Params, as, ps) %}
+            {%= vehistory.Table(p.RelEstimateHistoriesByEstimateID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -128,7 +129,7 @@
           <em>no related Members</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vemember.Table(p.RelEstimateMembersByEstimateID, nil, nil, p.Params, as, ps) %}
+            {%= vemember.Table(p.RelEstimateMembersByEstimateID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -145,7 +146,7 @@
           <em>no related Permissions</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vepermission.Table(p.RelEstimatePermissionsByEstimateID, nil, p.Params, as, ps) %}
+            {%= vepermission.Table(p.RelEstimatePermissionsByEstimateID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -162,7 +163,7 @@
           <em>no related Stories</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vstory.Table(p.RelStoriesByEstimateID, nil, nil, p.Params, as, ps) %}
+            {%= vstory.Table(p.RelStoriesByEstimateID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>

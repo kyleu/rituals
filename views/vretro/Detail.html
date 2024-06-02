@@ -96,6 +96,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := retro.Retros{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -111,7 +112,7 @@
           <em>no related Feedbacks</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vfeedback.Table(p.RelFeedbacksByRetroID, nil, nil, p.Params, as, ps) %}
+            {%= vfeedback.Table(p.RelFeedbacksByRetroID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -128,7 +129,7 @@
           <em>no related Histories</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vrhistory.Table(p.RelRetroHistoriesByRetroID, nil, p.Params, as, ps) %}
+            {%= vrhistory.Table(p.RelRetroHistoriesByRetroID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -145,7 +146,7 @@
           <em>no related Members</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vrmember.Table(p.RelRetroMembersByRetroID, nil, nil, p.Params, as, ps) %}
+            {%= vrmember.Table(p.RelRetroMembersByRetroID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -162,7 +163,7 @@
           <em>no related Permissions</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vrpermission.Table(p.RelRetroPermissionsByRetroID, nil, p.Params, as, ps) %}
+            {%= vrpermission.Table(p.RelRetroPermissionsByRetroID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>

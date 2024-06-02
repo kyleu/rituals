@@ -92,6 +92,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := standup.Standups{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -107,7 +108,7 @@
           <em>no related Reports</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vreport.Table(p.RelReportsByStandupID, nil, nil, p.Params, as, ps) %}
+            {%= vreport.Table(p.RelReportsByStandupID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -124,7 +125,7 @@
           <em>no related Histories</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vuhistory.Table(p.RelStandupHistoriesByStandupID, nil, p.Params, as, ps) %}
+            {%= vuhistory.Table(p.RelStandupHistoriesByStandupID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -141,7 +142,7 @@
           <em>no related Members</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vumember.Table(p.RelStandupMembersByStandupID, nil, nil, p.Params, as, ps) %}
+            {%= vumember.Table(p.RelStandupMembersByStandupID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -158,7 +159,7 @@
           <em>no related Permissions</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vupermission.Table(p.RelStandupPermissionsByStandupID, nil, p.Params, as, ps) %}
+            {%= vupermission.Table(p.RelStandupPermissionsByStandupID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>

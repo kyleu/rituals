@@ -83,6 +83,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := team.Teams{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -98,7 +99,7 @@
           <em>no related Estimates</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vestimate.Table(p.RelEstimatesByTeamID, nil, nil, p.Params, as, ps) %}
+            {%= vestimate.Table(p.RelEstimatesByTeamID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -115,7 +116,7 @@
           <em>no related Retros</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vretro.Table(p.RelRetrosByTeamID, nil, nil, p.Params, as, ps) %}
+            {%= vretro.Table(p.RelRetrosByTeamID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -132,7 +133,7 @@
           <em>no related Sprints</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vsprint.Table(p.RelSprintsByTeamID, nil, p.Params, as, ps) %}
+            {%= vsprint.Table(p.RelSprintsByTeamID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -149,7 +150,7 @@
           <em>no related Standups</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vstandup.Table(p.RelStandupsByTeamID, nil, nil, p.Params, as, ps) %}
+            {%= vstandup.Table(p.RelStandupsByTeamID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -166,7 +167,7 @@
           <em>no related Histories</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vthistory.Table(p.RelTeamHistoriesByTeamID, nil, p.Params, as, ps) %}
+            {%= vthistory.Table(p.RelTeamHistoriesByTeamID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -183,7 +184,7 @@
           <em>no related Members</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vtmember.Table(p.RelTeamMembersByTeamID, nil, nil, p.Params, as, ps) %}
+            {%= vtmember.Table(p.RelTeamMembersByTeamID, relationHelper, nil, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
@@ -200,7 +201,7 @@
           <em>no related Permissions</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vtpermission.Table(p.RelTeamPermissionsByTeamID, nil, p.Params, as, ps) %}
+            {%= vtpermission.Table(p.RelTeamPermissionsByTeamID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>
