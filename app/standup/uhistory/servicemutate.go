@@ -26,7 +26,7 @@ func (s *Service) Create(ctx context.Context, tx *sqlx.Tx, logger util.Logger, m
 	return s.db.Insert(ctx, q, tx, logger, vals...)
 }
 
-func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*StandupHistory) error {
+func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*StandupHistory) error {
 	for idx, chunk := range lo.Chunk(models, chunkSize) {
 		if logger != nil {
 			count := ((idx + 1) * chunkSize) - 1
@@ -38,6 +38,7 @@ func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int,
 		if err := s.Create(ctx, tx, logger, chunk...); err != nil {
 			return err
 		}
+		progress.Increment(chunkSize, logger)
 	}
 	return nil
 }
@@ -72,7 +73,7 @@ func (s *Service) Save(ctx context.Context, tx *sqlx.Tx, logger util.Logger, mod
 	return s.db.Insert(ctx, q, tx, logger, data...)
 }
 
-func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, logger util.Logger, models ...*StandupHistory) error {
+func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, progress *util.Progress, logger util.Logger, models ...*StandupHistory) error {
 	for idx, chunk := range lo.Chunk(models, chunkSize) {
 		if logger != nil {
 			count := ((idx + 1) * chunkSize) - 1
@@ -84,6 +85,7 @@ func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, l
 		if err := s.Save(ctx, tx, logger, chunk...); err != nil {
 			return err
 		}
+		progress.Increment(chunkSize, logger)
 	}
 	return nil
 }
