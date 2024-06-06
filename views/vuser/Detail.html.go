@@ -82,7 +82,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="right">
       <a href="#modal-user"><button type="button">`)
 //line views/vuser/Detail.html:58
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vuser/Detail.html:58
 	qw422016.N().S(`JSON</button></a>
       <a href="`)
@@ -91,15 +91,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vuser/Detail.html:59
 	qw422016.N().S(`/edit"><button>`)
 //line views/vuser/Detail.html:59
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vuser/Detail.html:59
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
 //line views/vuser/Detail.html:61
-	components.StreamSVGRefIcon(qw422016, `profile`, ps)
-//line views/vuser/Detail.html:61
-	qw422016.N().S(` `)
+	components.StreamSVGIcon(qw422016, `profile`, ps)
 //line views/vuser/Detail.html:61
 	qw422016.E().S(p.Model.TitleString())
 //line views/vuser/Detail.html:61

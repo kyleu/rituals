@@ -14,7 +14,7 @@
   <a id="self-edit-link" href="#modal-member-{%s self.UserID.String() %}"><h3>
     <span id="self-picture">
       {%- if self.Picture == "" -%}
-      {%= components.SVGRefIcon(`profile`, ps) %}
+      {%= components.SVGIcon(`profile`, ps) %}
       {%- else -%}
       <img class="icon" style="width: 20px; height: 20px;" src="{%s self.Picture %}" />
       {%- endif -%}

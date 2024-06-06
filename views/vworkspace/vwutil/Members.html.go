@@ -51,7 +51,7 @@ func StreamMemberPanels(qw422016 *qt422016.Writer, ms member.Members, admin bool
     <div class="card">
       <a href="#modal-invite"><h3>`)
 //line views/vworkspace/vwutil/Members.html:17
-	components.StreamSVGRefIcon(qw422016, `users`, ps)
+	components.StreamSVGIcon(qw422016, `users`, ps)
 //line views/vworkspace/vwutil/Members.html:17
 	qw422016.N().S(`Members</h3></a>
       <table class="mt expanded">

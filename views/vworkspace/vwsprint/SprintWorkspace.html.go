@@ -135,7 +135,7 @@ func (p *SprintWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, p
         <a href="#modal-sprint-config" id="modal-sprint-config-link"><h3>
           <span id="model-icon">`)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:55
-	components.StreamSVGRefIcon(qw422016, s.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, s.IconSafe(), ps)
 //line views/vworkspace/vwsprint/SprintWorkspace.html:55
 	qw422016.N().S(`</span>
           <span id="model-title">`)

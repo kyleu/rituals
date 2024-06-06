@@ -142,7 +142,7 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 //line views/vemail/Table.html:38
 		qw422016.N().S(`">`)
 //line views/vemail/Table.html:38
-		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
+		components.StreamSVGSimple(qw422016, "profile", 18, ps)
 //line views/vemail/Table.html:38
 		qw422016.N().S(`</a>
           </td>

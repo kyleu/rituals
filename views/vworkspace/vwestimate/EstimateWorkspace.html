@@ -36,7 +36,7 @@
           {%= vwutil.Comments(enum.ModelServiceEstimate, e.ID, e.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-estimate-config" id="modal-estimate-config-link"><h3>
-          <span id="model-icon">{%= components.SVGRefIcon(e.IconSafe(), ps) %}</span>
+          <span id="model-icon">{%= components.SVGIcon(e.IconSafe(), ps) %}</span>
           <span id="model-title">{%s e.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyEstimate) %}
@@ -50,7 +50,7 @@
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a class="add-story-link" href="#modal-story--add"><button>Add Story</button></a></div>
-        <a class="add-story-link" href="#modal-story--add"><h3>{%= components.SVGRefIcon(util.KeyStory, ps) %}Stories</h3></a>
+        <a class="add-story-link" href="#modal-story--add"><h3>{%= components.SVGIcon(util.KeyStory, ps) %}Stories</h3></a>
         {%= EstimateWorkspaceStories(w, ps) %}
         {%= EstimateWorkspaceStoryModalAdd() %}
         {%= EstimateWorkspaceStoryModalEmpty(ps) %}

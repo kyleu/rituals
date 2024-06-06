@@ -34,7 +34,7 @@
           {%= vwutil.Comments(enum.ModelServiceStandup, u.ID, u.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-standup-config" id="modal-standup-config-link"><h3>
-          <span id="model-icon">{%= components.SVGRefIcon(u.IconSafe(), ps) %}</span>
+          <span id="model-icon">{%= components.SVGIcon(u.IconSafe(), ps) %}</span>
           <span id="model-title">{%s u.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, util.KeyStandup) %}
@@ -48,7 +48,7 @@
     <div id="panel-detail">
       <div class="card">
         <div class="right"><a class="add-report-link" href="#modal-report--add"><button>Add Report</button></a></div>
-        <a class="add-report-link" href="#modal-report--add"><h3>{%= components.SVGRefIcon(`file-alt`, ps) %}Reports</h3></a>
+        <a class="add-report-link" href="#modal-report--add"><h3>{%= components.SVGIcon(`file-alt`, ps) %}Reports</h3></a>
         <div class="mt">{%= StandupWorkspaceReports(w, ps) %}</div>
         {%= StandupWorkspaceReportModalAdd() %}
       </div>

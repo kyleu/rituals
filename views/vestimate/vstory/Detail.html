@@ -27,10 +27,10 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
-      <a href="#modal-story"><button type="button">{%= components.SVGRef("file", 15, 15, "icon", ps) %}JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+      <a href="#modal-story"><button type="button">{%= components.SVGButton("file", ps) %}JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`story`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGIcon(`story`, ps) %}{%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/estimate/story"><em>Story</em></a></div>
     <div class="mt overflow full-width">
       <table>
@@ -43,7 +43,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
-              <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGRef("estimate", 18, 18, "", ps) %}</a>
+              <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGSimple("estimate", 18, ps) %}</a>
             </td>
           </tr>
           <tr>
@@ -54,7 +54,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGSimple("profile", 18, ps) %}</a>
             </td>
           </tr>
           <tr>

@@ -118,7 +118,7 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 //line views/vsprint/vsmember/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vsprint/vsmember/Table.html:34
-		components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
+		components.StreamSVGSimple(qw422016, "sprint", 18, ps)
 //line views/vsprint/vsmember/Table.html:34
 		qw422016.N().S(`</a>
           </td>
@@ -152,7 +152,7 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 //line views/vsprint/vsmember/Table.html:38
 		qw422016.N().S(`">`)
 //line views/vsprint/vsmember/Table.html:38
-		components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
+		components.StreamSVGSimple(qw422016, "profile", 18, ps)
 //line views/vsprint/vsmember/Table.html:38
 		qw422016.N().S(`</a>
           </td>

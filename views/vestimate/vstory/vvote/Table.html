@@ -28,11 +28,11 @@
         <tr>
           <td class="nowrap">
             <a href="/admin/db/estimate/story/vote/{%= view.UUID(&model.StoryID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.StoryID) %}{% if x := storiesByStoryID.Get(model.StoryID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Story" href="{%s `/admin/db/estimate/story`+`/`+model.StoryID.String() %}">{%= components.SVGRef("story", 18, 18, "", ps) %}</a>
+            <a title="Story" href="{%s `/admin/db/estimate/story`+`/`+model.StoryID.String() %}">{%= components.SVGSimple("story", 18, ps) %}</a>
           </td>
           <td class="nowrap">
             <a href="/admin/db/estimate/story/vote/{%= view.UUID(&model.StoryID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGSimple("profile", 18, ps) %}</a>
           </td>
           <td>{%= view.String(model.Choice) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

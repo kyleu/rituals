@@ -20,7 +20,7 @@
 
 {% func (p *TeamList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}{%s util.StringPlural(len(p.Teams), "Team") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeyTeam, ps) %}{%s util.StringPlural(len(p.Teams), "Team") %}</h3>
     <em>{%s util.KeyTeamDesc %}</em>
     <table class="mt expanded">
       <tbody>
@@ -35,7 +35,7 @@
     </table>
   </div>
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyTeam, ps) %}New Team</h3>
+    <h3>{%= components.SVGIcon(util.KeyTeam, ps) %}New Team</h3>
     {%= TeamForm(&team.Team{}, as, ps) %}
   </div>
 {% endfunc %}
@@ -55,7 +55,7 @@
 {% func TeamListTable(teams team.Teams, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyTeam, nil, nil, "New Team") %}</div>
-    <h3 title="{%s util.KeyTeamDesc %}">{%= components.SVGRefIcon(util.KeyTeam, ps) %}Teams</h3>
+    <h3 title="{%s util.KeyTeamDesc %}">{%= components.SVGIcon(util.KeyTeam, ps) %}Teams</h3>
     {%- if len(teams) == 0 -%}
     <div class="mt"><em>no teams</em></div>
     {%- else -%}

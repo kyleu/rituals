@@ -36,7 +36,7 @@
           {%= vwutil.Comments(enum.ModelServiceRetro, r.ID, r.TitleString(), w.Comments, w.UtilMembers, "", ps) %}
         </div>
         <a href="#modal-retro-config" id="modal-retro-config-link"><h3>
-          <span id="model-icon">{%= components.SVGRefIcon(r.IconSafe(), ps) %}</span>
+          <span id="model-icon">{%= components.SVGIcon(r.IconSafe(), ps) %}</span>
           <span id="model-title">{%s r.TitleString() %}</span>
         </h3></a>
         {%= vwutil.Banner(w.Team, w.Sprint, "retrospective") %}
@@ -49,7 +49,7 @@
     </div>
     <div id="panel-detail">
       <div class="card">
-        <h3>{%= components.SVGRefIcon(`comment`, ps) %}Feedback</h3>
+        <h3>{%= components.SVGIcon(`comment`, ps) %}Feedback</h3>
         <div class="clear"></div>
         {%= RetroWorkspaceFeedbacks(ps.Profile.ID, ps.Username(), w, ps) %}
       </div>

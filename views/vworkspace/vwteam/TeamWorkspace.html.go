@@ -70,7 +70,7 @@ func (p *TeamWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps 
         <a href="#modal-team-config" id="modal-team-config-link"><h3>
           <span id="model-icon">`)
 //line views/vworkspace/vwteam/TeamWorkspace.html:37
-	components.StreamSVGRefIcon(qw422016, t.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, t.IconSafe(), ps)
 //line views/vworkspace/vwteam/TeamWorkspace.html:37
 	qw422016.N().S(`</span>
           <span id="model-title">`)

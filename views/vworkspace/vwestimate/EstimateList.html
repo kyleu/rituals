@@ -28,7 +28,7 @@
 
 {% func (p *EstimateList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}{%s util.StringPlural(len(p.Estimates), "Estimate") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeyEstimate, ps) %}{%s util.StringPlural(len(p.Estimates), "Estimate") %}</h3>
     <em>{%s util.KeyEstimateDesc %}</em>
     <table class="mt expanded">
       <tbody>
@@ -42,7 +42,7 @@
     </table>
   </div>
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyEstimate, ps) %}New Estimate</h3>
+    <h3>{%= components.SVGIcon(util.KeyEstimate, ps) %}New Estimate</h3>
     {%= EstimateForm(&estimate.Estimate{}, p.Teams, p.Sprints, as, ps) %}
   </div>
 {% endfunc %}
@@ -64,7 +64,7 @@
 {% func EstimateListTable(estimates estimate.Estimates, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyEstimate, teamID, sprintID, "New Estimate") %}</div>
-    <h3 title="{%s util.KeyEstimateDesc %}">{%= components.SVGRefIcon(util.KeyEstimate, ps) %}Estimates</h3>
+    <h3 title="{%s util.KeyEstimateDesc %}">{%= components.SVGIcon(util.KeyEstimate, ps) %}Estimates</h3>
     <table id="estimate-list" class="mt expanded">
       <tbody>
         {%- if len(estimates) == 0 -%}

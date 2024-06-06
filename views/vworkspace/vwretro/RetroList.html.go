@@ -54,7 +54,7 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwretro/RetroList.html:31
-	components.StreamSVGRefIcon(qw422016, `retro`, ps)
+	components.StreamSVGIcon(qw422016, `retro`, ps)
 //line views/vworkspace/vwretro/RetroList.html:31
 	qw422016.E().S(util.StringPlural(len(p.Retros), "Retro"))
 //line views/vworkspace/vwretro/RetroList.html:31
@@ -98,7 +98,7 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwretro/RetroList.html:45
-	components.StreamSVGRefIcon(qw422016, `retro`, ps)
+	components.StreamSVGIcon(qw422016, `retro`, ps)
 //line views/vworkspace/vwretro/RetroList.html:45
 	qw422016.N().S(`New Retro</h3>
     `)
@@ -216,7 +216,7 @@ func StreamRetroListTable(qw422016 *qt422016.Writer, retros retro.Retros, teamID
 //line views/vworkspace/vwretro/RetroList.html:69
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwretro/RetroList.html:69
-	components.StreamSVGRefIcon(qw422016, util.KeyRetro, ps)
+	components.StreamSVGIcon(qw422016, util.KeyRetro, ps)
 //line views/vworkspace/vwretro/RetroList.html:69
 	qw422016.N().S(`Retros</h3>
     <table id="retro-list" class="mt expanded">

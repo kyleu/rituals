@@ -63,7 +63,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="right">
       <a href="#modal-standup"><button type="button">`)
 //line views/vstandup/Detail.html:39
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vstandup/Detail.html:39
 	qw422016.N().S(`JSON</button></a>
       <a href="`)
@@ -72,15 +72,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:40
 	qw422016.N().S(`/edit"><button>`)
 //line views/vstandup/Detail.html:40
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vstandup/Detail.html:40
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
 //line views/vstandup/Detail.html:42
-	components.StreamSVGRefIcon(qw422016, `standup`, ps)
-//line views/vstandup/Detail.html:42
-	qw422016.N().S(` `)
+	components.StreamSVGIcon(qw422016, `standup`, ps)
 //line views/vstandup/Detail.html:42
 	qw422016.E().S(p.Model.TitleString())
 //line views/vstandup/Detail.html:42
@@ -161,7 +159,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:71
 		qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:71
-		components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
+		components.StreamSVGSimple(qw422016, "team", 18, ps)
 //line views/vstandup/Detail.html:71
 		qw422016.N().S(`</a>`)
 //line views/vstandup/Detail.html:71
@@ -198,7 +196,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/Detail.html:78
 		qw422016.N().S(`">`)
 //line views/vstandup/Detail.html:78
-		components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
+		components.StreamSVGSimple(qw422016, "sprint", 18, ps)
 //line views/vstandup/Detail.html:78
 		qw422016.N().S(`</a>`)
 //line views/vstandup/Detail.html:78

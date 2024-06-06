@@ -28,7 +28,7 @@
 
 {% func (p *StandupList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}{%s util.StringPlural(len(p.Standups), "Standup") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeyStandup, ps) %}{%s util.StringPlural(len(p.Standups), "Standup") %}</h3>
     <em>{%s util.KeyStandupDesc %}</em>
     <table class="mt expanded">
       <tbody>
@@ -42,7 +42,7 @@
     </table>
   </div>
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeyStandup, ps) %}New Standup</h3>
+    <h3>{%= components.SVGIcon(util.KeyStandup, ps) %}New Standup</h3>
     {%= StandupForm(&standup.Standup{}, p.Teams, p.Sprints, as, ps) %}
   </div>
 {% endfunc %}
@@ -64,7 +64,7 @@
 {% func StandupListTable(standups standup.Standups, teamID *uuid.UUID, sprintID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeyStandup, teamID, sprintID, "New Standup") %}</div>
-    <h3 title="{%s util.KeyStandupDesc %}">{%= components.SVGRefIcon(util.KeyStandup, ps) %}Standups</h3>
+    <h3 title="{%s util.KeyStandupDesc %}">{%= components.SVGIcon(util.KeyStandup, ps) %}Standups</h3>
     <table id="standup-list" class="mt expanded">
       <tbody>
         {%- if len(standups) == 0 -%}

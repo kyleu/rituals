@@ -47,7 +47,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="right">
       <a href="#modal-feedback"><button type="button">`)
 //line views/vretro/vfeedback/Detail.html:23
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vretro/vfeedback/Detail.html:23
 	qw422016.N().S(`JSON</button></a>
       <a href="`)
@@ -56,15 +56,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:24
 	qw422016.N().S(`/edit"><button>`)
 //line views/vretro/vfeedback/Detail.html:24
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vretro/vfeedback/Detail.html:24
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
 //line views/vretro/vfeedback/Detail.html:26
-	components.StreamSVGRefIcon(qw422016, `comment`, ps)
-//line views/vretro/vfeedback/Detail.html:26
-	qw422016.N().S(` `)
+	components.StreamSVGIcon(qw422016, `comment`, ps)
 //line views/vretro/vfeedback/Detail.html:26
 	qw422016.E().S(p.Model.TitleString())
 //line views/vretro/vfeedback/Detail.html:26
@@ -105,7 +103,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:39
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:39
-	components.StreamSVGRef(qw422016, "retro", 18, 18, "", ps)
+	components.StreamSVGSimple(qw422016, "retro", 18, ps)
 //line views/vretro/vfeedback/Detail.html:39
 	qw422016.N().S(`</a>
             </td>
@@ -142,7 +140,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:50
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:50
-	components.StreamSVGRef(qw422016, "profile", 18, 18, "", ps)
+	components.StreamSVGSimple(qw422016, "profile", 18, ps)
 //line views/vretro/vfeedback/Detail.html:50
 	qw422016.N().S(`</a>
             </td>

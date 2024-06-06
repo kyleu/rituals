@@ -26,7 +26,7 @@
 
 {% func (p *SprintList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}{%s util.StringPlural(len(p.Sprints), "Sprint") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeySprint, ps) %}{%s util.StringPlural(len(p.Sprints), "Sprint") %}</h3>
     <em>{%s util.KeySprintDesc %}</em>
     <table class="mt expanded">
       <tbody>
@@ -40,7 +40,7 @@
     </table>
   </div>
   <div class="card">
-    <h3>{%= components.SVGRefIcon(util.KeySprint, ps) %}New Sprint</h3>
+    <h3>{%= components.SVGIcon(util.KeySprint, ps) %}New Sprint</h3>
     {%= SprintForm(&sprint.Sprint{}, p.Teams, as, ps) %}
   </div>
 {% endfunc %}
@@ -61,7 +61,7 @@
 {% func SprintListTable(sprints sprint.Sprints, teamID *uuid.UUID, showComments bool, comments comment.Comments, members member.Members, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">{%= vwutil.EditWorkspaceForm(util.KeySprint, teamID, nil, "New Sprint") %}</div>
-    <h3 title="{%s util.KeySprintDesc %}">{%= components.SVGRefIcon(util.KeySprint, ps) %}Sprints</h3>
+    <h3 title="{%s util.KeySprintDesc %}">{%= components.SVGIcon(util.KeySprint, ps) %}Sprints</h3>
     <table id="sprint-list" class="mt expanded">
       <tbody>
         {%- if len(sprints) == 0 -%}

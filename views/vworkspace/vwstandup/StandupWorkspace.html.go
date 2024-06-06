@@ -70,7 +70,7 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
         <a href="#modal-standup-config" id="modal-standup-config-link"><h3>
           <span id="model-icon">`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:37
-	components.StreamSVGRefIcon(qw422016, u.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, u.IconSafe(), ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:37
 	qw422016.N().S(`</span>
           <span id="model-title">`)
@@ -113,7 +113,7 @@ func (p *StandupWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, 
         <div class="right"><a class="add-report-link" href="#modal-report--add"><button>Add Report</button></a></div>
         <a class="add-report-link" href="#modal-report--add"><h3>`)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:51
-	components.StreamSVGRefIcon(qw422016, `file-alt`, ps)
+	components.StreamSVGIcon(qw422016, `file-alt`, ps)
 //line views/vworkspace/vwstandup/StandupWorkspace.html:51
 	qw422016.N().S(`Reports</h3></a>
         <div class="mt">`)

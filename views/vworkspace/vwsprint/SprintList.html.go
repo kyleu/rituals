@@ -52,7 +52,7 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwsprint/SprintList.html:29
-	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
+	components.StreamSVGIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintList.html:29
 	qw422016.E().S(util.StringPlural(len(p.Sprints), "Sprint"))
 //line views/vworkspace/vwsprint/SprintList.html:29
@@ -96,7 +96,7 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwsprint/SprintList.html:43
-	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
+	components.StreamSVGIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintList.html:43
 	qw422016.N().S(`New Sprint</h3>
     `)
@@ -207,7 +207,7 @@ func StreamSprintListTable(qw422016 *qt422016.Writer, sprints sprint.Sprints, te
 //line views/vworkspace/vwsprint/SprintList.html:64
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwsprint/SprintList.html:64
-	components.StreamSVGRefIcon(qw422016, util.KeySprint, ps)
+	components.StreamSVGIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintList.html:64
 	qw422016.N().S(`Sprints</h3>
     <table id="sprint-list" class="mt expanded">

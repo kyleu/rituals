@@ -54,7 +54,7 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwestimate/EstimateList.html:31
-	components.StreamSVGRefIcon(qw422016, util.KeyEstimate, ps)
+	components.StreamSVGIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:31
 	qw422016.E().S(util.StringPlural(len(p.Estimates), "Estimate"))
 //line views/vworkspace/vwestimate/EstimateList.html:31
@@ -98,7 +98,7 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwestimate/EstimateList.html:45
-	components.StreamSVGRefIcon(qw422016, util.KeyEstimate, ps)
+	components.StreamSVGIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:45
 	qw422016.N().S(`New Estimate</h3>
     `)
@@ -214,7 +214,7 @@ func StreamEstimateListTable(qw422016 *qt422016.Writer, estimates estimate.Estim
 //line views/vworkspace/vwestimate/EstimateList.html:67
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwestimate/EstimateList.html:67
-	components.StreamSVGRefIcon(qw422016, util.KeyEstimate, ps)
+	components.StreamSVGIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:67
 	qw422016.N().S(`Estimates</h3>
     <table id="estimate-list" class="mt expanded">

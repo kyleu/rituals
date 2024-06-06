@@ -18,11 +18,11 @@
   <div class="card">
     {%- if p.IsNew -%}
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
-    <h3>{%= components.SVGRefIcon(`comment`, ps) %} New Feedback</h3>
+    <h3>{%= components.SVGIcon(`comment`, ps) %} New Feedback</h3>
     <form action="/admin/db/retro/feedback/_new" class="mt" method="post">
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete feedback [{%s p.Model.String() %}]?"><button>Delete</button></a></div>
-    <h3>{%= components.SVGRefIcon(`comment`, ps) %} Edit Feedback [{%s p.Model.String() %}]</h3>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete feedback [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %}Delete</button></a></div>
+    <h3>{%= components.SVGIcon(`comment`, ps) %} Edit Feedback [{%s p.Model.String() %}]</h3>
     <form action="" method="post">
     {%- endif -%}
       <table class="mt expanded">

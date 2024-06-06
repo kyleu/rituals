@@ -72,7 +72,7 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
         <a href="#modal-estimate-config" id="modal-estimate-config-link"><h3>
           <span id="model-icon">`)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:39
-	components.StreamSVGRefIcon(qw422016, e.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, e.IconSafe(), ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:39
 	qw422016.N().S(`</span>
           <span id="model-title">`)
@@ -115,7 +115,7 @@ func (p *EstimateWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State,
         <div class="right"><a class="add-story-link" href="#modal-story--add"><button>Add Story</button></a></div>
         <a class="add-story-link" href="#modal-story--add"><h3>`)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:53
-	components.StreamSVGRefIcon(qw422016, util.KeyStory, ps)
+	components.StreamSVGIcon(qw422016, util.KeyStory, ps)
 //line views/vworkspace/vwestimate/EstimateWorkspace.html:53
 	qw422016.N().S(`Stories</h3></a>
         `)

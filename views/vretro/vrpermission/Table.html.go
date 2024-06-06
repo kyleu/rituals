@@ -110,7 +110,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 //line views/vretro/vrpermission/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vretro/vrpermission/Table.html:30
-		components.StreamSVGRef(qw422016, "retro", 18, 18, "", ps)
+		components.StreamSVGSimple(qw422016, "retro", 18, ps)
 //line views/vretro/vrpermission/Table.html:30
 		qw422016.N().S(`</a>
           </td>

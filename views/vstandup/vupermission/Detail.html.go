@@ -45,7 +45,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="right">
       <a href="#modal-standupPermission"><button type="button">`)
 //line views/vstandup/vupermission/Detail.html:21
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vstandup/vupermission/Detail.html:21
 	qw422016.N().S(`JSON</button></a>
       <a href="`)
@@ -54,15 +54,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:22
 	qw422016.N().S(`/edit"><button>`)
 //line views/vstandup/vupermission/Detail.html:22
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vstandup/vupermission/Detail.html:22
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
 //line views/vstandup/vupermission/Detail.html:24
-	components.StreamSVGRefIcon(qw422016, `permission`, ps)
-//line views/vstandup/vupermission/Detail.html:24
-	qw422016.N().S(` `)
+	components.StreamSVGIcon(qw422016, `permission`, ps)
 //line views/vstandup/vupermission/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
 //line views/vstandup/vupermission/Detail.html:24
@@ -95,7 +93,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Detail.html:33
-	components.StreamSVGRef(qw422016, "standup", 18, 18, "", ps)
+	components.StreamSVGSimple(qw422016, "standup", 18, ps)
 //line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`</a>
             </td>

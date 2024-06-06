@@ -54,7 +54,7 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwstandup/StandupList.html:31
-	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
+	components.StreamSVGIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupList.html:31
 	qw422016.E().S(util.StringPlural(len(p.Standups), "Standup"))
 //line views/vworkspace/vwstandup/StandupList.html:31
@@ -98,7 +98,7 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwstandup/StandupList.html:45
-	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
+	components.StreamSVGIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupList.html:45
 	qw422016.N().S(`New Standup</h3>
     `)
@@ -214,7 +214,7 @@ func StreamStandupListTable(qw422016 *qt422016.Writer, standups standup.Standups
 //line views/vworkspace/vwstandup/StandupList.html:67
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwstandup/StandupList.html:67
-	components.StreamSVGRefIcon(qw422016, util.KeyStandup, ps)
+	components.StreamSVGIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupList.html:67
 	qw422016.N().S(`Standups</h3>
     <table id="standup-list" class="mt expanded">

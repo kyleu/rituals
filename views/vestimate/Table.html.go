@@ -162,7 +162,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teamsByTe
 //line views/vestimate/Table.html:42
 			qw422016.N().S(`">`)
 //line views/vestimate/Table.html:42
-			components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
+			components.StreamSVGSimple(qw422016, "team", 18, ps)
 //line views/vestimate/Table.html:42
 			qw422016.N().S(`</a>`)
 //line views/vestimate/Table.html:42
@@ -200,7 +200,7 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teamsByTe
 //line views/vestimate/Table.html:46
 			qw422016.N().S(`">`)
 //line views/vestimate/Table.html:46
-			components.StreamSVGRef(qw422016, "sprint", 18, 18, "", ps)
+			components.StreamSVGSimple(qw422016, "sprint", 18, ps)
 //line views/vestimate/Table.html:46
 			qw422016.N().S(`</a>`)
 //line views/vestimate/Table.html:46

@@ -49,7 +49,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
 //line views/vemail/Edit.html:22
-		components.StreamSVGRefIcon(qw422016, `email`, ps)
+		components.StreamSVGIcon(qw422016, `email`, ps)
 //line views/vemail/Edit.html:22
 		qw422016.N().S(` New Email</h3>
     <form action="/admin/db/email/_new" class="mt" method="post">
@@ -65,10 +65,14 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vemail/Edit.html:25
 		qw422016.E().S(p.Model.String())
 //line views/vemail/Edit.html:25
-		qw422016.N().S(`]?"><button>Delete</button></a></div>
+		qw422016.N().S(`]?"><button>`)
+//line views/vemail/Edit.html:25
+		components.StreamSVGButton(qw422016, "times", ps)
+//line views/vemail/Edit.html:25
+		qw422016.N().S(`Delete</button></a></div>
     <h3>`)
 //line views/vemail/Edit.html:26
-		components.StreamSVGRefIcon(qw422016, `email`, ps)
+		components.StreamSVGIcon(qw422016, `email`, ps)
 //line views/vemail/Edit.html:26
 		qw422016.N().S(` Edit Email [`)
 //line views/vemail/Edit.html:26

@@ -161,7 +161,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID
 //line views/vsprint/Table.html:41
 			qw422016.N().S(`">`)
 //line views/vsprint/Table.html:41
-			components.StreamSVGRef(qw422016, "team", 18, 18, "", ps)
+			components.StreamSVGSimple(qw422016, "team", 18, ps)
 //line views/vsprint/Table.html:41
 			qw422016.N().S(`</a>`)
 //line views/vsprint/Table.html:41

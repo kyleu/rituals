@@ -72,7 +72,7 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
         <a href="#modal-retro-config" id="modal-retro-config-link"><h3>
           <span id="model-icon">`)
 //line views/vworkspace/vwretro/RetroWorkspace.html:39
-	components.StreamSVGRefIcon(qw422016, r.IconSafe(), ps)
+	components.StreamSVGIcon(qw422016, r.IconSafe(), ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:39
 	qw422016.N().S(`</span>
           <span id="model-title">`)
@@ -114,7 +114,7 @@ func (p *RetroWorkspace) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps
       <div class="card">
         <h3>`)
 //line views/vworkspace/vwretro/RetroWorkspace.html:52
-	components.StreamSVGRefIcon(qw422016, `comment`, ps)
+	components.StreamSVGIcon(qw422016, `comment`, ps)
 //line views/vworkspace/vwretro/RetroWorkspace.html:52
 	qw422016.N().S(`Feedback</h3>
         <div class="clear"></div>

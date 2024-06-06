@@ -43,7 +43,7 @@ func StreamAuthentication(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <div class="right"><a href="#modal-available"><button type="button">Available</button></a></div>
     <h3>`)
 //line views/vauth/Authentication.html:18
-	components.StreamSVGRefIcon(qw422016, `profile`, ps)
+	components.StreamSVGIcon(qw422016, `profile`, ps)
 //line views/vauth/Authentication.html:18
 	qw422016.N().S(`Authentication</h3>
 `)

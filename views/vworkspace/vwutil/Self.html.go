@@ -50,7 +50,7 @@ func StreamSelfLink(qw422016 *qt422016.Writer, self *member.Member, ps *cutil.Pa
 //line views/vworkspace/vwutil/Self.html:16
 		qw422016.N().S(`      `)
 //line views/vworkspace/vwutil/Self.html:17
-		components.StreamSVGRefIcon(qw422016, `profile`, ps)
+		components.StreamSVGIcon(qw422016, `profile`, ps)
 //line views/vworkspace/vwutil/Self.html:17
 		qw422016.N().S(`
 `)

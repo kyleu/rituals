@@ -43,7 +43,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <h3>`)
 //line views/vdatabase/List.html:19
-	components.StreamSVGRefIcon(qw422016, `database`, ps)
+	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/List.html:19
 	qw422016.N().S(`Databases</h3>
     <em>`)
@@ -71,7 +71,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vdatabase/List.html:26
 		qw422016.N().S(`">`)
 //line views/vdatabase/List.html:26
-		components.StreamSVGRefIcon(qw422016, `database`, ps)
+		components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/List.html:26
 		qw422016.E().S(svc.Key)
 //line views/vdatabase/List.html:26

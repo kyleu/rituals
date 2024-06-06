@@ -60,7 +60,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 //line views/vadmin/Settings.html:22
 	qw422016.N().S(`">`)
 //line views/vadmin/Settings.html:22
-	components.StreamSVGRefIcon(qw422016, `cog`, ps)
+	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vadmin/Settings.html:22
 	qw422016.E().S(util.AppName)
 //line views/vadmin/Settings.html:22
@@ -103,7 +103,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vadmin/Settings.html:33
-	components.StreamSVGRefIcon(qw422016, `archive`, ps)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vadmin/Settings.html:33
 	qw422016.N().S(`Admin Functions</h3>
     `)
@@ -131,7 +131,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vadmin/Settings.html:41
-	components.StreamSVGRefIcon(qw422016, `bolt`, ps)
+	components.StreamSVGIcon(qw422016, `bolt`, ps)
 //line views/vadmin/Settings.html:41
 	qw422016.N().S(`HTTP Methods</h3>
     `)
@@ -164,7 +164,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vadmin/Settings.html:50
-	components.StreamSVGRefIcon(qw422016, `cog`, ps)
+	components.StreamSVGIcon(qw422016, `cog`, ps)
 //line views/vadmin/Settings.html:50
 	qw422016.N().S(`App Profiling</h3>
     `)
@@ -197,7 +197,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vadmin/Settings.html:59
-	components.StreamSVGRefIcon(qw422016, `database`, ps)
+	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vadmin/Settings.html:59
 	qw422016.N().S(`Database Management</h3>
     `)

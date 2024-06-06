@@ -18,8 +18,8 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right"><a href="/admin/db/action/_new"><button>{%= components.SVGRef("plus", 15, 15, "icon", ps) %}New</button></a></div>
-    <h3>{%= components.SVGRefIcon(`action`, ps) %}{%s ps.Title %}</h3>
+    <div class="right"><a href="/admin/db/action/_new"><button>{%= components.SVGButton("plus", ps) %}New</button></a></div>
+    <h3>{%= components.SVGIcon(`action`, ps) %}{%s ps.Title %}</h3>
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No actions available</em></div>
     {%- else -%}

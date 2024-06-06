@@ -45,12 +45,12 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   <div class="card">
     <div class="right"><a href="/admin/db/email/_new"><button>`)
 //line views/vemail/List.html:21
-	components.StreamSVGRef(qw422016, "plus", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "plus", ps)
 //line views/vemail/List.html:21
 	qw422016.N().S(`New</button></a></div>
     <h3>`)
 //line views/vemail/List.html:22
-	components.StreamSVGRefIcon(qw422016, `email`, ps)
+	components.StreamSVGIcon(qw422016, `email`, ps)
 //line views/vemail/List.html:22
 	qw422016.E().S(ps.Title)
 //line views/vemail/List.html:22

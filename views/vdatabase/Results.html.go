@@ -55,7 +55,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.N().S(` elapsed</div>
     <h3>`)
 //line views/vdatabase/Results.html:27
-	components.StreamSVGRefIcon(qw422016, `database`, ps)
+	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/Results.html:27
 	qw422016.N().S(`Table [`)
 //line views/vdatabase/Results.html:27

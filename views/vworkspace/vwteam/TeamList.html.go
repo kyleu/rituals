@@ -46,7 +46,7 @@ func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwteam/TeamList.html:23
-	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
+	components.StreamSVGIcon(qw422016, util.KeyTeam, ps)
 //line views/vworkspace/vwteam/TeamList.html:23
 	qw422016.E().S(util.StringPlural(len(p.Teams), "Team"))
 //line views/vworkspace/vwteam/TeamList.html:23
@@ -95,7 +95,7 @@ func (p *TeamList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
   <div class="card">
     <h3>`)
 //line views/vworkspace/vwteam/TeamList.html:38
-	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
+	components.StreamSVGIcon(qw422016, util.KeyTeam, ps)
 //line views/vworkspace/vwteam/TeamList.html:38
 	qw422016.N().S(`New Team</h3>
     `)
@@ -201,7 +201,7 @@ func StreamTeamListTable(qw422016 *qt422016.Writer, teams team.Teams, showCommen
 //line views/vworkspace/vwteam/TeamList.html:58
 	qw422016.N().S(`">`)
 //line views/vworkspace/vwteam/TeamList.html:58
-	components.StreamSVGRefIcon(qw422016, util.KeyTeam, ps)
+	components.StreamSVGIcon(qw422016, util.KeyTeam, ps)
 //line views/vworkspace/vwteam/TeamList.html:58
 	qw422016.N().S(`Teams</h3>
 `)

@@ -55,7 +55,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`</em></div>
     <h3>`)
 //line views/vdatabase/Detail.html:27
-	components.StreamSVGRefIcon(qw422016, `database`, ps)
+	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/Detail.html:27
 	qw422016.E().S(p.Svc.Key)
 //line views/vdatabase/Detail.html:27

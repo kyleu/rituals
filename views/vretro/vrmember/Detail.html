@@ -21,10 +21,10 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
-      <a href="#modal-retroMember"><button type="button">{%= components.SVGRef("file", 15, 15, "icon", ps) %}JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+      <a href="#modal-retroMember"><button type="button">{%= components.SVGButton("file", ps) %}JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %}Edit</button></a>
     </div>
-    <h3>{%= components.SVGRefIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGIcon(`users`, ps) %}{%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/retro/member"><em>Member</em></a></div>
     <div class="mt overflow full-width">
       <table>
@@ -33,14 +33,14 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
-              <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGRef("retro", 18, 18, "", ps) %}</a>
+              <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGSimple("retro", 18, ps) %}</a>
             </td>
           </tr>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGRef("profile", 18, 18, "", ps) %}</a>
+              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGSimple("profile", 18, ps) %}</a>
             </td>
           </tr>
           <tr>
