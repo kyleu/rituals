@@ -151,5 +151,6 @@ func thistoryFromForm(r *http.Request, b []byte, setPK bool) (*thistory.TeamHist
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return thistory.FromMap(frm, setPK)
+	ret, _, err := thistory.FromMap(frm, setPK)
+	return ret, err
 }

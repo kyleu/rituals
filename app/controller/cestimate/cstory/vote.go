@@ -182,5 +182,6 @@ func voteFromForm(r *http.Request, b []byte, setPK bool) (*vote.Vote, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return vote.FromMap(frm, setPK)
+	ret, _, err := vote.FromMap(frm, setPK)
+	return ret, err
 }

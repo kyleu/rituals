@@ -152,5 +152,6 @@ func uhistoryFromForm(r *http.Request, b []byte, setPK bool) (*uhistory.StandupH
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return uhistory.FromMap(frm, setPK)
+	ret, _, err := uhistory.FromMap(frm, setPK)
+	return ret, err
 }

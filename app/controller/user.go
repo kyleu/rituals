@@ -230,5 +230,6 @@ func userFromForm(r *http.Request, b []byte, setPK bool) (*user.User, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return user.FromMap(frm, setPK)
+	ret, _, err := user.FromMap(frm, setPK)
+	return ret, err
 }

@@ -182,5 +182,6 @@ func tmemberFromForm(r *http.Request, b []byte, setPK bool) (*tmember.TeamMember
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return tmember.FromMap(frm, setPK)
+	ret, _, err := tmember.FromMap(frm, setPK)
+	return ret, err
 }

@@ -6,52 +6,59 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func FromMap(m util.ValueMap, setPK bool) (*Story, error) {
+//nolint:gocognit
+func FromMap(m util.ValueMap, setPK bool) (*Story, util.ValueMap, error) {
 	ret := &Story{}
-	var err error
-	if setPK {
-		retID, e := m.ParseUUID("id", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "id":
+			if setPK {
+				retID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retID != nil {
+					ret.ID = *retID
+				}
+			}
+		case "estimateID":
+			retEstimateID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retEstimateID != nil {
+				ret.EstimateID = *retEstimateID
+			}
+		case "idx":
+			ret.Idx, err = m.ParseInt(k, true, true)
+		case "userID":
+			retUserID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retUserID != nil {
+				ret.UserID = *retUserID
+			}
+		case "title":
+			ret.Title, err = m.ParseString(k, true, true)
+		case "status":
+			retStatus, err := m.ParseString(k, true, true)
+			if err != nil {
+				return nil, nil, err
+			}
+			ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
+		case "finalVote":
+			ret.FinalVote, err = m.ParseString(k, true, true)
+		default:
+			extra[k] = v
 		}
-		if retID != nil {
-			ret.ID = *retID
+		if err != nil {
+			return nil, nil, err
 		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	retEstimateID, e := m.ParseUUID("estimateID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retEstimateID != nil {
-		ret.EstimateID = *retEstimateID
-	}
-	ret.Idx, err = m.ParseInt("idx", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retUserID, e := m.ParseUUID("userID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retUserID != nil {
-		ret.UserID = *retUserID
-	}
-	ret.Title, err = m.ParseString("title", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retStatus, err := m.ParseString("status", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Status = enum.AllSessionStatuses.Get(retStatus, nil)
-	ret.FinalVote, err = m.ParseString("finalVote", true, true)
-	if err != nil {
-		return nil, err
 	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

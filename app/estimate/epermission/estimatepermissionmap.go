@@ -3,33 +3,40 @@ package epermission
 
 import "github.com/kyleu/rituals/app/util"
 
-func FromMap(m util.ValueMap, setPK bool) (*EstimatePermission, error) {
+func FromMap(m util.ValueMap, setPK bool) (*EstimatePermission, util.ValueMap, error) {
 	ret := &EstimatePermission{}
-	var err error
-	if setPK {
-		retEstimateID, e := m.ParseUUID("estimateID", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "estimateID":
+			if setPK {
+				retEstimateID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retEstimateID != nil {
+					ret.EstimateID = *retEstimateID
+				}
+			}
+		case "key":
+			if setPK {
+				ret.Key, err = m.ParseString(k, true, true)
+			}
+		case "value":
+			if setPK {
+				ret.Value, err = m.ParseString(k, true, true)
+			}
+		case "access":
+			ret.Access, err = m.ParseString(k, true, true)
+		default:
+			extra[k] = v
 		}
-		if retEstimateID != nil {
-			ret.EstimateID = *retEstimateID
-		}
-		ret.Key, err = m.ParseString("key", true, true)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-		ret.Value, err = m.ParseString("value", true, true)
-		if err != nil {
-			return nil, err
-		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	ret.Access, err = m.ParseString("access", true, true)
-	if err != nil {
-		return nil, err
 	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

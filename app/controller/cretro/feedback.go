@@ -172,5 +172,6 @@ func feedbackFromForm(r *http.Request, b []byte, setPK bool) (*feedback.Feedback
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return feedback.FromMap(frm, setPK)
+	ret, _, err := feedback.FromMap(frm, setPK)
+	return ret, err
 }

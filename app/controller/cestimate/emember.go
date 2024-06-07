@@ -182,5 +182,6 @@ func ememberFromForm(r *http.Request, b []byte, setPK bool) (*emember.EstimateMe
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return emember.FromMap(frm, setPK)
+	ret, _, err := emember.FromMap(frm, setPK)
+	return ret, err
 }

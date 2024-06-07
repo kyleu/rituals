@@ -219,5 +219,6 @@ func retroFromForm(r *http.Request, b []byte, setPK bool) (*retro.Retro, error) 
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return retro.FromMap(frm, setPK)
+	ret, _, err := retro.FromMap(frm, setPK)
+	return ret, err
 }

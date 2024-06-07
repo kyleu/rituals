@@ -151,5 +151,6 @@ func shistoryFromForm(r *http.Request, b []byte, setPK bool) (*shistory.SprintHi
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return shistory.FromMap(frm, setPK)
+	ret, _, err := shistory.FromMap(frm, setPK)
+	return ret, err
 }

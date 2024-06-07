@@ -167,5 +167,6 @@ func upermissionFromForm(r *http.Request, b []byte, setPK bool) (*upermission.St
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return upermission.FromMap(frm, setPK)
+	ret, _, err := upermission.FromMap(frm, setPK)
+	return ret, err
 }

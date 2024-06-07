@@ -3,32 +3,42 @@ package vote
 
 import "github.com/kyleu/rituals/app/util"
 
-func FromMap(m util.ValueMap, setPK bool) (*Vote, error) {
+func FromMap(m util.ValueMap, setPK bool) (*Vote, util.ValueMap, error) {
 	ret := &Vote{}
-	var err error
-	if setPK {
-		retStoryID, e := m.ParseUUID("storyID", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "storyID":
+			if setPK {
+				retStoryID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retStoryID != nil {
+					ret.StoryID = *retStoryID
+				}
+			}
+		case "userID":
+			if setPK {
+				retUserID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retUserID != nil {
+					ret.UserID = *retUserID
+				}
+			}
+		case "choice":
+			ret.Choice, err = m.ParseString(k, true, true)
+		default:
+			extra[k] = v
 		}
-		if retStoryID != nil {
-			ret.StoryID = *retStoryID
+		if err != nil {
+			return nil, nil, err
 		}
-		retUserID, e := m.ParseUUID("userID", true, true)
-		if e != nil {
-			return nil, e
-		}
-		if retUserID != nil {
-			ret.UserID = *retUserID
-		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	ret.Choice, err = m.ParseString("choice", true, true)
-	if err != nil {
-		return nil, err
 	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

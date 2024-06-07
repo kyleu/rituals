@@ -151,5 +151,6 @@ func rhistoryFromForm(r *http.Request, b []byte, setPK bool) (*rhistory.RetroHis
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return rhistory.FromMap(frm, setPK)
+	ret, _, err := rhistory.FromMap(frm, setPK)
+	return ret, err
 }

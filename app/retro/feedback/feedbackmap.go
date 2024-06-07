@@ -3,51 +3,54 @@ package feedback
 
 import "github.com/kyleu/rituals/app/util"
 
-func FromMap(m util.ValueMap, setPK bool) (*Feedback, error) {
+func FromMap(m util.ValueMap, setPK bool) (*Feedback, util.ValueMap, error) {
 	ret := &Feedback{}
-	var err error
-	if setPK {
-		retID, e := m.ParseUUID("id", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "id":
+			if setPK {
+				retID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retID != nil {
+					ret.ID = *retID
+				}
+			}
+		case "retroID":
+			retRetroID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retRetroID != nil {
+				ret.RetroID = *retRetroID
+			}
+		case "idx":
+			ret.Idx, err = m.ParseInt(k, true, true)
+		case "userID":
+			retUserID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retUserID != nil {
+				ret.UserID = *retUserID
+			}
+		case "category":
+			ret.Category, err = m.ParseString(k, true, true)
+		case "content":
+			ret.Content, err = m.ParseString(k, true, true)
+		case "html":
+			ret.HTML, err = m.ParseString(k, true, true)
+		default:
+			extra[k] = v
 		}
-		if retID != nil {
-			ret.ID = *retID
+		if err != nil {
+			return nil, nil, err
 		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	retRetroID, e := m.ParseUUID("retroID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retRetroID != nil {
-		ret.RetroID = *retRetroID
-	}
-	ret.Idx, err = m.ParseInt("idx", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retUserID, e := m.ParseUUID("userID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retUserID != nil {
-		ret.UserID = *retUserID
-	}
-	ret.Category, err = m.ParseString("category", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Content, err = m.ParseString("content", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.HTML, err = m.ParseString("html", true, true)
-	if err != nil {
-		return nil, err
 	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

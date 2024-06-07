@@ -155,5 +155,6 @@ func emailFromForm(r *http.Request, b []byte, setPK bool) (*email.Email, error) 
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return email.FromMap(frm, setPK)
+	ret, _, err := email.FromMap(frm, setPK)
+	return ret, err
 }

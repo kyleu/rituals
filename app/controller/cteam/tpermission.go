@@ -166,5 +166,6 @@ func tpermissionFromForm(r *http.Request, b []byte, setPK bool) (*tpermission.Te
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return tpermission.FromMap(frm, setPK)
+	ret, _, err := tpermission.FromMap(frm, setPK)
+	return ret, err
 }

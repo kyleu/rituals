@@ -182,5 +182,6 @@ func rmemberFromForm(r *http.Request, b []byte, setPK bool) (*rmember.RetroMembe
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return rmember.FromMap(frm, setPK)
+	ret, _, err := rmember.FromMap(frm, setPK)
+	return ret, err
 }

@@ -167,5 +167,6 @@ func rpermissionFromForm(r *http.Request, b []byte, setPK bool) (*rpermission.Re
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return rpermission.FromMap(frm, setPK)
+	ret, _, err := rpermission.FromMap(frm, setPK)
+	return ret, err
 }

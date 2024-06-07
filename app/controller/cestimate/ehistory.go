@@ -152,5 +152,6 @@ func ehistoryFromForm(r *http.Request, b []byte, setPK bool) (*ehistory.Estimate
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return ehistory.FromMap(frm, setPK)
+	ret, _, err := ehistory.FromMap(frm, setPK)
+	return ret, err
 }

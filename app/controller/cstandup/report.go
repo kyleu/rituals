@@ -172,5 +172,6 @@ func reportFromForm(r *http.Request, b []byte, setPK bool) (*report.Report, erro
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return report.FromMap(frm, setPK)
+	ret, _, err := report.FromMap(frm, setPK)
+	return ret, err
 }

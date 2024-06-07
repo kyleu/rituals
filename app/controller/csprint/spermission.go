@@ -167,5 +167,6 @@ func spermissionFromForm(r *http.Request, b []byte, setPK bool) (*spermission.Sp
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return spermission.FromMap(frm, setPK)
+	ret, _, err := spermission.FromMap(frm, setPK)
+	return ret, err
 }

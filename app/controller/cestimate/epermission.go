@@ -167,5 +167,6 @@ func epermissionFromForm(r *http.Request, b []byte, setPK bool) (*epermission.Es
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return epermission.FromMap(frm, setPK)
+	ret, _, err := epermission.FromMap(frm, setPK)
+	return ret, err
 }

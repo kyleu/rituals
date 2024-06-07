@@ -6,41 +6,50 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func FromMap(m util.ValueMap, setPK bool) (*RetroMember, error) {
+func FromMap(m util.ValueMap, setPK bool) (*RetroMember, util.ValueMap, error) {
 	ret := &RetroMember{}
-	var err error
-	if setPK {
-		retRetroID, e := m.ParseUUID("retroID", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "retroID":
+			if setPK {
+				retRetroID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retRetroID != nil {
+					ret.RetroID = *retRetroID
+				}
+			}
+		case "userID":
+			if setPK {
+				retUserID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retUserID != nil {
+					ret.UserID = *retUserID
+				}
+			}
+		case "name":
+			ret.Name, err = m.ParseString(k, true, true)
+		case "picture":
+			ret.Picture, err = m.ParseString(k, true, true)
+		case "role":
+			retRole, err := m.ParseString(k, true, true)
+			if err != nil {
+				return nil, nil, err
+			}
+			ret.Role = enum.AllMemberStatuses.Get(retRole, nil)
+		default:
+			extra[k] = v
 		}
-		if retRetroID != nil {
-			ret.RetroID = *retRetroID
+		if err != nil {
+			return nil, nil, err
 		}
-		retUserID, e := m.ParseUUID("userID", true, true)
-		if e != nil {
-			return nil, e
-		}
-		if retUserID != nil {
-			ret.UserID = *retUserID
-		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
 	}
-	ret.Name, err = m.ParseString("name", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Picture, err = m.ParseString("picture", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retRole, err := m.ParseString("role", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Role = enum.AllMemberStatuses.Get(retRole, nil)
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

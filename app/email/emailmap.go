@@ -3,52 +3,53 @@ package email
 
 import "github.com/kyleu/rituals/app/util"
 
-func FromMap(m util.ValueMap, setPK bool) (*Email, error) {
+func FromMap(m util.ValueMap, setPK bool) (*Email, util.ValueMap, error) {
 	ret := &Email{}
-	var err error
-	if setPK {
-		retID, e := m.ParseUUID("id", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "id":
+			if setPK {
+				retID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retID != nil {
+					ret.ID = *retID
+				}
+			}
+		case "recipients":
+			ret.Recipients, err = m.ParseArrayString(k, true, true)
+			if err != nil {
+				return nil, nil, err
+			}
+		case "subject":
+			ret.Subject, err = m.ParseString(k, true, true)
+		case "data":
+			ret.Data, err = m.ParseMap(k, true, true)
+		case "plain":
+			ret.Plain, err = m.ParseString(k, true, true)
+		case "html":
+			ret.HTML, err = m.ParseString(k, true, true)
+		case "userID":
+			retUserID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retUserID != nil {
+				ret.UserID = *retUserID
+			}
+		case "status":
+			ret.Status, err = m.ParseString(k, true, true)
+		default:
+			extra[k] = v
 		}
-		if retID != nil {
-			ret.ID = *retID
+		if err != nil {
+			return nil, nil, err
 		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	ret.Recipients, err = m.ParseArrayString("recipients", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Subject, err = m.ParseString("subject", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Data, err = m.ParseMap("data", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.Plain, err = m.ParseString("plain", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.HTML, err = m.ParseString("html", true, true)
-	if err != nil {
-		return nil, err
-	}
-	retUserID, e := m.ParseUUID("userID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retUserID != nil {
-		ret.UserID = *retUserID
-	}
-	ret.Status, err = m.ParseString("status", true, true)
-	if err != nil {
-		return nil, err
 	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

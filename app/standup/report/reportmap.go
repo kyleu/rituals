@@ -3,50 +3,59 @@ package report
 
 import "github.com/kyleu/rituals/app/util"
 
-func FromMap(m util.ValueMap, setPK bool) (*Report, error) {
+//nolint:gocognit
+func FromMap(m util.ValueMap, setPK bool) (*Report, util.ValueMap, error) {
 	ret := &Report{}
-	var err error
-	if setPK {
-		retID, e := m.ParseUUID("id", true, true)
-		if e != nil {
-			return nil, e
+	extra := util.ValueMap{}
+	for k, v := range m {
+		var err error
+		switch k {
+		case "id":
+			if setPK {
+				retID, e := m.ParseUUID(k, true, true)
+				if e != nil {
+					return nil, nil, e
+				}
+				if retID != nil {
+					ret.ID = *retID
+				}
+			}
+		case "standupID":
+			retStandupID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retStandupID != nil {
+				ret.StandupID = *retStandupID
+			}
+		case "day":
+			retDay, e := m.ParseTime(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retDay != nil {
+				ret.Day = *retDay
+			}
+		case "userID":
+			retUserID, e := m.ParseUUID(k, true, true)
+			if e != nil {
+				return nil, nil, e
+			}
+			if retUserID != nil {
+				ret.UserID = *retUserID
+			}
+		case "content":
+			ret.Content, err = m.ParseString(k, true, true)
+		case "html":
+			ret.HTML, err = m.ParseString(k, true, true)
+		default:
+			extra[k] = v
 		}
-		if retID != nil {
-			ret.ID = *retID
+		if err != nil {
+			return nil, nil, err
 		}
-		// $PF_SECTION_START(pkchecks)$
-		// $PF_SECTION_END(pkchecks)$
-	}
-	retStandupID, e := m.ParseUUID("standupID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retStandupID != nil {
-		ret.StandupID = *retStandupID
-	}
-	retDay, e := m.ParseTime("day", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retDay != nil {
-		ret.Day = *retDay
-	}
-	retUserID, e := m.ParseUUID("userID", true, true)
-	if e != nil {
-		return nil, e
-	}
-	if retUserID != nil {
-		ret.UserID = *retUserID
-	}
-	ret.Content, err = m.ParseString("content", true, true)
-	if err != nil {
-		return nil, err
-	}
-	ret.HTML, err = m.ParseString("html", true, true)
-	if err != nil {
-		return nil, err
 	}
 	// $PF_SECTION_START(extrachecks)$
 	// $PF_SECTION_END(extrachecks)$
-	return ret, nil
+	return ret, extra, nil
 }

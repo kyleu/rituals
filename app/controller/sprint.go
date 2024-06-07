@@ -214,5 +214,6 @@ func sprintFromForm(r *http.Request, b []byte, setPK bool) (*sprint.Sprint, erro
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return sprint.FromMap(frm, setPK)
+	ret, _, err := sprint.FromMap(frm, setPK)
+	return ret, err
 }

@@ -220,5 +220,6 @@ func standupFromForm(r *http.Request, b []byte, setPK bool) (*standup.Standup, e
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return standup.FromMap(frm, setPK)
+	ret, _, err := standup.FromMap(frm, setPK)
+	return ret, err
 }

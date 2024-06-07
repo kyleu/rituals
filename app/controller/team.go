@@ -200,5 +200,6 @@ func teamFromForm(r *http.Request, b []byte, setPK bool) (*team.Team, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return team.FromMap(frm, setPK)
+	ret, _, err := team.FromMap(frm, setPK)
+	return ret, err
 }

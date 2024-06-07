@@ -182,5 +182,6 @@ func umemberFromForm(r *http.Request, b []byte, setPK bool) (*umember.StandupMem
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return umember.FromMap(frm, setPK)
+	ret, _, err := umember.FromMap(frm, setPK)
+	return ret, err
 }

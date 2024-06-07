@@ -155,5 +155,6 @@ func commentFromForm(r *http.Request, b []byte, setPK bool) (*comment.Comment, e
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return comment.FromMap(frm, setPK)
+	ret, _, err := comment.FromMap(frm, setPK)
+	return ret, err
 }

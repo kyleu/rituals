@@ -220,5 +220,6 @@ func estimateFromForm(r *http.Request, b []byte, setPK bool) (*estimate.Estimate
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return estimate.FromMap(frm, setPK)
+	ret, _, err := estimate.FromMap(frm, setPK)
+	return ret, err
 }

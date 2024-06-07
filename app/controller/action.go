@@ -155,5 +155,6 @@ func actionFromForm(r *http.Request, b []byte, setPK bool) (*action.Action, erro
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return action.FromMap(frm, setPK)
+	ret, _, err := action.FromMap(frm, setPK)
+	return ret, err
 }
