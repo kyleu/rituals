@@ -45,65 +45,79 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/vtmember/List.html:21
 	qw422016.N().S(`
   <div class="card">
-    <div class="right"><a href="/admin/db/team/member/_new"><button>`)
-//line views/vteam/vtmember/List.html:23
+    <div class="right mrs large-buttons">
+`)
+//line views/vteam/vtmember/List.html:24
+	if len(p.Models) > 0 {
+//line views/vteam/vtmember/List.html:24
+		qw422016.N().S(`<a href="/admin/db/team/member/_random"><button>`)
+//line views/vteam/vtmember/List.html:24
+		components.StreamSVGButton(qw422016, "gift", ps)
+//line views/vteam/vtmember/List.html:24
+		qw422016.N().S(`Random</button></a>`)
+//line views/vteam/vtmember/List.html:24
+	}
+//line views/vteam/vtmember/List.html:24
+	qw422016.N().S(`      <a href="/admin/db/team/member/_new"><button>`)
+//line views/vteam/vtmember/List.html:25
 	components.StreamSVGButton(qw422016, "plus", ps)
-//line views/vteam/vtmember/List.html:23
-	qw422016.N().S(`New</button></a></div>
+//line views/vteam/vtmember/List.html:25
+	qw422016.N().S(`New</button></a>
+    </div>
     <h3>`)
-//line views/vteam/vtmember/List.html:24
+//line views/vteam/vtmember/List.html:27
 	components.StreamSVGIcon(qw422016, `users`, ps)
-//line views/vteam/vtmember/List.html:24
+//line views/vteam/vtmember/List.html:27
 	qw422016.E().S(ps.Title)
-//line views/vteam/vtmember/List.html:24
+//line views/vteam/vtmember/List.html:27
 	qw422016.N().S(`</h3>
 `)
-//line views/vteam/vtmember/List.html:25
+//line views/vteam/vtmember/List.html:28
 	if len(p.Models) == 0 {
-//line views/vteam/vtmember/List.html:25
+//line views/vteam/vtmember/List.html:28
 		qw422016.N().S(`    <div class="mt"><em>No members available</em></div>
 `)
-//line views/vteam/vtmember/List.html:27
+//line views/vteam/vtmember/List.html:30
 	} else {
-//line views/vteam/vtmember/List.html:27
+//line views/vteam/vtmember/List.html:30
 		qw422016.N().S(`    <div class="mt">
       `)
-//line views/vteam/vtmember/List.html:29
+//line views/vteam/vtmember/List.html:32
 		StreamTable(qw422016, p.Models, p.TeamsByTeamID, p.UsersByUserID, p.Params, as, ps)
-//line views/vteam/vtmember/List.html:29
+//line views/vteam/vtmember/List.html:32
 		qw422016.N().S(`
     </div>
 `)
-//line views/vteam/vtmember/List.html:31
+//line views/vteam/vtmember/List.html:34
 	}
-//line views/vteam/vtmember/List.html:31
+//line views/vteam/vtmember/List.html:34
 	qw422016.N().S(`  </div>
 `)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 }
 
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	p.StreamBody(qw422016, as, ps)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 }
 
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	p.WriteBody(qb422016, as, ps)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	qs422016 := string(qb422016.B)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 	return qs422016
-//line views/vteam/vtmember/List.html:33
+//line views/vteam/vtmember/List.html:36
 }
