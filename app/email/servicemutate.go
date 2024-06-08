@@ -39,7 +39,7 @@ func (s *Service) CreateChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int,
 		if err := s.Create(ctx, tx, logger, chunk...); err != nil {
 			return err
 		}
-		progress.Increment(chunkSize, logger)
+		progress.Increment(len(chunk), logger)
 	}
 	return nil
 }
@@ -86,7 +86,7 @@ func (s *Service) SaveChunked(ctx context.Context, tx *sqlx.Tx, chunkSize int, p
 		if err := s.Save(ctx, tx, logger, chunk...); err != nil {
 			return err
 		}
-		progress.Increment(chunkSize, logger)
+		progress.Increment(len(chunk), logger)
 	}
 	return nil
 }
