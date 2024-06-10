@@ -100,7 +100,7 @@
         <input id="accordion-ReportsByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`report`) %} checked="checked"{% endif %} />
         <label for="accordion-ReportsByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`file-alt`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`file-alt`, 16, ps) %}
           {%s util.StringPlural(len(p.RelReportsByStandupID), "Report") %} by [Standup ID]
         </label>
         <div class="bd"><div><div>
@@ -117,7 +117,7 @@
         <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`uhistory`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupHistoriesByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`history`, 16, ps) %}
           {%s util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History") %} by [Standup ID]
         </label>
         <div class="bd"><div><div>
@@ -134,7 +134,7 @@
         <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`umember`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupMembersByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelStandupMembersByStandupID), "Member") %} by [Standup ID]
         </label>
         <div class="bd"><div><div>
@@ -151,7 +151,7 @@
         <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`upermission`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupPermissionsByStandupID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`permission`, 16, ps) %}
           {%s util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission") %} by [Standup ID]
         </label>
         <div class="bd"><div><div>

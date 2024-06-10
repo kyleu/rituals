@@ -259,7 +259,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:107
-	components.StreamSVGRef(qw422016, `comment`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `comment`, 16, ps)
 //line views/vretro/Detail.html:107
 	qw422016.N().S(`
           `)
@@ -309,7 +309,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:124
-	components.StreamSVGRef(qw422016, `history`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `history`, 16, ps)
 //line views/vretro/Detail.html:124
 	qw422016.N().S(`
           `)
@@ -359,7 +359,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:141
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vretro/Detail.html:141
 	qw422016.N().S(`
           `)
@@ -409,7 +409,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vretro/Detail.html:158
-	components.StreamSVGRef(qw422016, `permission`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `permission`, 16, ps)
 //line views/vretro/Detail.html:158
 	qw422016.N().S(`
           `)

@@ -234,7 +234,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:108
-	components.StreamSVGRef(qw422016, `estimate`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `estimate`, 16, ps)
 //line views/vsprint/Detail.html:108
 	qw422016.N().S(`
           `)
@@ -284,7 +284,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:125
-	components.StreamSVGRef(qw422016, `retro`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `retro`, 16, ps)
 //line views/vsprint/Detail.html:125
 	qw422016.N().S(`
           `)
@@ -334,7 +334,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:142
-	components.StreamSVGRef(qw422016, `history`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `history`, 16, ps)
 //line views/vsprint/Detail.html:142
 	qw422016.N().S(`
           `)
@@ -384,7 +384,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:159
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vsprint/Detail.html:159
 	qw422016.N().S(`
           `)
@@ -434,7 +434,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:176
-	components.StreamSVGRef(qw422016, `permission`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `permission`, 16, ps)
 //line views/vsprint/Detail.html:176
 	qw422016.N().S(`
           `)
@@ -484,7 +484,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vsprint/Detail.html:193
-	components.StreamSVGRef(qw422016, `standup`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `standup`, 16, ps)
 //line views/vsprint/Detail.html:193
 	qw422016.N().S(`
           `)

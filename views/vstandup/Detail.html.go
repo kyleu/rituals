@@ -251,7 +251,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vstandup/Detail.html:103
-	components.StreamSVGRef(qw422016, `file-alt`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `file-alt`, 16, ps)
 //line views/vstandup/Detail.html:103
 	qw422016.N().S(`
           `)
@@ -301,7 +301,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vstandup/Detail.html:120
-	components.StreamSVGRef(qw422016, `history`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `history`, 16, ps)
 //line views/vstandup/Detail.html:120
 	qw422016.N().S(`
           `)
@@ -351,7 +351,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vstandup/Detail.html:137
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vstandup/Detail.html:137
 	qw422016.N().S(`
           `)
@@ -401,7 +401,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vstandup/Detail.html:154
-	components.StreamSVGRef(qw422016, `permission`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `permission`, 16, ps)
 //line views/vstandup/Detail.html:154
 	qw422016.N().S(`
           `)

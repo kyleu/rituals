@@ -180,7 +180,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:100
-	components.StreamSVGRef(qw422016, `action`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `action`, 16, ps)
 //line views/vuser/Detail.html:100
 	qw422016.N().S(`
           `)
@@ -230,7 +230,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:117
-	components.StreamSVGRef(qw422016, `comments`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `comments`, 16, ps)
 //line views/vuser/Detail.html:117
 	qw422016.N().S(`
           `)
@@ -280,7 +280,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:134
-	components.StreamSVGRef(qw422016, `email`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `email`, 16, ps)
 //line views/vuser/Detail.html:134
 	qw422016.N().S(`
           `)
@@ -330,7 +330,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:151
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vuser/Detail.html:151
 	qw422016.N().S(`
           `)
@@ -380,7 +380,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:168
-	components.StreamSVGRef(qw422016, `comment`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `comment`, 16, ps)
 //line views/vuser/Detail.html:168
 	qw422016.N().S(`
           `)
@@ -430,7 +430,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:185
-	components.StreamSVGRef(qw422016, `file-alt`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `file-alt`, 16, ps)
 //line views/vuser/Detail.html:185
 	qw422016.N().S(`
           `)
@@ -480,7 +480,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:202
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vuser/Detail.html:202
 	qw422016.N().S(`
           `)
@@ -530,7 +530,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:219
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vuser/Detail.html:219
 	qw422016.N().S(`
           `)
@@ -580,7 +580,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:236
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vuser/Detail.html:236
 	qw422016.N().S(`
           `)
@@ -630,7 +630,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:253
-	components.StreamSVGRef(qw422016, `story`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `story`, 16, ps)
 //line views/vuser/Detail.html:253
 	qw422016.N().S(`
           `)
@@ -680,7 +680,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:270
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vuser/Detail.html:270
 	qw422016.N().S(`
           `)
@@ -730,7 +730,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vuser/Detail.html:287
-	components.StreamSVGRef(qw422016, `vote-yea`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `vote-yea`, 16, ps)
 //line views/vuser/Detail.html:287
 	qw422016.N().S(`
           `)

@@ -97,7 +97,7 @@
         <input id="accordion-ActionsByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`action`) %} checked="checked"{% endif %} />
         <label for="accordion-ActionsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`action`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`action`, 16, ps) %}
           {%s util.StringPlural(len(p.RelActionsByUserID), "Action") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -114,7 +114,7 @@
         <input id="accordion-CommentsByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`comment`) %} checked="checked"{% endif %} />
         <label for="accordion-CommentsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`comments`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`comments`, 16, ps) %}
           {%s util.StringPlural(len(p.RelCommentsByUserID), "Comment") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -131,7 +131,7 @@
         <input id="accordion-EmailsByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`email`) %} checked="checked"{% endif %} />
         <label for="accordion-EmailsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`email`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`email`, 16, ps) %}
           {%s util.StringPlural(len(p.RelEmailsByUserID), "Email") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -148,7 +148,7 @@
         <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`emember`) %} checked="checked"{% endif %} />
         <label for="accordion-EstimateMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelEstimateMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -165,7 +165,7 @@
         <input id="accordion-FeedbacksByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`feedback`) %} checked="checked"{% endif %} />
         <label for="accordion-FeedbacksByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`comment`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`comment`, 16, ps) %}
           {%s util.StringPlural(len(p.RelFeedbacksByUserID), "Feedback") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -182,7 +182,7 @@
         <input id="accordion-ReportsByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`report`) %} checked="checked"{% endif %} />
         <label for="accordion-ReportsByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`file-alt`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`file-alt`, 16, ps) %}
           {%s util.StringPlural(len(p.RelReportsByUserID), "Report") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -199,7 +199,7 @@
         <input id="accordion-RetroMembersByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rmember`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelRetroMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -216,7 +216,7 @@
         <input id="accordion-SprintMembersByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`smember`) %} checked="checked"{% endif %} />
         <label for="accordion-SprintMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelSprintMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -233,7 +233,7 @@
         <input id="accordion-StandupMembersByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`umember`) %} checked="checked"{% endif %} />
         <label for="accordion-StandupMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelStandupMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -250,7 +250,7 @@
         <input id="accordion-StoriesByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`story`) %} checked="checked"{% endif %} />
         <label for="accordion-StoriesByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`story`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`story`, 16, ps) %}
           {%s util.StringPlural(len(p.RelStoriesByUserID), "Story") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -267,7 +267,7 @@
         <input id="accordion-TeamMembersByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`tmember`) %} checked="checked"{% endif %} />
         <label for="accordion-TeamMembersByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelTeamMembersByUserID), "Member") %} by [User ID]
         </label>
         <div class="bd"><div><div>
@@ -284,7 +284,7 @@
         <input id="accordion-VotesByUserID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`vote`) %} checked="checked"{% endif %} />
         <label for="accordion-VotesByUserID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`vote-yea`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`vote-yea`, 16, ps) %}
           {%s util.StringPlural(len(p.RelVotesByUserID), "Vote") %} by [User ID]
         </label>
         <div class="bd"><div><div>

@@ -182,7 +182,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:94
-	components.StreamSVGRef(qw422016, `estimate`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `estimate`, 16, ps)
 //line views/vteam/Detail.html:94
 	qw422016.N().S(`
           `)
@@ -232,7 +232,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:111
-	components.StreamSVGRef(qw422016, `retro`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `retro`, 16, ps)
 //line views/vteam/Detail.html:111
 	qw422016.N().S(`
           `)
@@ -282,7 +282,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:128
-	components.StreamSVGRef(qw422016, `sprint`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `sprint`, 16, ps)
 //line views/vteam/Detail.html:128
 	qw422016.N().S(`
           `)
@@ -332,7 +332,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:145
-	components.StreamSVGRef(qw422016, `standup`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `standup`, 16, ps)
 //line views/vteam/Detail.html:145
 	qw422016.N().S(`
           `)
@@ -382,7 +382,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:162
-	components.StreamSVGRef(qw422016, `history`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `history`, 16, ps)
 //line views/vteam/Detail.html:162
 	qw422016.N().S(`
           `)
@@ -432,7 +432,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:179
-	components.StreamSVGRef(qw422016, `users`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `users`, 16, ps)
 //line views/vteam/Detail.html:179
 	qw422016.N().S(`
           `)
@@ -482,7 +482,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vteam/Detail.html:196
-	components.StreamSVGRef(qw422016, `permission`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `permission`, 16, ps)
 //line views/vteam/Detail.html:196
 	qw422016.N().S(`
           `)

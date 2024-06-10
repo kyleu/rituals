@@ -91,7 +91,7 @@
         <input id="accordion-VotesByStoryID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`vote`) %} checked="checked"{% endif %} />
         <label for="accordion-VotesByStoryID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`vote-yea`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`vote-yea`, 16, ps) %}
           {%s util.StringPlural(len(p.RelVotesByStoryID), "Vote") %} by [Story ID]
         </label>
         <div class="bd"><div><div>

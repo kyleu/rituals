@@ -59,10 +59,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 
 		n := ps.Profile.Clone()
 
-		referrerDefault := frm.GetStringOpt("referrer")
-		if referrerDefault == "" {
-			referrerDefault = cutil.DefaultProfilePath
-		}
+		referrerDefault := util.OrDefault(frm.GetStringOpt("referrer"), cutil.DefaultProfilePath)
 
 		n.Name = frm.GetStringOpt("name")
 		n.Mode = frm.GetStringOpt("mode")

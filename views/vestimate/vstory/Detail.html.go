@@ -226,7 +226,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vestimate/vstory/Detail.html:94
-	components.StreamSVGRef(qw422016, `vote-yea`, 16, 16, `icon`, ps)
+	components.StreamSVGInline(qw422016, `vote-yea`, 16, ps)
 //line views/vestimate/vstory/Detail.html:94
 	qw422016.N().S(`
           `)

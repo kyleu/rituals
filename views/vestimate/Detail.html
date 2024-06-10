@@ -104,7 +104,7 @@
         <input id="accordion-EstimateHistoriesByEstimateID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`ehistory`) %} checked="checked"{% endif %} />
         <label for="accordion-EstimateHistoriesByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`history`, 16, ps) %}
           {%s util.StringPlural(len(p.RelEstimateHistoriesByEstimateID), "History") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>
@@ -121,7 +121,7 @@
         <input id="accordion-EstimateMembersByEstimateID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`emember`) %} checked="checked"{% endif %} />
         <label for="accordion-EstimateMembersByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelEstimateMembersByEstimateID), "Member") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>
@@ -138,7 +138,7 @@
         <input id="accordion-EstimatePermissionsByEstimateID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`epermission`) %} checked="checked"{% endif %} />
         <label for="accordion-EstimatePermissionsByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`permission`, 16, ps) %}
           {%s util.StringPlural(len(p.RelEstimatePermissionsByEstimateID), "Permission") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>
@@ -155,7 +155,7 @@
         <input id="accordion-StoriesByEstimateID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`story`) %} checked="checked"{% endif %} />
         <label for="accordion-StoriesByEstimateID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`story`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`story`, 16, ps) %}
           {%s util.StringPlural(len(p.RelStoriesByEstimateID), "Story") %} by [Estimate ID]
         </label>
         <div class="bd"><div><div>

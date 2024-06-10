@@ -104,7 +104,7 @@
         <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`feedback`) %} checked="checked"{% endif %} />
         <label for="accordion-FeedbacksByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`comment`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`comment`, 16, ps) %}
           {%s util.StringPlural(len(p.RelFeedbacksByRetroID), "Feedback") %} by [Retro ID]
         </label>
         <div class="bd"><div><div>
@@ -121,7 +121,7 @@
         <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rhistory`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroHistoriesByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`history`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`history`, 16, ps) %}
           {%s util.StringPlural(len(p.RelRetroHistoriesByRetroID), "History") %} by [Retro ID]
         </label>
         <div class="bd"><div><div>
@@ -138,7 +138,7 @@
         <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rmember`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroMembersByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`users`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`users`, 16, ps) %}
           {%s util.StringPlural(len(p.RelRetroMembersByRetroID), "Member") %} by [Retro ID]
         </label>
         <div class="bd"><div><div>
@@ -155,7 +155,7 @@
         <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`rpermission`) %} checked="checked"{% endif %} />
         <label for="accordion-RetroPermissionsByRetroID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`permission`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`permission`, 16, ps) %}
           {%s util.StringPlural(len(p.RelRetroPermissionsByRetroID), "Permission") %} by [Retro ID]
         </label>
         <div class="bd"><div><div>
