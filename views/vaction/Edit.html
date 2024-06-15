@@ -21,12 +21,11 @@
     {%- if p.IsNew -%}
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`action`, ps) %} New Action</h3>
-    <form action="/admin/db/action/_new" class="mt" method="post">
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete action [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %}Delete</button></a></div>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete action [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
     <h3>{%= components.SVGIcon(`action`, ps) %} Edit Action [{%s p.Model.String() %}]</h3>
-    <form action="" method="post">
     {%- endif -%}
+    <form action="{%s util.Choose(p.IsNew, `/admin/db/action/_new`, ``) %}" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= edit.UUIDTable("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}

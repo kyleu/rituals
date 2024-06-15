@@ -57,7 +57,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vdatabase/Results.html:27
 	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/Results.html:27
-	qw422016.N().S(`Table [`)
+	qw422016.N().S(` Table [`)
 //line views/vdatabase/Results.html:27
 	if p.Schema != "default" {
 //line views/vdatabase/Results.html:27

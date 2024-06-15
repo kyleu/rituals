@@ -31,11 +31,11 @@
         <tr>
           <td class="nowrap">
             <a href="/admin/db/estimate/member/{%= view.UUID(&model.EstimateID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGSimple("estimate", 18, ps) %}</a>
+            <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGLink(`estimate`, ps) %}</a>
           </td>
           <td class="nowrap">
             <a href="/admin/db/estimate/member/{%= view.UUID(&model.EstimateID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGSimple("profile", 18, ps) %}</a>
+            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>

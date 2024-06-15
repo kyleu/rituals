@@ -3,6 +3,7 @@
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/estimate/epermission"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
@@ -19,12 +20,11 @@
     {%- if p.IsNew -%}
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} New Permission</h3>
-    <form action="/admin/db/estimate/permission/_new" class="mt" method="post">
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete permission [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %}Delete</button></a></div>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete permission [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} Edit Permission [{%s p.Model.String() %}]</h3>
-    <form action="" method="post">
     {%- endif -%}
+    <form action="{%s util.Choose(p.IsNew, `/admin/db/estimate/permission/_new`, ``) %}" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= edit.UUIDTable("estimateID", "input-estimateID", "Estimate ID", &p.Model.EstimateID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}

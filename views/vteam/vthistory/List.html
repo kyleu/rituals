@@ -19,10 +19,10 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right mrs large-buttons">
-      {%- if len(p.Models) > 0 -%}<a href="/admin/db/team/history/_random"><button>{%= components.SVGButton("gift", ps) %}Random</button></a>{%- endif -%}
-      <a href="/admin/db/team/history/_new"><button>{%= components.SVGButton("plus", ps) %}New</button></a>
+      {%- if len(p.Models) > 0 -%}<a href="/admin/db/team/history/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
+      <a href="/admin/db/team/history/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
-    <h3>{%= components.SVGIcon(`history`, ps) %}{%s ps.Title %}</h3>
+    <h3>{%= components.SVGIcon(`history`, ps) %} {%s ps.Title %}</h3>
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No histories available</em></div>
     {%- else -%}

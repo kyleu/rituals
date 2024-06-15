@@ -53,83 +53,86 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		components.StreamSVGIcon(qw422016, `estimate`, ps)
 //line views/vestimate/Edit.html:23
 		qw422016.N().S(` New Estimate</h3>
-    <form action="/admin/db/estimate/_new" class="mt" method="post">
 `)
-//line views/vestimate/Edit.html:25
+//line views/vestimate/Edit.html:24
 	} else {
-//line views/vestimate/Edit.html:25
+//line views/vestimate/Edit.html:24
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vestimate/Edit.html:26
+//line views/vestimate/Edit.html:25
 		qw422016.E().S(p.Model.WebPath())
-//line views/vestimate/Edit.html:26
+//line views/vestimate/Edit.html:25
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete estimate [`)
-//line views/vestimate/Edit.html:26
+//line views/vestimate/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vestimate/Edit.html:26
+//line views/vestimate/Edit.html:25
 		qw422016.N().S(`]?"><button>`)
-//line views/vestimate/Edit.html:26
+//line views/vestimate/Edit.html:25
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vestimate/Edit.html:26
-		qw422016.N().S(`Delete</button></a></div>
+//line views/vestimate/Edit.html:25
+		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vestimate/Edit.html:27
+//line views/vestimate/Edit.html:26
 		components.StreamSVGIcon(qw422016, `estimate`, ps)
-//line views/vestimate/Edit.html:27
+//line views/vestimate/Edit.html:26
 		qw422016.N().S(` Edit Estimate [`)
-//line views/vestimate/Edit.html:27
+//line views/vestimate/Edit.html:26
 		qw422016.E().S(p.Model.String())
-//line views/vestimate/Edit.html:27
+//line views/vestimate/Edit.html:26
 		qw422016.N().S(`]</h3>
-    <form action="" method="post">
 `)
-//line views/vestimate/Edit.html:29
+//line views/vestimate/Edit.html:27
 	}
-//line views/vestimate/Edit.html:29
-	qw422016.N().S(`      <table class="mt expanded">
+//line views/vestimate/Edit.html:27
+	qw422016.N().S(`    <form action="`)
+//line views/vestimate/Edit.html:28
+	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/estimate/_new`, ``))
+//line views/vestimate/Edit.html:28
+	qw422016.N().S(`" class="mt" method="post">
+      <table class="mt expanded">
         <tbody>
           `)
-//line views/vestimate/Edit.html:32
+//line views/vestimate/Edit.html:31
 	if p.IsNew {
-//line views/vestimate/Edit.html:32
+//line views/vestimate/Edit.html:31
 		edit.StreamUUIDTable(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/Edit.html:32
+//line views/vestimate/Edit.html:31
 	}
+//line views/vestimate/Edit.html:31
+	qw422016.N().S(`
+          `)
+//line views/vestimate/Edit.html:32
+	edit.StreamStringTable(qw422016, "slug", "", "Slug", p.Model.Slug, 5, "String text")
 //line views/vestimate/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:33
-	edit.StreamStringTable(qw422016, "slug", "", "Slug", p.Model.Slug, 5, "String text")
+	edit.StreamStringTable(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
 //line views/vestimate/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:34
-	edit.StreamStringTable(qw422016, "title", "", "Title", p.Model.Title, 5, "String text")
+	edit.StreamStringTable(qw422016, "icon", "", "Icon", p.Model.Icon, 5, "String text")
 //line views/vestimate/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:35
-	edit.StreamStringTable(qw422016, "icon", "", "Icon", p.Model.Icon, 5, "String text")
+	edit.StreamSelectTable(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help())
 //line views/vestimate/Edit.html:35
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:36
-	edit.StreamSelectTable(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help())
+	edit.StreamUUIDTable(qw422016, "teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vestimate/Edit.html:36
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:37
-	edit.StreamUUIDTable(qw422016, "teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
+	edit.StreamUUIDTable(qw422016, "sprintID", "input-sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
 //line views/vestimate/Edit.html:37
 	qw422016.N().S(`
           `)
 //line views/vestimate/Edit.html:38
-	edit.StreamUUIDTable(qw422016, "sprintID", "input-sprintID", "Sprint ID", p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)")
-//line views/vestimate/Edit.html:38
-	qw422016.N().S(`
-          `)
-//line views/vestimate/Edit.html:39
 	edit.StreamTextareaTable(qw422016, "choices", "", "Choices", 8, util.ToJSON(p.Model.Choices), 5, "Comma-separated list of values")
-//line views/vestimate/Edit.html:39
+//line views/vestimate/Edit.html:38
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -143,31 +146,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 }
 
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 }
 
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	qs422016 := string(qb422016.B)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 	return qs422016
-//line views/vestimate/Edit.html:51
+//line views/vestimate/Edit.html:50
 }

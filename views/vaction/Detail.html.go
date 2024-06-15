@@ -48,7 +48,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Detail.html:22
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vaction/Detail.html:22
-	qw422016.N().S(`JSON</button></a>
+	qw422016.N().S(` JSON</button></a>
       <a href="`)
 //line views/vaction/Detail.html:23
 	qw422016.E().S(p.Model.WebPath())
@@ -57,11 +57,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Detail.html:23
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vaction/Detail.html:23
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vaction/Detail.html:25
 	components.StreamSVGIcon(qw422016, `action`, ps)
+//line views/vaction/Detail.html:25
+	qw422016.N().S(` `)
 //line views/vaction/Detail.html:25
 	qw422016.E().S(p.Model.TitleString())
 //line views/vaction/Detail.html:25
@@ -122,7 +124,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vaction/Detail.html:46
 	qw422016.N().S(`">`)
 //line views/vaction/Detail.html:46
-	components.StreamSVGSimple(qw422016, "profile", 18, ps)
+	components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vaction/Detail.html:46
 	qw422016.N().S(`</a>
             </td>

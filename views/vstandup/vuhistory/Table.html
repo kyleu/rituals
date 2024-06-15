@@ -27,7 +27,7 @@
           <td><a href="/admin/db/standup/history/{%u model.Slug %}">{%= view.String(model.Slug) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGSimple("standup", 18, ps) %}</a>
+            <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGLink(`standup`, ps) %}</a>
           </td>
           <td>{%= view.String(model.StandupName) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

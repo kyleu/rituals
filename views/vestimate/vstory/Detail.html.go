@@ -56,7 +56,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:30
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vestimate/vstory/Detail.html:30
-	qw422016.N().S(`JSON</button></a>
+	qw422016.N().S(` JSON</button></a>
       <a href="`)
 //line views/vestimate/vstory/Detail.html:31
 	qw422016.E().S(p.Model.WebPath())
@@ -65,11 +65,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:31
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vestimate/vstory/Detail.html:31
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vestimate/vstory/Detail.html:33
 	components.StreamSVGIcon(qw422016, `story`, ps)
+//line views/vestimate/vstory/Detail.html:33
+	qw422016.N().S(` `)
 //line views/vestimate/vstory/Detail.html:33
 	qw422016.E().S(p.Model.TitleString())
 //line views/vestimate/vstory/Detail.html:33
@@ -110,7 +112,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:46
 	qw422016.N().S(`">`)
 //line views/vestimate/vstory/Detail.html:46
-	components.StreamSVGSimple(qw422016, "estimate", 18, ps)
+	components.StreamSVGLink(qw422016, `estimate`, ps)
 //line views/vestimate/vstory/Detail.html:46
 	qw422016.N().S(`</a>
             </td>
@@ -147,7 +149,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vestimate/vstory/Detail.html:57
 	qw422016.N().S(`">`)
 //line views/vestimate/vstory/Detail.html:57
-	components.StreamSVGSimple(qw422016, "profile", 18, ps)
+	components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vestimate/vstory/Detail.html:57
 	qw422016.N().S(`</a>
             </td>

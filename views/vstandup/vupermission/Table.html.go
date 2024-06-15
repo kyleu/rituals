@@ -110,7 +110,7 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 //line views/vstandup/vupermission/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Table.html:30
-		components.StreamSVGSimple(qw422016, "standup", 18, ps)
+		components.StreamSVGLink(qw422016, `standup`, ps)
 //line views/vstandup/vupermission/Table.html:30
 		qw422016.N().S(`</a>
           </td>

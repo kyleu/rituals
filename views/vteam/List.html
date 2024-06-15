@@ -20,10 +20,10 @@
   <div class="card">
     <div class="right">{%= edit.SearchForm("", "q", "Search Teams", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
-      {%- if len(p.Models) > 0 -%}<a href="/admin/db/team/_random"><button>{%= components.SVGButton("gift", ps) %}Random</button></a>{%- endif -%}
-      <a href="/admin/db/team/_new"><button>{%= components.SVGButton("plus", ps) %}New</button></a>
+      {%- if len(p.Models) > 0 -%}<a href="/admin/db/team/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
+      <a href="/admin/db/team/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
-    <h3>{%= components.SVGIcon(`team`, ps) %}{%s ps.Title %}</h3>
+    <h3>{%= components.SVGIcon(`team`, ps) %} {%s ps.Title %}</h3>
     <div class="clear"></div>
     {%- if p.SearchQuery != "" -%}
     <hr />

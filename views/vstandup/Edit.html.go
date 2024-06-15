@@ -12,47 +12,47 @@ import (
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/standup"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vstandup/Edit.html:12
+//line views/vstandup/Edit.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vstandup/Edit.html:12
+//line views/vstandup/Edit.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vstandup/Edit.html:12
+//line views/vstandup/Edit.html:13
 type Edit struct {
 	layout.Basic
 	Model *standup.Standup
 	IsNew bool
 }
 
-//line views/vstandup/Edit.html:18
+//line views/vstandup/Edit.html:19
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/Edit.html:18
+//line views/vstandup/Edit.html:19
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vstandup/Edit.html:20
+//line views/vstandup/Edit.html:21
 	if p.IsNew {
-//line views/vstandup/Edit.html:20
+//line views/vstandup/Edit.html:21
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vstandup/Edit.html:22
+//line views/vstandup/Edit.html:23
 		components.StreamSVGIcon(qw422016, `standup`, ps)
-//line views/vstandup/Edit.html:22
+//line views/vstandup/Edit.html:23
 		qw422016.N().S(` New Standup</h3>
-    <form action="/admin/db/standup/_new" class="mt" method="post">
 `)
 //line views/vstandup/Edit.html:24
 	} else {
@@ -69,7 +69,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vstandup/Edit.html:25
 		components.StreamSVGButton(qw422016, "times", ps)
 //line views/vstandup/Edit.html:25
-		qw422016.N().S(`Delete</button></a></div>
+		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
 //line views/vstandup/Edit.html:26
 		components.StreamSVGIcon(qw422016, `standup`, ps)
@@ -79,12 +79,16 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.E().S(p.Model.String())
 //line views/vstandup/Edit.html:26
 		qw422016.N().S(`]</h3>
-    <form action="" method="post">
 `)
-//line views/vstandup/Edit.html:28
+//line views/vstandup/Edit.html:27
 	}
+//line views/vstandup/Edit.html:27
+	qw422016.N().S(`    <form action="`)
 //line views/vstandup/Edit.html:28
-	qw422016.N().S(`      <table class="mt expanded">
+	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/standup/_new`, ``))
+//line views/vstandup/Edit.html:28
+	qw422016.N().S(`" class="mt" method="post">
+      <table class="mt expanded">
         <tbody>
           `)
 //line views/vstandup/Edit.html:31

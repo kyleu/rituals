@@ -12,47 +12,47 @@ import (
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/enum"
 	"github.com/kyleu/rituals/app/sprint/smember"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views/components"
 	"github.com/kyleu/rituals/views/components/edit"
 	"github.com/kyleu/rituals/views/layout"
 )
 
-//line views/vsprint/vsmember/Edit.html:12
+//line views/vsprint/vsmember/Edit.html:13
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vsprint/vsmember/Edit.html:12
+//line views/vsprint/vsmember/Edit.html:13
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vsprint/vsmember/Edit.html:12
+//line views/vsprint/vsmember/Edit.html:13
 type Edit struct {
 	layout.Basic
 	Model *smember.SprintMember
 	IsNew bool
 }
 
-//line views/vsprint/vsmember/Edit.html:18
+//line views/vsprint/vsmember/Edit.html:19
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vsmember/Edit.html:18
+//line views/vsprint/vsmember/Edit.html:19
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vsprint/vsmember/Edit.html:20
+//line views/vsprint/vsmember/Edit.html:21
 	if p.IsNew {
-//line views/vsprint/vsmember/Edit.html:20
+//line views/vsprint/vsmember/Edit.html:21
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vsprint/vsmember/Edit.html:22
+//line views/vsprint/vsmember/Edit.html:23
 		components.StreamSVGIcon(qw422016, `users`, ps)
-//line views/vsprint/vsmember/Edit.html:22
+//line views/vsprint/vsmember/Edit.html:23
 		qw422016.N().S(` New Member</h3>
-    <form action="/admin/db/sprint/member/_new" class="mt" method="post">
 `)
 //line views/vsprint/vsmember/Edit.html:24
 	} else {
@@ -69,7 +69,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vsprint/vsmember/Edit.html:25
 		components.StreamSVGButton(qw422016, "times", ps)
 //line views/vsprint/vsmember/Edit.html:25
-		qw422016.N().S(`Delete</button></a></div>
+		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
 //line views/vsprint/vsmember/Edit.html:26
 		components.StreamSVGIcon(qw422016, `users`, ps)
@@ -79,12 +79,16 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.E().S(p.Model.String())
 //line views/vsprint/vsmember/Edit.html:26
 		qw422016.N().S(`]</h3>
-    <form action="" method="post">
 `)
-//line views/vsprint/vsmember/Edit.html:28
+//line views/vsprint/vsmember/Edit.html:27
 	}
+//line views/vsprint/vsmember/Edit.html:27
+	qw422016.N().S(`    <form action="`)
 //line views/vsprint/vsmember/Edit.html:28
-	qw422016.N().S(`      <table class="mt expanded">
+	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/sprint/member/_new`, ``))
+//line views/vsprint/vsmember/Edit.html:28
+	qw422016.N().S(`" class="mt" method="post">
+      <table class="mt expanded">
         <tbody>
           `)
 //line views/vsprint/vsmember/Edit.html:31

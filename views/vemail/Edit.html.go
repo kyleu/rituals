@@ -52,83 +52,86 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		components.StreamSVGIcon(qw422016, `email`, ps)
 //line views/vemail/Edit.html:22
 		qw422016.N().S(` New Email</h3>
-    <form action="/admin/db/email/_new" class="mt" method="post">
 `)
-//line views/vemail/Edit.html:24
+//line views/vemail/Edit.html:23
 	} else {
-//line views/vemail/Edit.html:24
+//line views/vemail/Edit.html:23
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vemail/Edit.html:25
+//line views/vemail/Edit.html:24
 		qw422016.E().S(p.Model.WebPath())
-//line views/vemail/Edit.html:25
+//line views/vemail/Edit.html:24
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete email [`)
-//line views/vemail/Edit.html:25
+//line views/vemail/Edit.html:24
 		qw422016.E().S(p.Model.String())
-//line views/vemail/Edit.html:25
+//line views/vemail/Edit.html:24
 		qw422016.N().S(`]?"><button>`)
-//line views/vemail/Edit.html:25
+//line views/vemail/Edit.html:24
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vemail/Edit.html:25
-		qw422016.N().S(`Delete</button></a></div>
+//line views/vemail/Edit.html:24
+		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vemail/Edit.html:26
+//line views/vemail/Edit.html:25
 		components.StreamSVGIcon(qw422016, `email`, ps)
-//line views/vemail/Edit.html:26
+//line views/vemail/Edit.html:25
 		qw422016.N().S(` Edit Email [`)
-//line views/vemail/Edit.html:26
+//line views/vemail/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vemail/Edit.html:26
+//line views/vemail/Edit.html:25
 		qw422016.N().S(`]</h3>
-    <form action="" method="post">
 `)
-//line views/vemail/Edit.html:28
+//line views/vemail/Edit.html:26
 	}
-//line views/vemail/Edit.html:28
-	qw422016.N().S(`      <table class="mt expanded">
+//line views/vemail/Edit.html:26
+	qw422016.N().S(`    <form action="`)
+//line views/vemail/Edit.html:27
+	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/email/_new`, ``))
+//line views/vemail/Edit.html:27
+	qw422016.N().S(`" class="mt" method="post">
+      <table class="mt expanded">
         <tbody>
           `)
-//line views/vemail/Edit.html:31
+//line views/vemail/Edit.html:30
 	if p.IsNew {
-//line views/vemail/Edit.html:31
+//line views/vemail/Edit.html:30
 		edit.StreamUUIDTable(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vemail/Edit.html:31
+//line views/vemail/Edit.html:30
 	}
+//line views/vemail/Edit.html:30
+	qw422016.N().S(`
+          `)
+//line views/vemail/Edit.html:31
+	edit.StreamTextareaTable(qw422016, "recipients", "", "Recipients", 8, util.ToJSON(p.Model.Recipients), 5, "Comma-separated list of values")
 //line views/vemail/Edit.html:31
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:32
-	edit.StreamTextareaTable(qw422016, "recipients", "", "Recipients", 8, util.ToJSON(p.Model.Recipients), 5, "Comma-separated list of values")
+	edit.StreamStringTable(qw422016, "subject", "", "Subject", p.Model.Subject, 5, "String text")
 //line views/vemail/Edit.html:32
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:33
-	edit.StreamStringTable(qw422016, "subject", "", "Subject", p.Model.Subject, 5, "String text")
+	edit.StreamTextareaTable(qw422016, "data", "", "Data", 8, util.ToJSON(p.Model.Data), 5, "JSON object")
 //line views/vemail/Edit.html:33
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:34
-	edit.StreamTextareaTable(qw422016, "data", "", "Data", 8, util.ToJSON(p.Model.Data), 5, "JSON object")
+	edit.StreamStringTable(qw422016, "plain", "", "Plain", p.Model.Plain, 5, "String text")
 //line views/vemail/Edit.html:34
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:35
-	edit.StreamStringTable(qw422016, "plain", "", "Plain", p.Model.Plain, 5, "String text")
+	edit.StreamTextareaTable(qw422016, "html", "", "HTML", 8, p.Model.HTML, 5, "HTML code, in string form")
 //line views/vemail/Edit.html:35
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:36
-	edit.StreamTextareaTable(qw422016, "html", "", "HTML", 8, p.Model.HTML, 5, "HTML code, in string form")
+	edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
 //line views/vemail/Edit.html:36
 	qw422016.N().S(`
           `)
 //line views/vemail/Edit.html:37
-	edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vemail/Edit.html:37
-	qw422016.N().S(`
-          `)
-//line views/vemail/Edit.html:38
 	edit.StreamStringTable(qw422016, "status", "", "Status", p.Model.Status, 5, "String text")
-//line views/vemail/Edit.html:38
+//line views/vemail/Edit.html:37
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -141,31 +144,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 }
 
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	p.StreamBody(qw422016, as, ps)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 }
 
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	p.WriteBody(qb422016, as, ps)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	qs422016 := string(qb422016.B)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 	return qs422016
-//line views/vemail/Edit.html:49
+//line views/vemail/Edit.html:48
 }

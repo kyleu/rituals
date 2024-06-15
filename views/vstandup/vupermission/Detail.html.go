@@ -47,7 +47,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:21
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vstandup/vupermission/Detail.html:21
-	qw422016.N().S(`JSON</button></a>
+	qw422016.N().S(` JSON</button></a>
       <a href="`)
 //line views/vstandup/vupermission/Detail.html:22
 	qw422016.E().S(p.Model.WebPath())
@@ -56,11 +56,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:22
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vstandup/vupermission/Detail.html:22
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vstandup/vupermission/Detail.html:24
 	components.StreamSVGIcon(qw422016, `permission`, ps)
+//line views/vstandup/vupermission/Detail.html:24
+	qw422016.N().S(` `)
 //line views/vstandup/vupermission/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
 //line views/vstandup/vupermission/Detail.html:24
@@ -93,7 +95,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Detail.html:33
-	components.StreamSVGSimple(qw422016, "standup", 18, ps)
+	components.StreamSVGLink(qw422016, `standup`, ps)
 //line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`</a>
             </td>

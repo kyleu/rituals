@@ -38,11 +38,11 @@
           <td>{%s model.Status.String() %}</td>
           <td class="nowrap">
             {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGSimple("team", 18, ps) %}</a>{% endif %}
+            {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
           </td>
           <td class="nowrap">
             {%= view.UUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGSimple("sprint", 18, ps) %}</a>{% endif %}
+            {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
           </td>
           <td>{%= view.Timestamp(&model.Created) %}</td>
           <td>{%= view.Timestamp(model.Updated) %}</td>

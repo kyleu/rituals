@@ -45,7 +45,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vdatabase/List.html:19
 	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/List.html:19
-	qw422016.N().S(`Databases</h3>
+	qw422016.N().S(` Databases</h3>
     <em>`)
 //line views/vdatabase/List.html:20
 	qw422016.E().S(util.StringPlural(len(p.Keys), "database"))
@@ -72,6 +72,8 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`">`)
 //line views/vdatabase/List.html:26
 		components.StreamSVGIcon(qw422016, `database`, ps)
+//line views/vdatabase/List.html:26
+		qw422016.N().S(` `)
 //line views/vdatabase/List.html:26
 		qw422016.E().S(svc.Key)
 //line views/vdatabase/List.html:26

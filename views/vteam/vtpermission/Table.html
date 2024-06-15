@@ -27,7 +27,7 @@
         <tr>
           <td class="nowrap">
             <a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGSimple("team", 18, ps) %}</a>
+            <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGLink(`team`, ps) %}</a>
           </td>
           <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
           <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>

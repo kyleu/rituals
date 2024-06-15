@@ -45,7 +45,7 @@ func StreamAuthentication(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vauth/Authentication.html:18
 	components.StreamSVGIcon(qw422016, `profile`, ps)
 //line views/vauth/Authentication.html:18
-	qw422016.N().S(`Authentication</h3>
+	qw422016.N().S(` Authentication</h3>
 `)
 //line views/vauth/Authentication.html:19
 	if len(prvs) == 0 {

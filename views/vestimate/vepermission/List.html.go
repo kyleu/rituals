@@ -52,7 +52,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vepermission/List.html:22
 		components.StreamSVGButton(qw422016, "gift", ps)
 //line views/vestimate/vepermission/List.html:22
-		qw422016.N().S(`Random</button></a>`)
+		qw422016.N().S(` Random</button></a>`)
 //line views/vestimate/vepermission/List.html:22
 	}
 //line views/vestimate/vepermission/List.html:22
@@ -60,11 +60,13 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vestimate/vepermission/List.html:23
 	components.StreamSVGButton(qw422016, "plus", ps)
 //line views/vestimate/vepermission/List.html:23
-	qw422016.N().S(`New</button></a>
+	qw422016.N().S(` New</button></a>
     </div>
     <h3>`)
 //line views/vestimate/vepermission/List.html:25
 	components.StreamSVGIcon(qw422016, `permission`, ps)
+//line views/vestimate/vepermission/List.html:25
+	qw422016.N().S(` `)
 //line views/vestimate/vepermission/List.html:25
 	qw422016.E().S(ps.Title)
 //line views/vestimate/vepermission/List.html:25

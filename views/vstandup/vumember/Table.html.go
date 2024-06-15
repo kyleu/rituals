@@ -118,7 +118,7 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 //line views/vstandup/vumember/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:34
-		components.StreamSVGSimple(qw422016, "standup", 18, ps)
+		components.StreamSVGLink(qw422016, `standup`, ps)
 //line views/vstandup/vumember/Table.html:34
 		qw422016.N().S(`</a>
           </td>
@@ -152,7 +152,7 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 //line views/vstandup/vumember/Table.html:38
 		qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:38
-		components.StreamSVGSimple(qw422016, "profile", 18, ps)
+		components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vstandup/vumember/Table.html:38
 		qw422016.N().S(`</a>
           </td>

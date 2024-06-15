@@ -49,7 +49,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:23
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vretro/vfeedback/Detail.html:23
-	qw422016.N().S(`JSON</button></a>
+	qw422016.N().S(` JSON</button></a>
       <a href="`)
 //line views/vretro/vfeedback/Detail.html:24
 	qw422016.E().S(p.Model.WebPath())
@@ -58,11 +58,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:24
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vretro/vfeedback/Detail.html:24
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vretro/vfeedback/Detail.html:26
 	components.StreamSVGIcon(qw422016, `comment`, ps)
+//line views/vretro/vfeedback/Detail.html:26
+	qw422016.N().S(` `)
 //line views/vretro/vfeedback/Detail.html:26
 	qw422016.E().S(p.Model.TitleString())
 //line views/vretro/vfeedback/Detail.html:26
@@ -103,7 +105,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:39
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:39
-	components.StreamSVGSimple(qw422016, "retro", 18, ps)
+	components.StreamSVGLink(qw422016, `retro`, ps)
 //line views/vretro/vfeedback/Detail.html:39
 	qw422016.N().S(`</a>
             </td>
@@ -140,7 +142,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vretro/vfeedback/Detail.html:50
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:50
-	components.StreamSVGSimple(qw422016, "profile", 18, ps)
+	components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vretro/vfeedback/Detail.html:50
 	qw422016.N().S(`</a>
             </td>

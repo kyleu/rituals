@@ -18,10 +18,10 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
-      <a href="#modal-sprintHistory"><button type="button">{%= components.SVGButton("file", ps) %}JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %}Edit</button></a>
+      <a href="#modal-sprintHistory"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
-    <h3>{%= components.SVGIcon(`history`, ps) %}{%s p.Model.TitleString() %}</h3>
+    <h3>{%= components.SVGIcon(`history`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/admin/db/sprint/history"><em>History</em></a></div>
     <div class="mt overflow full-width">
       <table>
@@ -34,7 +34,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.SprintID) %}{% if p.SprintBySprintID != nil %} ({%s p.SprintBySprintID.TitleString() %}){% endif %}
-              <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGSimple("sprint", 18, ps) %}</a>
+              <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGLink(`sprint`, ps) %}</a>
             </td>
           </tr>
           <tr>

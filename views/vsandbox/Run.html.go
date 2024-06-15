@@ -45,6 +45,8 @@ func (p *Run) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pag
 //line views/vsandbox/Run.html:19
 	components.StreamSVGIcon(qw422016, p.Icon, ps)
 //line views/vsandbox/Run.html:19
+	qw422016.N().S(` `)
+//line views/vsandbox/Run.html:19
 	qw422016.E().S(p.Title)
 //line views/vsandbox/Run.html:19
 	qw422016.N().S(`</h3>

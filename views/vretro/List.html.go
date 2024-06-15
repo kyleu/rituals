@@ -61,7 +61,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/List.html:27
 		components.StreamSVGButton(qw422016, "gift", ps)
 //line views/vretro/List.html:27
-		qw422016.N().S(`Random</button></a>`)
+		qw422016.N().S(` Random</button></a>`)
 //line views/vretro/List.html:27
 	}
 //line views/vretro/List.html:27
@@ -69,11 +69,13 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/List.html:28
 	components.StreamSVGButton(qw422016, "plus", ps)
 //line views/vretro/List.html:28
-	qw422016.N().S(`New</button></a>
+	qw422016.N().S(` New</button></a>
     </div>
     <h3>`)
 //line views/vretro/List.html:30
 	components.StreamSVGIcon(qw422016, `retro`, ps)
+//line views/vretro/List.html:30
+	qw422016.N().S(` `)
 //line views/vretro/List.html:30
 	qw422016.E().S(ps.Title)
 //line views/vretro/List.html:30

@@ -55,7 +55,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vdatabase/Statement.html:21
 	components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/Statement.html:21
-	qw422016.N().S(`Statement [`)
+	qw422016.N().S(` Statement [`)
 //line views/vdatabase/Statement.html:21
 	qw422016.N().D(p.Statement.Index)
 //line views/vdatabase/Statement.html:21

@@ -107,7 +107,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 //line views/vestimate/vstory/vvote/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:31
-		components.StreamSVGSimple(qw422016, "story", 18, ps)
+		components.StreamSVGLink(qw422016, `story`, ps)
 //line views/vestimate/vstory/vvote/Table.html:31
 		qw422016.N().S(`</a>
           </td>
@@ -141,7 +141,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 //line views/vestimate/vstory/vvote/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:35
-		components.StreamSVGSimple(qw422016, "profile", 18, ps)
+		components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vestimate/vstory/vvote/Table.html:35
 		qw422016.N().S(`</a>
           </td>

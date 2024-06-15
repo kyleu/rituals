@@ -50,7 +50,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vumember/Detail.html:24
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vstandup/vumember/Detail.html:24
-	qw422016.N().S(`JSON</button></a>
+	qw422016.N().S(` JSON</button></a>
       <a href="`)
 //line views/vstandup/vumember/Detail.html:25
 	qw422016.E().S(p.Model.WebPath())
@@ -59,11 +59,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vumember/Detail.html:25
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vstandup/vumember/Detail.html:25
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vstandup/vumember/Detail.html:27
 	components.StreamSVGIcon(qw422016, `users`, ps)
+//line views/vstandup/vumember/Detail.html:27
+	qw422016.N().S(` `)
 //line views/vstandup/vumember/Detail.html:27
 	qw422016.E().S(p.Model.TitleString())
 //line views/vstandup/vumember/Detail.html:27
@@ -96,7 +98,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vumember/Detail.html:36
 	qw422016.N().S(`">`)
 //line views/vstandup/vumember/Detail.html:36
-	components.StreamSVGSimple(qw422016, "standup", 18, ps)
+	components.StreamSVGLink(qw422016, `standup`, ps)
 //line views/vstandup/vumember/Detail.html:36
 	qw422016.N().S(`</a>
             </td>
@@ -125,7 +127,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vstandup/vumember/Detail.html:43
 	qw422016.N().S(`">`)
 //line views/vstandup/vumember/Detail.html:43
-	components.StreamSVGSimple(qw422016, "profile", 18, ps)
+	components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vstandup/vumember/Detail.html:43
 	qw422016.N().S(`</a>
             </td>

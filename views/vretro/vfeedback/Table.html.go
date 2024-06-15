@@ -123,7 +123,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 //line views/vretro/vfeedback/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:35
-		components.StreamSVGSimple(qw422016, "retro", 18, ps)
+		components.StreamSVGLink(qw422016, `retro`, ps)
 //line views/vretro/vfeedback/Table.html:35
 		qw422016.N().S(`</a>
           </td>
@@ -154,7 +154,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 //line views/vretro/vfeedback/Table.html:40
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:40
-		components.StreamSVGSimple(qw422016, "profile", 18, ps)
+		components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vretro/vfeedback/Table.html:40
 		qw422016.N().S(`</a>
           </td>

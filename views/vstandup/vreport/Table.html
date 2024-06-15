@@ -31,12 +31,12 @@
           <td><a href="/admin/db/standup/report/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGSimple("standup", 18, ps) %}</a>
+            <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGLink(`standup`, ps) %}</a>
           </td>
           <td>{%= view.TimestampDay(&model.Day) %}</td>
           <td class="nowrap">
             {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGSimple("profile", 18, ps) %}</a>
+            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td>{%= view.String(model.Content) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

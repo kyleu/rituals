@@ -162,7 +162,7 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 //line views/vretro/Table.html:42
 			qw422016.N().S(`">`)
 //line views/vretro/Table.html:42
-			components.StreamSVGSimple(qw422016, "team", 18, ps)
+			components.StreamSVGLink(qw422016, `team`, ps)
 //line views/vretro/Table.html:42
 			qw422016.N().S(`</a>`)
 //line views/vretro/Table.html:42
@@ -200,7 +200,7 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 //line views/vretro/Table.html:46
 			qw422016.N().S(`">`)
 //line views/vretro/Table.html:46
-			components.StreamSVGSimple(qw422016, "sprint", 18, ps)
+			components.StreamSVGLink(qw422016, `sprint`, ps)
 //line views/vretro/Table.html:46
 			qw422016.N().S(`</a>`)
 //line views/vretro/Table.html:46

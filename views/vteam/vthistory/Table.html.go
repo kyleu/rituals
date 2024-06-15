@@ -102,7 +102,7 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
 //line views/vteam/vthistory/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vteam/vthistory/Table.html:30
-		components.StreamSVGSimple(qw422016, "team", 18, ps)
+		components.StreamSVGLink(qw422016, `team`, ps)
 //line views/vteam/vthistory/Table.html:30
 		qw422016.N().S(`</a>
           </td>

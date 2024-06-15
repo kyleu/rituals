@@ -123,7 +123,7 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUser
 //line views/vcomment/Table.html:35
 		qw422016.N().S(`">`)
 //line views/vcomment/Table.html:35
-		components.StreamSVGSimple(qw422016, "profile", 18, ps)
+		components.StreamSVGLink(qw422016, `profile`, ps)
 //line views/vcomment/Table.html:35
 		qw422016.N().S(`</a>
           </td>
