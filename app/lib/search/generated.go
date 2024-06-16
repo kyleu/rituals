@@ -30,7 +30,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *estimate.Estimate, _ int) *result.Result {
-			return result.NewResult("estimate", m.String(), m.WebPath(), m.TitleString(), "estimate", m, m, params.Q)
+			return result.NewResult("Estimate", m.String(), m.WebPath(), m.TitleString(), "estimate", m, m, params.Q)
 		}), nil
 	}
 	retroFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -43,7 +43,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *retro.Retro, _ int) *result.Result {
-			return result.NewResult("retro", m.String(), m.WebPath(), m.TitleString(), "retro", m, m, params.Q)
+			return result.NewResult("Retro", m.String(), m.WebPath(), m.TitleString(), "retro", m, m, params.Q)
 		}), nil
 	}
 	sprintFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -56,7 +56,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *sprint.Sprint, _ int) *result.Result {
-			return result.NewResult("sprint", m.String(), m.WebPath(), m.TitleString(), "sprint", m, m, params.Q)
+			return result.NewResult("Sprint", m.String(), m.WebPath(), m.TitleString(), "sprint", m, m, params.Q)
 		}), nil
 	}
 	standupFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -69,7 +69,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *standup.Standup, _ int) *result.Result {
-			return result.NewResult("standup", m.String(), m.WebPath(), m.TitleString(), "standup", m, m, params.Q)
+			return result.NewResult("Standup", m.String(), m.WebPath(), m.TitleString(), "standup", m, m, params.Q)
 		}), nil
 	}
 	storyFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -82,7 +82,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *story.Story, _ int) *result.Result {
-			return result.NewResult("story", m.String(), m.WebPath(), m.TitleString(), "story", m, m, params.Q)
+			return result.NewResult("Story", m.String(), m.WebPath(), m.TitleString(), "story", m, m, params.Q)
 		}), nil
 	}
 	teamFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -95,7 +95,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *team.Team, _ int) *result.Result {
-			return result.NewResult("team", m.String(), m.WebPath(), m.TitleString(), "team", m, m, params.Q)
+			return result.NewResult("Team", m.String(), m.WebPath(), m.TitleString(), "team", m, m, params.Q)
 		}), nil
 	}
 	userFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -108,7 +108,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *user.User, _ int) *result.Result {
-			return result.NewResult("user", m.String(), m.WebPath(), m.TitleString(), "profile", m, m, params.Q)
+			return result.NewResult("User", m.String(), m.WebPath(), m.TitleString(), "profile", m, m, params.Q)
 		}), nil
 	}
 	return []Provider{estimateFunc, retroFunc, sprintFunc, standupFunc, storyFunc, teamFunc, userFunc}
