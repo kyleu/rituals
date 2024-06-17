@@ -83,10 +83,7 @@ func (c Comments) ToCSV() ([]string, [][]string) {
 }
 
 func (c Comments) Random() *Comment {
-	if len(c) == 0 {
-		return nil
-	}
-	return c[util.RandomInt(len(c))]
+	return util.RandomElement(c)
 }
 
 func (c Comments) Clone() Comments {

@@ -100,10 +100,7 @@ func (s StandupMembers) ToCSV() ([]string, [][]string) {
 }
 
 func (s StandupMembers) Random() *StandupMember {
-	if len(s) == 0 {
-		return nil
-	}
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }
 
 func (s StandupMembers) Clone() StandupMembers {

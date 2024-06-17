@@ -101,10 +101,7 @@ func (f Feedbacks) ToCSV() ([]string, [][]string) {
 }
 
 func (f Feedbacks) Random() *Feedback {
-	if len(f) == 0 {
-		return nil
-	}
-	return f[util.RandomInt(len(f))]
+	return util.RandomElement(f)
 }
 
 func (f Feedbacks) Clone() Feedbacks {

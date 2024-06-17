@@ -129,10 +129,7 @@ func (s StandupPermissions) ToCSV() ([]string, [][]string) {
 }
 
 func (s StandupPermissions) Random() *StandupPermission {
-	if len(s) == 0 {
-		return nil
-	}
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }
 
 func (s StandupPermissions) Clone() StandupPermissions {

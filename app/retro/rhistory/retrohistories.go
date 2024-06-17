@@ -83,10 +83,7 @@ func (r RetroHistories) ToCSV() ([]string, [][]string) {
 }
 
 func (r RetroHistories) Random() *RetroHistory {
-	if len(r) == 0 {
-		return nil
-	}
-	return r[util.RandomInt(len(r))]
+	return util.RandomElement(r)
 }
 
 func (r RetroHistories) Clone() RetroHistories {

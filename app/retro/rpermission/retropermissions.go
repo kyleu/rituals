@@ -129,10 +129,7 @@ func (r RetroPermissions) ToCSV() ([]string, [][]string) {
 }
 
 func (r RetroPermissions) Random() *RetroPermission {
-	if len(r) == 0 {
-		return nil
-	}
-	return r[util.RandomInt(len(r))]
+	return util.RandomElement(r)
 }
 
 func (r RetroPermissions) Clone() RetroPermissions {

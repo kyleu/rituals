@@ -142,5 +142,5 @@ func (m ModelServices) GetByName(name string, logger util.Logger) ModelService {
 }
 
 func (m ModelServices) Random() ModelService {
-	return m[util.RandomInt(len(m))]
+	return util.RandomElement(m)
 }

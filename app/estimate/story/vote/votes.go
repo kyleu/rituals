@@ -100,10 +100,7 @@ func (v Votes) ToCSV() ([]string, [][]string) {
 }
 
 func (v Votes) Random() *Vote {
-	if len(v) == 0 {
-		return nil
-	}
-	return v[util.RandomInt(len(v))]
+	return util.RandomElement(v)
 }
 
 func (v Votes) Clone() Votes {

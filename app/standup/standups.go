@@ -138,10 +138,7 @@ func (s Standups) ToCSV() ([]string, [][]string) {
 }
 
 func (s Standups) Random() *Standup {
-	if len(s) == 0 {
-		return nil
-	}
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }
 
 func (s Standups) Clone() Standups {

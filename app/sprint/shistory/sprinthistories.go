@@ -83,10 +83,7 @@ func (s SprintHistories) ToCSV() ([]string, [][]string) {
 }
 
 func (s SprintHistories) Random() *SprintHistory {
-	if len(s) == 0 {
-		return nil
-	}
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }
 
 func (s SprintHistories) Clone() SprintHistories {

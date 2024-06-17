@@ -100,10 +100,7 @@ func (s SprintMembers) ToCSV() ([]string, [][]string) {
 }
 
 func (s SprintMembers) Random() *SprintMember {
-	if len(s) == 0 {
-		return nil
-	}
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }
 
 func (s SprintMembers) Clone() SprintMembers {

@@ -83,10 +83,7 @@ func (e Emails) ToCSV() ([]string, [][]string) {
 }
 
 func (e Emails) Random() *Email {
-	if len(e) == 0 {
-		return nil
-	}
-	return e[util.RandomInt(len(e))]
+	return util.RandomElement(e)
 }
 
 func (e Emails) Clone() Emails {

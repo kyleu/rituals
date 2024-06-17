@@ -136,5 +136,5 @@ func (m MemberStatuses) GetByName(name string, logger util.Logger) MemberStatus 
 }
 
 func (m MemberStatuses) Random() MemberStatus {
-	return m[util.RandomInt(len(m))]
+	return util.RandomElement(m)
 }

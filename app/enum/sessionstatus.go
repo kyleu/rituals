@@ -136,5 +136,5 @@ func (s SessionStatuses) GetByName(name string, logger util.Logger) SessionStatu
 }
 
 func (s SessionStatuses) Random() SessionStatus {
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }

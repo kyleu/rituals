@@ -138,10 +138,7 @@ func (e Estimates) ToCSV() ([]string, [][]string) {
 }
 
 func (e Estimates) Random() *Estimate {
-	if len(e) == 0 {
-		return nil
-	}
-	return e[util.RandomInt(len(e))]
+	return util.RandomElement(e)
 }
 
 func (e Estimates) Clone() Estimates {

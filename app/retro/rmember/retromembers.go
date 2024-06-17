@@ -100,10 +100,7 @@ func (r RetroMembers) ToCSV() ([]string, [][]string) {
 }
 
 func (r RetroMembers) Random() *RetroMember {
-	if len(r) == 0 {
-		return nil
-	}
-	return r[util.RandomInt(len(r))]
+	return util.RandomElement(r)
 }
 
 func (r RetroMembers) Clone() RetroMembers {

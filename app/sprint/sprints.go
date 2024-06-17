@@ -120,10 +120,7 @@ func (s Sprints) ToCSV() ([]string, [][]string) {
 }
 
 func (s Sprints) Random() *Sprint {
-	if len(s) == 0 {
-		return nil
-	}
-	return s[util.RandomInt(len(s))]
+	return util.RandomElement(s)
 }
 
 func (s Sprints) Clone() Sprints {

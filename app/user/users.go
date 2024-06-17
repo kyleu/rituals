@@ -1,4 +1,4 @@
-// $PF_IGNORE$
+// Package user - Content managed by Project Forge, see [projectforge.md] for details.
 package user
 
 import (
@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/rituals/app/util"
 )
 
 type Users []*User
@@ -16,15 +18,9 @@ func (u Users) Get(id uuid.UUID) *User {
 	})
 }
 
-func (u Users) GetByIDs(ids ...uuid.UUID) Users {
-	return lo.Filter(u, func(xx *User, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
 func (u Users) IDs() []uuid.UUID {
-	return lo.Map(u, func(x *User, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(u, func(xx *User, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -48,6 +44,28 @@ func (u Users) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (u Users) GetByID(id uuid.UUID) Users {
+	return lo.Filter(u, func(xx *User, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (u Users) GetByIDs(ids ...uuid.UUID) Users {
+	return lo.Filter(u, func(xx *User, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (u Users) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(u, func(x *User, _ int) []string {
+		return x.Strings()
+	})
+}
+
+func (u Users) Random() *User {
+	return util.RandomElement(u)
 }
 
 func (u Users) Clone() Users {

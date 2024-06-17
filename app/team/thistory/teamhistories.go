@@ -83,10 +83,7 @@ func (t TeamHistories) ToCSV() ([]string, [][]string) {
 }
 
 func (t TeamHistories) Random() *TeamHistory {
-	if len(t) == 0 {
-		return nil
-	}
-	return t[util.RandomInt(len(t))]
+	return util.RandomElement(t)
 }
 
 func (t TeamHistories) Clone() TeamHistories {

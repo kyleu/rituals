@@ -100,10 +100,7 @@ func (e EstimateMembers) ToCSV() ([]string, [][]string) {
 }
 
 func (e EstimateMembers) Random() *EstimateMember {
-	if len(e) == 0 {
-		return nil
-	}
-	return e[util.RandomInt(len(e))]
+	return util.RandomElement(e)
 }
 
 func (e EstimateMembers) Clone() EstimateMembers {

@@ -129,10 +129,7 @@ func (t TeamPermissions) ToCSV() ([]string, [][]string) {
 }
 
 func (t TeamPermissions) Random() *TeamPermission {
-	if len(t) == 0 {
-		return nil
-	}
-	return t[util.RandomInt(len(t))]
+	return util.RandomElement(t)
 }
 
 func (t TeamPermissions) Clone() TeamPermissions {

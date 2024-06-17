@@ -101,10 +101,7 @@ func (r Reports) ToCSV() ([]string, [][]string) {
 }
 
 func (r Reports) Random() *Report {
-	if len(r) == 0 {
-		return nil
-	}
-	return r[util.RandomInt(len(r))]
+	return util.RandomElement(r)
 }
 
 func (r Reports) Clone() Reports {

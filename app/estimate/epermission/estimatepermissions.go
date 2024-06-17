@@ -129,10 +129,7 @@ func (e EstimatePermissions) ToCSV() ([]string, [][]string) {
 }
 
 func (e EstimatePermissions) Random() *EstimatePermission {
-	if len(e) == 0 {
-		return nil
-	}
-	return e[util.RandomInt(len(e))]
+	return util.RandomElement(e)
 }
 
 func (e EstimatePermissions) Clone() EstimatePermissions {

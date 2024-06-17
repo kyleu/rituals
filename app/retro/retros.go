@@ -138,10 +138,7 @@ func (r Retros) ToCSV() ([]string, [][]string) {
 }
 
 func (r Retros) Random() *Retro {
-	if len(r) == 0 {
-		return nil
-	}
-	return r[util.RandomInt(len(r))]
+	return util.RandomElement(r)
 }
 
 func (r Retros) Clone() Retros {
