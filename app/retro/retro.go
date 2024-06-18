@@ -38,7 +38,10 @@ func (r *Retro) String() string {
 }
 
 func (r *Retro) TitleString() string {
-	return r.Title
+	if xx := r.Title; xx != "" {
+		return xx
+	}
+	return r.String()
 }
 
 func Random() *Retro {

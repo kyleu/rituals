@@ -32,7 +32,10 @@ func (u *User) String() string {
 }
 
 func (u *User) TitleString() string {
-	return u.Name
+	if xx := u.Name; xx != "" {
+		return xx
+	}
+	return u.String()
 }
 
 func Random() *User {

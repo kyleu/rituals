@@ -38,7 +38,10 @@ func (e *Estimate) String() string {
 }
 
 func (e *Estimate) TitleString() string {
-	return e.Title
+	if xx := e.Title; xx != "" {
+		return xx
+	}
+	return e.String()
 }
 
 func Random() *Estimate {

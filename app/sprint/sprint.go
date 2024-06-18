@@ -38,7 +38,10 @@ func (s *Sprint) String() string {
 }
 
 func (s *Sprint) TitleString() string {
-	return s.Title
+	if xx := s.Title; xx != "" {
+		return xx
+	}
+	return s.String()
 }
 
 func Random() *Sprint {

@@ -35,7 +35,10 @@ func (t *Team) String() string {
 }
 
 func (t *Team) TitleString() string {
-	return t.Title
+	if xx := t.Title; xx != "" {
+		return xx
+	}
+	return t.String()
 }
 
 func Random() *Team {

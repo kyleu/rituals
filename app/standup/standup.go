@@ -37,7 +37,10 @@ func (s *Standup) String() string {
 }
 
 func (s *Standup) TitleString() string {
-	return s.Title
+	if xx := s.Title; xx != "" {
+		return xx
+	}
+	return s.String()
 }
 
 func Random() *Standup {

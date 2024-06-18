@@ -38,7 +38,10 @@ func (s *Story) String() string {
 }
 
 func (s *Story) TitleString() string {
-	return s.Title
+	if xx := s.Title; xx != "" {
+		return xx
+	}
+	return s.String()
 }
 
 func Random() *Story {
