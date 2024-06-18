@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func FeedbackDrop() %}
 drop table if exists "feedback";
 -- {% endfunc %}

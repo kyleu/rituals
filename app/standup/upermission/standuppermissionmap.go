@@ -1,4 +1,3 @@
-// Package upermission - Content managed by Project Forge, see [projectforge.md] for details.
 package upermission
 
 import "github.com/kyleu/rituals/app/util"

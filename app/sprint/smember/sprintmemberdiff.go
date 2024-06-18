@@ -1,4 +1,3 @@
-// Package smember - Content managed by Project Forge, see [projectforge.md] for details.
 package smember
 
 import "github.com/kyleu/rituals/app/util"

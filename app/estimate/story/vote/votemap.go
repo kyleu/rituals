@@ -1,4 +1,3 @@
-// Package vote - Content managed by Project Forge, see [projectforge.md] for details.
 package vote
 
 import "github.com/kyleu/rituals/app/util"

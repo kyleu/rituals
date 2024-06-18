@@ -1,4 +1,3 @@
-// Package umember - Content managed by Project Forge, see [projectforge.md] for details.
 package umember
 
 import "github.com/kyleu/rituals/app/util"

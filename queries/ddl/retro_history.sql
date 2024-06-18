@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func RetroHistoryDrop() %}
 drop table if exists "retro_history";
 -- {% endfunc %}

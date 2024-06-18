@@ -1,4 +1,3 @@
-// Package site - Content managed by Project Forge, see [projectforge.md] for details.
 package site
 
 import (

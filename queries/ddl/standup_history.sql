@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func StandupHistoryDrop() %}
 drop table if exists "standup_history";
 -- {% endfunc %}

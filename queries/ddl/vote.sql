@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func VoteDrop() %}
 drop table if exists "vote";
 -- {% endfunc %}

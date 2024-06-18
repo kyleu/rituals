@@ -1,4 +1,3 @@
-// Package tmember - Content managed by Project Forge, see [projectforge.md] for details.
 package tmember
 
 import "github.com/kyleu/rituals/app/util"

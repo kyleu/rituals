@@ -1,4 +1,3 @@
-// Package migrate - Content managed by Project Forge, see [projectforge.md] for details.
 package migrate
 
 import (

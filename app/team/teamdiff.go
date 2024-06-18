@@ -1,4 +1,3 @@
-// Package team - Content managed by Project Forge, see [projectforge.md] for details.
 package team
 
 import "github.com/kyleu/rituals/app/util"

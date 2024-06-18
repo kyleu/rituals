@@ -1,4 +1,3 @@
-// Package comment - Content managed by Project Forge, see [projectforge.md] for details.
 package comment
 
 import "github.com/kyleu/rituals/app/util"

@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func EstimateHistoryDrop() %}
 drop table if exists "estimate_history";
 -- {% endfunc %}

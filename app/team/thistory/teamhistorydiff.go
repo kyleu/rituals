@@ -1,4 +1,3 @@
-// Package thistory - Content managed by Project Forge, see [projectforge.md] for details.
 package thistory
 
 import "github.com/kyleu/rituals/app/util"

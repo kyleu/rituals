@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func ActionDrop() %}
 drop table if exists "action";
 -- {% endfunc %}

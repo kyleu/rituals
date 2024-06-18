@@ -1,4 +1,3 @@
-// Package cstandup - Content managed by Project Forge, see [projectforge.md] for details.
 package cstandup
 
 import (

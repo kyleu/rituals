@@ -1,4 +1,3 @@
-// Package report - Content managed by Project Forge, see [projectforge.md] for details.
 package report
 
 import "github.com/kyleu/rituals/app/util"

@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func TypesDrop() %}
 drop type if exists "session_status";
 drop type if exists "model_service";

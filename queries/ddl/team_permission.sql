@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func TeamPermissionDrop() %}
 drop table if exists "team_permission";
 -- {% endfunc %}

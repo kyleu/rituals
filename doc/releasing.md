@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Releasing
 
 rituals.dev uses `goreleaser` to create build artifacts.

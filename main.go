@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 package main // import github.com/kyleu/rituals
 
 import (

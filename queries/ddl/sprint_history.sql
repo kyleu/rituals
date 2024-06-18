@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func SprintHistoryDrop() %}
 drop table if exists "sprint_history";
 -- {% endfunc %}

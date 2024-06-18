@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func SprintPermissionDrop() %}
 drop table if exists "sprint_permission";
 -- {% endfunc %}

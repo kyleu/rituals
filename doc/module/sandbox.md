@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Sandbox
 
 This is a module for [Project Forge](https://projectforge.dev). Useful playgrounds for testing custom functions.

@@ -1,4 +1,3 @@
-// Package svc - Content managed by Project Forge, see [projectforge.md] for details.
 package svc
 
 import (

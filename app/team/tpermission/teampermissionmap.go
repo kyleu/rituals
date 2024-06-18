@@ -1,4 +1,3 @@
-// Package tpermission - Content managed by Project Forge, see [projectforge.md] for details.
 package tpermission
 
 import "github.com/kyleu/rituals/app/util"

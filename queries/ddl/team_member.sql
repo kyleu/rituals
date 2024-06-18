@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func TeamMemberDrop() %}
 drop table if exists "team_member";
 -- {% endfunc %}

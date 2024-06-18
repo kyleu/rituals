@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func SizeInfo(dbType string) %}
 -- {% switch dbType %}
 -- {% case "postgres" %}

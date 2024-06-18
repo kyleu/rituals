@@ -1,4 +1,3 @@
-// Package spermission - Content managed by Project Forge, see [projectforge.md] for details.
 package spermission
 
 import "github.com/kyleu/rituals/app/util"
