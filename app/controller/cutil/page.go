@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/samber/lo"
@@ -91,6 +92,9 @@ func (p *PageState) TitleString() string {
 	if p.Title == "" {
 		return util.AppName
 	}
+	if strings.HasPrefix(p.Title, "!") {
+		return p.Title[1:]
+	}
 	return fmt.Sprintf("%s - %s", p.Title, util.AppName)
 }
 
@@ -162,6 +166,9 @@ func (p *PageState) LogError(msg string, args ...any) {
 }
 
 func (p *PageState) ClassDecl() string {
+	if len(p.Icons) == 0 {
+		return "-"
+	}
 	ret := &util.StringSlice{}
 	if p.Profile.Mode != "" {
 		ret.Push(p.Profile.ModeClass())
