@@ -51,7 +51,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <div class="right mrs large-buttons">
 `)
 //line views/vsprint/List.html:24
-	if len(p.Models) > 0 {
+	if len(p.Models) > 1 {
 //line views/vsprint/List.html:24
 		qw422016.N().S(`<a href="/admin/db/sprint/_random"><button>`)
 //line views/vsprint/List.html:24

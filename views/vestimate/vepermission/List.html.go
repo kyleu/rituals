@@ -44,7 +44,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <div class="right mrs large-buttons">
 `)
 //line views/vestimate/vepermission/List.html:21
-	if len(p.Models) > 0 {
+	if len(p.Models) > 1 {
 //line views/vestimate/vepermission/List.html:21
 		qw422016.N().S(`<a href="/admin/db/estimate/permission/_random"><button>`)
 //line views/vestimate/vepermission/List.html:21

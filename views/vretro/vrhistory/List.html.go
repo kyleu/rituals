@@ -44,7 +44,7 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     <div class="right mrs large-buttons">
 `)
 //line views/vretro/vrhistory/List.html:21
-	if len(p.Models) > 0 {
+	if len(p.Models) > 1 {
 //line views/vretro/vrhistory/List.html:21
 		qw422016.N().S(`<a href="/admin/db/retro/history/_random"><button>`)
 //line views/vretro/vrhistory/List.html:21
