@@ -1,4 +1,6 @@
 # http://goreleaser.com
+version: 2
+
 project_name: rituals
 
 archives:
@@ -15,7 +17,7 @@ brews:
     commit_author:
       name: "Kyle U"
       email: "rituals.dev@kyleu.com"
-    folder: Formula
+    directory: Formula
     homepage: "https://rituals.dev"
     description: "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
     license: "MIT"
