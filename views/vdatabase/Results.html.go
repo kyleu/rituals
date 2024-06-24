@@ -88,7 +88,7 @@ func (p *Results) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vdatabase/Results.html:30
 	qw422016.N().S(`    <div class="mt overflow">`)
 //line views/vdatabase/Results.html:31
-	view.StreamMapArray(qw422016, true, p.Results...)
+	view.StreamMapArray(qw422016, true, ps, p.Results...)
 //line views/vdatabase/Results.html:31
 	qw422016.N().S(`</div>
   </div>

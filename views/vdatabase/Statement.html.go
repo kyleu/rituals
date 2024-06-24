@@ -150,7 +150,7 @@ func (p *Statement) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
           <div class="bd"><div><div>
             `)
 //line views/vdatabase/Statement.html:56
-		view.StreamMapArray(qw422016, true, s.Extra...)
+		view.StreamMapArray(qw422016, true, ps, s.Extra...)
 //line views/vdatabase/Statement.html:56
 		qw422016.N().S(`
           </div></div></div>
