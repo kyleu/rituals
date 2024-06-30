@@ -110,7 +110,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:35
-	streamsettingsLink(qw422016, "/admin/modules", "archive", "Go Modules", "The Go modules used by "+util.AppName, ps)
+	streamsettingsLink(qw422016, "/admin/modules", "robot", "Go Modules", "The Go modules used by "+util.AppName, ps)
 //line views/vadmin/Settings.html:35
 	qw422016.N().S(`
     `)
@@ -120,7 +120,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:37
-	streamsettingsLink(qw422016, "/admin/logs", "archive", "Recent Logs", "Displays the 100 most recent app logs", ps)
+	streamsettingsLink(qw422016, "/admin/logs", "folder", "Recent Logs", "Displays the 100 most recent app logs", ps)
 //line views/vadmin/Settings.html:37
 	qw422016.N().S(`
     <div class="clear"></div>
@@ -133,27 +133,27 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(` HTTP Methods</h3>
     `)
 //line views/vadmin/Settings.html:42
-	streamsettingsLink(qw422016, "/admin/sitemap", "bolt", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps)
+	streamsettingsLink(qw422016, "/admin/sitemap", "graph", "Sitemap", "Displays the HTTP actions that are available, with documentation", ps)
 //line views/vadmin/Settings.html:42
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:43
-	streamsettingsLink(qw422016, "/admin/routes", "bolt", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps)
+	streamsettingsLink(qw422016, "/admin/routes", "folder", "HTTP routes", "Enumerates all registered HTTP routes, by method", ps)
 //line views/vadmin/Settings.html:43
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:44
-	streamsettingsLink(qw422016, "/admin/session", "bolt", "User Session", "View the user session, including all cookies and settings", ps)
+	streamsettingsLink(qw422016, "/admin/session", "play", "User Session", "View the user session, including all cookies and settings", ps)
 //line views/vadmin/Settings.html:44
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:45
-	streamsettingsLink(qw422016, "/admin/request", "bolt", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps)
+	streamsettingsLink(qw422016, "/admin/request", "download", "Debug HTTP Request", "Full debug view of an HTTP request from your browser", ps)
 //line views/vadmin/Settings.html:45
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:46
-	streamsettingsLink(qw422016, "/admin/sockets", "bolt", "Active WebSockets", "Manage the active WebSockets in this server", ps)
+	streamsettingsLink(qw422016, "/admin/sockets", "cog", "Active WebSockets", "Manage the active WebSockets in this server", ps)
 //line views/vadmin/Settings.html:46
 	qw422016.N().S(`
     <div class="clear"></div>
@@ -166,7 +166,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(` App Profiling</h3>
     `)
 //line views/vadmin/Settings.html:51
-	streamsettingsLink(qw422016, "/admin/memusage", "cog", "Memory Usage", "Detailed memory usage statistics for this application", ps)
+	streamsettingsLink(qw422016, "/admin/memusage", "desktop", "Memory Usage", "Detailed memory usage statistics for this application", ps)
 //line views/vadmin/Settings.html:51
 	qw422016.N().S(`
     `)
@@ -253,7 +253,7 @@ func (p *Settings) Body(as *app.State, ps *cutil.PageState) string {
 //line views/vadmin/Settings.html:69
 func streamsettingsLink(qw422016 *qt422016.Writer, href string, icon string, title string, description string, ps *cutil.PageState) {
 //line views/vadmin/Settings.html:69
-	qw422016.N().S(`<hr class="clear" /><div class="mts"><a href="`)
+	qw422016.N().S(`<hr class="clear" /><div class="mts ml"><a href="`)
 //line views/vadmin/Settings.html:72
 	qw422016.E().S(href)
 //line views/vadmin/Settings.html:72
