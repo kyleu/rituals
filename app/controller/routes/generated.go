@@ -14,230 +14,371 @@ import (
 	"github.com/kyleu/rituals/app/controller/cteam"
 )
 
-//nolint:funlen
+const routeNew, routeRandom, routeEdit, routeDelete = "/_new", "/_random", "/edit", "/delete"
+
 func generatedRoutes(r *mux.Router) {
-	makeRoute(r, http.MethodGet, "/admin/db/user", controller.UserList)
-	makeRoute(r, http.MethodGet, "/admin/db/user/_new", controller.UserCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/user/_new", controller.UserCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/user/_random", controller.UserRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/user/{id}", controller.UserDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/user/{id}/edit", controller.UserEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/user/{id}/edit", controller.UserEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/user/{id}/delete", controller.UserDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/team/permission", cteam.TeamPermissionList)
-	makeRoute(r, http.MethodGet, "/admin/db/team/permission/_new", cteam.TeamPermissionCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/permission/_new", cteam.TeamPermissionCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/team/permission/_random", cteam.TeamPermissionRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/team/permission/{teamID}/{key}/{value}", cteam.TeamPermissionDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/team/permission/{teamID}/{key}/{value}/edit", cteam.TeamPermissionEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/permission/{teamID}/{key}/{value}/edit", cteam.TeamPermissionEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/team/permission/{teamID}/{key}/{value}/delete", cteam.TeamPermissionDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/team/member", cteam.TeamMemberList)
-	makeRoute(r, http.MethodGet, "/admin/db/team/member/_new", cteam.TeamMemberCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/member/_new", cteam.TeamMemberCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/team/member/_random", cteam.TeamMemberRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/team/member/{teamID}/{userID}", cteam.TeamMemberDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/team/member/{teamID}/{userID}/edit", cteam.TeamMemberEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/member/{teamID}/{userID}/edit", cteam.TeamMemberEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/team/member/{teamID}/{userID}/delete", cteam.TeamMemberDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/team/history", cteam.TeamHistoryList)
-	makeRoute(r, http.MethodGet, "/admin/db/team/history/_new", cteam.TeamHistoryCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/history/_new", cteam.TeamHistoryCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/team/history/_random", cteam.TeamHistoryRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/team/history/{slug}", cteam.TeamHistoryDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/team/history/{slug}/edit", cteam.TeamHistoryEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/history/{slug}/edit", cteam.TeamHistoryEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/team/history/{slug}/delete", cteam.TeamHistoryDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/team", controller.TeamList)
-	makeRoute(r, http.MethodGet, "/admin/db/team/_new", controller.TeamCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/_new", controller.TeamCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/team/_random", controller.TeamRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/team/{id}", controller.TeamDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/team/{id}/edit", controller.TeamEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/team/{id}/edit", controller.TeamEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/team/{id}/delete", controller.TeamDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/permission", cstandup.StandupPermissionList)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/permission/_new", cstandup.StandupPermissionCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/permission/_new", cstandup.StandupPermissionCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/permission/_random", cstandup.StandupPermissionRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/permission/{standupID}/{key}/{value}", cstandup.StandupPermissionDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/permission/{standupID}/{key}/{value}/edit", cstandup.StandupPermissionEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/permission/{standupID}/{key}/{value}/edit", cstandup.StandupPermissionEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/permission/{standupID}/{key}/{value}/delete", cstandup.StandupPermissionDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/member", cstandup.StandupMemberList)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/member/_new", cstandup.StandupMemberCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/member/_new", cstandup.StandupMemberCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/member/_random", cstandup.StandupMemberRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/member/{standupID}/{userID}", cstandup.StandupMemberDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/member/{standupID}/{userID}/edit", cstandup.StandupMemberEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/member/{standupID}/{userID}/edit", cstandup.StandupMemberEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/member/{standupID}/{userID}/delete", cstandup.StandupMemberDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/history", cstandup.StandupHistoryList)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/history/_new", cstandup.StandupHistoryCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/history/_new", cstandup.StandupHistoryCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/history/_random", cstandup.StandupHistoryRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/history/{slug}", cstandup.StandupHistoryDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/history/{slug}/edit", cstandup.StandupHistoryEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/history/{slug}/edit", cstandup.StandupHistoryEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/history/{slug}/delete", cstandup.StandupHistoryDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/report", cstandup.ReportList)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/report/_new", cstandup.ReportCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/report/_new", cstandup.ReportCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/report/_random", cstandup.ReportRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/report/{id}", cstandup.ReportDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/report/{id}/edit", cstandup.ReportEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/report/{id}/edit", cstandup.ReportEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/report/{id}/delete", cstandup.ReportDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/standup", controller.StandupList)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/_new", controller.StandupCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/_new", controller.StandupCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/_random", controller.StandupRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/{id}", controller.StandupDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/{id}/edit", controller.StandupEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/standup/{id}/edit", controller.StandupEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/standup/{id}/delete", controller.StandupDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/permission", csprint.SprintPermissionList)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/permission/_new", csprint.SprintPermissionCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/permission/_new", csprint.SprintPermissionCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/permission/_random", csprint.SprintPermissionRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/permission/{sprintID}/{key}/{value}", csprint.SprintPermissionDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/permission/{sprintID}/{key}/{value}/edit", csprint.SprintPermissionEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/permission/{sprintID}/{key}/{value}/edit", csprint.SprintPermissionEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/permission/{sprintID}/{key}/{value}/delete", csprint.SprintPermissionDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/member", csprint.SprintMemberList)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/member/_new", csprint.SprintMemberCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/member/_new", csprint.SprintMemberCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/member/_random", csprint.SprintMemberRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/member/{sprintID}/{userID}", csprint.SprintMemberDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/member/{sprintID}/{userID}/edit", csprint.SprintMemberEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/member/{sprintID}/{userID}/edit", csprint.SprintMemberEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/member/{sprintID}/{userID}/delete", csprint.SprintMemberDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/history", csprint.SprintHistoryList)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/history/_new", csprint.SprintHistoryCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/history/_new", csprint.SprintHistoryCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/history/_random", csprint.SprintHistoryRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/history/{slug}", csprint.SprintHistoryDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/history/{slug}/edit", csprint.SprintHistoryEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/history/{slug}/edit", csprint.SprintHistoryEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/history/{slug}/delete", csprint.SprintHistoryDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint", controller.SprintList)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/_new", controller.SprintCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/_new", controller.SprintCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/_random", controller.SprintRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/{id}", controller.SprintDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/{id}/edit", controller.SprintEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/sprint/{id}/edit", controller.SprintEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/sprint/{id}/delete", controller.SprintDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/permission", cretro.RetroPermissionList)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/permission/_new", cretro.RetroPermissionCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/permission/_new", cretro.RetroPermissionCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/permission/_random", cretro.RetroPermissionRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/permission/{retroID}/{key}/{value}", cretro.RetroPermissionDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/permission/{retroID}/{key}/{value}/edit", cretro.RetroPermissionEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/permission/{retroID}/{key}/{value}/edit", cretro.RetroPermissionEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/permission/{retroID}/{key}/{value}/delete", cretro.RetroPermissionDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/member", cretro.RetroMemberList)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/member/_new", cretro.RetroMemberCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/member/_new", cretro.RetroMemberCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/member/_random", cretro.RetroMemberRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/member/{retroID}/{userID}", cretro.RetroMemberDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/member/{retroID}/{userID}/edit", cretro.RetroMemberEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/member/{retroID}/{userID}/edit", cretro.RetroMemberEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/member/{retroID}/{userID}/delete", cretro.RetroMemberDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/history", cretro.RetroHistoryList)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/history/_new", cretro.RetroHistoryCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/history/_new", cretro.RetroHistoryCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/history/_random", cretro.RetroHistoryRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/history/{slug}", cretro.RetroHistoryDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/history/{slug}/edit", cretro.RetroHistoryEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/history/{slug}/edit", cretro.RetroHistoryEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/history/{slug}/delete", cretro.RetroHistoryDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/feedback", cretro.FeedbackList)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/feedback/_new", cretro.FeedbackCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/feedback/_new", cretro.FeedbackCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/feedback/_random", cretro.FeedbackRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/feedback/{id}", cretro.FeedbackDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/feedback/{id}/edit", cretro.FeedbackEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/feedback/{id}/edit", cretro.FeedbackEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/feedback/{id}/delete", cretro.FeedbackDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/retro", controller.RetroList)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/_new", controller.RetroCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/_new", controller.RetroCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/_random", controller.RetroRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/{id}", controller.RetroDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/{id}/edit", controller.RetroEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/retro/{id}/edit", controller.RetroEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/retro/{id}/delete", controller.RetroDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/vote", cstory.VoteList)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/vote/_new", cstory.VoteCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/story/vote/_new", cstory.VoteCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/vote/_random", cstory.VoteRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/vote/{storyID}/{userID}", cstory.VoteDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/vote/{storyID}/{userID}/edit", cstory.VoteEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/story/vote/{storyID}/{userID}/edit", cstory.VoteEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/vote/{storyID}/{userID}/delete", cstory.VoteDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story", cestimate.StoryList)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/_new", cestimate.StoryCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/story/_new", cestimate.StoryCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/_random", cestimate.StoryRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/{id}", cestimate.StoryDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/{id}/edit", cestimate.StoryEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/story/{id}/edit", cestimate.StoryEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/story/{id}/delete", cestimate.StoryDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/permission", cestimate.EstimatePermissionList)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/permission/_new", cestimate.EstimatePermissionCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/permission/_new", cestimate.EstimatePermissionCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/permission/_random", cestimate.EstimatePermissionRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/permission/{estimateID}/{key}/{value}", cestimate.EstimatePermissionDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/permission/{estimateID}/{key}/{value}/edit", cestimate.EstimatePermissionEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/permission/{estimateID}/{key}/{value}/edit", cestimate.EstimatePermissionEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/permission/{estimateID}/{key}/{value}/delete", cestimate.EstimatePermissionDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/member", cestimate.EstimateMemberList)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/member/_new", cestimate.EstimateMemberCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/member/_new", cestimate.EstimateMemberCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/member/_random", cestimate.EstimateMemberRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/member/{estimateID}/{userID}", cestimate.EstimateMemberDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/member/{estimateID}/{userID}/edit", cestimate.EstimateMemberEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/member/{estimateID}/{userID}/edit", cestimate.EstimateMemberEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/member/{estimateID}/{userID}/delete", cestimate.EstimateMemberDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/history", cestimate.EstimateHistoryList)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/history/_new", cestimate.EstimateHistoryCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/history/_new", cestimate.EstimateHistoryCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/history/_random", cestimate.EstimateHistoryRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/history/{slug}", cestimate.EstimateHistoryDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/history/{slug}/edit", cestimate.EstimateHistoryEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/history/{slug}/edit", cestimate.EstimateHistoryEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/history/{slug}/delete", cestimate.EstimateHistoryDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate", controller.EstimateList)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/_new", controller.EstimateCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/_new", controller.EstimateCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/_random", controller.EstimateRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/{id}", controller.EstimateDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/{id}/edit", controller.EstimateEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/estimate/{id}/edit", controller.EstimateEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/estimate/{id}/delete", controller.EstimateDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/email", controller.EmailList)
-	makeRoute(r, http.MethodGet, "/admin/db/email/_new", controller.EmailCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/email/_new", controller.EmailCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/email/_random", controller.EmailRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/email/{id}", controller.EmailDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/email/{id}/edit", controller.EmailEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/email/{id}/edit", controller.EmailEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/email/{id}/delete", controller.EmailDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/comment", controller.CommentList)
-	makeRoute(r, http.MethodGet, "/admin/db/comment/_new", controller.CommentCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/comment/_new", controller.CommentCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/comment/_random", controller.CommentRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/comment/{id}", controller.CommentDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/comment/{id}/edit", controller.CommentEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/comment/{id}/edit", controller.CommentEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/comment/{id}/delete", controller.CommentDelete)
-	makeRoute(r, http.MethodGet, "/admin/db/action", controller.ActionList)
-	makeRoute(r, http.MethodGet, "/admin/db/action/_new", controller.ActionCreateForm)
-	makeRoute(r, http.MethodPost, "/admin/db/action/_new", controller.ActionCreate)
-	makeRoute(r, http.MethodGet, "/admin/db/action/_random", controller.ActionRandom)
-	makeRoute(r, http.MethodGet, "/admin/db/action/{id}", controller.ActionDetail)
-	makeRoute(r, http.MethodGet, "/admin/db/action/{id}/edit", controller.ActionEditForm)
-	makeRoute(r, http.MethodPost, "/admin/db/action/{id}/edit", controller.ActionEdit)
-	makeRoute(r, http.MethodGet, "/admin/db/action/{id}/delete", controller.ActionDelete)
+	generatedRoutesUser(r, "/admin/db/user")
+	generatedRoutesTeamPermission(r, "/admin/db/team/permission")
+	generatedRoutesTeamMember(r, "/admin/db/team/member")
+	generatedRoutesTeamHistory(r, "/admin/db/team/history")
+	generatedRoutesTeam(r, "/admin/db/team")
+	generatedRoutesStandupPermission(r, "/admin/db/standup/permission")
+	generatedRoutesStandupMember(r, "/admin/db/standup/member")
+	generatedRoutesStandupHistory(r, "/admin/db/standup/history")
+	generatedRoutesReport(r, "/admin/db/standup/report")
+	generatedRoutesStandup(r, "/admin/db/standup")
+	generatedRoutesSprintPermission(r, "/admin/db/sprint/permission")
+	generatedRoutesSprintMember(r, "/admin/db/sprint/member")
+	generatedRoutesSprintHistory(r, "/admin/db/sprint/history")
+	generatedRoutesSprint(r, "/admin/db/sprint")
+	generatedRoutesRetroPermission(r, "/admin/db/retro/permission")
+	generatedRoutesRetroMember(r, "/admin/db/retro/member")
+	generatedRoutesRetroHistory(r, "/admin/db/retro/history")
+	generatedRoutesFeedback(r, "/admin/db/retro/feedback")
+	generatedRoutesRetro(r, "/admin/db/retro")
+	generatedRoutesVote(r, "/admin/db/estimate/story/vote")
+	generatedRoutesStory(r, "/admin/db/estimate/story")
+	generatedRoutesEstimatePermission(r, "/admin/db/estimate/permission")
+	generatedRoutesEstimateMember(r, "/admin/db/estimate/member")
+	generatedRoutesEstimateHistory(r, "/admin/db/estimate/history")
+	generatedRoutesEstimate(r, "/admin/db/estimate")
+	generatedRoutesEmail(r, "/admin/db/email")
+	generatedRoutesComment(r, "/admin/db/comment")
+	generatedRoutesAction(r, "/admin/db/action")
+}
+
+func generatedRoutesUser(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.UserList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.UserCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.UserCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.UserRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.UserDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.UserEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.UserEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.UserDelete)
+}
+
+func generatedRoutesTeamPermission(r *mux.Router, prefix string) {
+	const pkn = "/{teamID}/{key}/{value}"
+	makeRoute(r, http.MethodGet, prefix, cteam.TeamPermissionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cteam.TeamPermissionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cteam.TeamPermissionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cteam.TeamPermissionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cteam.TeamPermissionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cteam.TeamPermissionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cteam.TeamPermissionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cteam.TeamPermissionDelete)
+}
+
+func generatedRoutesTeamMember(r *mux.Router, prefix string) {
+	const pkn = "/{teamID}/{userID}"
+	makeRoute(r, http.MethodGet, prefix, cteam.TeamMemberList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cteam.TeamMemberCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cteam.TeamMemberCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cteam.TeamMemberRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cteam.TeamMemberDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cteam.TeamMemberEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cteam.TeamMemberEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cteam.TeamMemberDelete)
+}
+
+func generatedRoutesTeamHistory(r *mux.Router, prefix string) {
+	const pkn = "/{slug}"
+	makeRoute(r, http.MethodGet, prefix, cteam.TeamHistoryList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cteam.TeamHistoryCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cteam.TeamHistoryCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cteam.TeamHistoryRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cteam.TeamHistoryDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cteam.TeamHistoryEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cteam.TeamHistoryEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cteam.TeamHistoryDelete)
+}
+
+func generatedRoutesTeam(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.TeamList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.TeamCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.TeamCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.TeamRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.TeamDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.TeamEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.TeamEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.TeamDelete)
+}
+
+func generatedRoutesStandupPermission(r *mux.Router, prefix string) {
+	const pkn = "/{standupID}/{key}/{value}"
+	makeRoute(r, http.MethodGet, prefix, cstandup.StandupPermissionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cstandup.StandupPermissionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cstandup.StandupPermissionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cstandup.StandupPermissionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cstandup.StandupPermissionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cstandup.StandupPermissionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cstandup.StandupPermissionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cstandup.StandupPermissionDelete)
+}
+
+func generatedRoutesStandupMember(r *mux.Router, prefix string) {
+	const pkn = "/{standupID}/{userID}"
+	makeRoute(r, http.MethodGet, prefix, cstandup.StandupMemberList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cstandup.StandupMemberCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cstandup.StandupMemberCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cstandup.StandupMemberRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cstandup.StandupMemberDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cstandup.StandupMemberEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cstandup.StandupMemberEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cstandup.StandupMemberDelete)
+}
+
+func generatedRoutesStandupHistory(r *mux.Router, prefix string) {
+	const pkn = "/{slug}"
+	makeRoute(r, http.MethodGet, prefix, cstandup.StandupHistoryList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cstandup.StandupHistoryCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cstandup.StandupHistoryCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cstandup.StandupHistoryRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cstandup.StandupHistoryDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cstandup.StandupHistoryEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cstandup.StandupHistoryEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cstandup.StandupHistoryDelete)
+}
+
+func generatedRoutesReport(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, cstandup.ReportList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cstandup.ReportCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cstandup.ReportCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cstandup.ReportRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cstandup.ReportDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cstandup.ReportEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cstandup.ReportEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cstandup.ReportDelete)
+}
+
+func generatedRoutesStandup(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.StandupList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.StandupCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.StandupCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.StandupRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.StandupDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.StandupEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.StandupEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.StandupDelete)
+}
+
+func generatedRoutesSprintPermission(r *mux.Router, prefix string) {
+	const pkn = "/{sprintID}/{key}/{value}"
+	makeRoute(r, http.MethodGet, prefix, csprint.SprintPermissionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, csprint.SprintPermissionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, csprint.SprintPermissionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, csprint.SprintPermissionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, csprint.SprintPermissionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, csprint.SprintPermissionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, csprint.SprintPermissionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, csprint.SprintPermissionDelete)
+}
+
+func generatedRoutesSprintMember(r *mux.Router, prefix string) {
+	const pkn = "/{sprintID}/{userID}"
+	makeRoute(r, http.MethodGet, prefix, csprint.SprintMemberList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, csprint.SprintMemberCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, csprint.SprintMemberCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, csprint.SprintMemberRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, csprint.SprintMemberDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, csprint.SprintMemberEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, csprint.SprintMemberEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, csprint.SprintMemberDelete)
+}
+
+func generatedRoutesSprintHistory(r *mux.Router, prefix string) {
+	const pkn = "/{slug}"
+	makeRoute(r, http.MethodGet, prefix, csprint.SprintHistoryList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, csprint.SprintHistoryCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, csprint.SprintHistoryCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, csprint.SprintHistoryRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, csprint.SprintHistoryDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, csprint.SprintHistoryEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, csprint.SprintHistoryEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, csprint.SprintHistoryDelete)
+}
+
+func generatedRoutesSprint(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.SprintList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.SprintCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.SprintCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.SprintRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.SprintDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.SprintEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.SprintEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.SprintDelete)
+}
+
+func generatedRoutesRetroPermission(r *mux.Router, prefix string) {
+	const pkn = "/{retroID}/{key}/{value}"
+	makeRoute(r, http.MethodGet, prefix, cretro.RetroPermissionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cretro.RetroPermissionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cretro.RetroPermissionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cretro.RetroPermissionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cretro.RetroPermissionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cretro.RetroPermissionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cretro.RetroPermissionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cretro.RetroPermissionDelete)
+}
+
+func generatedRoutesRetroMember(r *mux.Router, prefix string) {
+	const pkn = "/{retroID}/{userID}"
+	makeRoute(r, http.MethodGet, prefix, cretro.RetroMemberList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cretro.RetroMemberCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cretro.RetroMemberCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cretro.RetroMemberRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cretro.RetroMemberDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cretro.RetroMemberEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cretro.RetroMemberEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cretro.RetroMemberDelete)
+}
+
+func generatedRoutesRetroHistory(r *mux.Router, prefix string) {
+	const pkn = "/{slug}"
+	makeRoute(r, http.MethodGet, prefix, cretro.RetroHistoryList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cretro.RetroHistoryCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cretro.RetroHistoryCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cretro.RetroHistoryRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cretro.RetroHistoryDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cretro.RetroHistoryEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cretro.RetroHistoryEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cretro.RetroHistoryDelete)
+}
+
+func generatedRoutesFeedback(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, cretro.FeedbackList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cretro.FeedbackCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cretro.FeedbackCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cretro.FeedbackRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cretro.FeedbackDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cretro.FeedbackEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cretro.FeedbackEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cretro.FeedbackDelete)
+}
+
+func generatedRoutesRetro(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.RetroList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.RetroCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.RetroCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.RetroRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.RetroDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.RetroEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.RetroEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.RetroDelete)
+}
+
+func generatedRoutesVote(r *mux.Router, prefix string) {
+	const pkn = "/{storyID}/{userID}"
+	makeRoute(r, http.MethodGet, prefix, cstory.VoteList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cstory.VoteCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cstory.VoteCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cstory.VoteRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cstory.VoteDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cstory.VoteEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cstory.VoteEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cstory.VoteDelete)
+}
+
+func generatedRoutesStory(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, cestimate.StoryList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cestimate.StoryCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cestimate.StoryCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cestimate.StoryRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cestimate.StoryDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cestimate.StoryEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cestimate.StoryEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cestimate.StoryDelete)
+}
+
+func generatedRoutesEstimatePermission(r *mux.Router, prefix string) {
+	const pkn = "/{estimateID}/{key}/{value}"
+	makeRoute(r, http.MethodGet, prefix, cestimate.EstimatePermissionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cestimate.EstimatePermissionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cestimate.EstimatePermissionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cestimate.EstimatePermissionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cestimate.EstimatePermissionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cestimate.EstimatePermissionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cestimate.EstimatePermissionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cestimate.EstimatePermissionDelete)
+}
+
+func generatedRoutesEstimateMember(r *mux.Router, prefix string) {
+	const pkn = "/{estimateID}/{userID}"
+	makeRoute(r, http.MethodGet, prefix, cestimate.EstimateMemberList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cestimate.EstimateMemberCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cestimate.EstimateMemberCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cestimate.EstimateMemberRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cestimate.EstimateMemberDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cestimate.EstimateMemberEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cestimate.EstimateMemberEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cestimate.EstimateMemberDelete)
+}
+
+func generatedRoutesEstimateHistory(r *mux.Router, prefix string) {
+	const pkn = "/{slug}"
+	makeRoute(r, http.MethodGet, prefix, cestimate.EstimateHistoryList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, cestimate.EstimateHistoryCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, cestimate.EstimateHistoryCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, cestimate.EstimateHistoryRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, cestimate.EstimateHistoryDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, cestimate.EstimateHistoryEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, cestimate.EstimateHistoryEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, cestimate.EstimateHistoryDelete)
+}
+
+func generatedRoutesEstimate(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.EstimateList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.EstimateCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.EstimateCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.EstimateRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.EstimateDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.EstimateEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.EstimateEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.EstimateDelete)
+}
+
+func generatedRoutesEmail(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.EmailList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.EmailCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.EmailCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.EmailRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.EmailDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.EmailEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.EmailEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.EmailDelete)
+}
+
+func generatedRoutesComment(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.CommentList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.CommentCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.CommentCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.CommentRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.CommentDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.CommentEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.CommentEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.CommentDelete)
+}
+
+func generatedRoutesAction(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.ActionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.ActionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.ActionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.ActionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.ActionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.ActionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.ActionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.ActionDelete)
 }
