@@ -1,5 +1,5 @@
 import "./client.css";
-import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import {JSX} from "./jsx";
 import {audit} from "./audit";
 import {menuInit} from "./menu";
 import {modeInit} from "./mode";
@@ -15,7 +15,7 @@ import {socketInit} from "./socket";
 import {appInit} from "./app";
 
 declare global {
-  interface Window { // eslint-disable-line @typescript-eslint/consistent-type-definitions
+  interface Window {
     "rituals": {
       wireTime: (el: HTMLElement) => void;
       relativeTime: (el: HTMLElement) => string;
