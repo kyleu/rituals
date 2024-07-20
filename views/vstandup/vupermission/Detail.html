@@ -12,16 +12,17 @@
   layout.Basic
   Model *upermission.StandupPermission
   StandupByStandupID *standup.Standup
+  Paths []string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       <a href="#modal-standupPermission"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} {%s p.Model.TitleString() %}</h3>
-    <div><a href="/admin/db/standup/permission"><em>Permission</em></a></div>
+    <div><a href="{%s upermission.Route(p.Paths...) %}"><em>Permission</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
@@ -29,7 +30,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.StandupID) %}{% if p.StandupByStandupID != nil %} ({%s p.StandupByStandupID.TitleString() %}){% endif %}
-              <a title="Standup" href="{%s `/admin/db/standup`+`/`+p.Model.StandupID.String() %}">{%= components.SVGLink(`standup`, ps) %}</a>
+              <a title="Standup" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`standup`, ps) %}</a>
             </td>
           </tr>
           <tr>

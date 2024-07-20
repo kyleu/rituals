@@ -12,6 +12,7 @@
   layout.Basic
   Models team.Teams
   Params filter.ParamSet
+  Paths []string
   SearchQuery string
 } %}
 
@@ -20,7 +21,7 @@
     <div class="right">{%= edit.SearchForm("", "q", "Search Teams", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
       {%- if len(p.Models) > 1 -%}<a href="/admin/db/team/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
-      <a href="/admin/db/team/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
+      <a href="{%s team.Route(p.Paths...) %}/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`team`, ps) %} {%s ps.Title %}</h3>
     <div class="clear"></div>
@@ -32,7 +33,7 @@
     <div class="mt"><em>No teams available</em></div>
     {%- else -%}
     <div class="mt">
-      {%= Table(p.Models, p.Params, as, ps) %}
+      {%= Table(p.Models, p.Params, as, ps, p.Paths...) %}
     </div>
     {%- endif -%}
   </div>

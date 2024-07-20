@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vcomment/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vcomment/Table.html:12
 	qw422016.N().S(`
 `)
@@ -80,9 +80,9 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUser
 	for _, model := range models {
 //line views/vcomment/Table.html:27
 		qw422016.N().S(`        <tr>
-          <td><a href="/admin/db/comment/`)
+          <td><a href="`)
 //line views/vcomment/Table.html:29
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vcomment/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vcomment/Table.html:29
@@ -117,7 +117,7 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUser
 		qw422016.N().S(`
             <a title="User" href="`)
 //line views/vcomment/Table.html:34
-		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vcomment/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vcomment/Table.html:34
@@ -161,22 +161,22 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUser
 }
 
 //line views/vcomment/Table.html:48
-func WriteTable(qq422016 qtio422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vcomment/Table.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vcomment/Table.html:48
-	StreamTable(qw422016, models, usersByUserID, params, as, ps)
+	StreamTable(qw422016, models, usersByUserID, params, as, ps, paths...)
 //line views/vcomment/Table.html:48
 	qt422016.ReleaseWriter(qw422016)
 //line views/vcomment/Table.html:48
 }
 
 //line views/vcomment/Table.html:48
-func Table(models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vcomment/Table.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vcomment/Table.html:48
-	WriteTable(qb422016, models, usersByUserID, params, as, ps)
+	WriteTable(qb422016, models, usersByUserID, params, as, ps, paths...)
 //line views/vcomment/Table.html:48
 	qs422016 := string(qb422016.B)
 //line views/vcomment/Table.html:48

@@ -28,7 +28,7 @@ var (
 )
 
 //line views/vuser/Table.html:10
-func StreamTable(qw422016 *qt422016.Writer, models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vuser/Table.html:10
 	qw422016.N().S(`
 `)
@@ -73,9 +73,9 @@ func StreamTable(qw422016 *qt422016.Writer, models user.Users, params filter.Par
 	for _, model := range models {
 //line views/vuser/Table.html:24
 		qw422016.N().S(`        <tr>
-          <td><a href="/admin/db/user/`)
+          <td><a href="`)
 //line views/vuser/Table.html:26
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vuser/Table.html:26
 		qw422016.N().S(`">`)
 //line views/vuser/Table.html:26
@@ -132,22 +132,22 @@ func StreamTable(qw422016 *qt422016.Writer, models user.Users, params filter.Par
 }
 
 //line views/vuser/Table.html:41
-func WriteTable(qq422016 qtio422016.Writer, models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vuser/Table.html:41
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vuser/Table.html:41
-	StreamTable(qw422016, models, params, as, ps)
+	StreamTable(qw422016, models, params, as, ps, paths...)
 //line views/vuser/Table.html:41
 	qt422016.ReleaseWriter(qw422016)
 //line views/vuser/Table.html:41
 }
 
 //line views/vuser/Table.html:41
-func Table(models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vuser/Table.html:41
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vuser/Table.html:41
-	WriteTable(qb422016, models, params, as, ps)
+	WriteTable(qb422016, models, params, as, ps, paths...)
 //line views/vuser/Table.html:41
 	qs422016 := string(qb422016.B)
 //line views/vuser/Table.html:41

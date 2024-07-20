@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models epermission.EstimatePermissions, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models epermission.EstimatePermissions, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("epermission", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -25,11 +25,11 @@
         {%- for _, model := range models -%}
         <tr>
           <td class="nowrap">
-            <a href="/admin/db/estimate/permission/{%= view.UUID(&model.EstimateID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Estimate" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
           </td>
-          <td><a href="/admin/db/estimate/permission/{%= view.UUID(&model.EstimateID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
-          <td><a href="/admin/db/estimate/permission/{%= view.UUID(&model.EstimateID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>
           <td>{%= view.String(model.Access) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>
         </tr>

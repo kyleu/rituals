@@ -13,20 +13,21 @@
   Models spermission.SprintPermissions
   SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
+  Paths []string
 } %}
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right mrs large-buttons">
       {%- if len(p.Models) > 1 -%}<a href="/admin/db/sprint/permission/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
-      <a href="/admin/db/sprint/permission/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
+      <a href="{%s spermission.Route(p.Paths...) %}/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} {%s ps.Title %}</h3>
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No permissions available</em></div>
     {%- else -%}
     <div class="mt">
-      {%= Table(p.Models, p.SprintsBySprintID, p.Params, as, ps) %}
+      {%= Table(p.Models, p.SprintsBySprintID, p.Params, as, ps, p.Paths...) %}
     </div>
     {%- endif -%}
   </div>

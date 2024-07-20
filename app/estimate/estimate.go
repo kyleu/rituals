@@ -1,6 +1,8 @@
 package estimate
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/estimate"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Estimate)(nil)
 
@@ -68,8 +79,11 @@ func (e *Estimate) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{e.Strings()}
 }
 
-func (e *Estimate) WebPath() string {
-	return "/admin/db/estimate/" + e.ID.String()
+func (e *Estimate) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(e.ID.String()))...)
 }
 
 func (e *Estimate) ToData() []any {

@@ -2,6 +2,8 @@ package smember
 
 import (
 	"fmt"
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +12,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/sprint/member"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*SprintMember)(nil)
 
@@ -75,8 +86,11 @@ func (s *SprintMember) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *SprintMember) WebPath() string {
-	return "/admin/db/sprint/member/" + s.SprintID.String() + "/" + s.UserID.String()
+func (s *SprintMember) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.SprintID.String()), url.QueryEscape(s.UserID.String()))...)
 }
 
 func (s *SprintMember) ToData() []any {

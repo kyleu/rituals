@@ -1,6 +1,8 @@
 package user
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/user"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*User)(nil)
 
@@ -56,8 +67,11 @@ func (u *User) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{u.Strings()}
 }
 
-func (u *User) WebPath() string {
-	return "/admin/db/user/" + u.ID.String()
+func (u *User) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(u.ID.String()))...)
 }
 
 func (u *User) ToData() []any {

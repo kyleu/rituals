@@ -7,7 +7,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("user", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -23,7 +23,7 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/db/user/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

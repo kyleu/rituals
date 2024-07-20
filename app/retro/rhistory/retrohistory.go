@@ -2,6 +2,7 @@ package rhistory
 
 import (
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/retro/history"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*RetroHistory)(nil)
 
@@ -52,8 +62,11 @@ func (r *RetroHistory) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{r.Strings()}
 }
 
-func (r *RetroHistory) WebPath() string {
-	return "/admin/db/retro/history/" + url.QueryEscape(r.Slug)
+func (r *RetroHistory) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(r.Slug))...)
 }
 
 func (r *RetroHistory) ToData() []any {

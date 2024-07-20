@@ -35,16 +35,17 @@
   RelTeamHistoriesByTeamID thistory.TeamHistories
   RelTeamMembersByTeamID tmember.TeamMembers
   RelTeamPermissionsByTeamID tpermission.TeamPermissions
+  Paths []string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       <a href="#modal-team"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(`team`, ps) %} {%s p.Model.TitleString() %}</h3>
-    <div><a href="/admin/db/team"><em>Team</em></a></div>
+    <div><a href="{%s team.Route(p.Paths...) %}"><em>Team</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>

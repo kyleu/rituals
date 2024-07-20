@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models tpermission.TeamPermissions, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("tpermission", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -25,11 +25,11 @@
         {%- for _, model := range models -%}
         <tr>
           <td class="nowrap">
-            <a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGLink(`team`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Team" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
           </td>
-          <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
-          <td><a href="/admin/db/team/permission/{%= view.UUID(&model.TeamID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>
           <td>{%= view.String(model.Access) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>
         </tr>

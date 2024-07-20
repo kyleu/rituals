@@ -1,6 +1,8 @@
 package action
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/action"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Action)(nil)
 
@@ -60,8 +71,11 @@ func (a *Action) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{a.Strings()}
 }
 
-func (a *Action) WebPath() string {
-	return "/admin/db/action/" + a.ID.String()
+func (a *Action) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(a.ID.String()))...)
 }
 
 func (a *Action) ToData() []any {

@@ -2,6 +2,8 @@ package umember
 
 import (
 	"fmt"
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +12,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/standup/member"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*StandupMember)(nil)
 
@@ -75,8 +86,11 @@ func (s *StandupMember) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *StandupMember) WebPath() string {
-	return "/admin/db/standup/member/" + s.StandupID.String() + "/" + s.UserID.String()
+func (s *StandupMember) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.UserID.String()))...)
 }
 
 func (s *StandupMember) ToData() []any {

@@ -1,6 +1,8 @@
 package sprint
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/sprint"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Sprint)(nil)
 
@@ -68,8 +79,11 @@ func (s *Sprint) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *Sprint) WebPath() string {
-	return "/admin/db/sprint/" + s.ID.String()
+func (s *Sprint) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.ID.String()))...)
 }
 
 func (s *Sprint) ToData() []any {

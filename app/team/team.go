@@ -1,6 +1,8 @@
 package team
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/team"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Team)(nil)
 
@@ -61,8 +72,11 @@ func (t *Team) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{t.Strings()}
 }
 
-func (t *Team) WebPath() string {
-	return "/admin/db/team/" + t.ID.String()
+func (t *Team) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(t.ID.String()))...)
 }
 
 func (t *Team) ToData() []any {

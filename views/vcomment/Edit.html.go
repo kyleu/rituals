@@ -33,94 +33,95 @@ var (
 type Edit struct {
 	layout.Basic
 	Model *comment.Comment
+	Paths []string
 	IsNew bool
 }
 
-//line views/vcomment/Edit.html:18
+//line views/vcomment/Edit.html:19
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Edit.html:18
+//line views/vcomment/Edit.html:19
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vcomment/Edit.html:20
+//line views/vcomment/Edit.html:21
 	if p.IsNew {
-//line views/vcomment/Edit.html:20
+//line views/vcomment/Edit.html:21
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vcomment/Edit.html:22
+//line views/vcomment/Edit.html:23
 		components.StreamSVGIcon(qw422016, `comments`, ps)
-//line views/vcomment/Edit.html:22
+//line views/vcomment/Edit.html:23
 		qw422016.N().S(` New Comment</h3>
 `)
-//line views/vcomment/Edit.html:23
+//line views/vcomment/Edit.html:24
 	} else {
-//line views/vcomment/Edit.html:23
+//line views/vcomment/Edit.html:24
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vcomment/Edit.html:24
-		qw422016.E().S(p.Model.WebPath())
-//line views/vcomment/Edit.html:24
+//line views/vcomment/Edit.html:25
+		qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vcomment/Edit.html:25
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete comment [`)
-//line views/vcomment/Edit.html:24
+//line views/vcomment/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vcomment/Edit.html:24
+//line views/vcomment/Edit.html:25
 		qw422016.N().S(`]?"><button>`)
-//line views/vcomment/Edit.html:24
+//line views/vcomment/Edit.html:25
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vcomment/Edit.html:24
+//line views/vcomment/Edit.html:25
 		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vcomment/Edit.html:25
+//line views/vcomment/Edit.html:26
 		components.StreamSVGIcon(qw422016, `comments`, ps)
-//line views/vcomment/Edit.html:25
+//line views/vcomment/Edit.html:26
 		qw422016.N().S(` Edit Comment [`)
-//line views/vcomment/Edit.html:25
+//line views/vcomment/Edit.html:26
 		qw422016.E().S(p.Model.String())
-//line views/vcomment/Edit.html:25
+//line views/vcomment/Edit.html:26
 		qw422016.N().S(`]</h3>
 `)
-//line views/vcomment/Edit.html:26
+//line views/vcomment/Edit.html:27
 	}
-//line views/vcomment/Edit.html:26
+//line views/vcomment/Edit.html:27
 	qw422016.N().S(`    <form action="`)
-//line views/vcomment/Edit.html:27
-	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/comment/_new`, ``))
-//line views/vcomment/Edit.html:27
+//line views/vcomment/Edit.html:28
+	qw422016.E().S(util.Choose(p.IsNew, comment.Route(p.Paths...)+`/_new`, p.Model.WebPath(p.Paths...)+`/edit`))
+//line views/vcomment/Edit.html:28
 	qw422016.N().S(`" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vcomment/Edit.html:30
+//line views/vcomment/Edit.html:31
 	if p.IsNew {
-//line views/vcomment/Edit.html:30
+//line views/vcomment/Edit.html:31
 		edit.StreamUUIDTable(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vcomment/Edit.html:30
+//line views/vcomment/Edit.html:31
 	}
-//line views/vcomment/Edit.html:30
+//line views/vcomment/Edit.html:31
 	qw422016.N().S(`
           `)
-//line views/vcomment/Edit.html:31
+//line views/vcomment/Edit.html:32
 	edit.StreamSelectTable(qw422016, "svc", "", "Svc", p.Model.Svc.Key, enum.AllModelServices.Keys(), enum.AllModelServices.Strings(), 5, enum.AllModelServices.Help())
-//line views/vcomment/Edit.html:31
+//line views/vcomment/Edit.html:32
 	qw422016.N().S(`
           `)
-//line views/vcomment/Edit.html:32
+//line views/vcomment/Edit.html:33
 	edit.StreamUUIDTable(qw422016, "modelID", "", "Model ID", &p.Model.ModelID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vcomment/Edit.html:32
+//line views/vcomment/Edit.html:33
 	qw422016.N().S(`
           `)
-//line views/vcomment/Edit.html:33
+//line views/vcomment/Edit.html:34
 	edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vcomment/Edit.html:33
+//line views/vcomment/Edit.html:34
 	qw422016.N().S(`
           `)
-//line views/vcomment/Edit.html:34
+//line views/vcomment/Edit.html:35
 	edit.StreamStringTable(qw422016, "content", "", "Content", p.Model.Content, 5, "String text")
-//line views/vcomment/Edit.html:34
+//line views/vcomment/Edit.html:35
 	qw422016.N().S(`
           `)
-//line views/vcomment/Edit.html:35
+//line views/vcomment/Edit.html:36
 	edit.StreamTextareaTable(qw422016, "html", "", "HTML", 8, p.Model.HTML, 5, "HTML code, in string form")
-//line views/vcomment/Edit.html:35
+//line views/vcomment/Edit.html:36
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -133,31 +134,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 }
 
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 }
 
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 	return qs422016
-//line views/vcomment/Edit.html:46
+//line views/vcomment/Edit.html:47
 }

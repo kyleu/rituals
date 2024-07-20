@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models ehistory.EstimateHistories, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models ehistory.EstimateHistories, estimatesByEstimateID estimate.Estimates, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("ehistory", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -23,10 +23,10 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/db/estimate/history/{%u model.Slug %}">{%= view.String(model.Slug) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Slug) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+model.EstimateID.String() %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+            <a title="Estimate" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
           </td>
           <td>{%= view.String(model.EstimateName) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

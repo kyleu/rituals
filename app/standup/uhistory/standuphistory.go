@@ -2,6 +2,7 @@ package uhistory
 
 import (
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/standup/history"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*StandupHistory)(nil)
 
@@ -52,8 +62,11 @@ func (s *StandupHistory) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *StandupHistory) WebPath() string {
-	return "/admin/db/standup/history/" + url.QueryEscape(s.Slug)
+func (s *StandupHistory) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.Slug))...)
 }
 
 func (s *StandupHistory) ToData() []any {

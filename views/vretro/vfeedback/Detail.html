@@ -14,16 +14,17 @@
   Model *feedback.Feedback
   RetroByRetroID *retro.Retro
   UserByUserID *user.User
+  Paths []string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       <a href="#modal-feedback"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(`comment`, ps) %} {%s p.Model.TitleString() %}</h3>
-    <div><a href="/admin/db/retro/feedback"><em>Feedback</em></a></div>
+    <div><a href="{%s feedback.Route(p.Paths...) %}"><em>Feedback</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
@@ -35,7 +36,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
-              <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGLink(`retro`, ps) %}</a>
+              <a title="Retro" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
             </td>
           </tr>
           <tr>
@@ -46,7 +47,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
+              <a title="User" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
             </td>
           </tr>
           <tr>

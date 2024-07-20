@@ -34,88 +34,93 @@ type List struct {
 	Models          rpermission.RetroPermissions
 	RetrosByRetroID retro.Retros
 	Params          filter.ParamSet
+	Paths           []string
 }
 
-//line views/vretro/vrpermission/List.html:18
+//line views/vretro/vrpermission/List.html:19
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vrpermission/List.html:18
+//line views/vretro/vrpermission/List.html:19
 	qw422016.N().S(`
   <div class="card">
     <div class="right mrs large-buttons">
 `)
-//line views/vretro/vrpermission/List.html:21
+//line views/vretro/vrpermission/List.html:22
 	if len(p.Models) > 1 {
-//line views/vretro/vrpermission/List.html:21
+//line views/vretro/vrpermission/List.html:22
 		qw422016.N().S(`<a href="/admin/db/retro/permission/_random"><button>`)
-//line views/vretro/vrpermission/List.html:21
+//line views/vretro/vrpermission/List.html:22
 		components.StreamSVGButton(qw422016, "gift", ps)
-//line views/vretro/vrpermission/List.html:21
+//line views/vretro/vrpermission/List.html:22
 		qw422016.N().S(` Random</button></a>`)
-//line views/vretro/vrpermission/List.html:21
+//line views/vretro/vrpermission/List.html:22
 	}
-//line views/vretro/vrpermission/List.html:21
-	qw422016.N().S(`      <a href="/admin/db/retro/permission/_new"><button>`)
 //line views/vretro/vrpermission/List.html:22
+	qw422016.N().S(`      <a href="`)
+//line views/vretro/vrpermission/List.html:23
+	qw422016.E().S(rpermission.Route(p.Paths...))
+//line views/vretro/vrpermission/List.html:23
+	qw422016.N().S(`/_new"><button>`)
+//line views/vretro/vrpermission/List.html:23
 	components.StreamSVGButton(qw422016, "plus", ps)
-//line views/vretro/vrpermission/List.html:22
+//line views/vretro/vrpermission/List.html:23
 	qw422016.N().S(` New</button></a>
     </div>
     <h3>`)
-//line views/vretro/vrpermission/List.html:24
+//line views/vretro/vrpermission/List.html:25
 	components.StreamSVGIcon(qw422016, `permission`, ps)
-//line views/vretro/vrpermission/List.html:24
+//line views/vretro/vrpermission/List.html:25
 	qw422016.N().S(` `)
-//line views/vretro/vrpermission/List.html:24
+//line views/vretro/vrpermission/List.html:25
 	qw422016.E().S(ps.Title)
-//line views/vretro/vrpermission/List.html:24
+//line views/vretro/vrpermission/List.html:25
 	qw422016.N().S(`</h3>
 `)
-//line views/vretro/vrpermission/List.html:25
+//line views/vretro/vrpermission/List.html:26
 	if len(p.Models) == 0 {
-//line views/vretro/vrpermission/List.html:25
+//line views/vretro/vrpermission/List.html:26
 		qw422016.N().S(`    <div class="mt"><em>No permissions available</em></div>
 `)
-//line views/vretro/vrpermission/List.html:27
+//line views/vretro/vrpermission/List.html:28
 	} else {
-//line views/vretro/vrpermission/List.html:27
+//line views/vretro/vrpermission/List.html:28
 		qw422016.N().S(`    <div class="mt">
       `)
-//line views/vretro/vrpermission/List.html:29
-		StreamTable(qw422016, p.Models, p.RetrosByRetroID, p.Params, as, ps)
-//line views/vretro/vrpermission/List.html:29
+//line views/vretro/vrpermission/List.html:30
+		StreamTable(qw422016, p.Models, p.RetrosByRetroID, p.Params, as, ps, p.Paths...)
+//line views/vretro/vrpermission/List.html:30
 		qw422016.N().S(`
     </div>
 `)
-//line views/vretro/vrpermission/List.html:31
+//line views/vretro/vrpermission/List.html:32
 	}
-//line views/vretro/vrpermission/List.html:31
+//line views/vretro/vrpermission/List.html:32
 	qw422016.N().S(`  </div>
 `)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 }
 
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	p.StreamBody(qw422016, as, ps)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 }
 
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	p.WriteBody(qb422016, as, ps)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	qs422016 := string(qb422016.B)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 	return qs422016
-//line views/vretro/vrpermission/List.html:33
+//line views/vretro/vrpermission/List.html:34
 }

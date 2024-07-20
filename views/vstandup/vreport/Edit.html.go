@@ -32,94 +32,95 @@ var (
 type Edit struct {
 	layout.Basic
 	Model *report.Report
+	Paths []string
 	IsNew bool
 }
 
-//line views/vstandup/vreport/Edit.html:17
+//line views/vstandup/vreport/Edit.html:18
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/vreport/Edit.html:17
+//line views/vstandup/vreport/Edit.html:18
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vstandup/vreport/Edit.html:19
+//line views/vstandup/vreport/Edit.html:20
 	if p.IsNew {
-//line views/vstandup/vreport/Edit.html:19
+//line views/vstandup/vreport/Edit.html:20
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vstandup/vreport/Edit.html:21
+//line views/vstandup/vreport/Edit.html:22
 		components.StreamSVGIcon(qw422016, `file-alt`, ps)
-//line views/vstandup/vreport/Edit.html:21
+//line views/vstandup/vreport/Edit.html:22
 		qw422016.N().S(` New Report</h3>
 `)
-//line views/vstandup/vreport/Edit.html:22
+//line views/vstandup/vreport/Edit.html:23
 	} else {
-//line views/vstandup/vreport/Edit.html:22
+//line views/vstandup/vreport/Edit.html:23
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vstandup/vreport/Edit.html:23
-		qw422016.E().S(p.Model.WebPath())
-//line views/vstandup/vreport/Edit.html:23
+//line views/vstandup/vreport/Edit.html:24
+		qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vstandup/vreport/Edit.html:24
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete report [`)
-//line views/vstandup/vreport/Edit.html:23
+//line views/vstandup/vreport/Edit.html:24
 		qw422016.E().S(p.Model.String())
-//line views/vstandup/vreport/Edit.html:23
+//line views/vstandup/vreport/Edit.html:24
 		qw422016.N().S(`]?"><button>`)
-//line views/vstandup/vreport/Edit.html:23
+//line views/vstandup/vreport/Edit.html:24
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vstandup/vreport/Edit.html:23
+//line views/vstandup/vreport/Edit.html:24
 		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vstandup/vreport/Edit.html:24
+//line views/vstandup/vreport/Edit.html:25
 		components.StreamSVGIcon(qw422016, `file-alt`, ps)
-//line views/vstandup/vreport/Edit.html:24
+//line views/vstandup/vreport/Edit.html:25
 		qw422016.N().S(` Edit Report [`)
-//line views/vstandup/vreport/Edit.html:24
+//line views/vstandup/vreport/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vstandup/vreport/Edit.html:24
+//line views/vstandup/vreport/Edit.html:25
 		qw422016.N().S(`]</h3>
 `)
-//line views/vstandup/vreport/Edit.html:25
+//line views/vstandup/vreport/Edit.html:26
 	}
-//line views/vstandup/vreport/Edit.html:25
+//line views/vstandup/vreport/Edit.html:26
 	qw422016.N().S(`    <form action="`)
-//line views/vstandup/vreport/Edit.html:26
-	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/standup/report/_new`, ``))
-//line views/vstandup/vreport/Edit.html:26
+//line views/vstandup/vreport/Edit.html:27
+	qw422016.E().S(util.Choose(p.IsNew, report.Route(p.Paths...)+`/_new`, p.Model.WebPath(p.Paths...)+`/edit`))
+//line views/vstandup/vreport/Edit.html:27
 	qw422016.N().S(`" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vstandup/vreport/Edit.html:29
+//line views/vstandup/vreport/Edit.html:30
 	if p.IsNew {
-//line views/vstandup/vreport/Edit.html:29
+//line views/vstandup/vreport/Edit.html:30
 		edit.StreamUUIDTable(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vstandup/vreport/Edit.html:29
+//line views/vstandup/vreport/Edit.html:30
 	}
-//line views/vstandup/vreport/Edit.html:29
+//line views/vstandup/vreport/Edit.html:30
 	qw422016.N().S(`
           `)
-//line views/vstandup/vreport/Edit.html:30
+//line views/vstandup/vreport/Edit.html:31
 	edit.StreamUUIDTable(qw422016, "standupID", "input-standupID", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vstandup/vreport/Edit.html:30
+//line views/vstandup/vreport/Edit.html:31
 	qw422016.N().S(`
           `)
-//line views/vstandup/vreport/Edit.html:31
+//line views/vstandup/vreport/Edit.html:32
 	edit.StreamTimestampDayTable(qw422016, "day", "", "Day", &p.Model.Day, 5, "Calendar date")
-//line views/vstandup/vreport/Edit.html:31
+//line views/vstandup/vreport/Edit.html:32
 	qw422016.N().S(`
           `)
-//line views/vstandup/vreport/Edit.html:32
+//line views/vstandup/vreport/Edit.html:33
 	edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vstandup/vreport/Edit.html:32
+//line views/vstandup/vreport/Edit.html:33
 	qw422016.N().S(`
           `)
-//line views/vstandup/vreport/Edit.html:33
+//line views/vstandup/vreport/Edit.html:34
 	edit.StreamStringTable(qw422016, "content", "", "Content", p.Model.Content, 5, "String text")
-//line views/vstandup/vreport/Edit.html:33
+//line views/vstandup/vreport/Edit.html:34
 	qw422016.N().S(`
           `)
-//line views/vstandup/vreport/Edit.html:34
+//line views/vstandup/vreport/Edit.html:35
 	edit.StreamTextareaTable(qw422016, "html", "", "HTML", 8, p.Model.HTML, 5, "HTML code, in string form")
-//line views/vstandup/vreport/Edit.html:34
+//line views/vstandup/vreport/Edit.html:35
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -133,31 +134,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 }
 
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 }
 
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 	return qs422016
-//line views/vstandup/vreport/Edit.html:46
+//line views/vstandup/vreport/Edit.html:47
 }

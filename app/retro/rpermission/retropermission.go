@@ -3,6 +3,7 @@ package rpermission
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/retro/permission"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*RetroPermission)(nil)
 
@@ -73,8 +83,11 @@ func (r *RetroPermission) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{r.Strings()}
 }
 
-func (r *RetroPermission) WebPath() string {
-	return "/admin/db/retro/permission/" + r.RetroID.String() + "/" + url.QueryEscape(r.Key) + "/" + url.QueryEscape(r.Value)
+func (r *RetroPermission) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(r.RetroID.String()), url.QueryEscape(r.Key), url.QueryEscape(r.Value))...)
 }
 
 func (r *RetroPermission) ToData() []any {

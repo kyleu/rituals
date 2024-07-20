@@ -2,6 +2,7 @@ package ehistory
 
 import (
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/estimate/history"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*EstimateHistory)(nil)
 
@@ -52,8 +62,11 @@ func (e *EstimateHistory) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{e.Strings()}
 }
 
-func (e *EstimateHistory) WebPath() string {
-	return "/admin/db/estimate/history/" + url.QueryEscape(e.Slug)
+func (e *EstimateHistory) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(e.Slug))...)
 }
 
 func (e *EstimateHistory) ToData() []any {

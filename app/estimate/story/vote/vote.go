@@ -2,6 +2,8 @@ package vote
 
 import (
 	"fmt"
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/estimate/story/vote"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Vote)(nil)
 
@@ -70,8 +81,11 @@ func (v *Vote) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{v.Strings()}
 }
 
-func (v *Vote) WebPath() string {
-	return "/admin/db/estimate/story/vote/" + v.StoryID.String() + "/" + v.UserID.String()
+func (v *Vote) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(v.StoryID.String()), url.QueryEscape(v.UserID.String()))...)
 }
 
 func (v *Vote) ToData() []any {

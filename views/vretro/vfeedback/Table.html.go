@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vretro/vfeedback/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vretro/vfeedback/Table.html:12
 	qw422016.N().S(`
 `)
@@ -90,9 +90,9 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 	for _, model := range models {
 //line views/vretro/vfeedback/Table.html:29
 		qw422016.N().S(`        <tr>
-          <td><a href="/admin/db/retro/feedback/`)
+          <td><a href="`)
 //line views/vretro/vfeedback/Table.html:31
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vfeedback/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:31
@@ -117,7 +117,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 		qw422016.N().S(`
             <a title="Retro" href="`)
 //line views/vretro/vfeedback/Table.html:34
-		qw422016.E().S(`/admin/db/retro` + `/` + model.RetroID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vfeedback/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:34
@@ -148,7 +148,7 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 		qw422016.N().S(`
             <a title="User" href="`)
 //line views/vretro/vfeedback/Table.html:39
-		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vfeedback/Table.html:39
 		qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Table.html:39
@@ -202,22 +202,22 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
 }
 
 //line views/vretro/vfeedback/Table.html:55
-func WriteTable(qq422016 qtio422016.Writer, models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vretro/vfeedback/Table.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vretro/vfeedback/Table.html:55
-	StreamTable(qw422016, models, retrosByRetroID, usersByUserID, params, as, ps)
+	StreamTable(qw422016, models, retrosByRetroID, usersByUserID, params, as, ps, paths...)
 //line views/vretro/vfeedback/Table.html:55
 	qt422016.ReleaseWriter(qw422016)
 //line views/vretro/vfeedback/Table.html:55
 }
 
 //line views/vretro/vfeedback/Table.html:55
-func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vretro/vfeedback/Table.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vretro/vfeedback/Table.html:55
-	WriteTable(qb422016, models, retrosByRetroID, usersByUserID, params, as, ps)
+	WriteTable(qb422016, models, retrosByRetroID, usersByUserID, params, as, ps, paths...)
 //line views/vretro/vfeedback/Table.html:55
 	qs422016 := string(qb422016.B)
 //line views/vretro/vfeedback/Table.html:55

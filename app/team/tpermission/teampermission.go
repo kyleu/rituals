@@ -3,6 +3,7 @@ package tpermission
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/team/permission"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*TeamPermission)(nil)
 
@@ -73,8 +83,11 @@ func (t *TeamPermission) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{t.Strings()}
 }
 
-func (t *TeamPermission) WebPath() string {
-	return "/admin/db/team/permission/" + t.TeamID.String() + "/" + url.QueryEscape(t.Key) + "/" + url.QueryEscape(t.Value)
+func (t *TeamPermission) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(t.TeamID.String()), url.QueryEscape(t.Key), url.QueryEscape(t.Value))...)
 }
 
 func (t *TeamPermission) ToData() []any {

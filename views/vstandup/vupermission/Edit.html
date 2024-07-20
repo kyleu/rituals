@@ -11,6 +11,7 @@
 {% code type Edit struct {
   layout.Basic
   Model *upermission.StandupPermission
+  Paths []string
   IsNew bool
 } %}
 
@@ -20,10 +21,10 @@
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} New Permission</h3>
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete permission [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete permission [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} Edit Permission [{%s p.Model.String() %}]</h3>
     {%- endif -%}
-    <form action="{%s util.Choose(p.IsNew, `/admin/db/standup/permission/_new`, ``) %}" class="mt" method="post">
+    <form action="{%s util.Choose(p.IsNew, upermission.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %}" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= edit.UUIDTable("standupID", "input-standupID", "Standup ID", &p.Model.StandupID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}

@@ -33,93 +33,98 @@ type Detail struct {
 	layout.Basic
 	Model                *ehistory.EstimateHistory
 	EstimateByEstimateID *estimate.Estimate
+	Paths                []string
 }
 
-//line views/vestimate/vehistory/Detail.html:17
+//line views/vestimate/vehistory/Detail.html:18
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vehistory/Detail.html:17
+//line views/vestimate/vehistory/Detail.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-estimateHistory"><button type="button">`)
-//line views/vestimate/vehistory/Detail.html:20
+//line views/vestimate/vehistory/Detail.html:21
 	components.StreamSVGButton(qw422016, "file", ps)
-//line views/vestimate/vehistory/Detail.html:20
+//line views/vestimate/vehistory/Detail.html:21
 	qw422016.N().S(` JSON</button></a>
       <a href="`)
-//line views/vestimate/vehistory/Detail.html:21
-	qw422016.E().S(p.Model.WebPath())
-//line views/vestimate/vehistory/Detail.html:21
+//line views/vestimate/vehistory/Detail.html:22
+	qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vestimate/vehistory/Detail.html:22
 	qw422016.N().S(`/edit"><button>`)
-//line views/vestimate/vehistory/Detail.html:21
+//line views/vestimate/vehistory/Detail.html:22
 	components.StreamSVGButton(qw422016, "edit", ps)
-//line views/vestimate/vehistory/Detail.html:21
+//line views/vestimate/vehistory/Detail.html:22
 	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
-//line views/vestimate/vehistory/Detail.html:23
+//line views/vestimate/vehistory/Detail.html:24
 	components.StreamSVGIcon(qw422016, `history`, ps)
-//line views/vestimate/vehistory/Detail.html:23
+//line views/vestimate/vehistory/Detail.html:24
 	qw422016.N().S(` `)
-//line views/vestimate/vehistory/Detail.html:23
+//line views/vestimate/vehistory/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
-//line views/vestimate/vehistory/Detail.html:23
+//line views/vestimate/vehistory/Detail.html:24
 	qw422016.N().S(`</h3>
-    <div><a href="/admin/db/estimate/history"><em>History</em></a></div>
+    <div><a href="`)
+//line views/vestimate/vehistory/Detail.html:25
+	qw422016.E().S(ehistory.Route(p.Paths...))
+//line views/vestimate/vehistory/Detail.html:25
+	qw422016.N().S(`"><em>History</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
           <tr>
             <th class="shrink" title="String text">Slug</th>
             <td>`)
-//line views/vestimate/vehistory/Detail.html:30
+//line views/vestimate/vehistory/Detail.html:31
 	view.StreamString(qw422016, p.Model.Slug)
-//line views/vestimate/vehistory/Detail.html:30
+//line views/vestimate/vehistory/Detail.html:31
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
             <td class="nowrap">
               `)
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 	view.StreamUUID(qw422016, &p.Model.EstimateID)
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 	if p.EstimateByEstimateID != nil {
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 		qw422016.N().S(` (`)
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 		qw422016.E().S(p.EstimateByEstimateID.TitleString())
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 		qw422016.N().S(`)`)
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 	}
-//line views/vestimate/vehistory/Detail.html:35
+//line views/vestimate/vehistory/Detail.html:36
 	qw422016.N().S(`
               <a title="Estimate" href="`)
-//line views/vestimate/vehistory/Detail.html:36
-	qw422016.E().S(`/admin/db/estimate` + `/` + p.Model.EstimateID.String())
-//line views/vestimate/vehistory/Detail.html:36
+//line views/vestimate/vehistory/Detail.html:37
+	qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vestimate/vehistory/Detail.html:37
 	qw422016.N().S(`">`)
-//line views/vestimate/vehistory/Detail.html:36
+//line views/vestimate/vehistory/Detail.html:37
 	components.StreamSVGLink(qw422016, `estimate`, ps)
-//line views/vestimate/vehistory/Detail.html:36
+//line views/vestimate/vehistory/Detail.html:37
 	qw422016.N().S(`</a>
             </td>
           </tr>
           <tr>
             <th class="shrink" title="String text">Estimate Name</th>
             <td>`)
-//line views/vestimate/vehistory/Detail.html:41
+//line views/vestimate/vehistory/Detail.html:42
 	view.StreamString(qw422016, p.Model.EstimateName)
-//line views/vestimate/vehistory/Detail.html:41
+//line views/vestimate/vehistory/Detail.html:42
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th class="shrink" title="Date and time, in almost any format">Created</th>
             <td>`)
-//line views/vestimate/vehistory/Detail.html:45
+//line views/vestimate/vehistory/Detail.html:46
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vestimate/vehistory/Detail.html:45
+//line views/vestimate/vehistory/Detail.html:46
 	qw422016.N().S(`</td>
           </tr>
         </tbody>
@@ -127,38 +132,38 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
   </div>
 `)
-//line views/vestimate/vehistory/Detail.html:52
+//line views/vestimate/vehistory/Detail.html:53
 	qw422016.N().S(`  `)
-//line views/vestimate/vehistory/Detail.html:53
+//line views/vestimate/vehistory/Detail.html:54
 	components.StreamJSONModal(qw422016, "estimateHistory", "History JSON", p.Model, 1)
-//line views/vestimate/vehistory/Detail.html:53
+//line views/vestimate/vehistory/Detail.html:54
 	qw422016.N().S(`
 `)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 }
 
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 }
 
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 	return qs422016
-//line views/vestimate/vehistory/Detail.html:54
+//line views/vestimate/vehistory/Detail.html:55
 }

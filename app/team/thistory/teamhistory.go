@@ -2,6 +2,7 @@ package thistory
 
 import (
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/team/history"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*TeamHistory)(nil)
 
@@ -52,8 +62,11 @@ func (t *TeamHistory) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{t.Strings()}
 }
 
-func (t *TeamHistory) WebPath() string {
-	return "/admin/db/team/history/" + url.QueryEscape(t.Slug)
+func (t *TeamHistory) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(t.Slug))...)
 }
 
 func (t *TeamHistory) ToData() []any {

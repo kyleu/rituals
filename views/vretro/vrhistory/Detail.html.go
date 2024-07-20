@@ -33,93 +33,98 @@ type Detail struct {
 	layout.Basic
 	Model          *rhistory.RetroHistory
 	RetroByRetroID *retro.Retro
+	Paths          []string
 }
 
-//line views/vretro/vrhistory/Detail.html:17
+//line views/vretro/vrhistory/Detail.html:18
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vrhistory/Detail.html:17
+//line views/vretro/vrhistory/Detail.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-retroHistory"><button type="button">`)
-//line views/vretro/vrhistory/Detail.html:20
+//line views/vretro/vrhistory/Detail.html:21
 	components.StreamSVGButton(qw422016, "file", ps)
-//line views/vretro/vrhistory/Detail.html:20
+//line views/vretro/vrhistory/Detail.html:21
 	qw422016.N().S(` JSON</button></a>
       <a href="`)
-//line views/vretro/vrhistory/Detail.html:21
-	qw422016.E().S(p.Model.WebPath())
-//line views/vretro/vrhistory/Detail.html:21
+//line views/vretro/vrhistory/Detail.html:22
+	qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vretro/vrhistory/Detail.html:22
 	qw422016.N().S(`/edit"><button>`)
-//line views/vretro/vrhistory/Detail.html:21
+//line views/vretro/vrhistory/Detail.html:22
 	components.StreamSVGButton(qw422016, "edit", ps)
-//line views/vretro/vrhistory/Detail.html:21
+//line views/vretro/vrhistory/Detail.html:22
 	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
-//line views/vretro/vrhistory/Detail.html:23
+//line views/vretro/vrhistory/Detail.html:24
 	components.StreamSVGIcon(qw422016, `history`, ps)
-//line views/vretro/vrhistory/Detail.html:23
+//line views/vretro/vrhistory/Detail.html:24
 	qw422016.N().S(` `)
-//line views/vretro/vrhistory/Detail.html:23
+//line views/vretro/vrhistory/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
-//line views/vretro/vrhistory/Detail.html:23
+//line views/vretro/vrhistory/Detail.html:24
 	qw422016.N().S(`</h3>
-    <div><a href="/admin/db/retro/history"><em>History</em></a></div>
+    <div><a href="`)
+//line views/vretro/vrhistory/Detail.html:25
+	qw422016.E().S(rhistory.Route(p.Paths...))
+//line views/vretro/vrhistory/Detail.html:25
+	qw422016.N().S(`"><em>History</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
           <tr>
             <th class="shrink" title="String text">Slug</th>
             <td>`)
-//line views/vretro/vrhistory/Detail.html:30
+//line views/vretro/vrhistory/Detail.html:31
 	view.StreamString(qw422016, p.Model.Slug)
-//line views/vretro/vrhistory/Detail.html:30
+//line views/vretro/vrhistory/Detail.html:31
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
             <td class="nowrap">
               `)
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 	view.StreamUUID(qw422016, &p.Model.RetroID)
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 	if p.RetroByRetroID != nil {
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 		qw422016.N().S(` (`)
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 		qw422016.E().S(p.RetroByRetroID.TitleString())
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 		qw422016.N().S(`)`)
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 	}
-//line views/vretro/vrhistory/Detail.html:35
+//line views/vretro/vrhistory/Detail.html:36
 	qw422016.N().S(`
               <a title="Retro" href="`)
-//line views/vretro/vrhistory/Detail.html:36
-	qw422016.E().S(`/admin/db/retro` + `/` + p.Model.RetroID.String())
-//line views/vretro/vrhistory/Detail.html:36
+//line views/vretro/vrhistory/Detail.html:37
+	qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vretro/vrhistory/Detail.html:37
 	qw422016.N().S(`">`)
-//line views/vretro/vrhistory/Detail.html:36
+//line views/vretro/vrhistory/Detail.html:37
 	components.StreamSVGLink(qw422016, `retro`, ps)
-//line views/vretro/vrhistory/Detail.html:36
+//line views/vretro/vrhistory/Detail.html:37
 	qw422016.N().S(`</a>
             </td>
           </tr>
           <tr>
             <th class="shrink" title="String text">Retro Name</th>
             <td>`)
-//line views/vretro/vrhistory/Detail.html:41
+//line views/vretro/vrhistory/Detail.html:42
 	view.StreamString(qw422016, p.Model.RetroName)
-//line views/vretro/vrhistory/Detail.html:41
+//line views/vretro/vrhistory/Detail.html:42
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th class="shrink" title="Date and time, in almost any format">Created</th>
             <td>`)
-//line views/vretro/vrhistory/Detail.html:45
+//line views/vretro/vrhistory/Detail.html:46
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vretro/vrhistory/Detail.html:45
+//line views/vretro/vrhistory/Detail.html:46
 	qw422016.N().S(`</td>
           </tr>
         </tbody>
@@ -127,38 +132,38 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
   </div>
 `)
-//line views/vretro/vrhistory/Detail.html:52
+//line views/vretro/vrhistory/Detail.html:53
 	qw422016.N().S(`  `)
-//line views/vretro/vrhistory/Detail.html:53
+//line views/vretro/vrhistory/Detail.html:54
 	components.StreamJSONModal(qw422016, "retroHistory", "History JSON", p.Model, 1)
-//line views/vretro/vrhistory/Detail.html:53
+//line views/vretro/vrhistory/Detail.html:54
 	qw422016.N().S(`
 `)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 }
 
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	p.StreamBody(qw422016, as, ps)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 }
 
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	p.WriteBody(qb422016, as, ps)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	qs422016 := string(qb422016.B)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 	return qs422016
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:55
 }

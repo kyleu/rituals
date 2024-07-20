@@ -30,16 +30,17 @@
   RelEstimateMembersByEstimateID emember.EstimateMembers
   RelEstimatePermissionsByEstimateID epermission.EstimatePermissions
   RelStoriesByEstimateID story.Stories
+  Paths []string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       <a href="#modal-estimate"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(`estimate`, ps) %} {%s p.Model.TitleString() %}</h3>
-    <div><a href="/admin/db/estimate"><em>Estimate</em></a></div>
+    <div><a href="{%s estimate.Route(p.Paths...) %}"><em>Estimate</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
@@ -67,14 +68,14 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
             <td class="nowrap">
               {%= view.UUID(p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
-              {% if p.Model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+p.Model.TeamID.String() %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+              {% if p.Model.TeamID != nil %}<a title="Team" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
             </td>
           </tr>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
             <td class="nowrap">
               {%= view.UUID(p.Model.SprintID) %}{% if p.SprintBySprintID != nil %} ({%s p.SprintBySprintID.TitleString() %}){% endif %}
-              {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+p.Model.SprintID.String() %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
+              {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
             </td>
           </tr>
           <tr>

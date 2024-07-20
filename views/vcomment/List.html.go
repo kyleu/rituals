@@ -34,88 +34,93 @@ type List struct {
 	Models        comment.Comments
 	UsersByUserID user.Users
 	Params        filter.ParamSet
+	Paths         []string
 }
 
-//line views/vcomment/List.html:18
+//line views/vcomment/List.html:19
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/List.html:18
+//line views/vcomment/List.html:19
 	qw422016.N().S(`
   <div class="card">
     <div class="right mrs large-buttons">
 `)
-//line views/vcomment/List.html:21
+//line views/vcomment/List.html:22
 	if len(p.Models) > 1 {
-//line views/vcomment/List.html:21
+//line views/vcomment/List.html:22
 		qw422016.N().S(`<a href="/admin/db/comment/_random"><button>`)
-//line views/vcomment/List.html:21
+//line views/vcomment/List.html:22
 		components.StreamSVGButton(qw422016, "gift", ps)
-//line views/vcomment/List.html:21
+//line views/vcomment/List.html:22
 		qw422016.N().S(` Random</button></a>`)
-//line views/vcomment/List.html:21
+//line views/vcomment/List.html:22
 	}
-//line views/vcomment/List.html:21
-	qw422016.N().S(`      <a href="/admin/db/comment/_new"><button>`)
 //line views/vcomment/List.html:22
+	qw422016.N().S(`      <a href="`)
+//line views/vcomment/List.html:23
+	qw422016.E().S(comment.Route(p.Paths...))
+//line views/vcomment/List.html:23
+	qw422016.N().S(`/_new"><button>`)
+//line views/vcomment/List.html:23
 	components.StreamSVGButton(qw422016, "plus", ps)
-//line views/vcomment/List.html:22
+//line views/vcomment/List.html:23
 	qw422016.N().S(` New</button></a>
     </div>
     <h3>`)
-//line views/vcomment/List.html:24
+//line views/vcomment/List.html:25
 	components.StreamSVGIcon(qw422016, `comments`, ps)
-//line views/vcomment/List.html:24
+//line views/vcomment/List.html:25
 	qw422016.N().S(` `)
-//line views/vcomment/List.html:24
+//line views/vcomment/List.html:25
 	qw422016.E().S(ps.Title)
-//line views/vcomment/List.html:24
+//line views/vcomment/List.html:25
 	qw422016.N().S(`</h3>
 `)
-//line views/vcomment/List.html:25
+//line views/vcomment/List.html:26
 	if len(p.Models) == 0 {
-//line views/vcomment/List.html:25
+//line views/vcomment/List.html:26
 		qw422016.N().S(`    <div class="mt"><em>No comments available</em></div>
 `)
-//line views/vcomment/List.html:27
+//line views/vcomment/List.html:28
 	} else {
-//line views/vcomment/List.html:27
+//line views/vcomment/List.html:28
 		qw422016.N().S(`    <div class="mt">
       `)
-//line views/vcomment/List.html:29
-		StreamTable(qw422016, p.Models, p.UsersByUserID, p.Params, as, ps)
-//line views/vcomment/List.html:29
+//line views/vcomment/List.html:30
+		StreamTable(qw422016, p.Models, p.UsersByUserID, p.Params, as, ps, p.Paths...)
+//line views/vcomment/List.html:30
 		qw422016.N().S(`
     </div>
 `)
-//line views/vcomment/List.html:31
+//line views/vcomment/List.html:32
 	}
-//line views/vcomment/List.html:31
+//line views/vcomment/List.html:32
 	qw422016.N().S(`  </div>
 `)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 }
 
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	p.StreamBody(qw422016, as, ps)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 }
 
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	p.WriteBody(qb422016, as, ps)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	qs422016 := string(qb422016.B)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 	return qs422016
-//line views/vcomment/List.html:33
+//line views/vcomment/List.html:34
 }

@@ -3,6 +3,7 @@ package upermission
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/standup/permission"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*StandupPermission)(nil)
 
@@ -73,8 +83,11 @@ func (s *StandupPermission) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *StandupPermission) WebPath() string {
-	return "/admin/db/standup/permission/" + s.StandupID.String() + "/" + url.QueryEscape(s.Key) + "/" + url.QueryEscape(s.Value)
+func (s *StandupPermission) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.Key), url.QueryEscape(s.Value))...)
 }
 
 func (s *StandupPermission) ToData() []any {

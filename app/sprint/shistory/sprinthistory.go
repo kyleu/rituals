@@ -2,6 +2,7 @@ package shistory
 
 import (
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/sprint/history"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*SprintHistory)(nil)
 
@@ -52,8 +62,11 @@ func (s *SprintHistory) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *SprintHistory) WebPath() string {
-	return "/admin/db/sprint/history/" + url.QueryEscape(s.Slug)
+func (s *SprintHistory) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.Slug))...)
 }
 
 func (s *SprintHistory) ToData() []any {

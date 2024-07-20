@@ -33,99 +33,100 @@ var (
 type Edit struct {
 	layout.Basic
 	Model *action.Action
+	Paths []string
 	IsNew bool
 }
 
-//line views/vaction/Edit.html:18
+//line views/vaction/Edit.html:19
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Edit.html:18
+//line views/vaction/Edit.html:19
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vaction/Edit.html:20
+//line views/vaction/Edit.html:21
 	if p.IsNew {
-//line views/vaction/Edit.html:20
+//line views/vaction/Edit.html:21
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vaction/Edit.html:22
+//line views/vaction/Edit.html:23
 		components.StreamSVGIcon(qw422016, `action`, ps)
-//line views/vaction/Edit.html:22
+//line views/vaction/Edit.html:23
 		qw422016.N().S(` New Action</h3>
 `)
-//line views/vaction/Edit.html:23
+//line views/vaction/Edit.html:24
 	} else {
-//line views/vaction/Edit.html:23
+//line views/vaction/Edit.html:24
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vaction/Edit.html:24
-		qw422016.E().S(p.Model.WebPath())
-//line views/vaction/Edit.html:24
+//line views/vaction/Edit.html:25
+		qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vaction/Edit.html:25
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete action [`)
-//line views/vaction/Edit.html:24
+//line views/vaction/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vaction/Edit.html:24
+//line views/vaction/Edit.html:25
 		qw422016.N().S(`]?"><button>`)
-//line views/vaction/Edit.html:24
+//line views/vaction/Edit.html:25
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vaction/Edit.html:24
+//line views/vaction/Edit.html:25
 		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vaction/Edit.html:25
+//line views/vaction/Edit.html:26
 		components.StreamSVGIcon(qw422016, `action`, ps)
-//line views/vaction/Edit.html:25
+//line views/vaction/Edit.html:26
 		qw422016.N().S(` Edit Action [`)
-//line views/vaction/Edit.html:25
+//line views/vaction/Edit.html:26
 		qw422016.E().S(p.Model.String())
-//line views/vaction/Edit.html:25
+//line views/vaction/Edit.html:26
 		qw422016.N().S(`]</h3>
 `)
-//line views/vaction/Edit.html:26
+//line views/vaction/Edit.html:27
 	}
-//line views/vaction/Edit.html:26
+//line views/vaction/Edit.html:27
 	qw422016.N().S(`    <form action="`)
-//line views/vaction/Edit.html:27
-	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/action/_new`, ``))
-//line views/vaction/Edit.html:27
+//line views/vaction/Edit.html:28
+	qw422016.E().S(util.Choose(p.IsNew, action.Route(p.Paths...)+`/_new`, p.Model.WebPath(p.Paths...)+`/edit`))
+//line views/vaction/Edit.html:28
 	qw422016.N().S(`" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vaction/Edit.html:30
+//line views/vaction/Edit.html:31
 	if p.IsNew {
-//line views/vaction/Edit.html:30
+//line views/vaction/Edit.html:31
 		edit.StreamUUIDTable(qw422016, "id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vaction/Edit.html:30
+//line views/vaction/Edit.html:31
 	}
-//line views/vaction/Edit.html:30
+//line views/vaction/Edit.html:31
 	qw422016.N().S(`
           `)
-//line views/vaction/Edit.html:31
+//line views/vaction/Edit.html:32
 	edit.StreamSelectTable(qw422016, "svc", "", "Svc", p.Model.Svc.Key, enum.AllModelServices.Keys(), enum.AllModelServices.Strings(), 5, enum.AllModelServices.Help())
-//line views/vaction/Edit.html:31
+//line views/vaction/Edit.html:32
 	qw422016.N().S(`
           `)
-//line views/vaction/Edit.html:32
+//line views/vaction/Edit.html:33
 	edit.StreamUUIDTable(qw422016, "modelID", "", "Model ID", &p.Model.ModelID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vaction/Edit.html:32
+//line views/vaction/Edit.html:33
 	qw422016.N().S(`
           `)
-//line views/vaction/Edit.html:33
+//line views/vaction/Edit.html:34
 	edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vaction/Edit.html:33
+//line views/vaction/Edit.html:34
 	qw422016.N().S(`
           `)
-//line views/vaction/Edit.html:34
+//line views/vaction/Edit.html:35
 	edit.StreamStringTable(qw422016, "act", "", "Act", p.Model.Act, 5, "String text")
-//line views/vaction/Edit.html:34
+//line views/vaction/Edit.html:35
 	qw422016.N().S(`
           `)
-//line views/vaction/Edit.html:35
+//line views/vaction/Edit.html:36
 	edit.StreamTextareaTable(qw422016, "content", "", "Content", 8, util.ToJSON(p.Model.Content), 5, "JSON object")
-//line views/vaction/Edit.html:35
+//line views/vaction/Edit.html:36
 	qw422016.N().S(`
           `)
-//line views/vaction/Edit.html:36
+//line views/vaction/Edit.html:37
 	edit.StreamStringTable(qw422016, "note", "", "Note", p.Model.Note, 5, "String text")
-//line views/vaction/Edit.html:36
+//line views/vaction/Edit.html:37
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -138,31 +139,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 }
 
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	p.StreamBody(qw422016, as, ps)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 }
 
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	p.WriteBody(qb422016, as, ps)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	qs422016 := string(qb422016.B)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 	return qs422016
-//line views/vaction/Edit.html:47
+//line views/vaction/Edit.html:48
 }

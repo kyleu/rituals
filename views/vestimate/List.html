@@ -16,6 +16,7 @@
   TeamsByTeamID team.Teams
   SprintsBySprintID sprint.Sprints
   Params filter.ParamSet
+  Paths []string
   SearchQuery string
 } %}
 
@@ -24,7 +25,7 @@
     <div class="right">{%= edit.SearchForm("", "q", "Search Estimates", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
       {%- if len(p.Models) > 1 -%}<a href="/admin/db/estimate/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
-      <a href="/admin/db/estimate/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
+      <a href="{%s estimate.Route(p.Paths...) %}/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`estimate`, ps) %} {%s ps.Title %}</h3>
     <div class="clear"></div>
@@ -36,7 +37,7 @@
     <div class="mt"><em>No estimates available</em></div>
     {%- else -%}
     <div class="mt">
-      {%= Table(p.Models, p.TeamsByTeamID, p.SprintsBySprintID, p.Params, as, ps) %}
+      {%= Table(p.Models, p.TeamsByTeamID, p.SprintsBySprintID, p.Params, as, ps, p.Paths...) %}
     </div>
     {%- endif -%}
   </div>

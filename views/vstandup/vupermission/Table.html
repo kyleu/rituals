@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("upermission", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -25,11 +25,11 @@
         {%- for _, model := range models -%}
         <tr>
           <td class="nowrap">
-            <a href="/admin/db/standup/permission/{%= view.UUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.UUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Standup" href="{%s `/admin/db/standup`+`/`+model.StandupID.String() %}">{%= components.SVGLink(`standup`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.StandupID) %}{% if x := standupsByStandupID.Get(model.StandupID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Standup" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`standup`, ps) %}</a>
           </td>
-          <td><a href="/admin/db/standup/permission/{%= view.UUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Key) %}</a></td>
-          <td><a href="/admin/db/standup/permission/{%= view.UUID(&model.StandupID) %}/{%u model.Key %}/{%u model.Value %}">{%= view.String(model.Value) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>
           <td>{%= view.String(model.Access) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>
         </tr>

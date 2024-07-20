@@ -3,6 +3,7 @@ package spermission
 import (
 	"fmt"
 	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/sprint/permission"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*SprintPermission)(nil)
 
@@ -73,8 +83,11 @@ func (s *SprintPermission) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *SprintPermission) WebPath() string {
-	return "/admin/db/sprint/permission/" + s.SprintID.String() + "/" + url.QueryEscape(s.Key) + "/" + url.QueryEscape(s.Value)
+func (s *SprintPermission) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.SprintID.String()), url.QueryEscape(s.Key), url.QueryEscape(s.Value))...)
 }
 
 func (s *SprintPermission) ToData() []any {

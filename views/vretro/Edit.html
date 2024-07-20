@@ -12,6 +12,7 @@
 {% code type Edit struct {
   layout.Basic
   Model *retro.Retro
+  Paths []string
   IsNew bool
 } %}
 
@@ -21,10 +22,10 @@
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`retro`, ps) %} New Retro</h3>
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath() %}/delete" data-message="Are you sure you wish to delete retro [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete retro [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
     <h3>{%= components.SVGIcon(`retro`, ps) %} Edit Retro [{%s p.Model.String() %}]</h3>
     {%- endif -%}
-    <form action="{%s util.Choose(p.IsNew, `/admin/db/retro/_new`, ``) %}" class="mt" method="post">
+    <form action="{%s util.Choose(p.IsNew, retro.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %}" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           {% if p.IsNew %}{%= edit.UUIDTable("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}

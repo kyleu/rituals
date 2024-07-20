@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vretro/Table.html:13
-func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vretro/Table.html:13
 	qw422016.N().S(`
 `)
@@ -101,9 +101,9 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 	for _, model := range models {
 //line views/vretro/Table.html:32
 		qw422016.N().S(`        <tr>
-          <td><a href="/admin/db/retro/`)
+          <td><a href="`)
 //line views/vretro/Table.html:34
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vretro/Table.html:34
@@ -156,7 +156,7 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 //line views/vretro/Table.html:41
 			qw422016.N().S(`<a title="Team" href="`)
 //line views/vretro/Table.html:41
-			qw422016.E().S(`/admin/db/team` + `/` + model.TeamID.String())
+			qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/Table.html:41
 			qw422016.N().S(`">`)
 //line views/vretro/Table.html:41
@@ -194,7 +194,7 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 //line views/vretro/Table.html:45
 			qw422016.N().S(`<a title="Sprint" href="`)
 //line views/vretro/Table.html:45
-			qw422016.E().S(`/admin/db/sprint` + `/` + model.SprintID.String())
+			qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/Table.html:45
 			qw422016.N().S(`">`)
 //line views/vretro/Table.html:45
@@ -247,22 +247,22 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 }
 
 //line views/vretro/Table.html:60
-func WriteTable(qq422016 qtio422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vretro/Table.html:60
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vretro/Table.html:60
-	StreamTable(qw422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps, paths...)
 //line views/vretro/Table.html:60
 	qt422016.ReleaseWriter(qw422016)
 //line views/vretro/Table.html:60
 }
 
 //line views/vretro/Table.html:60
-func Table(models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vretro/Table.html:60
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vretro/Table.html:60
-	WriteTable(qb422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps, paths...)
 //line views/vretro/Table.html:60
 	qs422016 := string(qb422016.B)
 //line views/vretro/Table.html:60

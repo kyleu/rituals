@@ -1,6 +1,8 @@
 package email
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/email"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Email)(nil)
 
@@ -62,8 +73,11 @@ func (e *Email) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{e.Strings()}
 }
 
-func (e *Email) WebPath() string {
-	return "/admin/db/email/" + e.ID.String()
+func (e *Email) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(e.ID.String()))...)
 }
 
 func (e *Email) ToData() []any {

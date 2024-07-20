@@ -8,7 +8,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("rhistory", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -23,10 +23,10 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/db/retro/history/{%u model.Slug %}">{%= view.String(model.Slug) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Slug) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGLink(`retro`, ps) %}</a>
+            <a title="Retro" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
           </td>
           <td>{%= view.String(model.RetroName) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

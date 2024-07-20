@@ -2,6 +2,8 @@ package story
 
 import (
 	"fmt"
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,6 +12,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/estimate/story"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Story)(nil)
 
@@ -67,8 +78,11 @@ func (s *Story) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{s.Strings()}
 }
 
-func (s *Story) WebPath() string {
-	return "/admin/db/estimate/story/" + s.ID.String()
+func (s *Story) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(s.ID.String()))...)
 }
 
 func (s *Story) ToData() []any {

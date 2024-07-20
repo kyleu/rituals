@@ -29,7 +29,7 @@ var (
 )
 
 //line views/vsprint/vspermission/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vsprint/vspermission/Table.html:11
 	qw422016.N().S(`
 `)
@@ -75,17 +75,9 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:25
 		qw422016.N().S(`        <tr>
           <td class="nowrap">
-            <a href="/admin/db/sprint/permission/`)
+            <a href="`)
 //line views/vsprint/vspermission/Table.html:28
-		view.StreamUUID(qw422016, &model.SprintID)
-//line views/vsprint/vspermission/Table.html:28
-		qw422016.N().S(`/`)
-//line views/vsprint/vspermission/Table.html:28
-		qw422016.N().U(model.Key)
-//line views/vsprint/vspermission/Table.html:28
-		qw422016.N().S(`/`)
-//line views/vsprint/vspermission/Table.html:28
-		qw422016.N().U(model.Value)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vsprint/vspermission/Table.html:28
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:28
@@ -104,7 +96,7 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 		qw422016.N().S(`</a>
             <a title="Sprint" href="`)
 //line views/vsprint/vspermission/Table.html:29
-		qw422016.E().S(`/admin/db/sprint` + `/` + model.SprintID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vsprint/vspermission/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:29
@@ -112,34 +104,18 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 //line views/vsprint/vspermission/Table.html:29
 		qw422016.N().S(`</a>
           </td>
-          <td><a href="/admin/db/sprint/permission/`)
+          <td><a href="`)
 //line views/vsprint/vspermission/Table.html:31
-		view.StreamUUID(qw422016, &model.SprintID)
-//line views/vsprint/vspermission/Table.html:31
-		qw422016.N().S(`/`)
-//line views/vsprint/vspermission/Table.html:31
-		qw422016.N().U(model.Key)
-//line views/vsprint/vspermission/Table.html:31
-		qw422016.N().S(`/`)
-//line views/vsprint/vspermission/Table.html:31
-		qw422016.N().U(model.Value)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vsprint/vspermission/Table.html:31
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:31
 		view.StreamString(qw422016, model.Key)
 //line views/vsprint/vspermission/Table.html:31
 		qw422016.N().S(`</a></td>
-          <td><a href="/admin/db/sprint/permission/`)
+          <td><a href="`)
 //line views/vsprint/vspermission/Table.html:32
-		view.StreamUUID(qw422016, &model.SprintID)
-//line views/vsprint/vspermission/Table.html:32
-		qw422016.N().S(`/`)
-//line views/vsprint/vspermission/Table.html:32
-		qw422016.N().U(model.Key)
-//line views/vsprint/vspermission/Table.html:32
-		qw422016.N().S(`/`)
-//line views/vsprint/vspermission/Table.html:32
-		qw422016.N().U(model.Value)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vsprint/vspermission/Table.html:32
 		qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:32
@@ -182,22 +158,22 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 }
 
 //line views/vsprint/vspermission/Table.html:45
-func WriteTable(qq422016 qtio422016.Writer, models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vsprint/vspermission/Table.html:45
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vsprint/vspermission/Table.html:45
-	StreamTable(qw422016, models, sprintsBySprintID, params, as, ps)
+	StreamTable(qw422016, models, sprintsBySprintID, params, as, ps, paths...)
 //line views/vsprint/vspermission/Table.html:45
 	qt422016.ReleaseWriter(qw422016)
 //line views/vsprint/vspermission/Table.html:45
 }
 
 //line views/vsprint/vspermission/Table.html:45
-func Table(models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models spermission.SprintPermissions, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vsprint/vspermission/Table.html:45
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vsprint/vspermission/Table.html:45
-	WriteTable(qb422016, models, sprintsBySprintID, params, as, ps)
+	WriteTable(qb422016, models, sprintsBySprintID, params, as, ps, paths...)
 //line views/vsprint/vspermission/Table.html:45
 	qs422016 := string(qb422016.B)
 //line views/vsprint/vspermission/Table.html:45

@@ -12,16 +12,17 @@
   layout.Basic
   Model *rpermission.RetroPermission
   RetroByRetroID *retro.Retro
+  Paths []string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       <a href="#modal-retroPermission"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} {%s p.Model.TitleString() %}</h3>
-    <div><a href="/admin/db/retro/permission"><em>Permission</em></a></div>
+    <div><a href="{%s rpermission.Route(p.Paths...) %}"><em>Permission</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
@@ -29,7 +30,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.RetroID) %}{% if p.RetroByRetroID != nil %} ({%s p.RetroByRetroID.TitleString() %}){% endif %}
-              <a title="Retro" href="{%s `/admin/db/retro`+`/`+p.Model.RetroID.String() %}">{%= components.SVGLink(`retro`, ps) %}</a>
+              <a title="Retro" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
             </td>
           </tr>
           <tr>

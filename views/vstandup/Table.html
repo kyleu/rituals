@@ -10,7 +10,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models standup.Standups, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("standup", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -30,18 +30,18 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/db/standup/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td>{%= view.String(model.Slug) %}</td>
           <td><strong>{%= view.String(model.Title) %}</strong></td>
           <td>{%= view.String(model.Icon) %}</td>
           <td>{%s model.Status.String() %}</td>
           <td class="nowrap">
             {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.TeamID != nil %}<a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+            {% if model.TeamID != nil %}<a title="Team" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
           </td>
           <td class="nowrap">
             {%= view.UUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.SprintID != nil %}<a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
+            {% if model.SprintID != nil %}<a title="Sprint" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
           </td>
           <td>{%= view.Timestamp(&model.Created) %}</td>
           <td>{%= view.Timestamp(model.Updated) %}</td>

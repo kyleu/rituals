@@ -10,7 +10,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models smember.SprintMembers, sprintsBySprintID sprint.Sprints, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models smember.SprintMembers, sprintsBySprintID sprint.Sprints, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("smember", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -29,12 +29,12 @@
         {%- for _, model := range models -%}
         <tr>
           <td class="nowrap">
-            <a href="/admin/db/sprint/member/{%= view.UUID(&model.SprintID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Sprint" href="{%s `/admin/db/sprint`+`/`+model.SprintID.String() %}">{%= components.SVGLink(`sprint`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Sprint" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>
           </td>
           <td class="nowrap">
-            <a href="/admin/db/sprint/member/{%= view.UUID(&model.SprintID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="User" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>

@@ -31,7 +31,7 @@ var (
 )
 
 //line views/vretro/vrmember/Table.html:13
-func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vretro/vrmember/Table.html:13
 	qw422016.N().S(`
 `)
@@ -87,13 +87,9 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 //line views/vretro/vrmember/Table.html:29
 		qw422016.N().S(`        <tr>
           <td class="nowrap">
-            <a href="/admin/db/retro/member/`)
+            <a href="`)
 //line views/vretro/vrmember/Table.html:32
-		view.StreamUUID(qw422016, &model.RetroID)
-//line views/vretro/vrmember/Table.html:32
-		qw422016.N().S(`/`)
-//line views/vretro/vrmember/Table.html:32
-		view.StreamUUID(qw422016, &model.UserID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vrmember/Table.html:32
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:32
@@ -112,7 +108,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
             <a title="Retro" href="`)
 //line views/vretro/vrmember/Table.html:33
-		qw422016.E().S(`/admin/db/retro` + `/` + model.RetroID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vrmember/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:33
@@ -121,13 +117,9 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
           </td>
           <td class="nowrap">
-            <a href="/admin/db/retro/member/`)
+            <a href="`)
 //line views/vretro/vrmember/Table.html:36
-		view.StreamUUID(qw422016, &model.RetroID)
-//line views/vretro/vrmember/Table.html:36
-		qw422016.N().S(`/`)
-//line views/vretro/vrmember/Table.html:36
-		view.StreamUUID(qw422016, &model.UserID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vrmember/Table.html:36
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:36
@@ -146,7 +138,7 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
             <a title="User" href="`)
 //line views/vretro/vrmember/Table.html:37
-		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vretro/vrmember/Table.html:37
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:37
@@ -209,22 +201,22 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 }
 
 //line views/vretro/vrmember/Table.html:54
-func WriteTable(qq422016 qtio422016.Writer, models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vretro/vrmember/Table.html:54
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vretro/vrmember/Table.html:54
-	StreamTable(qw422016, models, retrosByRetroID, usersByUserID, params, as, ps)
+	StreamTable(qw422016, models, retrosByRetroID, usersByUserID, params, as, ps, paths...)
 //line views/vretro/vrmember/Table.html:54
 	qt422016.ReleaseWriter(qw422016)
 //line views/vretro/vrmember/Table.html:54
 }
 
 //line views/vretro/vrmember/Table.html:54
-func Table(models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models rmember.RetroMembers, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vretro/vrmember/Table.html:54
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vretro/vrmember/Table.html:54
-	WriteTable(qb422016, models, retrosByRetroID, usersByUserID, params, as, ps)
+	WriteTable(qb422016, models, retrosByRetroID, usersByUserID, params, as, ps, paths...)
 //line views/vretro/vrmember/Table.html:54
 	qs422016 := string(qb422016.B)
 //line views/vretro/vrmember/Table.html:54

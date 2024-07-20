@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vsprint/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vsprint/Table.html:12
 	qw422016.N().S(`
 `)
@@ -100,9 +100,9 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID
 	for _, model := range models {
 //line views/vsprint/Table.html:31
 		qw422016.N().S(`        <tr>
-          <td><a href="/admin/db/sprint/`)
+          <td><a href="`)
 //line views/vsprint/Table.html:33
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vsprint/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vsprint/Table.html:33
@@ -155,7 +155,7 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID
 //line views/vsprint/Table.html:40
 			qw422016.N().S(`<a title="Team" href="`)
 //line views/vsprint/Table.html:40
-			qw422016.E().S(`/admin/db/team` + `/` + model.TeamID.String())
+			qw422016.E().S(model.WebPath(paths...))
 //line views/vsprint/Table.html:40
 			qw422016.N().S(`">`)
 //line views/vsprint/Table.html:40
@@ -213,22 +213,22 @@ func StreamTable(qw422016 *qt422016.Writer, models sprint.Sprints, teamsByTeamID
 }
 
 //line views/vsprint/Table.html:56
-func WriteTable(qq422016 qtio422016.Writer, models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vsprint/Table.html:56
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vsprint/Table.html:56
-	StreamTable(qw422016, models, teamsByTeamID, params, as, ps)
+	StreamTable(qw422016, models, teamsByTeamID, params, as, ps, paths...)
 //line views/vsprint/Table.html:56
 	qt422016.ReleaseWriter(qw422016)
 //line views/vsprint/Table.html:56
 }
 
 //line views/vsprint/Table.html:56
-func Table(models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vsprint/Table.html:56
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vsprint/Table.html:56
-	WriteTable(qb422016, models, teamsByTeamID, params, as, ps)
+	WriteTable(qb422016, models, teamsByTeamID, params, as, ps, paths...)
 //line views/vsprint/Table.html:56
 	qs422016 := string(qb422016.B)
 //line views/vsprint/Table.html:56

@@ -1,6 +1,8 @@
 package report
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,6 +10,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/standup/report"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Report)(nil)
 
@@ -60,8 +71,11 @@ func (r *Report) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{r.Strings()}
 }
 
-func (r *Report) WebPath() string {
-	return "/admin/db/standup/report/" + r.ID.String()
+func (r *Report) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(r.ID.String()))...)
 }
 
 func (r *Report) ToData() []any {

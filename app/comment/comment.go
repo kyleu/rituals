@@ -1,6 +1,8 @@
 package comment
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +11,15 @@ import (
 	"github.com/kyleu/rituals/app/lib/svc"
 	"github.com/kyleu/rituals/app/util"
 )
+
+const DefaultRoute = "/admin/db/comment"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Comment)(nil)
 
@@ -58,8 +69,11 @@ func (c *Comment) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{c.Strings()}
 }
 
-func (c *Comment) WebPath() string {
-	return "/admin/db/comment/" + c.ID.String()
+func (c *Comment) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(c.ID.String()))...)
 }
 
 func (c *Comment) ToData() []any {

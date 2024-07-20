@@ -32,83 +32,84 @@ var (
 type Edit struct {
 	layout.Basic
 	Model *vote.Vote
+	Paths []string
 	IsNew bool
 }
 
-//line views/vestimate/vstory/vvote/Edit.html:17
+//line views/vestimate/vstory/vvote/Edit.html:18
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/vvote/Edit.html:17
+//line views/vestimate/vstory/vvote/Edit.html:18
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vestimate/vstory/vvote/Edit.html:19
+//line views/vestimate/vstory/vvote/Edit.html:20
 	if p.IsNew {
-//line views/vestimate/vstory/vvote/Edit.html:19
+//line views/vestimate/vstory/vvote/Edit.html:20
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vestimate/vstory/vvote/Edit.html:21
+//line views/vestimate/vstory/vvote/Edit.html:22
 		components.StreamSVGIcon(qw422016, `vote-yea`, ps)
-//line views/vestimate/vstory/vvote/Edit.html:21
+//line views/vestimate/vstory/vvote/Edit.html:22
 		qw422016.N().S(` New Vote</h3>
 `)
-//line views/vestimate/vstory/vvote/Edit.html:22
+//line views/vestimate/vstory/vvote/Edit.html:23
 	} else {
-//line views/vestimate/vstory/vvote/Edit.html:22
+//line views/vestimate/vstory/vvote/Edit.html:23
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vestimate/vstory/vvote/Edit.html:23
-		qw422016.E().S(p.Model.WebPath())
-//line views/vestimate/vstory/vvote/Edit.html:23
+//line views/vestimate/vstory/vvote/Edit.html:24
+		qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vestimate/vstory/vvote/Edit.html:24
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete vote [`)
-//line views/vestimate/vstory/vvote/Edit.html:23
+//line views/vestimate/vstory/vvote/Edit.html:24
 		qw422016.E().S(p.Model.String())
-//line views/vestimate/vstory/vvote/Edit.html:23
+//line views/vestimate/vstory/vvote/Edit.html:24
 		qw422016.N().S(`]?"><button>`)
-//line views/vestimate/vstory/vvote/Edit.html:23
+//line views/vestimate/vstory/vvote/Edit.html:24
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vestimate/vstory/vvote/Edit.html:23
+//line views/vestimate/vstory/vvote/Edit.html:24
 		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vestimate/vstory/vvote/Edit.html:24
+//line views/vestimate/vstory/vvote/Edit.html:25
 		components.StreamSVGIcon(qw422016, `vote-yea`, ps)
-//line views/vestimate/vstory/vvote/Edit.html:24
+//line views/vestimate/vstory/vvote/Edit.html:25
 		qw422016.N().S(` Edit Vote [`)
-//line views/vestimate/vstory/vvote/Edit.html:24
+//line views/vestimate/vstory/vvote/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vestimate/vstory/vvote/Edit.html:24
+//line views/vestimate/vstory/vvote/Edit.html:25
 		qw422016.N().S(`]</h3>
 `)
-//line views/vestimate/vstory/vvote/Edit.html:25
+//line views/vestimate/vstory/vvote/Edit.html:26
 	}
-//line views/vestimate/vstory/vvote/Edit.html:25
+//line views/vestimate/vstory/vvote/Edit.html:26
 	qw422016.N().S(`    <form action="`)
-//line views/vestimate/vstory/vvote/Edit.html:26
-	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/estimate/story/vote/_new`, ``))
-//line views/vestimate/vstory/vvote/Edit.html:26
+//line views/vestimate/vstory/vvote/Edit.html:27
+	qw422016.E().S(util.Choose(p.IsNew, vote.Route(p.Paths...)+`/_new`, p.Model.WebPath(p.Paths...)+`/edit`))
+//line views/vestimate/vstory/vvote/Edit.html:27
 	qw422016.N().S(`" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vestimate/vstory/vvote/Edit.html:29
+//line views/vestimate/vstory/vvote/Edit.html:30
 	if p.IsNew {
-//line views/vestimate/vstory/vvote/Edit.html:29
+//line views/vestimate/vstory/vvote/Edit.html:30
 		edit.StreamUUIDTable(qw422016, "storyID", "input-storyID", "Story ID", &p.Model.StoryID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/vstory/vvote/Edit.html:29
+//line views/vestimate/vstory/vvote/Edit.html:30
 	}
-//line views/vestimate/vstory/vvote/Edit.html:29
+//line views/vestimate/vstory/vvote/Edit.html:30
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/vvote/Edit.html:30
+//line views/vestimate/vstory/vvote/Edit.html:31
 	if p.IsNew {
-//line views/vestimate/vstory/vvote/Edit.html:30
+//line views/vestimate/vstory/vvote/Edit.html:31
 		edit.StreamUUIDTable(qw422016, "userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vestimate/vstory/vvote/Edit.html:30
+//line views/vestimate/vstory/vvote/Edit.html:31
 	}
-//line views/vestimate/vstory/vvote/Edit.html:30
+//line views/vestimate/vstory/vvote/Edit.html:31
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/vvote/Edit.html:31
+//line views/vestimate/vstory/vvote/Edit.html:32
 	edit.StreamStringTable(qw422016, "choice", "", "Choice", p.Model.Choice, 5, "String text")
-//line views/vestimate/vstory/vvote/Edit.html:31
+//line views/vestimate/vstory/vvote/Edit.html:32
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -122,31 +123,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 }
 
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	p.StreamBody(qw422016, as, ps)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 }
 
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	p.WriteBody(qb422016, as, ps)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 	return qs422016
-//line views/vestimate/vstory/vvote/Edit.html:43
+//line views/vestimate/vstory/vvote/Edit.html:44
 }

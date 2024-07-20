@@ -21,16 +21,17 @@
   UserByUserID *user.User
   Params filter.ParamSet
   RelVotesByStoryID vote.Votes
+  Paths []string
 } %}
 
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
       <a href="#modal-story"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
     </div>
     <h3>{%= components.SVGIcon(`story`, ps) %} {%s p.Model.TitleString() %}</h3>
-    <div><a href="/admin/db/estimate/story"><em>Story</em></a></div>
+    <div><a href="{%s story.Route(p.Paths...) %}"><em>Story</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
@@ -42,7 +43,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
-              <a title="Estimate" href="{%s `/admin/db/estimate`+`/`+p.Model.EstimateID.String() %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+              <a title="Estimate" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
             </td>
           </tr>
           <tr>
@@ -53,7 +54,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-              <a title="User" href="{%s `/admin/db/user`+`/`+p.Model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
+              <a title="User" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
             </td>
           </tr>
           <tr>

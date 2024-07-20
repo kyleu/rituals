@@ -32,79 +32,80 @@ var (
 type Edit struct {
 	layout.Basic
 	Model *shistory.SprintHistory
+	Paths []string
 	IsNew bool
 }
 
-//line views/vsprint/vshistory/Edit.html:17
+//line views/vsprint/vshistory/Edit.html:18
 func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vshistory/Edit.html:17
+//line views/vsprint/vshistory/Edit.html:18
 	qw422016.N().S(`
   <div class="card">
 `)
-//line views/vsprint/vshistory/Edit.html:19
+//line views/vsprint/vshistory/Edit.html:20
 	if p.IsNew {
-//line views/vsprint/vshistory/Edit.html:19
+//line views/vsprint/vshistory/Edit.html:20
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
-//line views/vsprint/vshistory/Edit.html:21
+//line views/vsprint/vshistory/Edit.html:22
 		components.StreamSVGIcon(qw422016, `history`, ps)
-//line views/vsprint/vshistory/Edit.html:21
+//line views/vsprint/vshistory/Edit.html:22
 		qw422016.N().S(` New History</h3>
 `)
-//line views/vsprint/vshistory/Edit.html:22
+//line views/vsprint/vshistory/Edit.html:23
 	} else {
-//line views/vsprint/vshistory/Edit.html:22
+//line views/vsprint/vshistory/Edit.html:23
 		qw422016.N().S(`    <div class="right"><a class="link-confirm" href="`)
-//line views/vsprint/vshistory/Edit.html:23
-		qw422016.E().S(p.Model.WebPath())
-//line views/vsprint/vshistory/Edit.html:23
+//line views/vsprint/vshistory/Edit.html:24
+		qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vsprint/vshistory/Edit.html:24
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete history [`)
-//line views/vsprint/vshistory/Edit.html:23
+//line views/vsprint/vshistory/Edit.html:24
 		qw422016.E().S(p.Model.String())
-//line views/vsprint/vshistory/Edit.html:23
+//line views/vsprint/vshistory/Edit.html:24
 		qw422016.N().S(`]?"><button>`)
-//line views/vsprint/vshistory/Edit.html:23
+//line views/vsprint/vshistory/Edit.html:24
 		components.StreamSVGButton(qw422016, "times", ps)
-//line views/vsprint/vshistory/Edit.html:23
+//line views/vsprint/vshistory/Edit.html:24
 		qw422016.N().S(` Delete</button></a></div>
     <h3>`)
-//line views/vsprint/vshistory/Edit.html:24
+//line views/vsprint/vshistory/Edit.html:25
 		components.StreamSVGIcon(qw422016, `history`, ps)
-//line views/vsprint/vshistory/Edit.html:24
+//line views/vsprint/vshistory/Edit.html:25
 		qw422016.N().S(` Edit History [`)
-//line views/vsprint/vshistory/Edit.html:24
+//line views/vsprint/vshistory/Edit.html:25
 		qw422016.E().S(p.Model.String())
-//line views/vsprint/vshistory/Edit.html:24
+//line views/vsprint/vshistory/Edit.html:25
 		qw422016.N().S(`]</h3>
 `)
-//line views/vsprint/vshistory/Edit.html:25
+//line views/vsprint/vshistory/Edit.html:26
 	}
-//line views/vsprint/vshistory/Edit.html:25
+//line views/vsprint/vshistory/Edit.html:26
 	qw422016.N().S(`    <form action="`)
-//line views/vsprint/vshistory/Edit.html:26
-	qw422016.E().S(util.Choose(p.IsNew, `/admin/db/sprint/history/_new`, ``))
-//line views/vsprint/vshistory/Edit.html:26
+//line views/vsprint/vshistory/Edit.html:27
+	qw422016.E().S(util.Choose(p.IsNew, shistory.Route(p.Paths...)+`/_new`, p.Model.WebPath(p.Paths...)+`/edit`))
+//line views/vsprint/vshistory/Edit.html:27
 	qw422016.N().S(`" class="mt" method="post">
       <table class="mt expanded">
         <tbody>
           `)
-//line views/vsprint/vshistory/Edit.html:29
+//line views/vsprint/vshistory/Edit.html:30
 	if p.IsNew {
-//line views/vsprint/vshistory/Edit.html:29
+//line views/vsprint/vshistory/Edit.html:30
 		edit.StreamStringTable(qw422016, "slug", "", "Slug", p.Model.Slug, 5, "String text")
-//line views/vsprint/vshistory/Edit.html:29
+//line views/vsprint/vshistory/Edit.html:30
 	}
-//line views/vsprint/vshistory/Edit.html:29
+//line views/vsprint/vshistory/Edit.html:30
 	qw422016.N().S(`
           `)
-//line views/vsprint/vshistory/Edit.html:30
+//line views/vsprint/vshistory/Edit.html:31
 	edit.StreamUUIDTable(qw422016, "sprintID", "input-sprintID", "Sprint ID", &p.Model.SprintID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)")
-//line views/vsprint/vshistory/Edit.html:30
+//line views/vsprint/vshistory/Edit.html:31
 	qw422016.N().S(`
           `)
-//line views/vsprint/vshistory/Edit.html:31
+//line views/vsprint/vshistory/Edit.html:32
 	edit.StreamStringTable(qw422016, "sprintName", "", "Sprint Name", p.Model.SprintName, 5, "String text")
-//line views/vsprint/vshistory/Edit.html:31
+//line views/vsprint/vshistory/Edit.html:32
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>
@@ -117,31 +118,31 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
     });
   </script>
 `)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 }
 
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 func (p *Edit) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 }
 
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 func (p *Edit) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	qs422016 := string(qb422016.B)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 	return qs422016
-//line views/vsprint/vshistory/Edit.html:42
+//line views/vsprint/vshistory/Edit.html:43
 }

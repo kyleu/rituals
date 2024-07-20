@@ -10,7 +10,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models tmember.TeamMembers, teamsByTeamID team.Teams, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models tmember.TeamMembers, teamsByTeamID team.Teams, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("tmember", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -29,12 +29,12 @@
         {%- for _, model := range models -%}
         <tr>
           <td class="nowrap">
-            <a href="/admin/db/team/member/{%= view.UUID(&model.TeamID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Team" href="{%s `/admin/db/team`+`/`+model.TeamID.String() %}">{%= components.SVGLink(`team`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="Team" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
           </td>
           <td class="nowrap">
-            <a href="/admin/db/team/member/{%= view.UUID(&model.TeamID) %}/{%= view.UUID(&model.UserID) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
+            <a title="User" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>

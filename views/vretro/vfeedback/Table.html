@@ -9,7 +9,7 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
-{% func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("feedback", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -28,15 +28,15 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/admin/db/retro/feedback/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Retro" href="{%s `/admin/db/retro`+`/`+model.RetroID.String() %}">{%= components.SVGLink(`retro`, ps) %}</a>
+            <a title="Retro" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
           </td>
           <td>{%d model.Idx %}</td>
           <td class="nowrap">
             {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{%s `/admin/db/user`+`/`+model.UserID.String() %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a title="User" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td>{%= view.String(model.Category) %}</td>
           <td>{%= view.String(model.Content) %}</td>

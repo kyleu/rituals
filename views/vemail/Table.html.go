@@ -29,7 +29,7 @@ var (
 )
 
 //line views/vemail/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vemail/Table.html:11
 	qw422016.N().S(`
 `)
@@ -89,9 +89,9 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 	for _, model := range models {
 //line views/vemail/Table.html:28
 		qw422016.N().S(`        <tr>
-          <td><a href="/admin/db/email/`)
+          <td><a href="`)
 //line views/vemail/Table.html:30
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vemail/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vemail/Table.html:30
@@ -136,7 +136,7 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 		qw422016.N().S(`
             <a title="User" href="`)
 //line views/vemail/Table.html:37
-		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vemail/Table.html:37
 		qw422016.N().S(`">`)
 //line views/vemail/Table.html:37
@@ -180,22 +180,22 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 }
 
 //line views/vemail/Table.html:51
-func WriteTable(qq422016 qtio422016.Writer, models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vemail/Table.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vemail/Table.html:51
-	StreamTable(qw422016, models, usersByUserID, params, as, ps)
+	StreamTable(qw422016, models, usersByUserID, params, as, ps, paths...)
 //line views/vemail/Table.html:51
 	qt422016.ReleaseWriter(qw422016)
 //line views/vemail/Table.html:51
 }
 
 //line views/vemail/Table.html:51
-func Table(models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models email.Emails, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vemail/Table.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vemail/Table.html:51
-	WriteTable(qb422016, models, usersByUserID, params, as, ps)
+	WriteTable(qb422016, models, usersByUserID, params, as, ps, paths...)
 //line views/vemail/Table.html:51
 	qs422016 := string(qb422016.B)
 //line views/vemail/Table.html:51

@@ -30,7 +30,7 @@ var (
 )
 
 //line views/vestimate/vstory/vvote/Table.html:12
-func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vestimate/vstory/vvote/Table.html:12
 	qw422016.N().S(`
 `)
@@ -76,13 +76,9 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 //line views/vestimate/vstory/vvote/Table.html:26
 		qw422016.N().S(`        <tr>
           <td class="nowrap">
-            <a href="/admin/db/estimate/story/vote/`)
+            <a href="`)
 //line views/vestimate/vstory/vvote/Table.html:29
-		view.StreamUUID(qw422016, &model.StoryID)
-//line views/vestimate/vstory/vvote/Table.html:29
-		qw422016.N().S(`/`)
-//line views/vestimate/vstory/vvote/Table.html:29
-		view.StreamUUID(qw422016, &model.UserID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vestimate/vstory/vvote/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:29
@@ -101,7 +97,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		qw422016.N().S(`</a>
             <a title="Story" href="`)
 //line views/vestimate/vstory/vvote/Table.html:30
-		qw422016.E().S(`/admin/db/estimate/story` + `/` + model.StoryID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vestimate/vstory/vvote/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:30
@@ -110,13 +106,9 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		qw422016.N().S(`</a>
           </td>
           <td class="nowrap">
-            <a href="/admin/db/estimate/story/vote/`)
+            <a href="`)
 //line views/vestimate/vstory/vvote/Table.html:33
-		view.StreamUUID(qw422016, &model.StoryID)
-//line views/vestimate/vstory/vvote/Table.html:33
-		qw422016.N().S(`/`)
-//line views/vestimate/vstory/vvote/Table.html:33
-		view.StreamUUID(qw422016, &model.UserID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vestimate/vstory/vvote/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:33
@@ -135,7 +127,7 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		qw422016.N().S(`</a>
             <a title="User" href="`)
 //line views/vestimate/vstory/vvote/Table.html:34
-		qw422016.E().S(`/admin/db/user` + `/` + model.UserID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vestimate/vstory/vvote/Table.html:34
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:34
@@ -184,22 +176,22 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 }
 
 //line views/vestimate/vstory/vvote/Table.html:49
-func WriteTable(qq422016 qtio422016.Writer, models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vestimate/vstory/vvote/Table.html:49
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vestimate/vstory/vvote/Table.html:49
-	StreamTable(qw422016, models, storiesByStoryID, usersByUserID, params, as, ps)
+	StreamTable(qw422016, models, storiesByStoryID, usersByUserID, params, as, ps, paths...)
 //line views/vestimate/vstory/vvote/Table.html:49
 	qt422016.ReleaseWriter(qw422016)
 //line views/vestimate/vstory/vvote/Table.html:49
 }
 
 //line views/vestimate/vstory/vvote/Table.html:49
-func Table(models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models vote.Votes, storiesByStoryID story.Stories, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vestimate/vstory/vvote/Table.html:49
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vestimate/vstory/vvote/Table.html:49
-	WriteTable(qb422016, models, storiesByStoryID, usersByUserID, params, as, ps)
+	WriteTable(qb422016, models, storiesByStoryID, usersByUserID, params, as, ps, paths...)
 //line views/vestimate/vstory/vvote/Table.html:49
 	qs422016 := string(qb422016.B)
 //line views/vestimate/vstory/vvote/Table.html:49
