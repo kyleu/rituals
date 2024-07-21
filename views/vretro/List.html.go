@@ -56,7 +56,11 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/List.html:27
 	if len(p.Models) > 1 {
 //line views/vretro/List.html:27
-		qw422016.N().S(`<a href="/admin/db/retro/_random"><button>`)
+		qw422016.N().S(`<a href="`)
+//line views/vretro/List.html:27
+		qw422016.E().S(retro.Route(p.Paths...))
+//line views/vretro/List.html:27
+		qw422016.N().S(`/_random"><button>`)
 //line views/vretro/List.html:27
 		components.StreamSVGButton(qw422016, "gift", ps)
 //line views/vretro/List.html:27

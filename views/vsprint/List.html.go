@@ -54,7 +54,11 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vsprint/List.html:25
 	if len(p.Models) > 1 {
 //line views/vsprint/List.html:25
-		qw422016.N().S(`<a href="/admin/db/sprint/_random"><button>`)
+		qw422016.N().S(`<a href="`)
+//line views/vsprint/List.html:25
+		qw422016.E().S(sprint.Route(p.Paths...))
+//line views/vsprint/List.html:25
+		qw422016.N().S(`/_random"><button>`)
 //line views/vsprint/List.html:25
 		components.StreamSVGButton(qw422016, "gift", ps)
 //line views/vsprint/List.html:25

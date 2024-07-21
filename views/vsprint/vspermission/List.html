@@ -19,7 +19,7 @@
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right mrs large-buttons">
-      {%- if len(p.Models) > 1 -%}<a href="/admin/db/sprint/permission/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
+      {%- if len(p.Models) > 1 -%}<a href="{%s spermission.Route(p.Paths...) %}/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
       <a href="{%s spermission.Route(p.Paths...) %}/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} {%s ps.Title %}</h3>

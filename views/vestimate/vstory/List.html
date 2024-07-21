@@ -24,7 +24,7 @@
   <div class="card">
     <div class="right">{%= edit.SearchForm("", "q", "Search Stories", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
-      {%- if len(p.Models) > 1 -%}<a href="/admin/db/estimate/story/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
+      {%- if len(p.Models) > 1 -%}<a href="{%s story.Route(p.Paths...) %}/_random"><button>{%= components.SVGButton("gift", ps) %} Random</button></a>{%- endif -%}
       <a href="{%s story.Route(p.Paths...) %}/_new"><button>{%= components.SVGButton("plus", ps) %} New</button></a>
     </div>
     <h3>{%= components.SVGIcon(`story`, ps) %} {%s ps.Title %}</h3>
