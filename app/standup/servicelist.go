@@ -6,9 +6,11 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/filter"
+	"github.com/kyleu/rituals/app/lib/search/result"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -74,4 +76,14 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 		return nil, err
 	}
 	return ret.ToStandups(), nil
+}
+
+func (s *Service) SearchEntries(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (result.Results, error) {
+	ret, err := s.Search(ctx, query, tx, params, logger)
+	if err != nil {
+		return nil, err
+	}
+	return lo.Map(ret, func(m *Standup, _ int) *result.Result {
+		return result.NewResult("Standup", m.String(), m.WebPath(), m.TitleString(), "standup", m, m, query)
+	}), nil
 }
