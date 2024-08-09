@@ -6,6 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/kyleu/rituals/app/lib/filter"
+	"github.com/kyleu/rituals/app/lib/search/result"
 	"github.com/kyleu/rituals/app/util"
 )
 
@@ -29,6 +30,10 @@ type Service[Mdl Model, Seq any] interface {
 
 type ServiceSearch[Seq any] interface {
 	Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Seq, error)
+}
+
+type ServiceSearchEntries interface {
+	SearchEntries(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (result.Results, error)
 }
 
 type ServiceID[Mdl Model, Seq any, ID any] interface {
