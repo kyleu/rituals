@@ -96,7 +96,11 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 		qw422016.N().S(`</a>
             <a title="Retro" href="`)
 //line views/vretro/vrpermission/Table.html:29
-		qw422016.E().S(model.WebPath(paths...))
+		if x := retrosByRetroID.Get(model.RetroID); x != nil {
+//line views/vretro/vrpermission/Table.html:29
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vretro/vrpermission/Table.html:29
+		}
 //line views/vretro/vrpermission/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vretro/vrpermission/Table.html:29

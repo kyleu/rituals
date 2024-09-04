@@ -102,7 +102,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="Team" href="`)
 //line views/vteam/vthistory/Detail.html:37
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.TeamByTeamID; x != nil {
+//line views/vteam/vthistory/Detail.html:37
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vteam/vthistory/Detail.html:37
+	}
 //line views/vteam/vthistory/Detail.html:37
 	qw422016.N().S(`">`)
 //line views/vteam/vthistory/Detail.html:37

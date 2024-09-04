@@ -33,14 +33,14 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.SprintID) %}{% if p.SprintBySprintID != nil %} ({%s p.SprintBySprintID.TitleString() %}){% endif %}
-              <a title="Sprint" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>
+              <a title="Sprint" href="{% if x := p.SprintBySprintID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`sprint`, ps) %}</a>
             </td>
           </tr>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-              <a title="User" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+              <a title="User" href="{% if x := p.UserByUserID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
             </td>
           </tr>
           <tr>

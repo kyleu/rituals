@@ -151,7 +151,11 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teamsByTeam
 //line views/vstandup/Table.html:40
 			qw422016.N().S(`<a title="Team" href="`)
 //line views/vstandup/Table.html:40
-			qw422016.E().S(model.WebPath(paths...))
+			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
+//line views/vstandup/Table.html:40
+				qw422016.E().S(x.WebPath(paths...))
+//line views/vstandup/Table.html:40
+			}
 //line views/vstandup/Table.html:40
 			qw422016.N().S(`">`)
 //line views/vstandup/Table.html:40
@@ -189,7 +193,11 @@ func StreamTable(qw422016 *qt422016.Writer, models standup.Standups, teamsByTeam
 //line views/vstandup/Table.html:44
 			qw422016.N().S(`<a title="Sprint" href="`)
 //line views/vstandup/Table.html:44
-			qw422016.E().S(model.WebPath(paths...))
+			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
+//line views/vstandup/Table.html:44
+				qw422016.E().S(x.WebPath(paths...))
+//line views/vstandup/Table.html:44
+			}
 //line views/vstandup/Table.html:44
 			qw422016.N().S(`">`)
 //line views/vstandup/Table.html:44

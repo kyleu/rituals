@@ -94,7 +94,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="Estimate" href="`)
 //line views/vestimate/vepermission/Detail.html:33
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.EstimateByEstimateID; x != nil {
+//line views/vestimate/vepermission/Detail.html:33
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vestimate/vepermission/Detail.html:33
+	}
 //line views/vestimate/vepermission/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vestimate/vepermission/Detail.html:33

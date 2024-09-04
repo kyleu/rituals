@@ -96,7 +96,11 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
 		qw422016.N().S(`
             <a title="Sprint" href="`)
 //line views/vsprint/vshistory/Table.html:29
-		qw422016.E().S(model.WebPath(paths...))
+		if x := sprintsBySprintID.Get(model.SprintID); x != nil {
+//line views/vsprint/vshistory/Table.html:29
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vsprint/vshistory/Table.html:29
+		}
 //line views/vsprint/vshistory/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vsprint/vshistory/Table.html:29

@@ -37,7 +37,7 @@
           <td>{%s model.Status.String() %}</td>
           <td class="nowrap">
             {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.TeamID != nil %}<a title="Team" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+            {% if model.TeamID != nil %}<a title="Team" href="{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
           </td>
           <td>{%= view.TimestampDay(model.StartDate) %}</td>
           <td>{%= view.TimestampDay(model.EndDate) %}</td>

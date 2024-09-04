@@ -108,7 +108,11 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teamsByT
 		qw422016.N().S(`</a>
             <a title="Team" href="`)
 //line views/vteam/vtmember/Table.html:33
-		qw422016.E().S(model.WebPath(paths...))
+		if x := teamsByTeamID.Get(model.TeamID); x != nil {
+//line views/vteam/vtmember/Table.html:33
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vteam/vtmember/Table.html:33
+		}
 //line views/vteam/vtmember/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vteam/vtmember/Table.html:33
@@ -138,7 +142,11 @@ func StreamTable(qw422016 *qt422016.Writer, models tmember.TeamMembers, teamsByT
 		qw422016.N().S(`</a>
             <a title="User" href="`)
 //line views/vteam/vtmember/Table.html:37
-		qw422016.E().S(model.WebPath(paths...))
+		if x := usersByUserID.Get(model.UserID); x != nil {
+//line views/vteam/vtmember/Table.html:37
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vteam/vtmember/Table.html:37
+		}
 //line views/vteam/vtmember/Table.html:37
 		qw422016.N().S(`">`)
 //line views/vteam/vtmember/Table.html:37

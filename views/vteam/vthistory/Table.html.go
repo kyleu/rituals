@@ -96,7 +96,11 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
 		qw422016.N().S(`
             <a title="Team" href="`)
 //line views/vteam/vthistory/Table.html:29
-		qw422016.E().S(model.WebPath(paths...))
+		if x := teamsByTeamID.Get(model.TeamID); x != nil {
+//line views/vteam/vthistory/Table.html:29
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vteam/vthistory/Table.html:29
+		}
 //line views/vteam/vthistory/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vteam/vthistory/Table.html:29

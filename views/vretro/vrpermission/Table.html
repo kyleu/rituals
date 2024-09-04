@@ -26,7 +26,7 @@
         <tr>
           <td class="nowrap">
             <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Retro" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
+            <a title="Retro" href="{% if x := retrosByRetroID.Get(model.RetroID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`retro`, ps) %}</a>
           </td>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>

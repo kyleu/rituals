@@ -34,7 +34,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
-              <a title="Estimate" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+              <a title="Estimate" href="{% if x := p.EstimateByEstimateID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`estimate`, ps) %}</a>
             </td>
           </tr>
           <tr>

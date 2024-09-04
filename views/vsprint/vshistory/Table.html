@@ -26,7 +26,7 @@
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Slug) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.SprintID) %}{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Sprint" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>
+            <a title="Sprint" href="{% if x := sprintsBySprintID.Get(model.SprintID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`sprint`, ps) %}</a>
           </td>
           <td>{%= view.String(model.SprintName) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

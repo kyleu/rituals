@@ -136,7 +136,11 @@ func StreamTable(qw422016 *qt422016.Writer, models email.Emails, usersByUserID u
 		qw422016.N().S(`
             <a title="User" href="`)
 //line views/vemail/Table.html:37
-		qw422016.E().S(model.WebPath(paths...))
+		if x := usersByUserID.Get(model.UserID); x != nil {
+//line views/vemail/Table.html:37
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vemail/Table.html:37
+		}
 //line views/vemail/Table.html:37
 		qw422016.N().S(`">`)
 //line views/vemail/Table.html:37

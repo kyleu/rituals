@@ -104,7 +104,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="Retro" href="`)
 //line views/vretro/vfeedback/Detail.html:39
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.RetroByRetroID; x != nil {
+//line views/vretro/vfeedback/Detail.html:39
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vretro/vfeedback/Detail.html:39
+	}
 //line views/vretro/vfeedback/Detail.html:39
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:39
@@ -141,7 +145,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="User" href="`)
 //line views/vretro/vfeedback/Detail.html:50
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.UserByUserID; x != nil {
+//line views/vretro/vfeedback/Detail.html:50
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vretro/vfeedback/Detail.html:50
+	}
 //line views/vretro/vfeedback/Detail.html:50
 	qw422016.N().S(`">`)
 //line views/vretro/vfeedback/Detail.html:50

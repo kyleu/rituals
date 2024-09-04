@@ -108,7 +108,11 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
             <a title="Retro" href="`)
 //line views/vretro/vrmember/Table.html:33
-		qw422016.E().S(model.WebPath(paths...))
+		if x := retrosByRetroID.Get(model.RetroID); x != nil {
+//line views/vretro/vrmember/Table.html:33
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vretro/vrmember/Table.html:33
+		}
 //line views/vretro/vrmember/Table.html:33
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:33
@@ -138,7 +142,11 @@ func StreamTable(qw422016 *qt422016.Writer, models rmember.RetroMembers, retrosB
 		qw422016.N().S(`</a>
             <a title="User" href="`)
 //line views/vretro/vrmember/Table.html:37
-		qw422016.E().S(model.WebPath(paths...))
+		if x := usersByUserID.Get(model.UserID); x != nil {
+//line views/vretro/vrmember/Table.html:37
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vretro/vrmember/Table.html:37
+		}
 //line views/vretro/vrmember/Table.html:37
 		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Table.html:37

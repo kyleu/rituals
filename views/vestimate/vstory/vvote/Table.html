@@ -27,11 +27,11 @@
         <tr>
           <td class="nowrap">
             <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.StoryID) %}{% if x := storiesByStoryID.Get(model.StoryID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Story" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`story`, ps) %}</a>
+            <a title="Story" href="{% if x := storiesByStoryID.Get(model.StoryID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`story`, ps) %}</a>
           </td>
           <td class="nowrap">
             <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="User" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a title="User" href="{% if x := usersByUserID.Get(model.UserID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td>{%= view.String(model.Choice) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

@@ -30,11 +30,11 @@
         <tr>
           <td class="nowrap">
             <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.TeamID) %}{% if x := teamsByTeamID.Get(model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Team" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
+            <a title="Team" href="{% if x := teamsByTeamID.Get(model.TeamID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>
           </td>
           <td class="nowrap">
             <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="User" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a title="User" href="{% if x := usersByUserID.Get(model.UserID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
           </td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>

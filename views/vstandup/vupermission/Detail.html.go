@@ -94,7 +94,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="Standup" href="`)
 //line views/vstandup/vupermission/Detail.html:33
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.StandupByStandupID; x != nil {
+//line views/vstandup/vupermission/Detail.html:33
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vstandup/vupermission/Detail.html:33
+	}
 //line views/vstandup/vupermission/Detail.html:33
 	qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Detail.html:33

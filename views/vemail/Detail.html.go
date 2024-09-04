@@ -142,7 +142,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="User" href="`)
 //line views/vemail/Detail.html:57
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.UserByUserID; x != nil {
+//line views/vemail/Detail.html:57
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vemail/Detail.html:57
+	}
 //line views/vemail/Detail.html:57
 	qw422016.N().S(`">`)
 //line views/vemail/Detail.html:57

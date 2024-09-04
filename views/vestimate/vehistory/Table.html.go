@@ -96,7 +96,11 @@ func StreamTable(qw422016 *qt422016.Writer, models ehistory.EstimateHistories, e
 		qw422016.N().S(`
             <a title="Estimate" href="`)
 //line views/vestimate/vehistory/Table.html:29
-		qw422016.E().S(model.WebPath(paths...))
+		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
+//line views/vestimate/vehistory/Table.html:29
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vestimate/vehistory/Table.html:29
+		}
 //line views/vestimate/vehistory/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vestimate/vehistory/Table.html:29

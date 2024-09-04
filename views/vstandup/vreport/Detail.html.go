@@ -104,7 +104,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="Standup" href="`)
 //line views/vstandup/vreport/Detail.html:39
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.StandupByStandupID; x != nil {
+//line views/vstandup/vreport/Detail.html:39
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vstandup/vreport/Detail.html:39
+	}
 //line views/vstandup/vreport/Detail.html:39
 	qw422016.N().S(`">`)
 //line views/vstandup/vreport/Detail.html:39
@@ -141,7 +145,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="User" href="`)
 //line views/vstandup/vreport/Detail.html:50
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.UserByUserID; x != nil {
+//line views/vstandup/vreport/Detail.html:50
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vstandup/vreport/Detail.html:50
+	}
 //line views/vstandup/vreport/Detail.html:50
 	qw422016.N().S(`">`)
 //line views/vstandup/vreport/Detail.html:50

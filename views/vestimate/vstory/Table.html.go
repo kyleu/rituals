@@ -123,7 +123,11 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEst
 		qw422016.N().S(`
             <a title="Estimate" href="`)
 //line views/vestimate/vstory/Table.html:36
-		qw422016.E().S(model.WebPath(paths...))
+		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
+//line views/vestimate/vstory/Table.html:36
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vestimate/vstory/Table.html:36
+		}
 //line views/vestimate/vstory/Table.html:36
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/Table.html:36
@@ -154,7 +158,11 @@ func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEst
 		qw422016.N().S(`
             <a title="User" href="`)
 //line views/vestimate/vstory/Table.html:41
-		qw422016.E().S(model.WebPath(paths...))
+		if x := usersByUserID.Get(model.UserID); x != nil {
+//line views/vestimate/vstory/Table.html:41
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vestimate/vstory/Table.html:41
+		}
 //line views/vestimate/vstory/Table.html:41
 		qw422016.N().S(`">`)
 //line views/vestimate/vstory/Table.html:41
