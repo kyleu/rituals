@@ -110,7 +110,7 @@ func (m MemberStatuses) Help() string {
 
 func (m MemberStatuses) Get(key string, logger util.Logger) MemberStatus {
 	for _, value := range m {
-		if value.Key == key {
+		if strings.EqualFold(value.Key, key) {
 			return value
 		}
 	}
@@ -123,7 +123,7 @@ func (m MemberStatuses) Get(key string, logger util.Logger) MemberStatus {
 
 func (m MemberStatuses) GetByName(name string, logger util.Logger) MemberStatus {
 	for _, value := range m {
-		if value.Name == name {
+		if strings.EqualFold(value.Name, name) {
 			return value
 		}
 	}

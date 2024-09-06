@@ -116,7 +116,7 @@ func (m ModelServices) Help() string {
 
 func (m ModelServices) Get(key string, logger util.Logger) ModelService {
 	for _, value := range m {
-		if value.Key == key {
+		if strings.EqualFold(value.Key, key) {
 			return value
 		}
 	}
@@ -129,7 +129,7 @@ func (m ModelServices) Get(key string, logger util.Logger) ModelService {
 
 func (m ModelServices) GetByName(name string, logger util.Logger) ModelService {
 	for _, value := range m {
-		if value.Name == name {
+		if strings.EqualFold(value.Name, name) {
 			return value
 		}
 	}

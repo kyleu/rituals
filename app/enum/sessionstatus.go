@@ -110,7 +110,7 @@ func (s SessionStatuses) Help() string {
 
 func (s SessionStatuses) Get(key string, logger util.Logger) SessionStatus {
 	for _, value := range s {
-		if value.Key == key {
+		if strings.EqualFold(value.Key, key) {
 			return value
 		}
 	}
@@ -123,7 +123,7 @@ func (s SessionStatuses) Get(key string, logger util.Logger) SessionStatus {
 
 func (s SessionStatuses) GetByName(name string, logger util.Logger) SessionStatus {
 	for _, value := range s {
-		if value.Name == name {
+		if strings.EqualFold(value.Name, name) {
 			return value
 		}
 	}
