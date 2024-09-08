@@ -23,37 +23,41 @@
     </div>
     <h3>{%= components.SVGIcon(`permission`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s epermission.Route(p.Paths...) %}"><em>Permission</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
-            <td class="nowrap">
-              {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
-              <a title="Estimate" href="{% if x := p.EstimateByEstimateID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`estimate`, ps) %}</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Key</th>
-            <td>{%= view.String(p.Model.Key) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Value</th>
-            <td>{%= view.String(p.Model.Value) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Access</th>
-            <td>{%= view.String(p.Model.Access) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {%= DetailTable(p, ps) %}
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%= components.JSONModal("estimatePermission", "Permission JSON", p.Model, 1) %}
+{% endfunc %}
+
+{% func DetailTable(p *Detail, ps *cutil.PageState) %}
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Estimate ID</th>
+          <td class="nowrap">
+            {%= view.UUID(&p.Model.EstimateID) %}{% if p.EstimateByEstimateID != nil %} ({%s p.EstimateByEstimateID.TitleString() %}){% endif %}
+            <a title="Estimate" href="{% if x := p.EstimateByEstimateID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Key</th>
+          <td>{%= view.String(p.Model.Key) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Value</th>
+          <td>{%= view.String(p.Model.Value) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Access</th>
+          <td>{%= view.String(p.Model.Access) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

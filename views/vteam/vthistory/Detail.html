@@ -23,33 +23,37 @@
     </div>
     <h3>{%= components.SVGIcon(`history`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s thistory.Route(p.Paths...) %}"><em>History</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="String text">Slug</th>
-            <td>{%= view.String(p.Model.Slug) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
-            <td class="nowrap">
-              {%= view.UUID(&p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
-              <a title="Team" href="{% if x := p.TeamByTeamID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Team Name</th>
-            <td>{%= view.String(p.Model.TeamName) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {%= DetailTable(p, ps) %}
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%= components.JSONModal("teamHistory", "History JSON", p.Model, 1) %}
+{% endfunc %}
+
+{% func DetailTable(p *Detail, ps *cutil.PageState) %}
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>{%= view.String(p.Model.Slug) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
+          <td class="nowrap">
+            {%= view.UUID(&p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
+            <a title="Team" href="{% if x := p.TeamByTeamID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Team Name</th>
+          <td>{%= view.String(p.Model.TeamName) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

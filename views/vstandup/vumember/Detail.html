@@ -26,48 +26,52 @@
     </div>
     <h3>{%= components.SVGIcon(`users`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s umember.Route(p.Paths...) %}"><em>Member</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
-            <td class="nowrap">
-              {%= view.UUID(&p.Model.StandupID) %}{% if p.StandupByStandupID != nil %} ({%s p.StandupByStandupID.TitleString() %}){% endif %}
-              <a title="Standup" href="{% if x := p.StandupByStandupID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`standup`, ps) %}</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-            <td class="nowrap">
-              {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
-              <a title="User" href="{% if x := p.UserByUserID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Name</th>
-            <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="URL in string form">Picture</th>
-            <td><a href="{%s p.Model.Picture %}" target="_blank" rel="noopener noreferrer">{%s p.Model.Picture %}</a></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="{%s enum.AllMemberStatuses.Help() %}">Role</th>
-            <td>{%s p.Model.Role.String() %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>{%= view.Timestamp(p.Model.Updated) %}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {%= DetailTable(p, ps) %}
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%= components.JSONModal("standupMember", "Member JSON", p.Model, 1) %}
+{% endfunc %}
+
+{% func DetailTable(p *Detail, ps *cutil.PageState) %}
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
+          <td class="nowrap">
+            {%= view.UUID(&p.Model.StandupID) %}{% if p.StandupByStandupID != nil %} ({%s p.StandupByStandupID.TitleString() %}){% endif %}
+            <a title="Standup" href="{% if x := p.StandupByStandupID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`standup`, ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+          <td class="nowrap">
+            {%= view.UUID(&p.Model.UserID) %}{% if p.UserByUserID != nil %} ({%s p.UserByUserID.TitleString() %}){% endif %}
+            <a title="User" href="{% if x := p.UserByUserID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="URL in string form">Picture</th>
+          <td><a href="{%s p.Model.Picture %}" target="_blank" rel="noopener noreferrer">{%s p.Model.Picture %}</a></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="{%s enum.AllMemberStatuses.Help() %}">Role</th>
+          <td>{%s p.Model.Role.String() %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

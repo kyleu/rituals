@@ -108,698 +108,778 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(user.Route(p.Paths...))
 //line views/vuser/Detail.html:62
 	qw422016.N().S(`"><em>User</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>`)
-//line views/vuser/Detail.html:68
-	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vuser/Detail.html:68
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Name</th>
-            <td><strong>`)
-//line views/vuser/Detail.html:72
-	view.StreamString(qw422016, p.Model.Name)
-//line views/vuser/Detail.html:72
-	qw422016.N().S(`</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="URL in string form">Picture</th>
-            <td><a href="`)
-//line views/vuser/Detail.html:76
-	qw422016.E().S(p.Model.Picture)
-//line views/vuser/Detail.html:76
-	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vuser/Detail.html:76
-	qw422016.E().S(p.Model.Picture)
-//line views/vuser/Detail.html:76
-	qw422016.N().S(`</a></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>`)
-//line views/vuser/Detail.html:80
-	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vuser/Detail.html:80
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>`)
-//line views/vuser/Detail.html:84
-	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vuser/Detail.html:84
-	qw422016.N().S(`</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    `)
+//line views/vuser/Detail.html:63
+	StreamDetailTable(qw422016, p, ps)
+//line views/vuser/Detail.html:63
+	qw422016.N().S(`
   </div>
 `)
-//line views/vuser/Detail.html:92
+//line views/vuser/Detail.html:66
+	qw422016.N().S(`  `)
+//line views/vuser/Detail.html:67
+	StreamDetailRelations(qw422016, as, p, ps)
+//line views/vuser/Detail.html:67
+	qw422016.N().S(`
+  `)
+//line views/vuser/Detail.html:68
+	components.StreamJSONModal(qw422016, "user", "User JSON", p.Model, 1)
+//line views/vuser/Detail.html:68
+	qw422016.N().S(`
+`)
+//line views/vuser/Detail.html:69
+}
+
+//line views/vuser/Detail.html:69
+func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vuser/Detail.html:69
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vuser/Detail.html:69
+	p.StreamBody(qw422016, as, ps)
+//line views/vuser/Detail.html:69
+	qt422016.ReleaseWriter(qw422016)
+//line views/vuser/Detail.html:69
+}
+
+//line views/vuser/Detail.html:69
+func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vuser/Detail.html:69
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vuser/Detail.html:69
+	p.WriteBody(qb422016, as, ps)
+//line views/vuser/Detail.html:69
+	qs422016 := string(qb422016.B)
+//line views/vuser/Detail.html:69
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vuser/Detail.html:69
+	return qs422016
+//line views/vuser/Detail.html:69
+}
+
+//line views/vuser/Detail.html:71
+func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vuser/Detail.html:71
+	qw422016.N().S(`
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>`)
+//line views/vuser/Detail.html:77
+	view.StreamUUID(qw422016, &p.Model.ID)
+//line views/vuser/Detail.html:77
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>`)
+//line views/vuser/Detail.html:81
+	view.StreamString(qw422016, p.Model.Name)
+//line views/vuser/Detail.html:81
+	qw422016.N().S(`</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="URL in string form">Picture</th>
+          <td><a href="`)
+//line views/vuser/Detail.html:85
+	qw422016.E().S(p.Model.Picture)
+//line views/vuser/Detail.html:85
+	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
+//line views/vuser/Detail.html:85
+	qw422016.E().S(p.Model.Picture)
+//line views/vuser/Detail.html:85
+	qw422016.N().S(`</a></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>`)
+//line views/vuser/Detail.html:89
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vuser/Detail.html:89
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>`)
+//line views/vuser/Detail.html:93
+	view.StreamTimestamp(qw422016, p.Model.Updated)
+//line views/vuser/Detail.html:93
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vuser/Detail.html:98
+}
+
+//line views/vuser/Detail.html:98
+func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vuser/Detail.html:98
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vuser/Detail.html:98
+	StreamDetailTable(qw422016, p, ps)
+//line views/vuser/Detail.html:98
+	qt422016.ReleaseWriter(qw422016)
+//line views/vuser/Detail.html:98
+}
+
+//line views/vuser/Detail.html:98
+func DetailTable(p *Detail, ps *cutil.PageState) string {
+//line views/vuser/Detail.html:98
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vuser/Detail.html:98
+	WriteDetailTable(qb422016, p, ps)
+//line views/vuser/Detail.html:98
+	qs422016 := string(qb422016.B)
+//line views/vuser/Detail.html:98
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vuser/Detail.html:98
+	return qs422016
+//line views/vuser/Detail.html:98
+}
+
+//line views/vuser/Detail.html:100
+func StreamDetailRelations(qw422016 *qt422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
+//line views/vuser/Detail.html:100
+	qw422016.N().S(`
+`)
+//line views/vuser/Detail.html:101
 	relationHelper := user.Users{p.Model}
 
-//line views/vuser/Detail.html:92
+//line views/vuser/Detail.html:101
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-ActionsByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:97
+//line views/vuser/Detail.html:106
 	if p.Params.Specifies(`action`) {
-//line views/vuser/Detail.html:97
+//line views/vuser/Detail.html:106
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:97
+//line views/vuser/Detail.html:106
 	}
-//line views/vuser/Detail.html:97
+//line views/vuser/Detail.html:106
 	qw422016.N().S(` />
         <label for="accordion-ActionsByUserID">
           `)
-//line views/vuser/Detail.html:99
+//line views/vuser/Detail.html:108
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:99
+//line views/vuser/Detail.html:108
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:100
+//line views/vuser/Detail.html:109
 	components.StreamSVGInline(qw422016, `action`, 16, ps)
-//line views/vuser/Detail.html:100
+//line views/vuser/Detail.html:109
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:101
+//line views/vuser/Detail.html:110
 	qw422016.E().S(util.StringPlural(len(p.RelActionsByUserID), "Action"))
-//line views/vuser/Detail.html:101
+//line views/vuser/Detail.html:110
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:104
+//line views/vuser/Detail.html:113
 	if len(p.RelActionsByUserID) == 0 {
-//line views/vuser/Detail.html:104
+//line views/vuser/Detail.html:113
 		qw422016.N().S(`          <em>no related Actions</em>
 `)
-//line views/vuser/Detail.html:106
+//line views/vuser/Detail.html:115
 	} else {
-//line views/vuser/Detail.html:106
+//line views/vuser/Detail.html:115
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:108
+//line views/vuser/Detail.html:117
 		vaction.StreamTable(qw422016, p.RelActionsByUserID, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:108
+//line views/vuser/Detail.html:117
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:110
+//line views/vuser/Detail.html:119
 	}
-//line views/vuser/Detail.html:110
+//line views/vuser/Detail.html:119
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-CommentsByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:114
+//line views/vuser/Detail.html:123
 	if p.Params.Specifies(`comment`) {
-//line views/vuser/Detail.html:114
+//line views/vuser/Detail.html:123
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:114
+//line views/vuser/Detail.html:123
 	}
-//line views/vuser/Detail.html:114
+//line views/vuser/Detail.html:123
 	qw422016.N().S(` />
         <label for="accordion-CommentsByUserID">
           `)
-//line views/vuser/Detail.html:116
+//line views/vuser/Detail.html:125
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:116
+//line views/vuser/Detail.html:125
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:117
+//line views/vuser/Detail.html:126
 	components.StreamSVGInline(qw422016, `comments`, 16, ps)
-//line views/vuser/Detail.html:117
+//line views/vuser/Detail.html:126
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:118
+//line views/vuser/Detail.html:127
 	qw422016.E().S(util.StringPlural(len(p.RelCommentsByUserID), "Comment"))
-//line views/vuser/Detail.html:118
+//line views/vuser/Detail.html:127
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:121
+//line views/vuser/Detail.html:130
 	if len(p.RelCommentsByUserID) == 0 {
-//line views/vuser/Detail.html:121
+//line views/vuser/Detail.html:130
 		qw422016.N().S(`          <em>no related Comments</em>
 `)
-//line views/vuser/Detail.html:123
+//line views/vuser/Detail.html:132
 	} else {
-//line views/vuser/Detail.html:123
+//line views/vuser/Detail.html:132
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:125
+//line views/vuser/Detail.html:134
 		vcomment.StreamTable(qw422016, p.RelCommentsByUserID, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:125
+//line views/vuser/Detail.html:134
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:127
+//line views/vuser/Detail.html:136
 	}
-//line views/vuser/Detail.html:127
+//line views/vuser/Detail.html:136
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-EmailsByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:131
+//line views/vuser/Detail.html:140
 	if p.Params.Specifies(`email`) {
-//line views/vuser/Detail.html:131
+//line views/vuser/Detail.html:140
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:131
+//line views/vuser/Detail.html:140
 	}
-//line views/vuser/Detail.html:131
+//line views/vuser/Detail.html:140
 	qw422016.N().S(` />
         <label for="accordion-EmailsByUserID">
           `)
-//line views/vuser/Detail.html:133
+//line views/vuser/Detail.html:142
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:133
+//line views/vuser/Detail.html:142
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:134
+//line views/vuser/Detail.html:143
 	components.StreamSVGInline(qw422016, `email`, 16, ps)
-//line views/vuser/Detail.html:134
+//line views/vuser/Detail.html:143
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:135
+//line views/vuser/Detail.html:144
 	qw422016.E().S(util.StringPlural(len(p.RelEmailsByUserID), "Email"))
-//line views/vuser/Detail.html:135
+//line views/vuser/Detail.html:144
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:138
+//line views/vuser/Detail.html:147
 	if len(p.RelEmailsByUserID) == 0 {
-//line views/vuser/Detail.html:138
+//line views/vuser/Detail.html:147
 		qw422016.N().S(`          <em>no related Emails</em>
 `)
-//line views/vuser/Detail.html:140
+//line views/vuser/Detail.html:149
 	} else {
-//line views/vuser/Detail.html:140
+//line views/vuser/Detail.html:149
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:142
+//line views/vuser/Detail.html:151
 		vemail.StreamTable(qw422016, p.RelEmailsByUserID, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:142
+//line views/vuser/Detail.html:151
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:144
+//line views/vuser/Detail.html:153
 	}
-//line views/vuser/Detail.html:144
+//line views/vuser/Detail.html:153
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-EstimateMembersByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:148
+//line views/vuser/Detail.html:157
 	if p.Params.Specifies(`emember`) {
-//line views/vuser/Detail.html:148
+//line views/vuser/Detail.html:157
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:148
+//line views/vuser/Detail.html:157
 	}
-//line views/vuser/Detail.html:148
+//line views/vuser/Detail.html:157
 	qw422016.N().S(` />
         <label for="accordion-EstimateMembersByUserID">
           `)
-//line views/vuser/Detail.html:150
+//line views/vuser/Detail.html:159
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:150
+//line views/vuser/Detail.html:159
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:151
+//line views/vuser/Detail.html:160
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vuser/Detail.html:151
+//line views/vuser/Detail.html:160
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:152
+//line views/vuser/Detail.html:161
 	qw422016.E().S(util.StringPlural(len(p.RelEstimateMembersByUserID), "Member"))
-//line views/vuser/Detail.html:152
+//line views/vuser/Detail.html:161
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:155
+//line views/vuser/Detail.html:164
 	if len(p.RelEstimateMembersByUserID) == 0 {
-//line views/vuser/Detail.html:155
+//line views/vuser/Detail.html:164
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vuser/Detail.html:157
+//line views/vuser/Detail.html:166
 	} else {
-//line views/vuser/Detail.html:157
+//line views/vuser/Detail.html:166
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:159
+//line views/vuser/Detail.html:168
 		vemember.StreamTable(qw422016, p.RelEstimateMembersByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:159
+//line views/vuser/Detail.html:168
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:161
+//line views/vuser/Detail.html:170
 	}
-//line views/vuser/Detail.html:161
+//line views/vuser/Detail.html:170
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-FeedbacksByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:165
+//line views/vuser/Detail.html:174
 	if p.Params.Specifies(`feedback`) {
-//line views/vuser/Detail.html:165
+//line views/vuser/Detail.html:174
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:165
+//line views/vuser/Detail.html:174
 	}
-//line views/vuser/Detail.html:165
+//line views/vuser/Detail.html:174
 	qw422016.N().S(` />
         <label for="accordion-FeedbacksByUserID">
           `)
-//line views/vuser/Detail.html:167
+//line views/vuser/Detail.html:176
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:167
+//line views/vuser/Detail.html:176
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:168
+//line views/vuser/Detail.html:177
 	components.StreamSVGInline(qw422016, `comment`, 16, ps)
-//line views/vuser/Detail.html:168
+//line views/vuser/Detail.html:177
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:169
+//line views/vuser/Detail.html:178
 	qw422016.E().S(util.StringPlural(len(p.RelFeedbacksByUserID), "Feedback"))
-//line views/vuser/Detail.html:169
+//line views/vuser/Detail.html:178
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:172
+//line views/vuser/Detail.html:181
 	if len(p.RelFeedbacksByUserID) == 0 {
-//line views/vuser/Detail.html:172
+//line views/vuser/Detail.html:181
 		qw422016.N().S(`          <em>no related Feedbacks</em>
 `)
-//line views/vuser/Detail.html:174
+//line views/vuser/Detail.html:183
 	} else {
-//line views/vuser/Detail.html:174
+//line views/vuser/Detail.html:183
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:176
+//line views/vuser/Detail.html:185
 		vfeedback.StreamTable(qw422016, p.RelFeedbacksByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:176
+//line views/vuser/Detail.html:185
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:178
+//line views/vuser/Detail.html:187
 	}
-//line views/vuser/Detail.html:178
+//line views/vuser/Detail.html:187
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-ReportsByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:182
+//line views/vuser/Detail.html:191
 	if p.Params.Specifies(`report`) {
-//line views/vuser/Detail.html:182
+//line views/vuser/Detail.html:191
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:182
+//line views/vuser/Detail.html:191
 	}
-//line views/vuser/Detail.html:182
+//line views/vuser/Detail.html:191
 	qw422016.N().S(` />
         <label for="accordion-ReportsByUserID">
           `)
-//line views/vuser/Detail.html:184
+//line views/vuser/Detail.html:193
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:184
+//line views/vuser/Detail.html:193
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:185
+//line views/vuser/Detail.html:194
 	components.StreamSVGInline(qw422016, `file-alt`, 16, ps)
-//line views/vuser/Detail.html:185
+//line views/vuser/Detail.html:194
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:186
+//line views/vuser/Detail.html:195
 	qw422016.E().S(util.StringPlural(len(p.RelReportsByUserID), "Report"))
-//line views/vuser/Detail.html:186
+//line views/vuser/Detail.html:195
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:189
+//line views/vuser/Detail.html:198
 	if len(p.RelReportsByUserID) == 0 {
-//line views/vuser/Detail.html:189
+//line views/vuser/Detail.html:198
 		qw422016.N().S(`          <em>no related Reports</em>
 `)
-//line views/vuser/Detail.html:191
+//line views/vuser/Detail.html:200
 	} else {
-//line views/vuser/Detail.html:191
+//line views/vuser/Detail.html:200
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:193
+//line views/vuser/Detail.html:202
 		vreport.StreamTable(qw422016, p.RelReportsByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:193
+//line views/vuser/Detail.html:202
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:195
+//line views/vuser/Detail.html:204
 	}
-//line views/vuser/Detail.html:195
+//line views/vuser/Detail.html:204
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroMembersByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:199
+//line views/vuser/Detail.html:208
 	if p.Params.Specifies(`rmember`) {
-//line views/vuser/Detail.html:199
+//line views/vuser/Detail.html:208
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:199
+//line views/vuser/Detail.html:208
 	}
-//line views/vuser/Detail.html:199
+//line views/vuser/Detail.html:208
 	qw422016.N().S(` />
         <label for="accordion-RetroMembersByUserID">
           `)
-//line views/vuser/Detail.html:201
+//line views/vuser/Detail.html:210
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:201
+//line views/vuser/Detail.html:210
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:202
+//line views/vuser/Detail.html:211
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vuser/Detail.html:202
+//line views/vuser/Detail.html:211
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:203
+//line views/vuser/Detail.html:212
 	qw422016.E().S(util.StringPlural(len(p.RelRetroMembersByUserID), "Member"))
-//line views/vuser/Detail.html:203
+//line views/vuser/Detail.html:212
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:206
+//line views/vuser/Detail.html:215
 	if len(p.RelRetroMembersByUserID) == 0 {
-//line views/vuser/Detail.html:206
+//line views/vuser/Detail.html:215
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vuser/Detail.html:208
+//line views/vuser/Detail.html:217
 	} else {
-//line views/vuser/Detail.html:208
+//line views/vuser/Detail.html:217
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:210
+//line views/vuser/Detail.html:219
 		vrmember.StreamTable(qw422016, p.RelRetroMembersByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:210
+//line views/vuser/Detail.html:219
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:212
+//line views/vuser/Detail.html:221
 	}
-//line views/vuser/Detail.html:212
+//line views/vuser/Detail.html:221
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-SprintMembersByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:216
+//line views/vuser/Detail.html:225
 	if p.Params.Specifies(`smember`) {
-//line views/vuser/Detail.html:216
+//line views/vuser/Detail.html:225
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:216
+//line views/vuser/Detail.html:225
 	}
-//line views/vuser/Detail.html:216
+//line views/vuser/Detail.html:225
 	qw422016.N().S(` />
         <label for="accordion-SprintMembersByUserID">
           `)
-//line views/vuser/Detail.html:218
+//line views/vuser/Detail.html:227
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:218
+//line views/vuser/Detail.html:227
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:219
+//line views/vuser/Detail.html:228
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vuser/Detail.html:219
+//line views/vuser/Detail.html:228
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:220
+//line views/vuser/Detail.html:229
 	qw422016.E().S(util.StringPlural(len(p.RelSprintMembersByUserID), "Member"))
-//line views/vuser/Detail.html:220
+//line views/vuser/Detail.html:229
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:223
+//line views/vuser/Detail.html:232
 	if len(p.RelSprintMembersByUserID) == 0 {
-//line views/vuser/Detail.html:223
+//line views/vuser/Detail.html:232
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vuser/Detail.html:225
+//line views/vuser/Detail.html:234
 	} else {
-//line views/vuser/Detail.html:225
+//line views/vuser/Detail.html:234
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:227
+//line views/vuser/Detail.html:236
 		vsmember.StreamTable(qw422016, p.RelSprintMembersByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:227
+//line views/vuser/Detail.html:236
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:229
+//line views/vuser/Detail.html:238
 	}
-//line views/vuser/Detail.html:229
+//line views/vuser/Detail.html:238
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupMembersByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:233
+//line views/vuser/Detail.html:242
 	if p.Params.Specifies(`umember`) {
-//line views/vuser/Detail.html:233
+//line views/vuser/Detail.html:242
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:233
+//line views/vuser/Detail.html:242
 	}
-//line views/vuser/Detail.html:233
+//line views/vuser/Detail.html:242
 	qw422016.N().S(` />
         <label for="accordion-StandupMembersByUserID">
           `)
-//line views/vuser/Detail.html:235
+//line views/vuser/Detail.html:244
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:235
+//line views/vuser/Detail.html:244
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:236
+//line views/vuser/Detail.html:245
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vuser/Detail.html:236
+//line views/vuser/Detail.html:245
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:237
+//line views/vuser/Detail.html:246
 	qw422016.E().S(util.StringPlural(len(p.RelStandupMembersByUserID), "Member"))
-//line views/vuser/Detail.html:237
+//line views/vuser/Detail.html:246
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:240
+//line views/vuser/Detail.html:249
 	if len(p.RelStandupMembersByUserID) == 0 {
-//line views/vuser/Detail.html:240
+//line views/vuser/Detail.html:249
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vuser/Detail.html:242
+//line views/vuser/Detail.html:251
 	} else {
-//line views/vuser/Detail.html:242
+//line views/vuser/Detail.html:251
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:253
 		vumember.StreamTable(qw422016, p.RelStandupMembersByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:244
+//line views/vuser/Detail.html:253
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:246
+//line views/vuser/Detail.html:255
 	}
-//line views/vuser/Detail.html:246
+//line views/vuser/Detail.html:255
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StoriesByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:250
+//line views/vuser/Detail.html:259
 	if p.Params.Specifies(`story`) {
-//line views/vuser/Detail.html:250
+//line views/vuser/Detail.html:259
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:250
+//line views/vuser/Detail.html:259
 	}
-//line views/vuser/Detail.html:250
+//line views/vuser/Detail.html:259
 	qw422016.N().S(` />
         <label for="accordion-StoriesByUserID">
           `)
-//line views/vuser/Detail.html:252
+//line views/vuser/Detail.html:261
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:252
+//line views/vuser/Detail.html:261
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:253
+//line views/vuser/Detail.html:262
 	components.StreamSVGInline(qw422016, `story`, 16, ps)
-//line views/vuser/Detail.html:253
+//line views/vuser/Detail.html:262
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:254
+//line views/vuser/Detail.html:263
 	qw422016.E().S(util.StringPlural(len(p.RelStoriesByUserID), "Story"))
-//line views/vuser/Detail.html:254
+//line views/vuser/Detail.html:263
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:257
+//line views/vuser/Detail.html:266
 	if len(p.RelStoriesByUserID) == 0 {
-//line views/vuser/Detail.html:257
+//line views/vuser/Detail.html:266
 		qw422016.N().S(`          <em>no related Stories</em>
 `)
-//line views/vuser/Detail.html:259
+//line views/vuser/Detail.html:268
 	} else {
-//line views/vuser/Detail.html:259
+//line views/vuser/Detail.html:268
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:261
+//line views/vuser/Detail.html:270
 		vstory.StreamTable(qw422016, p.RelStoriesByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:261
+//line views/vuser/Detail.html:270
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:263
+//line views/vuser/Detail.html:272
 	}
-//line views/vuser/Detail.html:263
+//line views/vuser/Detail.html:272
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamMembersByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:267
+//line views/vuser/Detail.html:276
 	if p.Params.Specifies(`tmember`) {
-//line views/vuser/Detail.html:267
+//line views/vuser/Detail.html:276
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:267
+//line views/vuser/Detail.html:276
 	}
-//line views/vuser/Detail.html:267
+//line views/vuser/Detail.html:276
 	qw422016.N().S(` />
         <label for="accordion-TeamMembersByUserID">
           `)
-//line views/vuser/Detail.html:269
+//line views/vuser/Detail.html:278
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:269
+//line views/vuser/Detail.html:278
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:270
+//line views/vuser/Detail.html:279
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vuser/Detail.html:270
+//line views/vuser/Detail.html:279
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:271
+//line views/vuser/Detail.html:280
 	qw422016.E().S(util.StringPlural(len(p.RelTeamMembersByUserID), "Member"))
-//line views/vuser/Detail.html:271
+//line views/vuser/Detail.html:280
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:274
+//line views/vuser/Detail.html:283
 	if len(p.RelTeamMembersByUserID) == 0 {
-//line views/vuser/Detail.html:274
+//line views/vuser/Detail.html:283
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vuser/Detail.html:276
+//line views/vuser/Detail.html:285
 	} else {
-//line views/vuser/Detail.html:276
+//line views/vuser/Detail.html:285
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:278
+//line views/vuser/Detail.html:287
 		vtmember.StreamTable(qw422016, p.RelTeamMembersByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:278
+//line views/vuser/Detail.html:287
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:280
+//line views/vuser/Detail.html:289
 	}
-//line views/vuser/Detail.html:280
+//line views/vuser/Detail.html:289
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-VotesByUserID" type="checkbox" hidden="hidden"`)
-//line views/vuser/Detail.html:284
+//line views/vuser/Detail.html:293
 	if p.Params.Specifies(`vote`) {
-//line views/vuser/Detail.html:284
+//line views/vuser/Detail.html:293
 		qw422016.N().S(` checked="checked"`)
-//line views/vuser/Detail.html:284
+//line views/vuser/Detail.html:293
 	}
-//line views/vuser/Detail.html:284
+//line views/vuser/Detail.html:293
 	qw422016.N().S(` />
         <label for="accordion-VotesByUserID">
           `)
-//line views/vuser/Detail.html:286
+//line views/vuser/Detail.html:295
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vuser/Detail.html:286
+//line views/vuser/Detail.html:295
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:287
+//line views/vuser/Detail.html:296
 	components.StreamSVGInline(qw422016, `vote-yea`, 16, ps)
-//line views/vuser/Detail.html:287
+//line views/vuser/Detail.html:296
 	qw422016.N().S(`
           `)
-//line views/vuser/Detail.html:288
+//line views/vuser/Detail.html:297
 	qw422016.E().S(util.StringPlural(len(p.RelVotesByUserID), "Vote"))
-//line views/vuser/Detail.html:288
+//line views/vuser/Detail.html:297
 	qw422016.N().S(` by [User ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vuser/Detail.html:291
+//line views/vuser/Detail.html:300
 	if len(p.RelVotesByUserID) == 0 {
-//line views/vuser/Detail.html:291
+//line views/vuser/Detail.html:300
 		qw422016.N().S(`          <em>no related Votes</em>
 `)
-//line views/vuser/Detail.html:293
+//line views/vuser/Detail.html:302
 	} else {
-//line views/vuser/Detail.html:293
+//line views/vuser/Detail.html:302
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vuser/Detail.html:295
+//line views/vuser/Detail.html:304
 		vvote.StreamTable(qw422016, p.RelVotesByUserID, nil, relationHelper, p.Params, as, ps)
-//line views/vuser/Detail.html:295
+//line views/vuser/Detail.html:304
 		qw422016.N().S(`
           </div>
 `)
-//line views/vuser/Detail.html:297
+//line views/vuser/Detail.html:306
 	}
-//line views/vuser/Detail.html:297
+//line views/vuser/Detail.html:306
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
-  `)
-//line views/vuser/Detail.html:302
-	components.StreamJSONModal(qw422016, "user", "User JSON", p.Model, 1)
-//line views/vuser/Detail.html:302
-	qw422016.N().S(`
 `)
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
 }
 
-//line views/vuser/Detail.html:303
-func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
+func WriteDetailRelations(qq422016 qtio422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
+//line views/vuser/Detail.html:311
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vuser/Detail.html:303
-	p.StreamBody(qw422016, as, ps)
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
+	StreamDetailRelations(qw422016, as, p, ps)
+//line views/vuser/Detail.html:311
 	qt422016.ReleaseWriter(qw422016)
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
 }
 
-//line views/vuser/Detail.html:303
-func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
+func DetailRelations(as *app.State, p *Detail, ps *cutil.PageState) string {
+//line views/vuser/Detail.html:311
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vuser/Detail.html:303
-	p.WriteBody(qb422016, as, ps)
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
+	WriteDetailRelations(qb422016, as, p, ps)
+//line views/vuser/Detail.html:311
 	qs422016 := string(qb422016.B)
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
 	return qs422016
-//line views/vuser/Detail.html:303
+//line views/vuser/Detail.html:311
 }

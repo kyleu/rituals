@@ -135,8 +135,8 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.autocomplete(document.getElementById("input-estimateID"), "/admin/db/estimate?estimate.l=10", "q", (o) => o["slug"] + " / " + o["title"] + " / " + o["choices"] + " (" + o["id"] + ")", (o) => o["id"]);
-      rituals.autocomplete(document.getElementById("input-userID"), "/admin/db/user?user.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-estimateID"), "/admin/db/estimate?estimate.l=10", "q", (o) => (o["slug"] || "[no slug]") + " / " + (o["title"] || "[no title]") + " / " + (o["choices"] || "[no choices]") + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-userID"), "/admin/db/user?user.l=10", "q", (o) => (o["name"] || "[no name]") + " (" + o["id"] + ")", (o) => o["id"]);
     });
   </script>
 `)

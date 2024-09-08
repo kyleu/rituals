@@ -73,160 +73,199 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(report.Route(p.Paths...))
 //line views/vstandup/vreport/Detail.html:27
 	qw422016.N().S(`"><em>Report</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>`)
-//line views/vstandup/vreport/Detail.html:33
-	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vstandup/vreport/Detail.html:33
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
-            <td class="nowrap">
-              `)
-//line views/vstandup/vreport/Detail.html:38
-	view.StreamUUID(qw422016, &p.Model.StandupID)
-//line views/vstandup/vreport/Detail.html:38
-	if p.StandupByStandupID != nil {
-//line views/vstandup/vreport/Detail.html:38
-		qw422016.N().S(` (`)
-//line views/vstandup/vreport/Detail.html:38
-		qw422016.E().S(p.StandupByStandupID.TitleString())
-//line views/vstandup/vreport/Detail.html:38
-		qw422016.N().S(`)`)
-//line views/vstandup/vreport/Detail.html:38
-	}
-//line views/vstandup/vreport/Detail.html:38
+    `)
+//line views/vstandup/vreport/Detail.html:28
+	StreamDetailTable(qw422016, p, ps)
+//line views/vstandup/vreport/Detail.html:28
 	qw422016.N().S(`
-              <a title="Standup" href="`)
-//line views/vstandup/vreport/Detail.html:39
-	if x := p.StandupByStandupID; x != nil {
-//line views/vstandup/vreport/Detail.html:39
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vstandup/vreport/Detail.html:39
-	}
-//line views/vstandup/vreport/Detail.html:39
-	qw422016.N().S(`">`)
-//line views/vstandup/vreport/Detail.html:39
-	components.StreamSVGLink(qw422016, `standup`, ps)
-//line views/vstandup/vreport/Detail.html:39
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Calendar date">Day</th>
-            <td>`)
-//line views/vstandup/vreport/Detail.html:44
-	view.StreamTimestampDay(qw422016, &p.Model.Day)
-//line views/vstandup/vreport/Detail.html:44
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-            <td class="nowrap">
-              `)
-//line views/vstandup/vreport/Detail.html:49
-	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vstandup/vreport/Detail.html:49
-	if p.UserByUserID != nil {
-//line views/vstandup/vreport/Detail.html:49
-		qw422016.N().S(` (`)
-//line views/vstandup/vreport/Detail.html:49
-		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vstandup/vreport/Detail.html:49
-		qw422016.N().S(`)`)
-//line views/vstandup/vreport/Detail.html:49
-	}
-//line views/vstandup/vreport/Detail.html:49
-	qw422016.N().S(`
-              <a title="User" href="`)
-//line views/vstandup/vreport/Detail.html:50
-	if x := p.UserByUserID; x != nil {
-//line views/vstandup/vreport/Detail.html:50
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vstandup/vreport/Detail.html:50
-	}
-//line views/vstandup/vreport/Detail.html:50
-	qw422016.N().S(`">`)
-//line views/vstandup/vreport/Detail.html:50
-	components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vstandup/vreport/Detail.html:50
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Content</th>
-            <td>`)
-//line views/vstandup/vreport/Detail.html:55
-	view.StreamString(qw422016, p.Model.Content)
-//line views/vstandup/vreport/Detail.html:55
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="HTML code, in string form">HTML</th>
-            <td>`)
-//line views/vstandup/vreport/Detail.html:59
-	view.StreamFormat(qw422016, p.Model.HTML, "html")
-//line views/vstandup/vreport/Detail.html:59
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>`)
-//line views/vstandup/vreport/Detail.html:63
-	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vstandup/vreport/Detail.html:63
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>`)
-//line views/vstandup/vreport/Detail.html:67
-	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vstandup/vreport/Detail.html:67
-	qw422016.N().S(`</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 `)
-//line views/vstandup/vreport/Detail.html:74
+//line views/vstandup/vreport/Detail.html:31
 	qw422016.N().S(`  `)
-//line views/vstandup/vreport/Detail.html:75
+//line views/vstandup/vreport/Detail.html:32
 	components.StreamJSONModal(qw422016, "report", "Report JSON", p.Model, 1)
-//line views/vstandup/vreport/Detail.html:75
+//line views/vstandup/vreport/Detail.html:32
 	qw422016.N().S(`
 `)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 }
 
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 }
 
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
 	return qs422016
-//line views/vstandup/vreport/Detail.html:76
+//line views/vstandup/vreport/Detail.html:33
+}
+
+//line views/vstandup/vreport/Detail.html:35
+func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vstandup/vreport/Detail.html:35
+	qw422016.N().S(`
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>`)
+//line views/vstandup/vreport/Detail.html:41
+	view.StreamUUID(qw422016, &p.Model.ID)
+//line views/vstandup/vreport/Detail.html:41
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Standup ID</th>
+          <td class="nowrap">
+            `)
+//line views/vstandup/vreport/Detail.html:46
+	view.StreamUUID(qw422016, &p.Model.StandupID)
+//line views/vstandup/vreport/Detail.html:46
+	if p.StandupByStandupID != nil {
+//line views/vstandup/vreport/Detail.html:46
+		qw422016.N().S(` (`)
+//line views/vstandup/vreport/Detail.html:46
+		qw422016.E().S(p.StandupByStandupID.TitleString())
+//line views/vstandup/vreport/Detail.html:46
+		qw422016.N().S(`)`)
+//line views/vstandup/vreport/Detail.html:46
+	}
+//line views/vstandup/vreport/Detail.html:46
+	qw422016.N().S(`
+            <a title="Standup" href="`)
+//line views/vstandup/vreport/Detail.html:47
+	if x := p.StandupByStandupID; x != nil {
+//line views/vstandup/vreport/Detail.html:47
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vstandup/vreport/Detail.html:47
+	}
+//line views/vstandup/vreport/Detail.html:47
+	qw422016.N().S(`">`)
+//line views/vstandup/vreport/Detail.html:47
+	components.StreamSVGLink(qw422016, `standup`, ps)
+//line views/vstandup/vreport/Detail.html:47
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Calendar date">Day</th>
+          <td>`)
+//line views/vstandup/vreport/Detail.html:52
+	view.StreamTimestampDay(qw422016, &p.Model.Day)
+//line views/vstandup/vreport/Detail.html:52
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+          <td class="nowrap">
+            `)
+//line views/vstandup/vreport/Detail.html:57
+	view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vstandup/vreport/Detail.html:57
+	if p.UserByUserID != nil {
+//line views/vstandup/vreport/Detail.html:57
+		qw422016.N().S(` (`)
+//line views/vstandup/vreport/Detail.html:57
+		qw422016.E().S(p.UserByUserID.TitleString())
+//line views/vstandup/vreport/Detail.html:57
+		qw422016.N().S(`)`)
+//line views/vstandup/vreport/Detail.html:57
+	}
+//line views/vstandup/vreport/Detail.html:57
+	qw422016.N().S(`
+            <a title="User" href="`)
+//line views/vstandup/vreport/Detail.html:58
+	if x := p.UserByUserID; x != nil {
+//line views/vstandup/vreport/Detail.html:58
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vstandup/vreport/Detail.html:58
+	}
+//line views/vstandup/vreport/Detail.html:58
+	qw422016.N().S(`">`)
+//line views/vstandup/vreport/Detail.html:58
+	components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vstandup/vreport/Detail.html:58
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Content</th>
+          <td>`)
+//line views/vstandup/vreport/Detail.html:63
+	view.StreamString(qw422016, p.Model.Content)
+//line views/vstandup/vreport/Detail.html:63
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="HTML code, in string form">HTML</th>
+          <td>`)
+//line views/vstandup/vreport/Detail.html:67
+	view.StreamFormat(qw422016, p.Model.HTML, "html")
+//line views/vstandup/vreport/Detail.html:67
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>`)
+//line views/vstandup/vreport/Detail.html:71
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vstandup/vreport/Detail.html:71
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>`)
+//line views/vstandup/vreport/Detail.html:75
+	view.StreamTimestamp(qw422016, p.Model.Updated)
+//line views/vstandup/vreport/Detail.html:75
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vstandup/vreport/Detail.html:80
+}
+
+//line views/vstandup/vreport/Detail.html:80
+func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vstandup/vreport/Detail.html:80
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vstandup/vreport/Detail.html:80
+	StreamDetailTable(qw422016, p, ps)
+//line views/vstandup/vreport/Detail.html:80
+	qt422016.ReleaseWriter(qw422016)
+//line views/vstandup/vreport/Detail.html:80
+}
+
+//line views/vstandup/vreport/Detail.html:80
+func DetailTable(p *Detail, ps *cutil.PageState) string {
+//line views/vstandup/vreport/Detail.html:80
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vstandup/vreport/Detail.html:80
+	WriteDetailTable(qb422016, p, ps)
+//line views/vstandup/vreport/Detail.html:80
+	qs422016 := string(qb422016.B)
+//line views/vstandup/vreport/Detail.html:80
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vstandup/vreport/Detail.html:80
+	return qs422016
+//line views/vstandup/vreport/Detail.html:80
 }

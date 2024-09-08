@@ -74,160 +74,199 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(smember.Route(p.Paths...))
 //line views/vsprint/vsmember/Detail.html:28
 	qw422016.N().S(`"><em>Member</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
-            <td class="nowrap">
-              `)
-//line views/vsprint/vsmember/Detail.html:35
-	view.StreamUUID(qw422016, &p.Model.SprintID)
-//line views/vsprint/vsmember/Detail.html:35
-	if p.SprintBySprintID != nil {
-//line views/vsprint/vsmember/Detail.html:35
-		qw422016.N().S(` (`)
-//line views/vsprint/vsmember/Detail.html:35
-		qw422016.E().S(p.SprintBySprintID.TitleString())
-//line views/vsprint/vsmember/Detail.html:35
-		qw422016.N().S(`)`)
-//line views/vsprint/vsmember/Detail.html:35
-	}
-//line views/vsprint/vsmember/Detail.html:35
+    `)
+//line views/vsprint/vsmember/Detail.html:29
+	StreamDetailTable(qw422016, p, ps)
+//line views/vsprint/vsmember/Detail.html:29
 	qw422016.N().S(`
-              <a title="Sprint" href="`)
-//line views/vsprint/vsmember/Detail.html:36
-	if x := p.SprintBySprintID; x != nil {
-//line views/vsprint/vsmember/Detail.html:36
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vsprint/vsmember/Detail.html:36
-	}
-//line views/vsprint/vsmember/Detail.html:36
-	qw422016.N().S(`">`)
-//line views/vsprint/vsmember/Detail.html:36
-	components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vsprint/vsmember/Detail.html:36
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-            <td class="nowrap">
-              `)
-//line views/vsprint/vsmember/Detail.html:42
-	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vsprint/vsmember/Detail.html:42
-	if p.UserByUserID != nil {
-//line views/vsprint/vsmember/Detail.html:42
-		qw422016.N().S(` (`)
-//line views/vsprint/vsmember/Detail.html:42
-		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vsprint/vsmember/Detail.html:42
-		qw422016.N().S(`)`)
-//line views/vsprint/vsmember/Detail.html:42
-	}
-//line views/vsprint/vsmember/Detail.html:42
-	qw422016.N().S(`
-              <a title="User" href="`)
-//line views/vsprint/vsmember/Detail.html:43
-	if x := p.UserByUserID; x != nil {
-//line views/vsprint/vsmember/Detail.html:43
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vsprint/vsmember/Detail.html:43
-	}
-//line views/vsprint/vsmember/Detail.html:43
-	qw422016.N().S(`">`)
-//line views/vsprint/vsmember/Detail.html:43
-	components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vsprint/vsmember/Detail.html:43
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Name</th>
-            <td><strong>`)
-//line views/vsprint/vsmember/Detail.html:48
-	view.StreamString(qw422016, p.Model.Name)
-//line views/vsprint/vsmember/Detail.html:48
-	qw422016.N().S(`</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="URL in string form">Picture</th>
-            <td><a href="`)
-//line views/vsprint/vsmember/Detail.html:52
-	qw422016.E().S(p.Model.Picture)
-//line views/vsprint/vsmember/Detail.html:52
-	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vsprint/vsmember/Detail.html:52
-	qw422016.E().S(p.Model.Picture)
-//line views/vsprint/vsmember/Detail.html:52
-	qw422016.N().S(`</a></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="`)
-//line views/vsprint/vsmember/Detail.html:55
-	qw422016.E().S(enum.AllMemberStatuses.Help())
-//line views/vsprint/vsmember/Detail.html:55
-	qw422016.N().S(`">Role</th>
-            <td>`)
-//line views/vsprint/vsmember/Detail.html:56
-	qw422016.E().S(p.Model.Role.String())
-//line views/vsprint/vsmember/Detail.html:56
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>`)
-//line views/vsprint/vsmember/Detail.html:60
-	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vsprint/vsmember/Detail.html:60
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>`)
-//line views/vsprint/vsmember/Detail.html:64
-	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vsprint/vsmember/Detail.html:64
-	qw422016.N().S(`</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 `)
-//line views/vsprint/vsmember/Detail.html:71
+//line views/vsprint/vsmember/Detail.html:32
 	qw422016.N().S(`  `)
-//line views/vsprint/vsmember/Detail.html:72
+//line views/vsprint/vsmember/Detail.html:33
 	components.StreamJSONModal(qw422016, "sprintMember", "Member JSON", p.Model, 1)
-//line views/vsprint/vsmember/Detail.html:72
+//line views/vsprint/vsmember/Detail.html:33
 	qw422016.N().S(`
 `)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 }
 
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	p.StreamBody(qw422016, as, ps)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 }
 
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	p.WriteBody(qb422016, as, ps)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	qs422016 := string(qb422016.B)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
 	return qs422016
-//line views/vsprint/vsmember/Detail.html:73
+//line views/vsprint/vsmember/Detail.html:34
+}
+
+//line views/vsprint/vsmember/Detail.html:36
+func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vsprint/vsmember/Detail.html:36
+	qw422016.N().S(`
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Sprint ID</th>
+          <td class="nowrap">
+            `)
+//line views/vsprint/vsmember/Detail.html:43
+	view.StreamUUID(qw422016, &p.Model.SprintID)
+//line views/vsprint/vsmember/Detail.html:43
+	if p.SprintBySprintID != nil {
+//line views/vsprint/vsmember/Detail.html:43
+		qw422016.N().S(` (`)
+//line views/vsprint/vsmember/Detail.html:43
+		qw422016.E().S(p.SprintBySprintID.TitleString())
+//line views/vsprint/vsmember/Detail.html:43
+		qw422016.N().S(`)`)
+//line views/vsprint/vsmember/Detail.html:43
+	}
+//line views/vsprint/vsmember/Detail.html:43
+	qw422016.N().S(`
+            <a title="Sprint" href="`)
+//line views/vsprint/vsmember/Detail.html:44
+	if x := p.SprintBySprintID; x != nil {
+//line views/vsprint/vsmember/Detail.html:44
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vsprint/vsmember/Detail.html:44
+	}
+//line views/vsprint/vsmember/Detail.html:44
+	qw422016.N().S(`">`)
+//line views/vsprint/vsmember/Detail.html:44
+	components.StreamSVGLink(qw422016, `sprint`, ps)
+//line views/vsprint/vsmember/Detail.html:44
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+          <td class="nowrap">
+            `)
+//line views/vsprint/vsmember/Detail.html:50
+	view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vsprint/vsmember/Detail.html:50
+	if p.UserByUserID != nil {
+//line views/vsprint/vsmember/Detail.html:50
+		qw422016.N().S(` (`)
+//line views/vsprint/vsmember/Detail.html:50
+		qw422016.E().S(p.UserByUserID.TitleString())
+//line views/vsprint/vsmember/Detail.html:50
+		qw422016.N().S(`)`)
+//line views/vsprint/vsmember/Detail.html:50
+	}
+//line views/vsprint/vsmember/Detail.html:50
+	qw422016.N().S(`
+            <a title="User" href="`)
+//line views/vsprint/vsmember/Detail.html:51
+	if x := p.UserByUserID; x != nil {
+//line views/vsprint/vsmember/Detail.html:51
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vsprint/vsmember/Detail.html:51
+	}
+//line views/vsprint/vsmember/Detail.html:51
+	qw422016.N().S(`">`)
+//line views/vsprint/vsmember/Detail.html:51
+	components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vsprint/vsmember/Detail.html:51
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>`)
+//line views/vsprint/vsmember/Detail.html:56
+	view.StreamString(qw422016, p.Model.Name)
+//line views/vsprint/vsmember/Detail.html:56
+	qw422016.N().S(`</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="URL in string form">Picture</th>
+          <td><a href="`)
+//line views/vsprint/vsmember/Detail.html:60
+	qw422016.E().S(p.Model.Picture)
+//line views/vsprint/vsmember/Detail.html:60
+	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
+//line views/vsprint/vsmember/Detail.html:60
+	qw422016.E().S(p.Model.Picture)
+//line views/vsprint/vsmember/Detail.html:60
+	qw422016.N().S(`</a></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="`)
+//line views/vsprint/vsmember/Detail.html:63
+	qw422016.E().S(enum.AllMemberStatuses.Help())
+//line views/vsprint/vsmember/Detail.html:63
+	qw422016.N().S(`">Role</th>
+          <td>`)
+//line views/vsprint/vsmember/Detail.html:64
+	qw422016.E().S(p.Model.Role.String())
+//line views/vsprint/vsmember/Detail.html:64
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>`)
+//line views/vsprint/vsmember/Detail.html:68
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vsprint/vsmember/Detail.html:68
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>`)
+//line views/vsprint/vsmember/Detail.html:72
+	view.StreamTimestamp(qw422016, p.Model.Updated)
+//line views/vsprint/vsmember/Detail.html:72
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vsprint/vsmember/Detail.html:77
+}
+
+//line views/vsprint/vsmember/Detail.html:77
+func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vsprint/vsmember/Detail.html:77
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vsprint/vsmember/Detail.html:77
+	StreamDetailTable(qw422016, p, ps)
+//line views/vsprint/vsmember/Detail.html:77
+	qt422016.ReleaseWriter(qw422016)
+//line views/vsprint/vsmember/Detail.html:77
+}
+
+//line views/vsprint/vsmember/Detail.html:77
+func DetailTable(p *Detail, ps *cutil.PageState) string {
+//line views/vsprint/vsmember/Detail.html:77
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vsprint/vsmember/Detail.html:77
+	WriteDetailTable(qb422016, p, ps)
+//line views/vsprint/vsmember/Detail.html:77
+	qs422016 := string(qb422016.B)
+//line views/vsprint/vsmember/Detail.html:77
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vsprint/vsmember/Detail.html:77
+	return qs422016
+//line views/vsprint/vsmember/Detail.html:77
 }

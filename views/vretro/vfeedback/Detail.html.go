@@ -73,168 +73,207 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(feedback.Route(p.Paths...))
 //line views/vretro/vfeedback/Detail.html:27
 	qw422016.N().S(`"><em>Feedback</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:33
-	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vretro/vfeedback/Detail.html:33
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
-            <td class="nowrap">
-              `)
-//line views/vretro/vfeedback/Detail.html:38
-	view.StreamUUID(qw422016, &p.Model.RetroID)
-//line views/vretro/vfeedback/Detail.html:38
-	if p.RetroByRetroID != nil {
-//line views/vretro/vfeedback/Detail.html:38
-		qw422016.N().S(` (`)
-//line views/vretro/vfeedback/Detail.html:38
-		qw422016.E().S(p.RetroByRetroID.TitleString())
-//line views/vretro/vfeedback/Detail.html:38
-		qw422016.N().S(`)`)
-//line views/vretro/vfeedback/Detail.html:38
-	}
-//line views/vretro/vfeedback/Detail.html:38
+    `)
+//line views/vretro/vfeedback/Detail.html:28
+	StreamDetailTable(qw422016, p, ps)
+//line views/vretro/vfeedback/Detail.html:28
 	qw422016.N().S(`
-              <a title="Retro" href="`)
-//line views/vretro/vfeedback/Detail.html:39
-	if x := p.RetroByRetroID; x != nil {
-//line views/vretro/vfeedback/Detail.html:39
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vretro/vfeedback/Detail.html:39
-	}
-//line views/vretro/vfeedback/Detail.html:39
-	qw422016.N().S(`">`)
-//line views/vretro/vfeedback/Detail.html:39
-	components.StreamSVGLink(qw422016, `retro`, ps)
-//line views/vretro/vfeedback/Detail.html:39
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Integer">Idx</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:44
-	qw422016.N().D(p.Model.Idx)
-//line views/vretro/vfeedback/Detail.html:44
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
-            <td class="nowrap">
-              `)
-//line views/vretro/vfeedback/Detail.html:49
-	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vretro/vfeedback/Detail.html:49
-	if p.UserByUserID != nil {
-//line views/vretro/vfeedback/Detail.html:49
-		qw422016.N().S(` (`)
-//line views/vretro/vfeedback/Detail.html:49
-		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vretro/vfeedback/Detail.html:49
-		qw422016.N().S(`)`)
-//line views/vretro/vfeedback/Detail.html:49
-	}
-//line views/vretro/vfeedback/Detail.html:49
-	qw422016.N().S(`
-              <a title="User" href="`)
-//line views/vretro/vfeedback/Detail.html:50
-	if x := p.UserByUserID; x != nil {
-//line views/vretro/vfeedback/Detail.html:50
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vretro/vfeedback/Detail.html:50
-	}
-//line views/vretro/vfeedback/Detail.html:50
-	qw422016.N().S(`">`)
-//line views/vretro/vfeedback/Detail.html:50
-	components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vretro/vfeedback/Detail.html:50
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Category</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:55
-	view.StreamString(qw422016, p.Model.Category)
-//line views/vretro/vfeedback/Detail.html:55
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Content</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:59
-	view.StreamString(qw422016, p.Model.Content)
-//line views/vretro/vfeedback/Detail.html:59
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="HTML code, in string form">HTML</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:63
-	view.StreamFormat(qw422016, p.Model.HTML, "html")
-//line views/vretro/vfeedback/Detail.html:63
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:67
-	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vretro/vfeedback/Detail.html:67
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>`)
-//line views/vretro/vfeedback/Detail.html:71
-	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vretro/vfeedback/Detail.html:71
-	qw422016.N().S(`</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 `)
-//line views/vretro/vfeedback/Detail.html:78
+//line views/vretro/vfeedback/Detail.html:31
 	qw422016.N().S(`  `)
-//line views/vretro/vfeedback/Detail.html:79
+//line views/vretro/vfeedback/Detail.html:32
 	components.StreamJSONModal(qw422016, "feedback", "Feedback JSON", p.Model, 1)
-//line views/vretro/vfeedback/Detail.html:79
+//line views/vretro/vfeedback/Detail.html:32
 	qw422016.N().S(`
 `)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 }
 
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	p.StreamBody(qw422016, as, ps)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 }
 
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	p.WriteBody(qb422016, as, ps)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	qs422016 := string(qb422016.B)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
 	return qs422016
-//line views/vretro/vfeedback/Detail.html:80
+//line views/vretro/vfeedback/Detail.html:33
+}
+
+//line views/vretro/vfeedback/Detail.html:35
+func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vretro/vfeedback/Detail.html:35
+	qw422016.N().S(`
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:41
+	view.StreamUUID(qw422016, &p.Model.ID)
+//line views/vretro/vfeedback/Detail.html:41
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
+          <td class="nowrap">
+            `)
+//line views/vretro/vfeedback/Detail.html:46
+	view.StreamUUID(qw422016, &p.Model.RetroID)
+//line views/vretro/vfeedback/Detail.html:46
+	if p.RetroByRetroID != nil {
+//line views/vretro/vfeedback/Detail.html:46
+		qw422016.N().S(` (`)
+//line views/vretro/vfeedback/Detail.html:46
+		qw422016.E().S(p.RetroByRetroID.TitleString())
+//line views/vretro/vfeedback/Detail.html:46
+		qw422016.N().S(`)`)
+//line views/vretro/vfeedback/Detail.html:46
+	}
+//line views/vretro/vfeedback/Detail.html:46
+	qw422016.N().S(`
+            <a title="Retro" href="`)
+//line views/vretro/vfeedback/Detail.html:47
+	if x := p.RetroByRetroID; x != nil {
+//line views/vretro/vfeedback/Detail.html:47
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vretro/vfeedback/Detail.html:47
+	}
+//line views/vretro/vfeedback/Detail.html:47
+	qw422016.N().S(`">`)
+//line views/vretro/vfeedback/Detail.html:47
+	components.StreamSVGLink(qw422016, `retro`, ps)
+//line views/vretro/vfeedback/Detail.html:47
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Integer">Idx</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:52
+	qw422016.N().D(p.Model.Idx)
+//line views/vretro/vfeedback/Detail.html:52
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
+          <td class="nowrap">
+            `)
+//line views/vretro/vfeedback/Detail.html:57
+	view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vretro/vfeedback/Detail.html:57
+	if p.UserByUserID != nil {
+//line views/vretro/vfeedback/Detail.html:57
+		qw422016.N().S(` (`)
+//line views/vretro/vfeedback/Detail.html:57
+		qw422016.E().S(p.UserByUserID.TitleString())
+//line views/vretro/vfeedback/Detail.html:57
+		qw422016.N().S(`)`)
+//line views/vretro/vfeedback/Detail.html:57
+	}
+//line views/vretro/vfeedback/Detail.html:57
+	qw422016.N().S(`
+            <a title="User" href="`)
+//line views/vretro/vfeedback/Detail.html:58
+	if x := p.UserByUserID; x != nil {
+//line views/vretro/vfeedback/Detail.html:58
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vretro/vfeedback/Detail.html:58
+	}
+//line views/vretro/vfeedback/Detail.html:58
+	qw422016.N().S(`">`)
+//line views/vretro/vfeedback/Detail.html:58
+	components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vretro/vfeedback/Detail.html:58
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Category</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:63
+	view.StreamString(qw422016, p.Model.Category)
+//line views/vretro/vfeedback/Detail.html:63
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Content</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:67
+	view.StreamString(qw422016, p.Model.Content)
+//line views/vretro/vfeedback/Detail.html:67
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="HTML code, in string form">HTML</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:71
+	view.StreamFormat(qw422016, p.Model.HTML, "html")
+//line views/vretro/vfeedback/Detail.html:71
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:75
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vretro/vfeedback/Detail.html:75
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>`)
+//line views/vretro/vfeedback/Detail.html:79
+	view.StreamTimestamp(qw422016, p.Model.Updated)
+//line views/vretro/vfeedback/Detail.html:79
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vretro/vfeedback/Detail.html:84
+}
+
+//line views/vretro/vfeedback/Detail.html:84
+func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vretro/vfeedback/Detail.html:84
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vretro/vfeedback/Detail.html:84
+	StreamDetailTable(qw422016, p, ps)
+//line views/vretro/vfeedback/Detail.html:84
+	qt422016.ReleaseWriter(qw422016)
+//line views/vretro/vfeedback/Detail.html:84
+}
+
+//line views/vretro/vfeedback/Detail.html:84
+func DetailTable(p *Detail, ps *cutil.PageState) string {
+//line views/vretro/vfeedback/Detail.html:84
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vretro/vfeedback/Detail.html:84
+	WriteDetailTable(qb422016, p, ps)
+//line views/vretro/vfeedback/Detail.html:84
+	qs422016 := string(qb422016.B)
+//line views/vretro/vfeedback/Detail.html:84
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vretro/vfeedback/Detail.html:84
+	return qs422016
+//line views/vretro/vfeedback/Detail.html:84
 }

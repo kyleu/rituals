@@ -60,35 +60,44 @@
     </div>
     <h3>{%= components.SVGIcon(`profile`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s user.Route(p.Paths...) %}"><em>User</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>{%= view.UUID(&p.Model.ID) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Name</th>
-            <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="URL in string form">Picture</th>
-            <td><a href="{%s p.Model.Picture %}" target="_blank" rel="noopener noreferrer">{%s p.Model.Picture %}</a></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>{%= view.Timestamp(p.Model.Updated) %}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {%= DetailTable(p, ps) %}
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= DetailRelations(as, p, ps) %}
+  {%= components.JSONModal("user", "User JSON", p.Model, 1) %}
+{% endfunc %}
+
+{% func DetailTable(p *Detail, ps *cutil.PageState) %}
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="URL in string form">Picture</th>
+          <td><a href="{%s p.Model.Picture %}" target="_blank" rel="noopener noreferrer">{%s p.Model.Picture %}</a></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}
+
+{% func DetailRelations(as *app.State, p *Detail, ps *cutil.PageState) %}
   {%- code relationHelper := user.Users{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
@@ -299,5 +308,4 @@
       </li>
     </ul>
   </div>
-  {%= components.JSONModal("user", "User JSON", p.Model, 1) %}
 {% endfunc %}

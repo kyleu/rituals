@@ -94,464 +94,544 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(team.Route(p.Paths...))
 //line views/vteam/Detail.html:48
 	qw422016.N().S(`"><em>Team</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>`)
-//line views/vteam/Detail.html:54
-	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vteam/Detail.html:54
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Slug</th>
-            <td>`)
-//line views/vteam/Detail.html:58
-	view.StreamString(qw422016, p.Model.Slug)
-//line views/vteam/Detail.html:58
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Title</th>
-            <td><strong>`)
-//line views/vteam/Detail.html:62
-	view.StreamString(qw422016, p.Model.Title)
-//line views/vteam/Detail.html:62
-	qw422016.N().S(`</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Icon</th>
-            <td>`)
-//line views/vteam/Detail.html:66
-	view.StreamString(qw422016, p.Model.Icon)
-//line views/vteam/Detail.html:66
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="`)
-//line views/vteam/Detail.html:69
-	qw422016.E().S(enum.AllSessionStatuses.Help())
-//line views/vteam/Detail.html:69
-	qw422016.N().S(`">Status</th>
-            <td>`)
-//line views/vteam/Detail.html:70
-	qw422016.E().S(p.Model.Status.String())
-//line views/vteam/Detail.html:70
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>`)
-//line views/vteam/Detail.html:74
-	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vteam/Detail.html:74
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>`)
-//line views/vteam/Detail.html:78
-	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vteam/Detail.html:78
-	qw422016.N().S(`</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    `)
+//line views/vteam/Detail.html:49
+	StreamDetailTable(qw422016, p, ps)
+//line views/vteam/Detail.html:49
+	qw422016.N().S(`
   </div>
 `)
-//line views/vteam/Detail.html:86
+//line views/vteam/Detail.html:52
+	qw422016.N().S(`  `)
+//line views/vteam/Detail.html:53
+	StreamDetailRelations(qw422016, as, p, ps)
+//line views/vteam/Detail.html:53
+	qw422016.N().S(`
+  `)
+//line views/vteam/Detail.html:54
+	components.StreamJSONModal(qw422016, "team", "Team JSON", p.Model, 1)
+//line views/vteam/Detail.html:54
+	qw422016.N().S(`
+`)
+//line views/vteam/Detail.html:55
+}
+
+//line views/vteam/Detail.html:55
+func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
+//line views/vteam/Detail.html:55
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vteam/Detail.html:55
+	p.StreamBody(qw422016, as, ps)
+//line views/vteam/Detail.html:55
+	qt422016.ReleaseWriter(qw422016)
+//line views/vteam/Detail.html:55
+}
+
+//line views/vteam/Detail.html:55
+func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
+//line views/vteam/Detail.html:55
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vteam/Detail.html:55
+	p.WriteBody(qb422016, as, ps)
+//line views/vteam/Detail.html:55
+	qs422016 := string(qb422016.B)
+//line views/vteam/Detail.html:55
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vteam/Detail.html:55
+	return qs422016
+//line views/vteam/Detail.html:55
+}
+
+//line views/vteam/Detail.html:57
+func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vteam/Detail.html:57
+	qw422016.N().S(`
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>`)
+//line views/vteam/Detail.html:63
+	view.StreamUUID(qw422016, &p.Model.ID)
+//line views/vteam/Detail.html:63
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>`)
+//line views/vteam/Detail.html:67
+	view.StreamString(qw422016, p.Model.Slug)
+//line views/vteam/Detail.html:67
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Title</th>
+          <td><strong>`)
+//line views/vteam/Detail.html:71
+	view.StreamString(qw422016, p.Model.Title)
+//line views/vteam/Detail.html:71
+	qw422016.N().S(`</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Icon</th>
+          <td>`)
+//line views/vteam/Detail.html:75
+	view.StreamString(qw422016, p.Model.Icon)
+//line views/vteam/Detail.html:75
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="`)
+//line views/vteam/Detail.html:78
+	qw422016.E().S(enum.AllSessionStatuses.Help())
+//line views/vteam/Detail.html:78
+	qw422016.N().S(`">Status</th>
+          <td>`)
+//line views/vteam/Detail.html:79
+	qw422016.E().S(p.Model.Status.String())
+//line views/vteam/Detail.html:79
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>`)
+//line views/vteam/Detail.html:83
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vteam/Detail.html:83
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>`)
+//line views/vteam/Detail.html:87
+	view.StreamTimestamp(qw422016, p.Model.Updated)
+//line views/vteam/Detail.html:87
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vteam/Detail.html:92
+}
+
+//line views/vteam/Detail.html:92
+func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vteam/Detail.html:92
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vteam/Detail.html:92
+	StreamDetailTable(qw422016, p, ps)
+//line views/vteam/Detail.html:92
+	qt422016.ReleaseWriter(qw422016)
+//line views/vteam/Detail.html:92
+}
+
+//line views/vteam/Detail.html:92
+func DetailTable(p *Detail, ps *cutil.PageState) string {
+//line views/vteam/Detail.html:92
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vteam/Detail.html:92
+	WriteDetailTable(qb422016, p, ps)
+//line views/vteam/Detail.html:92
+	qs422016 := string(qb422016.B)
+//line views/vteam/Detail.html:92
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vteam/Detail.html:92
+	return qs422016
+//line views/vteam/Detail.html:92
+}
+
+//line views/vteam/Detail.html:94
+func StreamDetailRelations(qw422016 *qt422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
+//line views/vteam/Detail.html:94
+	qw422016.N().S(`
+`)
+//line views/vteam/Detail.html:95
 	relationHelper := team.Teams{p.Model}
 
-//line views/vteam/Detail.html:86
+//line views/vteam/Detail.html:95
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-EstimatesByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:91
+//line views/vteam/Detail.html:100
 	if p.Params.Specifies(`estimate`) {
-//line views/vteam/Detail.html:91
+//line views/vteam/Detail.html:100
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:91
+//line views/vteam/Detail.html:100
 	}
-//line views/vteam/Detail.html:91
+//line views/vteam/Detail.html:100
 	qw422016.N().S(` />
         <label for="accordion-EstimatesByTeamID">
           `)
-//line views/vteam/Detail.html:93
+//line views/vteam/Detail.html:102
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:93
+//line views/vteam/Detail.html:102
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:94
+//line views/vteam/Detail.html:103
 	components.StreamSVGInline(qw422016, `estimate`, 16, ps)
-//line views/vteam/Detail.html:94
+//line views/vteam/Detail.html:103
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:95
+//line views/vteam/Detail.html:104
 	qw422016.E().S(util.StringPlural(len(p.RelEstimatesByTeamID), "Estimate"))
-//line views/vteam/Detail.html:95
+//line views/vteam/Detail.html:104
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:98
+//line views/vteam/Detail.html:107
 	if len(p.RelEstimatesByTeamID) == 0 {
-//line views/vteam/Detail.html:98
+//line views/vteam/Detail.html:107
 		qw422016.N().S(`          <em>no related Estimates</em>
 `)
-//line views/vteam/Detail.html:100
+//line views/vteam/Detail.html:109
 	} else {
-//line views/vteam/Detail.html:100
+//line views/vteam/Detail.html:109
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:102
+//line views/vteam/Detail.html:111
 		vestimate.StreamTable(qw422016, p.RelEstimatesByTeamID, relationHelper, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:102
+//line views/vteam/Detail.html:111
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:104
+//line views/vteam/Detail.html:113
 	}
-//line views/vteam/Detail.html:104
+//line views/vteam/Detail.html:113
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetrosByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:108
+//line views/vteam/Detail.html:117
 	if p.Params.Specifies(`retro`) {
-//line views/vteam/Detail.html:108
+//line views/vteam/Detail.html:117
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:108
+//line views/vteam/Detail.html:117
 	}
-//line views/vteam/Detail.html:108
+//line views/vteam/Detail.html:117
 	qw422016.N().S(` />
         <label for="accordion-RetrosByTeamID">
           `)
-//line views/vteam/Detail.html:110
+//line views/vteam/Detail.html:119
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:110
+//line views/vteam/Detail.html:119
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:111
+//line views/vteam/Detail.html:120
 	components.StreamSVGInline(qw422016, `retro`, 16, ps)
-//line views/vteam/Detail.html:111
+//line views/vteam/Detail.html:120
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:112
+//line views/vteam/Detail.html:121
 	qw422016.E().S(util.StringPlural(len(p.RelRetrosByTeamID), "Retro"))
-//line views/vteam/Detail.html:112
+//line views/vteam/Detail.html:121
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:115
+//line views/vteam/Detail.html:124
 	if len(p.RelRetrosByTeamID) == 0 {
-//line views/vteam/Detail.html:115
+//line views/vteam/Detail.html:124
 		qw422016.N().S(`          <em>no related Retros</em>
 `)
-//line views/vteam/Detail.html:117
+//line views/vteam/Detail.html:126
 	} else {
-//line views/vteam/Detail.html:117
+//line views/vteam/Detail.html:126
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:119
+//line views/vteam/Detail.html:128
 		vretro.StreamTable(qw422016, p.RelRetrosByTeamID, relationHelper, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:119
+//line views/vteam/Detail.html:128
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:121
+//line views/vteam/Detail.html:130
 	}
-//line views/vteam/Detail.html:121
+//line views/vteam/Detail.html:130
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-SprintsByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:125
+//line views/vteam/Detail.html:134
 	if p.Params.Specifies(`sprint`) {
-//line views/vteam/Detail.html:125
+//line views/vteam/Detail.html:134
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:125
+//line views/vteam/Detail.html:134
 	}
-//line views/vteam/Detail.html:125
+//line views/vteam/Detail.html:134
 	qw422016.N().S(` />
         <label for="accordion-SprintsByTeamID">
           `)
-//line views/vteam/Detail.html:127
+//line views/vteam/Detail.html:136
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:127
+//line views/vteam/Detail.html:136
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:128
+//line views/vteam/Detail.html:137
 	components.StreamSVGInline(qw422016, `sprint`, 16, ps)
-//line views/vteam/Detail.html:128
+//line views/vteam/Detail.html:137
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:129
+//line views/vteam/Detail.html:138
 	qw422016.E().S(util.StringPlural(len(p.RelSprintsByTeamID), "Sprint"))
-//line views/vteam/Detail.html:129
+//line views/vteam/Detail.html:138
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:132
+//line views/vteam/Detail.html:141
 	if len(p.RelSprintsByTeamID) == 0 {
-//line views/vteam/Detail.html:132
+//line views/vteam/Detail.html:141
 		qw422016.N().S(`          <em>no related Sprints</em>
 `)
-//line views/vteam/Detail.html:134
+//line views/vteam/Detail.html:143
 	} else {
-//line views/vteam/Detail.html:134
+//line views/vteam/Detail.html:143
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:136
+//line views/vteam/Detail.html:145
 		vsprint.StreamTable(qw422016, p.RelSprintsByTeamID, relationHelper, p.Params, as, ps)
-//line views/vteam/Detail.html:136
+//line views/vteam/Detail.html:145
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:138
+//line views/vteam/Detail.html:147
 	}
-//line views/vteam/Detail.html:138
+//line views/vteam/Detail.html:147
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupsByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:142
+//line views/vteam/Detail.html:151
 	if p.Params.Specifies(`standup`) {
-//line views/vteam/Detail.html:142
+//line views/vteam/Detail.html:151
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:142
+//line views/vteam/Detail.html:151
 	}
-//line views/vteam/Detail.html:142
+//line views/vteam/Detail.html:151
 	qw422016.N().S(` />
         <label for="accordion-StandupsByTeamID">
           `)
-//line views/vteam/Detail.html:144
+//line views/vteam/Detail.html:153
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:144
+//line views/vteam/Detail.html:153
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:145
+//line views/vteam/Detail.html:154
 	components.StreamSVGInline(qw422016, `standup`, 16, ps)
-//line views/vteam/Detail.html:145
+//line views/vteam/Detail.html:154
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:146
+//line views/vteam/Detail.html:155
 	qw422016.E().S(util.StringPlural(len(p.RelStandupsByTeamID), "Standup"))
-//line views/vteam/Detail.html:146
+//line views/vteam/Detail.html:155
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:149
+//line views/vteam/Detail.html:158
 	if len(p.RelStandupsByTeamID) == 0 {
-//line views/vteam/Detail.html:149
+//line views/vteam/Detail.html:158
 		qw422016.N().S(`          <em>no related Standups</em>
 `)
-//line views/vteam/Detail.html:151
+//line views/vteam/Detail.html:160
 	} else {
-//line views/vteam/Detail.html:151
+//line views/vteam/Detail.html:160
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:153
+//line views/vteam/Detail.html:162
 		vstandup.StreamTable(qw422016, p.RelStandupsByTeamID, relationHelper, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:153
+//line views/vteam/Detail.html:162
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:155
+//line views/vteam/Detail.html:164
 	}
-//line views/vteam/Detail.html:155
+//line views/vteam/Detail.html:164
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamHistoriesByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:159
+//line views/vteam/Detail.html:168
 	if p.Params.Specifies(`thistory`) {
-//line views/vteam/Detail.html:159
+//line views/vteam/Detail.html:168
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:159
+//line views/vteam/Detail.html:168
 	}
-//line views/vteam/Detail.html:159
+//line views/vteam/Detail.html:168
 	qw422016.N().S(` />
         <label for="accordion-TeamHistoriesByTeamID">
           `)
-//line views/vteam/Detail.html:161
+//line views/vteam/Detail.html:170
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:161
+//line views/vteam/Detail.html:170
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:162
+//line views/vteam/Detail.html:171
 	components.StreamSVGInline(qw422016, `history`, 16, ps)
-//line views/vteam/Detail.html:162
+//line views/vteam/Detail.html:171
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:163
+//line views/vteam/Detail.html:172
 	qw422016.E().S(util.StringPlural(len(p.RelTeamHistoriesByTeamID), "History"))
-//line views/vteam/Detail.html:163
+//line views/vteam/Detail.html:172
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:166
+//line views/vteam/Detail.html:175
 	if len(p.RelTeamHistoriesByTeamID) == 0 {
-//line views/vteam/Detail.html:166
+//line views/vteam/Detail.html:175
 		qw422016.N().S(`          <em>no related Histories</em>
 `)
-//line views/vteam/Detail.html:168
+//line views/vteam/Detail.html:177
 	} else {
-//line views/vteam/Detail.html:168
+//line views/vteam/Detail.html:177
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:170
+//line views/vteam/Detail.html:179
 		vthistory.StreamTable(qw422016, p.RelTeamHistoriesByTeamID, relationHelper, p.Params, as, ps)
-//line views/vteam/Detail.html:170
+//line views/vteam/Detail.html:179
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:172
+//line views/vteam/Detail.html:181
 	}
-//line views/vteam/Detail.html:172
+//line views/vteam/Detail.html:181
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamMembersByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:176
+//line views/vteam/Detail.html:185
 	if p.Params.Specifies(`tmember`) {
-//line views/vteam/Detail.html:176
+//line views/vteam/Detail.html:185
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:176
+//line views/vteam/Detail.html:185
 	}
-//line views/vteam/Detail.html:176
+//line views/vteam/Detail.html:185
 	qw422016.N().S(` />
         <label for="accordion-TeamMembersByTeamID">
           `)
-//line views/vteam/Detail.html:178
+//line views/vteam/Detail.html:187
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:178
+//line views/vteam/Detail.html:187
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:179
+//line views/vteam/Detail.html:188
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vteam/Detail.html:179
+//line views/vteam/Detail.html:188
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:180
+//line views/vteam/Detail.html:189
 	qw422016.E().S(util.StringPlural(len(p.RelTeamMembersByTeamID), "Member"))
-//line views/vteam/Detail.html:180
+//line views/vteam/Detail.html:189
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:183
+//line views/vteam/Detail.html:192
 	if len(p.RelTeamMembersByTeamID) == 0 {
-//line views/vteam/Detail.html:183
+//line views/vteam/Detail.html:192
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vteam/Detail.html:185
+//line views/vteam/Detail.html:194
 	} else {
-//line views/vteam/Detail.html:185
+//line views/vteam/Detail.html:194
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:187
+//line views/vteam/Detail.html:196
 		vtmember.StreamTable(qw422016, p.RelTeamMembersByTeamID, relationHelper, nil, p.Params, as, ps)
-//line views/vteam/Detail.html:187
+//line views/vteam/Detail.html:196
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:189
+//line views/vteam/Detail.html:198
 	}
-//line views/vteam/Detail.html:189
+//line views/vteam/Detail.html:198
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-TeamPermissionsByTeamID" type="checkbox" hidden="hidden"`)
-//line views/vteam/Detail.html:193
+//line views/vteam/Detail.html:202
 	if p.Params.Specifies(`tpermission`) {
-//line views/vteam/Detail.html:193
+//line views/vteam/Detail.html:202
 		qw422016.N().S(` checked="checked"`)
-//line views/vteam/Detail.html:193
+//line views/vteam/Detail.html:202
 	}
-//line views/vteam/Detail.html:193
+//line views/vteam/Detail.html:202
 	qw422016.N().S(` />
         <label for="accordion-TeamPermissionsByTeamID">
           `)
-//line views/vteam/Detail.html:195
+//line views/vteam/Detail.html:204
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vteam/Detail.html:195
+//line views/vteam/Detail.html:204
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:196
+//line views/vteam/Detail.html:205
 	components.StreamSVGInline(qw422016, `permission`, 16, ps)
-//line views/vteam/Detail.html:196
+//line views/vteam/Detail.html:205
 	qw422016.N().S(`
           `)
-//line views/vteam/Detail.html:197
+//line views/vteam/Detail.html:206
 	qw422016.E().S(util.StringPlural(len(p.RelTeamPermissionsByTeamID), "Permission"))
-//line views/vteam/Detail.html:197
+//line views/vteam/Detail.html:206
 	qw422016.N().S(` by [Team ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vteam/Detail.html:200
+//line views/vteam/Detail.html:209
 	if len(p.RelTeamPermissionsByTeamID) == 0 {
-//line views/vteam/Detail.html:200
+//line views/vteam/Detail.html:209
 		qw422016.N().S(`          <em>no related Permissions</em>
 `)
-//line views/vteam/Detail.html:202
+//line views/vteam/Detail.html:211
 	} else {
-//line views/vteam/Detail.html:202
+//line views/vteam/Detail.html:211
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vteam/Detail.html:204
+//line views/vteam/Detail.html:213
 		vtpermission.StreamTable(qw422016, p.RelTeamPermissionsByTeamID, relationHelper, p.Params, as, ps)
-//line views/vteam/Detail.html:204
+//line views/vteam/Detail.html:213
 		qw422016.N().S(`
           </div>
 `)
-//line views/vteam/Detail.html:206
+//line views/vteam/Detail.html:215
 	}
-//line views/vteam/Detail.html:206
+//line views/vteam/Detail.html:215
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
-  `)
-//line views/vteam/Detail.html:211
-	components.StreamJSONModal(qw422016, "team", "Team JSON", p.Model, 1)
-//line views/vteam/Detail.html:211
-	qw422016.N().S(`
 `)
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
 }
 
-//line views/vteam/Detail.html:212
-func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
+func WriteDetailRelations(qq422016 qtio422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
+//line views/vteam/Detail.html:220
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/Detail.html:212
-	p.StreamBody(qw422016, as, ps)
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
+	StreamDetailRelations(qw422016, as, p, ps)
+//line views/vteam/Detail.html:220
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
 }
 
-//line views/vteam/Detail.html:212
-func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
+func DetailRelations(as *app.State, p *Detail, ps *cutil.PageState) string {
+//line views/vteam/Detail.html:220
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/Detail.html:212
-	p.WriteBody(qb422016, as, ps)
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
+	WriteDetailRelations(qb422016, as, p, ps)
+//line views/vteam/Detail.html:220
 	qs422016 := string(qb422016.B)
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
 	return qs422016
-//line views/vteam/Detail.html:212
+//line views/vteam/Detail.html:220
 }

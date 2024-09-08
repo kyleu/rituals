@@ -45,58 +45,67 @@
     </div>
     <h3>{%= components.SVGIcon(`sprint`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s sprint.Route(p.Paths...) %}"><em>Sprint</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>{%= view.UUID(&p.Model.ID) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Slug</th>
-            <td>{%= view.String(p.Model.Slug) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Title</th>
-            <td><strong>{%= view.String(p.Model.Title) %}</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Icon</th>
-            <td>{%= view.String(p.Model.Icon) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
-            <td>{%s p.Model.Status.String() %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
-            <td class="nowrap">
-              {%= view.UUID(p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
-              {% if p.Model.TeamID != nil %}<a title="Team" href="{% if x := p.TeamByTeamID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Calendar date (optional)">Start Date</th>
-            <td>{%= view.TimestampDay(p.Model.StartDate) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Calendar date (optional)">End Date</th>
-            <td>{%= view.TimestampDay(p.Model.EndDate) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
-            <td>{%= view.Timestamp(p.Model.Updated) %}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {%= DetailTable(p, ps) %}
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%= DetailRelations(as, p, ps) %}
+  {%= components.JSONModal("sprint", "Sprint JSON", p.Model, 1) %}
+{% endfunc %}
+
+{% func DetailTable(p *Detail, ps *cutil.PageState) %}
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Slug</th>
+          <td>{%= view.String(p.Model.Slug) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Title</th>
+          <td><strong>{%= view.String(p.Model.Title) %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Icon</th>
+          <td>{%= view.String(p.Model.Icon) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
+          <td>{%s p.Model.Status.String() %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
+          <td class="nowrap">
+            {%= view.UUID(p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
+            {% if p.Model.TeamID != nil %}<a title="Team" href="{% if x := p.TeamByTeamID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Calendar date (optional)">Start Date</th>
+          <td>{%= view.TimestampDay(p.Model.StartDate) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Calendar date (optional)">End Date</th>
+          <td>{%= view.TimestampDay(p.Model.EndDate) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
+          <td>{%= view.Timestamp(p.Model.Updated) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endfunc %}
+
+{% func DetailRelations(as *app.State, p *Detail, ps *cutil.PageState) %}
   {%- code relationHelper := sprint.Sprints{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
@@ -205,5 +214,4 @@
       </li>
     </ul>
   </div>
-  {%= components.JSONModal("sprint", "Sprint JSON", p.Model, 1) %}
 {% endfunc %}
