@@ -43,20 +43,20 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
-      <a href="#modal-comment"><button type="button">`)
+      <a href="#modal-comment"><button type="button" title="JSON">`)
 //line views/vcomment/Detail.html:22
-	components.StreamSVGButton(qw422016, "file", ps)
+	components.StreamSVGButton(qw422016, "code", ps)
 //line views/vcomment/Detail.html:22
-	qw422016.N().S(` JSON</button></a>
+	qw422016.N().S(`</button></a>
       <a href="`)
 //line views/vcomment/Detail.html:23
 	qw422016.E().S(p.Model.WebPath(p.Paths...))
 //line views/vcomment/Detail.html:23
-	qw422016.N().S(`/edit"><button>`)
+	qw422016.N().S(`/edit" title="Edit"><button>`)
 //line views/vcomment/Detail.html:23
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vcomment/Detail.html:23
-	qw422016.N().S(` Edit</button></a>
+	qw422016.N().S(`</button></a>
     </div>
     <h3>`)
 //line views/vcomment/Detail.html:25

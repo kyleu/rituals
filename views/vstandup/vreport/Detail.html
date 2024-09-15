@@ -20,8 +20,8 @@
 {% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <div class="right">
-      <a href="#modal-report"><button type="button">{%= components.SVGButton("file", ps) %} JSON</button></a>
-      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit"><button>{%= components.SVGButton("edit", ps) %} Edit</button></a>
+      <a href="#modal-report"><button type="button" title="JSON">{%= components.SVGButton("code", ps) %}</button></a>
+      <a href="{%s p.Model.WebPath(p.Paths...) %}/edit" title="Edit"><button>{%= components.SVGButton("edit", ps) %}</button></a>
     </div>
     <h3>{%= components.SVGIcon(`file-alt`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s report.Route(p.Paths...) %}"><em>Report</em></a></div>

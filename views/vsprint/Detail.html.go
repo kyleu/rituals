@@ -64,20 +64,20 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
-      <a href="#modal-sprint"><button type="button">`)
+      <a href="#modal-sprint"><button type="button" title="JSON">`)
 //line views/vsprint/Detail.html:43
-	components.StreamSVGButton(qw422016, "file", ps)
+	components.StreamSVGButton(qw422016, "code", ps)
 //line views/vsprint/Detail.html:43
-	qw422016.N().S(` JSON</button></a>
+	qw422016.N().S(`</button></a>
       <a href="`)
 //line views/vsprint/Detail.html:44
 	qw422016.E().S(p.Model.WebPath(p.Paths...))
 //line views/vsprint/Detail.html:44
-	qw422016.N().S(`/edit"><button>`)
+	qw422016.N().S(`/edit" title="Edit"><button>`)
 //line views/vsprint/Detail.html:44
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vsprint/Detail.html:44
-	qw422016.N().S(` Edit</button></a>
+	qw422016.N().S(`</button></a>
     </div>
     <h3>`)
 //line views/vsprint/Detail.html:46

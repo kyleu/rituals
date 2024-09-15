@@ -60,20 +60,20 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
-      <a href="#modal-retro"><button type="button">`)
+      <a href="#modal-retro"><button type="button" title="JSON">`)
 //line views/vretro/Detail.html:39
-	components.StreamSVGButton(qw422016, "file", ps)
+	components.StreamSVGButton(qw422016, "code", ps)
 //line views/vretro/Detail.html:39
-	qw422016.N().S(` JSON</button></a>
+	qw422016.N().S(`</button></a>
       <a href="`)
 //line views/vretro/Detail.html:40
 	qw422016.E().S(p.Model.WebPath(p.Paths...))
 //line views/vretro/Detail.html:40
-	qw422016.N().S(`/edit"><button>`)
+	qw422016.N().S(`/edit" title="Edit"><button>`)
 //line views/vretro/Detail.html:40
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vretro/Detail.html:40
-	qw422016.N().S(` Edit</button></a>
+	qw422016.N().S(`</button></a>
     </div>
     <h3>`)
 //line views/vretro/Detail.html:42
