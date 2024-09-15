@@ -25,6 +25,7 @@ const (
 	ExtJSON     = ".json"
 	ExtMarkdown = ".md"
 
+	OK = "ok"
 	// $PF_SECTION_START(keys)$.
 	KeyTeam     = "team"
 	KeySprint   = "sprint"
