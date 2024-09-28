@@ -53,7 +53,7 @@ func (s *Service) Count(ctx context.Context, tx *sqlx.Tx, whereClause string, lo
 	return int(ret), nil
 }
 
-const searchClause = "(lower(id::text) like $1 or lower(slug) like $1 or lower(title) like $1 or lower(choices::text) like $1)"
+const searchClause = `(lower("id"::text) like $1 or lower(slug) like $1 or lower(title) like $1 or lower("choices"::text) like $1)`
 
 func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Estimates, error) {
 	params = filters(params)
