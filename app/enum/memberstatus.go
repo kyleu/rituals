@@ -43,8 +43,8 @@ func (m MemberStatus) MarshalJSON() ([]byte, error) {
 }
 
 func (m *MemberStatus) UnmarshalJSON(data []byte) error {
-	var key string
-	if err := util.FromJSON(data, &key); err != nil {
+	key, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	*m = AllMemberStatuses.Get(key, nil)

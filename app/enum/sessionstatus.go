@@ -43,8 +43,8 @@ func (s SessionStatus) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SessionStatus) UnmarshalJSON(data []byte) error {
-	var key string
-	if err := util.FromJSON(data, &key); err != nil {
+	key, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	*s = AllSessionStatuses.Get(key, nil)

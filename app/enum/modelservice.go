@@ -49,8 +49,8 @@ func (m ModelService) MarshalJSON() ([]byte, error) {
 }
 
 func (m *ModelService) UnmarshalJSON(data []byte) error {
-	var key string
-	if err := util.FromJSON(data, &key); err != nil {
+	key, err := util.FromJSONString(data)
+	if err != nil {
 		return err
 	}
 	*m = AllModelServices.Get(key, nil)

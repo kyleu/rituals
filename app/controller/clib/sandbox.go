@@ -8,11 +8,16 @@ import (
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/sandbox"
 	"github.com/kyleu/rituals/app/lib/telemetry"
+	"github.com/kyleu/rituals/views"
 	"github.com/kyleu/rituals/views/vsandbox"
 )
 
 func SandboxList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("sandbox.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		if title := r.URL.Query().Get("title"); title != "" {
+			ps.SetTitleAndData(title, title)
+			return controller.Render(r, as, &views.Debug{}, ps, title)
+		}
 		ps.SetTitleAndData("Sandboxes", sandbox.AllSandboxes)
 		return controller.Render(r, as, &vsandbox.List{}, ps, "sandbox")
 	})
