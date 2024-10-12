@@ -257,7 +257,13 @@ func streamsettingsLink(qw422016 *qt422016.Writer, href string, icon string, tit
 //line views/vadmin/Settings.html:72
 	qw422016.E().S(href)
 //line views/vadmin/Settings.html:72
-	qw422016.N().S(`"><strong>`)
+	qw422016.N().S(`">`)
+//line views/vadmin/Settings.html:72
+	components.StreamSVGInline(qw422016, icon, 16, ps)
+//line views/vadmin/Settings.html:72
+	qw422016.N().S(` `)
+//line views/vadmin/Settings.html:72
+	qw422016.N().S(`<strong>`)
 //line views/vadmin/Settings.html:72
 	qw422016.E().S(title)
 //line views/vadmin/Settings.html:72
