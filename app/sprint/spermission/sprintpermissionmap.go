@@ -2,6 +2,10 @@ package spermission
 
 import "github.com/kyleu/rituals/app/util"
 
+func (s *SprintPermission) ToMap() util.ValueMap {
+	return util.ValueMap{"sprintID": s.SprintID, "key": s.Key, "value": s.Value, "access": s.Access, "created": s.Created}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*SprintPermission, util.ValueMap, error) {
 	ret := &SprintPermission{}
 	extra := util.ValueMap{}

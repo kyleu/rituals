@@ -5,6 +5,11 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+//nolint:lll
+func (a *Action) ToMap() util.ValueMap {
+	return util.ValueMap{"id": a.ID, "svc": a.Svc, "modelID": a.ModelID, "userID": a.UserID, "act": a.Act, "content": a.Content, "note": a.Note, "created": a.Created}
+}
+
 //nolint:gocognit
 func FromMap(m util.ValueMap, setPK bool) (*Action, util.ValueMap, error) {
 	ret := &Action{}

@@ -5,6 +5,10 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+func (c *Comment) ToMap() util.ValueMap {
+	return util.ValueMap{"id": c.ID, "svc": c.Svc, "modelID": c.ModelID, "userID": c.UserID, "content": c.Content, "html": c.HTML, "created": c.Created}
+}
+
 //nolint:gocognit
 func FromMap(m util.ValueMap, setPK bool) (*Comment, util.ValueMap, error) {
 	ret := &Comment{}

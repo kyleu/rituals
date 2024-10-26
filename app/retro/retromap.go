@@ -5,6 +5,11 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+//nolint:lll
+func (r *Retro) ToMap() util.ValueMap {
+	return util.ValueMap{"id": r.ID, "slug": r.Slug, "title": r.Title, "icon": r.Icon, "status": r.Status, "teamID": r.TeamID, "sprintID": r.SprintID, "categories": r.Categories, "created": r.Created, "updated": r.Updated}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*Retro, util.ValueMap, error) {
 	ret := &Retro{}
 	extra := util.ValueMap{}

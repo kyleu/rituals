@@ -28,10 +28,14 @@ type SessionStatus struct {
 }
 
 func (s SessionStatus) String() string {
+	return s.Key
+}
+
+func (s SessionStatus) NameSafe() string {
 	if s.Name != "" {
 		return s.Name
 	}
-	return s.Key
+	return s.String()
 }
 
 func (s SessionStatus) Matches(xx SessionStatus) bool {

@@ -5,6 +5,10 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+func (t *TeamMember) ToMap() util.ValueMap {
+	return util.ValueMap{"teamID": t.TeamID, "userID": t.UserID, "name": t.Name, "picture": t.Picture, "role": t.Role, "created": t.Created, "updated": t.Updated}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*TeamMember, util.ValueMap, error) {
 	ret := &TeamMember{}
 	extra := util.ValueMap{}

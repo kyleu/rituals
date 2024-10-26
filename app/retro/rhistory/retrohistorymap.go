@@ -2,6 +2,10 @@ package rhistory
 
 import "github.com/kyleu/rituals/app/util"
 
+func (r *RetroHistory) ToMap() util.ValueMap {
+	return util.ValueMap{"slug": r.Slug, "retroID": r.RetroID, "retroName": r.RetroName, "created": r.Created}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*RetroHistory, util.ValueMap, error) {
 	ret := &RetroHistory{}
 	extra := util.ValueMap{}

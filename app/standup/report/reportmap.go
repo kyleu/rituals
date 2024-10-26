@@ -2,6 +2,11 @@ package report
 
 import "github.com/kyleu/rituals/app/util"
 
+//nolint:lll
+func (r *Report) ToMap() util.ValueMap {
+	return util.ValueMap{"id": r.ID, "standupID": r.StandupID, "day": r.Day, "userID": r.UserID, "content": r.Content, "html": r.HTML, "created": r.Created, "updated": r.Updated}
+}
+
 //nolint:gocognit
 func FromMap(m util.ValueMap, setPK bool) (*Report, util.ValueMap, error) {
 	ret := &Report{}

@@ -2,6 +2,10 @@ package thistory
 
 import "github.com/kyleu/rituals/app/util"
 
+func (t *TeamHistory) ToMap() util.ValueMap {
+	return util.ValueMap{"slug": t.Slug, "teamID": t.TeamID, "teamName": t.TeamName, "created": t.Created}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*TeamHistory, util.ValueMap, error) {
 	ret := &TeamHistory{}
 	extra := util.ValueMap{}

@@ -34,10 +34,14 @@ type ModelService struct {
 }
 
 func (m ModelService) String() string {
+	return m.Key
+}
+
+func (m ModelService) NameSafe() string {
 	if m.Name != "" {
 		return m.Name
 	}
-	return m.Key
+	return m.String()
 }
 
 func (m ModelService) Matches(xx ModelService) bool {

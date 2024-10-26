@@ -2,6 +2,11 @@ package feedback
 
 import "github.com/kyleu/rituals/app/util"
 
+//nolint:lll
+func (f *Feedback) ToMap() util.ValueMap {
+	return util.ValueMap{"id": f.ID, "retroID": f.RetroID, "idx": f.Idx, "userID": f.UserID, "category": f.Category, "content": f.Content, "html": f.HTML, "created": f.Created, "updated": f.Updated}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*Feedback, util.ValueMap, error) {
 	ret := &Feedback{}
 	extra := util.ValueMap{}

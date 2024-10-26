@@ -2,6 +2,10 @@ package shistory
 
 import "github.com/kyleu/rituals/app/util"
 
+func (s *SprintHistory) ToMap() util.ValueMap {
+	return util.ValueMap{"slug": s.Slug, "sprintID": s.SprintID, "sprintName": s.SprintName, "created": s.Created}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*SprintHistory, util.ValueMap, error) {
 	ret := &SprintHistory{}
 	extra := util.ValueMap{}

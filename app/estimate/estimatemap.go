@@ -5,6 +5,11 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+//nolint:lll
+func (e *Estimate) ToMap() util.ValueMap {
+	return util.ValueMap{"id": e.ID, "slug": e.Slug, "title": e.Title, "icon": e.Icon, "status": e.Status, "teamID": e.TeamID, "sprintID": e.SprintID, "choices": e.Choices, "created": e.Created, "updated": e.Updated}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*Estimate, util.ValueMap, error) {
 	ret := &Estimate{}
 	extra := util.ValueMap{}

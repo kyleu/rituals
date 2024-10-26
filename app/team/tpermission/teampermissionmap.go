@@ -2,6 +2,10 @@ package tpermission
 
 import "github.com/kyleu/rituals/app/util"
 
+func (t *TeamPermission) ToMap() util.ValueMap {
+	return util.ValueMap{"teamID": t.TeamID, "key": t.Key, "value": t.Value, "access": t.Access, "created": t.Created}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*TeamPermission, util.ValueMap, error) {
 	ret := &TeamPermission{}
 	extra := util.ValueMap{}

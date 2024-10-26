@@ -28,10 +28,14 @@ type MemberStatus struct {
 }
 
 func (m MemberStatus) String() string {
+	return m.Key
+}
+
+func (m MemberStatus) NameSafe() string {
 	if m.Name != "" {
 		return m.Name
 	}
-	return m.Key
+	return m.String()
 }
 
 func (m MemberStatus) Matches(xx MemberStatus) bool {

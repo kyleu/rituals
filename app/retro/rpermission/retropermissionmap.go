@@ -2,6 +2,10 @@ package rpermission
 
 import "github.com/kyleu/rituals/app/util"
 
+func (r *RetroPermission) ToMap() util.ValueMap {
+	return util.ValueMap{"retroID": r.RetroID, "key": r.Key, "value": r.Value, "access": r.Access, "created": r.Created}
+}
+
 func FromMap(m util.ValueMap, setPK bool) (*RetroPermission, util.ValueMap, error) {
 	ret := &RetroPermission{}
 	extra := util.ValueMap{}

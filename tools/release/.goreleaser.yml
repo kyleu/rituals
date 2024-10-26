@@ -73,6 +73,8 @@ release:
     # $PF_SECTION_START(releasefiles)$
     # $PF_SECTION_END(releasefiles)$
 
+report_sizes: true
+
 snapcrafts:
   -
     publish: false
