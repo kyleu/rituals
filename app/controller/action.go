@@ -53,7 +53,7 @@ func ActionCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("action.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &action.Action{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = action.Random()
+			ret = action.RandomAction()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
 				ret.UserID = randomUser.ID
@@ -154,6 +154,6 @@ func actionFromForm(r *http.Request, b []byte, setPK bool) (*action.Action, erro
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := action.FromMap(frm, setPK)
+	ret, _, err := action.ActionFromMap(frm, setPK)
 	return ret, err
 }

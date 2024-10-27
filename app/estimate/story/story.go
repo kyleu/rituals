@@ -36,7 +36,7 @@ type Story struct {
 	Updated    *time.Time         `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Story {
+func NewStory(id uuid.UUID) *Story {
 	return &Story{ID: id}
 }
 
@@ -55,7 +55,7 @@ func (s *Story) TitleString() string {
 	return s.String()
 }
 
-func Random() *Story {
+func RandomStory() *Story {
 	return &Story{
 		ID:         util.UUID(),
 		EstimateID: util.UUID(),
@@ -75,7 +75,7 @@ func (s *Story) Strings() []string {
 }
 
 func (s *Story) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return StoryFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *Story) WebPath(paths ...string) string {
@@ -89,7 +89,7 @@ func (s *Story) ToData() []any {
 	return []any{s.ID, s.EstimateID, s.Idx, s.UserID, s.Title, s.Status, s.FinalVote, s.Created, s.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var StoryFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
 	{Key: "idx", Title: "Idx", Description: "", Type: "int"},

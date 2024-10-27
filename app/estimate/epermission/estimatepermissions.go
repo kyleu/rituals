@@ -122,7 +122,7 @@ func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
 }
 
 func (e EstimatePermissions) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(e, func(x *EstimatePermission, _ int) []string {
+	return EstimatePermissionFieldDescs.Keys(), lo.Map(e, func(x *EstimatePermission, _ int) []string {
 		return x.Strings()
 	})
 }

@@ -41,7 +41,7 @@ type TeamPermission struct {
 	Created time.Time `json:"created,omitempty"`
 }
 
-func New(teamID uuid.UUID, key string, value string) *TeamPermission {
+func NewTeamPermission(teamID uuid.UUID, key string, value string) *TeamPermission {
 	return &TeamPermission{TeamID: teamID, Key: key, Value: value}
 }
 
@@ -65,7 +65,7 @@ func (t *TeamPermission) ToPK() *PK {
 	}
 }
 
-func Random() *TeamPermission {
+func RandomTeamPermission() *TeamPermission {
 	return &TeamPermission{
 		TeamID:  util.UUID(),
 		Key:     util.RandomString(12),
@@ -80,7 +80,7 @@ func (t *TeamPermission) Strings() []string {
 }
 
 func (t *TeamPermission) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{t.Strings()}
+	return TeamPermissionFieldDescs.Keys(), [][]string{t.Strings()}
 }
 
 func (t *TeamPermission) WebPath(paths ...string) string {
@@ -94,7 +94,7 @@ func (t *TeamPermission) ToData() []any {
 	return []any{t.TeamID, t.Key, t.Value, t.Access, t.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var TeamPermissionFieldDescs = util.FieldDescs{
 	{Key: "teamID", Title: "Team ID", Description: "", Type: "uuid"},
 	{Key: "key", Title: "Key", Description: "", Type: "string"},
 	{Key: "value", Title: "Value", Description: "", Type: "string"},

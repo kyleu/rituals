@@ -54,7 +54,7 @@ func SprintHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("shistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &shistory.SprintHistory{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = shistory.Random()
+			ret = shistory.RandomSprintHistory()
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {
 				ret.SprintID = randomSprint.ID
@@ -150,6 +150,6 @@ func shistoryFromForm(r *http.Request, b []byte, setPK bool) (*shistory.SprintHi
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := shistory.FromMap(frm, setPK)
+	ret, _, err := shistory.SprintHistoryFromMap(frm, setPK)
 	return ret, err
 }

@@ -10,7 +10,7 @@ func (s *StandupMember) ToMap() util.ValueMap {
 	return util.ValueMap{"standupID": s.StandupID, "userID": s.UserID, "name": s.Name, "picture": s.Picture, "role": s.Role, "created": s.Created, "updated": s.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*StandupMember, util.ValueMap, error) {
+func StandupMemberFromMap(m util.ValueMap, setPK bool) (*StandupMember, util.ValueMap, error) {
 	ret := &StandupMember{}
 	extra := util.ValueMap{}
 	for k, v := range m {

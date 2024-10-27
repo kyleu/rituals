@@ -53,7 +53,7 @@ func EmailCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("email.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &email.Email{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = email.Random()
+			ret = email.RandomEmail()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
 				ret.UserID = randomUser.ID
@@ -154,6 +154,6 @@ func emailFromForm(r *http.Request, b []byte, setPK bool) (*email.Email, error) 
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := email.FromMap(frm, setPK)
+	ret, _, err := email.EmailFromMap(frm, setPK)
 	return ret, err
 }

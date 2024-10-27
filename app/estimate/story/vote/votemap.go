@@ -6,7 +6,7 @@ func (v *Vote) ToMap() util.ValueMap {
 	return util.ValueMap{"storyID": v.StoryID, "userID": v.UserID, "choice": v.Choice, "created": v.Created, "updated": v.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Vote, util.ValueMap, error) {
+func VoteFromMap(m util.ValueMap, setPK bool) (*Vote, util.ValueMap, error) {
 	ret := &Vote{}
 	extra := util.ValueMap{}
 	for k, v := range m {

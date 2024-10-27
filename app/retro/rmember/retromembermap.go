@@ -10,7 +10,7 @@ func (r *RetroMember) ToMap() util.ValueMap {
 	return util.ValueMap{"retroID": r.RetroID, "userID": r.UserID, "name": r.Name, "picture": r.Picture, "role": r.Role, "created": r.Created, "updated": r.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*RetroMember, util.ValueMap, error) {
+func RetroMemberFromMap(m util.ValueMap, setPK bool) (*RetroMember, util.ValueMap, error) {
 	ret := &RetroMember{}
 	extra := util.ValueMap{}
 	for k, v := range m {

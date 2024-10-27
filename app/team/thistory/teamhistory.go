@@ -29,7 +29,7 @@ type TeamHistory struct {
 	Created  time.Time `json:"created,omitempty"`
 }
 
-func New(slug string) *TeamHistory {
+func NewTeamHistory(slug string) *TeamHistory {
 	return &TeamHistory{Slug: slug}
 }
 
@@ -45,7 +45,7 @@ func (t *TeamHistory) TitleString() string {
 	return t.String()
 }
 
-func Random() *TeamHistory {
+func RandomTeamHistory() *TeamHistory {
 	return &TeamHistory{
 		Slug:     util.RandomString(12),
 		TeamID:   util.UUID(),
@@ -59,7 +59,7 @@ func (t *TeamHistory) Strings() []string {
 }
 
 func (t *TeamHistory) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{t.Strings()}
+	return TeamHistoryFieldDescs.Keys(), [][]string{t.Strings()}
 }
 
 func (t *TeamHistory) WebPath(paths ...string) string {
@@ -73,7 +73,7 @@ func (t *TeamHistory) ToData() []any {
 	return []any{t.Slug, t.TeamID, t.TeamName, t.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var TeamHistoryFieldDescs = util.FieldDescs{
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "teamID", Title: "Team ID", Description: "", Type: "uuid"},
 	{Key: "teamName", Title: "Team Name", Description: "", Type: "string"},

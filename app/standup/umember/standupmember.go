@@ -43,7 +43,7 @@ type StandupMember struct {
 	Updated   *time.Time        `json:"updated,omitempty"`
 }
 
-func New(standupID uuid.UUID, userID uuid.UUID) *StandupMember {
+func NewStandupMember(standupID uuid.UUID, userID uuid.UUID) *StandupMember {
 	return &StandupMember{StandupID: standupID, UserID: userID}
 }
 
@@ -66,7 +66,7 @@ func (s *StandupMember) ToPK() *PK {
 	}
 }
 
-func Random() *StandupMember {
+func RandomStandupMember() *StandupMember {
 	return &StandupMember{
 		StandupID: util.UUID(),
 		UserID:    util.UUID(),
@@ -83,7 +83,7 @@ func (s *StandupMember) Strings() []string {
 }
 
 func (s *StandupMember) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return StandupMemberFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *StandupMember) WebPath(paths ...string) string {
@@ -97,7 +97,7 @@ func (s *StandupMember) ToData() []any {
 	return []any{s.StandupID, s.UserID, s.Name, s.Picture, s.Role, s.Created, s.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var StandupMemberFieldDescs = util.FieldDescs{
 	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},

@@ -10,7 +10,7 @@ func (s *Standup) ToMap() util.ValueMap {
 	return util.ValueMap{"id": s.ID, "slug": s.Slug, "title": s.Title, "icon": s.Icon, "status": s.Status, "teamID": s.TeamID, "sprintID": s.SprintID, "created": s.Created, "updated": s.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Standup, util.ValueMap, error) {
+func StandupFromMap(m util.ValueMap, setPK bool) (*Standup, util.ValueMap, error) {
 	ret := &Standup{}
 	extra := util.ValueMap{}
 	for k, v := range m {

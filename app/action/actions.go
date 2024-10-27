@@ -76,7 +76,7 @@ func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
 }
 
 func (a Actions) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(a, func(x *Action, _ int) []string {
+	return ActionFieldDescs.Keys(), lo.Map(a, func(x *Action, _ int) []string {
 		return x.Strings()
 	})
 }

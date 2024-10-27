@@ -54,7 +54,7 @@ func RetroHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rhistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rhistory.RetroHistory{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = rhistory.Random()
+			ret = rhistory.RandomRetroHistory()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
 				ret.RetroID = randomRetro.ID
@@ -150,6 +150,6 @@ func rhistoryFromForm(r *http.Request, b []byte, setPK bool) (*rhistory.RetroHis
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := rhistory.FromMap(frm, setPK)
+	ret, _, err := rhistory.RetroHistoryFromMap(frm, setPK)
 	return ret, err
 }

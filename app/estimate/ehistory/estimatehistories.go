@@ -76,7 +76,7 @@ func (e EstimateHistories) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateHi
 }
 
 func (e EstimateHistories) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(e, func(x *EstimateHistory, _ int) []string {
+	return EstimateHistoryFieldDescs.Keys(), lo.Map(e, func(x *EstimateHistory, _ int) []string {
 		return x.Strings()
 	})
 }

@@ -113,7 +113,7 @@ func RetroCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("retro.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &retro.Retro{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = retro.Random()
+			ret = retro.RandomRetro()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = &randomTeam.ID
@@ -218,6 +218,6 @@ func retroFromForm(r *http.Request, b []byte, setPK bool) (*retro.Retro, error) 
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := retro.FromMap(frm, setPK)
+	ret, _, err := retro.RetroFromMap(frm, setPK)
 	return ret, err
 }

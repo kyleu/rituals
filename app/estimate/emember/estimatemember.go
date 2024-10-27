@@ -43,7 +43,7 @@ type EstimateMember struct {
 	Updated    *time.Time        `json:"updated,omitempty"`
 }
 
-func New(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {
+func NewEstimateMember(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {
 	return &EstimateMember{EstimateID: estimateID, UserID: userID}
 }
 
@@ -66,7 +66,7 @@ func (e *EstimateMember) ToPK() *PK {
 	}
 }
 
-func Random() *EstimateMember {
+func RandomEstimateMember() *EstimateMember {
 	return &EstimateMember{
 		EstimateID: util.UUID(),
 		UserID:     util.UUID(),
@@ -83,7 +83,7 @@ func (e *EstimateMember) Strings() []string {
 }
 
 func (e *EstimateMember) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{e.Strings()}
+	return EstimateMemberFieldDescs.Keys(), [][]string{e.Strings()}
 }
 
 func (e *EstimateMember) WebPath(paths ...string) string {
@@ -97,7 +97,7 @@ func (e *EstimateMember) ToData() []any {
 	return []any{e.EstimateID, e.UserID, e.Name, e.Picture, e.Role, e.Created, e.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var EstimateMemberFieldDescs = util.FieldDescs{
 	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},

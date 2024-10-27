@@ -88,7 +88,7 @@ func StoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("story.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &story.Story{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = story.Random()
+			ret = story.RandomStory()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {
 				ret.EstimateID = randomEstimate.ID
@@ -193,6 +193,6 @@ func storyFromForm(r *http.Request, b []byte, setPK bool) (*story.Story, error) 
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := story.FromMap(frm, setPK)
+	ret, _, err := story.StoryFromMap(frm, setPK)
 	return ret, err
 }

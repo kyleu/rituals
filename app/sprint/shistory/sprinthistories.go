@@ -76,7 +76,7 @@ func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories 
 }
 
 func (s SprintHistories) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(s, func(x *SprintHistory, _ int) []string {
+	return SprintHistoryFieldDescs.Keys(), lo.Map(s, func(x *SprintHistory, _ int) []string {
 		return x.Strings()
 	})
 }

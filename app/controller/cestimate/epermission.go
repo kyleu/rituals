@@ -55,7 +55,7 @@ func EstimatePermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("epermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &epermission.EstimatePermission{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = epermission.Random()
+			ret = epermission.RandomEstimatePermission()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {
 				ret.EstimateID = randomEstimate.ID
@@ -166,6 +166,6 @@ func epermissionFromForm(r *http.Request, b []byte, setPK bool) (*epermission.Es
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := epermission.FromMap(frm, setPK)
+	ret, _, err := epermission.EstimatePermissionFromMap(frm, setPK)
 	return ret, err
 }

@@ -33,7 +33,7 @@ type Team struct {
 	Updated *time.Time         `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Team {
+func NewTeam(id uuid.UUID) *Team {
 	return &Team{ID: id}
 }
 
@@ -52,7 +52,7 @@ func (t *Team) TitleString() string {
 	return t.String()
 }
 
-func Random() *Team {
+func RandomTeam() *Team {
 	return &Team{
 		ID:      util.UUID(),
 		Slug:    util.RandomString(12),
@@ -69,7 +69,7 @@ func (t *Team) Strings() []string {
 }
 
 func (t *Team) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{t.Strings()}
+	return TeamFieldDescs.Keys(), [][]string{t.Strings()}
 }
 
 func (t *Team) WebPath(paths ...string) string {
@@ -83,7 +83,7 @@ func (t *Team) ToData() []any {
 	return []any{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Created, t.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var TeamFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "title", Title: "Title", Description: "", Type: "string"},

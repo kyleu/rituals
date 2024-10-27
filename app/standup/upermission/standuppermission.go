@@ -41,7 +41,7 @@ type StandupPermission struct {
 	Created   time.Time `json:"created,omitempty"`
 }
 
-func New(standupID uuid.UUID, key string, value string) *StandupPermission {
+func NewStandupPermission(standupID uuid.UUID, key string, value string) *StandupPermission {
 	return &StandupPermission{StandupID: standupID, Key: key, Value: value}
 }
 
@@ -65,7 +65,7 @@ func (s *StandupPermission) ToPK() *PK {
 	}
 }
 
-func Random() *StandupPermission {
+func RandomStandupPermission() *StandupPermission {
 	return &StandupPermission{
 		StandupID: util.UUID(),
 		Key:       util.RandomString(12),
@@ -80,7 +80,7 @@ func (s *StandupPermission) Strings() []string {
 }
 
 func (s *StandupPermission) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return StandupPermissionFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *StandupPermission) WebPath(paths ...string) string {
@@ -94,7 +94,7 @@ func (s *StandupPermission) ToData() []any {
 	return []any{s.StandupID, s.Key, s.Value, s.Access, s.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var StandupPermissionFieldDescs = util.FieldDescs{
 	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
 	{Key: "key", Title: "Key", Description: "", Type: "string"},
 	{Key: "value", Title: "Value", Description: "", Type: "string"},

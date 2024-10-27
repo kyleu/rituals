@@ -29,7 +29,7 @@ type EstimateHistory struct {
 	Created      time.Time `json:"created,omitempty"`
 }
 
-func New(slug string) *EstimateHistory {
+func NewEstimateHistory(slug string) *EstimateHistory {
 	return &EstimateHistory{Slug: slug}
 }
 
@@ -45,7 +45,7 @@ func (e *EstimateHistory) TitleString() string {
 	return e.String()
 }
 
-func Random() *EstimateHistory {
+func RandomEstimateHistory() *EstimateHistory {
 	return &EstimateHistory{
 		Slug:         util.RandomString(12),
 		EstimateID:   util.UUID(),
@@ -59,7 +59,7 @@ func (e *EstimateHistory) Strings() []string {
 }
 
 func (e *EstimateHistory) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{e.Strings()}
+	return EstimateHistoryFieldDescs.Keys(), [][]string{e.Strings()}
 }
 
 func (e *EstimateHistory) WebPath(paths ...string) string {
@@ -73,7 +73,7 @@ func (e *EstimateHistory) ToData() []any {
 	return []any{e.Slug, e.EstimateID, e.EstimateName, e.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var EstimateHistoryFieldDescs = util.FieldDescs{
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
 	{Key: "estimateName", Title: "Estimate Name", Description: "", Type: "string"},

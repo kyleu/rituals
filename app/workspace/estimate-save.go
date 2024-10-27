@@ -77,7 +77,7 @@ func (s *Service) SaveEstimate(ctx context.Context, e *estimate.Estimate, user u
 		return nil, err
 	}
 
-	act := action.NewAction(enum.ModelServiceEstimate, e.ID, user, "update", util.ValueMap{}, "")
+	act := action.New(enum.ModelServiceEstimate, e.ID, user, "update", util.ValueMap{}, "")
 	err = s.a.Save(ctx, tx, logger, act)
 	if err != nil {
 		return nil, err

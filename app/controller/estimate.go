@@ -114,7 +114,7 @@ func EstimateCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("estimate.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &estimate.Estimate{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = estimate.Random()
+			ret = estimate.RandomEstimate()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = &randomTeam.ID
@@ -219,6 +219,6 @@ func estimateFromForm(r *http.Request, b []byte, setPK bool) (*estimate.Estimate
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := estimate.FromMap(frm, setPK)
+	ret, _, err := estimate.EstimateFromMap(frm, setPK)
 	return ret, err
 }

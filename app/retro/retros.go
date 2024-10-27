@@ -131,7 +131,7 @@ func (r Retros) GetBySprintIDs(sprintIDs ...*uuid.UUID) Retros {
 }
 
 func (r Retros) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(r, func(x *Retro, _ int) []string {
+	return RetroFieldDescs.Keys(), lo.Map(r, func(x *Retro, _ int) []string {
 		return x.Strings()
 	})
 }

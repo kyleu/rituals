@@ -132,7 +132,7 @@ func UserCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("user.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &user.User{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = user.Random()
+			ret = user.RandomUser()
 		}
 		ps.SetTitleAndData("Create [User]", ret)
 		ps.Data = ret
@@ -229,6 +229,6 @@ func userFromForm(r *http.Request, b []byte, setPK bool) (*user.User, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := user.FromMap(frm, setPK)
+	ret, _, err := user.UserFromMap(frm, setPK)
 	return ret, err
 }

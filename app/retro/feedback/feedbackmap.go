@@ -7,7 +7,7 @@ func (f *Feedback) ToMap() util.ValueMap {
 	return util.ValueMap{"id": f.ID, "retroID": f.RetroID, "idx": f.Idx, "userID": f.UserID, "category": f.Category, "content": f.Content, "html": f.HTML, "created": f.Created, "updated": f.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Feedback, util.ValueMap, error) {
+func FeedbackFromMap(m util.ValueMap, setPK bool) (*Feedback, util.ValueMap, error) {
 	ret := &Feedback{}
 	extra := util.ValueMap{}
 	for k, v := range m {

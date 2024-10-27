@@ -35,7 +35,7 @@ type Feedback struct {
 	Updated  *time.Time `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Feedback {
+func NewFeedback(id uuid.UUID) *Feedback {
 	return &Feedback{ID: id}
 }
 
@@ -51,7 +51,7 @@ func (f *Feedback) TitleString() string {
 	return f.String()
 }
 
-func Random() *Feedback {
+func RandomFeedback() *Feedback {
 	return &Feedback{
 		ID:       util.UUID(),
 		RetroID:  util.UUID(),
@@ -71,7 +71,7 @@ func (f *Feedback) Strings() []string {
 }
 
 func (f *Feedback) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{f.Strings()}
+	return FeedbackFieldDescs.Keys(), [][]string{f.Strings()}
 }
 
 func (f *Feedback) WebPath(paths ...string) string {
@@ -85,7 +85,7 @@ func (f *Feedback) ToData() []any {
 	return []any{f.ID, f.RetroID, f.Idx, f.UserID, f.Category, f.Content, f.HTML, f.Created, f.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var FeedbackFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
 	{Key: "idx", Title: "Idx", Description: "", Type: "int"},

@@ -54,7 +54,7 @@ func TeamHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("thistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &thistory.TeamHistory{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = thistory.Random()
+			ret = thistory.RandomTeamHistory()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = randomTeam.ID
@@ -150,6 +150,6 @@ func thistoryFromForm(r *http.Request, b []byte, setPK bool) (*thistory.TeamHist
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := thistory.FromMap(frm, setPK)
+	ret, _, err := thistory.TeamHistoryFromMap(frm, setPK)
 	return ret, err
 }

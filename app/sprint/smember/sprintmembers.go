@@ -93,7 +93,7 @@ func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 }
 
 func (s SprintMembers) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(s, func(x *SprintMember, _ int) []string {
+	return SprintMemberFieldDescs.Keys(), lo.Map(s, func(x *SprintMember, _ int) []string {
 		return x.Strings()
 	})
 }

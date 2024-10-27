@@ -33,7 +33,7 @@ type Report struct {
 	Updated   *time.Time `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Report {
+func NewReport(id uuid.UUID) *Report {
 	return &Report{ID: id}
 }
 
@@ -49,7 +49,7 @@ func (r *Report) TitleString() string {
 	return r.String()
 }
 
-func Random() *Report {
+func RandomReport() *Report {
 	return &Report{
 		ID:        util.UUID(),
 		StandupID: util.UUID(),
@@ -68,7 +68,7 @@ func (r *Report) Strings() []string {
 }
 
 func (r *Report) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{r.Strings()}
+	return ReportFieldDescs.Keys(), [][]string{r.Strings()}
 }
 
 func (r *Report) WebPath(paths ...string) string {
@@ -82,7 +82,7 @@ func (r *Report) ToData() []any {
 	return []any{r.ID, r.StandupID, r.Day, r.UserID, r.Content, r.HTML, r.Created, r.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var ReportFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
 	{Key: "day", Title: "Day", Description: "", Type: "date"},

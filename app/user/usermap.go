@@ -6,7 +6,7 @@ func (u *User) ToMap() util.ValueMap {
 	return util.ValueMap{"id": u.ID, "name": u.Name, "picture": u.Picture, "created": u.Created, "updated": u.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*User, util.ValueMap, error) {
+func UserFromMap(m util.ValueMap, setPK bool) (*User, util.ValueMap, error) {
 	ret := &User{}
 	extra := util.ValueMap{}
 	for k, v := range m {

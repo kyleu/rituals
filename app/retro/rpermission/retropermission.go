@@ -41,7 +41,7 @@ type RetroPermission struct {
 	Created time.Time `json:"created,omitempty"`
 }
 
-func New(retroID uuid.UUID, key string, value string) *RetroPermission {
+func NewRetroPermission(retroID uuid.UUID, key string, value string) *RetroPermission {
 	return &RetroPermission{RetroID: retroID, Key: key, Value: value}
 }
 
@@ -65,7 +65,7 @@ func (r *RetroPermission) ToPK() *PK {
 	}
 }
 
-func Random() *RetroPermission {
+func RandomRetroPermission() *RetroPermission {
 	return &RetroPermission{
 		RetroID: util.UUID(),
 		Key:     util.RandomString(12),
@@ -80,7 +80,7 @@ func (r *RetroPermission) Strings() []string {
 }
 
 func (r *RetroPermission) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{r.Strings()}
+	return RetroPermissionFieldDescs.Keys(), [][]string{r.Strings()}
 }
 
 func (r *RetroPermission) WebPath(paths ...string) string {
@@ -94,7 +94,7 @@ func (r *RetroPermission) ToData() []any {
 	return []any{r.RetroID, r.Key, r.Value, r.Access, r.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var RetroPermissionFieldDescs = util.FieldDescs{
 	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
 	{Key: "key", Title: "Key", Description: "", Type: "string"},
 	{Key: "value", Title: "Value", Description: "", Type: "string"},

@@ -122,7 +122,7 @@ func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 }
 
 func (s StandupPermissions) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(s, func(x *StandupPermission, _ int) []string {
+	return StandupPermissionFieldDescs.Keys(), lo.Map(s, func(x *StandupPermission, _ int) []string {
 		return x.Strings()
 	})
 }

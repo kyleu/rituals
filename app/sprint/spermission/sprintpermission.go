@@ -41,7 +41,7 @@ type SprintPermission struct {
 	Created  time.Time `json:"created,omitempty"`
 }
 
-func New(sprintID uuid.UUID, key string, value string) *SprintPermission {
+func NewSprintPermission(sprintID uuid.UUID, key string, value string) *SprintPermission {
 	return &SprintPermission{SprintID: sprintID, Key: key, Value: value}
 }
 
@@ -65,7 +65,7 @@ func (s *SprintPermission) ToPK() *PK {
 	}
 }
 
-func Random() *SprintPermission {
+func RandomSprintPermission() *SprintPermission {
 	return &SprintPermission{
 		SprintID: util.UUID(),
 		Key:      util.RandomString(12),
@@ -80,7 +80,7 @@ func (s *SprintPermission) Strings() []string {
 }
 
 func (s *SprintPermission) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return SprintPermissionFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *SprintPermission) WebPath(paths ...string) string {
@@ -94,7 +94,7 @@ func (s *SprintPermission) ToData() []any {
 	return []any{s.SprintID, s.Key, s.Value, s.Access, s.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var SprintPermissionFieldDescs = util.FieldDescs{
 	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
 	{Key: "key", Title: "Key", Description: "", Type: "string"},
 	{Key: "value", Title: "Value", Description: "", Type: "string"},

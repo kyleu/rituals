@@ -43,7 +43,7 @@ type RetroMember struct {
 	Updated *time.Time        `json:"updated,omitempty"`
 }
 
-func New(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
+func NewRetroMember(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
 	return &RetroMember{RetroID: retroID, UserID: userID}
 }
 
@@ -66,7 +66,7 @@ func (r *RetroMember) ToPK() *PK {
 	}
 }
 
-func Random() *RetroMember {
+func RandomRetroMember() *RetroMember {
 	return &RetroMember{
 		RetroID: util.UUID(),
 		UserID:  util.UUID(),
@@ -83,7 +83,7 @@ func (r *RetroMember) Strings() []string {
 }
 
 func (r *RetroMember) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{r.Strings()}
+	return RetroMemberFieldDescs.Keys(), [][]string{r.Strings()}
 }
 
 func (r *RetroMember) WebPath(paths ...string) string {
@@ -97,7 +97,7 @@ func (r *RetroMember) ToData() []any {
 	return []any{r.RetroID, r.UserID, r.Name, r.Picture, r.Role, r.Created, r.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var RetroMemberFieldDescs = util.FieldDescs{
 	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},

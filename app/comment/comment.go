@@ -33,7 +33,7 @@ type Comment struct {
 	Created time.Time         `json:"created,omitempty"`
 }
 
-func New(id uuid.UUID) *Comment {
+func NewComment(id uuid.UUID) *Comment {
 	return &Comment{ID: id}
 }
 
@@ -49,7 +49,7 @@ func (c *Comment) TitleString() string {
 	return c.String()
 }
 
-func Random() *Comment {
+func RandomComment() *Comment {
 	return &Comment{
 		ID:      util.UUID(),
 		Svc:     enum.AllModelServices.Random(),
@@ -66,7 +66,7 @@ func (c *Comment) Strings() []string {
 }
 
 func (c *Comment) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{c.Strings()}
+	return CommentFieldDescs.Keys(), [][]string{c.Strings()}
 }
 
 func (c *Comment) WebPath(paths ...string) string {
@@ -80,7 +80,7 @@ func (c *Comment) ToData() []any {
 	return []any{c.ID, c.Svc, c.ModelID, c.UserID, c.Content, c.HTML, c.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var CommentFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "svc", Title: "Svc", Description: "", Type: "enum(model_service)"},
 	{Key: "modelID", Title: "Model ID", Description: "", Type: "uuid"},

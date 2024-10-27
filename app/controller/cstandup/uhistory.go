@@ -55,7 +55,7 @@ func StandupHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("uhistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &uhistory.StandupHistory{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = uhistory.Random()
+			ret = uhistory.RandomStandupHistory()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {
 				ret.StandupID = randomStandup.ID
@@ -151,6 +151,6 @@ func uhistoryFromForm(r *http.Request, b []byte, setPK bool) (*uhistory.StandupH
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := uhistory.FromMap(frm, setPK)
+	ret, _, err := uhistory.StandupHistoryFromMap(frm, setPK)
 	return ret, err
 }

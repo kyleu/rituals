@@ -114,7 +114,7 @@ func StandupCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("standup.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &standup.Standup{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = standup.Random()
+			ret = standup.RandomStandup()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = &randomTeam.ID
@@ -219,6 +219,6 @@ func standupFromForm(r *http.Request, b []byte, setPK bool) (*standup.Standup, e
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := standup.FromMap(frm, setPK)
+	ret, _, err := standup.StandupFromMap(frm, setPK)
 	return ret, err
 }

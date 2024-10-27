@@ -66,7 +66,7 @@ func ReportCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("report.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &report.Report{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = report.Random()
+			ret = report.RandomReport()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {
 				ret.StandupID = randomStandup.ID
@@ -171,6 +171,6 @@ func reportFromForm(r *http.Request, b []byte, setPK bool) (*report.Report, erro
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := report.FromMap(frm, setPK)
+	ret, _, err := report.ReportFromMap(frm, setPK)
 	return ret, err
 }

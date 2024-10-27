@@ -6,7 +6,7 @@ func (s *SprintHistory) ToMap() util.ValueMap {
 	return util.ValueMap{"slug": s.Slug, "sprintID": s.SprintID, "sprintName": s.SprintName, "created": s.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*SprintHistory, util.ValueMap, error) {
+func SprintHistoryFromMap(m util.ValueMap, setPK bool) (*SprintHistory, util.ValueMap, error) {
 	ret := &SprintHistory{}
 	extra := util.ValueMap{}
 	for k, v := range m {

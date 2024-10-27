@@ -93,7 +93,7 @@ func (s StandupMembers) GetByUserIDs(userIDs ...uuid.UUID) StandupMembers {
 }
 
 func (s StandupMembers) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(s, func(x *StandupMember, _ int) []string {
+	return StandupMemberFieldDescs.Keys(), lo.Map(s, func(x *StandupMember, _ int) []string {
 		return x.Strings()
 	})
 }

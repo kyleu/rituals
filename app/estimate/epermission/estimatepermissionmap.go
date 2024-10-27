@@ -6,7 +6,7 @@ func (e *EstimatePermission) ToMap() util.ValueMap {
 	return util.ValueMap{"estimateID": e.EstimateID, "key": e.Key, "value": e.Value, "access": e.Access, "created": e.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*EstimatePermission, util.ValueMap, error) {
+func EstimatePermissionFromMap(m util.ValueMap, setPK bool) (*EstimatePermission, util.ValueMap, error) {
 	ret := &EstimatePermission{}
 	extra := util.ValueMap{}
 	for k, v := range m {

@@ -66,7 +66,7 @@ func RetroMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rmember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rmember.RetroMember{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = rmember.Random()
+			ret = rmember.RandomRetroMember()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
 				ret.RetroID = randomRetro.ID
@@ -181,6 +181,6 @@ func rmemberFromForm(r *http.Request, b []byte, setPK bool) (*rmember.RetroMembe
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := rmember.FromMap(frm, setPK)
+	ret, _, err := rmember.RetroMemberFromMap(frm, setPK)
 	return ret, err
 }

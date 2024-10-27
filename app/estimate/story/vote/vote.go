@@ -40,7 +40,7 @@ type Vote struct {
 	Updated *time.Time `json:"updated,omitempty"`
 }
 
-func New(storyID uuid.UUID, userID uuid.UUID) *Vote {
+func NewVote(storyID uuid.UUID, userID uuid.UUID) *Vote {
 	return &Vote{StoryID: storyID, UserID: userID}
 }
 
@@ -63,7 +63,7 @@ func (v *Vote) ToPK() *PK {
 	}
 }
 
-func Random() *Vote {
+func RandomVote() *Vote {
 	return &Vote{
 		StoryID: util.UUID(),
 		UserID:  util.UUID(),
@@ -78,7 +78,7 @@ func (v *Vote) Strings() []string {
 }
 
 func (v *Vote) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{v.Strings()}
+	return VoteFieldDescs.Keys(), [][]string{v.Strings()}
 }
 
 func (v *Vote) WebPath(paths ...string) string {
@@ -92,7 +92,7 @@ func (v *Vote) ToData() []any {
 	return []any{v.StoryID, v.UserID, v.Choice, v.Created, v.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var VoteFieldDescs = util.FieldDescs{
 	{Key: "storyID", Title: "Story ID", Description: "", Type: "uuid"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
 	{Key: "choice", Title: "Choice", Description: "", Type: "string"},

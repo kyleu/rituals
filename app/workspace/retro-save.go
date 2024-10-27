@@ -76,7 +76,7 @@ func (s *Service) SaveRetro(ctx context.Context, r *retro.Retro, user uuid.UUID,
 		return nil, err
 	}
 
-	act := action.NewAction(enum.ModelServiceRetro, r.ID, user, "update", util.ValueMap{}, "")
+	act := action.New(enum.ModelServiceRetro, r.ID, user, "update", util.ValueMap{}, "")
 	err = s.a.Save(ctx, tx, logger, act)
 	if err != nil {
 		return nil, err

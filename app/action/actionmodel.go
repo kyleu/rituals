@@ -10,7 +10,7 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func NewAction(svc enum.ModelService, model uuid.UUID, user uuid.UUID, act string, content util.ValueMap, note string) *Action {
+func New(svc enum.ModelService, model uuid.UUID, user uuid.UUID, act string, content util.ValueMap, note string) *Action {
 	return &Action{ID: util.UUID(), Svc: svc, ModelID: model, UserID: user, Act: act, Content: content, Note: note, Created: time.Now()}
 }
 

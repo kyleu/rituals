@@ -66,7 +66,7 @@ func FeedbackCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("feedback.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &feedback.Feedback{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = feedback.Random()
+			ret = feedback.RandomFeedback()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
 				ret.RetroID = randomRetro.ID
@@ -171,6 +171,6 @@ func feedbackFromForm(r *http.Request, b []byte, setPK bool) (*feedback.Feedback
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := feedback.FromMap(frm, setPK)
+	ret, _, err := feedback.FeedbackFromMap(frm, setPK)
 	return ret, err
 }

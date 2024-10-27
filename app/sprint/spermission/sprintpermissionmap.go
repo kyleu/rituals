@@ -6,7 +6,7 @@ func (s *SprintPermission) ToMap() util.ValueMap {
 	return util.ValueMap{"sprintID": s.SprintID, "key": s.Key, "value": s.Value, "access": s.Access, "created": s.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*SprintPermission, util.ValueMap, error) {
+func SprintPermissionFromMap(m util.ValueMap, setPK bool) (*SprintPermission, util.ValueMap, error) {
 	ret := &SprintPermission{}
 	extra := util.ValueMap{}
 	for k, v := range m {

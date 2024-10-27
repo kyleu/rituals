@@ -66,7 +66,7 @@ func VoteCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("vote.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &vote.Vote{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = vote.Random()
+			ret = vote.RandomVote()
 			randomStory, err := as.Services.Story.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStory != nil {
 				ret.StoryID = randomStory.ID
@@ -181,6 +181,6 @@ func voteFromForm(r *http.Request, b []byte, setPK bool) (*vote.Vote, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := vote.FromMap(frm, setPK)
+	ret, _, err := vote.VoteFromMap(frm, setPK)
 	return ret, err
 }

@@ -122,7 +122,7 @@ func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 }
 
 func (s SprintPermissions) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(s, func(x *SprintPermission, _ int) []string {
+	return SprintPermissionFieldDescs.Keys(), lo.Map(s, func(x *SprintPermission, _ int) []string {
 		return x.Strings()
 	})
 }

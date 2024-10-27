@@ -7,7 +7,7 @@ func (e *Email) ToMap() util.ValueMap {
 	return util.ValueMap{"id": e.ID, "recipients": e.Recipients, "subject": e.Subject, "data": e.Data, "plain": e.Plain, "html": e.HTML, "userID": e.UserID, "status": e.Status, "created": e.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Email, util.ValueMap, error) {
+func EmailFromMap(m util.ValueMap, setPK bool) (*Email, util.ValueMap, error) {
 	ret := &Email{}
 	extra := util.ValueMap{}
 	for k, v := range m {

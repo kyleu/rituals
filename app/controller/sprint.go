@@ -112,7 +112,7 @@ func SprintCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("sprint.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &sprint.Sprint{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = sprint.Random()
+			ret = sprint.RandomSprint()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = &randomTeam.ID
@@ -213,6 +213,6 @@ func sprintFromForm(r *http.Request, b []byte, setPK bool) (*sprint.Sprint, erro
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := sprint.FromMap(frm, setPK)
+	ret, _, err := sprint.SprintFromMap(frm, setPK)
 	return ret, err
 }

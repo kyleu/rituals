@@ -53,7 +53,7 @@ func CommentCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("comment.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &comment.Comment{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = comment.Random()
+			ret = comment.RandomComment()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
 				ret.UserID = randomUser.ID
@@ -154,6 +154,6 @@ func commentFromForm(r *http.Request, b []byte, setPK bool) (*comment.Comment, e
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := comment.FromMap(frm, setPK)
+	ret, _, err := comment.CommentFromMap(frm, setPK)
 	return ret, err
 }

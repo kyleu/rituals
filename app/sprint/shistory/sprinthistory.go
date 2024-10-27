@@ -29,7 +29,7 @@ type SprintHistory struct {
 	Created    time.Time `json:"created,omitempty"`
 }
 
-func New(slug string) *SprintHistory {
+func NewSprintHistory(slug string) *SprintHistory {
 	return &SprintHistory{Slug: slug}
 }
 
@@ -45,7 +45,7 @@ func (s *SprintHistory) TitleString() string {
 	return s.String()
 }
 
-func Random() *SprintHistory {
+func RandomSprintHistory() *SprintHistory {
 	return &SprintHistory{
 		Slug:       util.RandomString(12),
 		SprintID:   util.UUID(),
@@ -59,7 +59,7 @@ func (s *SprintHistory) Strings() []string {
 }
 
 func (s *SprintHistory) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return SprintHistoryFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *SprintHistory) WebPath(paths ...string) string {
@@ -73,7 +73,7 @@ func (s *SprintHistory) ToData() []any {
 	return []any{s.Slug, s.SprintID, s.SprintName, s.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var SprintHistoryFieldDescs = util.FieldDescs{
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
 	{Key: "sprintName", Title: "Sprint Name", Description: "", Type: "string"},

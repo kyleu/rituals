@@ -6,7 +6,7 @@ func (e *EstimateHistory) ToMap() util.ValueMap {
 	return util.ValueMap{"slug": e.Slug, "estimateID": e.EstimateID, "estimateName": e.EstimateName, "created": e.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*EstimateHistory, util.ValueMap, error) {
+func EstimateHistoryFromMap(m util.ValueMap, setPK bool) (*EstimateHistory, util.ValueMap, error) {
 	ret := &EstimateHistory{}
 	extra := util.ValueMap{}
 	for k, v := range m {

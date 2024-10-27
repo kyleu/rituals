@@ -55,7 +55,7 @@ func StandupPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("upermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &upermission.StandupPermission{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = upermission.Random()
+			ret = upermission.RandomStandupPermission()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {
 				ret.StandupID = randomStandup.ID
@@ -166,6 +166,6 @@ func upermissionFromForm(r *http.Request, b []byte, setPK bool) (*upermission.St
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := upermission.FromMap(frm, setPK)
+	ret, _, err := upermission.StandupPermissionFromMap(frm, setPK)
 	return ret, err
 }

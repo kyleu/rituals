@@ -34,7 +34,7 @@ type Email struct {
 	Created    time.Time     `json:"created,omitempty"`
 }
 
-func New(id uuid.UUID) *Email {
+func NewEmail(id uuid.UUID) *Email {
 	return &Email{ID: id}
 }
 
@@ -50,7 +50,7 @@ func (e *Email) TitleString() string {
 	return e.String()
 }
 
-func Random() *Email {
+func RandomEmail() *Email {
 	return &Email{
 		ID:         util.UUID(),
 		Recipients: []string{util.RandomString(12), util.RandomString(12)},
@@ -70,7 +70,7 @@ func (e *Email) Strings() []string {
 }
 
 func (e *Email) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{e.Strings()}
+	return EmailFieldDescs.Keys(), [][]string{e.Strings()}
 }
 
 func (e *Email) WebPath(paths ...string) string {
@@ -84,7 +84,7 @@ func (e *Email) ToData() []any {
 	return []any{e.ID, e.Recipients, e.Subject, e.Data, e.Plain, e.HTML, e.UserID, e.Status, e.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var EmailFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "recipients", Title: "Recipients", Description: "", Type: "[]string"},
 	{Key: "subject", Title: "Subject", Description: "", Type: "string"},

@@ -66,7 +66,7 @@ func TeamMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("tmember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tmember.TeamMember{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = tmember.Random()
+			ret = tmember.RandomTeamMember()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = randomTeam.ID
@@ -181,6 +181,6 @@ func tmemberFromForm(r *http.Request, b []byte, setPK bool) (*tmember.TeamMember
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := tmember.FromMap(frm, setPK)
+	ret, _, err := tmember.TeamMemberFromMap(frm, setPK)
 	return ret, err
 }

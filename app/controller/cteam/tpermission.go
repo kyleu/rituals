@@ -54,7 +54,7 @@ func TeamPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("tpermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tpermission.TeamPermission{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = tpermission.Random()
+			ret = tpermission.RandomTeamPermission()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {
 				ret.TeamID = randomTeam.ID
@@ -165,6 +165,6 @@ func tpermissionFromForm(r *http.Request, b []byte, setPK bool) (*tpermission.Te
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := tpermission.FromMap(frm, setPK)
+	ret, _, err := tpermission.TeamPermissionFromMap(frm, setPK)
 	return ret, err
 }

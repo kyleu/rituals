@@ -102,7 +102,7 @@ func TeamCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("team.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &team.Team{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = team.Random()
+			ret = team.RandomTeam()
 		}
 		ps.SetTitleAndData("Create [Team]", ret)
 		ps.Data = ret
@@ -199,6 +199,6 @@ func teamFromForm(r *http.Request, b []byte, setPK bool) (*team.Team, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := team.FromMap(frm, setPK)
+	ret, _, err := team.TeamFromMap(frm, setPK)
 	return ret, err
 }

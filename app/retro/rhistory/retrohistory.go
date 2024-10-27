@@ -29,7 +29,7 @@ type RetroHistory struct {
 	Created   time.Time `json:"created,omitempty"`
 }
 
-func New(slug string) *RetroHistory {
+func NewRetroHistory(slug string) *RetroHistory {
 	return &RetroHistory{Slug: slug}
 }
 
@@ -45,7 +45,7 @@ func (r *RetroHistory) TitleString() string {
 	return r.String()
 }
 
-func Random() *RetroHistory {
+func RandomRetroHistory() *RetroHistory {
 	return &RetroHistory{
 		Slug:      util.RandomString(12),
 		RetroID:   util.UUID(),
@@ -59,7 +59,7 @@ func (r *RetroHistory) Strings() []string {
 }
 
 func (r *RetroHistory) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{r.Strings()}
+	return RetroHistoryFieldDescs.Keys(), [][]string{r.Strings()}
 }
 
 func (r *RetroHistory) WebPath(paths ...string) string {
@@ -73,7 +73,7 @@ func (r *RetroHistory) ToData() []any {
 	return []any{r.Slug, r.RetroID, r.RetroName, r.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var RetroHistoryFieldDescs = util.FieldDescs{
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
 	{Key: "retroName", Title: "Retro Name", Description: "", Type: "string"},

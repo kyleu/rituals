@@ -29,7 +29,7 @@ type StandupHistory struct {
 	Created     time.Time `json:"created,omitempty"`
 }
 
-func New(slug string) *StandupHistory {
+func NewStandupHistory(slug string) *StandupHistory {
 	return &StandupHistory{Slug: slug}
 }
 
@@ -45,7 +45,7 @@ func (s *StandupHistory) TitleString() string {
 	return s.String()
 }
 
-func Random() *StandupHistory {
+func RandomStandupHistory() *StandupHistory {
 	return &StandupHistory{
 		Slug:        util.RandomString(12),
 		StandupID:   util.UUID(),
@@ -59,7 +59,7 @@ func (s *StandupHistory) Strings() []string {
 }
 
 func (s *StandupHistory) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return StandupHistoryFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *StandupHistory) WebPath(paths ...string) string {
@@ -73,7 +73,7 @@ func (s *StandupHistory) ToData() []any {
 	return []any{s.Slug, s.StandupID, s.StandupName, s.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var StandupHistoryFieldDescs = util.FieldDescs{
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
 	{Key: "standupName", Title: "Standup Name", Description: "", Type: "string"},

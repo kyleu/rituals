@@ -35,7 +35,7 @@ type Standup struct {
 	Updated  *time.Time         `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Standup {
+func NewStandup(id uuid.UUID) *Standup {
 	return &Standup{ID: id}
 }
 
@@ -54,7 +54,7 @@ func (s *Standup) TitleString() string {
 	return s.String()
 }
 
-func Random() *Standup {
+func RandomStandup() *Standup {
 	return &Standup{
 		ID:       util.UUID(),
 		Slug:     util.RandomString(12),
@@ -74,7 +74,7 @@ func (s *Standup) Strings() []string {
 }
 
 func (s *Standup) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return StandupFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *Standup) WebPath(paths ...string) string {
@@ -88,7 +88,7 @@ func (s *Standup) ToData() []any {
 	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var StandupFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "title", Title: "Title", Description: "", Type: "string"},

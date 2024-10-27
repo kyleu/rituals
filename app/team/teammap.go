@@ -9,7 +9,7 @@ func (t *Team) ToMap() util.ValueMap {
 	return util.ValueMap{"id": t.ID, "slug": t.Slug, "title": t.Title, "icon": t.Icon, "status": t.Status, "created": t.Created, "updated": t.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Team, util.ValueMap, error) {
+func TeamFromMap(m util.ValueMap, setPK bool) (*Team, util.ValueMap, error) {
 	ret := &Team{}
 	extra := util.ValueMap{}
 	for k, v := range m {

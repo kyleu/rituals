@@ -36,7 +36,7 @@ type Estimate struct {
 	Updated  *time.Time         `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Estimate {
+func NewEstimate(id uuid.UUID) *Estimate {
 	return &Estimate{ID: id}
 }
 
@@ -55,7 +55,7 @@ func (e *Estimate) TitleString() string {
 	return e.String()
 }
 
-func Random() *Estimate {
+func RandomEstimate() *Estimate {
 	return &Estimate{
 		ID:       util.UUID(),
 		Slug:     util.RandomString(12),
@@ -76,7 +76,7 @@ func (e *Estimate) Strings() []string {
 }
 
 func (e *Estimate) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{e.Strings()}
+	return EstimateFieldDescs.Keys(), [][]string{e.Strings()}
 }
 
 func (e *Estimate) WebPath(paths ...string) string {
@@ -90,7 +90,7 @@ func (e *Estimate) ToData() []any {
 	return []any{e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, e.Choices, e.Created, e.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var EstimateFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "title", Title: "Title", Description: "", Type: "string"},

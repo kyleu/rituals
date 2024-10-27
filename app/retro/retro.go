@@ -36,7 +36,7 @@ type Retro struct {
 	Updated    *time.Time         `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Retro {
+func NewRetro(id uuid.UUID) *Retro {
 	return &Retro{ID: id}
 }
 
@@ -55,7 +55,7 @@ func (r *Retro) TitleString() string {
 	return r.String()
 }
 
-func Random() *Retro {
+func RandomRetro() *Retro {
 	return &Retro{
 		ID:         util.UUID(),
 		Slug:       util.RandomString(12),
@@ -76,7 +76,7 @@ func (r *Retro) Strings() []string {
 }
 
 func (r *Retro) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{r.Strings()}
+	return RetroFieldDescs.Keys(), [][]string{r.Strings()}
 }
 
 func (r *Retro) WebPath(paths ...string) string {
@@ -90,7 +90,7 @@ func (r *Retro) ToData() []any {
 	return []any{r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Categories, r.Created, r.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var RetroFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "title", Title: "Title", Description: "", Type: "string"},

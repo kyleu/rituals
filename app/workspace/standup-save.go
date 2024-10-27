@@ -71,7 +71,7 @@ func (s *Service) SaveStandup(ctx context.Context, u *standup.Standup, user uuid
 		return nil, err
 	}
 
-	act := action.NewAction(enum.ModelServiceStandup, u.ID, user, "update", util.ValueMap{}, "")
+	act := action.New(enum.ModelServiceStandup, u.ID, user, "update", util.ValueMap{}, "")
 	err = s.a.Save(ctx, tx, logger, act)
 	if err != nil {
 		return nil, err

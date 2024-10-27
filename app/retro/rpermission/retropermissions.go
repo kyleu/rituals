@@ -122,7 +122,7 @@ func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 }
 
 func (r RetroPermissions) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(r, func(x *RetroPermission, _ int) []string {
+	return RetroPermissionFieldDescs.Keys(), lo.Map(r, func(x *RetroPermission, _ int) []string {
 		return x.Strings()
 	})
 }

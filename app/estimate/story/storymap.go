@@ -11,7 +11,7 @@ func (s *Story) ToMap() util.ValueMap {
 }
 
 //nolint:gocognit
-func FromMap(m util.ValueMap, setPK bool) (*Story, util.ValueMap, error) {
+func StoryFromMap(m util.ValueMap, setPK bool) (*Story, util.ValueMap, error) {
 	ret := &Story{}
 	extra := util.ValueMap{}
 	for k, v := range m {

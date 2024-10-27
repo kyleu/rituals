@@ -10,7 +10,7 @@ func (c *Comment) ToMap() util.ValueMap {
 }
 
 //nolint:gocognit
-func FromMap(m util.ValueMap, setPK bool) (*Comment, util.ValueMap, error) {
+func CommentFromMap(m util.ValueMap, setPK bool) (*Comment, util.ValueMap, error) {
 	ret := &Comment{}
 	extra := util.ValueMap{}
 	for k, v := range m {

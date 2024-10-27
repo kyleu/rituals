@@ -76,7 +76,7 @@ func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistor
 }
 
 func (s StandupHistories) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(s, func(x *StandupHistory, _ int) []string {
+	return StandupHistoryFieldDescs.Keys(), lo.Map(s, func(x *StandupHistory, _ int) []string {
 		return x.Strings()
 	})
 }

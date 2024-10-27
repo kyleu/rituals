@@ -8,7 +8,7 @@ func (r *Report) ToMap() util.ValueMap {
 }
 
 //nolint:gocognit
-func FromMap(m util.ValueMap, setPK bool) (*Report, util.ValueMap, error) {
+func ReportFromMap(m util.ValueMap, setPK bool) (*Report, util.ValueMap, error) {
 	ret := &Report{}
 	extra := util.ValueMap{}
 	for k, v := range m {

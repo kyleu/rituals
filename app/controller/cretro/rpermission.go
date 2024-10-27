@@ -55,7 +55,7 @@ func RetroPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rpermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rpermission.RetroPermission{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = rpermission.Random()
+			ret = rpermission.RandomRetroPermission()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {
 				ret.RetroID = randomRetro.ID
@@ -166,6 +166,6 @@ func rpermissionFromForm(r *http.Request, b []byte, setPK bool) (*rpermission.Re
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := rpermission.FromMap(frm, setPK)
+	ret, _, err := rpermission.RetroPermissionFromMap(frm, setPK)
 	return ret, err
 }

@@ -95,7 +95,7 @@ func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
 }
 
 func (t Teams) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(t, func(x *Team, _ int) []string {
+	return TeamFieldDescs.Keys(), lo.Map(t, func(x *Team, _ int) []string {
 		return x.Strings()
 	})
 }

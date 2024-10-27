@@ -43,7 +43,7 @@ type SprintMember struct {
 	Updated  *time.Time        `json:"updated,omitempty"`
 }
 
-func New(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
+func NewSprintMember(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 	return &SprintMember{SprintID: sprintID, UserID: userID}
 }
 
@@ -66,7 +66,7 @@ func (s *SprintMember) ToPK() *PK {
 	}
 }
 
-func Random() *SprintMember {
+func RandomSprintMember() *SprintMember {
 	return &SprintMember{
 		SprintID: util.UUID(),
 		UserID:   util.UUID(),
@@ -83,7 +83,7 @@ func (s *SprintMember) Strings() []string {
 }
 
 func (s *SprintMember) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return SprintMemberFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *SprintMember) WebPath(paths ...string) string {
@@ -97,7 +97,7 @@ func (s *SprintMember) ToData() []any {
 	return []any{s.SprintID, s.UserID, s.Name, s.Picture, s.Role, s.Created, s.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var SprintMemberFieldDescs = util.FieldDescs{
 	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
 	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},

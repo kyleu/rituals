@@ -41,7 +41,7 @@ type EstimatePermission struct {
 	Created    time.Time `json:"created,omitempty"`
 }
 
-func New(estimateID uuid.UUID, key string, value string) *EstimatePermission {
+func NewEstimatePermission(estimateID uuid.UUID, key string, value string) *EstimatePermission {
 	return &EstimatePermission{EstimateID: estimateID, Key: key, Value: value}
 }
 
@@ -65,7 +65,7 @@ func (e *EstimatePermission) ToPK() *PK {
 	}
 }
 
-func Random() *EstimatePermission {
+func RandomEstimatePermission() *EstimatePermission {
 	return &EstimatePermission{
 		EstimateID: util.UUID(),
 		Key:        util.RandomString(12),
@@ -80,7 +80,7 @@ func (e *EstimatePermission) Strings() []string {
 }
 
 func (e *EstimatePermission) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{e.Strings()}
+	return EstimatePermissionFieldDescs.Keys(), [][]string{e.Strings()}
 }
 
 func (e *EstimatePermission) WebPath(paths ...string) string {
@@ -94,7 +94,7 @@ func (e *EstimatePermission) ToData() []any {
 	return []any{e.EstimateID, e.Key, e.Value, e.Access, e.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var EstimatePermissionFieldDescs = util.FieldDescs{
 	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
 	{Key: "key", Title: "Key", Description: "", Type: "string"},
 	{Key: "value", Title: "Value", Description: "", Type: "string"},

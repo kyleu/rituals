@@ -55,7 +55,7 @@ func (s *Service) SaveTeam(ctx context.Context, t *team.Team, user uuid.UUID, tx
 		return nil, err
 	}
 
-	act := action.NewAction(enum.ModelServiceTeam, t.ID, user, "update", util.ValueMap{}, "")
+	act := action.New(enum.ModelServiceTeam, t.ID, user, "update", util.ValueMap{}, "")
 	err = s.a.Save(ctx, tx, logger, act)
 	if err != nil {
 		return nil, err

@@ -10,7 +10,7 @@ func (s *SprintMember) ToMap() util.ValueMap {
 	return util.ValueMap{"sprintID": s.SprintID, "userID": s.UserID, "name": s.Name, "picture": s.Picture, "role": s.Role, "created": s.Created, "updated": s.Updated}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*SprintMember, util.ValueMap, error) {
+func SprintMemberFromMap(m util.ValueMap, setPK bool) (*SprintMember, util.ValueMap, error) {
 	ret := &SprintMember{}
 	extra := util.ValueMap{}
 	for k, v := range m {

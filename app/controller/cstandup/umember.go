@@ -66,7 +66,7 @@ func StandupMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("umember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &umember.StandupMember{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = umember.Random()
+			ret = umember.RandomStandupMember()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {
 				ret.StandupID = randomStandup.ID
@@ -181,6 +181,6 @@ func umemberFromForm(r *http.Request, b []byte, setPK bool) (*umember.StandupMem
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := umember.FromMap(frm, setPK)
+	ret, _, err := umember.StandupMemberFromMap(frm, setPK)
 	return ret, err
 }

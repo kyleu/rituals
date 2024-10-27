@@ -58,7 +58,7 @@ func (u Users) GetByIDs(ids ...uuid.UUID) Users {
 }
 
 func (u Users) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(u, func(x *User, _ int) []string {
+	return UserFieldDescs.Keys(), lo.Map(u, func(x *User, _ int) []string {
 		return x.Strings()
 	})
 }

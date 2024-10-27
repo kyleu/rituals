@@ -61,7 +61,7 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 	var vals []any
 	var err error
 	if strings.Contains(query, ":") {
-		wc, vals, err = database.QueryFieldDescs(FieldDescs, query, 0)
+		wc, vals, err = database.QueryFieldDescs(StoryFieldDescs, query, 0)
 	} else {
 		wc = searchClause
 		vals = []any{"%" + strings.ToLower(query) + "%"}

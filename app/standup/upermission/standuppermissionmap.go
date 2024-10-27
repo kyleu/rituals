@@ -6,7 +6,7 @@ func (s *StandupPermission) ToMap() util.ValueMap {
 	return util.ValueMap{"standupID": s.StandupID, "key": s.Key, "value": s.Value, "access": s.Access, "created": s.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*StandupPermission, util.ValueMap, error) {
+func StandupPermissionFromMap(m util.ValueMap, setPK bool) (*StandupPermission, util.ValueMap, error) {
 	ret := &StandupPermission{}
 	extra := util.ValueMap{}
 	for k, v := range m {

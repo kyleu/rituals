@@ -36,7 +36,7 @@ type Sprint struct {
 	Updated   *time.Time         `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *Sprint {
+func NewSprint(id uuid.UUID) *Sprint {
 	return &Sprint{ID: id}
 }
 
@@ -55,7 +55,7 @@ func (s *Sprint) TitleString() string {
 	return s.String()
 }
 
-func Random() *Sprint {
+func RandomSprint() *Sprint {
 	return &Sprint{
 		ID:        util.UUID(),
 		Slug:      util.RandomString(12),
@@ -76,7 +76,7 @@ func (s *Sprint) Strings() []string {
 }
 
 func (s *Sprint) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{s.Strings()}
+	return SprintFieldDescs.Keys(), [][]string{s.Strings()}
 }
 
 func (s *Sprint) WebPath(paths ...string) string {
@@ -90,7 +90,7 @@ func (s *Sprint) ToData() []any {
 	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.StartDate, s.EndDate, s.Created, s.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var SprintFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
 	{Key: "title", Title: "Title", Description: "", Type: "string"},

@@ -30,7 +30,7 @@ type User struct {
 	Updated *time.Time `json:"updated,omitempty"`
 }
 
-func New(id uuid.UUID) *User {
+func NewUser(id uuid.UUID) *User {
 	return &User{ID: id}
 }
 
@@ -49,7 +49,7 @@ func (u *User) TitleString() string {
 	return u.String()
 }
 
-func Random() *User {
+func RandomUser() *User {
 	return &User{
 		ID:      util.UUID(),
 		Name:    util.RandomString(12),
@@ -64,7 +64,7 @@ func (u *User) Strings() []string {
 }
 
 func (u *User) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{u.Strings()}
+	return UserFieldDescs.Keys(), [][]string{u.Strings()}
 }
 
 func (u *User) WebPath(paths ...string) string {
@@ -78,7 +78,7 @@ func (u *User) ToData() []any {
 	return []any{u.ID, u.Name, u.Picture, u.Created, u.Updated}
 }
 
-var FieldDescs = util.FieldDescs{
+var UserFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},
 	{Key: "picture", Title: "Picture", Description: "", Type: "string"},

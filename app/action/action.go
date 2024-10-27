@@ -34,7 +34,7 @@ type Action struct {
 	Created time.Time         `json:"created,omitempty"`
 }
 
-func New(id uuid.UUID) *Action {
+func NewAction(id uuid.UUID) *Action {
 	return &Action{ID: id}
 }
 
@@ -50,7 +50,7 @@ func (a *Action) TitleString() string {
 	return a.String()
 }
 
-func Random() *Action {
+func RandomAction() *Action {
 	return &Action{
 		ID:      util.UUID(),
 		Svc:     enum.AllModelServices.Random(),
@@ -68,7 +68,7 @@ func (a *Action) Strings() []string {
 }
 
 func (a *Action) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{a.Strings()}
+	return ActionFieldDescs.Keys(), [][]string{a.Strings()}
 }
 
 func (a *Action) WebPath(paths ...string) string {
@@ -82,7 +82,7 @@ func (a *Action) ToData() []any {
 	return []any{a.ID, a.Svc, a.ModelID, a.UserID, a.Act, a.Content, a.Note, a.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var ActionFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "svc", Title: "Svc", Description: "", Type: "enum(model_service)"},
 	{Key: "modelID", Title: "Model ID", Description: "", Type: "uuid"},

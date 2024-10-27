@@ -66,7 +66,7 @@ func SprintMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("smember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &smember.SprintMember{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = smember.Random()
+			ret = smember.RandomSprintMember()
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {
 				ret.SprintID = randomSprint.ID
@@ -181,6 +181,6 @@ func smemberFromForm(r *http.Request, b []byte, setPK bool) (*smember.SprintMemb
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := smember.FromMap(frm, setPK)
+	ret, _, err := smember.SprintMemberFromMap(frm, setPK)
 	return ret, err
 }
