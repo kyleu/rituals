@@ -1,8 +1,6 @@
 package retro
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -141,5 +139,7 @@ func (r Retros) Random() *Retro {
 }
 
 func (r Retros) Clone() Retros {
-	return slices.Clone(r)
+	return lo.Map(r, func(xx *Retro, _ int) *Retro {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package smember
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -103,5 +101,7 @@ func (s SprintMembers) Random() *SprintMember {
 }
 
 func (s SprintMembers) Clone() SprintMembers {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *SprintMember, _ int) *SprintMember {
+		return xx.Clone()
+	})
 }

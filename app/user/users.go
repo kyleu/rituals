@@ -1,8 +1,6 @@
 package user
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -68,5 +66,7 @@ func (u Users) Random() *User {
 }
 
 func (u Users) Clone() Users {
-	return slices.Clone(u)
+	return lo.Map(u, func(xx *User, _ int) *User {
+		return xx.Clone()
+	})
 }

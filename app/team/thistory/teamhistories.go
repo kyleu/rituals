@@ -1,8 +1,6 @@
 package thistory
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (t TeamHistories) Random() *TeamHistory {
 }
 
 func (t TeamHistories) Clone() TeamHistories {
-	return slices.Clone(t)
+	return lo.Map(t, func(xx *TeamHistory, _ int) *TeamHistory {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package estimate
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -141,5 +139,7 @@ func (e Estimates) Random() *Estimate {
 }
 
 func (e Estimates) Clone() Estimates {
-	return slices.Clone(e)
+	return lo.Map(e, func(xx *Estimate, _ int) *Estimate {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package story
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -104,5 +102,7 @@ func (s Stories) Random() *Story {
 }
 
 func (s Stories) Clone() Stories {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *Story, _ int) *Story {
+		return xx.Clone()
+	})
 }

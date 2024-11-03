@@ -1,8 +1,6 @@
 package upermission
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -132,5 +130,7 @@ func (s StandupPermissions) Random() *StandupPermission {
 }
 
 func (s StandupPermissions) Clone() StandupPermissions {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *StandupPermission, _ int) *StandupPermission {
+		return xx.Clone()
+	})
 }

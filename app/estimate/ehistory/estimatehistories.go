@@ -1,8 +1,6 @@
 package ehistory
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (e EstimateHistories) Random() *EstimateHistory {
 }
 
 func (e EstimateHistories) Clone() EstimateHistories {
-	return slices.Clone(e)
+	return lo.Map(e, func(xx *EstimateHistory, _ int) *EstimateHistory {
+		return xx.Clone()
+	})
 }

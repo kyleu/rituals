@@ -1,8 +1,6 @@
 package umember
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -103,5 +101,7 @@ func (s StandupMembers) Random() *StandupMember {
 }
 
 func (s StandupMembers) Clone() StandupMembers {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *StandupMember, _ int) *StandupMember {
+		return xx.Clone()
+	})
 }

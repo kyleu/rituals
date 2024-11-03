@@ -1,8 +1,6 @@
 package sprint
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -123,5 +121,7 @@ func (s Sprints) Random() *Sprint {
 }
 
 func (s Sprints) Clone() Sprints {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *Sprint, _ int) *Sprint {
+		return xx.Clone()
+	})
 }

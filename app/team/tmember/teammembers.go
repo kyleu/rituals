@@ -1,8 +1,6 @@
 package tmember
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -103,5 +101,7 @@ func (t TeamMembers) Random() *TeamMember {
 }
 
 func (t TeamMembers) Clone() TeamMembers {
-	return slices.Clone(t)
+	return lo.Map(t, func(xx *TeamMember, _ int) *TeamMember {
+		return xx.Clone()
+	})
 }

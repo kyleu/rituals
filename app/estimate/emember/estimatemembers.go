@@ -1,8 +1,6 @@
 package emember
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -103,5 +101,7 @@ func (e EstimateMembers) Random() *EstimateMember {
 }
 
 func (e EstimateMembers) Clone() EstimateMembers {
-	return slices.Clone(e)
+	return lo.Map(e, func(xx *EstimateMember, _ int) *EstimateMember {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package uhistory
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (s StandupHistories) Random() *StandupHistory {
 }
 
 func (s StandupHistories) Clone() StandupHistories {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *StandupHistory, _ int) *StandupHistory {
+		return xx.Clone()
+	})
 }

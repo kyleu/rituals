@@ -1,8 +1,6 @@
 package team
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -105,5 +103,7 @@ func (t Teams) Random() *Team {
 }
 
 func (t Teams) Clone() Teams {
-	return slices.Clone(t)
+	return lo.Map(t, func(xx *Team, _ int) *Team {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package epermission
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -132,5 +130,7 @@ func (e EstimatePermissions) Random() *EstimatePermission {
 }
 
 func (e EstimatePermissions) Clone() EstimatePermissions {
-	return slices.Clone(e)
+	return lo.Map(e, func(xx *EstimatePermission, _ int) *EstimatePermission {
+		return xx.Clone()
+	})
 }

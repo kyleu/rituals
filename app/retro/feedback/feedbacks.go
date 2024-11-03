@@ -1,8 +1,6 @@
 package feedback
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -104,5 +102,7 @@ func (f Feedbacks) Random() *Feedback {
 }
 
 func (f Feedbacks) Clone() Feedbacks {
-	return slices.Clone(f)
+	return lo.Map(f, func(xx *Feedback, _ int) *Feedback {
+		return xx.Clone()
+	})
 }

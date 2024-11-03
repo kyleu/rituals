@@ -1,8 +1,6 @@
 package report
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -104,5 +102,7 @@ func (r Reports) Random() *Report {
 }
 
 func (r Reports) Clone() Reports {
-	return slices.Clone(r)
+	return lo.Map(r, func(xx *Report, _ int) *Report {
+		return xx.Clone()
+	})
 }

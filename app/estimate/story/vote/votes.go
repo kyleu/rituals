@@ -1,8 +1,6 @@
 package vote
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -103,5 +101,7 @@ func (v Votes) Random() *Vote {
 }
 
 func (v Votes) Clone() Votes {
-	return slices.Clone(v)
+	return lo.Map(v, func(xx *Vote, _ int) *Vote {
+		return xx.Clone()
+	})
 }

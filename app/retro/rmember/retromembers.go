@@ -1,8 +1,6 @@
 package rmember
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -103,5 +101,7 @@ func (r RetroMembers) Random() *RetroMember {
 }
 
 func (r RetroMembers) Clone() RetroMembers {
-	return slices.Clone(r)
+	return lo.Map(r, func(xx *RetroMember, _ int) *RetroMember {
+		return xx.Clone()
+	})
 }

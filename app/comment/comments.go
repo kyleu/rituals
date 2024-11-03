@@ -1,8 +1,6 @@
 package comment
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (c Comments) Random() *Comment {
 }
 
 func (c Comments) Clone() Comments {
-	return slices.Clone(c)
+	return lo.Map(c, func(xx *Comment, _ int) *Comment {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package rhistory
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (r RetroHistories) Random() *RetroHistory {
 }
 
 func (r RetroHistories) Clone() RetroHistories {
-	return slices.Clone(r)
+	return lo.Map(r, func(xx *RetroHistory, _ int) *RetroHistory {
+		return xx.Clone()
+	})
 }

@@ -1,8 +1,6 @@
 package spermission
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -132,5 +130,7 @@ func (s SprintPermissions) Random() *SprintPermission {
 }
 
 func (s SprintPermissions) Clone() SprintPermissions {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *SprintPermission, _ int) *SprintPermission {
+		return xx.Clone()
+	})
 }

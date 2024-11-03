@@ -1,8 +1,6 @@
 package standup
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -141,5 +139,7 @@ func (s Standups) Random() *Standup {
 }
 
 func (s Standups) Clone() Standups {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *Standup, _ int) *Standup {
+		return xx.Clone()
+	})
 }

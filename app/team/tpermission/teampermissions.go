@@ -1,8 +1,6 @@
 package tpermission
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -132,5 +130,7 @@ func (t TeamPermissions) Random() *TeamPermission {
 }
 
 func (t TeamPermissions) Clone() TeamPermissions {
-	return slices.Clone(t)
+	return lo.Map(t, func(xx *TeamPermission, _ int) *TeamPermission {
+		return xx.Clone()
+	})
 }

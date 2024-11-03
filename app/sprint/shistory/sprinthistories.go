@@ -1,8 +1,6 @@
 package shistory
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (s SprintHistories) Random() *SprintHistory {
 }
 
 func (s SprintHistories) Clone() SprintHistories {
-	return slices.Clone(s)
+	return lo.Map(s, func(xx *SprintHistory, _ int) *SprintHistory {
+		return xx.Clone()
+	})
 }

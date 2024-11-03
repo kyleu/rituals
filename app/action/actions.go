@@ -1,8 +1,6 @@
 package action
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (a Actions) Random() *Action {
 }
 
 func (a Actions) Clone() Actions {
-	return slices.Clone(a)
+	return lo.Map(a, func(xx *Action, _ int) *Action {
+		return xx.Clone()
+	})
 }

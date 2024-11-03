@@ -1,8 +1,6 @@
 package email
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (e Emails) Random() *Email {
 }
 
 func (e Emails) Clone() Emails {
-	return slices.Clone(e)
+	return lo.Map(e, func(xx *Email, _ int) *Email {
+		return xx.Clone()
+	})
 }

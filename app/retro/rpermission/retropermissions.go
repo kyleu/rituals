@@ -1,8 +1,6 @@
 package rpermission
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -132,5 +130,7 @@ func (r RetroPermissions) Random() *RetroPermission {
 }
 
 func (r RetroPermissions) Clone() RetroPermissions {
-	return slices.Clone(r)
+	return lo.Map(r, func(xx *RetroPermission, _ int) *RetroPermission {
+		return xx.Clone()
+	})
 }
