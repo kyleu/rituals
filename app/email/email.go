@@ -39,7 +39,7 @@ func NewEmail(id uuid.UUID) *Email {
 }
 
 func (e *Email) Clone() *Email {
-	return &Email{e.ID, e.Recipients, e.Subject, e.Data.Clone(), e.Plain, e.HTML, e.UserID, e.Status, e.Created}
+	return &Email{e.ID, e.Recipients[:], e.Subject, e.Data.Clone(), e.Plain, e.HTML, e.UserID, e.Status, e.Created}
 }
 
 func (e *Email) String() string {
