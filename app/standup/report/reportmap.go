@@ -63,3 +63,9 @@ func ReportFromMap(m util.ValueMap, setPK bool) (*Report, util.ValueMap, error) 
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (r *Report) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "id", V: r.ID}, {K: "standupID", V: r.StandupID}, {K: "day", V: r.Day}, {K: "userID", V: r.UserID}, {K: "content", V: r.Content}, {K: "html", V: r.HTML}, {K: "created", V: r.Created}, {K: "updated", V: r.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

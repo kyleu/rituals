@@ -73,6 +73,18 @@ func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories 
 	})
 }
 
+func (s SprintHistories) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *SprintHistory, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s SprintHistories) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *SprintHistory, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s SprintHistories) ToCSV() ([]string, [][]string) {
 	return SprintHistoryFieldDescs.Keys(), lo.Map(s, func(x *SprintHistory, _ int) []string {
 		return x.Strings()

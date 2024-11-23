@@ -55,3 +55,9 @@ func SprintFromMap(m util.ValueMap, setPK bool) (*Sprint, util.ValueMap, error) 
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (s *Sprint) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "id", V: s.ID}, {K: "slug", V: s.Slug}, {K: "title", V: s.Title}, {K: "icon", V: s.Icon}, {K: "status", V: s.Status}, {K: "teamID", V: s.TeamID}, {K: "startDate", V: s.StartDate}, {K: "endDate", V: s.EndDate}, {K: "created", V: s.Created}, {K: "updated", V: s.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

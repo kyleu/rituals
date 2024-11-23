@@ -91,6 +91,18 @@ func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
 	})
 }
 
+func (r Reports) ToMaps() []util.ValueMap {
+	return lo.Map(r, func(x *Report, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (r Reports) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(r, func(x *Report, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (r Reports) ToCSV() ([]string, [][]string) {
 	return ReportFieldDescs.Keys(), lo.Map(r, func(x *Report, _ int) []string {
 		return x.Strings()

@@ -73,6 +73,18 @@ func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
 	})
 }
 
+func (t TeamHistories) ToMaps() []util.ValueMap {
+	return lo.Map(t, func(x *TeamHistory, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (t TeamHistories) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(t, func(x *TeamHistory, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (t TeamHistories) ToCSV() ([]string, [][]string) {
 	return TeamHistoryFieldDescs.Keys(), lo.Map(t, func(x *TeamHistory, _ int) []string {
 		return x.Strings()

@@ -90,6 +90,18 @@ func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 	})
 }
 
+func (s SprintMembers) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *SprintMember, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s SprintMembers) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *SprintMember, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s SprintMembers) ToCSV() ([]string, [][]string) {
 	return SprintMemberFieldDescs.Keys(), lo.Map(s, func(x *SprintMember, _ int) []string {
 		return x.Strings()

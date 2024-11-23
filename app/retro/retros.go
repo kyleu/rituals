@@ -128,6 +128,18 @@ func (r Retros) GetBySprintIDs(sprintIDs ...*uuid.UUID) Retros {
 	})
 }
 
+func (r Retros) ToMaps() []util.ValueMap {
+	return lo.Map(r, func(x *Retro, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (r Retros) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(r, func(x *Retro, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (r Retros) ToCSV() ([]string, [][]string) {
 	return RetroFieldDescs.Keys(), lo.Map(r, func(x *Retro, _ int) []string {
 		return x.Strings()

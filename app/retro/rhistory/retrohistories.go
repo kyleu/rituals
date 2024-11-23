@@ -73,6 +73,18 @@ func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
 	})
 }
 
+func (r RetroHistories) ToMaps() []util.ValueMap {
+	return lo.Map(r, func(x *RetroHistory, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (r RetroHistories) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(r, func(x *RetroHistory, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (r RetroHistories) ToCSV() ([]string, [][]string) {
 	return RetroHistoryFieldDescs.Keys(), lo.Map(r, func(x *RetroHistory, _ int) []string {
 		return x.Strings()

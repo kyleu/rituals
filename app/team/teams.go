@@ -92,6 +92,18 @@ func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
 	})
 }
 
+func (t Teams) ToMaps() []util.ValueMap {
+	return lo.Map(t, func(x *Team, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (t Teams) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(t, func(x *Team, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (t Teams) ToCSV() ([]string, [][]string) {
 	return TeamFieldDescs.Keys(), lo.Map(t, func(x *Team, _ int) []string {
 		return x.Strings()

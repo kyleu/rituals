@@ -91,6 +91,18 @@ func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
 	})
 }
 
+func (f Feedbacks) ToMaps() []util.ValueMap {
+	return lo.Map(f, func(x *Feedback, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (f Feedbacks) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(f, func(x *Feedback, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (f Feedbacks) ToCSV() ([]string, [][]string) {
 	return FeedbackFieldDescs.Keys(), lo.Map(f, func(x *Feedback, _ int) []string {
 		return x.Strings()

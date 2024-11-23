@@ -119,6 +119,18 @@ func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 	})
 }
 
+func (r RetroPermissions) ToMaps() []util.ValueMap {
+	return lo.Map(r, func(x *RetroPermission, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (r RetroPermissions) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(r, func(x *RetroPermission, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (r RetroPermissions) ToCSV() ([]string, [][]string) {
 	return RetroPermissionFieldDescs.Keys(), lo.Map(r, func(x *RetroPermission, _ int) []string {
 		return x.Strings()

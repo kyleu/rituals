@@ -119,6 +119,18 @@ func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
 	})
 }
 
+func (e EstimatePermissions) ToMaps() []util.ValueMap {
+	return lo.Map(e, func(x *EstimatePermission, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (e EstimatePermissions) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(e, func(x *EstimatePermission, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (e EstimatePermissions) ToCSV() ([]string, [][]string) {
 	return EstimatePermissionFieldDescs.Keys(), lo.Map(e, func(x *EstimatePermission, _ int) []string {
 		return x.Strings()

@@ -57,3 +57,9 @@ func EmailFromMap(m util.ValueMap, setPK bool) (*Email, util.ValueMap, error) {
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (e *Email) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "id", V: e.ID}, {K: "recipients", V: e.Recipients}, {K: "subject", V: e.Subject}, {K: "data", V: e.Data}, {K: "plain", V: e.Plain}, {K: "html", V: e.HTML}, {K: "userID", V: e.UserID}, {K: "status", V: e.Status}, {K: "created", V: e.Created}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

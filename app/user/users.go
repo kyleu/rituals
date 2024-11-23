@@ -55,6 +55,18 @@ func (u Users) GetByIDs(ids ...uuid.UUID) Users {
 	})
 }
 
+func (u Users) ToMaps() []util.ValueMap {
+	return lo.Map(u, func(x *User, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (u Users) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(u, func(x *User, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (u Users) ToCSV() ([]string, [][]string) {
 	return UserFieldDescs.Keys(), lo.Map(u, func(x *User, _ int) []string {
 		return x.Strings()

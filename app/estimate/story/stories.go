@@ -91,6 +91,18 @@ func (s Stories) GetByUserIDs(userIDs ...uuid.UUID) Stories {
 	})
 }
 
+func (s Stories) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *Story, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s Stories) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *Story, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s Stories) ToCSV() ([]string, [][]string) {
 	return StoryFieldDescs.Keys(), lo.Map(s, func(x *Story, _ int) []string {
 		return x.Strings()

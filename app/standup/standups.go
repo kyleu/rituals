@@ -128,6 +128,18 @@ func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
 	})
 }
 
+func (s Standups) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *Standup, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s Standups) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *Standup, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s Standups) ToCSV() ([]string, [][]string) {
 	return StandupFieldDescs.Keys(), lo.Map(s, func(x *Standup, _ int) []string {
 		return x.Strings()

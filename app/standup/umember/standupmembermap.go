@@ -57,3 +57,9 @@ func StandupMemberFromMap(m util.ValueMap, setPK bool) (*StandupMember, util.Val
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (s *StandupMember) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "standupID", V: s.StandupID}, {K: "userID", V: s.UserID}, {K: "name", V: s.Name}, {K: "picture", V: s.Picture}, {K: "role", V: s.Role}, {K: "created", V: s.Created}, {K: "updated", V: s.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

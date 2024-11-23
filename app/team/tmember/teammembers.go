@@ -90,6 +90,18 @@ func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
 	})
 }
 
+func (t TeamMembers) ToMaps() []util.ValueMap {
+	return lo.Map(t, func(x *TeamMember, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (t TeamMembers) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(t, func(x *TeamMember, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (t TeamMembers) ToCSV() ([]string, [][]string) {
 	return TeamMemberFieldDescs.Keys(), lo.Map(t, func(x *TeamMember, _ int) []string {
 		return x.Strings()

@@ -90,6 +90,18 @@ func (s StandupMembers) GetByUserIDs(userIDs ...uuid.UUID) StandupMembers {
 	})
 }
 
+func (s StandupMembers) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *StandupMember, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s StandupMembers) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *StandupMember, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s StandupMembers) ToCSV() ([]string, [][]string) {
 	return StandupMemberFieldDescs.Keys(), lo.Map(s, func(x *StandupMember, _ int) []string {
 		return x.Strings()

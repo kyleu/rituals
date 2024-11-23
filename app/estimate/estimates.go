@@ -128,6 +128,18 @@ func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
 	})
 }
 
+func (e Estimates) ToMaps() []util.ValueMap {
+	return lo.Map(e, func(x *Estimate, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (e Estimates) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(e, func(x *Estimate, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (e Estimates) ToCSV() ([]string, [][]string) {
 	return EstimateFieldDescs.Keys(), lo.Map(e, func(x *Estimate, _ int) []string {
 		return x.Strings()

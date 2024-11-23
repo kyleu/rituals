@@ -58,3 +58,9 @@ func FeedbackFromMap(m util.ValueMap, setPK bool) (*Feedback, util.ValueMap, err
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (f *Feedback) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "id", V: f.ID}, {K: "retroID", V: f.RetroID}, {K: "idx", V: f.Idx}, {K: "userID", V: f.UserID}, {K: "category", V: f.Category}, {K: "content", V: f.Content}, {K: "html", V: f.HTML}, {K: "created", V: f.Created}, {K: "updated", V: f.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

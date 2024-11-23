@@ -37,3 +37,9 @@ func UserFromMap(m util.ValueMap, setPK bool) (*User, util.ValueMap, error) {
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (u *User) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "id", V: u.ID}, {K: "name", V: u.Name}, {K: "picture", V: u.Picture}, {K: "created", V: u.Created}, {K: "updated", V: u.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

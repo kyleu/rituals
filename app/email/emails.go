@@ -73,6 +73,18 @@ func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
 	})
 }
 
+func (e Emails) ToMaps() []util.ValueMap {
+	return lo.Map(e, func(x *Email, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (e Emails) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(e, func(x *Email, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (e Emails) ToCSV() ([]string, [][]string) {
 	return EmailFieldDescs.Keys(), lo.Map(e, func(x *Email, _ int) []string {
 		return x.Strings()

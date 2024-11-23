@@ -119,6 +119,18 @@ func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 	})
 }
 
+func (s StandupPermissions) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *StandupPermission, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s StandupPermissions) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *StandupPermission, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s StandupPermissions) ToCSV() ([]string, [][]string) {
 	return StandupPermissionFieldDescs.Keys(), lo.Map(s, func(x *StandupPermission, _ int) []string {
 		return x.Strings()

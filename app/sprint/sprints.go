@@ -110,6 +110,18 @@ func (s Sprints) GetByTeamIDs(teamIDs ...*uuid.UUID) Sprints {
 	})
 }
 
+func (s Sprints) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *Sprint, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s Sprints) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *Sprint, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s Sprints) ToCSV() ([]string, [][]string) {
 	return SprintFieldDescs.Keys(), lo.Map(s, func(x *Sprint, _ int) []string {
 		return x.Strings()

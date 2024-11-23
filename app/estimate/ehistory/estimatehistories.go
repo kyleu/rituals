@@ -73,6 +73,18 @@ func (e EstimateHistories) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateHi
 	})
 }
 
+func (e EstimateHistories) ToMaps() []util.ValueMap {
+	return lo.Map(e, func(x *EstimateHistory, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (e EstimateHistories) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(e, func(x *EstimateHistory, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (e EstimateHistories) ToCSV() ([]string, [][]string) {
 	return EstimateHistoryFieldDescs.Keys(), lo.Map(e, func(x *EstimateHistory, _ int) []string {
 		return x.Strings()

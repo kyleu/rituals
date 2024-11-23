@@ -57,3 +57,9 @@ func RetroMemberFromMap(m util.ValueMap, setPK bool) (*RetroMember, util.ValueMa
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (r *RetroMember) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "retroID", V: r.RetroID}, {K: "userID", V: r.UserID}, {K: "name", V: r.Name}, {K: "picture", V: r.Picture}, {K: "role", V: r.Role}, {K: "created", V: r.Created}, {K: "updated", V: r.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

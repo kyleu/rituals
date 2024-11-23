@@ -90,6 +90,18 @@ func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
 	})
 }
 
+func (r RetroMembers) ToMaps() []util.ValueMap {
+	return lo.Map(r, func(x *RetroMember, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (r RetroMembers) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(r, func(x *RetroMember, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (r RetroMembers) ToCSV() ([]string, [][]string) {
 	return RetroMemberFieldDescs.Keys(), lo.Map(r, func(x *RetroMember, _ int) []string {
 		return x.Strings()

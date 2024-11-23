@@ -57,3 +57,9 @@ func EstimateMemberFromMap(m util.ValueMap, setPK bool) (*EstimateMember, util.V
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (e *EstimateMember) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "estimateID", V: e.EstimateID}, {K: "userID", V: e.UserID}, {K: "name", V: e.Name}, {K: "picture", V: e.Picture}, {K: "role", V: e.Role}, {K: "created", V: e.Created}, {K: "updated", V: e.Updated}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

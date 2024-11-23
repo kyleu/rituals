@@ -43,3 +43,9 @@ func RetroPermissionFromMap(m util.ValueMap, setPK bool) (*RetroPermission, util
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (r *RetroPermission) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "retroID", V: r.RetroID}, {K: "key", V: r.Key}, {K: "value", V: r.Value}, {K: "access", V: r.Access}, {K: "created", V: r.Created}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

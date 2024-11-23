@@ -119,6 +119,18 @@ func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
 	})
 }
 
+func (t TeamPermissions) ToMaps() []util.ValueMap {
+	return lo.Map(t, func(x *TeamPermission, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (t TeamPermissions) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(t, func(x *TeamPermission, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (t TeamPermissions) ToCSV() ([]string, [][]string) {
 	return TeamPermissionFieldDescs.Keys(), lo.Map(t, func(x *TeamPermission, _ int) []string {
 		return x.Strings()

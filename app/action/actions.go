@@ -73,6 +73,18 @@ func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
 	})
 }
 
+func (a Actions) ToMaps() []util.ValueMap {
+	return lo.Map(a, func(x *Action, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (a Actions) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(a, func(x *Action, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (a Actions) ToCSV() ([]string, [][]string) {
 	return ActionFieldDescs.Keys(), lo.Map(a, func(x *Action, _ int) []string {
 		return x.Strings()

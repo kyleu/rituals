@@ -63,3 +63,9 @@ func CommentFromMap(m util.ValueMap, setPK bool) (*Comment, util.ValueMap, error
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (c *Comment) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "id", V: c.ID}, {K: "svc", V: c.Svc}, {K: "modelID", V: c.ModelID}, {K: "userID", V: c.UserID}, {K: "content", V: c.Content}, {K: "html", V: c.HTML}, {K: "created", V: c.Created}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

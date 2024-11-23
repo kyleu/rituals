@@ -37,3 +37,9 @@ func EstimateHistoryFromMap(m util.ValueMap, setPK bool) (*EstimateHistory, util
 	// $PF_SECTION_END(extrachecks)$
 	return ret, extra, nil
 }
+
+//nolint:lll
+func (e *EstimateHistory) ToOrderedMap() *util.OrderedMap[any] {
+	pairs := util.OrderedPairs[any]{{K: "slug", V: e.Slug}, {K: "estimateID", V: e.EstimateID}, {K: "estimateName", V: e.EstimateName}, {K: "created", V: e.Created}}
+	return util.NewOrderedMap[any](false, 4, pairs...)
+}

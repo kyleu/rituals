@@ -73,6 +73,18 @@ func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistor
 	})
 }
 
+func (s StandupHistories) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *StandupHistory, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s StandupHistories) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *StandupHistory, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s StandupHistories) ToCSV() ([]string, [][]string) {
 	return StandupHistoryFieldDescs.Keys(), lo.Map(s, func(x *StandupHistory, _ int) []string {
 		return x.Strings()

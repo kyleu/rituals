@@ -90,6 +90,18 @@ func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
 	})
 }
 
+func (v Votes) ToMaps() []util.ValueMap {
+	return lo.Map(v, func(x *Vote, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (v Votes) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(v, func(x *Vote, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (v Votes) ToCSV() ([]string, [][]string) {
 	return VoteFieldDescs.Keys(), lo.Map(v, func(x *Vote, _ int) []string {
 		return x.Strings()

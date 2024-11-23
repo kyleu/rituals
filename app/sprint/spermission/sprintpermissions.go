@@ -119,6 +119,18 @@ func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 	})
 }
 
+func (s SprintPermissions) ToMaps() []util.ValueMap {
+	return lo.Map(s, func(x *SprintPermission, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (s SprintPermissions) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(s, func(x *SprintPermission, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (s SprintPermissions) ToCSV() ([]string, [][]string) {
 	return SprintPermissionFieldDescs.Keys(), lo.Map(s, func(x *SprintPermission, _ int) []string {
 		return x.Strings()

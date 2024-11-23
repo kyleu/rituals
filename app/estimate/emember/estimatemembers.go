@@ -90,6 +90,18 @@ func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
 	})
 }
 
+func (e EstimateMembers) ToMaps() []util.ValueMap {
+	return lo.Map(e, func(x *EstimateMember, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (e EstimateMembers) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(e, func(x *EstimateMember, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (e EstimateMembers) ToCSV() ([]string, [][]string) {
 	return EstimateMemberFieldDescs.Keys(), lo.Map(e, func(x *EstimateMember, _ int) []string {
 		return x.Strings()

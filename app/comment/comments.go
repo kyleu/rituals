@@ -73,6 +73,18 @@ func (c Comments) GetByUserIDs(userIDs ...uuid.UUID) Comments {
 	})
 }
 
+func (c Comments) ToMaps() []util.ValueMap {
+	return lo.Map(c, func(x *Comment, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (c Comments) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(c, func(x *Comment, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (c Comments) ToCSV() ([]string, [][]string) {
 	return CommentFieldDescs.Keys(), lo.Map(c, func(x *Comment, _ int) []string {
 		return x.Strings()
