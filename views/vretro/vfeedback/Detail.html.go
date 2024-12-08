@@ -225,7 +225,7 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <th class="shrink" title="HTML code, in string form">HTML</th>
           <td>`)
 //line views/vretro/vfeedback/Detail.html:71
-	view.StreamFormat(qw422016, p.Model.HTML, "html")
+	view.StreamFormatLang(qw422016, p.Model.HTML, "html")
 //line views/vretro/vfeedback/Detail.html:71
 	qw422016.N().S(`</td>
         </tr>
