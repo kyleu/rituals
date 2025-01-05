@@ -4,7 +4,6 @@ import (
 	"sync"
 
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 
 	"github.com/kyleu/rituals/app/util"
 )
@@ -36,5 +35,5 @@ func RegistryGet(key string) (*Service, error) {
 }
 
 func RegistryKeys() []string {
-	return util.ArraySorted(lo.Keys(serviceRegistry))
+	return util.MapKeysSorted(serviceRegistry)
 }
