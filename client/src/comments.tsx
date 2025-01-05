@@ -1,4 +1,4 @@
-import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import {JSX} from "./jsx";
 import {Comment, initCommentsLink} from "./comment";
 import {relativeTime, utc} from "./time";
 import {svg} from "./util";

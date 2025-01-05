@@ -1,4 +1,4 @@
-import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import {JSX} from "./jsx";
 import type {Vote} from "./vote";
 import type {Member} from "./member";
 

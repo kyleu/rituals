@@ -1,4 +1,4 @@
-import {JSX} from "./jsx"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import {JSX} from "./jsx";
 import {svg, svgRef} from "./util";
 
 export function memberPictureFor(picture: string, size: number, cls: string) {
