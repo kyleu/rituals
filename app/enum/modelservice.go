@@ -83,7 +83,7 @@ func (m *ModelService) Scan(value any) error {
 		return nil
 	}
 	if converted, err := driver.String.ConvertValue(value); err == nil {
-		if str, ok := converted.(string); ok {
+		if str, err := util.Cast[string](converted); err == nil {
 			*m = AllModelServices.Get(str, nil)
 			return nil
 		}

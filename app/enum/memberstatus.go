@@ -77,7 +77,7 @@ func (m *MemberStatus) Scan(value any) error {
 		return nil
 	}
 	if converted, err := driver.String.ConvertValue(value); err == nil {
-		if str, ok := converted.(string); ok {
+		if str, err := util.Cast[string](converted); err == nil {
 			*m = AllMemberStatuses.Get(str, nil)
 			return nil
 		}

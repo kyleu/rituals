@@ -77,7 +77,7 @@ func (s *SessionStatus) Scan(value any) error {
 		return nil
 	}
 	if converted, err := driver.String.ConvertValue(value); err == nil {
-		if str, ok := converted.(string); ok {
+		if str, err := util.Cast[string](converted); err == nil {
 			*s = AllSessionStatuses.Get(str, nil)
 			return nil
 		}
