@@ -11,7 +11,7 @@ import {modalInit} from "./modal";
 import {tagsInit} from "./tags";
 import {formInit} from "./form";
 import {themeInit} from "./theme";
-import {socketInit} from "./socket";
+import {Message, socketInit} from "./socket";
 import {appInit} from "./app";
 
 declare global {
