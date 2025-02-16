@@ -71,7 +71,11 @@ func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vdatabase/List.html:25
 		components.StreamSVGIcon(qw422016, `database`, ps)
 //line views/vdatabase/List.html:25
-		qw422016.N().S(` `)
+		qw422016.N().S(`</a> <a href="/admin/database/`)
+//line views/vdatabase/List.html:25
+		qw422016.E().S(key)
+//line views/vdatabase/List.html:25
+		qw422016.N().S(`">`)
 //line views/vdatabase/List.html:25
 		qw422016.E().S(svc.Key)
 //line views/vdatabase/List.html:25

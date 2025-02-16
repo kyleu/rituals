@@ -37,12 +37,18 @@
           <td>{%= view.String(model.Icon) %}</td>
           <td>{%s model.Status.String() %}</td>
           <td class="nowrap">
-            {%= view.UUID(model.TeamID) %}{% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.TeamID != nil %}<a title="Team" href="{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+            {% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}
+            {%s x.TitleString() %} {% if model.TeamID != nil %}<a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+            {% else %}
+            {%= view.UUID(model.TeamID) %}
+            {% endif %}
           </td>
           <td class="nowrap">
-            {%= view.UUID(model.SprintID) %}{% if model.SprintID != nil %}{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %} ({%s x.TitleString() %}){% endif %}{% endif %}
-            {% if model.SprintID != nil %}<a title="Sprint" href="{% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
+            {% if x := sprintsBySprintID.Get(*model.SprintID); x != nil %}
+            {%s x.TitleString() %} {% if model.SprintID != nil %}<a title="Sprint" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
+            {% else %}
+            {%= view.UUID(model.SprintID) %}
+            {% endif %}
           </td>
           <td>{%= view.StringArray(model.Choices) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

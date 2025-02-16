@@ -134,79 +134,84 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vretro/vrhistory/Detail.html:44
-	view.StreamUUID(qw422016, &p.Model.RetroID)
-//line views/vretro/vrhistory/Detail.html:44
-	if p.RetroByRetroID != nil {
-//line views/vretro/vrhistory/Detail.html:44
-		qw422016.N().S(` (`)
-//line views/vretro/vrhistory/Detail.html:44
-		qw422016.E().S(p.RetroByRetroID.TitleString())
-//line views/vretro/vrhistory/Detail.html:44
-		qw422016.N().S(`)`)
-//line views/vretro/vrhistory/Detail.html:44
-	}
-//line views/vretro/vrhistory/Detail.html:44
-	qw422016.N().S(`
-            <a title="Retro" href="`)
-//line views/vretro/vrhistory/Detail.html:45
 	if x := p.RetroByRetroID; x != nil {
+//line views/vretro/vrhistory/Detail.html:44
+		qw422016.N().S(`
+            `)
+//line views/vretro/vrhistory/Detail.html:45
+		qw422016.E().S(x.TitleString())
+//line views/vretro/vrhistory/Detail.html:45
+		qw422016.N().S(` <a title="Retro" href="`)
 //line views/vretro/vrhistory/Detail.html:45
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vretro/vrhistory/Detail.html:45
+		qw422016.N().S(`">`)
+//line views/vretro/vrhistory/Detail.html:45
+		components.StreamSVGLink(qw422016, `retro`, ps)
+//line views/vretro/vrhistory/Detail.html:45
+		qw422016.N().S(`</a>
+            `)
+//line views/vretro/vrhistory/Detail.html:46
+	} else {
+//line views/vretro/vrhistory/Detail.html:46
+		qw422016.N().S(`
+            `)
+//line views/vretro/vrhistory/Detail.html:47
+		view.StreamUUID(qw422016, &p.Model.RetroID)
+//line views/vretro/vrhistory/Detail.html:47
+		qw422016.N().S(`
+            `)
+//line views/vretro/vrhistory/Detail.html:48
 	}
-//line views/vretro/vrhistory/Detail.html:45
-	qw422016.N().S(`">`)
-//line views/vretro/vrhistory/Detail.html:45
-	components.StreamSVGLink(qw422016, `retro`, ps)
-//line views/vretro/vrhistory/Detail.html:45
-	qw422016.N().S(`</a>
+//line views/vretro/vrhistory/Detail.html:48
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Retro Name</th>
           <td>`)
-//line views/vretro/vrhistory/Detail.html:50
+//line views/vretro/vrhistory/Detail.html:53
 	view.StreamString(qw422016, p.Model.RetroName)
-//line views/vretro/vrhistory/Detail.html:50
+//line views/vretro/vrhistory/Detail.html:53
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:57
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vretro/vrhistory/Detail.html:54
+//line views/vretro/vrhistory/Detail.html:57
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 }
 
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	StreamDetailTable(qw422016, p, ps)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 }
 
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	WriteDetailTable(qb422016, p, ps)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	qs422016 := string(qb422016.B)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 	return qs422016
-//line views/vretro/vrhistory/Detail.html:59
+//line views/vretro/vrhistory/Detail.html:62
 }

@@ -134,79 +134,84 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vteam/vthistory/Detail.html:44
-	view.StreamUUID(qw422016, &p.Model.TeamID)
-//line views/vteam/vthistory/Detail.html:44
-	if p.TeamByTeamID != nil {
-//line views/vteam/vthistory/Detail.html:44
-		qw422016.N().S(` (`)
-//line views/vteam/vthistory/Detail.html:44
-		qw422016.E().S(p.TeamByTeamID.TitleString())
-//line views/vteam/vthistory/Detail.html:44
-		qw422016.N().S(`)`)
-//line views/vteam/vthistory/Detail.html:44
-	}
-//line views/vteam/vthistory/Detail.html:44
-	qw422016.N().S(`
-            <a title="Team" href="`)
-//line views/vteam/vthistory/Detail.html:45
 	if x := p.TeamByTeamID; x != nil {
+//line views/vteam/vthistory/Detail.html:44
+		qw422016.N().S(`
+            `)
+//line views/vteam/vthistory/Detail.html:45
+		qw422016.E().S(x.TitleString())
+//line views/vteam/vthistory/Detail.html:45
+		qw422016.N().S(` <a title="Team" href="`)
 //line views/vteam/vthistory/Detail.html:45
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vteam/vthistory/Detail.html:45
+		qw422016.N().S(`">`)
+//line views/vteam/vthistory/Detail.html:45
+		components.StreamSVGLink(qw422016, `team`, ps)
+//line views/vteam/vthistory/Detail.html:45
+		qw422016.N().S(`</a>
+            `)
+//line views/vteam/vthistory/Detail.html:46
+	} else {
+//line views/vteam/vthistory/Detail.html:46
+		qw422016.N().S(`
+            `)
+//line views/vteam/vthistory/Detail.html:47
+		view.StreamUUID(qw422016, &p.Model.TeamID)
+//line views/vteam/vthistory/Detail.html:47
+		qw422016.N().S(`
+            `)
+//line views/vteam/vthistory/Detail.html:48
 	}
-//line views/vteam/vthistory/Detail.html:45
-	qw422016.N().S(`">`)
-//line views/vteam/vthistory/Detail.html:45
-	components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vteam/vthistory/Detail.html:45
-	qw422016.N().S(`</a>
+//line views/vteam/vthistory/Detail.html:48
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Team Name</th>
           <td>`)
-//line views/vteam/vthistory/Detail.html:50
+//line views/vteam/vthistory/Detail.html:53
 	view.StreamString(qw422016, p.Model.TeamName)
-//line views/vteam/vthistory/Detail.html:50
+//line views/vteam/vthistory/Detail.html:53
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vteam/vthistory/Detail.html:54
+//line views/vteam/vthistory/Detail.html:57
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vteam/vthistory/Detail.html:54
+//line views/vteam/vthistory/Detail.html:57
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 }
 
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	StreamDetailTable(qw422016, p, ps)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 }
 
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	WriteDetailTable(qb422016, p, ps)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	qs422016 := string(qb422016.B)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 	return qs422016
-//line views/vteam/vthistory/Detail.html:59
+//line views/vteam/vthistory/Detail.html:62
 }

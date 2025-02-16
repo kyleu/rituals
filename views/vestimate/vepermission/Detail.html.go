@@ -126,95 +126,100 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vestimate/vepermission/Detail.html:40
-	view.StreamUUID(qw422016, &p.Model.EstimateID)
-//line views/vestimate/vepermission/Detail.html:40
-	if p.EstimateByEstimateID != nil {
-//line views/vestimate/vepermission/Detail.html:40
-		qw422016.N().S(` (`)
-//line views/vestimate/vepermission/Detail.html:40
-		qw422016.E().S(p.EstimateByEstimateID.TitleString())
-//line views/vestimate/vepermission/Detail.html:40
-		qw422016.N().S(`)`)
-//line views/vestimate/vepermission/Detail.html:40
-	}
-//line views/vestimate/vepermission/Detail.html:40
-	qw422016.N().S(`
-            <a title="Estimate" href="`)
-//line views/vestimate/vepermission/Detail.html:41
 	if x := p.EstimateByEstimateID; x != nil {
+//line views/vestimate/vepermission/Detail.html:40
+		qw422016.N().S(`
+            `)
+//line views/vestimate/vepermission/Detail.html:41
+		qw422016.E().S(x.TitleString())
+//line views/vestimate/vepermission/Detail.html:41
+		qw422016.N().S(` <a title="Estimate" href="`)
 //line views/vestimate/vepermission/Detail.html:41
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vestimate/vepermission/Detail.html:41
+		qw422016.N().S(`">`)
+//line views/vestimate/vepermission/Detail.html:41
+		components.StreamSVGLink(qw422016, `estimate`, ps)
+//line views/vestimate/vepermission/Detail.html:41
+		qw422016.N().S(`</a>
+            `)
+//line views/vestimate/vepermission/Detail.html:42
+	} else {
+//line views/vestimate/vepermission/Detail.html:42
+		qw422016.N().S(`
+            `)
+//line views/vestimate/vepermission/Detail.html:43
+		view.StreamUUID(qw422016, &p.Model.EstimateID)
+//line views/vestimate/vepermission/Detail.html:43
+		qw422016.N().S(`
+            `)
+//line views/vestimate/vepermission/Detail.html:44
 	}
-//line views/vestimate/vepermission/Detail.html:41
-	qw422016.N().S(`">`)
-//line views/vestimate/vepermission/Detail.html:41
-	components.StreamSVGLink(qw422016, `estimate`, ps)
-//line views/vestimate/vepermission/Detail.html:41
-	qw422016.N().S(`</a>
+//line views/vestimate/vepermission/Detail.html:44
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Key</th>
           <td>`)
-//line views/vestimate/vepermission/Detail.html:46
+//line views/vestimate/vepermission/Detail.html:49
 	view.StreamString(qw422016, p.Model.Key)
-//line views/vestimate/vepermission/Detail.html:46
+//line views/vestimate/vepermission/Detail.html:49
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Value</th>
           <td>`)
-//line views/vestimate/vepermission/Detail.html:50
+//line views/vestimate/vepermission/Detail.html:53
 	view.StreamString(qw422016, p.Model.Value)
-//line views/vestimate/vepermission/Detail.html:50
+//line views/vestimate/vepermission/Detail.html:53
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Access</th>
           <td>`)
-//line views/vestimate/vepermission/Detail.html:54
+//line views/vestimate/vepermission/Detail.html:57
 	view.StreamString(qw422016, p.Model.Access)
-//line views/vestimate/vepermission/Detail.html:54
+//line views/vestimate/vepermission/Detail.html:57
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vestimate/vepermission/Detail.html:58
+//line views/vestimate/vepermission/Detail.html:61
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vestimate/vepermission/Detail.html:58
+//line views/vestimate/vepermission/Detail.html:61
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 }
 
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	StreamDetailTable(qw422016, p, ps)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 }
 
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	WriteDetailTable(qb422016, p, ps)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 	return qs422016
-//line views/vestimate/vepermission/Detail.html:63
+//line views/vestimate/vepermission/Detail.html:66
 }

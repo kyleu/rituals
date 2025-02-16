@@ -112,100 +112,105 @@ func StreamTable(qw422016 *qt422016.Writer, models action.Actions, usersByUserID
           <td class="nowrap">
             `)
 //line views/vaction/Table.html:35
-		view.StreamUUID(qw422016, &model.UserID)
-//line views/vaction/Table.html:35
 		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vaction/Table.html:35
-			qw422016.N().S(` (`)
-//line views/vaction/Table.html:35
-			qw422016.E().S(x.TitleString())
-//line views/vaction/Table.html:35
-			qw422016.N().S(`)`)
-//line views/vaction/Table.html:35
-		}
-//line views/vaction/Table.html:35
-		qw422016.N().S(`
-            <a title="User" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vaction/Table.html:36
-		if x := usersByUserID.Get(model.UserID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vaction/Table.html:36
+			qw422016.N().S(` <a title="User" href="`)
 //line views/vaction/Table.html:36
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vaction/Table.html:36
+			qw422016.N().S(`">`)
+//line views/vaction/Table.html:36
+			components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vaction/Table.html:36
+			qw422016.N().S(`</a>
+            `)
+//line views/vaction/Table.html:37
+		} else {
+//line views/vaction/Table.html:37
+			qw422016.N().S(`
+            `)
+//line views/vaction/Table.html:38
+			view.StreamUUID(qw422016, &model.UserID)
+//line views/vaction/Table.html:38
+			qw422016.N().S(`
+            `)
+//line views/vaction/Table.html:39
 		}
-//line views/vaction/Table.html:36
-		qw422016.N().S(`">`)
-//line views/vaction/Table.html:36
-		components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vaction/Table.html:36
-		qw422016.N().S(`</a>
+//line views/vaction/Table.html:39
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vaction/Table.html:38
+//line views/vaction/Table.html:41
 		view.StreamString(qw422016, model.Act)
-//line views/vaction/Table.html:38
+//line views/vaction/Table.html:41
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vaction/Table.html:39
+//line views/vaction/Table.html:42
 		components.StreamJSON(qw422016, model.Content)
-//line views/vaction/Table.html:39
+//line views/vaction/Table.html:42
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vaction/Table.html:40
+//line views/vaction/Table.html:43
 		view.StreamString(qw422016, model.Note)
-//line views/vaction/Table.html:40
+//line views/vaction/Table.html:43
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vaction/Table.html:41
+//line views/vaction/Table.html:44
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vaction/Table.html:41
+//line views/vaction/Table.html:44
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vaction/Table.html:43
+//line views/vaction/Table.html:46
 	}
-//line views/vaction/Table.html:43
+//line views/vaction/Table.html:46
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vaction/Table.html:47
+//line views/vaction/Table.html:50
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vaction/Table.html:47
+//line views/vaction/Table.html:50
 		qw422016.N().S(`  <hr />
   `)
-//line views/vaction/Table.html:49
+//line views/vaction/Table.html:52
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vaction/Table.html:49
+//line views/vaction/Table.html:52
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vaction/Table.html:51
+//line views/vaction/Table.html:54
 	}
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 }
 
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 func WriteTable(qq422016 qtio422016.Writer, models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	StreamTable(qw422016, models, usersByUserID, params, as, ps, paths...)
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 }
 
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 func Table(models action.Actions, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	WriteTable(qb422016, models, usersByUserID, params, as, ps, paths...)
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	qs422016 := string(qb422016.B)
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 	return qs422016
-//line views/vaction/Table.html:52
+//line views/vaction/Table.html:55
 }

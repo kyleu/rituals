@@ -81,90 +81,95 @@ func StreamTable(qw422016 *qt422016.Writer, models thistory.TeamHistories, teams
           <td class="nowrap">
             `)
 //line views/vteam/vthistory/Table.html:28
-		view.StreamUUID(qw422016, &model.TeamID)
-//line views/vteam/vthistory/Table.html:28
 		if x := teamsByTeamID.Get(model.TeamID); x != nil {
 //line views/vteam/vthistory/Table.html:28
-			qw422016.N().S(` (`)
-//line views/vteam/vthistory/Table.html:28
-			qw422016.E().S(x.TitleString())
-//line views/vteam/vthistory/Table.html:28
-			qw422016.N().S(`)`)
-//line views/vteam/vthistory/Table.html:28
-		}
-//line views/vteam/vthistory/Table.html:28
-		qw422016.N().S(`
-            <a title="Team" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vteam/vthistory/Table.html:29
-		if x := teamsByTeamID.Get(model.TeamID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vteam/vthistory/Table.html:29
+			qw422016.N().S(` <a title="Team" href="`)
 //line views/vteam/vthistory/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vteam/vthistory/Table.html:29
+			qw422016.N().S(`">`)
+//line views/vteam/vthistory/Table.html:29
+			components.StreamSVGLink(qw422016, `team`, ps)
+//line views/vteam/vthistory/Table.html:29
+			qw422016.N().S(`</a>
+            `)
+//line views/vteam/vthistory/Table.html:30
+		} else {
+//line views/vteam/vthistory/Table.html:30
+			qw422016.N().S(`
+            `)
+//line views/vteam/vthistory/Table.html:31
+			view.StreamUUID(qw422016, &model.TeamID)
+//line views/vteam/vthistory/Table.html:31
+			qw422016.N().S(`
+            `)
+//line views/vteam/vthistory/Table.html:32
 		}
-//line views/vteam/vthistory/Table.html:29
-		qw422016.N().S(`">`)
-//line views/vteam/vthistory/Table.html:29
-		components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vteam/vthistory/Table.html:29
-		qw422016.N().S(`</a>
+//line views/vteam/vthistory/Table.html:32
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vteam/vthistory/Table.html:31
+//line views/vteam/vthistory/Table.html:34
 		view.StreamString(qw422016, model.TeamName)
-//line views/vteam/vthistory/Table.html:31
+//line views/vteam/vthistory/Table.html:34
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vteam/vthistory/Table.html:32
+//line views/vteam/vthistory/Table.html:35
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vteam/vthistory/Table.html:32
+//line views/vteam/vthistory/Table.html:35
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vteam/vthistory/Table.html:34
+//line views/vteam/vthistory/Table.html:37
 	}
-//line views/vteam/vthistory/Table.html:34
+//line views/vteam/vthistory/Table.html:37
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vteam/vthistory/Table.html:38
+//line views/vteam/vthistory/Table.html:41
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vteam/vthistory/Table.html:38
+//line views/vteam/vthistory/Table.html:41
 		qw422016.N().S(`  <hr />
   `)
-//line views/vteam/vthistory/Table.html:40
+//line views/vteam/vthistory/Table.html:43
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vteam/vthistory/Table.html:40
+//line views/vteam/vthistory/Table.html:43
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vteam/vthistory/Table.html:42
+//line views/vteam/vthistory/Table.html:45
 	}
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 }
 
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 func WriteTable(qq422016 qtio422016.Writer, models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	StreamTable(qw422016, models, teamsByTeamID, params, as, ps, paths...)
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 }
 
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 func Table(models thistory.TeamHistories, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	WriteTable(qb422016, models, teamsByTeamID, params, as, ps, paths...)
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	qs422016 := string(qb422016.B)
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 	return qs422016
-//line views/vteam/vthistory/Table.html:43
+//line views/vteam/vthistory/Table.html:46
 }

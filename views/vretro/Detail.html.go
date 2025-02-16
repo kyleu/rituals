@@ -193,39 +193,44 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vretro/Detail.html:79
-	view.StreamUUID(qw422016, p.Model.TeamID)
+	if x := p.TeamByTeamID; x != nil {
 //line views/vretro/Detail.html:79
-	if p.TeamByTeamID != nil {
-//line views/vretro/Detail.html:79
-		qw422016.N().S(` (`)
-//line views/vretro/Detail.html:79
-		qw422016.E().S(p.TeamByTeamID.TitleString())
-//line views/vretro/Detail.html:79
-		qw422016.N().S(`)`)
-//line views/vretro/Detail.html:79
-	}
-//line views/vretro/Detail.html:79
-	qw422016.N().S(`
+		qw422016.N().S(`
             `)
 //line views/vretro/Detail.html:80
-	if p.Model.TeamID != nil {
+		qw422016.E().S(x.TitleString())
 //line views/vretro/Detail.html:80
-		qw422016.N().S(`<a title="Team" href="`)
+		qw422016.N().S(` `)
 //line views/vretro/Detail.html:80
-		if x := p.TeamByTeamID; x != nil {
+		if p.Model.TeamID != nil {
+//line views/vretro/Detail.html:80
+			qw422016.N().S(`<a title="Team" href="`)
 //line views/vretro/Detail.html:80
 			qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vretro/Detail.html:80
+			qw422016.N().S(`">`)
+//line views/vretro/Detail.html:80
+			components.StreamSVGLink(qw422016, `team`, ps)
+//line views/vretro/Detail.html:80
+			qw422016.N().S(`</a>`)
+//line views/vretro/Detail.html:80
 		}
 //line views/vretro/Detail.html:80
-		qw422016.N().S(`">`)
-//line views/vretro/Detail.html:80
-		components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vretro/Detail.html:80
-		qw422016.N().S(`</a>`)
-//line views/vretro/Detail.html:80
+		qw422016.N().S(`
+            `)
+//line views/vretro/Detail.html:81
+	} else {
+//line views/vretro/Detail.html:81
+		qw422016.N().S(`
+            `)
+//line views/vretro/Detail.html:82
+		view.StreamUUID(qw422016, p.Model.TeamID)
+//line views/vretro/Detail.html:82
+		qw422016.N().S(`
+            `)
+//line views/vretro/Detail.html:83
 	}
-//line views/vretro/Detail.html:80
+//line views/vretro/Detail.html:83
 	qw422016.N().S(`
           </td>
         </tr>
@@ -233,340 +238,345 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td class="nowrap">
             `)
-//line views/vretro/Detail.html:86
-	view.StreamUUID(qw422016, p.Model.SprintID)
-//line views/vretro/Detail.html:86
-	if p.SprintBySprintID != nil {
-//line views/vretro/Detail.html:86
-		qw422016.N().S(` (`)
-//line views/vretro/Detail.html:86
-		qw422016.E().S(p.SprintBySprintID.TitleString())
-//line views/vretro/Detail.html:86
-		qw422016.N().S(`)`)
-//line views/vretro/Detail.html:86
-	}
-//line views/vretro/Detail.html:86
-	qw422016.N().S(`
+//line views/vretro/Detail.html:89
+	if x := p.SprintBySprintID; x != nil {
+//line views/vretro/Detail.html:89
+		qw422016.N().S(`
             `)
-//line views/vretro/Detail.html:87
-	if p.Model.SprintID != nil {
-//line views/vretro/Detail.html:87
-		qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vretro/Detail.html:87
-		if x := p.SprintBySprintID; x != nil {
-//line views/vretro/Detail.html:87
+//line views/vretro/Detail.html:90
+		qw422016.E().S(x.TitleString())
+//line views/vretro/Detail.html:90
+		qw422016.N().S(` `)
+//line views/vretro/Detail.html:90
+		if p.Model.SprintID != nil {
+//line views/vretro/Detail.html:90
+			qw422016.N().S(`<a title="Sprint" href="`)
+//line views/vretro/Detail.html:90
 			qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vretro/Detail.html:87
+//line views/vretro/Detail.html:90
+			qw422016.N().S(`">`)
+//line views/vretro/Detail.html:90
+			components.StreamSVGLink(qw422016, `sprint`, ps)
+//line views/vretro/Detail.html:90
+			qw422016.N().S(`</a>`)
+//line views/vretro/Detail.html:90
 		}
-//line views/vretro/Detail.html:87
-		qw422016.N().S(`">`)
-//line views/vretro/Detail.html:87
-		components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vretro/Detail.html:87
-		qw422016.N().S(`</a>`)
-//line views/vretro/Detail.html:87
+//line views/vretro/Detail.html:90
+		qw422016.N().S(`
+            `)
+//line views/vretro/Detail.html:91
+	} else {
+//line views/vretro/Detail.html:91
+		qw422016.N().S(`
+            `)
+//line views/vretro/Detail.html:92
+		view.StreamUUID(qw422016, p.Model.SprintID)
+//line views/vretro/Detail.html:92
+		qw422016.N().S(`
+            `)
+//line views/vretro/Detail.html:93
 	}
-//line views/vretro/Detail.html:87
+//line views/vretro/Detail.html:93
 	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Comma-separated list of values">Categories</th>
           <td>`)
-//line views/vretro/Detail.html:92
+//line views/vretro/Detail.html:98
 	view.StreamStringArray(qw422016, p.Model.Categories)
-//line views/vretro/Detail.html:92
+//line views/vretro/Detail.html:98
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vretro/Detail.html:96
+//line views/vretro/Detail.html:102
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vretro/Detail.html:96
+//line views/vretro/Detail.html:102
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vretro/Detail.html:100
+//line views/vretro/Detail.html:106
 	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vretro/Detail.html:100
+//line views/vretro/Detail.html:106
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 }
 
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	StreamDetailTable(qw422016, p, ps)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 }
 
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	WriteDetailTable(qb422016, p, ps)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	qs422016 := string(qb422016.B)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 	return qs422016
-//line views/vretro/Detail.html:105
+//line views/vretro/Detail.html:111
 }
 
-//line views/vretro/Detail.html:107
+//line views/vretro/Detail.html:113
 func StreamDetailRelations(qw422016 *qt422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
-//line views/vretro/Detail.html:107
+//line views/vretro/Detail.html:113
 	qw422016.N().S(`
 `)
-//line views/vretro/Detail.html:108
+//line views/vretro/Detail.html:114
 	relationHelper := retro.Retros{p.Model}
 
-//line views/vretro/Detail.html:108
+//line views/vretro/Detail.html:114
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-FeedbacksByRetroID" type="checkbox" hidden="hidden"`)
-//line views/vretro/Detail.html:113
+//line views/vretro/Detail.html:119
 	if p.Params.Specifies(`feedback`) {
-//line views/vretro/Detail.html:113
+//line views/vretro/Detail.html:119
 		qw422016.N().S(` checked="checked"`)
-//line views/vretro/Detail.html:113
+//line views/vretro/Detail.html:119
 	}
-//line views/vretro/Detail.html:113
+//line views/vretro/Detail.html:119
 	qw422016.N().S(` />
         <label for="accordion-FeedbacksByRetroID">
           `)
-//line views/vretro/Detail.html:115
+//line views/vretro/Detail.html:121
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vretro/Detail.html:115
+//line views/vretro/Detail.html:121
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:116
+//line views/vretro/Detail.html:122
 	components.StreamSVGInline(qw422016, `comment`, 16, ps)
-//line views/vretro/Detail.html:116
+//line views/vretro/Detail.html:122
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:117
+//line views/vretro/Detail.html:123
 	qw422016.E().S(util.StringPlural(len(p.RelFeedbacksByRetroID), "Feedback"))
-//line views/vretro/Detail.html:117
+//line views/vretro/Detail.html:123
 	qw422016.N().S(` by [Retro ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vretro/Detail.html:120
+//line views/vretro/Detail.html:126
 	if len(p.RelFeedbacksByRetroID) == 0 {
-//line views/vretro/Detail.html:120
+//line views/vretro/Detail.html:126
 		qw422016.N().S(`          <em>no related Feedbacks</em>
 `)
-//line views/vretro/Detail.html:122
+//line views/vretro/Detail.html:128
 	} else {
-//line views/vretro/Detail.html:122
+//line views/vretro/Detail.html:128
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vretro/Detail.html:124
+//line views/vretro/Detail.html:130
 		vfeedback.StreamTable(qw422016, p.RelFeedbacksByRetroID, relationHelper, nil, p.Params, as, ps)
-//line views/vretro/Detail.html:124
+//line views/vretro/Detail.html:130
 		qw422016.N().S(`
           </div>
 `)
-//line views/vretro/Detail.html:126
+//line views/vretro/Detail.html:132
 	}
-//line views/vretro/Detail.html:126
+//line views/vretro/Detail.html:132
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroHistoriesByRetroID" type="checkbox" hidden="hidden"`)
-//line views/vretro/Detail.html:130
+//line views/vretro/Detail.html:136
 	if p.Params.Specifies(`rhistory`) {
-//line views/vretro/Detail.html:130
+//line views/vretro/Detail.html:136
 		qw422016.N().S(` checked="checked"`)
-//line views/vretro/Detail.html:130
+//line views/vretro/Detail.html:136
 	}
-//line views/vretro/Detail.html:130
+//line views/vretro/Detail.html:136
 	qw422016.N().S(` />
         <label for="accordion-RetroHistoriesByRetroID">
           `)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:138
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vretro/Detail.html:132
+//line views/vretro/Detail.html:138
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:133
+//line views/vretro/Detail.html:139
 	components.StreamSVGInline(qw422016, `history`, 16, ps)
-//line views/vretro/Detail.html:133
+//line views/vretro/Detail.html:139
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:134
+//line views/vretro/Detail.html:140
 	qw422016.E().S(util.StringPlural(len(p.RelRetroHistoriesByRetroID), "History"))
-//line views/vretro/Detail.html:134
+//line views/vretro/Detail.html:140
 	qw422016.N().S(` by [Retro ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vretro/Detail.html:137
+//line views/vretro/Detail.html:143
 	if len(p.RelRetroHistoriesByRetroID) == 0 {
-//line views/vretro/Detail.html:137
+//line views/vretro/Detail.html:143
 		qw422016.N().S(`          <em>no related Histories</em>
 `)
-//line views/vretro/Detail.html:139
+//line views/vretro/Detail.html:145
 	} else {
-//line views/vretro/Detail.html:139
+//line views/vretro/Detail.html:145
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vretro/Detail.html:141
+//line views/vretro/Detail.html:147
 		vrhistory.StreamTable(qw422016, p.RelRetroHistoriesByRetroID, relationHelper, p.Params, as, ps)
-//line views/vretro/Detail.html:141
+//line views/vretro/Detail.html:147
 		qw422016.N().S(`
           </div>
 `)
-//line views/vretro/Detail.html:143
+//line views/vretro/Detail.html:149
 	}
-//line views/vretro/Detail.html:143
+//line views/vretro/Detail.html:149
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroMembersByRetroID" type="checkbox" hidden="hidden"`)
-//line views/vretro/Detail.html:147
+//line views/vretro/Detail.html:153
 	if p.Params.Specifies(`rmember`) {
-//line views/vretro/Detail.html:147
+//line views/vretro/Detail.html:153
 		qw422016.N().S(` checked="checked"`)
-//line views/vretro/Detail.html:147
+//line views/vretro/Detail.html:153
 	}
-//line views/vretro/Detail.html:147
+//line views/vretro/Detail.html:153
 	qw422016.N().S(` />
         <label for="accordion-RetroMembersByRetroID">
           `)
-//line views/vretro/Detail.html:149
+//line views/vretro/Detail.html:155
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vretro/Detail.html:149
+//line views/vretro/Detail.html:155
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:150
+//line views/vretro/Detail.html:156
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vretro/Detail.html:150
+//line views/vretro/Detail.html:156
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:151
+//line views/vretro/Detail.html:157
 	qw422016.E().S(util.StringPlural(len(p.RelRetroMembersByRetroID), "Member"))
-//line views/vretro/Detail.html:151
+//line views/vretro/Detail.html:157
 	qw422016.N().S(` by [Retro ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vretro/Detail.html:154
+//line views/vretro/Detail.html:160
 	if len(p.RelRetroMembersByRetroID) == 0 {
-//line views/vretro/Detail.html:154
+//line views/vretro/Detail.html:160
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vretro/Detail.html:156
+//line views/vretro/Detail.html:162
 	} else {
-//line views/vretro/Detail.html:156
+//line views/vretro/Detail.html:162
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vretro/Detail.html:158
+//line views/vretro/Detail.html:164
 		vrmember.StreamTable(qw422016, p.RelRetroMembersByRetroID, relationHelper, nil, p.Params, as, ps)
-//line views/vretro/Detail.html:158
+//line views/vretro/Detail.html:164
 		qw422016.N().S(`
           </div>
 `)
-//line views/vretro/Detail.html:160
+//line views/vretro/Detail.html:166
 	}
-//line views/vretro/Detail.html:160
+//line views/vretro/Detail.html:166
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-RetroPermissionsByRetroID" type="checkbox" hidden="hidden"`)
-//line views/vretro/Detail.html:164
+//line views/vretro/Detail.html:170
 	if p.Params.Specifies(`rpermission`) {
-//line views/vretro/Detail.html:164
+//line views/vretro/Detail.html:170
 		qw422016.N().S(` checked="checked"`)
-//line views/vretro/Detail.html:164
+//line views/vretro/Detail.html:170
 	}
-//line views/vretro/Detail.html:164
+//line views/vretro/Detail.html:170
 	qw422016.N().S(` />
         <label for="accordion-RetroPermissionsByRetroID">
           `)
-//line views/vretro/Detail.html:166
+//line views/vretro/Detail.html:172
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vretro/Detail.html:166
+//line views/vretro/Detail.html:172
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:167
+//line views/vretro/Detail.html:173
 	components.StreamSVGInline(qw422016, `permission`, 16, ps)
-//line views/vretro/Detail.html:167
+//line views/vretro/Detail.html:173
 	qw422016.N().S(`
           `)
-//line views/vretro/Detail.html:168
+//line views/vretro/Detail.html:174
 	qw422016.E().S(util.StringPlural(len(p.RelRetroPermissionsByRetroID), "Permission"))
-//line views/vretro/Detail.html:168
+//line views/vretro/Detail.html:174
 	qw422016.N().S(` by [Retro ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vretro/Detail.html:171
+//line views/vretro/Detail.html:177
 	if len(p.RelRetroPermissionsByRetroID) == 0 {
-//line views/vretro/Detail.html:171
+//line views/vretro/Detail.html:177
 		qw422016.N().S(`          <em>no related Permissions</em>
 `)
-//line views/vretro/Detail.html:173
+//line views/vretro/Detail.html:179
 	} else {
-//line views/vretro/Detail.html:173
+//line views/vretro/Detail.html:179
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vretro/Detail.html:175
+//line views/vretro/Detail.html:181
 		vrpermission.StreamTable(qw422016, p.RelRetroPermissionsByRetroID, relationHelper, p.Params, as, ps)
-//line views/vretro/Detail.html:175
+//line views/vretro/Detail.html:181
 		qw422016.N().S(`
           </div>
 `)
-//line views/vretro/Detail.html:177
+//line views/vretro/Detail.html:183
 	}
-//line views/vretro/Detail.html:177
+//line views/vretro/Detail.html:183
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
 `)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 }
 
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 func WriteDetailRelations(qq422016 qtio422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	StreamDetailRelations(qw422016, as, p, ps)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 }
 
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 func DetailRelations(as *app.State, p *Detail, ps *cutil.PageState) string {
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	WriteDetailRelations(qb422016, as, p, ps)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	qs422016 := string(qb422016.B)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 	return qs422016
-//line views/vretro/Detail.html:182
+//line views/vretro/Detail.html:188
 }

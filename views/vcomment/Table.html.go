@@ -102,90 +102,95 @@ func StreamTable(qw422016 *qt422016.Writer, models comment.Comments, usersByUser
           <td class="nowrap">
             `)
 //line views/vcomment/Table.html:33
-		view.StreamUUID(qw422016, &model.UserID)
-//line views/vcomment/Table.html:33
 		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vcomment/Table.html:33
-			qw422016.N().S(` (`)
-//line views/vcomment/Table.html:33
-			qw422016.E().S(x.TitleString())
-//line views/vcomment/Table.html:33
-			qw422016.N().S(`)`)
-//line views/vcomment/Table.html:33
-		}
-//line views/vcomment/Table.html:33
-		qw422016.N().S(`
-            <a title="User" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vcomment/Table.html:34
-		if x := usersByUserID.Get(model.UserID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vcomment/Table.html:34
+			qw422016.N().S(` <a title="User" href="`)
 //line views/vcomment/Table.html:34
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vcomment/Table.html:34
+			qw422016.N().S(`">`)
+//line views/vcomment/Table.html:34
+			components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vcomment/Table.html:34
+			qw422016.N().S(`</a>
+            `)
+//line views/vcomment/Table.html:35
+		} else {
+//line views/vcomment/Table.html:35
+			qw422016.N().S(`
+            `)
+//line views/vcomment/Table.html:36
+			view.StreamUUID(qw422016, &model.UserID)
+//line views/vcomment/Table.html:36
+			qw422016.N().S(`
+            `)
+//line views/vcomment/Table.html:37
 		}
-//line views/vcomment/Table.html:34
-		qw422016.N().S(`">`)
-//line views/vcomment/Table.html:34
-		components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vcomment/Table.html:34
-		qw422016.N().S(`</a>
+//line views/vcomment/Table.html:37
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vcomment/Table.html:36
+//line views/vcomment/Table.html:39
 		view.StreamString(qw422016, model.Content)
-//line views/vcomment/Table.html:36
+//line views/vcomment/Table.html:39
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vcomment/Table.html:37
+//line views/vcomment/Table.html:40
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vcomment/Table.html:37
+//line views/vcomment/Table.html:40
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vcomment/Table.html:39
+//line views/vcomment/Table.html:42
 	}
-//line views/vcomment/Table.html:39
+//line views/vcomment/Table.html:42
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vcomment/Table.html:43
+//line views/vcomment/Table.html:46
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vcomment/Table.html:43
+//line views/vcomment/Table.html:46
 		qw422016.N().S(`  <hr />
   `)
-//line views/vcomment/Table.html:45
+//line views/vcomment/Table.html:48
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vcomment/Table.html:45
+//line views/vcomment/Table.html:48
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vcomment/Table.html:47
+//line views/vcomment/Table.html:50
 	}
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 }
 
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 func WriteTable(qq422016 qtio422016.Writer, models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	StreamTable(qw422016, models, usersByUserID, params, as, ps, paths...)
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 }
 
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 func Table(models comment.Comments, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	WriteTable(qb422016, models, usersByUserID, params, as, ps, paths...)
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	qs422016 := string(qb422016.B)
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 	return qs422016
-//line views/vcomment/Table.html:48
+//line views/vcomment/Table.html:51
 }

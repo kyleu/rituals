@@ -193,39 +193,44 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vstandup/Detail.html:79
-	view.StreamUUID(qw422016, p.Model.TeamID)
+	if x := p.TeamByTeamID; x != nil {
 //line views/vstandup/Detail.html:79
-	if p.TeamByTeamID != nil {
-//line views/vstandup/Detail.html:79
-		qw422016.N().S(` (`)
-//line views/vstandup/Detail.html:79
-		qw422016.E().S(p.TeamByTeamID.TitleString())
-//line views/vstandup/Detail.html:79
-		qw422016.N().S(`)`)
-//line views/vstandup/Detail.html:79
-	}
-//line views/vstandup/Detail.html:79
-	qw422016.N().S(`
+		qw422016.N().S(`
             `)
 //line views/vstandup/Detail.html:80
-	if p.Model.TeamID != nil {
+		qw422016.E().S(x.TitleString())
 //line views/vstandup/Detail.html:80
-		qw422016.N().S(`<a title="Team" href="`)
+		qw422016.N().S(` `)
 //line views/vstandup/Detail.html:80
-		if x := p.TeamByTeamID; x != nil {
+		if p.Model.TeamID != nil {
+//line views/vstandup/Detail.html:80
+			qw422016.N().S(`<a title="Team" href="`)
 //line views/vstandup/Detail.html:80
 			qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vstandup/Detail.html:80
+			qw422016.N().S(`">`)
+//line views/vstandup/Detail.html:80
+			components.StreamSVGLink(qw422016, `team`, ps)
+//line views/vstandup/Detail.html:80
+			qw422016.N().S(`</a>`)
+//line views/vstandup/Detail.html:80
 		}
 //line views/vstandup/Detail.html:80
-		qw422016.N().S(`">`)
-//line views/vstandup/Detail.html:80
-		components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vstandup/Detail.html:80
-		qw422016.N().S(`</a>`)
-//line views/vstandup/Detail.html:80
+		qw422016.N().S(`
+            `)
+//line views/vstandup/Detail.html:81
+	} else {
+//line views/vstandup/Detail.html:81
+		qw422016.N().S(`
+            `)
+//line views/vstandup/Detail.html:82
+		view.StreamUUID(qw422016, p.Model.TeamID)
+//line views/vstandup/Detail.html:82
+		qw422016.N().S(`
+            `)
+//line views/vstandup/Detail.html:83
 	}
-//line views/vstandup/Detail.html:80
+//line views/vstandup/Detail.html:83
 	qw422016.N().S(`
           </td>
         </tr>
@@ -233,332 +238,337 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td class="nowrap">
             `)
-//line views/vstandup/Detail.html:86
-	view.StreamUUID(qw422016, p.Model.SprintID)
-//line views/vstandup/Detail.html:86
-	if p.SprintBySprintID != nil {
-//line views/vstandup/Detail.html:86
-		qw422016.N().S(` (`)
-//line views/vstandup/Detail.html:86
-		qw422016.E().S(p.SprintBySprintID.TitleString())
-//line views/vstandup/Detail.html:86
-		qw422016.N().S(`)`)
-//line views/vstandup/Detail.html:86
-	}
-//line views/vstandup/Detail.html:86
-	qw422016.N().S(`
+//line views/vstandup/Detail.html:89
+	if x := p.SprintBySprintID; x != nil {
+//line views/vstandup/Detail.html:89
+		qw422016.N().S(`
             `)
-//line views/vstandup/Detail.html:87
-	if p.Model.SprintID != nil {
-//line views/vstandup/Detail.html:87
-		qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vstandup/Detail.html:87
-		if x := p.SprintBySprintID; x != nil {
-//line views/vstandup/Detail.html:87
+//line views/vstandup/Detail.html:90
+		qw422016.E().S(x.TitleString())
+//line views/vstandup/Detail.html:90
+		qw422016.N().S(` `)
+//line views/vstandup/Detail.html:90
+		if p.Model.SprintID != nil {
+//line views/vstandup/Detail.html:90
+			qw422016.N().S(`<a title="Sprint" href="`)
+//line views/vstandup/Detail.html:90
 			qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vstandup/Detail.html:87
+//line views/vstandup/Detail.html:90
+			qw422016.N().S(`">`)
+//line views/vstandup/Detail.html:90
+			components.StreamSVGLink(qw422016, `sprint`, ps)
+//line views/vstandup/Detail.html:90
+			qw422016.N().S(`</a>`)
+//line views/vstandup/Detail.html:90
 		}
-//line views/vstandup/Detail.html:87
-		qw422016.N().S(`">`)
-//line views/vstandup/Detail.html:87
-		components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vstandup/Detail.html:87
-		qw422016.N().S(`</a>`)
-//line views/vstandup/Detail.html:87
+//line views/vstandup/Detail.html:90
+		qw422016.N().S(`
+            `)
+//line views/vstandup/Detail.html:91
+	} else {
+//line views/vstandup/Detail.html:91
+		qw422016.N().S(`
+            `)
+//line views/vstandup/Detail.html:92
+		view.StreamUUID(qw422016, p.Model.SprintID)
+//line views/vstandup/Detail.html:92
+		qw422016.N().S(`
+            `)
+//line views/vstandup/Detail.html:93
 	}
-//line views/vstandup/Detail.html:87
+//line views/vstandup/Detail.html:93
 	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vstandup/Detail.html:92
+//line views/vstandup/Detail.html:98
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vstandup/Detail.html:92
+//line views/vstandup/Detail.html:98
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vstandup/Detail.html:96
+//line views/vstandup/Detail.html:102
 	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vstandup/Detail.html:96
+//line views/vstandup/Detail.html:102
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 }
 
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	StreamDetailTable(qw422016, p, ps)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 }
 
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	WriteDetailTable(qb422016, p, ps)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	qs422016 := string(qb422016.B)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 	return qs422016
-//line views/vstandup/Detail.html:101
+//line views/vstandup/Detail.html:107
 }
 
-//line views/vstandup/Detail.html:103
+//line views/vstandup/Detail.html:109
 func StreamDetailRelations(qw422016 *qt422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
-//line views/vstandup/Detail.html:103
+//line views/vstandup/Detail.html:109
 	qw422016.N().S(`
 `)
-//line views/vstandup/Detail.html:104
+//line views/vstandup/Detail.html:110
 	relationHelper := standup.Standups{p.Model}
 
-//line views/vstandup/Detail.html:104
+//line views/vstandup/Detail.html:110
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-ReportsByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:109
+//line views/vstandup/Detail.html:115
 	if p.Params.Specifies(`report`) {
-//line views/vstandup/Detail.html:109
+//line views/vstandup/Detail.html:115
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:109
+//line views/vstandup/Detail.html:115
 	}
-//line views/vstandup/Detail.html:109
+//line views/vstandup/Detail.html:115
 	qw422016.N().S(` />
         <label for="accordion-ReportsByStandupID">
           `)
-//line views/vstandup/Detail.html:111
+//line views/vstandup/Detail.html:117
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:111
+//line views/vstandup/Detail.html:117
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:112
+//line views/vstandup/Detail.html:118
 	components.StreamSVGInline(qw422016, `file-alt`, 16, ps)
-//line views/vstandup/Detail.html:112
+//line views/vstandup/Detail.html:118
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:113
+//line views/vstandup/Detail.html:119
 	qw422016.E().S(util.StringPlural(len(p.RelReportsByStandupID), "Report"))
-//line views/vstandup/Detail.html:113
+//line views/vstandup/Detail.html:119
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:116
+//line views/vstandup/Detail.html:122
 	if len(p.RelReportsByStandupID) == 0 {
-//line views/vstandup/Detail.html:116
+//line views/vstandup/Detail.html:122
 		qw422016.N().S(`          <em>no related Reports</em>
 `)
-//line views/vstandup/Detail.html:118
+//line views/vstandup/Detail.html:124
 	} else {
-//line views/vstandup/Detail.html:118
+//line views/vstandup/Detail.html:124
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:120
+//line views/vstandup/Detail.html:126
 		vreport.StreamTable(qw422016, p.RelReportsByStandupID, relationHelper, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:120
+//line views/vstandup/Detail.html:126
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:122
+//line views/vstandup/Detail.html:128
 	}
-//line views/vstandup/Detail.html:122
+//line views/vstandup/Detail.html:128
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupHistoriesByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:126
+//line views/vstandup/Detail.html:132
 	if p.Params.Specifies(`uhistory`) {
-//line views/vstandup/Detail.html:126
+//line views/vstandup/Detail.html:132
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:126
+//line views/vstandup/Detail.html:132
 	}
-//line views/vstandup/Detail.html:126
+//line views/vstandup/Detail.html:132
 	qw422016.N().S(` />
         <label for="accordion-StandupHistoriesByStandupID">
           `)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:134
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:128
+//line views/vstandup/Detail.html:134
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:129
+//line views/vstandup/Detail.html:135
 	components.StreamSVGInline(qw422016, `history`, 16, ps)
-//line views/vstandup/Detail.html:129
+//line views/vstandup/Detail.html:135
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:130
+//line views/vstandup/Detail.html:136
 	qw422016.E().S(util.StringPlural(len(p.RelStandupHistoriesByStandupID), "History"))
-//line views/vstandup/Detail.html:130
+//line views/vstandup/Detail.html:136
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:133
+//line views/vstandup/Detail.html:139
 	if len(p.RelStandupHistoriesByStandupID) == 0 {
-//line views/vstandup/Detail.html:133
+//line views/vstandup/Detail.html:139
 		qw422016.N().S(`          <em>no related Histories</em>
 `)
-//line views/vstandup/Detail.html:135
+//line views/vstandup/Detail.html:141
 	} else {
-//line views/vstandup/Detail.html:135
+//line views/vstandup/Detail.html:141
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:137
+//line views/vstandup/Detail.html:143
 		vuhistory.StreamTable(qw422016, p.RelStandupHistoriesByStandupID, relationHelper, p.Params, as, ps)
-//line views/vstandup/Detail.html:137
+//line views/vstandup/Detail.html:143
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:139
+//line views/vstandup/Detail.html:145
 	}
-//line views/vstandup/Detail.html:139
+//line views/vstandup/Detail.html:145
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupMembersByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:143
+//line views/vstandup/Detail.html:149
 	if p.Params.Specifies(`umember`) {
-//line views/vstandup/Detail.html:143
+//line views/vstandup/Detail.html:149
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:143
+//line views/vstandup/Detail.html:149
 	}
-//line views/vstandup/Detail.html:143
+//line views/vstandup/Detail.html:149
 	qw422016.N().S(` />
         <label for="accordion-StandupMembersByStandupID">
           `)
-//line views/vstandup/Detail.html:145
+//line views/vstandup/Detail.html:151
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:145
+//line views/vstandup/Detail.html:151
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:146
+//line views/vstandup/Detail.html:152
 	components.StreamSVGInline(qw422016, `users`, 16, ps)
-//line views/vstandup/Detail.html:146
+//line views/vstandup/Detail.html:152
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:147
+//line views/vstandup/Detail.html:153
 	qw422016.E().S(util.StringPlural(len(p.RelStandupMembersByStandupID), "Member"))
-//line views/vstandup/Detail.html:147
+//line views/vstandup/Detail.html:153
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:150
+//line views/vstandup/Detail.html:156
 	if len(p.RelStandupMembersByStandupID) == 0 {
-//line views/vstandup/Detail.html:150
+//line views/vstandup/Detail.html:156
 		qw422016.N().S(`          <em>no related Members</em>
 `)
-//line views/vstandup/Detail.html:152
+//line views/vstandup/Detail.html:158
 	} else {
-//line views/vstandup/Detail.html:152
+//line views/vstandup/Detail.html:158
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:154
+//line views/vstandup/Detail.html:160
 		vumember.StreamTable(qw422016, p.RelStandupMembersByStandupID, relationHelper, nil, p.Params, as, ps)
-//line views/vstandup/Detail.html:154
+//line views/vstandup/Detail.html:160
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:156
+//line views/vstandup/Detail.html:162
 	}
-//line views/vstandup/Detail.html:156
+//line views/vstandup/Detail.html:162
 	qw422016.N().S(`        </div></div></div>
       </li>
       <li>
         <input id="accordion-StandupPermissionsByStandupID" type="checkbox" hidden="hidden"`)
-//line views/vstandup/Detail.html:160
+//line views/vstandup/Detail.html:166
 	if p.Params.Specifies(`upermission`) {
-//line views/vstandup/Detail.html:160
+//line views/vstandup/Detail.html:166
 		qw422016.N().S(` checked="checked"`)
-//line views/vstandup/Detail.html:160
+//line views/vstandup/Detail.html:166
 	}
-//line views/vstandup/Detail.html:160
+//line views/vstandup/Detail.html:166
 	qw422016.N().S(` />
         <label for="accordion-StandupPermissionsByStandupID">
           `)
-//line views/vstandup/Detail.html:162
+//line views/vstandup/Detail.html:168
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vstandup/Detail.html:162
+//line views/vstandup/Detail.html:168
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:163
+//line views/vstandup/Detail.html:169
 	components.StreamSVGInline(qw422016, `permission`, 16, ps)
-//line views/vstandup/Detail.html:163
+//line views/vstandup/Detail.html:169
 	qw422016.N().S(`
           `)
-//line views/vstandup/Detail.html:164
+//line views/vstandup/Detail.html:170
 	qw422016.E().S(util.StringPlural(len(p.RelStandupPermissionsByStandupID), "Permission"))
-//line views/vstandup/Detail.html:164
+//line views/vstandup/Detail.html:170
 	qw422016.N().S(` by [Standup ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vstandup/Detail.html:167
+//line views/vstandup/Detail.html:173
 	if len(p.RelStandupPermissionsByStandupID) == 0 {
-//line views/vstandup/Detail.html:167
+//line views/vstandup/Detail.html:173
 		qw422016.N().S(`          <em>no related Permissions</em>
 `)
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:175
 	} else {
-//line views/vstandup/Detail.html:169
+//line views/vstandup/Detail.html:175
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vstandup/Detail.html:171
+//line views/vstandup/Detail.html:177
 		vupermission.StreamTable(qw422016, p.RelStandupPermissionsByStandupID, relationHelper, p.Params, as, ps)
-//line views/vstandup/Detail.html:171
+//line views/vstandup/Detail.html:177
 		qw422016.N().S(`
           </div>
 `)
-//line views/vstandup/Detail.html:173
+//line views/vstandup/Detail.html:179
 	}
-//line views/vstandup/Detail.html:173
+//line views/vstandup/Detail.html:179
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
 `)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 }
 
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 func WriteDetailRelations(qq422016 qtio422016.Writer, as *app.State, p *Detail, ps *cutil.PageState) {
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	StreamDetailRelations(qw422016, as, p, ps)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 }
 
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 func DetailRelations(as *app.State, p *Detail, ps *cutil.PageState) string {
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	WriteDetailRelations(qb422016, as, p, ps)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	qs422016 := string(qb422016.B)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 	return qs422016
-//line views/vstandup/Detail.html:178
+//line views/vstandup/Detail.html:184
 }

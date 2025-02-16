@@ -41,8 +41,11 @@
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Team ID</th>
           <td class="nowrap">
-            {%= view.UUID(&p.Model.TeamID) %}{% if p.TeamByTeamID != nil %} ({%s p.TeamByTeamID.TitleString() %}){% endif %}
-            <a title="Team" href="{% if x := p.TeamByTeamID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`team`, ps) %}</a>
+            {% if x := p.TeamByTeamID; x != nil %}
+            {%s x.TitleString() %} <a title="Team" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&p.Model.TeamID) %}
+            {% endif %}
           </td>
         </tr>
         <tr>

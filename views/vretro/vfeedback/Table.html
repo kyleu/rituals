@@ -30,13 +30,19 @@
         <tr>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td class="nowrap">
-            {%= view.UUID(&model.RetroID) %}{% if x := retrosByRetroID.Get(model.RetroID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Retro" href="{% if x := retrosByRetroID.Get(model.RetroID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`retro`, ps) %}</a>
+            {% if x := retrosByRetroID.Get(model.RetroID); x != nil %}
+            {%s x.TitleString() %} <a title="Retro" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&model.RetroID) %}
+            {% endif %}
           </td>
           <td>{%d model.Idx %}</td>
           <td class="nowrap">
-            {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{% if x := usersByUserID.Get(model.UserID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            {% if x := usersByUserID.Get(model.UserID); x != nil %}
+            {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&model.UserID) %}
+            {% endif %}
           </td>
           <td>{%= view.String(model.Category) %}</td>
           <td>{%= view.String(model.Content) %}</td>

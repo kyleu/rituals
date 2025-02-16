@@ -102,135 +102,145 @@ func StreamTable(qw422016 *qt422016.Writer, models feedback.Feedbacks, retrosByR
           <td class="nowrap">
             `)
 //line views/vretro/vfeedback/Table.html:33
-		view.StreamUUID(qw422016, &model.RetroID)
-//line views/vretro/vfeedback/Table.html:33
 		if x := retrosByRetroID.Get(model.RetroID); x != nil {
 //line views/vretro/vfeedback/Table.html:33
-			qw422016.N().S(` (`)
-//line views/vretro/vfeedback/Table.html:33
-			qw422016.E().S(x.TitleString())
-//line views/vretro/vfeedback/Table.html:33
-			qw422016.N().S(`)`)
-//line views/vretro/vfeedback/Table.html:33
-		}
-//line views/vretro/vfeedback/Table.html:33
-		qw422016.N().S(`
-            <a title="Retro" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vretro/vfeedback/Table.html:34
-		if x := retrosByRetroID.Get(model.RetroID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vretro/vfeedback/Table.html:34
+			qw422016.N().S(` <a title="Retro" href="`)
 //line views/vretro/vfeedback/Table.html:34
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vretro/vfeedback/Table.html:34
+			qw422016.N().S(`">`)
+//line views/vretro/vfeedback/Table.html:34
+			components.StreamSVGLink(qw422016, `retro`, ps)
+//line views/vretro/vfeedback/Table.html:34
+			qw422016.N().S(`</a>
+            `)
+//line views/vretro/vfeedback/Table.html:35
+		} else {
+//line views/vretro/vfeedback/Table.html:35
+			qw422016.N().S(`
+            `)
+//line views/vretro/vfeedback/Table.html:36
+			view.StreamUUID(qw422016, &model.RetroID)
+//line views/vretro/vfeedback/Table.html:36
+			qw422016.N().S(`
+            `)
+//line views/vretro/vfeedback/Table.html:37
 		}
-//line views/vretro/vfeedback/Table.html:34
-		qw422016.N().S(`">`)
-//line views/vretro/vfeedback/Table.html:34
-		components.StreamSVGLink(qw422016, `retro`, ps)
-//line views/vretro/vfeedback/Table.html:34
-		qw422016.N().S(`</a>
+//line views/vretro/vfeedback/Table.html:37
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vretro/vfeedback/Table.html:36
+//line views/vretro/vfeedback/Table.html:39
 		qw422016.N().D(model.Idx)
-//line views/vretro/vfeedback/Table.html:36
+//line views/vretro/vfeedback/Table.html:39
 		qw422016.N().S(`</td>
           <td class="nowrap">
             `)
-//line views/vretro/vfeedback/Table.html:38
-		view.StreamUUID(qw422016, &model.UserID)
-//line views/vretro/vfeedback/Table.html:38
+//line views/vretro/vfeedback/Table.html:41
 		if x := usersByUserID.Get(model.UserID); x != nil {
-//line views/vretro/vfeedback/Table.html:38
-			qw422016.N().S(` (`)
-//line views/vretro/vfeedback/Table.html:38
+//line views/vretro/vfeedback/Table.html:41
+			qw422016.N().S(`
+            `)
+//line views/vretro/vfeedback/Table.html:42
 			qw422016.E().S(x.TitleString())
-//line views/vretro/vfeedback/Table.html:38
-			qw422016.N().S(`)`)
-//line views/vretro/vfeedback/Table.html:38
-		}
-//line views/vretro/vfeedback/Table.html:38
-		qw422016.N().S(`
-            <a title="User" href="`)
-//line views/vretro/vfeedback/Table.html:39
-		if x := usersByUserID.Get(model.UserID); x != nil {
-//line views/vretro/vfeedback/Table.html:39
+//line views/vretro/vfeedback/Table.html:42
+			qw422016.N().S(` <a title="User" href="`)
+//line views/vretro/vfeedback/Table.html:42
 			qw422016.E().S(x.WebPath(paths...))
-//line views/vretro/vfeedback/Table.html:39
+//line views/vretro/vfeedback/Table.html:42
+			qw422016.N().S(`">`)
+//line views/vretro/vfeedback/Table.html:42
+			components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vretro/vfeedback/Table.html:42
+			qw422016.N().S(`</a>
+            `)
+//line views/vretro/vfeedback/Table.html:43
+		} else {
+//line views/vretro/vfeedback/Table.html:43
+			qw422016.N().S(`
+            `)
+//line views/vretro/vfeedback/Table.html:44
+			view.StreamUUID(qw422016, &model.UserID)
+//line views/vretro/vfeedback/Table.html:44
+			qw422016.N().S(`
+            `)
+//line views/vretro/vfeedback/Table.html:45
 		}
-//line views/vretro/vfeedback/Table.html:39
-		qw422016.N().S(`">`)
-//line views/vretro/vfeedback/Table.html:39
-		components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vretro/vfeedback/Table.html:39
-		qw422016.N().S(`</a>
+//line views/vretro/vfeedback/Table.html:45
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vretro/vfeedback/Table.html:41
+//line views/vretro/vfeedback/Table.html:47
 		view.StreamString(qw422016, model.Category)
-//line views/vretro/vfeedback/Table.html:41
+//line views/vretro/vfeedback/Table.html:47
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vretro/vfeedback/Table.html:42
+//line views/vretro/vfeedback/Table.html:48
 		view.StreamString(qw422016, model.Content)
-//line views/vretro/vfeedback/Table.html:42
+//line views/vretro/vfeedback/Table.html:48
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vretro/vfeedback/Table.html:43
+//line views/vretro/vfeedback/Table.html:49
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vretro/vfeedback/Table.html:43
+//line views/vretro/vfeedback/Table.html:49
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vretro/vfeedback/Table.html:44
+//line views/vretro/vfeedback/Table.html:50
 		view.StreamTimestamp(qw422016, model.Updated)
-//line views/vretro/vfeedback/Table.html:44
+//line views/vretro/vfeedback/Table.html:50
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vretro/vfeedback/Table.html:46
+//line views/vretro/vfeedback/Table.html:52
 	}
-//line views/vretro/vfeedback/Table.html:46
+//line views/vretro/vfeedback/Table.html:52
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vretro/vfeedback/Table.html:50
+//line views/vretro/vfeedback/Table.html:56
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vretro/vfeedback/Table.html:50
+//line views/vretro/vfeedback/Table.html:56
 		qw422016.N().S(`  <hr />
   `)
-//line views/vretro/vfeedback/Table.html:52
+//line views/vretro/vfeedback/Table.html:58
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vretro/vfeedback/Table.html:52
+//line views/vretro/vfeedback/Table.html:58
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vretro/vfeedback/Table.html:54
+//line views/vretro/vfeedback/Table.html:60
 	}
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 }
 
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 func WriteTable(qq422016 qtio422016.Writer, models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	StreamTable(qw422016, models, retrosByRetroID, usersByUserID, params, as, ps, paths...)
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 }
 
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	WriteTable(qb422016, models, retrosByRetroID, usersByUserID, params, as, ps, paths...)
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	qs422016 := string(qb422016.B)
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 	return qs422016
-//line views/vretro/vfeedback/Table.html:55
+//line views/vretro/vfeedback/Table.html:61
 }

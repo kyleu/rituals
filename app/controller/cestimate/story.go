@@ -33,7 +33,7 @@ func StoryList(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				return "", err
 			}
-			if len(ret) == 1 {
+			if len(ret) == 1 && !cutil.IsContentTypeJSON(cutil.GetContentType(r)) {
 				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}

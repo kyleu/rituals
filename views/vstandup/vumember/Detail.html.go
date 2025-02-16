@@ -129,144 +129,154 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vstandup/vumember/Detail.html:43
-	view.StreamUUID(qw422016, &p.Model.StandupID)
-//line views/vstandup/vumember/Detail.html:43
-	if p.StandupByStandupID != nil {
-//line views/vstandup/vumember/Detail.html:43
-		qw422016.N().S(` (`)
-//line views/vstandup/vumember/Detail.html:43
-		qw422016.E().S(p.StandupByStandupID.TitleString())
-//line views/vstandup/vumember/Detail.html:43
-		qw422016.N().S(`)`)
-//line views/vstandup/vumember/Detail.html:43
-	}
-//line views/vstandup/vumember/Detail.html:43
-	qw422016.N().S(`
-            <a title="Standup" href="`)
-//line views/vstandup/vumember/Detail.html:44
 	if x := p.StandupByStandupID; x != nil {
+//line views/vstandup/vumember/Detail.html:43
+		qw422016.N().S(`
+            `)
+//line views/vstandup/vumember/Detail.html:44
+		qw422016.E().S(x.TitleString())
+//line views/vstandup/vumember/Detail.html:44
+		qw422016.N().S(` <a title="Standup" href="`)
 //line views/vstandup/vumember/Detail.html:44
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vstandup/vumember/Detail.html:44
+		qw422016.N().S(`">`)
+//line views/vstandup/vumember/Detail.html:44
+		components.StreamSVGLink(qw422016, `standup`, ps)
+//line views/vstandup/vumember/Detail.html:44
+		qw422016.N().S(`</a>
+            `)
+//line views/vstandup/vumember/Detail.html:45
+	} else {
+//line views/vstandup/vumember/Detail.html:45
+		qw422016.N().S(`
+            `)
+//line views/vstandup/vumember/Detail.html:46
+		view.StreamUUID(qw422016, &p.Model.StandupID)
+//line views/vstandup/vumember/Detail.html:46
+		qw422016.N().S(`
+            `)
+//line views/vstandup/vumember/Detail.html:47
 	}
-//line views/vstandup/vumember/Detail.html:44
-	qw422016.N().S(`">`)
-//line views/vstandup/vumember/Detail.html:44
-	components.StreamSVGLink(qw422016, `standup`, ps)
-//line views/vstandup/vumember/Detail.html:44
-	qw422016.N().S(`</a>
+//line views/vstandup/vumember/Detail.html:47
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
             `)
-//line views/vstandup/vumember/Detail.html:50
-	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vstandup/vumember/Detail.html:50
-	if p.UserByUserID != nil {
-//line views/vstandup/vumember/Detail.html:50
-		qw422016.N().S(` (`)
-//line views/vstandup/vumember/Detail.html:50
-		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vstandup/vumember/Detail.html:50
-		qw422016.N().S(`)`)
-//line views/vstandup/vumember/Detail.html:50
-	}
-//line views/vstandup/vumember/Detail.html:50
-	qw422016.N().S(`
-            <a title="User" href="`)
-//line views/vstandup/vumember/Detail.html:51
+//line views/vstandup/vumember/Detail.html:53
 	if x := p.UserByUserID; x != nil {
-//line views/vstandup/vumember/Detail.html:51
+//line views/vstandup/vumember/Detail.html:53
+		qw422016.N().S(`
+            `)
+//line views/vstandup/vumember/Detail.html:54
+		qw422016.E().S(x.TitleString())
+//line views/vstandup/vumember/Detail.html:54
+		qw422016.N().S(` <a title="User" href="`)
+//line views/vstandup/vumember/Detail.html:54
 		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vstandup/vumember/Detail.html:51
+//line views/vstandup/vumember/Detail.html:54
+		qw422016.N().S(`">`)
+//line views/vstandup/vumember/Detail.html:54
+		components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vstandup/vumember/Detail.html:54
+		qw422016.N().S(`</a>
+            `)
+//line views/vstandup/vumember/Detail.html:55
+	} else {
+//line views/vstandup/vumember/Detail.html:55
+		qw422016.N().S(`
+            `)
+//line views/vstandup/vumember/Detail.html:56
+		view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vstandup/vumember/Detail.html:56
+		qw422016.N().S(`
+            `)
+//line views/vstandup/vumember/Detail.html:57
 	}
-//line views/vstandup/vumember/Detail.html:51
-	qw422016.N().S(`">`)
-//line views/vstandup/vumember/Detail.html:51
-	components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vstandup/vumember/Detail.html:51
-	qw422016.N().S(`</a>
+//line views/vstandup/vumember/Detail.html:57
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Name</th>
           <td><strong>`)
-//line views/vstandup/vumember/Detail.html:56
+//line views/vstandup/vumember/Detail.html:62
 	view.StreamString(qw422016, p.Model.Name)
-//line views/vstandup/vumember/Detail.html:56
+//line views/vstandup/vumember/Detail.html:62
 	qw422016.N().S(`</strong></td>
         </tr>
         <tr>
           <th class="shrink" title="URL in string form">Picture</th>
           <td><a href="`)
-//line views/vstandup/vumember/Detail.html:60
+//line views/vstandup/vumember/Detail.html:66
 	qw422016.E().S(p.Model.Picture)
-//line views/vstandup/vumember/Detail.html:60
+//line views/vstandup/vumember/Detail.html:66
 	qw422016.N().S(`" target="_blank" rel="noopener noreferrer">`)
-//line views/vstandup/vumember/Detail.html:60
+//line views/vstandup/vumember/Detail.html:66
 	qw422016.E().S(p.Model.Picture)
-//line views/vstandup/vumember/Detail.html:60
+//line views/vstandup/vumember/Detail.html:66
 	qw422016.N().S(`</a></td>
         </tr>
         <tr>
           <th class="shrink" title="`)
-//line views/vstandup/vumember/Detail.html:63
+//line views/vstandup/vumember/Detail.html:69
 	qw422016.E().S(enum.AllMemberStatuses.Help())
-//line views/vstandup/vumember/Detail.html:63
+//line views/vstandup/vumember/Detail.html:69
 	qw422016.N().S(`">Role</th>
           <td>`)
-//line views/vstandup/vumember/Detail.html:64
+//line views/vstandup/vumember/Detail.html:70
 	qw422016.E().S(p.Model.Role.String())
-//line views/vstandup/vumember/Detail.html:64
+//line views/vstandup/vumember/Detail.html:70
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vstandup/vumember/Detail.html:68
+//line views/vstandup/vumember/Detail.html:74
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vstandup/vumember/Detail.html:68
+//line views/vstandup/vumember/Detail.html:74
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format (optional)">Updated</th>
           <td>`)
-//line views/vstandup/vumember/Detail.html:72
+//line views/vstandup/vumember/Detail.html:78
 	view.StreamTimestamp(qw422016, p.Model.Updated)
-//line views/vstandup/vumember/Detail.html:72
+//line views/vstandup/vumember/Detail.html:78
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 }
 
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	StreamDetailTable(qw422016, p, ps)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 }
 
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	WriteDetailTable(qb422016, p, ps)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 	return qs422016
-//line views/vstandup/vumember/Detail.html:77
+//line views/vstandup/vumember/Detail.html:83
 }

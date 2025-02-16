@@ -81,90 +81,95 @@ func StreamTable(qw422016 *qt422016.Writer, models rhistory.RetroHistories, retr
           <td class="nowrap">
             `)
 //line views/vretro/vrhistory/Table.html:28
-		view.StreamUUID(qw422016, &model.RetroID)
-//line views/vretro/vrhistory/Table.html:28
 		if x := retrosByRetroID.Get(model.RetroID); x != nil {
 //line views/vretro/vrhistory/Table.html:28
-			qw422016.N().S(` (`)
-//line views/vretro/vrhistory/Table.html:28
-			qw422016.E().S(x.TitleString())
-//line views/vretro/vrhistory/Table.html:28
-			qw422016.N().S(`)`)
-//line views/vretro/vrhistory/Table.html:28
-		}
-//line views/vretro/vrhistory/Table.html:28
-		qw422016.N().S(`
-            <a title="Retro" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vretro/vrhistory/Table.html:29
-		if x := retrosByRetroID.Get(model.RetroID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vretro/vrhistory/Table.html:29
+			qw422016.N().S(` <a title="Retro" href="`)
 //line views/vretro/vrhistory/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vretro/vrhistory/Table.html:29
+			qw422016.N().S(`">`)
+//line views/vretro/vrhistory/Table.html:29
+			components.StreamSVGLink(qw422016, `retro`, ps)
+//line views/vretro/vrhistory/Table.html:29
+			qw422016.N().S(`</a>
+            `)
+//line views/vretro/vrhistory/Table.html:30
+		} else {
+//line views/vretro/vrhistory/Table.html:30
+			qw422016.N().S(`
+            `)
+//line views/vretro/vrhistory/Table.html:31
+			view.StreamUUID(qw422016, &model.RetroID)
+//line views/vretro/vrhistory/Table.html:31
+			qw422016.N().S(`
+            `)
+//line views/vretro/vrhistory/Table.html:32
 		}
-//line views/vretro/vrhistory/Table.html:29
-		qw422016.N().S(`">`)
-//line views/vretro/vrhistory/Table.html:29
-		components.StreamSVGLink(qw422016, `retro`, ps)
-//line views/vretro/vrhistory/Table.html:29
-		qw422016.N().S(`</a>
+//line views/vretro/vrhistory/Table.html:32
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vretro/vrhistory/Table.html:31
+//line views/vretro/vrhistory/Table.html:34
 		view.StreamString(qw422016, model.RetroName)
-//line views/vretro/vrhistory/Table.html:31
+//line views/vretro/vrhistory/Table.html:34
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vretro/vrhistory/Table.html:32
+//line views/vretro/vrhistory/Table.html:35
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vretro/vrhistory/Table.html:32
+//line views/vretro/vrhistory/Table.html:35
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vretro/vrhistory/Table.html:34
+//line views/vretro/vrhistory/Table.html:37
 	}
-//line views/vretro/vrhistory/Table.html:34
+//line views/vretro/vrhistory/Table.html:37
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vretro/vrhistory/Table.html:38
+//line views/vretro/vrhistory/Table.html:41
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vretro/vrhistory/Table.html:38
+//line views/vretro/vrhistory/Table.html:41
 		qw422016.N().S(`  <hr />
   `)
-//line views/vretro/vrhistory/Table.html:40
+//line views/vretro/vrhistory/Table.html:43
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vretro/vrhistory/Table.html:40
+//line views/vretro/vrhistory/Table.html:43
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vretro/vrhistory/Table.html:42
+//line views/vretro/vrhistory/Table.html:45
 	}
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 }
 
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 func WriteTable(qq422016 qtio422016.Writer, models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	StreamTable(qw422016, models, retrosByRetroID, params, as, ps, paths...)
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 }
 
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 func Table(models rhistory.RetroHistories, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	WriteTable(qb422016, models, retrosByRetroID, params, as, ps, paths...)
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	qs422016 := string(qb422016.B)
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 	return qs422016
-//line views/vretro/vrhistory/Table.html:43
+//line views/vretro/vrhistory/Table.html:46
 }

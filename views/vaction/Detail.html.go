@@ -155,95 +155,100 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vaction/Detail.html:53
-	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vaction/Detail.html:53
-	if p.UserByUserID != nil {
-//line views/vaction/Detail.html:53
-		qw422016.N().S(` (`)
-//line views/vaction/Detail.html:53
-		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vaction/Detail.html:53
-		qw422016.N().S(`)`)
-//line views/vaction/Detail.html:53
-	}
-//line views/vaction/Detail.html:53
-	qw422016.N().S(`
-            <a title="User" href="`)
-//line views/vaction/Detail.html:54
 	if x := p.UserByUserID; x != nil {
+//line views/vaction/Detail.html:53
+		qw422016.N().S(`
+            `)
+//line views/vaction/Detail.html:54
+		qw422016.E().S(x.TitleString())
+//line views/vaction/Detail.html:54
+		qw422016.N().S(` <a title="User" href="`)
 //line views/vaction/Detail.html:54
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vaction/Detail.html:54
+		qw422016.N().S(`">`)
+//line views/vaction/Detail.html:54
+		components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vaction/Detail.html:54
+		qw422016.N().S(`</a>
+            `)
+//line views/vaction/Detail.html:55
+	} else {
+//line views/vaction/Detail.html:55
+		qw422016.N().S(`
+            `)
+//line views/vaction/Detail.html:56
+		view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vaction/Detail.html:56
+		qw422016.N().S(`
+            `)
+//line views/vaction/Detail.html:57
 	}
-//line views/vaction/Detail.html:54
-	qw422016.N().S(`">`)
-//line views/vaction/Detail.html:54
-	components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vaction/Detail.html:54
-	qw422016.N().S(`</a>
+//line views/vaction/Detail.html:57
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Act</th>
           <td>`)
-//line views/vaction/Detail.html:59
+//line views/vaction/Detail.html:62
 	view.StreamString(qw422016, p.Model.Act)
-//line views/vaction/Detail.html:59
+//line views/vaction/Detail.html:62
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="JSON object">Content</th>
           <td>`)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:66
 	components.StreamJSON(qw422016, p.Model.Content)
-//line views/vaction/Detail.html:63
+//line views/vaction/Detail.html:66
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Note</th>
           <td>`)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 	view.StreamString(qw422016, p.Model.Note)
-//line views/vaction/Detail.html:67
+//line views/vaction/Detail.html:70
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vaction/Detail.html:71
+//line views/vaction/Detail.html:74
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vaction/Detail.html:71
+//line views/vaction/Detail.html:74
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 }
 
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	StreamDetailTable(qw422016, p, ps)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	qt422016.ReleaseWriter(qw422016)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 }
 
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	WriteDetailTable(qb422016, p, ps)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	qs422016 := string(qb422016.B)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 	return qs422016
-//line views/vaction/Detail.html:76
+//line views/vaction/Detail.html:79
 }

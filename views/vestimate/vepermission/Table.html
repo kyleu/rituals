@@ -25,8 +25,11 @@
         {%- for _, model := range models -%}
         <tr>
           <td class="nowrap">
-            <a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}</a>
-            <a title="Estimate" href="{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+            {% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %}
+            {%s x.TitleString() %} <a title="Estimate" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&model.EstimateID) %}
+            {% endif %}
           </td>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>

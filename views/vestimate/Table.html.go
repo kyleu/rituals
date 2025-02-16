@@ -133,149 +133,151 @@ func StreamTable(qw422016 *qt422016.Writer, models estimate.Estimates, teamsByTe
           <td class="nowrap">
             `)
 //line views/vestimate/Table.html:40
-		view.StreamUUID(qw422016, model.TeamID)
+		if x := teamsByTeamID.Get(*model.TeamID); x != nil {
 //line views/vestimate/Table.html:40
-		if model.TeamID != nil {
-//line views/vestimate/Table.html:40
-			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
-//line views/vestimate/Table.html:40
-				qw422016.N().S(` (`)
-//line views/vestimate/Table.html:40
-				qw422016.E().S(x.TitleString())
-//line views/vestimate/Table.html:40
-				qw422016.N().S(`)`)
-//line views/vestimate/Table.html:40
-			}
-//line views/vestimate/Table.html:40
-		}
-//line views/vestimate/Table.html:40
-		qw422016.N().S(`
+			qw422016.N().S(`
             `)
 //line views/vestimate/Table.html:41
-		if model.TeamID != nil {
+			qw422016.E().S(x.TitleString())
 //line views/vestimate/Table.html:41
-			qw422016.N().S(`<a title="Team" href="`)
+			qw422016.N().S(` `)
 //line views/vestimate/Table.html:41
-			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
+			if model.TeamID != nil {
+//line views/vestimate/Table.html:41
+				qw422016.N().S(`<a title="Team" href="`)
 //line views/vestimate/Table.html:41
 				qw422016.E().S(x.WebPath(paths...))
 //line views/vestimate/Table.html:41
+				qw422016.N().S(`">`)
+//line views/vestimate/Table.html:41
+				components.StreamSVGLink(qw422016, `team`, ps)
+//line views/vestimate/Table.html:41
+				qw422016.N().S(`</a>`)
+//line views/vestimate/Table.html:41
 			}
 //line views/vestimate/Table.html:41
-			qw422016.N().S(`">`)
-//line views/vestimate/Table.html:41
-			components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vestimate/Table.html:41
-			qw422016.N().S(`</a>`)
-//line views/vestimate/Table.html:41
+			qw422016.N().S(`
+            `)
+//line views/vestimate/Table.html:42
+		} else {
+//line views/vestimate/Table.html:42
+			qw422016.N().S(`
+            `)
+//line views/vestimate/Table.html:43
+			view.StreamUUID(qw422016, model.TeamID)
+//line views/vestimate/Table.html:43
+			qw422016.N().S(`
+            `)
+//line views/vestimate/Table.html:44
 		}
-//line views/vestimate/Table.html:41
+//line views/vestimate/Table.html:44
 		qw422016.N().S(`
           </td>
           <td class="nowrap">
             `)
-//line views/vestimate/Table.html:44
-		view.StreamUUID(qw422016, model.SprintID)
-//line views/vestimate/Table.html:44
-		if model.SprintID != nil {
-//line views/vestimate/Table.html:44
-			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
-//line views/vestimate/Table.html:44
-				qw422016.N().S(` (`)
-//line views/vestimate/Table.html:44
-				qw422016.E().S(x.TitleString())
-//line views/vestimate/Table.html:44
-				qw422016.N().S(`)`)
-//line views/vestimate/Table.html:44
-			}
-//line views/vestimate/Table.html:44
-		}
-//line views/vestimate/Table.html:44
-		qw422016.N().S(`
+//line views/vestimate/Table.html:47
+		if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
+//line views/vestimate/Table.html:47
+			qw422016.N().S(`
             `)
-//line views/vestimate/Table.html:45
-		if model.SprintID != nil {
-//line views/vestimate/Table.html:45
-			qw422016.N().S(`<a title="Sprint" href="`)
-//line views/vestimate/Table.html:45
-			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
-//line views/vestimate/Table.html:45
+//line views/vestimate/Table.html:48
+			qw422016.E().S(x.TitleString())
+//line views/vestimate/Table.html:48
+			qw422016.N().S(` `)
+//line views/vestimate/Table.html:48
+			if model.SprintID != nil {
+//line views/vestimate/Table.html:48
+				qw422016.N().S(`<a title="Sprint" href="`)
+//line views/vestimate/Table.html:48
 				qw422016.E().S(x.WebPath(paths...))
-//line views/vestimate/Table.html:45
+//line views/vestimate/Table.html:48
+				qw422016.N().S(`">`)
+//line views/vestimate/Table.html:48
+				components.StreamSVGLink(qw422016, `sprint`, ps)
+//line views/vestimate/Table.html:48
+				qw422016.N().S(`</a>`)
+//line views/vestimate/Table.html:48
 			}
-//line views/vestimate/Table.html:45
-			qw422016.N().S(`">`)
-//line views/vestimate/Table.html:45
-			components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vestimate/Table.html:45
-			qw422016.N().S(`</a>`)
-//line views/vestimate/Table.html:45
+//line views/vestimate/Table.html:48
+			qw422016.N().S(`
+            `)
+//line views/vestimate/Table.html:49
+		} else {
+//line views/vestimate/Table.html:49
+			qw422016.N().S(`
+            `)
+//line views/vestimate/Table.html:50
+			view.StreamUUID(qw422016, model.SprintID)
+//line views/vestimate/Table.html:50
+			qw422016.N().S(`
+            `)
+//line views/vestimate/Table.html:51
 		}
-//line views/vestimate/Table.html:45
+//line views/vestimate/Table.html:51
 		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vestimate/Table.html:47
+//line views/vestimate/Table.html:53
 		view.StreamStringArray(qw422016, model.Choices)
-//line views/vestimate/Table.html:47
+//line views/vestimate/Table.html:53
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vestimate/Table.html:48
+//line views/vestimate/Table.html:54
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vestimate/Table.html:48
+//line views/vestimate/Table.html:54
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vestimate/Table.html:49
+//line views/vestimate/Table.html:55
 		view.StreamTimestamp(qw422016, model.Updated)
-//line views/vestimate/Table.html:49
+//line views/vestimate/Table.html:55
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vestimate/Table.html:51
+//line views/vestimate/Table.html:57
 	}
-//line views/vestimate/Table.html:51
+//line views/vestimate/Table.html:57
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vestimate/Table.html:55
+//line views/vestimate/Table.html:61
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vestimate/Table.html:55
+//line views/vestimate/Table.html:61
 		qw422016.N().S(`  <hr />
   `)
-//line views/vestimate/Table.html:57
+//line views/vestimate/Table.html:63
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vestimate/Table.html:57
+//line views/vestimate/Table.html:63
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vestimate/Table.html:59
+//line views/vestimate/Table.html:65
 	}
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 }
 
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 func WriteTable(qq422016 qtio422016.Writer, models estimate.Estimates, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	StreamTable(qw422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps, paths...)
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 }
 
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 func Table(models estimate.Estimates, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	WriteTable(qb422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps, paths...)
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	qs422016 := string(qb422016.B)
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 	return qs422016
-//line views/vestimate/Table.html:60
+//line views/vestimate/Table.html:66
 }

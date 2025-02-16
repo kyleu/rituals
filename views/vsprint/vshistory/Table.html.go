@@ -81,90 +81,95 @@ func StreamTable(qw422016 *qt422016.Writer, models shistory.SprintHistories, spr
           <td class="nowrap">
             `)
 //line views/vsprint/vshistory/Table.html:28
-		view.StreamUUID(qw422016, &model.SprintID)
-//line views/vsprint/vshistory/Table.html:28
 		if x := sprintsBySprintID.Get(model.SprintID); x != nil {
 //line views/vsprint/vshistory/Table.html:28
-			qw422016.N().S(` (`)
-//line views/vsprint/vshistory/Table.html:28
-			qw422016.E().S(x.TitleString())
-//line views/vsprint/vshistory/Table.html:28
-			qw422016.N().S(`)`)
-//line views/vsprint/vshistory/Table.html:28
-		}
-//line views/vsprint/vshistory/Table.html:28
-		qw422016.N().S(`
-            <a title="Sprint" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vsprint/vshistory/Table.html:29
-		if x := sprintsBySprintID.Get(model.SprintID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vsprint/vshistory/Table.html:29
+			qw422016.N().S(` <a title="Sprint" href="`)
 //line views/vsprint/vshistory/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vsprint/vshistory/Table.html:29
+			qw422016.N().S(`">`)
+//line views/vsprint/vshistory/Table.html:29
+			components.StreamSVGLink(qw422016, `sprint`, ps)
+//line views/vsprint/vshistory/Table.html:29
+			qw422016.N().S(`</a>
+            `)
+//line views/vsprint/vshistory/Table.html:30
+		} else {
+//line views/vsprint/vshistory/Table.html:30
+			qw422016.N().S(`
+            `)
+//line views/vsprint/vshistory/Table.html:31
+			view.StreamUUID(qw422016, &model.SprintID)
+//line views/vsprint/vshistory/Table.html:31
+			qw422016.N().S(`
+            `)
+//line views/vsprint/vshistory/Table.html:32
 		}
-//line views/vsprint/vshistory/Table.html:29
-		qw422016.N().S(`">`)
-//line views/vsprint/vshistory/Table.html:29
-		components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vsprint/vshistory/Table.html:29
-		qw422016.N().S(`</a>
+//line views/vsprint/vshistory/Table.html:32
+		qw422016.N().S(`
           </td>
           <td>`)
-//line views/vsprint/vshistory/Table.html:31
+//line views/vsprint/vshistory/Table.html:34
 		view.StreamString(qw422016, model.SprintName)
-//line views/vsprint/vshistory/Table.html:31
+//line views/vsprint/vshistory/Table.html:34
 		qw422016.N().S(`</td>
           <td>`)
-//line views/vsprint/vshistory/Table.html:32
+//line views/vsprint/vshistory/Table.html:35
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vsprint/vshistory/Table.html:32
+//line views/vsprint/vshistory/Table.html:35
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vsprint/vshistory/Table.html:34
+//line views/vsprint/vshistory/Table.html:37
 	}
-//line views/vsprint/vshistory/Table.html:34
+//line views/vsprint/vshistory/Table.html:37
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vsprint/vshistory/Table.html:38
+//line views/vsprint/vshistory/Table.html:41
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vsprint/vshistory/Table.html:38
+//line views/vsprint/vshistory/Table.html:41
 		qw422016.N().S(`  <hr />
   `)
-//line views/vsprint/vshistory/Table.html:40
+//line views/vsprint/vshistory/Table.html:43
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vsprint/vshistory/Table.html:40
+//line views/vsprint/vshistory/Table.html:43
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vsprint/vshistory/Table.html:42
+//line views/vsprint/vshistory/Table.html:45
 	}
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 }
 
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 func WriteTable(qq422016 qtio422016.Writer, models shistory.SprintHistories, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	StreamTable(qw422016, models, sprintsBySprintID, params, as, ps, paths...)
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 }
 
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 func Table(models shistory.SprintHistories, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	WriteTable(qb422016, models, sprintsBySprintID, params, as, ps, paths...)
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	qs422016 := string(qb422016.B)
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 	return qs422016
-//line views/vsprint/vshistory/Table.html:43
+//line views/vsprint/vshistory/Table.html:46
 }

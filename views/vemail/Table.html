@@ -33,8 +33,11 @@
           <td>{%= components.JSON(model.Data) %}</td>
           <td>{%= view.String(model.Plain) %}</td>
           <td class="nowrap">
-            {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{% if x := usersByUserID.Get(model.UserID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            {% if x := usersByUserID.Get(model.UserID); x != nil %}
+            {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&model.UserID) %}
+            {% endif %}
           </td>
           <td>{%= view.String(model.Status) %}</td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

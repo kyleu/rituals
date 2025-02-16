@@ -174,79 +174,84 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
           <td class="nowrap">
             `)
 //line views/vemail/Detail.html:64
-	view.StreamUUID(qw422016, &p.Model.UserID)
-//line views/vemail/Detail.html:64
-	if p.UserByUserID != nil {
-//line views/vemail/Detail.html:64
-		qw422016.N().S(` (`)
-//line views/vemail/Detail.html:64
-		qw422016.E().S(p.UserByUserID.TitleString())
-//line views/vemail/Detail.html:64
-		qw422016.N().S(`)`)
-//line views/vemail/Detail.html:64
-	}
-//line views/vemail/Detail.html:64
-	qw422016.N().S(`
-            <a title="User" href="`)
-//line views/vemail/Detail.html:65
 	if x := p.UserByUserID; x != nil {
+//line views/vemail/Detail.html:64
+		qw422016.N().S(`
+            `)
+//line views/vemail/Detail.html:65
+		qw422016.E().S(x.TitleString())
+//line views/vemail/Detail.html:65
+		qw422016.N().S(` <a title="User" href="`)
 //line views/vemail/Detail.html:65
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vemail/Detail.html:65
+		qw422016.N().S(`">`)
+//line views/vemail/Detail.html:65
+		components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vemail/Detail.html:65
+		qw422016.N().S(`</a>
+            `)
+//line views/vemail/Detail.html:66
+	} else {
+//line views/vemail/Detail.html:66
+		qw422016.N().S(`
+            `)
+//line views/vemail/Detail.html:67
+		view.StreamUUID(qw422016, &p.Model.UserID)
+//line views/vemail/Detail.html:67
+		qw422016.N().S(`
+            `)
+//line views/vemail/Detail.html:68
 	}
-//line views/vemail/Detail.html:65
-	qw422016.N().S(`">`)
-//line views/vemail/Detail.html:65
-	components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vemail/Detail.html:65
-	qw422016.N().S(`</a>
+//line views/vemail/Detail.html:68
+	qw422016.N().S(`
           </td>
         </tr>
         <tr>
           <th class="shrink" title="String text">Status</th>
           <td>`)
-//line views/vemail/Detail.html:70
+//line views/vemail/Detail.html:73
 	view.StreamString(qw422016, p.Model.Status)
-//line views/vemail/Detail.html:70
+//line views/vemail/Detail.html:73
 	qw422016.N().S(`</td>
         </tr>
         <tr>
           <th class="shrink" title="Date and time, in almost any format">Created</th>
           <td>`)
-//line views/vemail/Detail.html:74
+//line views/vemail/Detail.html:77
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vemail/Detail.html:74
+//line views/vemail/Detail.html:77
 	qw422016.N().S(`</td>
         </tr>
       </tbody>
     </table>
   </div>
 `)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 }
 
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	StreamDetailTable(qw422016, p, ps)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	qt422016.ReleaseWriter(qw422016)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 }
 
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 func DetailTable(p *Detail, ps *cutil.PageState) string {
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	WriteDetailTable(qb422016, p, ps)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	qs422016 := string(qb422016.B)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 	return qs422016
-//line views/vemail/Detail.html:79
+//line views/vemail/Detail.html:82
 }

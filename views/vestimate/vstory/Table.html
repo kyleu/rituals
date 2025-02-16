@@ -32,13 +32,19 @@
         <tr>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td class="nowrap">
-            {%= view.UUID(&model.EstimateID) %}{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Estimate" href="{% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+            {% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %}
+            {%s x.TitleString() %} <a title="Estimate" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&model.EstimateID) %}
+            {% endif %}
           </td>
           <td>{%d model.Idx %}</td>
           <td class="nowrap">
-            {%= view.UUID(&model.UserID) %}{% if x := usersByUserID.Get(model.UserID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="User" href="{% if x := usersByUserID.Get(model.UserID); x != nil %}{%s x.WebPath(paths...) %}{% endif %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            {% if x := usersByUserID.Get(model.UserID); x != nil %}
+            {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            {% else %}
+            {%= view.UUID(&model.UserID) %}
+            {% endif %}
           </td>
           <td><strong>{%= view.String(model.Title) %}</strong></td>
           <td>{%s model.Status.String() %}</td>
