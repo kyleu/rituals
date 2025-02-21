@@ -200,23 +200,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 //line views/vretro/Detail.html:80
 		qw422016.E().S(x.TitleString())
 //line views/vretro/Detail.html:80
-		qw422016.N().S(` `)
+		qw422016.N().S(` <a title="Team" href="`)
 //line views/vretro/Detail.html:80
-		if p.Model.TeamID != nil {
+		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vretro/Detail.html:80
-			qw422016.N().S(`<a title="Team" href="`)
+		qw422016.N().S(`">`)
 //line views/vretro/Detail.html:80
-			qw422016.E().S(x.WebPath(p.Paths...))
+		components.StreamSVGLink(qw422016, `team`, ps)
 //line views/vretro/Detail.html:80
-			qw422016.N().S(`">`)
-//line views/vretro/Detail.html:80
-			components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vretro/Detail.html:80
-			qw422016.N().S(`</a>`)
-//line views/vretro/Detail.html:80
-		}
-//line views/vretro/Detail.html:80
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vretro/Detail.html:81
 	} else {
@@ -246,23 +238,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 //line views/vretro/Detail.html:90
 		qw422016.E().S(x.TitleString())
 //line views/vretro/Detail.html:90
-		qw422016.N().S(` `)
+		qw422016.N().S(` <a title="Sprint" href="`)
 //line views/vretro/Detail.html:90
-		if p.Model.SprintID != nil {
+		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vretro/Detail.html:90
-			qw422016.N().S(`<a title="Sprint" href="`)
+		qw422016.N().S(`">`)
 //line views/vretro/Detail.html:90
-			qw422016.E().S(x.WebPath(p.Paths...))
+		components.StreamSVGLink(qw422016, `sprint`, ps)
 //line views/vretro/Detail.html:90
-			qw422016.N().S(`">`)
-//line views/vretro/Detail.html:90
-			components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vretro/Detail.html:90
-			qw422016.N().S(`</a>`)
-//line views/vretro/Detail.html:90
-		}
-//line views/vretro/Detail.html:90
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vretro/Detail.html:91
 	} else {

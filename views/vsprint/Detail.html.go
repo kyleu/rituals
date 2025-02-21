@@ -204,23 +204,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 //line views/vsprint/Detail.html:84
 		qw422016.E().S(x.TitleString())
 //line views/vsprint/Detail.html:84
-		qw422016.N().S(` `)
+		qw422016.N().S(` <a title="Team" href="`)
 //line views/vsprint/Detail.html:84
-		if p.Model.TeamID != nil {
+		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vsprint/Detail.html:84
-			qw422016.N().S(`<a title="Team" href="`)
+		qw422016.N().S(`">`)
 //line views/vsprint/Detail.html:84
-			qw422016.E().S(x.WebPath(p.Paths...))
+		components.StreamSVGLink(qw422016, `team`, ps)
 //line views/vsprint/Detail.html:84
-			qw422016.N().S(`">`)
-//line views/vsprint/Detail.html:84
-			components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vsprint/Detail.html:84
-			qw422016.N().S(`</a>`)
-//line views/vsprint/Detail.html:84
-		}
-//line views/vsprint/Detail.html:84
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vsprint/Detail.html:85
 	} else {

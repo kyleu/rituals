@@ -133,18 +133,16 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
           <td class="nowrap">
             `)
 //line views/vretro/Table.html:40
-		if x := teamsByTeamID.Get(*model.TeamID); x != nil {
+		if model.TeamID != nil {
 //line views/vretro/Table.html:40
-			qw422016.N().S(`
+			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
+//line views/vretro/Table.html:40
+				qw422016.N().S(`
             `)
 //line views/vretro/Table.html:41
-			qw422016.E().S(x.TitleString())
+				qw422016.E().S(x.TitleString())
 //line views/vretro/Table.html:41
-			qw422016.N().S(` `)
-//line views/vretro/Table.html:41
-			if model.TeamID != nil {
-//line views/vretro/Table.html:41
-				qw422016.N().S(`<a title="Team" href="`)
+				qw422016.N().S(` <a title="Team" href="`)
 //line views/vretro/Table.html:41
 				qw422016.E().S(x.WebPath(paths...))
 //line views/vretro/Table.html:41
@@ -152,22 +150,20 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 //line views/vretro/Table.html:41
 				components.StreamSVGLink(qw422016, `team`, ps)
 //line views/vretro/Table.html:41
-				qw422016.N().S(`</a>`)
-//line views/vretro/Table.html:41
+				qw422016.N().S(`</a>
+            `)
+//line views/vretro/Table.html:42
+			} else {
+//line views/vretro/Table.html:42
+				qw422016.N().S(`
+            `)
+//line views/vretro/Table.html:43
+				view.StreamUUID(qw422016, model.TeamID)
+//line views/vretro/Table.html:43
+				qw422016.N().S(`
+            `)
+//line views/vretro/Table.html:44
 			}
-//line views/vretro/Table.html:41
-			qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:42
-		} else {
-//line views/vretro/Table.html:42
-			qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:43
-			view.StreamUUID(qw422016, model.TeamID)
-//line views/vretro/Table.html:43
-			qw422016.N().S(`
-            `)
 //line views/vretro/Table.html:44
 		}
 //line views/vretro/Table.html:44
@@ -176,18 +172,16 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
           <td class="nowrap">
             `)
 //line views/vretro/Table.html:47
-		if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
+		if model.SprintID != nil {
 //line views/vretro/Table.html:47
-			qw422016.N().S(`
+			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
+//line views/vretro/Table.html:47
+				qw422016.N().S(`
             `)
 //line views/vretro/Table.html:48
-			qw422016.E().S(x.TitleString())
+				qw422016.E().S(x.TitleString())
 //line views/vretro/Table.html:48
-			qw422016.N().S(` `)
-//line views/vretro/Table.html:48
-			if model.SprintID != nil {
-//line views/vretro/Table.html:48
-				qw422016.N().S(`<a title="Sprint" href="`)
+				qw422016.N().S(` <a title="Sprint" href="`)
 //line views/vretro/Table.html:48
 				qw422016.E().S(x.WebPath(paths...))
 //line views/vretro/Table.html:48
@@ -195,22 +189,20 @@ func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID t
 //line views/vretro/Table.html:48
 				components.StreamSVGLink(qw422016, `sprint`, ps)
 //line views/vretro/Table.html:48
-				qw422016.N().S(`</a>`)
-//line views/vretro/Table.html:48
+				qw422016.N().S(`</a>
+            `)
+//line views/vretro/Table.html:49
+			} else {
+//line views/vretro/Table.html:49
+				qw422016.N().S(`
+            `)
+//line views/vretro/Table.html:50
+				view.StreamUUID(qw422016, model.SprintID)
+//line views/vretro/Table.html:50
+				qw422016.N().S(`
+            `)
+//line views/vretro/Table.html:51
 			}
-//line views/vretro/Table.html:48
-			qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:49
-		} else {
-//line views/vretro/Table.html:49
-			qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:50
-			view.StreamUUID(qw422016, model.SprintID)
-//line views/vretro/Table.html:50
-			qw422016.N().S(`
-            `)
 //line views/vretro/Table.html:51
 		}
 //line views/vretro/Table.html:51

@@ -36,11 +36,11 @@
           <td>{%= view.String(model.Icon) %}</td>
           <td>{%s model.Status.String() %}</td>
           <td class="nowrap">
-            {% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}
-            {%s x.TitleString() %} {% if model.TeamID != nil %}<a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+            {% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}
+            {%s x.TitleString() %} <a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
             {% else %}
             {%= view.UUID(model.TeamID) %}
-            {% endif %}
+            {% endif %}{% endif %}
           </td>
           <td>{%= view.TimestampDay(model.StartDate) %}</td>
           <td>{%= view.TimestampDay(model.EndDate) %}</td>

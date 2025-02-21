@@ -77,7 +77,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
           <td class="nowrap">
             {% if x := p.TeamByTeamID; x != nil %}
-            {%s x.TitleString() %} {% if p.Model.TeamID != nil %}<a title="Team" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>{% endif %}
+            {%s x.TitleString() %} <a title="Team" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
             {% else %}
             {%= view.UUID(p.Model.TeamID) %}
             {% endif %}
@@ -87,7 +87,7 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Sprint ID</th>
           <td class="nowrap">
             {% if x := p.SprintBySprintID; x != nil %}
-            {%s x.TitleString() %} {% if p.Model.SprintID != nil %}<a title="Sprint" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>{% endif %}
+            {%s x.TitleString() %} <a title="Sprint" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`sprint`, ps) %}</a>
             {% else %}
             {%= view.UUID(p.Model.SprintID) %}
             {% endif %}
