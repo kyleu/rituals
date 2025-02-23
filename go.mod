@@ -27,7 +27,7 @@ require (
 	github.com/muesli/coral v1.0.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.21.0
+	github.com/prometheus/client_golang v1.20.5
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/lo v1.49.1
 	github.com/spf13/afero v1.12.0
