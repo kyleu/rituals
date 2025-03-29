@@ -42,7 +42,7 @@ func NewRetro(id uuid.UUID) *Retro {
 
 func (r *Retro) Clone() *Retro {
 	return &Retro{
-		r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Categories[:], r.Created, r.Updated,
+		r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, util.ArrayCopy(r.Categories), r.Created, r.Updated,
 	}
 }
 

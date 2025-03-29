@@ -41,7 +41,9 @@ func NewEstimate(id uuid.UUID) *Estimate {
 }
 
 func (e *Estimate) Clone() *Estimate {
-	return &Estimate{e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, e.Choices[:], e.Created, e.Updated}
+	return &Estimate{
+		e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, util.ArrayCopy(e.Choices), e.Created, e.Updated,
+	}
 }
 
 func (e *Estimate) String() string {

@@ -1,6 +1,7 @@
 package clib
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/kyleu/rituals/app"
@@ -8,7 +9,9 @@ import (
 	"github.com/kyleu/rituals/app/controller/cutil"
 	"github.com/kyleu/rituals/app/lib/sandbox"
 	"github.com/kyleu/rituals/app/lib/telemetry"
+	"github.com/kyleu/rituals/app/util"
 	"github.com/kyleu/rituals/views"
+	"github.com/kyleu/rituals/views/vpage"
 	"github.com/kyleu/rituals/views/vsandbox"
 )
 
@@ -35,10 +38,17 @@ func SandboxRun(w http.ResponseWriter, r *http.Request) {
 			return controller.ERsp("no sandbox with key [%s]", key)
 		}
 
+		argRes := util.FieldDescsCollect(r, sb.Args)
+		if argRes.HasMissing() {
+			ps.Data = argRes
+			url := fmt.Sprintf("/admin/sandbox/%s", sb.Key)
+			return controller.Render(r, as, &vpage.Args{URL: url, Directions: "Choose your options", Results: argRes}, ps, "sandbox", sb.Key)
+		}
+
 		ctx, span, logger := telemetry.StartSpan(ps.Context, "sandbox."+key, ps.Logger)
 		defer span.Complete()
 
-		ret, err := sb.Run(ctx, as, logger.With("sandbox", key))
+		ret, err := sb.Run(ctx, as, argRes.Values, logger.With("sandbox", key))
 		if err != nil {
 			return "", err
 		}

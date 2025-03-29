@@ -5,7 +5,6 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"slices"
 	"strings"
 
 	"github.com/mileusna/useragent"
@@ -61,7 +60,7 @@ func LoadPageState(as *app.State, w *WriteCounter, r *http.Request, key string, 
 		Action: key, Method: r.Method, URI: r.URL, Flashes: flashes, Session: session,
 		OS: os, OSVersion: ua.OSVersion, Browser: browser, BrowserVersion: ua.Version, Platform: platform,
 		User: u, Profile: prof, Accounts: accts, Authed: isAuthed, Admin: isAdmin, Params: params,
-		Icons: slices.Clone(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b, W: w,
+		Icons: util.ArrayCopy(initialIcons), Started: util.TimeCurrent(), Logger: logger, Context: ctx, Span: span, RequestBody: b, W: w,
 	}
 }
 
