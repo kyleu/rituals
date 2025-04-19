@@ -38,7 +38,7 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.autocomplete(document.getElementById("input-estimateID"), "/admin/db/estimate?estimate.l=10", "q", (o) => (o["slug"] || "[no slug]") + " / " + (o["title"] || "[no title]") + " / " + (o["choices"] || "[no choices]") + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-estimateID"), "/admin/db/estimate?estimate.l=10", "q", (o) => (o["title"] || "[no title]") + " (" + o["id"] + ")", (o) => o["id"]);
     });
   </script>
 {% endfunc %}

@@ -127,7 +127,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      rituals.autocomplete(document.getElementById("input-sprintID"), "/admin/db/sprint?sprint.l=10", "q", (o) => (o["slug"] || "[no slug]") + " / " + (o["title"] || "[no title]") + " (" + o["id"] + ")", (o) => o["id"]);
+      rituals.autocomplete(document.getElementById("input-sprintID"), "/admin/db/sprint?sprint.l=10", "q", (o) => (o["title"] || "[no title]") + " (" + o["id"] + ")", (o) => o["id"]);
     });
   </script>
 `)

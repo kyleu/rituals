@@ -30,7 +30,7 @@ type PK struct {
 }
 
 func (p *PK) String() string {
-	return fmt.Sprintf("%v::%v", p.RetroID, p.UserID)
+	return fmt.Sprintf("%v • %v", p.RetroID, p.UserID)
 }
 
 type RetroMember struct {
@@ -52,7 +52,7 @@ func (r *RetroMember) Clone() *RetroMember {
 }
 
 func (r *RetroMember) String() string {
-	return fmt.Sprintf("%s::%s", r.RetroID.String(), r.UserID.String())
+	return fmt.Sprintf("%s • %s", r.RetroID.String(), r.UserID.String())
 }
 
 func (r *RetroMember) TitleString() string {

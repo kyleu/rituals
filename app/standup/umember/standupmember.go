@@ -30,7 +30,7 @@ type PK struct {
 }
 
 func (p *PK) String() string {
-	return fmt.Sprintf("%v::%v", p.StandupID, p.UserID)
+	return fmt.Sprintf("%v • %v", p.StandupID, p.UserID)
 }
 
 type StandupMember struct {
@@ -52,7 +52,7 @@ func (s *StandupMember) Clone() *StandupMember {
 }
 
 func (s *StandupMember) String() string {
-	return fmt.Sprintf("%s::%s", s.StandupID.String(), s.UserID.String())
+	return fmt.Sprintf("%s • %s", s.StandupID.String(), s.UserID.String())
 }
 
 func (s *StandupMember) TitleString() string {

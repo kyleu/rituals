@@ -29,7 +29,7 @@ type PK struct {
 }
 
 func (p *PK) String() string {
-	return fmt.Sprintf("%v::%v", p.StoryID, p.UserID)
+	return fmt.Sprintf("%v • %v", p.StoryID, p.UserID)
 }
 
 type Vote struct {
@@ -49,7 +49,7 @@ func (v *Vote) Clone() *Vote {
 }
 
 func (v *Vote) String() string {
-	return fmt.Sprintf("%s::%s", v.StoryID.String(), v.UserID.String())
+	return fmt.Sprintf("%s • %s", v.StoryID.String(), v.UserID.String())
 }
 
 func (v *Vote) TitleString() string {
