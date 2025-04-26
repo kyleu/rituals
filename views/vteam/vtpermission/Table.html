@@ -26,9 +26,9 @@
         <tr>
           <td class="nowrap">
             {% if x := teamsByTeamID.Get(model.TeamID); x != nil %}
-            {%s x.TitleString() %} <a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
+            <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
             {% else %}
-            {%= view.UUID(&model.TeamID) %}
+            <a href="{%s model.WebPath() %}">{%= view.UUID(&model.TeamID) %}</a>
             {% endif %}
           </td>
           <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>

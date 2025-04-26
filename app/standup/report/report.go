@@ -78,6 +78,10 @@ func (r *Report) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(r.ID.String()))...)
 }
 
+func (r *Report) Breadcrumb(extra ...string) string {
+	return r.TitleString() + "||" + r.WebPath(extra...) + "**file-alt"
+}
+
 func (r *Report) ToData() []any {
 	return []any{r.ID, r.StandupID, r.Day, r.UserID, r.Content, r.HTML, r.Created, r.Updated}
 }

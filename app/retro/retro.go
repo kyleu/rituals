@@ -88,6 +88,10 @@ func (r *Retro) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(r.ID.String()))...)
 }
 
+func (r *Retro) Breadcrumb(extra ...string) string {
+	return r.TitleString() + "||" + r.WebPath(extra...) + "**retro"
+}
+
 func (r *Retro) ToData() []any {
 	return []any{r.ID, r.Slug, r.Title, r.Icon, r.Status, r.TeamID, r.SprintID, r.Categories, r.Created, r.Updated}
 }

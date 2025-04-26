@@ -41,9 +41,9 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Retro ID</th>
           <td class="nowrap">
             {% if x := p.RetroByRetroID; x != nil %}
-            {%s x.TitleString() %} <a title="Retro" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
+            <a href="{%s p.Model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Retro" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
             {% else %}
-            {%= view.UUID(&p.Model.RetroID) %}
+            <a href="{%s p.Model.WebPath() %}">{%= view.UUID(&p.Model.RetroID) %}</a>
             {% endif %}
           </td>
         </tr>
@@ -51,9 +51,9 @@
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">User ID</th>
           <td class="nowrap">
             {% if x := p.UserByUserID; x != nil %}
-            {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a href="{%s p.Model.WebPath() %}">{%s x.TitleString() %}</a> <a title="User" href="{%s x.WebPath(p.Paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
             {% else %}
-            {%= view.UUID(&p.Model.UserID) %}
+            <a href="{%s p.Model.WebPath() %}">{%= view.UUID(&p.Model.UserID) %}</a>
             {% endif %}
           </td>
         </tr>

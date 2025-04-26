@@ -90,6 +90,10 @@ func (r *RetroPermission) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(r.RetroID.String()), url.QueryEscape(r.Key), url.QueryEscape(r.Value))...)
 }
 
+func (r *RetroPermission) Breadcrumb(extra ...string) string {
+	return r.TitleString() + "||" + r.WebPath(extra...) + "**permission"
+}
+
 func (r *RetroPermission) ToData() []any {
 	return []any{r.RetroID, r.Key, r.Value, r.Access, r.Created}
 }

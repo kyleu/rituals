@@ -90,6 +90,10 @@ func (t *TeamPermission) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(t.TeamID.String()), url.QueryEscape(t.Key), url.QueryEscape(t.Value))...)
 }
 
+func (t *TeamPermission) Breadcrumb(extra ...string) string {
+	return t.TitleString() + "||" + t.WebPath(extra...) + "**permission"
+}
+
 func (t *TeamPermission) ToData() []any {
 	return []any{t.TeamID, t.Key, t.Value, t.Access, t.Created}
 }

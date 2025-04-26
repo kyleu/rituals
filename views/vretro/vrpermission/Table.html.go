@@ -80,11 +80,15 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 		if x := retrosByRetroID.Get(model.RetroID); x != nil {
 //line views/vretro/vrpermission/Table.html:28
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vretro/vrpermission/Table.html:29
+			qw422016.E().S(model.WebPath())
+//line views/vretro/vrpermission/Table.html:29
+			qw422016.N().S(`">`)
 //line views/vretro/vrpermission/Table.html:29
 			qw422016.E().S(x.TitleString())
 //line views/vretro/vrpermission/Table.html:29
-			qw422016.N().S(` <a title="Retro" href="`)
+			qw422016.N().S(`</a> <a title="Retro" href="`)
 //line views/vretro/vrpermission/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vretro/vrpermission/Table.html:29
@@ -98,11 +102,15 @@ func StreamTable(qw422016 *qt422016.Writer, models rpermission.RetroPermissions,
 		} else {
 //line views/vretro/vrpermission/Table.html:30
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vretro/vrpermission/Table.html:31
+			qw422016.E().S(model.WebPath())
+//line views/vretro/vrpermission/Table.html:31
+			qw422016.N().S(`">`)
 //line views/vretro/vrpermission/Table.html:31
 			view.StreamUUID(qw422016, &model.RetroID)
 //line views/vretro/vrpermission/Table.html:31
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vretro/vrpermission/Table.html:32
 		}

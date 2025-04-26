@@ -132,11 +132,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	if x := p.RetroByRetroID; x != nil {
 //line views/vretro/vrmember/Detail.html:43
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vretro/vrmember/Detail.html:44
+		qw422016.E().S(p.Model.WebPath())
+//line views/vretro/vrmember/Detail.html:44
+		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:44
 		qw422016.E().S(x.TitleString())
 //line views/vretro/vrmember/Detail.html:44
-		qw422016.N().S(` <a title="Retro" href="`)
+		qw422016.N().S(`</a> <a title="Retro" href="`)
 //line views/vretro/vrmember/Detail.html:44
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vretro/vrmember/Detail.html:44
@@ -150,11 +154,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	} else {
 //line views/vretro/vrmember/Detail.html:45
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vretro/vrmember/Detail.html:46
+		qw422016.E().S(p.Model.WebPath())
+//line views/vretro/vrmember/Detail.html:46
+		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:46
 		view.StreamUUID(qw422016, &p.Model.RetroID)
 //line views/vretro/vrmember/Detail.html:46
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vretro/vrmember/Detail.html:47
 	}
@@ -170,11 +178,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	if x := p.UserByUserID; x != nil {
 //line views/vretro/vrmember/Detail.html:53
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vretro/vrmember/Detail.html:54
+		qw422016.E().S(p.Model.WebPath())
+//line views/vretro/vrmember/Detail.html:54
+		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:54
 		qw422016.E().S(x.TitleString())
 //line views/vretro/vrmember/Detail.html:54
-		qw422016.N().S(` <a title="User" href="`)
+		qw422016.N().S(`</a> <a title="User" href="`)
 //line views/vretro/vrmember/Detail.html:54
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vretro/vrmember/Detail.html:54
@@ -188,11 +200,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	} else {
 //line views/vretro/vrmember/Detail.html:55
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vretro/vrmember/Detail.html:56
+		qw422016.E().S(p.Model.WebPath())
+//line views/vretro/vrmember/Detail.html:56
+		qw422016.N().S(`">`)
 //line views/vretro/vrmember/Detail.html:56
 		view.StreamUUID(qw422016, &p.Model.UserID)
 //line views/vretro/vrmember/Detail.html:56
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vretro/vrmember/Detail.html:57
 	}

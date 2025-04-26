@@ -90,6 +90,10 @@ func (e *EstimatePermission) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(e.EstimateID.String()), url.QueryEscape(e.Key), url.QueryEscape(e.Value))...)
 }
 
+func (e *EstimatePermission) Breadcrumb(extra ...string) string {
+	return e.TitleString() + "||" + e.WebPath(extra...) + "**permission"
+}
+
 func (e *EstimatePermission) ToData() []any {
 	return []any{e.EstimateID, e.Key, e.Value, e.Access, e.Created}
 }

@@ -93,6 +93,10 @@ func (r *RetroMember) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(r.RetroID.String()), url.QueryEscape(r.UserID.String()))...)
 }
 
+func (r *RetroMember) Breadcrumb(extra ...string) string {
+	return r.TitleString() + "||" + r.WebPath(extra...) + "**users"
+}
+
 func (r *RetroMember) ToData() []any {
 	return []any{r.RetroID, r.UserID, r.Name, r.Picture, r.Role, r.Created, r.Updated}
 }

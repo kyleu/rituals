@@ -81,6 +81,10 @@ func (f *Feedback) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(f.ID.String()))...)
 }
 
+func (f *Feedback) Breadcrumb(extra ...string) string {
+	return f.TitleString() + "||" + f.WebPath(extra...) + "**comment"
+}
+
 func (f *Feedback) ToData() []any {
 	return []any{f.ID, f.RetroID, f.Idx, f.UserID, f.Category, f.Content, f.HTML, f.Created, f.Updated}
 }

@@ -74,6 +74,10 @@ func (u *User) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(u.ID.String()))...)
 }
 
+func (u *User) Breadcrumb(extra ...string) string {
+	return u.TitleString() + "||" + u.WebPath(extra...) + "**profile"
+}
+
 func (u *User) ToData() []any {
 	return []any{u.ID, u.Name, u.Picture, u.Created, u.Updated}
 }

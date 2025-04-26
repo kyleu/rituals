@@ -88,6 +88,10 @@ func (e *Estimate) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(e.ID.String()))...)
 }
 
+func (e *Estimate) Breadcrumb(extra ...string) string {
+	return e.TitleString() + "||" + e.WebPath(extra...) + "**estimate"
+}
+
 func (e *Estimate) ToData() []any {
 	return []any{e.ID, e.Slug, e.Title, e.Icon, e.Status, e.TeamID, e.SprintID, e.Choices, e.Created, e.Updated}
 }

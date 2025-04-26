@@ -90,6 +90,10 @@ func (s *SprintPermission) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.SprintID.String()), url.QueryEscape(s.Key), url.QueryEscape(s.Value))...)
 }
 
+func (s *SprintPermission) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**permission"
+}
+
 func (s *SprintPermission) ToData() []any {
 	return []any{s.SprintID, s.Key, s.Value, s.Access, s.Created}
 }

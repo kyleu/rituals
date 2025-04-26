@@ -88,6 +88,10 @@ func (v *Vote) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(v.StoryID.String()), url.QueryEscape(v.UserID.String()))...)
 }
 
+func (v *Vote) Breadcrumb(extra ...string) string {
+	return v.TitleString() + "||" + v.WebPath(extra...) + "**vote-yea"
+}
+
 func (v *Vote) ToData() []any {
 	return []any{v.StoryID, v.UserID, v.Choice, v.Created, v.Updated}
 }

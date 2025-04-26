@@ -85,6 +85,10 @@ func (s *Story) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.ID.String()))...)
 }
 
+func (s *Story) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**story"
+}
+
 func (s *Story) ToData() []any {
 	return []any{s.ID, s.EstimateID, s.Idx, s.UserID, s.Title, s.Status, s.FinalVote, s.Created, s.Updated}
 }

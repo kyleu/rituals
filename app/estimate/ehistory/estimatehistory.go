@@ -69,6 +69,10 @@ func (e *EstimateHistory) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(e.Slug))...)
 }
 
+func (e *EstimateHistory) Breadcrumb(extra ...string) string {
+	return e.TitleString() + "||" + e.WebPath(extra...) + "**history"
+}
+
 func (e *EstimateHistory) ToData() []any {
 	return []any{e.Slug, e.EstimateID, e.EstimateName, e.Created}
 }

@@ -93,6 +93,10 @@ func (s *SprintMember) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.SprintID.String()), url.QueryEscape(s.UserID.String()))...)
 }
 
+func (s *SprintMember) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**users"
+}
+
 func (s *SprintMember) ToData() []any {
 	return []any{s.SprintID, s.UserID, s.Name, s.Picture, s.Role, s.Created, s.Updated}
 }

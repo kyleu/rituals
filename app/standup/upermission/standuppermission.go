@@ -90,6 +90,10 @@ func (s *StandupPermission) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.Key), url.QueryEscape(s.Value))...)
 }
 
+func (s *StandupPermission) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**permission"
+}
+
 func (s *StandupPermission) ToData() []any {
 	return []any{s.StandupID, s.Key, s.Value, s.Access, s.Created}
 }

@@ -69,6 +69,10 @@ func (s *StandupHistory) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.Slug))...)
 }
 
+func (s *StandupHistory) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**history"
+}
+
 func (s *StandupHistory) ToData() []any {
 	return []any{s.Slug, s.StandupID, s.StandupName, s.Created}
 }

@@ -27,16 +27,16 @@
         <tr>
           <td class="nowrap">
             {% if x := storiesByStoryID.Get(model.StoryID); x != nil %}
-            {%s x.TitleString() %} <a title="Story" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`story`, ps) %}</a>
+            <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Story" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`story`, ps) %}</a>
             {% else %}
-            {%= view.UUID(&model.StoryID) %}
+            <a href="{%s model.WebPath() %}">{%= view.UUID(&model.StoryID) %}</a>
             {% endif %}
           </td>
           <td class="nowrap">
             {% if x := usersByUserID.Get(model.UserID); x != nil %}
-            {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+            <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
             {% else %}
-            {%= view.UUID(&model.UserID) %}
+            <a href="{%s model.WebPath() %}">{%= view.UUID(&model.UserID) %}</a>
             {% endif %}
           </td>
           <td>{%= view.String(model.Choice) %}</td>

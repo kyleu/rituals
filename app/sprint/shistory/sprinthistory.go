@@ -69,6 +69,10 @@ func (s *SprintHistory) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.Slug))...)
 }
 
+func (s *SprintHistory) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**history"
+}
+
 func (s *SprintHistory) ToData() []any {
 	return []any{s.Slug, s.SprintID, s.SprintName, s.Created}
 }

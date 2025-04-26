@@ -92,11 +92,15 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 		if x := standupsByStandupID.Get(model.StandupID); x != nil {
 //line views/vstandup/vumember/Table.html:32
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vstandup/vumember/Table.html:33
+			qw422016.E().S(model.WebPath())
+//line views/vstandup/vumember/Table.html:33
+			qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:33
 			qw422016.E().S(x.TitleString())
 //line views/vstandup/vumember/Table.html:33
-			qw422016.N().S(` <a title="Standup" href="`)
+			qw422016.N().S(`</a> <a title="Standup" href="`)
 //line views/vstandup/vumember/Table.html:33
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vstandup/vumember/Table.html:33
@@ -110,11 +114,15 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 		} else {
 //line views/vstandup/vumember/Table.html:34
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vstandup/vumember/Table.html:35
+			qw422016.E().S(model.WebPath())
+//line views/vstandup/vumember/Table.html:35
+			qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:35
 			view.StreamUUID(qw422016, &model.StandupID)
 //line views/vstandup/vumember/Table.html:35
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vstandup/vumember/Table.html:36
 		}
@@ -127,11 +135,15 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vstandup/vumember/Table.html:39
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vstandup/vumember/Table.html:40
+			qw422016.E().S(model.WebPath())
+//line views/vstandup/vumember/Table.html:40
+			qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:40
 			qw422016.E().S(x.TitleString())
 //line views/vstandup/vumember/Table.html:40
-			qw422016.N().S(` <a title="User" href="`)
+			qw422016.N().S(`</a> <a title="User" href="`)
 //line views/vstandup/vumember/Table.html:40
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vstandup/vumember/Table.html:40
@@ -145,11 +157,15 @@ func StreamTable(qw422016 *qt422016.Writer, models umember.StandupMembers, stand
 		} else {
 //line views/vstandup/vumember/Table.html:41
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vstandup/vumember/Table.html:42
+			qw422016.E().S(model.WebPath())
+//line views/vstandup/vumember/Table.html:42
+			qw422016.N().S(`">`)
 //line views/vstandup/vumember/Table.html:42
 			view.StreamUUID(qw422016, &model.UserID)
 //line views/vstandup/vumember/Table.html:42
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vstandup/vumember/Table.html:43
 		}

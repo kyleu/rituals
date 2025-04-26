@@ -69,6 +69,10 @@ func (t *TeamHistory) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(t.Slug))...)
 }
 
+func (t *TeamHistory) Breadcrumb(extra ...string) string {
+	return t.TitleString() + "||" + t.WebPath(extra...) + "**history"
+}
+
 func (t *TeamHistory) ToData() []any {
 	return []any{t.Slug, t.TeamID, t.TeamName, t.Created}
 }

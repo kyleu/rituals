@@ -81,11 +81,15 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		if x := storiesByStoryID.Get(model.StoryID); x != nil {
 //line views/vestimate/vstory/vvote/Table.html:29
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vstory/vvote/Table.html:30
+			qw422016.E().S(model.WebPath())
+//line views/vestimate/vstory/vvote/Table.html:30
+			qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:30
 			qw422016.E().S(x.TitleString())
 //line views/vestimate/vstory/vvote/Table.html:30
-			qw422016.N().S(` <a title="Story" href="`)
+			qw422016.N().S(`</a> <a title="Story" href="`)
 //line views/vestimate/vstory/vvote/Table.html:30
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vestimate/vstory/vvote/Table.html:30
@@ -99,11 +103,15 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		} else {
 //line views/vestimate/vstory/vvote/Table.html:31
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vstory/vvote/Table.html:32
+			qw422016.E().S(model.WebPath())
+//line views/vestimate/vstory/vvote/Table.html:32
+			qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:32
 			view.StreamUUID(qw422016, &model.StoryID)
 //line views/vestimate/vstory/vvote/Table.html:32
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vestimate/vstory/vvote/Table.html:33
 		}
@@ -116,11 +124,15 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vestimate/vstory/vvote/Table.html:36
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vstory/vvote/Table.html:37
+			qw422016.E().S(model.WebPath())
+//line views/vestimate/vstory/vvote/Table.html:37
+			qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:37
 			qw422016.E().S(x.TitleString())
 //line views/vestimate/vstory/vvote/Table.html:37
-			qw422016.N().S(` <a title="User" href="`)
+			qw422016.N().S(`</a> <a title="User" href="`)
 //line views/vestimate/vstory/vvote/Table.html:37
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vestimate/vstory/vvote/Table.html:37
@@ -134,11 +146,15 @@ func StreamTable(qw422016 *qt422016.Writer, models vote.Votes, storiesByStoryID 
 		} else {
 //line views/vestimate/vstory/vvote/Table.html:38
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vstory/vvote/Table.html:39
+			qw422016.E().S(model.WebPath())
+//line views/vestimate/vstory/vvote/Table.html:39
+			qw422016.N().S(`">`)
 //line views/vestimate/vstory/vvote/Table.html:39
 			view.StreamUUID(qw422016, &model.UserID)
 //line views/vestimate/vstory/vvote/Table.html:39
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vestimate/vstory/vvote/Table.html:40
 		}

@@ -80,11 +80,15 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 		if x := standupsByStandupID.Get(model.StandupID); x != nil {
 //line views/vstandup/vupermission/Table.html:28
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vstandup/vupermission/Table.html:29
+			qw422016.E().S(model.WebPath())
+//line views/vstandup/vupermission/Table.html:29
+			qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Table.html:29
 			qw422016.E().S(x.TitleString())
 //line views/vstandup/vupermission/Table.html:29
-			qw422016.N().S(` <a title="Standup" href="`)
+			qw422016.N().S(`</a> <a title="Standup" href="`)
 //line views/vstandup/vupermission/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vstandup/vupermission/Table.html:29
@@ -98,11 +102,15 @@ func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermission
 		} else {
 //line views/vstandup/vupermission/Table.html:30
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vstandup/vupermission/Table.html:31
+			qw422016.E().S(model.WebPath())
+//line views/vstandup/vupermission/Table.html:31
+			qw422016.N().S(`">`)
 //line views/vstandup/vupermission/Table.html:31
 			view.StreamUUID(qw422016, &model.StandupID)
 //line views/vstandup/vupermission/Table.html:31
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vstandup/vupermission/Table.html:32
 		}

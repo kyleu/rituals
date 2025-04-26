@@ -80,11 +80,15 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 		if x := sprintsBySprintID.Get(model.SprintID); x != nil {
 //line views/vsprint/vspermission/Table.html:28
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vsprint/vspermission/Table.html:29
+			qw422016.E().S(model.WebPath())
+//line views/vsprint/vspermission/Table.html:29
+			qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:29
 			qw422016.E().S(x.TitleString())
 //line views/vsprint/vspermission/Table.html:29
-			qw422016.N().S(` <a title="Sprint" href="`)
+			qw422016.N().S(`</a> <a title="Sprint" href="`)
 //line views/vsprint/vspermission/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vsprint/vspermission/Table.html:29
@@ -98,11 +102,15 @@ func StreamTable(qw422016 *qt422016.Writer, models spermission.SprintPermissions
 		} else {
 //line views/vsprint/vspermission/Table.html:30
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vsprint/vspermission/Table.html:31
+			qw422016.E().S(model.WebPath())
+//line views/vsprint/vspermission/Table.html:31
+			qw422016.N().S(`">`)
 //line views/vsprint/vspermission/Table.html:31
 			view.StreamUUID(qw422016, &model.SprintID)
 //line views/vsprint/vspermission/Table.html:31
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vsprint/vspermission/Table.html:32
 		}

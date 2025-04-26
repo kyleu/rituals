@@ -86,6 +86,10 @@ func (s *Sprint) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.ID.String()))...)
 }
 
+func (s *Sprint) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**sprint"
+}
+
 func (s *Sprint) ToData() []any {
 	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.StartDate, s.EndDate, s.Created, s.Updated}
 }

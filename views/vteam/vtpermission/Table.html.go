@@ -80,11 +80,15 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 		if x := teamsByTeamID.Get(model.TeamID); x != nil {
 //line views/vteam/vtpermission/Table.html:28
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vteam/vtpermission/Table.html:29
+			qw422016.E().S(model.WebPath())
+//line views/vteam/vtpermission/Table.html:29
+			qw422016.N().S(`">`)
 //line views/vteam/vtpermission/Table.html:29
 			qw422016.E().S(x.TitleString())
 //line views/vteam/vtpermission/Table.html:29
-			qw422016.N().S(` <a title="Team" href="`)
+			qw422016.N().S(`</a> <a title="Team" href="`)
 //line views/vteam/vtpermission/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vteam/vtpermission/Table.html:29
@@ -98,11 +102,15 @@ func StreamTable(qw422016 *qt422016.Writer, models tpermission.TeamPermissions, 
 		} else {
 //line views/vteam/vtpermission/Table.html:30
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vteam/vtpermission/Table.html:31
+			qw422016.E().S(model.WebPath())
+//line views/vteam/vtpermission/Table.html:31
+			qw422016.N().S(`">`)
 //line views/vteam/vtpermission/Table.html:31
 			view.StreamUUID(qw422016, &model.TeamID)
 //line views/vteam/vtpermission/Table.html:31
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vteam/vtpermission/Table.html:32
 		}

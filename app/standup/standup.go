@@ -84,6 +84,10 @@ func (s *Standup) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(s.ID.String()))...)
 }
 
+func (s *Standup) Breadcrumb(extra ...string) string {
+	return s.TitleString() + "||" + s.WebPath(extra...) + "**standup"
+}
+
 func (s *Standup) ToData() []any {
 	return []any{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
 }

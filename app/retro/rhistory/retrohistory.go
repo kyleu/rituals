@@ -69,6 +69,10 @@ func (r *RetroHistory) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(r.Slug))...)
 }
 
+func (r *RetroHistory) Breadcrumb(extra ...string) string {
+	return r.TitleString() + "||" + r.WebPath(extra...) + "**history"
+}
+
 func (r *RetroHistory) ToData() []any {
 	return []any{r.Slug, r.RetroID, r.RetroName, r.Created}
 }

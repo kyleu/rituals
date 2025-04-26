@@ -79,6 +79,10 @@ func (t *Team) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(t.ID.String()))...)
 }
 
+func (t *Team) Breadcrumb(extra ...string) string {
+	return t.TitleString() + "||" + t.WebPath(extra...) + "**team"
+}
+
 func (t *Team) ToData() []any {
 	return []any{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Created, t.Updated}
 }

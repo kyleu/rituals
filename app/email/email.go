@@ -82,6 +82,10 @@ func (e *Email) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(e.ID.String()))...)
 }
 
+func (e *Email) Breadcrumb(extra ...string) string {
+	return e.TitleString() + "||" + e.WebPath(extra...) + "**email"
+}
+
 func (e *Email) ToData() []any {
 	return []any{e.ID, e.Recipients, e.Subject, e.Data, e.Plain, e.HTML, e.UserID, e.Status, e.Created}
 }

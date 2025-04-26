@@ -132,11 +132,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	if x := p.EstimateByEstimateID; x != nil {
 //line views/vestimate/vemember/Detail.html:43
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vemember/Detail.html:44
+		qw422016.E().S(p.Model.WebPath())
+//line views/vestimate/vemember/Detail.html:44
+		qw422016.N().S(`">`)
 //line views/vestimate/vemember/Detail.html:44
 		qw422016.E().S(x.TitleString())
 //line views/vestimate/vemember/Detail.html:44
-		qw422016.N().S(` <a title="Estimate" href="`)
+		qw422016.N().S(`</a> <a title="Estimate" href="`)
 //line views/vestimate/vemember/Detail.html:44
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vestimate/vemember/Detail.html:44
@@ -150,11 +154,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	} else {
 //line views/vestimate/vemember/Detail.html:45
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vemember/Detail.html:46
+		qw422016.E().S(p.Model.WebPath())
+//line views/vestimate/vemember/Detail.html:46
+		qw422016.N().S(`">`)
 //line views/vestimate/vemember/Detail.html:46
 		view.StreamUUID(qw422016, &p.Model.EstimateID)
 //line views/vestimate/vemember/Detail.html:46
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vestimate/vemember/Detail.html:47
 	}
@@ -170,11 +178,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	if x := p.UserByUserID; x != nil {
 //line views/vestimate/vemember/Detail.html:53
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vemember/Detail.html:54
+		qw422016.E().S(p.Model.WebPath())
+//line views/vestimate/vemember/Detail.html:54
+		qw422016.N().S(`">`)
 //line views/vestimate/vemember/Detail.html:54
 		qw422016.E().S(x.TitleString())
 //line views/vestimate/vemember/Detail.html:54
-		qw422016.N().S(` <a title="User" href="`)
+		qw422016.N().S(`</a> <a title="User" href="`)
 //line views/vestimate/vemember/Detail.html:54
 		qw422016.E().S(x.WebPath(p.Paths...))
 //line views/vestimate/vemember/Detail.html:54
@@ -188,11 +200,15 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	} else {
 //line views/vestimate/vemember/Detail.html:55
 		qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vemember/Detail.html:56
+		qw422016.E().S(p.Model.WebPath())
+//line views/vestimate/vemember/Detail.html:56
+		qw422016.N().S(`">`)
 //line views/vestimate/vemember/Detail.html:56
 		view.StreamUUID(qw422016, &p.Model.UserID)
 //line views/vestimate/vemember/Detail.html:56
-		qw422016.N().S(`
+		qw422016.N().S(`</a>
             `)
 //line views/vestimate/vemember/Detail.html:57
 	}

@@ -92,11 +92,15 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 		if x := sprintsBySprintID.Get(model.SprintID); x != nil {
 //line views/vsprint/vsmember/Table.html:32
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vsprint/vsmember/Table.html:33
+			qw422016.E().S(model.WebPath())
+//line views/vsprint/vsmember/Table.html:33
+			qw422016.N().S(`">`)
 //line views/vsprint/vsmember/Table.html:33
 			qw422016.E().S(x.TitleString())
 //line views/vsprint/vsmember/Table.html:33
-			qw422016.N().S(` <a title="Sprint" href="`)
+			qw422016.N().S(`</a> <a title="Sprint" href="`)
 //line views/vsprint/vsmember/Table.html:33
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vsprint/vsmember/Table.html:33
@@ -110,11 +114,15 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 		} else {
 //line views/vsprint/vsmember/Table.html:34
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vsprint/vsmember/Table.html:35
+			qw422016.E().S(model.WebPath())
+//line views/vsprint/vsmember/Table.html:35
+			qw422016.N().S(`">`)
 //line views/vsprint/vsmember/Table.html:35
 			view.StreamUUID(qw422016, &model.SprintID)
 //line views/vsprint/vsmember/Table.html:35
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vsprint/vsmember/Table.html:36
 		}
@@ -127,11 +135,15 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 		if x := usersByUserID.Get(model.UserID); x != nil {
 //line views/vsprint/vsmember/Table.html:39
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vsprint/vsmember/Table.html:40
+			qw422016.E().S(model.WebPath())
+//line views/vsprint/vsmember/Table.html:40
+			qw422016.N().S(`">`)
 //line views/vsprint/vsmember/Table.html:40
 			qw422016.E().S(x.TitleString())
 //line views/vsprint/vsmember/Table.html:40
-			qw422016.N().S(` <a title="User" href="`)
+			qw422016.N().S(`</a> <a title="User" href="`)
 //line views/vsprint/vsmember/Table.html:40
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vsprint/vsmember/Table.html:40
@@ -145,11 +157,15 @@ func StreamTable(qw422016 *qt422016.Writer, models smember.SprintMembers, sprint
 		} else {
 //line views/vsprint/vsmember/Table.html:41
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vsprint/vsmember/Table.html:42
+			qw422016.E().S(model.WebPath())
+//line views/vsprint/vsmember/Table.html:42
+			qw422016.N().S(`">`)
 //line views/vsprint/vsmember/Table.html:42
 			view.StreamUUID(qw422016, &model.UserID)
 //line views/vsprint/vsmember/Table.html:42
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vsprint/vsmember/Table.html:43
 		}

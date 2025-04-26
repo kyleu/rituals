@@ -80,11 +80,15 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
 //line views/vestimate/vepermission/Table.html:28
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vepermission/Table.html:29
+			qw422016.E().S(model.WebPath())
+//line views/vestimate/vepermission/Table.html:29
+			qw422016.N().S(`">`)
 //line views/vestimate/vepermission/Table.html:29
 			qw422016.E().S(x.TitleString())
 //line views/vestimate/vepermission/Table.html:29
-			qw422016.N().S(` <a title="Estimate" href="`)
+			qw422016.N().S(`</a> <a title="Estimate" href="`)
 //line views/vestimate/vepermission/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vestimate/vepermission/Table.html:29
@@ -98,11 +102,15 @@ func StreamTable(qw422016 *qt422016.Writer, models epermission.EstimatePermissio
 		} else {
 //line views/vestimate/vepermission/Table.html:30
 			qw422016.N().S(`
-            `)
+            <a href="`)
+//line views/vestimate/vepermission/Table.html:31
+			qw422016.E().S(model.WebPath())
+//line views/vestimate/vepermission/Table.html:31
+			qw422016.N().S(`">`)
 //line views/vestimate/vepermission/Table.html:31
 			view.StreamUUID(qw422016, &model.EstimateID)
 //line views/vestimate/vepermission/Table.html:31
-			qw422016.N().S(`
+			qw422016.N().S(`</a>
             `)
 //line views/vestimate/vepermission/Table.html:32
 		}
