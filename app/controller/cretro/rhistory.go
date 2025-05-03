@@ -61,7 +61,6 @@ func RetroHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [RetroHistory]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vrhistory.Edit{Model: ret, IsNew: true}, ps, "retro", "rhistory", "Create")
 	})
 }

@@ -15,7 +15,7 @@ All variable names can be set in uppercase or lowercase
 | `db_host`                     | string | hostname for the default PostgreSQL connection, defaults to `localhost`          |
 | `db_metrics_disabled`         | bool   | when set, skips metrics for database methods                                     |
 | `db_password`                 | string | password for the default PostgreSQL connection                                   |
-| `db_port`                     | int    | port for the default PostgreSQL connection, defaults to `3306`                   |
+| `db_port`                     | int    | port for the default PostgreSQL connection, defaults to `5432`                   |
 | `db_schema`                   | string | schema for the default PostgreSQL connection                                     |
 | `db_ssl`                      | bool   | when set, uses SSL sessions for connections                                      |
 | `db_user`                     | string | user for the default PostgreSQL connection                                       |

@@ -77,7 +77,6 @@ func ReportCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Report]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vreport.Edit{Model: ret, IsNew: true}, ps, "standup", "report", "Create")
 	})
 }

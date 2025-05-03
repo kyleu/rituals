@@ -77,7 +77,6 @@ func RetroMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [RetroMember]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vrmember.Edit{Model: ret, IsNew: true}, ps, "retro", "rmember", "Create")
 	})
 }

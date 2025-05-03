@@ -125,7 +125,6 @@ func EstimateCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Estimate]", ret)
-		ps.Data = ret
 		return Render(r, as, &vestimate.Edit{Model: ret, IsNew: true}, ps, "estimate", "Create")
 	})
 }

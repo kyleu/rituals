@@ -62,7 +62,6 @@ func StandupHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [StandupHistory]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vuhistory.Edit{Model: ret, IsNew: true}, ps, "standup", "uhistory", "Create")
 	})
 }

@@ -105,7 +105,6 @@ func TeamCreateForm(w http.ResponseWriter, r *http.Request) {
 			ret = team.RandomTeam()
 		}
 		ps.SetTitleAndData("Create [Team]", ret)
-		ps.Data = ret
 		return Render(r, as, &vteam.Edit{Model: ret, IsNew: true}, ps, "team", "Create")
 	})
 }

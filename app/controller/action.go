@@ -60,7 +60,6 @@ func ActionCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Action]", ret)
-		ps.Data = ret
 		return Render(r, as, &vaction.Edit{Model: ret, IsNew: true}, ps, "action", "Create")
 	})
 }

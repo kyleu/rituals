@@ -77,7 +77,6 @@ func StandupMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [StandupMember]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vumember.Edit{Model: ret, IsNew: true}, ps, "standup", "umember", "Create")
 	})
 }

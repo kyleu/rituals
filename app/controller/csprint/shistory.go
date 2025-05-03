@@ -61,7 +61,6 @@ func SprintHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [SprintHistory]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vshistory.Edit{Model: ret, IsNew: true}, ps, "sprint", "shistory", "Create")
 	})
 }

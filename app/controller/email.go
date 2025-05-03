@@ -60,7 +60,6 @@ func EmailCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Email]", ret)
-		ps.Data = ret
 		return Render(r, as, &vemail.Edit{Model: ret, IsNew: true}, ps, "email", "Create")
 	})
 }

@@ -77,7 +77,6 @@ func SprintMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [SprintMember]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vsmember.Edit{Model: ret, IsNew: true}, ps, "sprint", "smember", "Create")
 	})
 }

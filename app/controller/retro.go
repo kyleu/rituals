@@ -124,7 +124,6 @@ func RetroCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Retro]", ret)
-		ps.Data = ret
 		return Render(r, as, &vretro.Edit{Model: ret, IsNew: true}, ps, "retro", "Create")
 	})
 }

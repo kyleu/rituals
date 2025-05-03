@@ -119,7 +119,6 @@ func SprintCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Sprint]", ret)
-		ps.Data = ret
 		return Render(r, as, &vsprint.Edit{Model: ret, IsNew: true}, ps, "sprint", "Create")
 	})
 }

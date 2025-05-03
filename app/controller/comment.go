@@ -60,7 +60,6 @@ func CommentCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Comment]", ret)
-		ps.Data = ret
 		return Render(r, as, &vcomment.Edit{Model: ret, IsNew: true}, ps, "comment", "Create")
 	})
 }

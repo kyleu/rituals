@@ -62,7 +62,6 @@ func SprintPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [SprintPermission]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vspermission.Edit{Model: ret, IsNew: true}, ps, "sprint", "spermission", "Create")
 	})
 }

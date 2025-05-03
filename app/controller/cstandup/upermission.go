@@ -62,7 +62,6 @@ func StandupPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [StandupPermission]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vupermission.Edit{Model: ret, IsNew: true}, ps, "standup", "upermission", "Create")
 	})
 }

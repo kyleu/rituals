@@ -135,7 +135,6 @@ func UserCreateForm(w http.ResponseWriter, r *http.Request) {
 			ret = user.RandomUser()
 		}
 		ps.SetTitleAndData("Create [User]", ret)
-		ps.Data = ret
 		return Render(r, as, &vuser.Edit{Model: ret, IsNew: true}, ps, "user", "Create")
 	})
 }

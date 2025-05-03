@@ -62,7 +62,6 @@ func RetroPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [RetroPermission]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vrpermission.Edit{Model: ret, IsNew: true}, ps, "retro", "rpermission", "Create")
 	})
 }

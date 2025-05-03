@@ -77,7 +77,6 @@ func FeedbackCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Feedback]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vfeedback.Edit{Model: ret, IsNew: true}, ps, "retro", "feedback", "Create")
 	})
 }

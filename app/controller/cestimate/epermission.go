@@ -62,7 +62,6 @@ func EstimatePermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [EstimatePermission]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vepermission.Edit{Model: ret, IsNew: true}, ps, "estimate", "epermission", "Create")
 	})
 }

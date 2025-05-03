@@ -77,7 +77,6 @@ func TeamMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [TeamMember]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vtmember.Edit{Model: ret, IsNew: true}, ps, "team", "tmember", "Create")
 	})
 }

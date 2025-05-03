@@ -61,7 +61,6 @@ func TeamPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [TeamPermission]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vtpermission.Edit{Model: ret, IsNew: true}, ps, "team", "tpermission", "Create")
 	})
 }

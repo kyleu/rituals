@@ -61,7 +61,6 @@ func TeamHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [TeamHistory]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vthistory.Edit{Model: ret, IsNew: true}, ps, "team", "thistory", "Create")
 	})
 }

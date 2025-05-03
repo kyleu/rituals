@@ -77,7 +77,6 @@ func EstimateMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [EstimateMember]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vemember.Edit{Model: ret, IsNew: true}, ps, "estimate", "emember", "Create")
 	})
 }

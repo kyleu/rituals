@@ -62,7 +62,6 @@ func EstimateHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [EstimateHistory]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vehistory.Edit{Model: ret, IsNew: true}, ps, "estimate", "ehistory", "Create")
 	})
 }

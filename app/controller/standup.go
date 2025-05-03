@@ -125,7 +125,6 @@ func StandupCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Standup]", ret)
-		ps.Data = ret
 		return Render(r, as, &vstandup.Edit{Model: ret, IsNew: true}, ps, "standup", "Create")
 	})
 }

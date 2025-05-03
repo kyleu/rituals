@@ -77,7 +77,6 @@ func VoteCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Vote]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vvote.Edit{Model: ret, IsNew: true}, ps, "estimate", "story", "vote", "Create")
 	})
 }
