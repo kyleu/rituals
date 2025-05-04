@@ -115,7 +115,7 @@ func (m ModelServices) Strings() []string {
 }
 
 func (m ModelServices) Help() string {
-	return "Available model service options: [" + strings.Join(m.Strings(), ", ") + "]"
+	return "Available model service options: [" + util.StringJoin(m.Strings(), ", ") + "]"
 }
 
 func (m ModelServices) Get(key string, logger util.Logger) ModelService {

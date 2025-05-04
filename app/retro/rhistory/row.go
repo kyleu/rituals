@@ -2,7 +2,6 @@ package rhistory
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,7 +15,7 @@ var (
 	tableQuoted   = fmt.Sprintf("%q", table)
 	columns       = []string{"slug", "retro_id", "retro_name", "created"}
 	columnsQuoted = util.StringArrayQuoted(columns)
-	columnsString = strings.Join(columnsQuoted, ", ")
+	columnsString = util.StringJoin(columnsQuoted, ", ")
 )
 
 type row struct {

@@ -2,7 +2,6 @@ package report
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,7 +15,7 @@ var (
 	tableQuoted   = fmt.Sprintf("%q", table)
 	columns       = []string{"id", "standup_id", "day", "user_id", "content", "html", "created", "updated"}
 	columnsQuoted = util.StringArrayQuoted(columns)
-	columnsString = strings.Join(columnsQuoted, ", ")
+	columnsString = util.StringJoin(columnsQuoted, ", ")
 )
 
 type row struct {

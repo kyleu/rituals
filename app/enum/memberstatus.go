@@ -109,7 +109,7 @@ func (m MemberStatuses) Strings() []string {
 }
 
 func (m MemberStatuses) Help() string {
-	return "Available member status options: [" + strings.Join(m.Strings(), ", ") + "]"
+	return "Available member status options: [" + util.StringJoin(m.Strings(), ", ") + "]"
 }
 
 func (m MemberStatuses) Get(key string, logger util.Logger) MemberStatus {

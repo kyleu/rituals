@@ -3,7 +3,6 @@ package email
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +16,7 @@ var (
 	tableQuoted   = fmt.Sprintf("%q", table)
 	columns       = []string{"id", "recipients", "subject", "data", "plain", "html", "user_id", "status", "created"}
 	columnsQuoted = util.StringArrayQuoted(columns)
-	columnsString = strings.Join(columnsQuoted, ", ")
+	columnsString = util.StringJoin(columnsQuoted, ", ")
 )
 
 type row struct {

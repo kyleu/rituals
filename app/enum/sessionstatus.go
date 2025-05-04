@@ -109,7 +109,7 @@ func (s SessionStatuses) Strings() []string {
 }
 
 func (s SessionStatuses) Help() string {
-	return "Available session status options: [" + strings.Join(s.Strings(), ", ") + "]"
+	return "Available session status options: [" + util.StringJoin(s.Strings(), ", ") + "]"
 }
 
 func (s SessionStatuses) Get(key string, logger util.Logger) SessionStatus {

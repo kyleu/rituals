@@ -16,7 +16,7 @@ func SQLSelect(columns string, tables string, where string, orderBy string, limi
 }
 
 func SQLSelectSimple(columns string, tables string, dbt *DBType, where ...string) string {
-	return SQLSelectGrouped(columns, tables, strings.Join(where, " and "), "", "", 0, 0, dbt)
+	return SQLSelectGrouped(columns, tables, util.StringJoin(where, " and "), "", "", 0, 0, dbt)
 }
 
 func SQLSelectGrouped(columns string, tables string, where string, groupBy string, orderBy string, limit int, offset int, dbt *DBType) string {
@@ -66,22 +66,22 @@ func SQLInsert(table string, columns []string, rows int, dbt *DBType) string {
 	if rows <= 0 {
 		rows = 1
 	}
-	colString := strings.Join(columns, ", ")
+	colString := util.StringJoin(columns, ", ")
 	var placeholders []string
 	lo.Times(rows, func(i int) struct{} {
 		ph := lo.Map(columns, func(_ string, idx int) string {
 			return dbt.PlaceholderFor((i * len(columns)) + idx + 1)
 		})
-		placeholders = append(placeholders, "("+strings.Join(ph, ", ")+")")
+		placeholders = append(placeholders, "("+util.StringJoin(ph, ", ")+")")
 		return util.EmptyStruct
 	})
-	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, strings.Join(placeholders, ", "))
+	return fmt.Sprintf("insert into %s (%s) values %s", table, colString, util.StringJoin(placeholders, ", "))
 }
 
 func SQLInsertReturning(table string, columns []string, rows int, returning []string, dbt *DBType) string {
 	q := SQLInsert(table, columns, rows, dbt)
 	if len(returning) > 0 {
-		q += returningC + strings.Join(returning, ", ")
+		q += returningC + util.StringJoin(returning, ", ")
 	}
 	return q
 }
@@ -95,20 +95,20 @@ func SQLUpdate(table string, columns []string, where string, dbt *DBType) string
 	stmts := lo.FilterMap(columns, func(col string, i int) (string, bool) {
 		return fmt.Sprintf("%s = %s", col, dbt.PlaceholderFor(i+1)), true
 	})
-	return fmt.Sprintf("update %s set %s%s", table, strings.Join(stmts, ", "), whereClause)
+	return fmt.Sprintf("update %s set %s%s", table, util.StringJoin(stmts, ", "), whereClause)
 }
 
 func SQLUpdateReturning(table string, columns []string, where string, returned []string, dbt *DBType) string {
 	q := SQLUpdate(table, columns, where, dbt)
 	if len(returned) > 0 {
-		q += returningC + strings.Join(returned, ", ")
+		q += returningC + util.StringJoin(returned, ", ")
 	}
 	return q
 }
 
 func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, dbt *DBType) string {
 	q := SQLInsert(table, columns, rows, dbt)
-	q += " on conflict (" + strings.Join(conflicts, ", ") + ") do update set "
+	q += " on conflict (" + util.StringJoin(conflicts, ", ") + ") do update set "
 	lo.ForEach(updates, func(x string, idx int) {
 		if idx > 0 {
 			q += ", "

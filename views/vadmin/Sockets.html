@@ -1,11 +1,10 @@
 {% import (
-  "strings"
-
   "github.com/google/uuid"
 
   "github.com/kyleu/rituals/app"
   "github.com/kyleu/rituals/app/controller/cutil"
   "github.com/kyleu/rituals/app/lib/websocket"
+  "github.com/kyleu/rituals/app/util"
   "github.com/kyleu/rituals/views/components"
   "github.com/kyleu/rituals/views/components/edit"
   "github.com/kyleu/rituals/views/layout"
@@ -73,7 +72,7 @@
               <td><a href="/admin/db/user/{%s x.Profile.ID.String() %}">{%s x.Profile.ID.String() %}</a></td>
               <td>{%s x.Profile.String() %}</td>
               <td>{%s x.Svc %}</td>
-              <td>{%s strings.Join(x.Channels, ", ") %}</td>
+              <td>{%s util.StringJoin(x.Channels, ", ") %}</td>
               <td class="shrink"><a href="#modal-conn-{%s x.ID.String() %}"><button type="button">JSON</button></a></td>
             </tr>
             {%- endfor -%}
@@ -159,7 +158,7 @@
           </tr>
           <tr>
             <th>Channels</th>
-            <td>{%s strings.Join(c.Channels, ", ") %}</td>
+            <td>{%s util.StringJoin(c.Channels, ", ") %}</td>
           </tr>
         </tbody>
       </table>
