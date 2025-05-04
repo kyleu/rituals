@@ -3,7 +3,6 @@ package upermission
 import (
 	"fmt"
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,7 +17,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*StandupPermission)(nil)
@@ -87,7 +86,7 @@ func (s *StandupPermission) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.Key), url.QueryEscape(s.Value))...)
+	return util.StringPath(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.Key), url.QueryEscape(s.Value))...)
 }
 
 func (s *StandupPermission) Breadcrumb(extra ...string) string {

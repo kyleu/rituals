@@ -3,7 +3,6 @@ package epermission
 import (
 	"fmt"
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,7 +17,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*EstimatePermission)(nil)
@@ -87,7 +86,7 @@ func (e *EstimatePermission) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(e.EstimateID.String()), url.QueryEscape(e.Key), url.QueryEscape(e.Value))...)
+	return util.StringPath(append(paths, url.QueryEscape(e.EstimateID.String()), url.QueryEscape(e.Key), url.QueryEscape(e.Value))...)
 }
 
 func (e *EstimatePermission) Breadcrumb(extra ...string) string {

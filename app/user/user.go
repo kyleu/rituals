@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +16,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*User)(nil)
@@ -71,7 +70,7 @@ func (u *User) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(u.ID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(u.ID.String()))...)
 }
 
 func (u *User) Breadcrumb(extra ...string) string {

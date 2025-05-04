@@ -2,7 +2,6 @@ package rhistory
 
 import (
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +16,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*RetroHistory)(nil)
@@ -66,7 +65,7 @@ func (r *RetroHistory) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(r.Slug))...)
+	return util.StringPath(append(paths, url.QueryEscape(r.Slug))...)
 }
 
 func (r *RetroHistory) Breadcrumb(extra ...string) string {

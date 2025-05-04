@@ -3,7 +3,6 @@ package tmember
 import (
 	"fmt"
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,7 +18,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*TeamMember)(nil)
@@ -90,7 +89,7 @@ func (t *TeamMember) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(t.TeamID.String()), url.QueryEscape(t.UserID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(t.TeamID.String()), url.QueryEscape(t.UserID.String()))...)
 }
 
 func (t *TeamMember) Breadcrumb(extra ...string) string {

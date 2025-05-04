@@ -3,7 +3,6 @@ package umember
 import (
 	"fmt"
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,7 +18,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*StandupMember)(nil)
@@ -90,7 +89,7 @@ func (s *StandupMember) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.UserID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(s.StandupID.String()), url.QueryEscape(s.UserID.String()))...)
 }
 
 func (s *StandupMember) Breadcrumb(extra ...string) string {

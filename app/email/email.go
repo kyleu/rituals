@@ -2,7 +2,6 @@ package email
 
 import (
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +16,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*Email)(nil)
@@ -79,7 +78,7 @@ func (e *Email) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(e.ID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(e.ID.String()))...)
 }
 
 func (e *Email) Breadcrumb(extra ...string) string {

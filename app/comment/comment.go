@@ -2,7 +2,6 @@ package comment
 
 import (
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,7 +17,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*Comment)(nil)
@@ -73,7 +72,7 @@ func (c *Comment) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(c.ID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(c.ID.String()))...)
 }
 
 func (c *Comment) Breadcrumb(extra ...string) string {

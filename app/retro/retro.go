@@ -2,7 +2,6 @@ package retro
 
 import (
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,7 +17,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*Retro)(nil)
@@ -85,7 +84,7 @@ func (r *Retro) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(r.ID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(r.ID.String()))...)
 }
 
 func (r *Retro) Breadcrumb(extra ...string) string {

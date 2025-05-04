@@ -3,7 +3,6 @@ package story
 import (
 	"fmt"
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,7 +18,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*Story)(nil)
@@ -82,7 +81,7 @@ func (s *Story) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(s.ID.String()))...)
+	return util.StringPath(append(paths, url.QueryEscape(s.ID.String()))...)
 }
 
 func (s *Story) Breadcrumb(extra ...string) string {

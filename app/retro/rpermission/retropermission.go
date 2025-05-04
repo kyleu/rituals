@@ -3,7 +3,6 @@ package rpermission
 import (
 	"fmt"
 	"net/url"
-	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,7 +17,7 @@ func Route(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(paths...)
+	return util.StringPath(paths...)
 }
 
 var _ svc.Model = (*RetroPermission)(nil)
@@ -87,7 +86,7 @@ func (r *RetroPermission) WebPath(paths ...string) string {
 	if len(paths) == 0 {
 		paths = []string{DefaultRoute}
 	}
-	return path.Join(append(paths, url.QueryEscape(r.RetroID.String()), url.QueryEscape(r.Key), url.QueryEscape(r.Value))...)
+	return util.StringPath(append(paths, url.QueryEscape(r.RetroID.String()), url.QueryEscape(r.Key), url.QueryEscape(r.Value))...)
 }
 
 func (r *RetroPermission) Breadcrumb(extra ...string) string {
