@@ -29,7 +29,7 @@ const (
 	Error = "error"
 
 	DatabasePostgreSQL = "postgres"
-	
+
 	// $PF_SECTION_START(keys)$.
 	KeyTeam     = "team"
 	KeySprint   = "sprint"
