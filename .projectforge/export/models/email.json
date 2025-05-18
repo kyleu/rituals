@@ -34,7 +34,7 @@
     },
     {
       "name": "data",
-      "type": "valuemap",
+      "type": "map",
       "search": true
     },
     {
