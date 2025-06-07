@@ -108,7 +108,7 @@ func SQLUpdateReturning(table string, columns []string, where string, returned [
 
 func SQLUpsert(table string, columns []string, rows int, conflicts []string, updates []string, dbt *DBType) string {
 	q := SQLInsert(table, columns, rows, dbt)
-	q += " on conflict (" + util.StringJoin(conflicts, ", ") + ") do update set "
+	q += " on conflict (" + util.StringJoin(util.StringArrayQuoted(conflicts), ", ") + ") do update set "
 	lo.ForEach(updates, func(x string, idx int) {
 		if idx > 0 {
 			q += ", "
