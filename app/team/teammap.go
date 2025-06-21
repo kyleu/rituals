@@ -52,5 +52,5 @@ func TeamFromMap(m util.ValueMap, setPK bool) (*Team, util.ValueMap, error) {
 //nolint:lll
 func (t *Team) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "id", V: t.ID}, {K: "slug", V: t.Slug}, {K: "title", V: t.Title}, {K: "icon", V: t.Icon}, {K: "status", V: t.Status}, {K: "created", V: t.Created}, {K: "updated", V: t.Updated}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }

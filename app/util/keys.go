@@ -5,6 +5,7 @@ const (
 	AppName    = "rituals.dev"
 	AppSummary = "Work with your team to estimate work, track your progress, and gather feedback"
 	AppPort    = 18000
+	AppCmd     = AppKey
 	AppContact = "Kyle U <rituals.dev@kyleu.com>"
 	AppURL     = "https://rituals.dev"
 	AppSource  = "https://github.com/kyleu/rituals"

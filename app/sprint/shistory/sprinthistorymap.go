@@ -40,5 +40,5 @@ func SprintHistoryFromMap(m util.ValueMap, setPK bool) (*SprintHistory, util.Val
 
 func (s *SprintHistory) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "slug", V: s.Slug}, {K: "sprintID", V: s.SprintID}, {K: "sprintName", V: s.SprintName}, {K: "created", V: s.Created}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }

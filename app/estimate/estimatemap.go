@@ -62,5 +62,5 @@ func EstimateFromMap(m util.ValueMap, setPK bool) (*Estimate, util.ValueMap, err
 //nolint:lll
 func (e *Estimate) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "id", V: e.ID}, {K: "slug", V: e.Slug}, {K: "title", V: e.Title}, {K: "icon", V: e.Icon}, {K: "status", V: e.Status}, {K: "teamID", V: e.TeamID}, {K: "sprintID", V: e.SprintID}, {K: "choices", V: e.Choices}, {K: "created", V: e.Created}, {K: "updated", V: e.Updated}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }

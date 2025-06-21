@@ -40,5 +40,5 @@ func RetroHistoryFromMap(m util.ValueMap, setPK bool) (*RetroHistory, util.Value
 
 func (r *RetroHistory) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "slug", V: r.Slug}, {K: "retroID", V: r.RetroID}, {K: "retroName", V: r.RetroName}, {K: "created", V: r.Created}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }

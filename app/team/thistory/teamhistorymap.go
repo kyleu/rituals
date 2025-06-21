@@ -40,5 +40,5 @@ func TeamHistoryFromMap(m util.ValueMap, setPK bool) (*TeamHistory, util.ValueMa
 
 func (t *TeamHistory) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "slug", V: t.Slug}, {K: "teamID", V: t.TeamID}, {K: "teamName", V: t.TeamName}, {K: "created", V: t.Created}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }

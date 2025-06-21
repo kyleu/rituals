@@ -70,5 +70,5 @@ func ActionFromMap(m util.ValueMap, setPK bool) (*Action, util.ValueMap, error) 
 //nolint:lll
 func (a *Action) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "id", V: a.ID}, {K: "svc", V: a.Svc}, {K: "modelID", V: a.ModelID}, {K: "userID", V: a.UserID}, {K: "act", V: a.Act}, {K: "content", V: a.Content}, {K: "note", V: a.Note}, {K: "created", V: a.Created}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }

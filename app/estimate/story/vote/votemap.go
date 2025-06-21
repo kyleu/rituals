@@ -49,5 +49,5 @@ func VoteFromMap(m util.ValueMap, setPK bool) (*Vote, util.ValueMap, error) {
 //nolint:lll
 func (v *Vote) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "storyID", V: v.StoryID}, {K: "userID", V: v.UserID}, {K: "choice", V: v.Choice}, {K: "created", V: v.Created}, {K: "updated", V: v.Updated}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }
