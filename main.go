@@ -1,6 +1,8 @@
 package main // import github.com/kyleu/rituals
 
 import (
+	"context"
+
 	"github.com/kyleu/rituals/app"
 	"github.com/kyleu/rituals/app/cmd"
 )
@@ -12,5 +14,5 @@ var (
 )
 
 func main() {
-	cmd.Entrypoint(&app.BuildInfo{Version: version, Commit: commit, Date: date})
+	cmd.Entrypoint(context.Background(), &app.BuildInfo{Version: version, Commit: commit, Date: date})
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/muesli/coral"
@@ -8,13 +9,15 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
+var rootCtx = context.Background()
+
 func rootF(*coral.Command, []string) error {
 	// $PF_SECTION_START(rootAction)$
-	return startServer(_flags)
+	return startServer(rootCtx, _flags)
 	// $PF_SECTION_END(rootAction)$
 }
 
-func rootCmd() *coral.Command {
+func rootCmd(ctx context.Context) *coral.Command {
 	short := fmt.Sprintf("%s %s - %s", util.AppName, _buildInfo.Version, util.AppSummary)
 	ret := &coral.Command{Use: util.AppKey, Short: short, RunE: rootF}
 	ret.AddCommand(serverCmd(), siteCmd(), allCmd(), migrateCmd(), upgradeCmd())

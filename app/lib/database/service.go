@@ -122,11 +122,9 @@ func (s *Service) logQuery(ctx context.Context, msg string, q string, logger uti
 	}
 }
 
-func (s *Service) newSpan(
-	ctx context.Context, name string, q string, logger util.Logger,
-) (time.Time, context.Context, *telemetry.Span, util.Logger) {
+func (s *Service) newSpan(ctx context.Context, name string, q string, logger util.Logger) (time.Time, context.Context, *telemetry.Span, util.Logger) {
 	if ctx == nil {
-		return util.TimeCurrent(), context.Background(), nil, logger
+		return util.TimeCurrent(), nil, nil, logger
 	}
 	if s.metrics != nil {
 		s.metrics.IncStmt(q, name)
