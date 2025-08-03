@@ -1,34 +1,34 @@
-import {els, opt, req} from "./dom";
-import {send} from "./app";
-import {snippetReport, snippetReportContainer, snippetReportModalEdit, snippetReportModalView} from "./reports";
-import {getSelfID, username} from "./member";
-import {initCommentsModal} from "./comment";
-import {flashCreate} from "./flash";
-import {focusDelay} from "./util";
+import { els, opt, req } from "./dom";
+import { send } from "./app";
+import { snippetReport, snippetReportContainer, snippetReportModalEdit, snippetReportModalView } from "./reports";
+import { getSelfID, username } from "./member";
+import { initCommentsModal } from "./comment";
+import { flashCreate } from "./flash";
+import { focusDelay } from "./util";
 
 export type Report = {
   id: string;
   day: string;
   userID: string;
   content: string;
-  html?: string
-}
+  html?: string;
+};
 
 function initEditModal(modal: HTMLElement) {
   const frm = req("form", modal);
-  const reportID = req<HTMLInputElement>("input[name=\"reportID\"]", frm).value;
+  const reportID = req<HTMLInputElement>('input[name="reportID"]', frm).value;
   req<HTMLElement>(".report-edit-delete", frm).onclick = () => {
     if (confirm("Are you sure you want to delete this report?")) {
-      send("child-remove", {"reportID": reportID});
+      send("child-remove", { reportID: reportID });
       document.location.hash = "";
     }
     return false;
   };
   frm.onsubmit = () => {
-    const day = req<HTMLInputElement>("input[name=\"day\"]", frm).value;
-    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
+    const day = req<HTMLInputElement>('input[name="day"]', frm).value;
+    const input = req<HTMLTextAreaElement>('textarea[name="content"]', frm);
     const content = input.value;
-    send("child-update", {"reportID": reportID, "day": day, "content": content});
+    send("child-update", { reportID: reportID, day: day, content: content });
     document.location.hash = "";
     return false;
   };
@@ -49,11 +49,11 @@ export function initReports() {
   const reportAddModal = req("#modal-report--add");
   const reportAddForm = req("form", reportAddModal);
   reportAddForm.onsubmit = () => {
-    const day = req<HTMLInputElement>("input[name=\"day\"]", reportAddForm).value;
-    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", reportAddForm);
+    const day = req<HTMLInputElement>('input[name="day"]', reportAddForm).value;
+    const input = req<HTMLTextAreaElement>('textarea[name="content"]', reportAddForm);
     const content = input.value;
     input.value = "";
-    send("child-add", {"day": day, "content": content});
+    send("child-add", { day: day, content: content });
     document.location.hash = "";
     return false;
   };
@@ -78,7 +78,7 @@ export function reportAdd(r: Report) {
   for (let i = 0; i < list.children.length; i++) {
     const n = list.children.item(i) as HTMLElement;
     const tgt = req(".username", n).innerText;
-    if (tgt.localeCompare(u, undefined, {sensitivity: "accent"}) >= 0) {
+    if (tgt.localeCompare(u, undefined, { sensitivity: "accent" }) >= 0) {
       idx = i;
       break;
     }

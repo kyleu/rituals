@@ -1,9 +1,16 @@
-import type {Message} from "./socket";
-import {opt, req} from "./dom";
-import {send} from "./app";
-import {configFocus, setTeamSprint} from "./workspace";
-import {initReports, Report, reportAdd, reportRemove, reportUpdate} from "./report";
-import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
+import type { Message } from "./socket";
+import { opt, req } from "./dom";
+import { send } from "./app";
+import { configFocus, setTeamSprint } from "./workspace";
+import { initReports, Report, reportAdd, reportRemove, reportUpdate } from "./report";
+import {
+  initPermissions,
+  loadPermsForm,
+  Permission,
+  permissionsSprintToggle,
+  permissionsTeamToggle,
+  permissionsUpdate
+} from "./permission";
 
 export type Standup = {
   id: string;
@@ -13,25 +20,25 @@ export type Standup = {
   status: string;
   teamID: string;
   sprintID: string;
-}
+};
 
 export function initStandup() {
   configFocus("standup");
   const frm = opt<HTMLFormElement>("#modal-standup-config form");
   if (frm) {
-    const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+    const teamEl = req<HTMLSelectElement>('select[name="team"]', frm);
     teamEl.onchange = () => {
       permissionsTeamToggle(teamEl.value !== "");
     };
-    const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+    const sprintEl = req<HTMLSelectElement>('select[name="sprint"]', frm);
     sprintEl.onchange = () => {
       permissionsSprintToggle(sprintEl.value !== "");
     };
     initPermissions(teamEl, sprintEl);
     frm.onsubmit = () => {
-      const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-      const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-      send("update", {"title": title, "icon": icon, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
+      const title = req<HTMLInputElement>('input[name="title"]', frm).value;
+      const icon = req<HTMLInputElement>('input[name="icon"]:checked', frm).value;
+      send("update", { title: title, icon: icon, team: teamEl.value, sprint: sprintEl.value, ...loadPermsForm(frm) });
       document.location.hash = "";
       return false;
     };

@@ -1,13 +1,13 @@
-import {els, opt, req} from "./dom";
-import {send} from "./app";
-import {memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView} from "./members.jsx";
-import {focusDelay, svgRef} from "./util";
+import { els, opt, req } from "./dom";
+import { send } from "./app";
+import { memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView } from "./members.jsx";
+import { focusDelay, svgRef } from "./util";
 
 export type Member = {
   id: string;
   name: string;
   role: string;
-}
+};
 
 export function getSelfID() {
   return req("#self-id").innerText;
@@ -22,11 +22,14 @@ function wireSelfForm() {
   const selfForm = opt<HTMLFormElement>("form", selfModal);
   if (selfForm) {
     selfForm.onsubmit = () => {
-      const nameInput = req<HTMLInputElement>("input[name=\"name\"]", selfForm);
-      const choiceInput = req<HTMLInputElement>("input[name=\"choice\"]:checked", selfForm);
-      const pictureInput = opt<HTMLInputElement>("input[name=\"picture\"]:checked", selfForm);
+      const nameInput = req<HTMLInputElement>('input[name="name"]', selfForm);
+      const choiceInput = req<HTMLInputElement>('input[name="choice"]:checked', selfForm);
+      const pictureInput = opt<HTMLInputElement>('input[name="picture"]:checked', selfForm);
 
-      const msg: { name: string, choice: string, picture?: string } = {"name": nameInput.value, "choice": choiceInput.value};
+      const msg: { name: string; choice: string; picture?: string } = {
+        name: nameInput.value,
+        choice: choiceInput.value
+      };
       if (pictureInput) {
         msg.picture = pictureInput.value;
       }
@@ -69,16 +72,16 @@ export function getMemberRole(id: string) {
 export function memberList(): Member[] {
   const ret: Member[] = [];
   const slID = getSelfID();
-  const sl: Member = {id: slID, name: getMemberName(slID), role: getMemberRole(slID)};
+  const sl: Member = { id: slID, name: getMemberName(slID), role: getMemberRole(slID) };
   ret.push(sl);
   els("#panel-members .member").forEach((e) => {
     if (e.dataset.id) {
       const id = e.dataset.id;
-      ret.push({id: id, name: getMemberName(id), role: getMemberRole(id)});
+      ret.push({ id: id, name: getMemberName(id), role: getMemberRole(id) });
     }
   });
   ret.sort((l, r) => {
-    return l.name.localeCompare(r.name, undefined, {sensitivity: "accent"});
+    return l.name.localeCompare(r.name, undefined, { sensitivity: "accent" });
   });
   return ret;
 }
@@ -89,9 +92,9 @@ function wireMemberForm(modal: HTMLElement) {
     return;
   }
   const f = (cmd: string) => {
-    const userID = req<HTMLInputElement>("input[name=\"userID\"]", form).value;
-    const role = req<HTMLSelectElement>("select[name=\"role\"]", form).value;
-    send(cmd, {"userID": userID, "role": role});
+    const userID = req<HTMLInputElement>('input[name="userID"]', form).value;
+    const role = req<HTMLSelectElement>('select[name="role"]', form).value;
+    send(cmd, { userID: userID, role: role });
     const panel = req("#member-" + userID);
     if (cmd === "member-update") {
       req(".member-role", panel).innerText = role;
@@ -122,7 +125,7 @@ export type MemberMessage = {
   name: string;
   role: string;
   picture?: string;
-}
+};
 
 export function memberUpdate(param: MemberMessage) {
   els(".member-" + param.userID + "-name").forEach((x) => {
@@ -141,7 +144,7 @@ export function memberUpdate(param: MemberMessage) {
     if (rd) {
       rd.innerText = param.role;
     }
-    const rs = opt<HTMLSelectElement>("select[name=\"role\"]", modal);
+    const rs = opt<HTMLSelectElement>('select[name="role"]', modal);
     if (rs) {
       rs.value = param.role;
     }
@@ -154,7 +157,7 @@ export function memberUpdate(param: MemberMessage) {
     itemsArr.sort((l, r) => {
       const ln = req(".member-name", l).innerText;
       const rn = req(".member-name", r).innerText;
-      return ln.localeCompare(rn, undefined, {sensitivity: "accent"});
+      return ln.localeCompare(rn, undefined, { sensitivity: "accent" });
     });
     tbl.replaceChildren(...itemsArr);
   }
@@ -171,7 +174,7 @@ export function memberAdd(param: MemberMessage) {
   for (let i = 0; i < tbl.children.length; i++) {
     const n = tbl.children.item(i);
     const nm = req(".member-name", n as HTMLElement).innerText;
-    if (nm.localeCompare(param.name, undefined, {sensitivity: "accent"}) > 0) {
+    if (nm.localeCompare(param.name, undefined, { sensitivity: "accent" }) > 0) {
       idx = i;
       break;
     }
@@ -200,7 +203,7 @@ export function memberRemove(userID: string) {
   panel.remove();
 }
 
-export function onlineUpdate(param: { userID: string; connected: boolean; }) {
+export function onlineUpdate(param: { userID: string; connected: boolean }) {
   if (param.userID === getSelfID()) {
     return;
   }

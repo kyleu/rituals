@@ -1,8 +1,17 @@
-import type {Message} from "./socket";
-import {opt, req} from "./dom";
-import {send} from "./app";
-import {ChildAdd, ChildRemove, ChildUpdate, configFocus, onChildAddModel, onChildRemoveModel, onChildUpdateModel, setTeamSprint} from "./workspace";
-import {loadPermsForm, Permission, permissionsUpdate} from "./permission";
+import type { Message } from "./socket";
+import { opt, req } from "./dom";
+import { send } from "./app";
+import {
+  ChildAdd,
+  ChildRemove,
+  ChildUpdate,
+  configFocus,
+  onChildAddModel,
+  onChildRemoveModel,
+  onChildUpdateModel,
+  setTeamSprint
+} from "./workspace";
+import { loadPermsForm, Permission, permissionsUpdate } from "./permission";
 
 export type Team = {
   id: string;
@@ -10,16 +19,16 @@ export type Team = {
   title: string;
   icon: string;
   status: string;
-}
+};
 
 export function initTeam() {
   configFocus("team");
   const frm = opt<HTMLFormElement>("#modal-team-config form");
   if (frm) {
     frm.onsubmit = () => {
-      const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-      const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-      send("update", {"title": title, "icon": icon, ...loadPermsForm(frm)});
+      const title = req<HTMLInputElement>('input[name="title"]', frm).value;
+      const icon = req<HTMLInputElement>('input[name="icon"]:checked', frm).value;
+      send("update", { title: title, icon: icon, ...loadPermsForm(frm) });
       document.location.hash = "";
       return false;
     };

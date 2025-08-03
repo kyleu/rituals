@@ -1,9 +1,9 @@
-import {els, req} from "./dom";
+import { els, req } from "./dom";
 
 export type Permission = {
   key: string;
   value: string;
-}
+};
 
 export function permissionsUpdate(perms: Permission[]) {
   console.log("TODO: permissionsUpdate", perms);

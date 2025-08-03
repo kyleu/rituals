@@ -1,10 +1,15 @@
-import {els, opt, req} from "./dom";
-import {send} from "./app";
-import {snippetFeedback, snippetFeedbackContainer, snippetFeedbackModalEdit, snippetFeedbackModalView} from "./feedbacks";
-import {initCommentsModal} from "./comment";
-import {flashCreate} from "./flash";
-import {focusDelay} from "./util";
-import {getSelfID} from "./member";
+import { els, opt, req } from "./dom";
+import { send } from "./app";
+import {
+  snippetFeedback,
+  snippetFeedbackContainer,
+  snippetFeedbackModalEdit,
+  snippetFeedbackModalView
+} from "./feedbacks";
+import { initCommentsModal } from "./comment";
+import { flashCreate } from "./flash";
+import { focusDelay } from "./util";
+import { getSelfID } from "./member";
 
 export type Feedback = {
   id: string;
@@ -12,17 +17,17 @@ export type Feedback = {
   idx: number;
   userID: string;
   content: string;
-  html?: string
-}
+  html?: string;
+};
 
 function initAddModal(feedbackAddModal: HTMLElement) {
   const feedbackAddForm = req("form", feedbackAddModal);
   feedbackAddForm.onsubmit = () => {
-    const category = req<HTMLSelectElement>("select[name=\"category\"]", feedbackAddForm).value;
-    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", feedbackAddForm);
+    const category = req<HTMLSelectElement>('select[name="category"]', feedbackAddForm).value;
+    const input = req<HTMLTextAreaElement>('textarea[name="content"]', feedbackAddForm);
     const content = input.value;
     input.value = "";
-    send("child-add", {"category": category, "content": content});
+    send("child-add", { category: category, content: content });
     document.location.hash = "";
     return false;
   };
@@ -30,19 +35,19 @@ function initAddModal(feedbackAddModal: HTMLElement) {
 
 function initEditModal(feedbackEditModal: HTMLElement) {
   const frm = req("form", feedbackEditModal);
-  const feedbackID = req<HTMLInputElement>("input[name=\"feedbackID\"]", frm).value;
+  const feedbackID = req<HTMLInputElement>('input[name="feedbackID"]', frm).value;
   req<HTMLElement>(".feedback-edit-delete", frm).onclick = () => {
     if (confirm("Are you sure you want to delete this feedback?")) {
-      send("child-remove", {"feedbackID": feedbackID});
+      send("child-remove", { feedbackID: feedbackID });
       document.location.hash = "";
     }
     return false;
   };
   frm.onsubmit = () => {
-    const category = req<HTMLSelectElement>("select[name=\"category\"]", frm).value;
-    const input = req<HTMLTextAreaElement>("textarea[name=\"content\"]", frm);
+    const category = req<HTMLSelectElement>('select[name="category"]', frm).value;
+    const input = req<HTMLTextAreaElement>('textarea[name="content"]', frm);
     const content = input.value;
-    send("child-update", {"feedbackID": feedbackID, "category": category, "content": content});
+    send("child-update", { feedbackID: feedbackID, category: category, content: content });
     document.location.hash = "";
     return false;
   };
@@ -84,7 +89,7 @@ export function feedbackAdd(f: Feedback) {
       if (currIdx >= f.idx) {
         idx = i;
         break;
-      } else if (title.localeCompare(f.content, undefined, {sensitivity: "accent"}) >= 0) {
+      } else if (title.localeCompare(f.content, undefined, { sensitivity: "accent" }) >= 0) {
         idx = i;
         break;
       }

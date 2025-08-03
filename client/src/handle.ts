@@ -1,14 +1,14 @@
-import type {Message} from "./socket";
-import {commentAdd, Comment} from "./comment";
-import {memberAdd, MemberMessage, memberRemove, memberUpdate, onlineUpdate} from "./member";
-import {flashCreate} from "./flash";
-import {handleTeam} from "./team";
-import {handleSprint} from "./sprint";
-import {handleEstimate} from "./estimate";
-import {handleStandup} from "./standup";
-import {handleRetro} from "./retro";
+import type { Message } from "./socket";
+import { commentAdd, Comment } from "./comment";
+import { memberAdd, MemberMessage, memberRemove, memberUpdate, onlineUpdate } from "./member";
+import { flashCreate } from "./flash";
+import { handleTeam } from "./team";
+import { handleSprint } from "./sprint";
+import { handleEstimate } from "./estimate";
+import { handleStandup } from "./standup";
+import { handleRetro } from "./retro";
 
-function onMessage(x: { level: "success" | "error", message: string }) {
+function onMessage(x: { level: "success" | "error"; message: string }) {
   flashCreate("adhoc-message", x.level, x.message);
 }
 
@@ -35,11 +35,11 @@ export function handle(svc: string, m: Message) {
       document.location.href = "/";
       return;
     case "message":
-      return onMessage(m.param as { level: "success" | "error", message: string });
+      return onMessage(m.param as { level: "success" | "error"; message: string });
     case "comment":
       return commentAdd(m.param as Comment);
     case "online-update":
-      return onlineUpdate(m.param as { userID: string; connected: boolean; });
+      return onlineUpdate(m.param as { userID: string; connected: boolean });
     case "member-add":
       if (svc === "estimate") {
         handleEstimate(m);

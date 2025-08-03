@@ -1,13 +1,13 @@
-import {els, req} from "./dom";
-import {send} from "./app";
-import {choiceItem, memberItem, snippetStory} from "./stories";
-import {wireStoryModal, wireStoryModalFormDelete} from "./storymodal";
-import {initCommentsModal} from "./comment";
-import {flashCreate} from "./flash";
-import {focusDelay} from "./util";
-import {applyCalcs, type Vote, type VoteResults} from "./vote";
-import {estimateChoices} from "./estimate";
-import {memberList, username} from "./member";
+import { els, req } from "./dom";
+import { send } from "./app";
+import { choiceItem, memberItem, snippetStory } from "./stories";
+import { wireStoryModal, wireStoryModalFormDelete } from "./storymodal";
+import { initCommentsModal } from "./comment";
+import { flashCreate } from "./flash";
+import { focusDelay } from "./util";
+import { applyCalcs, type Vote, type VoteResults } from "./vote";
+import { estimateChoices } from "./estimate";
+import { memberList, username } from "./member";
 
 export type Story = {
   id: string;
@@ -19,27 +19,27 @@ export type Story = {
   userID: string;
   updated: string;
   created: string;
-}
+};
 
 export type StoryStatusResult = {
   story: Story;
   votes?: Vote[];
   results?: VoteResults;
-}
+};
 
 function onEditSubmit(frm: HTMLElement) {
   const btn = req(".story-delete-button", frm);
   btn.onclick = () => {
     if (confirm("Are you sure you want to delete this story?")) {
-      send("child-remove", {"storyID": btn.dataset.id});
+      send("child-remove", { storyID: btn.dataset.id });
       document.location.hash = "";
     }
     return false;
   };
   frm.onsubmit = () => {
-    const storyID = req<HTMLInputElement>("input[name=\"storyID\"]", frm).value;
-    const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-    send("child-update", {"storyID": storyID, "title": title});
+    const storyID = req<HTMLInputElement>('input[name="storyID"]', frm).value;
+    const title = req<HTMLInputElement>('input[name="title"]', frm).value;
+    send("child-update", { storyID: storyID, title: title });
     document.location.hash = "";
     return false;
   };
@@ -55,10 +55,10 @@ export function initStories() {
   const storyAddModal = req("#modal-story--add");
   const storyAddForm = req("form", storyAddModal);
   storyAddForm.onsubmit = () => {
-    const input = req<HTMLInputElement>("input[name=\"title\"]", storyAddForm);
+    const input = req<HTMLInputElement>('input[name="title"]', storyAddForm);
     const title = input.value;
     input.value = "";
-    send("child-add", {"title": title});
+    send("child-add", { title: title });
     document.location.hash = "";
     return false;
   };
@@ -75,7 +75,7 @@ export function storyUpdate(s: Story) {
   req(".story-final-vote", tr).innerText = s.finalVote === "" ? "-" : s.finalVote;
 
   const editModal = req("#modal-story-" + s.id + "-edit");
-  req("form input[name=\"title\"]", editModal).innerText = s.title;
+  req('form input[name="title"]', editModal).innerText = s.title;
 
   const viewModal = req("#modal-story-" + s.id);
   const fv = req(".final-vote", viewModal);
@@ -89,7 +89,7 @@ export function storyUpdate(s: Story) {
     req(".description", fv).style.display = "block";
   }
 
-  els<HTMLFormElement>("input[name=\"storyID\"]", viewModal).forEach((el) => {
+  els<HTMLFormElement>('input[name="storyID"]', viewModal).forEach((el) => {
     el.value = s.id;
   });
 
@@ -108,7 +108,7 @@ export function storyAdd(s: Story) {
       if (currIdx >= s.idx) {
         idx = i;
         break;
-      } else if (title.localeCompare(s.title, undefined, {sensitivity: "accent"}) >= 0) {
+      } else if (title.localeCompare(s.title, undefined, { sensitivity: "accent" }) >= 0) {
         idx = i;
         break;
       }
@@ -127,10 +127,10 @@ export function storyAdd(s: Story) {
   const editModal = editPrototype.cloneNode(true) as HTMLDivElement;
   editModal.id = "modal-story-" + s.id + "-edit";
   editModal.classList.remove("modal-story-edit-new");
-  els<HTMLInputElement>("input[name=\"storyID\"]", editModal).forEach((e) => {
+  els<HTMLInputElement>('input[name="storyID"]', editModal).forEach((e) => {
     e.value = s.id;
   });
-  req<HTMLInputElement>("input[name=\"title\"]", editModal).value = s.title;
+  req<HTMLInputElement>('input[name="title"]', editModal).value = s.title;
   req<HTMLButtonElement>(".story-delete-button", editModal).dataset.id = s.id;
   onEditSubmit(req("form", editModal));
   els<HTMLFormElement>(".edit-form-delete", editModal).forEach((e) => wireStoryModalFormDelete(s.id, e));
@@ -183,4 +183,3 @@ export function storyRemove(id: string) {
   tr.remove();
   req("#modal-story-" + id).remove();
 }
-

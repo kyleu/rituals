@@ -1,8 +1,8 @@
-import {els, req} from "./dom";
-import {send} from "./app";
-import {getSelfID, username} from "./member";
-import {snippetComment} from "./comments";
-import {focusDelay, svgRef} from "./util";
+import { els, req } from "./dom";
+import { send } from "./app";
+import { getSelfID, username } from "./member";
+import { snippetComment } from "./comments";
+import { focusDelay, svgRef } from "./util";
 
 export class Comment {
   svc?: string;
@@ -33,8 +33,8 @@ export function initCommentsModal(modal: HTMLElement) {
   const form = req<HTMLFormElement>("form", modal);
   form.onsubmit = () => {
     const c: Comment = {
-      svc: req<HTMLInputElement>("input[name=\"svc\"]", form).value,
-      modelID: req<HTMLInputElement>("input[name=\"modelID\"]", form).value
+      svc: req<HTMLInputElement>('input[name="svc"]', form).value,
+      modelID: req<HTMLInputElement>('input[name="modelID"]', form).value
     };
     const ta = req<HTMLTextAreaElement>("textarea", form);
     c.content = ta.value;

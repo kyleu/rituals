@@ -1,12 +1,12 @@
-import {initComments} from "./comment";
-import {handle} from "./handle";
-import {initMembers} from "./member";
-import {Message, Socket} from "./socket";
-import {initEstimate} from "./estimate";
-import {initTeam} from "./team";
-import {initSprint} from "./sprint";
-import {initStandup} from "./standup";
-import {initRetro} from "./retro";
+import { initComments } from "./comment";
+import { handle } from "./handle";
+import { initMembers } from "./member";
+import { Message, Socket } from "./socket";
+import { initEstimate } from "./estimate";
+import { initTeam } from "./team";
+import { initSprint } from "./sprint";
+import { initStandup } from "./standup";
+import { initRetro } from "./retro";
 
 let sock: Socket;
 let svc: string;
@@ -57,12 +57,13 @@ export function initWorkspace(t: string, idStr: string) {
 }
 
 export function send(cmd: string, param: unknown) {
-  sock.send({channel: svc + ":" + id, cmd: cmd, param: param});
+  sock.send({ channel: svc + ":" + id, cmd: cmd, param: param });
 }
 
 declare global {
-  interface Window { // eslint-disable-line @typescript-eslint/consistent-type-definitions
-    initWorkspace: (t: string, idStr: string) => void
+  interface Window {
+    // eslint-disable-line @typescript-eslint/consistent-type-definitions
+    initWorkspace: (t: string, idStr: string) => void;
   }
 }
 

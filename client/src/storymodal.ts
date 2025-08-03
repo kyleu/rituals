@@ -1,31 +1,31 @@
-import {els, req} from "./dom";
-import {send} from "./app";
-import {focusDelay, svgRef} from "./util";
-import {getSelfID} from "./member";
+import { els, req } from "./dom";
+import { send } from "./app";
+import { focusDelay, svgRef } from "./util";
+import { getSelfID } from "./member";
 
 function wireStoryModalFormEdit(id: string, a: HTMLAnchorElement) {
   a.onclick = () => {
-    focusDelay(req("#modal-story-" + id + "-edit form input[name=\"title\"]"));
+    focusDelay(req("#modal-story-" + id + '-edit form input[name="title"]'));
   };
 }
 
 function wireStoryModalFormToNew(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
-    send("child-status", {"storyID": id, "status": "new"});
+    send("child-status", { storyID: id, status: "new" });
     return false;
   };
 }
 
 function wireStoryModalFormToActive(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
-    send("child-status", {"storyID": id, "status": "active"});
+    send("child-status", { storyID: id, status: "active" });
     return false;
   };
 }
 
 function wireStoryModalFormToComplete(id: string, frm: HTMLFormElement) {
   frm.onsubmit = () => {
-    send("child-status", {"storyID": id, "status": "complete"});
+    send("child-status", { storyID: id, status: "complete" });
     return false;
   };
 }
@@ -33,8 +33,8 @@ function wireStoryModalFormToComplete(id: string, frm: HTMLFormElement) {
 function wireStoryModalFormVote(id: string, e: HTMLElement) {
   els(".vote-option", e).forEach((opt) => {
     opt.onclick = () => {
-      req<HTMLInputElement>("input[name=\"vote\"]", opt).checked = true;
-      send("vote", {"storyID": id, "vote": opt.dataset.choice});
+      req<HTMLInputElement>('input[name="vote"]', opt).checked = true;
+      send("vote", { storyID: id, vote: opt.dataset.choice });
       els("#modal-story-" + id + " .story-members .member").forEach((m) => {
         if (m.dataset.member === getSelfID()) {
           req(".choice", m).innerHTML = svgRef("check", 18, "");
@@ -50,7 +50,7 @@ export function wireStoryModalFormDelete(id: string, frm: HTMLFormElement) {
     if (!confirm("Are you sure you want to delete this story?")) {
       return false;
     }
-    send("child-remove", {"storyID": id});
+    send("child-remove", { storyID: id });
     document.location.hash = "";
     return false;
   };

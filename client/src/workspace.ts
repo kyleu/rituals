@@ -1,25 +1,25 @@
-import {els, opt, req} from "./dom";
-import {snippetCommentsModal, snippetCommentsModalLink} from "./comments";
-import {initCommentsModal} from "./comment";
-import {focusDelay, svgRef} from "./util";
+import { els, opt, req } from "./dom";
+import { snippetCommentsModal, snippetCommentsModalLink } from "./comments";
+import { initCommentsModal } from "./comment";
+import { focusDelay, svgRef } from "./util";
 
 export type ChildAdd = {
-  "type": string;
-  "id": string;
-  "title": string;
-  "path": string;
-  "icon": string;
-}
+  type: string;
+  id: string;
+  title: string;
+  path: string;
+  icon: string;
+};
 
 export type ChildUpdate = {
-  "type": string;
-  "model": { id: string; title: string; icon: string };
-}
+  type: string;
+  model: { id: string; title: string; icon: string };
+};
 
 export type ChildRemove = {
-  "type": string;
-  "id": string;
-}
+  type: string;
+  id: string;
+};
 
 export function getSelectName(key: string, panel: HTMLElement, id: string | null) {
   if (id) {
@@ -98,8 +98,15 @@ export function onChildRemoveModel(param: ChildRemove) {
   }
 }
 
-export function setTeamSprint(key: string, panel: HTMLElement, teamID: string | null, sprintID: string | null, title: string, icon: string) {
-  const tEl = opt<HTMLInputElement>("input[name=\"title\"]", panel);
+export function setTeamSprint(
+  key: string,
+  panel: HTMLElement,
+  teamID: string | null,
+  sprintID: string | null,
+  title: string,
+  icon: string
+) {
+  const tEl = opt<HTMLInputElement>('input[name="title"]', panel);
   if (tEl) {
     tEl.value = title;
   }
@@ -115,14 +122,14 @@ export function setTeamSprint(key: string, panel: HTMLElement, teamID: string | 
   for (const vt of els(".view-title", panel)) {
     vt.innerText = title;
   }
-  for (const r of els<HTMLInputElement>("input[name=\"icon\"]", panel)) {
+  for (const r of els<HTMLInputElement>('input[name="icon"]', panel)) {
     r.checked = icon === r.value;
   }
-  const t = opt<HTMLSelectElement>("select[name=\"team\"]", panel);
+  const t = opt<HTMLSelectElement>('select[name="team"]', panel);
   if (t !== null && t !== undefined) {
     t.value = teamID ? teamID : "";
   }
-  const s = opt<HTMLSelectElement>("select[name=\"sprint\"]", panel);
+  const s = opt<HTMLSelectElement>('select[name="sprint"]', panel);
   if (s !== null && s !== undefined) {
     s.value = sprintID ? sprintID : "";
   }

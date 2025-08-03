@@ -1,10 +1,17 @@
-import type {Message} from "./socket";
-import {opt, req} from "./dom";
-import {send} from "./app";
-import {configFocus, setTeamSprint} from "./workspace";
-import {tagsWire} from "./tags";
-import {Feedback, feedbackAdd, feedbackRemove, feedbackUpdate, initFeedbacks} from "./feedback";
-import {initPermissions, loadPermsForm, Permission, permissionsSprintToggle, permissionsTeamToggle, permissionsUpdate} from "./permission";
+import type { Message } from "./socket";
+import { opt, req } from "./dom";
+import { send } from "./app";
+import { configFocus, setTeamSprint } from "./workspace";
+import { tagsWire } from "./tags";
+import { Feedback, feedbackAdd, feedbackRemove, feedbackUpdate, initFeedbacks } from "./feedback";
+import {
+  initPermissions,
+  loadPermsForm,
+  Permission,
+  permissionsSprintToggle,
+  permissionsTeamToggle,
+  permissionsUpdate
+} from "./permission";
 
 export type Retro = {
   id: string;
@@ -15,26 +22,33 @@ export type Retro = {
   status: string;
   teamID: string;
   sprintID: string;
-}
+};
 
 export function initRetro() {
   configFocus("retro");
   const frm = opt<HTMLFormElement>("#modal-retro-config form");
   if (frm) {
-    const teamEl = req<HTMLSelectElement>("select[name=\"team\"]", frm);
+    const teamEl = req<HTMLSelectElement>('select[name="team"]', frm);
     teamEl.onchange = () => {
       permissionsTeamToggle(teamEl.value !== "");
     };
-    const sprintEl = req<HTMLSelectElement>("select[name=\"sprint\"]", frm);
+    const sprintEl = req<HTMLSelectElement>('select[name="sprint"]', frm);
     sprintEl.onchange = () => {
       permissionsSprintToggle(sprintEl.value !== "");
     };
     initPermissions(teamEl, sprintEl);
     frm.onsubmit = () => {
-      const title = req<HTMLInputElement>("input[name=\"title\"]", frm).value;
-      const icon = req<HTMLInputElement>("input[name=\"icon\"]:checked", frm).value;
-      const categories = req<HTMLInputElement>("input[name=\"categories\"]", frm).value;
-      send("update", {"title": title, "icon": icon, "categories": categories, "team": teamEl.value, "sprint": sprintEl.value, ...loadPermsForm(frm)});
+      const title = req<HTMLInputElement>('input[name="title"]', frm).value;
+      const icon = req<HTMLInputElement>('input[name="icon"]:checked', frm).value;
+      const categories = req<HTMLInputElement>('input[name="categories"]', frm).value;
+      send("update", {
+        title: title,
+        icon: icon,
+        categories: categories,
+        team: teamEl.value,
+        sprint: sprintEl.value,
+        ...loadPermsForm(frm)
+      });
       document.location.hash = "";
       return false;
     };
@@ -46,7 +60,7 @@ function onUpdate(param: Retro) {
   const panel = req<HTMLElement>("#modal-retro-config");
   const frm = opt<HTMLFormElement>("form", panel);
   if (frm) {
-    const cat = req<HTMLInputElement>("input[name=\"categories\"]", frm);
+    const cat = req<HTMLInputElement>('input[name="categories"]', frm);
     cat.value = param.categories.join(",");
     if (cat.parentElement) {
       tagsWire(cat.parentElement);
