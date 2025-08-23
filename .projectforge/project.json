@@ -39,7 +39,7 @@
   "theme": {
     "base": "#8fbc8f",
     "light": {
-      "brd": "1px solid #dddddd",
+      "brd": "1px solid #cccccc",
       "ld": "none",
       "fg": "#000000",
       "fgm": "#2f3f2f",
@@ -58,7 +58,7 @@
       "err": "#ff0000"
     },
     "dark": {
-      "brd": "1px solid #666666",
+      "brd": "1px solid #444444",
       "ld": "none",
       "fg": "#dddddd",
       "fgm": "#94a693",
