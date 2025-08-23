@@ -9,8 +9,7 @@
   "icon": "vote-yea",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "title": "Vote",

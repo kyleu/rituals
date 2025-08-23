@@ -5,8 +5,7 @@
   "icon": "sprint",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "tags": [

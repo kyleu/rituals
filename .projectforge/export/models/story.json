@@ -8,8 +8,7 @@
   "icon": "story",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "tags": [

@@ -5,36 +5,28 @@
   "icon": "star",
   "values": [
     {
-      "key": "team",
-      "title": "Team"
+      "key": "team"
     },
     {
-      "key": "sprint",
-      "title": "Sprint"
+      "key": "sprint"
     },
     {
-      "key": "estimate",
-      "title": "Estimate"
+      "key": "estimate"
     },
     {
-      "key": "standup",
-      "title": "Standup"
+      "key": "standup"
     },
     {
-      "key": "retro",
-      "title": "Retro"
+      "key": "retro"
     },
     {
-      "key": "story",
-      "title": "Story"
+      "key": "story"
     },
     {
-      "key": "feedback",
-      "title": "Feedback"
+      "key": "feedback"
     },
     {
-      "key": "report",
-      "title": "Report"
+      "key": "report"
     }
   ]
 }

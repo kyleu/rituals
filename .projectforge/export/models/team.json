@@ -5,8 +5,7 @@
   "icon": "team",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "tags": [

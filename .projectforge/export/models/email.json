@@ -5,8 +5,7 @@
   "icon": "email",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "route": "admin/db/email",

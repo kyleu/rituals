@@ -8,8 +8,7 @@
   "icon": "file-alt",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "title": "Report",

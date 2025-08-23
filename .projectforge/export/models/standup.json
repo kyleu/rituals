@@ -5,8 +5,7 @@
   "icon": "standup",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "tags": [

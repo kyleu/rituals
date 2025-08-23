@@ -5,16 +5,13 @@
   "icon": "star",
   "values": [
     {
-      "key": "owner",
-      "title": "Owner"
+      "key": "owner"
     },
     {
-      "key": "member",
-      "title": "Member"
+      "key": "member"
     },
     {
-      "key": "observer",
-      "title": "Observer"
+      "key": "observer"
     }
   ]
 }

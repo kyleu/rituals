@@ -8,8 +8,7 @@
   "icon": "comment",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "title": "Feedback",

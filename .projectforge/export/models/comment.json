@@ -5,8 +5,7 @@
   "icon": "comments",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "route": "admin/db/comment",

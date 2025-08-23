@@ -8,8 +8,7 @@
   "icon": "users",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "title": "Member",

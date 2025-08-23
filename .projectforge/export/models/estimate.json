@@ -5,8 +5,7 @@
   "icon": "estimate",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "tags": [

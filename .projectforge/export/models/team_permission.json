@@ -8,8 +8,7 @@
   "icon": "permission",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "title": "Permission",

@@ -8,8 +8,7 @@
   "icon": "history",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "title": "History",

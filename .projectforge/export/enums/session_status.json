@@ -5,16 +5,13 @@
   "icon": "star",
   "values": [
     {
-      "key": "new",
-      "title": "New"
+      "key": "new"
     },
     {
-      "key": "active",
-      "title": "Active"
+      "key": "active"
     },
     {
-      "key": "complete",
-      "title": "Complete"
+      "key": "complete"
     }
   ]
 }

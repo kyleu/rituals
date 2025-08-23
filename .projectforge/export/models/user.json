@@ -5,8 +5,7 @@
   "icon": "profile",
   "ordering": [
     {
-      "column": "created",
-      "asc": false
+      "column": "created"
     }
   ],
   "tags": [
