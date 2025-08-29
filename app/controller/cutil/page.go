@@ -19,6 +19,7 @@ import (
 	"github.com/kyleu/rituals/app/lib/user"
 	dbuser "github.com/kyleu/rituals/app/user"
 	"github.com/kyleu/rituals/app/util"
+	"github.com/kyleu/rituals/assets"
 )
 
 const (
@@ -205,4 +206,12 @@ func (p *PageState) MainClasses() string {
 		ret = append(ret, "nomenu")
 	}
 	return util.StringJoin(ret, " ")
+}
+
+func (p *PageState) AddHeaderScript(path string, deferFlag bool) {
+	p.HeaderContent += "\n  " + assets.ScriptElement(path, deferFlag)
+}
+
+func (p *PageState) AddHeaderStylesheet(path string) {
+	p.HeaderContent += "\n  " + assets.StylesheetElement(path)
 }
