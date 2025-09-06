@@ -19,7 +19,6 @@ const (
 	cfgPassword = "db_password"
 	cfgDatabase = "db_database"
 	cfgSchema   = "db_schema"
-	cfgFile     = "db_file"
 	cfgMaxConns = "db_max_connections"
 	cfgDebug    = "db_debug"
 )
