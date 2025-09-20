@@ -1,7 +1,6 @@
 package estimate
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -28,7 +27,7 @@ type row struct {
 	Status   enum.SessionStatus `db:"status" json:"status"`
 	TeamID   *uuid.UUID         `db:"team_id" json:"team_id"`
 	SprintID *uuid.UUID         `db:"sprint_id" json:"sprint_id"`
-	Choices  json.RawMessage    `db:"choices" json:"choices"`
+	Choices  []byte             `db:"choices" json:"choices"`
 	Created  time.Time          `db:"created" json:"created"`
 	Updated  *time.Time         `db:"updated" json:"updated"`
 }

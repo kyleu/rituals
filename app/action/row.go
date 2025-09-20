@@ -1,7 +1,6 @@
 package action
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -26,7 +25,7 @@ type row struct {
 	ModelID uuid.UUID         `db:"model_id" json:"model_id"`
 	UserID  uuid.UUID         `db:"user_id" json:"user_id"`
 	Act     string            `db:"act" json:"act"`
-	Content json.RawMessage   `db:"content" json:"content"`
+	Content []byte            `db:"content" json:"content"`
 	Note    string            `db:"note" json:"note"`
 	Created time.Time         `db:"created" json:"created"`
 }

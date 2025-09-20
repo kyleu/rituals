@@ -1,7 +1,6 @@
 package email
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -20,15 +19,15 @@ var (
 )
 
 type row struct {
-	ID         uuid.UUID       `db:"id" json:"id"`
-	Recipients json.RawMessage `db:"recipients" json:"recipients"`
-	Subject    string          `db:"subject" json:"subject"`
-	Data       json.RawMessage `db:"data" json:"data"`
-	Plain      string          `db:"plain" json:"plain"`
-	HTML       string          `db:"html" json:"html"`
-	UserID     uuid.UUID       `db:"user_id" json:"user_id"`
-	Status     string          `db:"status" json:"status"`
-	Created    time.Time       `db:"created" json:"created"`
+	ID         uuid.UUID `db:"id" json:"id"`
+	Recipients []byte    `db:"recipients" json:"recipients"`
+	Subject    string    `db:"subject" json:"subject"`
+	Data       []byte    `db:"data" json:"data"`
+	Plain      string    `db:"plain" json:"plain"`
+	HTML       string    `db:"html" json:"html"`
+	UserID     uuid.UUID `db:"user_id" json:"user_id"`
+	Status     string    `db:"status" json:"status"`
+	Created    time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToEmail() *Email {

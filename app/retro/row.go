@@ -1,7 +1,6 @@
 package retro
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -28,7 +27,7 @@ type row struct {
 	Status     enum.SessionStatus `db:"status" json:"status"`
 	TeamID     *uuid.UUID         `db:"team_id" json:"team_id"`
 	SprintID   *uuid.UUID         `db:"sprint_id" json:"sprint_id"`
-	Categories json.RawMessage    `db:"categories" json:"categories"`
+	Categories []byte             `db:"categories" json:"categories"`
 	Created    time.Time          `db:"created" json:"created"`
 	Updated    *time.Time         `db:"updated" json:"updated"`
 }
