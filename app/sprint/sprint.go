@@ -23,16 +23,16 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Sprint)(nil)
 
 type Sprint struct {
-	ID        uuid.UUID          `json:"id,omitempty"`
-	Slug      string             `json:"slug,omitempty"`
-	Title     string             `json:"title,omitempty"`
-	Icon      string             `json:"icon,omitempty"`
-	Status    enum.SessionStatus `json:"status,omitempty"`
-	TeamID    *uuid.UUID         `json:"teamID,omitempty"`
-	StartDate *time.Time         `json:"startDate,omitempty"`
-	EndDate   *time.Time         `json:"endDate,omitempty"`
-	Created   time.Time          `json:"created,omitempty"`
-	Updated   *time.Time         `json:"updated,omitempty"`
+	ID        uuid.UUID          `json:"id,omitzero"`
+	Slug      string             `json:"slug,omitzero"`
+	Title     string             `json:"title,omitzero"`
+	Icon      string             `json:"icon,omitzero"`
+	Status    enum.SessionStatus `json:"status,omitzero"`
+	TeamID    *uuid.UUID         `json:"teamID,omitzero"`
+	StartDate *time.Time         `json:"startDate,omitzero"`
+	EndDate   *time.Time         `json:"endDate,omitzero"`
+	Created   time.Time          `json:"created,omitzero"`
+	Updated   *time.Time         `json:"updated,omitzero"`
 }
 
 func NewSprint(id uuid.UUID) *Sprint {

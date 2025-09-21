@@ -23,13 +23,13 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Comment)(nil)
 
 type Comment struct {
-	ID      uuid.UUID         `json:"id,omitempty"`
-	Svc     enum.ModelService `json:"svc,omitempty"`
-	ModelID uuid.UUID         `json:"modelID,omitempty"`
-	UserID  uuid.UUID         `json:"userID,omitempty"`
-	Content string            `json:"content,omitempty"`
-	HTML    string            `json:"html,omitempty"`
-	Created time.Time         `json:"created,omitempty"`
+	ID      uuid.UUID         `json:"id,omitzero"`
+	Svc     enum.ModelService `json:"svc,omitzero"`
+	ModelID uuid.UUID         `json:"modelID,omitzero"`
+	UserID  uuid.UUID         `json:"userID,omitzero"`
+	Content string            `json:"content,omitzero"`
+	HTML    string            `json:"html,omitzero"`
+	Created time.Time         `json:"created,omitzero"`
 }
 
 func NewComment(id uuid.UUID) *Comment {

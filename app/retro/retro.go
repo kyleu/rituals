@@ -23,16 +23,16 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Retro)(nil)
 
 type Retro struct {
-	ID         uuid.UUID          `json:"id,omitempty"`
-	Slug       string             `json:"slug,omitempty"`
-	Title      string             `json:"title,omitempty"`
-	Icon       string             `json:"icon,omitempty"`
-	Status     enum.SessionStatus `json:"status,omitempty"`
-	TeamID     *uuid.UUID         `json:"teamID,omitempty"`
-	SprintID   *uuid.UUID         `json:"sprintID,omitempty"`
+	ID         uuid.UUID          `json:"id,omitzero"`
+	Slug       string             `json:"slug,omitzero"`
+	Title      string             `json:"title,omitzero"`
+	Icon       string             `json:"icon,omitzero"`
+	Status     enum.SessionStatus `json:"status,omitzero"`
+	TeamID     *uuid.UUID         `json:"teamID,omitzero"`
+	SprintID   *uuid.UUID         `json:"sprintID,omitzero"`
 	Categories []string           `json:"categories,omitempty"`
-	Created    time.Time          `json:"created,omitempty"`
-	Updated    *time.Time         `json:"updated,omitempty"`
+	Created    time.Time          `json:"created,omitzero"`
+	Updated    *time.Time         `json:"updated,omitzero"`
 }
 
 func NewRetro(id uuid.UUID) *Retro {

@@ -23,15 +23,15 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Feedback)(nil)
 
 type Feedback struct {
-	ID       uuid.UUID  `json:"id,omitempty"`
-	RetroID  uuid.UUID  `json:"retroID,omitempty"`
-	Idx      int        `json:"idx,omitempty"`
-	UserID   uuid.UUID  `json:"userID,omitempty"`
-	Category string     `json:"category,omitempty"`
-	Content  string     `json:"content,omitempty"`
-	HTML     string     `json:"html,omitempty"`
-	Created  time.Time  `json:"created,omitempty"`
-	Updated  *time.Time `json:"updated,omitempty"`
+	ID       uuid.UUID  `json:"id,omitzero"`
+	RetroID  uuid.UUID  `json:"retroID,omitzero"`
+	Idx      int        `json:"idx,omitzero"`
+	UserID   uuid.UUID  `json:"userID,omitzero"`
+	Category string     `json:"category,omitzero"`
+	Content  string     `json:"content,omitzero"`
+	HTML     string     `json:"html,omitzero"`
+	Created  time.Time  `json:"created,omitzero"`
+	Updated  *time.Time `json:"updated,omitzero"`
 }
 
 func NewFeedback(id uuid.UUID) *Feedback {

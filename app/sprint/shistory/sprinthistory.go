@@ -22,10 +22,10 @@ func Route(paths ...string) string {
 var _ svc.Model = (*SprintHistory)(nil)
 
 type SprintHistory struct {
-	Slug       string    `json:"slug,omitempty"`
-	SprintID   uuid.UUID `json:"sprintID,omitempty"`
-	SprintName string    `json:"sprintName,omitempty"`
-	Created    time.Time `json:"created,omitempty"`
+	Slug       string    `json:"slug,omitzero"`
+	SprintID   uuid.UUID `json:"sprintID,omitzero"`
+	SprintName string    `json:"sprintName,omitzero"`
+	Created    time.Time `json:"created,omitzero"`
 }
 
 func NewSprintHistory(slug string) *SprintHistory {

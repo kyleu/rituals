@@ -24,8 +24,8 @@ func Route(paths ...string) string {
 var _ svc.Model = (*EstimateMember)(nil)
 
 type PK struct {
-	EstimateID uuid.UUID `json:"estimateID,omitempty"`
-	UserID     uuid.UUID `json:"userID,omitempty"`
+	EstimateID uuid.UUID `json:"estimateID,omitzero"`
+	UserID     uuid.UUID `json:"userID,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,13 +33,13 @@ func (p *PK) String() string {
 }
 
 type EstimateMember struct {
-	EstimateID uuid.UUID         `json:"estimateID,omitempty"`
-	UserID     uuid.UUID         `json:"userID,omitempty"`
-	Name       string            `json:"name,omitempty"`
-	Picture    string            `json:"picture,omitempty"`
-	Role       enum.MemberStatus `json:"role,omitempty"`
-	Created    time.Time         `json:"created,omitempty"`
-	Updated    *time.Time        `json:"updated,omitempty"`
+	EstimateID uuid.UUID         `json:"estimateID,omitzero"`
+	UserID     uuid.UUID         `json:"userID,omitzero"`
+	Name       string            `json:"name,omitzero"`
+	Picture    string            `json:"picture,omitzero"`
+	Role       enum.MemberStatus `json:"role,omitzero"`
+	Created    time.Time         `json:"created,omitzero"`
+	Updated    *time.Time        `json:"updated,omitzero"`
 }
 
 func NewEstimateMember(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {

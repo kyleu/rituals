@@ -22,15 +22,15 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Email)(nil)
 
 type Email struct {
-	ID         uuid.UUID     `json:"id,omitempty"`
+	ID         uuid.UUID     `json:"id,omitzero"`
 	Recipients []string      `json:"recipients,omitempty"`
-	Subject    string        `json:"subject,omitempty"`
-	Data       util.ValueMap `json:"data,omitempty"`
-	Plain      string        `json:"plain,omitempty"`
-	HTML       string        `json:"html,omitempty"`
-	UserID     uuid.UUID     `json:"userID,omitempty"`
-	Status     string        `json:"status,omitempty"`
-	Created    time.Time     `json:"created,omitempty"`
+	Subject    string        `json:"subject,omitzero"`
+	Data       util.ValueMap `json:"data,omitzero"`
+	Plain      string        `json:"plain,omitzero"`
+	HTML       string        `json:"html,omitzero"`
+	UserID     uuid.UUID     `json:"userID,omitzero"`
+	Status     string        `json:"status,omitzero"`
+	Created    time.Time     `json:"created,omitzero"`
 }
 
 func NewEmail(id uuid.UUID) *Email {

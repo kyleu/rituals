@@ -23,9 +23,9 @@ func Route(paths ...string) string {
 var _ svc.Model = (*RetroPermission)(nil)
 
 type PK struct {
-	RetroID uuid.UUID `json:"retroID,omitempty"`
-	Key     string    `json:"key,omitempty"`
-	Value   string    `json:"value,omitempty"`
+	RetroID uuid.UUID `json:"retroID,omitzero"`
+	Key     string    `json:"key,omitzero"`
+	Value   string    `json:"value,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,11 +33,11 @@ func (p *PK) String() string {
 }
 
 type RetroPermission struct {
-	RetroID uuid.UUID `json:"retroID,omitempty"`
-	Key     string    `json:"key,omitempty"`
-	Value   string    `json:"value,omitempty"`
-	Access  string    `json:"access,omitempty"`
-	Created time.Time `json:"created,omitempty"`
+	RetroID uuid.UUID `json:"retroID,omitzero"`
+	Key     string    `json:"key,omitzero"`
+	Value   string    `json:"value,omitzero"`
+	Access  string    `json:"access,omitzero"`
+	Created time.Time `json:"created,omitzero"`
 }
 
 func NewRetroPermission(retroID uuid.UUID, key string, value string) *RetroPermission {

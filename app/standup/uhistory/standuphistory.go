@@ -22,10 +22,10 @@ func Route(paths ...string) string {
 var _ svc.Model = (*StandupHistory)(nil)
 
 type StandupHistory struct {
-	Slug        string    `json:"slug,omitempty"`
-	StandupID   uuid.UUID `json:"standupID,omitempty"`
-	StandupName string    `json:"standupName,omitempty"`
-	Created     time.Time `json:"created,omitempty"`
+	Slug        string    `json:"slug,omitzero"`
+	StandupID   uuid.UUID `json:"standupID,omitzero"`
+	StandupName string    `json:"standupName,omitzero"`
+	Created     time.Time `json:"created,omitzero"`
 }
 
 func NewStandupHistory(slug string) *StandupHistory {

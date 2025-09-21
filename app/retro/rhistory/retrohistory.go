@@ -22,10 +22,10 @@ func Route(paths ...string) string {
 var _ svc.Model = (*RetroHistory)(nil)
 
 type RetroHistory struct {
-	Slug      string    `json:"slug,omitempty"`
-	RetroID   uuid.UUID `json:"retroID,omitempty"`
-	RetroName string    `json:"retroName,omitempty"`
-	Created   time.Time `json:"created,omitempty"`
+	Slug      string    `json:"slug,omitzero"`
+	RetroID   uuid.UUID `json:"retroID,omitzero"`
+	RetroName string    `json:"retroName,omitzero"`
+	Created   time.Time `json:"created,omitzero"`
 }
 
 func NewRetroHistory(slug string) *RetroHistory {

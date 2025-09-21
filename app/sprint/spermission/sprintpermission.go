@@ -23,9 +23,9 @@ func Route(paths ...string) string {
 var _ svc.Model = (*SprintPermission)(nil)
 
 type PK struct {
-	SprintID uuid.UUID `json:"sprintID,omitempty"`
-	Key      string    `json:"key,omitempty"`
-	Value    string    `json:"value,omitempty"`
+	SprintID uuid.UUID `json:"sprintID,omitzero"`
+	Key      string    `json:"key,omitzero"`
+	Value    string    `json:"value,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,11 +33,11 @@ func (p *PK) String() string {
 }
 
 type SprintPermission struct {
-	SprintID uuid.UUID `json:"sprintID,omitempty"`
-	Key      string    `json:"key,omitempty"`
-	Value    string    `json:"value,omitempty"`
-	Access   string    `json:"access,omitempty"`
-	Created  time.Time `json:"created,omitempty"`
+	SprintID uuid.UUID `json:"sprintID,omitzero"`
+	Key      string    `json:"key,omitzero"`
+	Value    string    `json:"value,omitzero"`
+	Access   string    `json:"access,omitzero"`
+	Created  time.Time `json:"created,omitzero"`
 }
 
 func NewSprintPermission(sprintID uuid.UUID, key string, value string) *SprintPermission {

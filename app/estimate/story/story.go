@@ -24,15 +24,15 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Story)(nil)
 
 type Story struct {
-	ID         uuid.UUID          `json:"id,omitempty"`
-	EstimateID uuid.UUID          `json:"estimateID,omitempty"`
-	Idx        int                `json:"idx,omitempty"`
-	UserID     uuid.UUID          `json:"userID,omitempty"`
-	Title      string             `json:"title,omitempty"`
-	Status     enum.SessionStatus `json:"status,omitempty"`
-	FinalVote  string             `json:"finalVote,omitempty"`
-	Created    time.Time          `json:"created,omitempty"`
-	Updated    *time.Time         `json:"updated,omitempty"`
+	ID         uuid.UUID          `json:"id,omitzero"`
+	EstimateID uuid.UUID          `json:"estimateID,omitzero"`
+	Idx        int                `json:"idx,omitzero"`
+	UserID     uuid.UUID          `json:"userID,omitzero"`
+	Title      string             `json:"title,omitzero"`
+	Status     enum.SessionStatus `json:"status,omitzero"`
+	FinalVote  string             `json:"finalVote,omitzero"`
+	Created    time.Time          `json:"created,omitzero"`
+	Updated    *time.Time         `json:"updated,omitzero"`
 }
 
 func NewStory(id uuid.UUID) *Story {

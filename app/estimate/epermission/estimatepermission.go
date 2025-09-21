@@ -23,9 +23,9 @@ func Route(paths ...string) string {
 var _ svc.Model = (*EstimatePermission)(nil)
 
 type PK struct {
-	EstimateID uuid.UUID `json:"estimateID,omitempty"`
-	Key        string    `json:"key,omitempty"`
-	Value      string    `json:"value,omitempty"`
+	EstimateID uuid.UUID `json:"estimateID,omitzero"`
+	Key        string    `json:"key,omitzero"`
+	Value      string    `json:"value,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,11 +33,11 @@ func (p *PK) String() string {
 }
 
 type EstimatePermission struct {
-	EstimateID uuid.UUID `json:"estimateID,omitempty"`
-	Key        string    `json:"key,omitempty"`
-	Value      string    `json:"value,omitempty"`
-	Access     string    `json:"access,omitempty"`
-	Created    time.Time `json:"created,omitempty"`
+	EstimateID uuid.UUID `json:"estimateID,omitzero"`
+	Key        string    `json:"key,omitzero"`
+	Value      string    `json:"value,omitzero"`
+	Access     string    `json:"access,omitzero"`
+	Created    time.Time `json:"created,omitzero"`
 }
 
 func NewEstimatePermission(estimateID uuid.UUID, key string, value string) *EstimatePermission {

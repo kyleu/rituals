@@ -22,14 +22,14 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Report)(nil)
 
 type Report struct {
-	ID        uuid.UUID  `json:"id,omitempty"`
-	StandupID uuid.UUID  `json:"standupID,omitempty"`
-	Day       time.Time  `json:"day,omitempty"`
-	UserID    uuid.UUID  `json:"userID,omitempty"`
-	Content   string     `json:"content,omitempty"`
-	HTML      string     `json:"html,omitempty"`
-	Created   time.Time  `json:"created,omitempty"`
-	Updated   *time.Time `json:"updated,omitempty"`
+	ID        uuid.UUID  `json:"id,omitzero"`
+	StandupID uuid.UUID  `json:"standupID,omitzero"`
+	Day       time.Time  `json:"day,omitzero"`
+	UserID    uuid.UUID  `json:"userID,omitzero"`
+	Content   string     `json:"content,omitzero"`
+	HTML      string     `json:"html,omitzero"`
+	Created   time.Time  `json:"created,omitzero"`
+	Updated   *time.Time `json:"updated,omitzero"`
 }
 
 func NewReport(id uuid.UUID) *Report {

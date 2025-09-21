@@ -23,8 +23,8 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Vote)(nil)
 
 type PK struct {
-	StoryID uuid.UUID `json:"storyID,omitempty"`
-	UserID  uuid.UUID `json:"userID,omitempty"`
+	StoryID uuid.UUID `json:"storyID,omitzero"`
+	UserID  uuid.UUID `json:"userID,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -32,11 +32,11 @@ func (p *PK) String() string {
 }
 
 type Vote struct {
-	StoryID uuid.UUID  `json:"storyID,omitempty"`
-	UserID  uuid.UUID  `json:"userID,omitempty"`
-	Choice  string     `json:"choice,omitempty"`
-	Created time.Time  `json:"created,omitempty"`
-	Updated *time.Time `json:"updated,omitempty"`
+	StoryID uuid.UUID  `json:"storyID,omitzero"`
+	UserID  uuid.UUID  `json:"userID,omitzero"`
+	Choice  string     `json:"choice,omitzero"`
+	Created time.Time  `json:"created,omitzero"`
+	Updated *time.Time `json:"updated,omitzero"`
 }
 
 func NewVote(storyID uuid.UUID, userID uuid.UUID) *Vote {

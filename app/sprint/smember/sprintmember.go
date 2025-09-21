@@ -24,8 +24,8 @@ func Route(paths ...string) string {
 var _ svc.Model = (*SprintMember)(nil)
 
 type PK struct {
-	SprintID uuid.UUID `json:"sprintID,omitempty"`
-	UserID   uuid.UUID `json:"userID,omitempty"`
+	SprintID uuid.UUID `json:"sprintID,omitzero"`
+	UserID   uuid.UUID `json:"userID,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,13 +33,13 @@ func (p *PK) String() string {
 }
 
 type SprintMember struct {
-	SprintID uuid.UUID         `json:"sprintID,omitempty"`
-	UserID   uuid.UUID         `json:"userID,omitempty"`
-	Name     string            `json:"name,omitempty"`
-	Picture  string            `json:"picture,omitempty"`
-	Role     enum.MemberStatus `json:"role,omitempty"`
-	Created  time.Time         `json:"created,omitempty"`
-	Updated  *time.Time        `json:"updated,omitempty"`
+	SprintID uuid.UUID         `json:"sprintID,omitzero"`
+	UserID   uuid.UUID         `json:"userID,omitzero"`
+	Name     string            `json:"name,omitzero"`
+	Picture  string            `json:"picture,omitzero"`
+	Role     enum.MemberStatus `json:"role,omitzero"`
+	Created  time.Time         `json:"created,omitzero"`
+	Updated  *time.Time        `json:"updated,omitzero"`
 }
 
 func NewSprintMember(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {

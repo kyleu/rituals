@@ -24,8 +24,8 @@ func Route(paths ...string) string {
 var _ svc.Model = (*StandupMember)(nil)
 
 type PK struct {
-	StandupID uuid.UUID `json:"standupID,omitempty"`
-	UserID    uuid.UUID `json:"userID,omitempty"`
+	StandupID uuid.UUID `json:"standupID,omitzero"`
+	UserID    uuid.UUID `json:"userID,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,13 +33,13 @@ func (p *PK) String() string {
 }
 
 type StandupMember struct {
-	StandupID uuid.UUID         `json:"standupID,omitempty"`
-	UserID    uuid.UUID         `json:"userID,omitempty"`
-	Name      string            `json:"name,omitempty"`
-	Picture   string            `json:"picture,omitempty"`
-	Role      enum.MemberStatus `json:"role,omitempty"`
-	Created   time.Time         `json:"created,omitempty"`
-	Updated   *time.Time        `json:"updated,omitempty"`
+	StandupID uuid.UUID         `json:"standupID,omitzero"`
+	UserID    uuid.UUID         `json:"userID,omitzero"`
+	Name      string            `json:"name,omitzero"`
+	Picture   string            `json:"picture,omitzero"`
+	Role      enum.MemberStatus `json:"role,omitzero"`
+	Created   time.Time         `json:"created,omitzero"`
+	Updated   *time.Time        `json:"updated,omitzero"`
 }
 
 func NewStandupMember(standupID uuid.UUID, userID uuid.UUID) *StandupMember {

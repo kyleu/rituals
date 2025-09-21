@@ -4,9 +4,9 @@ import "github.com/google/uuid"
 
 type Profile struct {
 	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name,omitempty"`
-	Mode  string    `json:"mode,omitempty"`
-	Theme string    `json:"theme,omitempty"`
+	Name  string    `json:"name,omitzero"`
+	Mode  string    `json:"mode,omitzero"`
+	Theme string    `json:"theme,omitzero"`
 }
 
 var DefaultProfile = &Profile{Name: "Guest"}

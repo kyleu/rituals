@@ -24,8 +24,8 @@ func Route(paths ...string) string {
 var _ svc.Model = (*RetroMember)(nil)
 
 type PK struct {
-	RetroID uuid.UUID `json:"retroID,omitempty"`
-	UserID  uuid.UUID `json:"userID,omitempty"`
+	RetroID uuid.UUID `json:"retroID,omitzero"`
+	UserID  uuid.UUID `json:"userID,omitzero"`
 }
 
 func (p *PK) String() string {
@@ -33,13 +33,13 @@ func (p *PK) String() string {
 }
 
 type RetroMember struct {
-	RetroID uuid.UUID         `json:"retroID,omitempty"`
-	UserID  uuid.UUID         `json:"userID,omitempty"`
-	Name    string            `json:"name,omitempty"`
-	Picture string            `json:"picture,omitempty"`
-	Role    enum.MemberStatus `json:"role,omitempty"`
-	Created time.Time         `json:"created,omitempty"`
-	Updated *time.Time        `json:"updated,omitempty"`
+	RetroID uuid.UUID         `json:"retroID,omitzero"`
+	UserID  uuid.UUID         `json:"userID,omitzero"`
+	Name    string            `json:"name,omitzero"`
+	Picture string            `json:"picture,omitzero"`
+	Role    enum.MemberStatus `json:"role,omitzero"`
+	Created time.Time         `json:"created,omitzero"`
+	Updated *time.Time        `json:"updated,omitzero"`
 }
 
 func NewRetroMember(retroID uuid.UUID, userID uuid.UUID) *RetroMember {

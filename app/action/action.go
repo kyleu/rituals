@@ -23,14 +23,14 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Action)(nil)
 
 type Action struct {
-	ID      uuid.UUID         `json:"id,omitempty"`
-	Svc     enum.ModelService `json:"svc,omitempty"`
-	ModelID uuid.UUID         `json:"modelID,omitempty"`
-	UserID  uuid.UUID         `json:"userID,omitempty"`
-	Act     string            `json:"act,omitempty"`
-	Content util.ValueMap     `json:"content,omitempty"`
-	Note    string            `json:"note,omitempty"`
-	Created time.Time         `json:"created,omitempty"`
+	ID      uuid.UUID         `json:"id,omitzero"`
+	Svc     enum.ModelService `json:"svc,omitzero"`
+	ModelID uuid.UUID         `json:"modelID,omitzero"`
+	UserID  uuid.UUID         `json:"userID,omitzero"`
+	Act     string            `json:"act,omitzero"`
+	Content util.ValueMap     `json:"content,omitzero"`
+	Note    string            `json:"note,omitzero"`
+	Created time.Time         `json:"created,omitzero"`
 }
 
 func NewAction(id uuid.UUID) *Action {
