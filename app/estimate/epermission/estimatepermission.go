@@ -45,7 +45,7 @@ func NewEstimatePermission(estimateID uuid.UUID, key string, value string) *Esti
 }
 
 func (e *EstimatePermission) Clone() *EstimatePermission {
-	return &EstimatePermission{e.EstimateID, e.Key, e.Value, e.Access, e.Created}
+	return &EstimatePermission{EstimateID: e.EstimateID, Key: e.Key, Value: e.Value, Access: e.Access, Created: e.Created}
 }
 
 func (e *EstimatePermission) String() string {

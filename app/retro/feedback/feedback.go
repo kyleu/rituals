@@ -39,7 +39,10 @@ func NewFeedback(id uuid.UUID) *Feedback {
 }
 
 func (f *Feedback) Clone() *Feedback {
-	return &Feedback{f.ID, f.RetroID, f.Idx, f.UserID, f.Category, f.Content, f.HTML, f.Created, f.Updated}
+	return &Feedback{
+		ID: f.ID, RetroID: f.RetroID, Idx: f.Idx, UserID: f.UserID, Category: f.Category, Content: f.Content, HTML: f.HTML,
+		Created: f.Created, Updated: f.Updated,
+	}
 }
 
 func (f *Feedback) String() string {

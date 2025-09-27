@@ -47,7 +47,10 @@ func NewStandupMember(standupID uuid.UUID, userID uuid.UUID) *StandupMember {
 }
 
 func (s *StandupMember) Clone() *StandupMember {
-	return &StandupMember{s.StandupID, s.UserID, s.Name, s.Picture, s.Role, s.Created, s.Updated}
+	return &StandupMember{
+		StandupID: s.StandupID, UserID: s.UserID, Name: s.Name, Picture: s.Picture, Role: s.Role, Created: s.Created,
+		Updated: s.Updated,
+	}
 }
 
 func (s *StandupMember) String() string {

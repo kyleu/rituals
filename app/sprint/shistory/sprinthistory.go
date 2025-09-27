@@ -33,7 +33,7 @@ func NewSprintHistory(slug string) *SprintHistory {
 }
 
 func (s *SprintHistory) Clone() *SprintHistory {
-	return &SprintHistory{s.Slug, s.SprintID, s.SprintName, s.Created}
+	return &SprintHistory{Slug: s.Slug, SprintID: s.SprintID, SprintName: s.SprintName, Created: s.Created}
 }
 
 func (s *SprintHistory) String() string {

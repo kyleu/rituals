@@ -38,7 +38,10 @@ func NewAction(id uuid.UUID) *Action {
 }
 
 func (a *Action) Clone() *Action {
-	return &Action{a.ID, a.Svc, a.ModelID, a.UserID, a.Act, a.Content.Clone(), a.Note, a.Created}
+	return &Action{
+		ID: a.ID, Svc: a.Svc, ModelID: a.ModelID, UserID: a.UserID, Act: a.Act, Content: a.Content.Clone(), Note: a.Note,
+		Created: a.Created,
+	}
 }
 
 func (a *Action) String() string {

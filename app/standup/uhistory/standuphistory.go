@@ -33,7 +33,7 @@ func NewStandupHistory(slug string) *StandupHistory {
 }
 
 func (s *StandupHistory) Clone() *StandupHistory {
-	return &StandupHistory{s.Slug, s.StandupID, s.StandupName, s.Created}
+	return &StandupHistory{Slug: s.Slug, StandupID: s.StandupID, StandupName: s.StandupName, Created: s.Created}
 }
 
 func (s *StandupHistory) String() string {

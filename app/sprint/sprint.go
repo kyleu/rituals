@@ -40,7 +40,10 @@ func NewSprint(id uuid.UUID) *Sprint {
 }
 
 func (s *Sprint) Clone() *Sprint {
-	return &Sprint{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.StartDate, s.EndDate, s.Created, s.Updated}
+	return &Sprint{
+		ID: s.ID, Slug: s.Slug, Title: s.Title, Icon: s.Icon, Status: s.Status, TeamID: s.TeamID, StartDate: s.StartDate,
+		EndDate: s.EndDate, Created: s.Created, Updated: s.Updated,
+	}
 }
 
 func (s *Sprint) String() string {

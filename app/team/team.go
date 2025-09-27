@@ -37,7 +37,9 @@ func NewTeam(id uuid.UUID) *Team {
 }
 
 func (t *Team) Clone() *Team {
-	return &Team{t.ID, t.Slug, t.Title, t.Icon, t.Status, t.Created, t.Updated}
+	return &Team{
+		ID: t.ID, Slug: t.Slug, Title: t.Title, Icon: t.Icon, Status: t.Status, Created: t.Created, Updated: t.Updated,
+	}
 }
 
 func (t *Team) String() string {

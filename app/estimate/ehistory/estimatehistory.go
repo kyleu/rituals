@@ -33,7 +33,7 @@ func NewEstimateHistory(slug string) *EstimateHistory {
 }
 
 func (e *EstimateHistory) Clone() *EstimateHistory {
-	return &EstimateHistory{e.Slug, e.EstimateID, e.EstimateName, e.Created}
+	return &EstimateHistory{Slug: e.Slug, EstimateID: e.EstimateID, EstimateName: e.EstimateName, Created: e.Created}
 }
 
 func (e *EstimateHistory) String() string {

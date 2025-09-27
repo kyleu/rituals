@@ -33,7 +33,7 @@ func NewRetroHistory(slug string) *RetroHistory {
 }
 
 func (r *RetroHistory) Clone() *RetroHistory {
-	return &RetroHistory{r.Slug, r.RetroID, r.RetroName, r.Created}
+	return &RetroHistory{Slug: r.Slug, RetroID: r.RetroID, RetroName: r.RetroName, Created: r.Created}
 }
 
 func (r *RetroHistory) String() string {

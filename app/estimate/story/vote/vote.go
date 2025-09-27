@@ -44,7 +44,7 @@ func NewVote(storyID uuid.UUID, userID uuid.UUID) *Vote {
 }
 
 func (v *Vote) Clone() *Vote {
-	return &Vote{v.StoryID, v.UserID, v.Choice, v.Created, v.Updated}
+	return &Vote{StoryID: v.StoryID, UserID: v.UserID, Choice: v.Choice, Created: v.Created, Updated: v.Updated}
 }
 
 func (v *Vote) String() string {

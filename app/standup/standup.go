@@ -39,7 +39,10 @@ func NewStandup(id uuid.UUID) *Standup {
 }
 
 func (s *Standup) Clone() *Standup {
-	return &Standup{s.ID, s.Slug, s.Title, s.Icon, s.Status, s.TeamID, s.SprintID, s.Created, s.Updated}
+	return &Standup{
+		ID: s.ID, Slug: s.Slug, Title: s.Title, Icon: s.Icon, Status: s.Status, TeamID: s.TeamID, SprintID: s.SprintID,
+		Created: s.Created, Updated: s.Updated,
+	}
 }
 
 func (s *Standup) String() string {

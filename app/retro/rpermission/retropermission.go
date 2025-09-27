@@ -45,7 +45,7 @@ func NewRetroPermission(retroID uuid.UUID, key string, value string) *RetroPermi
 }
 
 func (r *RetroPermission) Clone() *RetroPermission {
-	return &RetroPermission{r.RetroID, r.Key, r.Value, r.Access, r.Created}
+	return &RetroPermission{RetroID: r.RetroID, Key: r.Key, Value: r.Value, Access: r.Access, Created: r.Created}
 }
 
 func (r *RetroPermission) String() string {
