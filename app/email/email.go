@@ -25,7 +25,7 @@ type Email struct {
 	ID         uuid.UUID     `json:"id,omitzero"`
 	Recipients []string      `json:"recipients,omitempty"`
 	Subject    string        `json:"subject,omitzero"`
-	Data       util.ValueMap `json:"data,omitzero"`
+	Data       util.ValueMap `json:"data,omitempty"`
 	Plain      string        `json:"plain,omitzero"`
 	HTML       string        `json:"html,omitzero"`
 	UserID     uuid.UUID     `json:"userID,omitzero"`

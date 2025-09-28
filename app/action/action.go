@@ -28,7 +28,7 @@ type Action struct {
 	ModelID uuid.UUID         `json:"modelID,omitzero"`
 	UserID  uuid.UUID         `json:"userID,omitzero"`
 	Act     string            `json:"act,omitzero"`
-	Content util.ValueMap     `json:"content,omitzero"`
+	Content util.ValueMap     `json:"content,omitempty"`
 	Note    string            `json:"note,omitzero"`
 	Created time.Time         `json:"created,omitzero"`
 }
