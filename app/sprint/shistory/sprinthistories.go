@@ -74,8 +74,8 @@ func (s SprintHistories) GetBySprintIDs(sprintIDs ...uuid.UUID) SprintHistories 
 }
 
 func (s SprintHistories) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *SprintHistory, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *SprintHistory, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

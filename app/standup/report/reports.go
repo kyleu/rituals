@@ -92,8 +92,8 @@ func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
 }
 
 func (r Reports) ToMaps() []util.ValueMap {
-	return lo.Map(r, func(x *Report, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(r, func(xx *Report, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

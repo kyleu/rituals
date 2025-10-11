@@ -91,8 +91,8 @@ func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
 }
 
 func (r RetroMembers) ToMaps() []util.ValueMap {
-	return lo.Map(r, func(x *RetroMember, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(r, func(xx *RetroMember, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

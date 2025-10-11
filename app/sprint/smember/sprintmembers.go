@@ -91,8 +91,8 @@ func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 }
 
 func (s SprintMembers) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *SprintMember, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *SprintMember, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

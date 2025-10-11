@@ -74,8 +74,8 @@ func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
 }
 
 func (t TeamHistories) ToMaps() []util.ValueMap {
-	return lo.Map(t, func(x *TeamHistory, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(t, func(xx *TeamHistory, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

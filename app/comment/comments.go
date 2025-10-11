@@ -74,8 +74,8 @@ func (c Comments) GetByUserIDs(userIDs ...uuid.UUID) Comments {
 }
 
 func (c Comments) ToMaps() []util.ValueMap {
-	return lo.Map(c, func(x *Comment, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(c, func(xx *Comment, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

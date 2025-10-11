@@ -91,8 +91,8 @@ func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
 }
 
 func (v Votes) ToMaps() []util.ValueMap {
-	return lo.Map(v, func(x *Vote, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(v, func(xx *Vote, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

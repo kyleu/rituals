@@ -129,8 +129,8 @@ func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
 }
 
 func (e Estimates) ToMaps() []util.ValueMap {
-	return lo.Map(e, func(x *Estimate, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(e, func(xx *Estimate, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

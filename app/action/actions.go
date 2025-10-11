@@ -74,8 +74,8 @@ func (a Actions) GetByUserIDs(userIDs ...uuid.UUID) Actions {
 }
 
 func (a Actions) ToMaps() []util.ValueMap {
-	return lo.Map(a, func(x *Action, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(a, func(xx *Action, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

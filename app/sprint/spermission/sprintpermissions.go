@@ -120,8 +120,8 @@ func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 }
 
 func (s SprintPermissions) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *SprintPermission, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *SprintPermission, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

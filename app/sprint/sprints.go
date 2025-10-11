@@ -111,8 +111,8 @@ func (s Sprints) GetByTeamIDs(teamIDs ...*uuid.UUID) Sprints {
 }
 
 func (s Sprints) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *Sprint, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *Sprint, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

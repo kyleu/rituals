@@ -74,8 +74,8 @@ func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistor
 }
 
 func (s StandupHistories) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *StandupHistory, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *StandupHistory, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

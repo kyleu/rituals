@@ -456,41 +456,81 @@ func StreamConnectionCard(qw422016 *qt422016.Writer, c *websocket.Connection, as
 //line views/vadmin/Sockets.html:161
 	qw422016.N().S(`</td>
           </tr>
-        </tbody>
+`)
+//line views/vadmin/Sockets.html:163
+	if c.Stats != nil {
+//line views/vadmin/Sockets.html:163
+		qw422016.N().S(`          <tr>
+            <th>Sent</th>
+            <td>`)
+//line views/vadmin/Sockets.html:166
+		qw422016.N().D(c.Stats.MessagesSent)
+//line views/vadmin/Sockets.html:166
+		qw422016.N().S(` msgs, `)
+//line views/vadmin/Sockets.html:166
+		qw422016.E().S(util.ByteSizeSI(int64(c.Stats.BytesSent)))
+//line views/vadmin/Sockets.html:166
+		qw422016.N().S(`</td>
+          </tr>
+          <tr>
+            <th>Received</th>
+            <td>`)
+//line views/vadmin/Sockets.html:170
+		qw422016.N().D(c.Stats.MessagesReceived)
+//line views/vadmin/Sockets.html:170
+		qw422016.N().S(` msgs, `)
+//line views/vadmin/Sockets.html:170
+		qw422016.E().S(util.ByteSizeSI(int64(c.Stats.BytesReceived)))
+//line views/vadmin/Sockets.html:170
+		qw422016.N().S(`</td>
+          </tr>
+          <tr>
+            <th>Started</th>
+            <td>`)
+//line views/vadmin/Sockets.html:174
+		qw422016.E().S(util.TimeToFull(&c.Stats.Started))
+//line views/vadmin/Sockets.html:174
+		qw422016.N().S(`</td>
+          </tr>
+`)
+//line views/vadmin/Sockets.html:176
+	}
+//line views/vadmin/Sockets.html:176
+	qw422016.N().S(`        </tbody>
       </table>
     </div>
   </div>
   `)
-//line views/vadmin/Sockets.html:167
+//line views/vadmin/Sockets.html:181
 	components.StreamJSONModal(qw422016, "connection-"+c.ID.String(), "Connection ["+c.ID.String()+"] JSON", c, 1)
-//line views/vadmin/Sockets.html:167
+//line views/vadmin/Sockets.html:181
 	qw422016.N().S(`
 `)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 }
 
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 func WriteConnectionCard(qq422016 qtio422016.Writer, c *websocket.Connection, as *app.State, ps *cutil.PageState) {
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	StreamConnectionCard(qw422016, c, as, ps)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	qt422016.ReleaseWriter(qw422016)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 }
 
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 func ConnectionCard(c *websocket.Connection, as *app.State, ps *cutil.PageState) string {
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	WriteConnectionCard(qb422016, c, as, ps)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	qs422016 := string(qb422016.B)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 	return qs422016
-//line views/vadmin/Sockets.html:168
+//line views/vadmin/Sockets.html:182
 }

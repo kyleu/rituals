@@ -120,8 +120,8 @@ func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 }
 
 func (r RetroPermissions) ToMaps() []util.ValueMap {
-	return lo.Map(r, func(x *RetroPermission, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(r, func(xx *RetroPermission, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

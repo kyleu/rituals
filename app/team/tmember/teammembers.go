@@ -91,8 +91,8 @@ func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
 }
 
 func (t TeamMembers) ToMaps() []util.ValueMap {
-	return lo.Map(t, func(x *TeamMember, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(t, func(xx *TeamMember, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

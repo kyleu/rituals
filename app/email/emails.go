@@ -74,8 +74,8 @@ func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
 }
 
 func (e Emails) ToMaps() []util.ValueMap {
-	return lo.Map(e, func(x *Email, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(e, func(xx *Email, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

@@ -120,8 +120,8 @@ func (e EstimatePermissions) GetByValues(values ...string) EstimatePermissions {
 }
 
 func (e EstimatePermissions) ToMaps() []util.ValueMap {
-	return lo.Map(e, func(x *EstimatePermission, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(e, func(xx *EstimatePermission, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

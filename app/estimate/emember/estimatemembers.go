@@ -91,8 +91,8 @@ func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
 }
 
 func (e EstimateMembers) ToMaps() []util.ValueMap {
-	return lo.Map(e, func(x *EstimateMember, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(e, func(xx *EstimateMember, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

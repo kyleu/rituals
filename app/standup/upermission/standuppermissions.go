@@ -120,8 +120,8 @@ func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 }
 
 func (s StandupPermissions) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *StandupPermission, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *StandupPermission, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

@@ -56,8 +56,8 @@ func (u Users) GetByIDs(ids ...uuid.UUID) Users {
 }
 
 func (u Users) ToMaps() []util.ValueMap {
-	return lo.Map(u, func(x *User, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(u, func(xx *User, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

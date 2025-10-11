@@ -93,8 +93,8 @@ func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
 }
 
 func (t Teams) ToMaps() []util.ValueMap {
-	return lo.Map(t, func(x *Team, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(t, func(xx *Team, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

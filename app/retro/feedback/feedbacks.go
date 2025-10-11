@@ -92,8 +92,8 @@ func (f Feedbacks) GetByUserIDs(userIDs ...uuid.UUID) Feedbacks {
 }
 
 func (f Feedbacks) ToMaps() []util.ValueMap {
-	return lo.Map(f, func(x *Feedback, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(f, func(xx *Feedback, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

@@ -92,8 +92,8 @@ func (s Stories) GetByUserIDs(userIDs ...uuid.UUID) Stories {
 }
 
 func (s Stories) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *Story, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *Story, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 

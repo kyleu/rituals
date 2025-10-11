@@ -129,8 +129,8 @@ func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
 }
 
 func (s Standups) ToMaps() []util.ValueMap {
-	return lo.Map(s, func(x *Standup, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(s, func(xx *Standup, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 
