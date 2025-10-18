@@ -77,8 +77,8 @@ func (s *StandupHistory) ToData() []any {
 }
 
 var StandupHistoryFieldDescs = util.FieldDescs{
-	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
-	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
-	{Key: "standupName", Title: "Standup Name", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "slug", Title: "Slug", Type: "string"},
+	{Key: "standupID", Title: "Standup ID", Type: "uuid"},
+	{Key: "standupName", Title: "Standup Name", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

@@ -96,13 +96,13 @@ func (s *Story) ToData() []any {
 }
 
 var StoryFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
-	{Key: "idx", Title: "Idx", Description: "", Type: "int"},
-	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
-	{Key: "title", Title: "Title", Description: "", Type: "string"},
-	{Key: "status", Title: "Status", Description: "", Type: "enum(session_status)"},
-	{Key: "finalVote", Title: "Final Vote", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
-	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "estimateID", Title: "Estimate ID", Type: "uuid"},
+	{Key: "idx", Title: "Idx", Type: "int"},
+	{Key: "userID", Title: "User ID", Type: "uuid"},
+	{Key: "title", Title: "Title", Type: "string"},
+	{Key: "status", Title: "Status", Type: "enum(session_status)"},
+	{Key: "finalVote", Title: "Final Vote", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Type: "timestamp"},
 }

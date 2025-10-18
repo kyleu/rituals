@@ -98,9 +98,9 @@ func (s *SprintPermission) ToData() []any {
 }
 
 var SprintPermissionFieldDescs = util.FieldDescs{
-	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
-	{Key: "key", Title: "Key", Description: "", Type: "string"},
-	{Key: "value", Title: "Value", Description: "", Type: "string"},
-	{Key: "access", Title: "Access", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "sprintID", Title: "Sprint ID", Type: "uuid"},
+	{Key: "key", Title: "Key", Type: "string"},
+	{Key: "value", Title: "Value", Type: "string"},
+	{Key: "access", Title: "Access", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

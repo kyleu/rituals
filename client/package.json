@@ -1,17 +1,30 @@
 {
   "name": "client",
-  "version": "1.0.0",
+  "version": "2.2.22",
   "type": "module",
+  "description": "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyleu/rituals.git"
+  },
+  "keywords": [],
+  "author": "kyleu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kyleu/rituals/issues"
+  },
+  "homepage": "https://github.com/kyleu/rituals/tree/main/client#readme",
   "scripts": {
     "build": "node build.js",
+    "build:tsc": "tsc --project tsconfig.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
-    "@types/eslint__js": "^9.14.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.1.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",

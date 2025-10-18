@@ -104,11 +104,11 @@ func (s *StandupMember) ToData() []any {
 }
 
 var StandupMemberFieldDescs = util.FieldDescs{
-	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
-	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
-	{Key: "name", Title: "Name", Description: "", Type: "string"},
-	{Key: "picture", Title: "Picture", Description: "", Type: "string"},
-	{Key: "role", Title: "Role", Description: "", Type: "enum(member_status)"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
-	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+	{Key: "standupID", Title: "Standup ID", Type: "uuid"},
+	{Key: "userID", Title: "User ID", Type: "uuid"},
+	{Key: "name", Title: "Name", Type: "string"},
+	{Key: "picture", Title: "Picture", Type: "string"},
+	{Key: "role", Title: "Role", Type: "enum(member_status)"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Type: "timestamp"},
 }

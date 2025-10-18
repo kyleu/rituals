@@ -19,6 +19,21 @@ type MergeSet[K cmp.Ordered, T Mergeable[K, T]] struct {
 	Map map[K]T
 }
 
+func (m *MergeSet[K, T]) Merge(other *MergeSet[K, T]) (*MergeSet[K, T], error) {
+	ret := NewMergeSet[K, T]()
+	for _, v := range m.Map {
+		if err := ret.Set(v); err != nil {
+			return nil, err
+		}
+	}
+	for _, v := range other.Map {
+		if err := ret.Set(v); err != nil {
+			return nil, err
+		}
+	}
+	return ret, nil
+}
+
 func NewMergeSet[K cmp.Ordered, T Mergeable[K, T]](capacity ...int) *MergeSet[K, T] {
 	return &MergeSet[K, T]{Map: make(map[K]T, lo.Sum(capacity))}
 }
@@ -44,6 +59,10 @@ func (m *MergeSet[K, T]) Contains(x T) bool {
 
 func (m *MergeSet[K, T]) Remove(x T) {
 	delete(m.Map, x.Key())
+}
+
+func (m *MergeSet[K, T]) Length() int {
+	return len(m.Map)
 }
 
 func (m *MergeSet[K, T]) Entries() []T {
@@ -94,7 +113,9 @@ func (m *MergeSet[K, T]) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	for _, x := range ret {
-		m.Set(x)
+		if err := m.Set(x); err != nil {
+			return err
+		}
 	}
 	return nil
 }

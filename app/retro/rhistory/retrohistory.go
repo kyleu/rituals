@@ -77,8 +77,8 @@ func (r *RetroHistory) ToData() []any {
 }
 
 var RetroHistoryFieldDescs = util.FieldDescs{
-	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
-	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
-	{Key: "retroName", Title: "Retro Name", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "slug", Title: "Slug", Type: "string"},
+	{Key: "retroID", Title: "Retro ID", Type: "uuid"},
+	{Key: "retroName", Title: "Retro Name", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

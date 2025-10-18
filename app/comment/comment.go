@@ -86,11 +86,11 @@ func (c *Comment) ToData() []any {
 }
 
 var CommentFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "svc", Title: "Svc", Description: "", Type: "enum(model_service)"},
-	{Key: "modelID", Title: "Model ID", Description: "", Type: "uuid"},
-	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
-	{Key: "content", Title: "Content", Description: "", Type: "string"},
-	{Key: "html", Title: "HTML", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "svc", Title: "Svc", Type: "enum(model_service)"},
+	{Key: "modelID", Title: "Model ID", Type: "uuid"},
+	{Key: "userID", Title: "User ID", Type: "uuid"},
+	{Key: "content", Title: "Content", Type: "string"},
+	{Key: "html", Title: "HTML", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

@@ -77,8 +77,8 @@ func (t *TeamHistory) ToData() []any {
 }
 
 var TeamHistoryFieldDescs = util.FieldDescs{
-	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
-	{Key: "teamID", Title: "Team ID", Description: "", Type: "uuid"},
-	{Key: "teamName", Title: "Team Name", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "slug", Title: "Slug", Type: "string"},
+	{Key: "teamID", Title: "Team ID", Type: "uuid"},
+	{Key: "teamName", Title: "Team Name", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

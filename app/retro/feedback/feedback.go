@@ -92,13 +92,13 @@ func (f *Feedback) ToData() []any {
 }
 
 var FeedbackFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "retroID", Title: "Retro ID", Description: "", Type: "uuid"},
-	{Key: "idx", Title: "Idx", Description: "", Type: "int"},
-	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
-	{Key: "category", Title: "Category", Description: "", Type: "string"},
-	{Key: "content", Title: "Content", Description: "", Type: "string"},
-	{Key: "html", Title: "HTML", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
-	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "retroID", Title: "Retro ID", Type: "uuid"},
+	{Key: "idx", Title: "Idx", Type: "int"},
+	{Key: "userID", Title: "User ID", Type: "uuid"},
+	{Key: "category", Title: "Category", Type: "string"},
+	{Key: "content", Title: "Content", Type: "string"},
+	{Key: "html", Title: "HTML", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Type: "timestamp"},
 }

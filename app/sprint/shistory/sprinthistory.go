@@ -77,8 +77,8 @@ func (s *SprintHistory) ToData() []any {
 }
 
 var SprintHistoryFieldDescs = util.FieldDescs{
-	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
-	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
-	{Key: "sprintName", Title: "Sprint Name", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "slug", Title: "Slug", Type: "string"},
+	{Key: "sprintID", Title: "Sprint ID", Type: "uuid"},
+	{Key: "sprintName", Title: "Sprint Name", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

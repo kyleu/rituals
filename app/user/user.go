@@ -82,9 +82,9 @@ func (u *User) ToData() []any {
 }
 
 var UserFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "name", Title: "Name", Description: "", Type: "string"},
-	{Key: "picture", Title: "Picture", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
-	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "name", Title: "Name", Type: "string"},
+	{Key: "picture", Title: "Picture", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Type: "timestamp"},
 }

@@ -98,9 +98,9 @@ func (s *StandupPermission) ToData() []any {
 }
 
 var StandupPermissionFieldDescs = util.FieldDescs{
-	{Key: "standupID", Title: "Standup ID", Description: "", Type: "uuid"},
-	{Key: "key", Title: "Key", Description: "", Type: "string"},
-	{Key: "value", Title: "Value", Description: "", Type: "string"},
-	{Key: "access", Title: "Access", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "standupID", Title: "Standup ID", Type: "uuid"},
+	{Key: "key", Title: "Key", Type: "string"},
+	{Key: "value", Title: "Value", Type: "string"},
+	{Key: "access", Title: "Access", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

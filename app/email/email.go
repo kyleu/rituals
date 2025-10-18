@@ -91,13 +91,13 @@ func (e *Email) ToData() []any {
 }
 
 var EmailFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "recipients", Title: "Recipients", Description: "", Type: "[]string"},
-	{Key: "subject", Title: "Subject", Description: "", Type: "string"},
-	{Key: "data", Title: "Data", Description: "", Type: "map"},
-	{Key: "plain", Title: "Plain", Description: "", Type: "string"},
-	{Key: "html", Title: "HTML", Description: "", Type: "string"},
-	{Key: "userID", Title: "User ID", Description: "", Type: "uuid"},
-	{Key: "status", Title: "Status", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "recipients", Title: "Recipients", Type: "[]string"},
+	{Key: "subject", Title: "Subject", Type: "string"},
+	{Key: "data", Title: "Data", Type: "map"},
+	{Key: "plain", Title: "Plain", Type: "string"},
+	{Key: "html", Title: "HTML", Type: "string"},
+	{Key: "userID", Title: "User ID", Type: "uuid"},
+	{Key: "status", Title: "Status", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

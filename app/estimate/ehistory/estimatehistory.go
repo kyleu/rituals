@@ -77,8 +77,8 @@ func (e *EstimateHistory) ToData() []any {
 }
 
 var EstimateHistoryFieldDescs = util.FieldDescs{
-	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
-	{Key: "estimateID", Title: "Estimate ID", Description: "", Type: "uuid"},
-	{Key: "estimateName", Title: "Estimate Name", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "slug", Title: "Slug", Type: "string"},
+	{Key: "estimateID", Title: "Estimate ID", Type: "uuid"},
+	{Key: "estimateName", Title: "Estimate Name", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

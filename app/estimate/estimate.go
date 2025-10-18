@@ -97,14 +97,14 @@ func (e *Estimate) ToData() []any {
 }
 
 var EstimateFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "slug", Title: "Slug", Description: "", Type: "string"},
-	{Key: "title", Title: "Title", Description: "", Type: "string"},
-	{Key: "icon", Title: "Icon", Description: "", Type: "string"},
-	{Key: "status", Title: "Status", Description: "", Type: "enum(session_status)"},
-	{Key: "teamID", Title: "Team ID", Description: "", Type: "uuid"},
-	{Key: "sprintID", Title: "Sprint ID", Description: "", Type: "uuid"},
-	{Key: "choices", Title: "Choices", Description: "", Type: "[]string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
-	{Key: "updated", Title: "Updated", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "slug", Title: "Slug", Type: "string"},
+	{Key: "title", Title: "Title", Type: "string"},
+	{Key: "icon", Title: "Icon", Type: "string"},
+	{Key: "status", Title: "Status", Type: "enum(session_status)"},
+	{Key: "teamID", Title: "Team ID", Type: "uuid"},
+	{Key: "sprintID", Title: "Sprint ID", Type: "uuid"},
+	{Key: "choices", Title: "Choices", Type: "[]string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
+	{Key: "updated", Title: "Updated", Type: "timestamp"},
 }
