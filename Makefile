@@ -14,10 +14,12 @@ templates:
 	@bin/templates.sh
 
 .PHONY: build
+build: export GOEXPERIMENT=jsonv2
 build: templates ## Build all binaries
 	@go build -gcflags "all=-N -l" -o build/debug/rituals .
 
 .PHONY: build-release
+build-release: export GOEXPERIMENT=jsonv2
 build-release: templates ## Build all binaries without debug information, clean up after
 	@go build -ldflags '-s -w' -trimpath -o build/release/rituals .
 
