@@ -9,6 +9,27 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
+{% func TableRow(model *sprint.Sprint, teamsByTeamID team.Teams, ps *cutil.PageState, paths ...string) %}
+  <tr>
+    <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
+    <td>{%= view.String(model.Slug) %}</td>
+    <td><strong>{%= view.String(model.Title) %}</strong></td>
+    <td>{%= view.String(model.Icon) %}</td>
+    <td>{%s model.Status.String() %}</td>
+    <td class="nowrap">
+      {% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}
+      {%s x.TitleString() %} <a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
+      {% else %}
+      {%= view.UUID(model.TeamID) %}
+      {% endif %}{% endif %}
+    </td>
+    <td>{%= view.TimestampDay(model.StartDate) %}</td>
+    <td>{%= view.TimestampDay(model.EndDate) %}</td>
+    <td>{%= view.Timestamp(&model.Created) %}</td>
+    <td>{%= view.Timestamp(model.Updated) %}</td>
+  </tr>
+{% endfunc %}
+
 {% func Table(models sprint.Sprints, teamsByTeamID team.Teams, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("sprint", ps.Logger) -%}
   <div class="overflow clear">
@@ -29,24 +50,7 @@
       </thead>
       <tbody>
         {%- for _, model := range models -%}
-        <tr>
-          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
-          <td>{%= view.String(model.Slug) %}</td>
-          <td><strong>{%= view.String(model.Title) %}</strong></td>
-          <td>{%= view.String(model.Icon) %}</td>
-          <td>{%s model.Status.String() %}</td>
-          <td class="nowrap">
-            {% if model.TeamID != nil %}{% if x := teamsByTeamID.Get(*model.TeamID); x != nil %}
-            {%s x.TitleString() %} <a title="Team" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`team`, ps) %}</a>
-            {% else %}
-            {%= view.UUID(model.TeamID) %}
-            {% endif %}{% endif %}
-          </td>
-          <td>{%= view.TimestampDay(model.StartDate) %}</td>
-          <td>{%= view.TimestampDay(model.EndDate) %}</td>
-          <td>{%= view.Timestamp(&model.Created) %}</td>
-          <td>{%= view.Timestamp(model.Updated) %}</td>
-        </tr>
+        {%= TableRow(model, teamsByTeamID, ps, paths...) -%}
         {%- endfor -%}
       </tbody>
     </table>

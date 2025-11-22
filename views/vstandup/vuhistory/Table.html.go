@@ -29,147 +29,183 @@ var (
 )
 
 //line views/vstandup/vuhistory/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+func StreamTableRow(qw422016 *qt422016.Writer, model *uhistory.StandupHistory, standupsByStandupID standup.Standups, ps *cutil.PageState, paths ...string) {
 //line views/vstandup/vuhistory/Table.html:11
 	qw422016.N().S(`
+  <tr>
+    <td><a href="`)
+//line views/vstandup/vuhistory/Table.html:13
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vstandup/vuhistory/Table.html:13
+	qw422016.N().S(`">`)
+//line views/vstandup/vuhistory/Table.html:13
+	view.StreamString(qw422016, model.Slug)
+//line views/vstandup/vuhistory/Table.html:13
+	qw422016.N().S(`</a></td>
+    <td class="nowrap">
+      `)
+//line views/vstandup/vuhistory/Table.html:15
+	if x := standupsByStandupID.Get(model.StandupID); x != nil {
+//line views/vstandup/vuhistory/Table.html:15
+		qw422016.N().S(`
+      `)
+//line views/vstandup/vuhistory/Table.html:16
+		qw422016.E().S(x.TitleString())
+//line views/vstandup/vuhistory/Table.html:16
+		qw422016.N().S(` <a title="Standup" href="`)
+//line views/vstandup/vuhistory/Table.html:16
+		qw422016.E().S(x.WebPath(paths...))
+//line views/vstandup/vuhistory/Table.html:16
+		qw422016.N().S(`">`)
+//line views/vstandup/vuhistory/Table.html:16
+		components.StreamSVGLink(qw422016, `standup`, ps)
+//line views/vstandup/vuhistory/Table.html:16
+		qw422016.N().S(`</a>
+      `)
+//line views/vstandup/vuhistory/Table.html:17
+	} else {
+//line views/vstandup/vuhistory/Table.html:17
+		qw422016.N().S(`
+      `)
+//line views/vstandup/vuhistory/Table.html:18
+		view.StreamUUID(qw422016, &model.StandupID)
+//line views/vstandup/vuhistory/Table.html:18
+		qw422016.N().S(`
+      `)
+//line views/vstandup/vuhistory/Table.html:19
+	}
+//line views/vstandup/vuhistory/Table.html:19
+	qw422016.N().S(`
+    </td>
+    <td>`)
+//line views/vstandup/vuhistory/Table.html:21
+	view.StreamString(qw422016, model.StandupName)
+//line views/vstandup/vuhistory/Table.html:21
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vstandup/vuhistory/Table.html:22
+	view.StreamTimestamp(qw422016, &model.Created)
+//line views/vstandup/vuhistory/Table.html:22
+	qw422016.N().S(`</td>
+  </tr>
 `)
-//line views/vstandup/vuhistory/Table.html:12
+//line views/vstandup/vuhistory/Table.html:24
+}
+
+//line views/vstandup/vuhistory/Table.html:24
+func WriteTableRow(qq422016 qtio422016.Writer, model *uhistory.StandupHistory, standupsByStandupID standup.Standups, ps *cutil.PageState, paths ...string) {
+//line views/vstandup/vuhistory/Table.html:24
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vstandup/vuhistory/Table.html:24
+	StreamTableRow(qw422016, model, standupsByStandupID, ps, paths...)
+//line views/vstandup/vuhistory/Table.html:24
+	qt422016.ReleaseWriter(qw422016)
+//line views/vstandup/vuhistory/Table.html:24
+}
+
+//line views/vstandup/vuhistory/Table.html:24
+func TableRow(model *uhistory.StandupHistory, standupsByStandupID standup.Standups, ps *cutil.PageState, paths ...string) string {
+//line views/vstandup/vuhistory/Table.html:24
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vstandup/vuhistory/Table.html:24
+	WriteTableRow(qb422016, model, standupsByStandupID, ps, paths...)
+//line views/vstandup/vuhistory/Table.html:24
+	qs422016 := string(qb422016.B)
+//line views/vstandup/vuhistory/Table.html:24
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vstandup/vuhistory/Table.html:24
+	return qs422016
+//line views/vstandup/vuhistory/Table.html:24
+}
+
+//line views/vstandup/vuhistory/Table.html:26
+func StreamTable(qw422016 *qt422016.Writer, models uhistory.StandupHistories, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+//line views/vstandup/vuhistory/Table.html:26
+	qw422016.N().S(`
+`)
+//line views/vstandup/vuhistory/Table.html:27
 	prms := params.Sanitized("uhistory", ps.Logger)
 
-//line views/vstandup/vuhistory/Table.html:12
+//line views/vstandup/vuhistory/Table.html:27
 	qw422016.N().S(`  <div class="overflow clear">
     <table>
       <thead>
         <tr>
           `)
-//line views/vstandup/vuhistory/Table.html:17
+//line views/vstandup/vuhistory/Table.html:32
 	components.StreamTableHeaderSimple(qw422016, "uhistory", "slug", "Slug", "String text", prms, ps.URI, ps)
-//line views/vstandup/vuhistory/Table.html:17
+//line views/vstandup/vuhistory/Table.html:32
 	qw422016.N().S(`
           `)
-//line views/vstandup/vuhistory/Table.html:18
+//line views/vstandup/vuhistory/Table.html:33
 	components.StreamTableHeaderSimple(qw422016, "uhistory", "standup_id", "Standup ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vstandup/vuhistory/Table.html:18
+//line views/vstandup/vuhistory/Table.html:33
 	qw422016.N().S(`
           `)
-//line views/vstandup/vuhistory/Table.html:19
+//line views/vstandup/vuhistory/Table.html:34
 	components.StreamTableHeaderSimple(qw422016, "uhistory", "standup_name", "Standup Name", "String text", prms, ps.URI, ps)
-//line views/vstandup/vuhistory/Table.html:19
+//line views/vstandup/vuhistory/Table.html:34
 	qw422016.N().S(`
           `)
-//line views/vstandup/vuhistory/Table.html:20
+//line views/vstandup/vuhistory/Table.html:35
 	components.StreamTableHeaderSimple(qw422016, "uhistory", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vstandup/vuhistory/Table.html:20
+//line views/vstandup/vuhistory/Table.html:35
 	qw422016.N().S(`
         </tr>
       </thead>
       <tbody>
 `)
-//line views/vstandup/vuhistory/Table.html:24
+//line views/vstandup/vuhistory/Table.html:39
 	for _, model := range models {
-//line views/vstandup/vuhistory/Table.html:24
-		qw422016.N().S(`        <tr>
-          <td><a href="`)
-//line views/vstandup/vuhistory/Table.html:26
-		qw422016.E().S(model.WebPath(paths...))
-//line views/vstandup/vuhistory/Table.html:26
-		qw422016.N().S(`">`)
-//line views/vstandup/vuhistory/Table.html:26
-		view.StreamString(qw422016, model.Slug)
-//line views/vstandup/vuhistory/Table.html:26
-		qw422016.N().S(`</a></td>
-          <td class="nowrap">
-            `)
-//line views/vstandup/vuhistory/Table.html:28
-		if x := standupsByStandupID.Get(model.StandupID); x != nil {
-//line views/vstandup/vuhistory/Table.html:28
-			qw422016.N().S(`
-            `)
-//line views/vstandup/vuhistory/Table.html:29
-			qw422016.E().S(x.TitleString())
-//line views/vstandup/vuhistory/Table.html:29
-			qw422016.N().S(` <a title="Standup" href="`)
-//line views/vstandup/vuhistory/Table.html:29
-			qw422016.E().S(x.WebPath(paths...))
-//line views/vstandup/vuhistory/Table.html:29
-			qw422016.N().S(`">`)
-//line views/vstandup/vuhistory/Table.html:29
-			components.StreamSVGLink(qw422016, `standup`, ps)
-//line views/vstandup/vuhistory/Table.html:29
-			qw422016.N().S(`</a>
-            `)
-//line views/vstandup/vuhistory/Table.html:30
-		} else {
-//line views/vstandup/vuhistory/Table.html:30
-			qw422016.N().S(`
-            `)
-//line views/vstandup/vuhistory/Table.html:31
-			view.StreamUUID(qw422016, &model.StandupID)
-//line views/vstandup/vuhistory/Table.html:31
-			qw422016.N().S(`
-            `)
-//line views/vstandup/vuhistory/Table.html:32
-		}
-//line views/vstandup/vuhistory/Table.html:32
-		qw422016.N().S(`
-          </td>
-          <td>`)
-//line views/vstandup/vuhistory/Table.html:34
-		view.StreamString(qw422016, model.StandupName)
-//line views/vstandup/vuhistory/Table.html:34
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vstandup/vuhistory/Table.html:35
-		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vstandup/vuhistory/Table.html:35
-		qw422016.N().S(`</td>
-        </tr>
-`)
-//line views/vstandup/vuhistory/Table.html:37
+//line views/vstandup/vuhistory/Table.html:39
+		qw422016.N().S(`        `)
+//line views/vstandup/vuhistory/Table.html:40
+		StreamTableRow(qw422016, model, standupsByStandupID, ps, paths...)
+//line views/vstandup/vuhistory/Table.html:41
 	}
-//line views/vstandup/vuhistory/Table.html:37
+//line views/vstandup/vuhistory/Table.html:41
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vstandup/vuhistory/Table.html:41
+//line views/vstandup/vuhistory/Table.html:45
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vstandup/vuhistory/Table.html:41
+//line views/vstandup/vuhistory/Table.html:45
 		qw422016.N().S(`  <hr />
   `)
-//line views/vstandup/vuhistory/Table.html:43
+//line views/vstandup/vuhistory/Table.html:47
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vstandup/vuhistory/Table.html:43
+//line views/vstandup/vuhistory/Table.html:47
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vstandup/vuhistory/Table.html:45
+//line views/vstandup/vuhistory/Table.html:49
 	}
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 }
 
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 func WriteTable(qq422016 qtio422016.Writer, models uhistory.StandupHistories, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	StreamTable(qw422016, models, standupsByStandupID, params, as, ps, paths...)
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 }
 
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 func Table(models uhistory.StandupHistories, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	WriteTable(qb422016, models, standupsByStandupID, params, as, ps, paths...)
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 	return qs422016
-//line views/vstandup/vuhistory/Table.html:46
+//line views/vstandup/vuhistory/Table.html:50
 }

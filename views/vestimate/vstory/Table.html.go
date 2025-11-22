@@ -31,227 +31,263 @@ var (
 )
 
 //line views/vestimate/vstory/Table.html:13
-func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+func StreamTableRow(qw422016 *qt422016.Writer, model *story.Story, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, ps *cutil.PageState, paths ...string) {
 //line views/vestimate/vstory/Table.html:13
 	qw422016.N().S(`
+  <tr>
+    <td><a href="`)
+//line views/vestimate/vstory/Table.html:15
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vestimate/vstory/Table.html:15
+	qw422016.N().S(`">`)
+//line views/vestimate/vstory/Table.html:15
+	view.StreamUUID(qw422016, &model.ID)
+//line views/vestimate/vstory/Table.html:15
+	qw422016.N().S(`</a></td>
+    <td class="nowrap">
+      `)
+//line views/vestimate/vstory/Table.html:17
+	if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
+//line views/vestimate/vstory/Table.html:17
+		qw422016.N().S(`
+      `)
+//line views/vestimate/vstory/Table.html:18
+		qw422016.E().S(x.TitleString())
+//line views/vestimate/vstory/Table.html:18
+		qw422016.N().S(` <a title="Estimate" href="`)
+//line views/vestimate/vstory/Table.html:18
+		qw422016.E().S(x.WebPath(paths...))
+//line views/vestimate/vstory/Table.html:18
+		qw422016.N().S(`">`)
+//line views/vestimate/vstory/Table.html:18
+		components.StreamSVGLink(qw422016, `estimate`, ps)
+//line views/vestimate/vstory/Table.html:18
+		qw422016.N().S(`</a>
+      `)
+//line views/vestimate/vstory/Table.html:19
+	} else {
+//line views/vestimate/vstory/Table.html:19
+		qw422016.N().S(`
+      `)
+//line views/vestimate/vstory/Table.html:20
+		view.StreamUUID(qw422016, &model.EstimateID)
+//line views/vestimate/vstory/Table.html:20
+		qw422016.N().S(`
+      `)
+//line views/vestimate/vstory/Table.html:21
+	}
+//line views/vestimate/vstory/Table.html:21
+	qw422016.N().S(`
+    </td>
+    <td>`)
+//line views/vestimate/vstory/Table.html:23
+	qw422016.N().D(model.Idx)
+//line views/vestimate/vstory/Table.html:23
+	qw422016.N().S(`</td>
+    <td class="nowrap">
+      `)
+//line views/vestimate/vstory/Table.html:25
+	if x := usersByUserID.Get(model.UserID); x != nil {
+//line views/vestimate/vstory/Table.html:25
+		qw422016.N().S(`
+      `)
+//line views/vestimate/vstory/Table.html:26
+		qw422016.E().S(x.TitleString())
+//line views/vestimate/vstory/Table.html:26
+		qw422016.N().S(` <a title="User" href="`)
+//line views/vestimate/vstory/Table.html:26
+		qw422016.E().S(x.WebPath(paths...))
+//line views/vestimate/vstory/Table.html:26
+		qw422016.N().S(`">`)
+//line views/vestimate/vstory/Table.html:26
+		components.StreamSVGLink(qw422016, `profile`, ps)
+//line views/vestimate/vstory/Table.html:26
+		qw422016.N().S(`</a>
+      `)
+//line views/vestimate/vstory/Table.html:27
+	} else {
+//line views/vestimate/vstory/Table.html:27
+		qw422016.N().S(`
+      `)
+//line views/vestimate/vstory/Table.html:28
+		view.StreamUUID(qw422016, &model.UserID)
+//line views/vestimate/vstory/Table.html:28
+		qw422016.N().S(`
+      `)
+//line views/vestimate/vstory/Table.html:29
+	}
+//line views/vestimate/vstory/Table.html:29
+	qw422016.N().S(`
+    </td>
+    <td><strong>`)
+//line views/vestimate/vstory/Table.html:31
+	view.StreamString(qw422016, model.Title)
+//line views/vestimate/vstory/Table.html:31
+	qw422016.N().S(`</strong></td>
+    <td>`)
+//line views/vestimate/vstory/Table.html:32
+	qw422016.E().S(model.Status.String())
+//line views/vestimate/vstory/Table.html:32
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vestimate/vstory/Table.html:33
+	view.StreamString(qw422016, model.FinalVote)
+//line views/vestimate/vstory/Table.html:33
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vestimate/vstory/Table.html:34
+	view.StreamTimestamp(qw422016, &model.Created)
+//line views/vestimate/vstory/Table.html:34
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vestimate/vstory/Table.html:35
+	view.StreamTimestamp(qw422016, model.Updated)
+//line views/vestimate/vstory/Table.html:35
+	qw422016.N().S(`</td>
+  </tr>
 `)
-//line views/vestimate/vstory/Table.html:14
+//line views/vestimate/vstory/Table.html:37
+}
+
+//line views/vestimate/vstory/Table.html:37
+func WriteTableRow(qq422016 qtio422016.Writer, model *story.Story, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, ps *cutil.PageState, paths ...string) {
+//line views/vestimate/vstory/Table.html:37
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vestimate/vstory/Table.html:37
+	StreamTableRow(qw422016, model, estimatesByEstimateID, usersByUserID, ps, paths...)
+//line views/vestimate/vstory/Table.html:37
+	qt422016.ReleaseWriter(qw422016)
+//line views/vestimate/vstory/Table.html:37
+}
+
+//line views/vestimate/vstory/Table.html:37
+func TableRow(model *story.Story, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, ps *cutil.PageState, paths ...string) string {
+//line views/vestimate/vstory/Table.html:37
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vestimate/vstory/Table.html:37
+	WriteTableRow(qb422016, model, estimatesByEstimateID, usersByUserID, ps, paths...)
+//line views/vestimate/vstory/Table.html:37
+	qs422016 := string(qb422016.B)
+//line views/vestimate/vstory/Table.html:37
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vestimate/vstory/Table.html:37
+	return qs422016
+//line views/vestimate/vstory/Table.html:37
+}
+
+//line views/vestimate/vstory/Table.html:39
+func StreamTable(qw422016 *qt422016.Writer, models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+//line views/vestimate/vstory/Table.html:39
+	qw422016.N().S(`
+`)
+//line views/vestimate/vstory/Table.html:40
 	prms := params.Sanitized("story", ps.Logger)
 
-//line views/vestimate/vstory/Table.html:14
+//line views/vestimate/vstory/Table.html:40
 	qw422016.N().S(`  <div class="overflow clear">
     <table>
       <thead>
         <tr>
           `)
-//line views/vestimate/vstory/Table.html:19
+//line views/vestimate/vstory/Table.html:45
 	components.StreamTableHeaderSimple(qw422016, "story", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:19
+//line views/vestimate/vstory/Table.html:45
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:20
+//line views/vestimate/vstory/Table.html:46
 	components.StreamTableHeaderSimple(qw422016, "story", "estimate_id", "Estimate ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:20
+//line views/vestimate/vstory/Table.html:46
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:21
+//line views/vestimate/vstory/Table.html:47
 	components.StreamTableHeaderSimple(qw422016, "story", "idx", "Idx", "Integer", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:21
+//line views/vestimate/vstory/Table.html:47
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:22
+//line views/vestimate/vstory/Table.html:48
 	components.StreamTableHeaderSimple(qw422016, "story", "user_id", "User ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:22
+//line views/vestimate/vstory/Table.html:48
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:23
+//line views/vestimate/vstory/Table.html:49
 	components.StreamTableHeaderSimple(qw422016, "story", "title", "Title", "String text", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:23
+//line views/vestimate/vstory/Table.html:49
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:24
+//line views/vestimate/vstory/Table.html:50
 	components.StreamTableHeaderSimple(qw422016, "story", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:24
+//line views/vestimate/vstory/Table.html:50
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:25
+//line views/vestimate/vstory/Table.html:51
 	components.StreamTableHeaderSimple(qw422016, "story", "final_vote", "Final Vote", "String text", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:25
+//line views/vestimate/vstory/Table.html:51
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:26
+//line views/vestimate/vstory/Table.html:52
 	components.StreamTableHeaderSimple(qw422016, "story", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:26
+//line views/vestimate/vstory/Table.html:52
 	qw422016.N().S(`
           `)
-//line views/vestimate/vstory/Table.html:27
+//line views/vestimate/vstory/Table.html:53
 	components.StreamTableHeaderSimple(qw422016, "story", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
-//line views/vestimate/vstory/Table.html:27
+//line views/vestimate/vstory/Table.html:53
 	qw422016.N().S(`
         </tr>
       </thead>
       <tbody>
 `)
-//line views/vestimate/vstory/Table.html:31
+//line views/vestimate/vstory/Table.html:57
 	for _, model := range models {
-//line views/vestimate/vstory/Table.html:31
-		qw422016.N().S(`        <tr>
-          <td><a href="`)
-//line views/vestimate/vstory/Table.html:33
-		qw422016.E().S(model.WebPath(paths...))
-//line views/vestimate/vstory/Table.html:33
-		qw422016.N().S(`">`)
-//line views/vestimate/vstory/Table.html:33
-		view.StreamUUID(qw422016, &model.ID)
-//line views/vestimate/vstory/Table.html:33
-		qw422016.N().S(`</a></td>
-          <td class="nowrap">
-            `)
-//line views/vestimate/vstory/Table.html:35
-		if x := estimatesByEstimateID.Get(model.EstimateID); x != nil {
-//line views/vestimate/vstory/Table.html:35
-			qw422016.N().S(`
-            `)
-//line views/vestimate/vstory/Table.html:36
-			qw422016.E().S(x.TitleString())
-//line views/vestimate/vstory/Table.html:36
-			qw422016.N().S(` <a title="Estimate" href="`)
-//line views/vestimate/vstory/Table.html:36
-			qw422016.E().S(x.WebPath(paths...))
-//line views/vestimate/vstory/Table.html:36
-			qw422016.N().S(`">`)
-//line views/vestimate/vstory/Table.html:36
-			components.StreamSVGLink(qw422016, `estimate`, ps)
-//line views/vestimate/vstory/Table.html:36
-			qw422016.N().S(`</a>
-            `)
-//line views/vestimate/vstory/Table.html:37
-		} else {
-//line views/vestimate/vstory/Table.html:37
-			qw422016.N().S(`
-            `)
-//line views/vestimate/vstory/Table.html:38
-			view.StreamUUID(qw422016, &model.EstimateID)
-//line views/vestimate/vstory/Table.html:38
-			qw422016.N().S(`
-            `)
-//line views/vestimate/vstory/Table.html:39
-		}
-//line views/vestimate/vstory/Table.html:39
-		qw422016.N().S(`
-          </td>
-          <td>`)
-//line views/vestimate/vstory/Table.html:41
-		qw422016.N().D(model.Idx)
-//line views/vestimate/vstory/Table.html:41
-		qw422016.N().S(`</td>
-          <td class="nowrap">
-            `)
-//line views/vestimate/vstory/Table.html:43
-		if x := usersByUserID.Get(model.UserID); x != nil {
-//line views/vestimate/vstory/Table.html:43
-			qw422016.N().S(`
-            `)
-//line views/vestimate/vstory/Table.html:44
-			qw422016.E().S(x.TitleString())
-//line views/vestimate/vstory/Table.html:44
-			qw422016.N().S(` <a title="User" href="`)
-//line views/vestimate/vstory/Table.html:44
-			qw422016.E().S(x.WebPath(paths...))
-//line views/vestimate/vstory/Table.html:44
-			qw422016.N().S(`">`)
-//line views/vestimate/vstory/Table.html:44
-			components.StreamSVGLink(qw422016, `profile`, ps)
-//line views/vestimate/vstory/Table.html:44
-			qw422016.N().S(`</a>
-            `)
-//line views/vestimate/vstory/Table.html:45
-		} else {
-//line views/vestimate/vstory/Table.html:45
-			qw422016.N().S(`
-            `)
-//line views/vestimate/vstory/Table.html:46
-			view.StreamUUID(qw422016, &model.UserID)
-//line views/vestimate/vstory/Table.html:46
-			qw422016.N().S(`
-            `)
-//line views/vestimate/vstory/Table.html:47
-		}
-//line views/vestimate/vstory/Table.html:47
-		qw422016.N().S(`
-          </td>
-          <td><strong>`)
-//line views/vestimate/vstory/Table.html:49
-		view.StreamString(qw422016, model.Title)
-//line views/vestimate/vstory/Table.html:49
-		qw422016.N().S(`</strong></td>
-          <td>`)
-//line views/vestimate/vstory/Table.html:50
-		qw422016.E().S(model.Status.String())
-//line views/vestimate/vstory/Table.html:50
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vestimate/vstory/Table.html:51
-		view.StreamString(qw422016, model.FinalVote)
-//line views/vestimate/vstory/Table.html:51
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vestimate/vstory/Table.html:52
-		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vestimate/vstory/Table.html:52
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vestimate/vstory/Table.html:53
-		view.StreamTimestamp(qw422016, model.Updated)
-//line views/vestimate/vstory/Table.html:53
-		qw422016.N().S(`</td>
-        </tr>
-`)
-//line views/vestimate/vstory/Table.html:55
+//line views/vestimate/vstory/Table.html:57
+		qw422016.N().S(`        `)
+//line views/vestimate/vstory/Table.html:58
+		StreamTableRow(qw422016, model, estimatesByEstimateID, usersByUserID, ps, paths...)
+//line views/vestimate/vstory/Table.html:59
 	}
-//line views/vestimate/vstory/Table.html:55
+//line views/vestimate/vstory/Table.html:59
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vestimate/vstory/Table.html:59
+//line views/vestimate/vstory/Table.html:63
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vestimate/vstory/Table.html:59
+//line views/vestimate/vstory/Table.html:63
 		qw422016.N().S(`  <hr />
   `)
-//line views/vestimate/vstory/Table.html:61
+//line views/vestimate/vstory/Table.html:65
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vestimate/vstory/Table.html:61
+//line views/vestimate/vstory/Table.html:65
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vestimate/vstory/Table.html:63
+//line views/vestimate/vstory/Table.html:67
 	}
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 }
 
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 func WriteTable(qq422016 qtio422016.Writer, models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	StreamTable(qw422016, models, estimatesByEstimateID, usersByUserID, params, as, ps, paths...)
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	qt422016.ReleaseWriter(qw422016)
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 }
 
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 func Table(models story.Stories, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	WriteTable(qb422016, models, estimatesByEstimateID, usersByUserID, params, as, ps, paths...)
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	qs422016 := string(qb422016.B)
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 	return qs422016
-//line views/vestimate/vstory/Table.html:64
+//line views/vestimate/vstory/Table.html:68
 }

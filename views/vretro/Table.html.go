@@ -31,245 +31,281 @@ var (
 )
 
 //line views/vretro/Table.html:13
-func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+func StreamTableRow(qw422016 *qt422016.Writer, model *retro.Retro, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, ps *cutil.PageState, paths ...string) {
 //line views/vretro/Table.html:13
 	qw422016.N().S(`
+  <tr>
+    <td><a href="`)
+//line views/vretro/Table.html:15
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vretro/Table.html:15
+	qw422016.N().S(`">`)
+//line views/vretro/Table.html:15
+	view.StreamUUID(qw422016, &model.ID)
+//line views/vretro/Table.html:15
+	qw422016.N().S(`</a></td>
+    <td>`)
+//line views/vretro/Table.html:16
+	view.StreamString(qw422016, model.Slug)
+//line views/vretro/Table.html:16
+	qw422016.N().S(`</td>
+    <td><strong>`)
+//line views/vretro/Table.html:17
+	view.StreamString(qw422016, model.Title)
+//line views/vretro/Table.html:17
+	qw422016.N().S(`</strong></td>
+    <td>`)
+//line views/vretro/Table.html:18
+	view.StreamString(qw422016, model.Icon)
+//line views/vretro/Table.html:18
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vretro/Table.html:19
+	qw422016.E().S(model.Status.String())
+//line views/vretro/Table.html:19
+	qw422016.N().S(`</td>
+    <td class="nowrap">
+      `)
+//line views/vretro/Table.html:21
+	if model.TeamID != nil {
+//line views/vretro/Table.html:21
+		if x := teamsByTeamID.Get(*model.TeamID); x != nil {
+//line views/vretro/Table.html:21
+			qw422016.N().S(`
+      `)
+//line views/vretro/Table.html:22
+			qw422016.E().S(x.TitleString())
+//line views/vretro/Table.html:22
+			qw422016.N().S(` <a title="Team" href="`)
+//line views/vretro/Table.html:22
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vretro/Table.html:22
+			qw422016.N().S(`">`)
+//line views/vretro/Table.html:22
+			components.StreamSVGLink(qw422016, `team`, ps)
+//line views/vretro/Table.html:22
+			qw422016.N().S(`</a>
+      `)
+//line views/vretro/Table.html:23
+		} else {
+//line views/vretro/Table.html:23
+			qw422016.N().S(`
+      `)
+//line views/vretro/Table.html:24
+			view.StreamUUID(qw422016, model.TeamID)
+//line views/vretro/Table.html:24
+			qw422016.N().S(`
+      `)
+//line views/vretro/Table.html:25
+		}
+//line views/vretro/Table.html:25
+	}
+//line views/vretro/Table.html:25
+	qw422016.N().S(`
+    </td>
+    <td class="nowrap">
+      `)
+//line views/vretro/Table.html:28
+	if model.SprintID != nil {
+//line views/vretro/Table.html:28
+		if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
+//line views/vretro/Table.html:28
+			qw422016.N().S(`
+      `)
+//line views/vretro/Table.html:29
+			qw422016.E().S(x.TitleString())
+//line views/vretro/Table.html:29
+			qw422016.N().S(` <a title="Sprint" href="`)
+//line views/vretro/Table.html:29
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vretro/Table.html:29
+			qw422016.N().S(`">`)
+//line views/vretro/Table.html:29
+			components.StreamSVGLink(qw422016, `sprint`, ps)
+//line views/vretro/Table.html:29
+			qw422016.N().S(`</a>
+      `)
+//line views/vretro/Table.html:30
+		} else {
+//line views/vretro/Table.html:30
+			qw422016.N().S(`
+      `)
+//line views/vretro/Table.html:31
+			view.StreamUUID(qw422016, model.SprintID)
+//line views/vretro/Table.html:31
+			qw422016.N().S(`
+      `)
+//line views/vretro/Table.html:32
+		}
+//line views/vretro/Table.html:32
+	}
+//line views/vretro/Table.html:32
+	qw422016.N().S(`
+    </td>
+    <td>`)
+//line views/vretro/Table.html:34
+	view.StreamStringArray(qw422016, model.Categories)
+//line views/vretro/Table.html:34
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vretro/Table.html:35
+	view.StreamTimestamp(qw422016, &model.Created)
+//line views/vretro/Table.html:35
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vretro/Table.html:36
+	view.StreamTimestamp(qw422016, model.Updated)
+//line views/vretro/Table.html:36
+	qw422016.N().S(`</td>
+  </tr>
 `)
-//line views/vretro/Table.html:14
+//line views/vretro/Table.html:38
+}
+
+//line views/vretro/Table.html:38
+func WriteTableRow(qq422016 qtio422016.Writer, model *retro.Retro, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, ps *cutil.PageState, paths ...string) {
+//line views/vretro/Table.html:38
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vretro/Table.html:38
+	StreamTableRow(qw422016, model, teamsByTeamID, sprintsBySprintID, ps, paths...)
+//line views/vretro/Table.html:38
+	qt422016.ReleaseWriter(qw422016)
+//line views/vretro/Table.html:38
+}
+
+//line views/vretro/Table.html:38
+func TableRow(model *retro.Retro, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, ps *cutil.PageState, paths ...string) string {
+//line views/vretro/Table.html:38
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vretro/Table.html:38
+	WriteTableRow(qb422016, model, teamsByTeamID, sprintsBySprintID, ps, paths...)
+//line views/vretro/Table.html:38
+	qs422016 := string(qb422016.B)
+//line views/vretro/Table.html:38
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vretro/Table.html:38
+	return qs422016
+//line views/vretro/Table.html:38
+}
+
+//line views/vretro/Table.html:40
+func StreamTable(qw422016 *qt422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+//line views/vretro/Table.html:40
+	qw422016.N().S(`
+`)
+//line views/vretro/Table.html:41
 	prms := params.Sanitized("retro", ps.Logger)
 
-//line views/vretro/Table.html:14
+//line views/vretro/Table.html:41
 	qw422016.N().S(`  <div class="overflow clear">
     <table>
       <thead>
         <tr>
           `)
-//line views/vretro/Table.html:19
+//line views/vretro/Table.html:46
 	components.StreamTableHeaderSimple(qw422016, "retro", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vretro/Table.html:19
+//line views/vretro/Table.html:46
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:20
+//line views/vretro/Table.html:47
 	components.StreamTableHeaderSimple(qw422016, "retro", "slug", "Slug", "String text", prms, ps.URI, ps)
-//line views/vretro/Table.html:20
+//line views/vretro/Table.html:47
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:21
+//line views/vretro/Table.html:48
 	components.StreamTableHeaderSimple(qw422016, "retro", "title", "Title", "String text", prms, ps.URI, ps)
-//line views/vretro/Table.html:21
+//line views/vretro/Table.html:48
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:22
+//line views/vretro/Table.html:49
 	components.StreamTableHeaderSimple(qw422016, "retro", "icon", "Icon", "String text", prms, ps.URI, ps)
-//line views/vretro/Table.html:22
+//line views/vretro/Table.html:49
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:23
+//line views/vretro/Table.html:50
 	components.StreamTableHeaderSimple(qw422016, "retro", "status", "Status", enum.AllSessionStatuses.Help(), prms, ps.URI, ps)
-//line views/vretro/Table.html:23
+//line views/vretro/Table.html:50
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:24
+//line views/vretro/Table.html:51
 	components.StreamTableHeaderSimple(qw422016, "retro", "team_id", "Team ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
-//line views/vretro/Table.html:24
+//line views/vretro/Table.html:51
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:25
+//line views/vretro/Table.html:52
 	components.StreamTableHeaderSimple(qw422016, "retro", "sprint_id", "Sprint ID", "UUID in format (00000000-0000-0000-0000-000000000000) (optional)", prms, ps.URI, ps)
-//line views/vretro/Table.html:25
+//line views/vretro/Table.html:52
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:26
+//line views/vretro/Table.html:53
 	components.StreamTableHeaderSimple(qw422016, "retro", "categories", "Categories", "Comma-separated list of values", prms, ps.URI, ps)
-//line views/vretro/Table.html:26
+//line views/vretro/Table.html:53
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:27
+//line views/vretro/Table.html:54
 	components.StreamTableHeaderSimple(qw422016, "retro", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vretro/Table.html:27
+//line views/vretro/Table.html:54
 	qw422016.N().S(`
           `)
-//line views/vretro/Table.html:28
+//line views/vretro/Table.html:55
 	components.StreamTableHeaderSimple(qw422016, "retro", "updated", "Updated", "Date and time, in almost any format (optional)", prms, ps.URI, ps)
-//line views/vretro/Table.html:28
+//line views/vretro/Table.html:55
 	qw422016.N().S(`
         </tr>
       </thead>
       <tbody>
 `)
-//line views/vretro/Table.html:32
+//line views/vretro/Table.html:59
 	for _, model := range models {
-//line views/vretro/Table.html:32
-		qw422016.N().S(`        <tr>
-          <td><a href="`)
-//line views/vretro/Table.html:34
-		qw422016.E().S(model.WebPath(paths...))
-//line views/vretro/Table.html:34
-		qw422016.N().S(`">`)
-//line views/vretro/Table.html:34
-		view.StreamUUID(qw422016, &model.ID)
-//line views/vretro/Table.html:34
-		qw422016.N().S(`</a></td>
-          <td>`)
-//line views/vretro/Table.html:35
-		view.StreamString(qw422016, model.Slug)
-//line views/vretro/Table.html:35
-		qw422016.N().S(`</td>
-          <td><strong>`)
-//line views/vretro/Table.html:36
-		view.StreamString(qw422016, model.Title)
-//line views/vretro/Table.html:36
-		qw422016.N().S(`</strong></td>
-          <td>`)
-//line views/vretro/Table.html:37
-		view.StreamString(qw422016, model.Icon)
-//line views/vretro/Table.html:37
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vretro/Table.html:38
-		qw422016.E().S(model.Status.String())
-//line views/vretro/Table.html:38
-		qw422016.N().S(`</td>
-          <td class="nowrap">
-            `)
-//line views/vretro/Table.html:40
-		if model.TeamID != nil {
-//line views/vretro/Table.html:40
-			if x := teamsByTeamID.Get(*model.TeamID); x != nil {
-//line views/vretro/Table.html:40
-				qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:41
-				qw422016.E().S(x.TitleString())
-//line views/vretro/Table.html:41
-				qw422016.N().S(` <a title="Team" href="`)
-//line views/vretro/Table.html:41
-				qw422016.E().S(x.WebPath(paths...))
-//line views/vretro/Table.html:41
-				qw422016.N().S(`">`)
-//line views/vretro/Table.html:41
-				components.StreamSVGLink(qw422016, `team`, ps)
-//line views/vretro/Table.html:41
-				qw422016.N().S(`</a>
-            `)
-//line views/vretro/Table.html:42
-			} else {
-//line views/vretro/Table.html:42
-				qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:43
-				view.StreamUUID(qw422016, model.TeamID)
-//line views/vretro/Table.html:43
-				qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:44
-			}
-//line views/vretro/Table.html:44
-		}
-//line views/vretro/Table.html:44
-		qw422016.N().S(`
-          </td>
-          <td class="nowrap">
-            `)
-//line views/vretro/Table.html:47
-		if model.SprintID != nil {
-//line views/vretro/Table.html:47
-			if x := sprintsBySprintID.Get(*model.SprintID); x != nil {
-//line views/vretro/Table.html:47
-				qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:48
-				qw422016.E().S(x.TitleString())
-//line views/vretro/Table.html:48
-				qw422016.N().S(` <a title="Sprint" href="`)
-//line views/vretro/Table.html:48
-				qw422016.E().S(x.WebPath(paths...))
-//line views/vretro/Table.html:48
-				qw422016.N().S(`">`)
-//line views/vretro/Table.html:48
-				components.StreamSVGLink(qw422016, `sprint`, ps)
-//line views/vretro/Table.html:48
-				qw422016.N().S(`</a>
-            `)
-//line views/vretro/Table.html:49
-			} else {
-//line views/vretro/Table.html:49
-				qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:50
-				view.StreamUUID(qw422016, model.SprintID)
-//line views/vretro/Table.html:50
-				qw422016.N().S(`
-            `)
-//line views/vretro/Table.html:51
-			}
-//line views/vretro/Table.html:51
-		}
-//line views/vretro/Table.html:51
-		qw422016.N().S(`
-          </td>
-          <td>`)
-//line views/vretro/Table.html:53
-		view.StreamStringArray(qw422016, model.Categories)
-//line views/vretro/Table.html:53
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vretro/Table.html:54
-		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vretro/Table.html:54
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vretro/Table.html:55
-		view.StreamTimestamp(qw422016, model.Updated)
-//line views/vretro/Table.html:55
-		qw422016.N().S(`</td>
-        </tr>
-`)
-//line views/vretro/Table.html:57
+//line views/vretro/Table.html:59
+		qw422016.N().S(`        `)
+//line views/vretro/Table.html:60
+		StreamTableRow(qw422016, model, teamsByTeamID, sprintsBySprintID, ps, paths...)
+//line views/vretro/Table.html:61
 	}
-//line views/vretro/Table.html:57
+//line views/vretro/Table.html:61
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vretro/Table.html:61
+//line views/vretro/Table.html:65
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vretro/Table.html:61
+//line views/vretro/Table.html:65
 		qw422016.N().S(`  <hr />
   `)
-//line views/vretro/Table.html:63
+//line views/vretro/Table.html:67
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vretro/Table.html:63
+//line views/vretro/Table.html:67
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vretro/Table.html:65
+//line views/vretro/Table.html:69
 	}
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 }
 
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 func WriteTable(qq422016 qtio422016.Writer, models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	StreamTable(qw422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps, paths...)
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	qt422016.ReleaseWriter(qw422016)
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 }
 
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 func Table(models retro.Retros, teamsByTeamID team.Teams, sprintsBySprintID sprint.Sprints, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	WriteTable(qb422016, models, teamsByTeamID, sprintsBySprintID, params, as, ps, paths...)
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	qs422016 := string(qb422016.B)
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 	return qs422016
-//line views/vretro/Table.html:66
+//line views/vretro/Table.html:70
 }

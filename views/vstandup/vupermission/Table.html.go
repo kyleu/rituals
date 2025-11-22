@@ -29,169 +29,205 @@ var (
 )
 
 //line views/vstandup/vupermission/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+func StreamTableRow(qw422016 *qt422016.Writer, model *upermission.StandupPermission, standupsByStandupID standup.Standups, ps *cutil.PageState, paths ...string) {
 //line views/vstandup/vupermission/Table.html:11
 	qw422016.N().S(`
+  <tr>
+    <td class="nowrap">
+      `)
+//line views/vstandup/vupermission/Table.html:14
+	if x := standupsByStandupID.Get(model.StandupID); x != nil {
+//line views/vstandup/vupermission/Table.html:14
+		qw422016.N().S(`
+      <a href="`)
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.E().S(model.WebPath())
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.N().S(`">`)
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.E().S(x.TitleString())
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.N().S(`</a> <a title="Standup" href="`)
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.E().S(x.WebPath(paths...))
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.N().S(`">`)
+//line views/vstandup/vupermission/Table.html:15
+		components.StreamSVGLink(qw422016, `standup`, ps)
+//line views/vstandup/vupermission/Table.html:15
+		qw422016.N().S(`</a>
+      `)
+//line views/vstandup/vupermission/Table.html:16
+	} else {
+//line views/vstandup/vupermission/Table.html:16
+		qw422016.N().S(`
+      <a href="`)
+//line views/vstandup/vupermission/Table.html:17
+		qw422016.E().S(model.WebPath())
+//line views/vstandup/vupermission/Table.html:17
+		qw422016.N().S(`">`)
+//line views/vstandup/vupermission/Table.html:17
+		view.StreamUUID(qw422016, &model.StandupID)
+//line views/vstandup/vupermission/Table.html:17
+		qw422016.N().S(`</a>
+      `)
+//line views/vstandup/vupermission/Table.html:18
+	}
+//line views/vstandup/vupermission/Table.html:18
+	qw422016.N().S(`
+    </td>
+    <td><a href="`)
+//line views/vstandup/vupermission/Table.html:20
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vstandup/vupermission/Table.html:20
+	qw422016.N().S(`">`)
+//line views/vstandup/vupermission/Table.html:20
+	view.StreamString(qw422016, model.Key)
+//line views/vstandup/vupermission/Table.html:20
+	qw422016.N().S(`</a></td>
+    <td><a href="`)
+//line views/vstandup/vupermission/Table.html:21
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vstandup/vupermission/Table.html:21
+	qw422016.N().S(`">`)
+//line views/vstandup/vupermission/Table.html:21
+	view.StreamString(qw422016, model.Value)
+//line views/vstandup/vupermission/Table.html:21
+	qw422016.N().S(`</a></td>
+    <td>`)
+//line views/vstandup/vupermission/Table.html:22
+	view.StreamString(qw422016, model.Access)
+//line views/vstandup/vupermission/Table.html:22
+	qw422016.N().S(`</td>
+    <td>`)
+//line views/vstandup/vupermission/Table.html:23
+	view.StreamTimestamp(qw422016, &model.Created)
+//line views/vstandup/vupermission/Table.html:23
+	qw422016.N().S(`</td>
+  </tr>
 `)
-//line views/vstandup/vupermission/Table.html:12
+//line views/vstandup/vupermission/Table.html:25
+}
+
+//line views/vstandup/vupermission/Table.html:25
+func WriteTableRow(qq422016 qtio422016.Writer, model *upermission.StandupPermission, standupsByStandupID standup.Standups, ps *cutil.PageState, paths ...string) {
+//line views/vstandup/vupermission/Table.html:25
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vstandup/vupermission/Table.html:25
+	StreamTableRow(qw422016, model, standupsByStandupID, ps, paths...)
+//line views/vstandup/vupermission/Table.html:25
+	qt422016.ReleaseWriter(qw422016)
+//line views/vstandup/vupermission/Table.html:25
+}
+
+//line views/vstandup/vupermission/Table.html:25
+func TableRow(model *upermission.StandupPermission, standupsByStandupID standup.Standups, ps *cutil.PageState, paths ...string) string {
+//line views/vstandup/vupermission/Table.html:25
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vstandup/vupermission/Table.html:25
+	WriteTableRow(qb422016, model, standupsByStandupID, ps, paths...)
+//line views/vstandup/vupermission/Table.html:25
+	qs422016 := string(qb422016.B)
+//line views/vstandup/vupermission/Table.html:25
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vstandup/vupermission/Table.html:25
+	return qs422016
+//line views/vstandup/vupermission/Table.html:25
+}
+
+//line views/vstandup/vupermission/Table.html:27
+func StreamTable(qw422016 *qt422016.Writer, models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
+//line views/vstandup/vupermission/Table.html:27
+	qw422016.N().S(`
+`)
+//line views/vstandup/vupermission/Table.html:28
 	prms := params.Sanitized("upermission", ps.Logger)
 
-//line views/vstandup/vupermission/Table.html:12
+//line views/vstandup/vupermission/Table.html:28
 	qw422016.N().S(`  <div class="overflow clear">
     <table>
       <thead>
         <tr>
           `)
-//line views/vstandup/vupermission/Table.html:17
+//line views/vstandup/vupermission/Table.html:33
 	components.StreamTableHeaderSimple(qw422016, "upermission", "standup_id", "Standup ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vstandup/vupermission/Table.html:17
+//line views/vstandup/vupermission/Table.html:33
 	qw422016.N().S(`
           `)
-//line views/vstandup/vupermission/Table.html:18
+//line views/vstandup/vupermission/Table.html:34
 	components.StreamTableHeaderSimple(qw422016, "upermission", "key", "Key", "String text", prms, ps.URI, ps)
-//line views/vstandup/vupermission/Table.html:18
+//line views/vstandup/vupermission/Table.html:34
 	qw422016.N().S(`
           `)
-//line views/vstandup/vupermission/Table.html:19
+//line views/vstandup/vupermission/Table.html:35
 	components.StreamTableHeaderSimple(qw422016, "upermission", "value", "Value", "String text", prms, ps.URI, ps)
-//line views/vstandup/vupermission/Table.html:19
+//line views/vstandup/vupermission/Table.html:35
 	qw422016.N().S(`
           `)
-//line views/vstandup/vupermission/Table.html:20
+//line views/vstandup/vupermission/Table.html:36
 	components.StreamTableHeaderSimple(qw422016, "upermission", "access", "Access", "String text", prms, ps.URI, ps)
-//line views/vstandup/vupermission/Table.html:20
+//line views/vstandup/vupermission/Table.html:36
 	qw422016.N().S(`
           `)
-//line views/vstandup/vupermission/Table.html:21
+//line views/vstandup/vupermission/Table.html:37
 	components.StreamTableHeaderSimple(qw422016, "upermission", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vstandup/vupermission/Table.html:21
+//line views/vstandup/vupermission/Table.html:37
 	qw422016.N().S(`
         </tr>
       </thead>
       <tbody>
 `)
-//line views/vstandup/vupermission/Table.html:25
+//line views/vstandup/vupermission/Table.html:41
 	for _, model := range models {
-//line views/vstandup/vupermission/Table.html:25
-		qw422016.N().S(`        <tr>
-          <td class="nowrap">
-            `)
-//line views/vstandup/vupermission/Table.html:28
-		if x := standupsByStandupID.Get(model.StandupID); x != nil {
-//line views/vstandup/vupermission/Table.html:28
-			qw422016.N().S(`
-            <a href="`)
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.E().S(model.WebPath())
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.N().S(`">`)
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.E().S(x.TitleString())
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.N().S(`</a> <a title="Standup" href="`)
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.E().S(x.WebPath(paths...))
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.N().S(`">`)
-//line views/vstandup/vupermission/Table.html:29
-			components.StreamSVGLink(qw422016, `standup`, ps)
-//line views/vstandup/vupermission/Table.html:29
-			qw422016.N().S(`</a>
-            `)
-//line views/vstandup/vupermission/Table.html:30
-		} else {
-//line views/vstandup/vupermission/Table.html:30
-			qw422016.N().S(`
-            <a href="`)
-//line views/vstandup/vupermission/Table.html:31
-			qw422016.E().S(model.WebPath())
-//line views/vstandup/vupermission/Table.html:31
-			qw422016.N().S(`">`)
-//line views/vstandup/vupermission/Table.html:31
-			view.StreamUUID(qw422016, &model.StandupID)
-//line views/vstandup/vupermission/Table.html:31
-			qw422016.N().S(`</a>
-            `)
-//line views/vstandup/vupermission/Table.html:32
-		}
-//line views/vstandup/vupermission/Table.html:32
-		qw422016.N().S(`
-          </td>
-          <td><a href="`)
-//line views/vstandup/vupermission/Table.html:34
-		qw422016.E().S(model.WebPath(paths...))
-//line views/vstandup/vupermission/Table.html:34
-		qw422016.N().S(`">`)
-//line views/vstandup/vupermission/Table.html:34
-		view.StreamString(qw422016, model.Key)
-//line views/vstandup/vupermission/Table.html:34
-		qw422016.N().S(`</a></td>
-          <td><a href="`)
-//line views/vstandup/vupermission/Table.html:35
-		qw422016.E().S(model.WebPath(paths...))
-//line views/vstandup/vupermission/Table.html:35
-		qw422016.N().S(`">`)
-//line views/vstandup/vupermission/Table.html:35
-		view.StreamString(qw422016, model.Value)
-//line views/vstandup/vupermission/Table.html:35
-		qw422016.N().S(`</a></td>
-          <td>`)
-//line views/vstandup/vupermission/Table.html:36
-		view.StreamString(qw422016, model.Access)
-//line views/vstandup/vupermission/Table.html:36
-		qw422016.N().S(`</td>
-          <td>`)
-//line views/vstandup/vupermission/Table.html:37
-		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vstandup/vupermission/Table.html:37
-		qw422016.N().S(`</td>
-        </tr>
-`)
-//line views/vstandup/vupermission/Table.html:39
+//line views/vstandup/vupermission/Table.html:41
+		qw422016.N().S(`        `)
+//line views/vstandup/vupermission/Table.html:42
+		StreamTableRow(qw422016, model, standupsByStandupID, ps, paths...)
+//line views/vstandup/vupermission/Table.html:43
 	}
-//line views/vstandup/vupermission/Table.html:39
+//line views/vstandup/vupermission/Table.html:43
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vstandup/vupermission/Table.html:43
+//line views/vstandup/vupermission/Table.html:47
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vstandup/vupermission/Table.html:43
+//line views/vstandup/vupermission/Table.html:47
 		qw422016.N().S(`  <hr />
   `)
-//line views/vstandup/vupermission/Table.html:45
+//line views/vstandup/vupermission/Table.html:49
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vstandup/vupermission/Table.html:45
+//line views/vstandup/vupermission/Table.html:49
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vstandup/vupermission/Table.html:47
+//line views/vstandup/vupermission/Table.html:51
 	}
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 }
 
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 func WriteTable(qq422016 qtio422016.Writer, models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	StreamTable(qw422016, models, standupsByStandupID, params, as, ps, paths...)
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	qt422016.ReleaseWriter(qw422016)
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 }
 
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 func Table(models upermission.StandupPermissions, standupsByStandupID standup.Standups, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	WriteTable(qb422016, models, standupsByStandupID, params, as, ps, paths...)
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	qs422016 := string(qb422016.B)
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 	return qs422016
-//line views/vstandup/vupermission/Table.html:48
+//line views/vstandup/vupermission/Table.html:52
 }

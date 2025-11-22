@@ -9,6 +9,31 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
+{% func TableRow(model *feedback.Feedback, retrosByRetroID retro.Retros, usersByUserID user.Users, ps *cutil.PageState, paths ...string) %}
+  <tr>
+    <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
+    <td class="nowrap">
+      {% if x := retrosByRetroID.Get(model.RetroID); x != nil %}
+      {%s x.TitleString() %} <a title="Retro" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
+      {% else %}
+      {%= view.UUID(&model.RetroID) %}
+      {% endif %}
+    </td>
+    <td>{%d model.Idx %}</td>
+    <td class="nowrap">
+      {% if x := usersByUserID.Get(model.UserID); x != nil %}
+      {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+      {% else %}
+      {%= view.UUID(&model.UserID) %}
+      {% endif %}
+    </td>
+    <td>{%= view.String(model.Category) %}</td>
+    <td>{%= view.String(model.Content) %}</td>
+    <td>{%= view.Timestamp(&model.Created) %}</td>
+    <td>{%= view.Timestamp(model.Updated) %}</td>
+  </tr>
+{% endfunc %}
+
 {% func Table(models feedback.Feedbacks, retrosByRetroID retro.Retros, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("feedback", ps.Logger) -%}
   <div class="overflow clear">
@@ -27,28 +52,7 @@
       </thead>
       <tbody>
         {%- for _, model := range models -%}
-        <tr>
-          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
-          <td class="nowrap">
-            {% if x := retrosByRetroID.Get(model.RetroID); x != nil %}
-            {%s x.TitleString() %} <a title="Retro" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
-            {% else %}
-            {%= view.UUID(&model.RetroID) %}
-            {% endif %}
-          </td>
-          <td>{%d model.Idx %}</td>
-          <td class="nowrap">
-            {% if x := usersByUserID.Get(model.UserID); x != nil %}
-            {%s x.TitleString() %} <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
-            {% else %}
-            {%= view.UUID(&model.UserID) %}
-            {% endif %}
-          </td>
-          <td>{%= view.String(model.Category) %}</td>
-          <td>{%= view.String(model.Content) %}</td>
-          <td>{%= view.Timestamp(&model.Created) %}</td>
-          <td>{%= view.Timestamp(model.Updated) %}</td>
-        </tr>
+        {%= TableRow(model, retrosByRetroID, usersByUserID, ps, paths...) -%}
         {%- endfor -%}
       </tbody>
     </table>

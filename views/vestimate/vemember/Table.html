@@ -10,6 +10,30 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
+{% func TableRow(model *emember.EstimateMember, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, ps *cutil.PageState, paths ...string) %}
+  <tr>
+    <td class="nowrap">
+      {% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %}
+      <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Estimate" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
+      {% else %}
+      <a href="{%s model.WebPath() %}">{%= view.UUID(&model.EstimateID) %}</a>
+      {% endif %}
+    </td>
+    <td class="nowrap">
+      {% if x := usersByUserID.Get(model.UserID); x != nil %}
+      <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
+      {% else %}
+      <a href="{%s model.WebPath() %}">{%= view.UUID(&model.UserID) %}</a>
+      {% endif %}
+    </td>
+    <td><strong>{%= view.String(model.Name) %}</strong></td>
+    <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
+    <td>{%s model.Role.String() %}</td>
+    <td>{%= view.Timestamp(&model.Created) %}</td>
+    <td>{%= view.Timestamp(model.Updated) %}</td>
+  </tr>
+{% endfunc %}
+
 {% func Table(models emember.EstimateMembers, estimatesByEstimateID estimate.Estimates, usersByUserID user.Users, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("emember", ps.Logger) -%}
   <div class="overflow clear">
@@ -27,27 +51,7 @@
       </thead>
       <tbody>
         {%- for _, model := range models -%}
-        <tr>
-          <td class="nowrap">
-            {% if x := estimatesByEstimateID.Get(model.EstimateID); x != nil %}
-            <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Estimate" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`estimate`, ps) %}</a>
-            {% else %}
-            <a href="{%s model.WebPath() %}">{%= view.UUID(&model.EstimateID) %}</a>
-            {% endif %}
-          </td>
-          <td class="nowrap">
-            {% if x := usersByUserID.Get(model.UserID); x != nil %}
-            <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="User" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`profile`, ps) %}</a>
-            {% else %}
-            <a href="{%s model.WebPath() %}">{%= view.UUID(&model.UserID) %}</a>
-            {% endif %}
-          </td>
-          <td><strong>{%= view.String(model.Name) %}</strong></td>
-          <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
-          <td>{%s model.Role.String() %}</td>
-          <td>{%= view.Timestamp(&model.Created) %}</td>
-          <td>{%= view.Timestamp(model.Updated) %}</td>
-        </tr>
+        {%= TableRow(model, estimatesByEstimateID, usersByUserID, ps, paths...) -%}
         {%- endfor -%}
       </tbody>
     </table>

@@ -8,6 +8,22 @@
   "github.com/kyleu/rituals/views/components/view"
 ) %}
 
+{% func TableRow(model *rpermission.RetroPermission, retrosByRetroID retro.Retros, ps *cutil.PageState, paths ...string) %}
+  <tr>
+    <td class="nowrap">
+      {% if x := retrosByRetroID.Get(model.RetroID); x != nil %}
+      <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Retro" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
+      {% else %}
+      <a href="{%s model.WebPath() %}">{%= view.UUID(&model.RetroID) %}</a>
+      {% endif %}
+    </td>
+    <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
+    <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>
+    <td>{%= view.String(model.Access) %}</td>
+    <td>{%= view.Timestamp(&model.Created) %}</td>
+  </tr>
+{% endfunc %}
+
 {% func Table(models rpermission.RetroPermissions, retrosByRetroID retro.Retros, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("rpermission", ps.Logger) -%}
   <div class="overflow clear">
@@ -23,19 +39,7 @@
       </thead>
       <tbody>
         {%- for _, model := range models -%}
-        <tr>
-          <td class="nowrap">
-            {% if x := retrosByRetroID.Get(model.RetroID); x != nil %}
-            <a href="{%s model.WebPath() %}">{%s x.TitleString() %}</a> <a title="Retro" href="{%s x.WebPath(paths...) %}">{%= components.SVGLink(`retro`, ps) %}</a>
-            {% else %}
-            <a href="{%s model.WebPath() %}">{%= view.UUID(&model.RetroID) %}</a>
-            {% endif %}
-          </td>
-          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Key) %}</a></td>
-          <td><a href="{%s model.WebPath(paths...) %}">{%= view.String(model.Value) %}</a></td>
-          <td>{%= view.String(model.Access) %}</td>
-          <td>{%= view.Timestamp(&model.Created) %}</td>
-        </tr>
+        {%= TableRow(model, retrosByRetroID, ps, paths...) -%}
         {%- endfor -%}
       </tbody>
     </table>
