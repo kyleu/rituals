@@ -10,7 +10,7 @@
 {% func TableRow(model *user.User, ps *cutil.PageState, paths ...string) %}
   <tr>
     <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
-    <td><strong>{%= view.String(model.Name) %}</strong></td>
+    <td><a href="{%s model.WebPath(paths...) %}"><strong>{%= view.String(model.Name) %}</strong></a></td>
     <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
     <td>{%= view.Timestamp(&model.Created) %}</td>
     <td>{%= view.Timestamp(model.Updated) %}</td>

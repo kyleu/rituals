@@ -85,7 +85,7 @@ func RetroHistoryCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created RetroHistory")
 		}
-		msg := fmt.Sprintf("RetroHistory [%s] created", ret.String())
+		msg := fmt.Sprintf("RetroHistory [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -116,7 +116,7 @@ func RetroHistoryEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update RetroHistory [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("RetroHistory [%s] updated", frm.String())
+		msg := fmt.Sprintf("RetroHistory [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -131,7 +131,7 @@ func RetroHistoryDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("RetroHistory [%s] deleted", ret.String())
+		msg := fmt.Sprintf("RetroHistory [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/retro/history", ps)
 	})
 }

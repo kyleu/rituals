@@ -86,7 +86,7 @@ func StandupHistoryCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created StandupHistory")
 		}
-		msg := fmt.Sprintf("StandupHistory [%s] created", ret.String())
+		msg := fmt.Sprintf("StandupHistory [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -117,7 +117,7 @@ func StandupHistoryEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update StandupHistory [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("StandupHistory [%s] updated", frm.String())
+		msg := fmt.Sprintf("StandupHistory [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -132,7 +132,7 @@ func StandupHistoryDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("StandupHistory [%s] deleted", ret.String())
+		msg := fmt.Sprintf("StandupHistory [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/standup/history", ps)
 	})
 }

@@ -85,7 +85,7 @@ func TeamPermissionCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created TeamPermission")
 		}
-		msg := fmt.Sprintf("TeamPermission [%s] created", ret.String())
+		msg := fmt.Sprintf("TeamPermission [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -118,7 +118,7 @@ func TeamPermissionEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update TeamPermission [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("TeamPermission [%s] updated", frm.String())
+		msg := fmt.Sprintf("TeamPermission [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -133,7 +133,7 @@ func TeamPermissionDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("TeamPermission [%s] deleted", ret.String())
+		msg := fmt.Sprintf("TeamPermission [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/team/permission", ps)
 	})
 }

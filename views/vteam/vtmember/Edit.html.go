@@ -62,7 +62,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/vtmember/Edit.html:25
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete member [`)
 //line views/vteam/vtmember/Edit.html:25
-		qw422016.E().S(p.Model.String())
+		qw422016.E().S(p.Model.TitleString())
 //line views/vteam/vtmember/Edit.html:25
 		qw422016.N().S(`]?"><button>`)
 //line views/vteam/vtmember/Edit.html:25
@@ -75,7 +75,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vteam/vtmember/Edit.html:26
 		qw422016.N().S(` Edit Member [`)
 //line views/vteam/vtmember/Edit.html:26
-		qw422016.E().S(p.Model.String())
+		qw422016.E().S(p.Model.TitleString())
 //line views/vteam/vtmember/Edit.html:26
 		qw422016.N().S(`]</h3>
 `)
@@ -119,7 +119,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vteam/vtmember/Edit.html:35
-	edit.StreamSelectTable(qw422016, "role", "", "Role", p.Model.Role.Key, enum.AllMemberStatuses.Keys(), enum.AllMemberStatuses.Strings(), 5, enum.AllMemberStatuses.Help())
+	edit.StreamSelectTable(qw422016, "role", "", "Role", p.Model.Role.Key, enum.AllMemberStatuses.Keys(), enum.AllMemberStatuses.NamesSafe(), 5, enum.AllMemberStatuses.Help())
 //line views/vteam/vtmember/Edit.html:35
 	qw422016.N().S(`
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>

@@ -243,7 +243,7 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	qw422016.N().S(`">Status</th>
           <td>`)
 //line views/vestimate/vstory/Detail.html:81
-	qw422016.E().S(p.Model.Status.String())
+	qw422016.E().S(p.Model.Status.NameSafe())
 //line views/vestimate/vstory/Detail.html:81
 	qw422016.N().S(`</td>
         </tr>

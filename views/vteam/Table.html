@@ -12,9 +12,9 @@
   <tr>
     <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
     <td>{%= view.String(model.Slug) %}</td>
-    <td><strong>{%= view.String(model.Title) %}</strong></td>
+    <td><a href="{%s model.WebPath(paths...) %}"><strong>{%= view.String(model.Title) %}</strong></a></td>
     <td>{%= view.String(model.Icon) %}</td>
-    <td>{%s model.Status.String() %}</td>
+    <td>{%s model.Status.NameSafe() %}</td>
     <td>{%= view.Timestamp(&model.Created) %}</td>
     <td>{%= view.Timestamp(model.Updated) %}</td>
   </tr>

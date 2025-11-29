@@ -86,7 +86,7 @@ func StandupPermissionCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created StandupPermission")
 		}
-		msg := fmt.Sprintf("StandupPermission [%s] created", ret.String())
+		msg := fmt.Sprintf("StandupPermission [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -119,7 +119,7 @@ func StandupPermissionEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update StandupPermission [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("StandupPermission [%s] updated", frm.String())
+		msg := fmt.Sprintf("StandupPermission [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -134,7 +134,7 @@ func StandupPermissionDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("StandupPermission [%s] deleted", ret.String())
+		msg := fmt.Sprintf("StandupPermission [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/standup/permission", ps)
 	})
 }

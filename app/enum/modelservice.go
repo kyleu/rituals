@@ -114,6 +114,12 @@ func (m ModelServices) Strings() []string {
 	})
 }
 
+func (m ModelServices) NamesSafe() []string {
+	return lo.Map(m, func(x ModelService, _ int) string {
+		return x.NameSafe()
+	})
+}
+
 func (m ModelServices) Help() string {
 	return "Available model service options: [" + util.StringJoin(m.Strings(), ", ") + "]"
 }

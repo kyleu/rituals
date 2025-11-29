@@ -143,7 +143,7 @@ func SprintCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Sprint")
 		}
-		msg := fmt.Sprintf("Sprint [%s] created", ret.String())
+		msg := fmt.Sprintf("Sprint [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -174,7 +174,7 @@ func SprintEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Sprint [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Sprint [%s] updated", frm.String())
+		msg := fmt.Sprintf("Sprint [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -189,7 +189,7 @@ func SprintDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete sprint [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Sprint [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Sprint [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/sprint", ps)
 	})
 }

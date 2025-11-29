@@ -123,7 +123,7 @@ func StoryCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Story")
 		}
-		msg := fmt.Sprintf("Story [%s] created", ret.String())
+		msg := fmt.Sprintf("Story [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -154,7 +154,7 @@ func StoryEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Story [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Story [%s] updated", frm.String())
+		msg := fmt.Sprintf("Story [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -169,7 +169,7 @@ func StoryDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete story [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Story [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Story [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story", ps)
 	})
 }

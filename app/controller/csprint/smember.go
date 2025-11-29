@@ -101,7 +101,7 @@ func SprintMemberCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created SprintMember")
 		}
-		msg := fmt.Sprintf("SprintMember [%s] created", ret.String())
+		msg := fmt.Sprintf("SprintMember [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -133,7 +133,7 @@ func SprintMemberEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update SprintMember [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("SprintMember [%s] updated", frm.String())
+		msg := fmt.Sprintf("SprintMember [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -148,7 +148,7 @@ func SprintMemberDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("SprintMember [%s] deleted", ret.String())
+		msg := fmt.Sprintf("SprintMember [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/member", ps)
 	})
 }

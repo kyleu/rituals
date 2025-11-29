@@ -12,7 +12,7 @@
 {% func TableRow(model *comment.Comment, usersByUserID user.Users, ps *cutil.PageState, paths ...string) %}
   <tr>
     <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
-    <td>{%s model.Svc.String() %}</td>
+    <td>{%s model.Svc.NameSafe() %}</td>
     <td>{%= view.UUID(&model.ModelID) %}</td>
     <td class="nowrap">
       {% if x := usersByUserID.Get(model.UserID); x != nil %}

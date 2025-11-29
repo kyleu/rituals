@@ -84,7 +84,7 @@ func CommentCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Comment")
 		}
-		msg := fmt.Sprintf("Comment [%s] created", ret.String())
+		msg := fmt.Sprintf("Comment [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -115,7 +115,7 @@ func CommentEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Comment [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Comment [%s] updated", frm.String())
+		msg := fmt.Sprintf("Comment [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -130,7 +130,7 @@ func CommentDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete comment [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Comment [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Comment [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/comment", ps)
 	})
 }

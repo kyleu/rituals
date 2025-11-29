@@ -149,7 +149,7 @@ func EstimateCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Estimate")
 		}
-		msg := fmt.Sprintf("Estimate [%s] created", ret.String())
+		msg := fmt.Sprintf("Estimate [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -180,7 +180,7 @@ func EstimateEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Estimate [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Estimate [%s] updated", frm.String())
+		msg := fmt.Sprintf("Estimate [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -195,7 +195,7 @@ func EstimateDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete estimate [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Estimate [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Estimate [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/estimate", ps)
 	})
 }

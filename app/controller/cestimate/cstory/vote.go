@@ -101,7 +101,7 @@ func VoteCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Vote")
 		}
-		msg := fmt.Sprintf("Vote [%s] created", ret.String())
+		msg := fmt.Sprintf("Vote [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -133,7 +133,7 @@ func VoteEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Vote [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Vote [%s] updated", frm.String())
+		msg := fmt.Sprintf("Vote [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -148,7 +148,7 @@ func VoteDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete vote [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Vote [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Vote [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/story/vote", ps)
 	})
 }

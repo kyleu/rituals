@@ -85,7 +85,7 @@ func SprintHistoryCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created SprintHistory")
 		}
-		msg := fmt.Sprintf("SprintHistory [%s] created", ret.String())
+		msg := fmt.Sprintf("SprintHistory [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -116,7 +116,7 @@ func SprintHistoryEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update SprintHistory [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("SprintHistory [%s] updated", frm.String())
+		msg := fmt.Sprintf("SprintHistory [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -131,7 +131,7 @@ func SprintHistoryDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete history [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("SprintHistory [%s] deleted", ret.String())
+		msg := fmt.Sprintf("SprintHistory [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/sprint/history", ps)
 	})
 }

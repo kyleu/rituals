@@ -22,8 +22,8 @@
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`story`, ps) %} New Story</h3>
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete story [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
-    <h3>{%= components.SVGIcon(`story`, ps) %} Edit Story [{%s p.Model.String() %}]</h3>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete story [{%s p.Model.TitleString() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
+    <h3>{%= components.SVGIcon(`story`, ps) %} Edit Story [{%s p.Model.TitleString() %}]</h3>
     {%- endif -%}
     <form action="{%s util.Choose(p.IsNew, story.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %}" class="mt" method="post">
       <table class="mt expanded">
@@ -33,7 +33,7 @@
           {%= edit.IntTable("idx", "", "Idx", p.Model.Idx, 5, "Integer") %}
           {%= edit.UUIDTable("userID", "input-userID", "User ID", &p.Model.UserID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}
           {%= edit.StringTable("title", "", "Title", p.Model.Title, 5, "String text") %}
-          {%= edit.SelectTable("status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help()) %}
+          {%= edit.SelectTable("status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.NamesSafe(), 5, enum.AllSessionStatuses.Help()) %}
           {%= edit.StringTable("finalVote", "", "Final Vote", p.Model.FinalVote, 5, "String text") %}
           <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
         </tbody>

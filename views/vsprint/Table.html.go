@@ -48,11 +48,15 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *sprint.Sprint, teamsByTeam
 	view.StreamString(qw422016, model.Slug)
 //line views/vsprint/Table.html:15
 	qw422016.N().S(`</td>
-    <td><strong>`)
+    <td><a href="`)
+//line views/vsprint/Table.html:16
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vsprint/Table.html:16
+	qw422016.N().S(`"><strong>`)
 //line views/vsprint/Table.html:16
 	view.StreamString(qw422016, model.Title)
 //line views/vsprint/Table.html:16
-	qw422016.N().S(`</strong></td>
+	qw422016.N().S(`</strong></a></td>
     <td>`)
 //line views/vsprint/Table.html:17
 	view.StreamString(qw422016, model.Icon)
@@ -60,7 +64,7 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *sprint.Sprint, teamsByTeam
 	qw422016.N().S(`</td>
     <td>`)
 //line views/vsprint/Table.html:18
-	qw422016.E().S(model.Status.String())
+	qw422016.E().S(model.Status.NameSafe())
 //line views/vsprint/Table.html:18
 	qw422016.N().S(`</td>
     <td class="nowrap">

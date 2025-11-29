@@ -28,8 +28,8 @@
       {%= view.UUID(&model.UserID) %}
       {% endif %}
     </td>
-    <td><strong>{%= view.String(model.Title) %}</strong></td>
-    <td>{%s model.Status.String() %}</td>
+    <td><a href="{%s model.WebPath(paths...) %}"><strong>{%= view.String(model.Title) %}</strong></a></td>
+    <td>{%s model.Status.NameSafe() %}</td>
     <td>{%= view.String(model.FinalVote) %}</td>
     <td>{%= view.Timestamp(&model.Created) %}</td>
     <td>{%= view.Timestamp(model.Updated) %}</td>

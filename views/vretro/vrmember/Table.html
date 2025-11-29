@@ -26,9 +26,9 @@
       <a href="{%s model.WebPath() %}">{%= view.UUID(&model.UserID) %}</a>
       {% endif %}
     </td>
-    <td><strong>{%= view.String(model.Name) %}</strong></td>
+    <td><a href="{%s model.WebPath(paths...) %}"><strong>{%= view.String(model.Name) %}</strong></a></td>
     <td><a href="{%s model.Picture %}" target="_blank" rel="noopener noreferrer">{%s model.Picture %}</a></td>
-    <td>{%s model.Role.String() %}</td>
+    <td>{%s model.Role.NameSafe() %}</td>
     <td>{%= view.Timestamp(&model.Created) %}</td>
     <td>{%= view.Timestamp(model.Updated) %}</td>
   </tr>

@@ -101,7 +101,7 @@ func EstimateMemberCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created EstimateMember")
 		}
-		msg := fmt.Sprintf("EstimateMember [%s] created", ret.String())
+		msg := fmt.Sprintf("EstimateMember [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -133,7 +133,7 @@ func EstimateMemberEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update EstimateMember [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("EstimateMember [%s] updated", frm.String())
+		msg := fmt.Sprintf("EstimateMember [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -148,7 +148,7 @@ func EstimateMemberDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("EstimateMember [%s] deleted", ret.String())
+		msg := fmt.Sprintf("EstimateMember [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/member", ps)
 	})
 }

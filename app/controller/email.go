@@ -84,7 +84,7 @@ func EmailCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Email")
 		}
-		msg := fmt.Sprintf("Email [%s] created", ret.String())
+		msg := fmt.Sprintf("Email [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -115,7 +115,7 @@ func EmailEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Email [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Email [%s] updated", frm.String())
+		msg := fmt.Sprintf("Email [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -130,7 +130,7 @@ func EmailDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete email [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Email [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Email [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/email", ps)
 	})
 }

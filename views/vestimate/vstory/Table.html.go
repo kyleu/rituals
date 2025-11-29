@@ -119,14 +119,18 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *story.Story, estimatesByEs
 //line views/vestimate/vstory/Table.html:29
 	qw422016.N().S(`
     </td>
-    <td><strong>`)
+    <td><a href="`)
+//line views/vestimate/vstory/Table.html:31
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vestimate/vstory/Table.html:31
+	qw422016.N().S(`"><strong>`)
 //line views/vestimate/vstory/Table.html:31
 	view.StreamString(qw422016, model.Title)
 //line views/vestimate/vstory/Table.html:31
-	qw422016.N().S(`</strong></td>
+	qw422016.N().S(`</strong></a></td>
     <td>`)
 //line views/vestimate/vstory/Table.html:32
-	qw422016.E().S(model.Status.String())
+	qw422016.E().S(model.Status.NameSafe())
 //line views/vestimate/vstory/Table.html:32
 	qw422016.N().S(`</td>
     <td>`)

@@ -49,11 +49,15 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *estimate.Estimate, teamsBy
 	view.StreamString(qw422016, model.Slug)
 //line views/vestimate/Table.html:16
 	qw422016.N().S(`</td>
-    <td><strong>`)
+    <td><a href="`)
+//line views/vestimate/Table.html:17
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vestimate/Table.html:17
+	qw422016.N().S(`"><strong>`)
 //line views/vestimate/Table.html:17
 	view.StreamString(qw422016, model.Title)
 //line views/vestimate/Table.html:17
-	qw422016.N().S(`</strong></td>
+	qw422016.N().S(`</strong></a></td>
     <td>`)
 //line views/vestimate/Table.html:18
 	view.StreamString(qw422016, model.Icon)
@@ -61,7 +65,7 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *estimate.Estimate, teamsBy
 	qw422016.N().S(`</td>
     <td>`)
 //line views/vestimate/Table.html:19
-	qw422016.E().S(model.Status.String())
+	qw422016.E().S(model.Status.NameSafe())
 //line views/vestimate/Table.html:19
 	qw422016.N().S(`</td>
     <td class="nowrap">

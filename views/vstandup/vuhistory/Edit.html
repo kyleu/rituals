@@ -21,8 +21,8 @@
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`history`, ps) %} New History</h3>
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete history [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
-    <h3>{%= components.SVGIcon(`history`, ps) %} Edit History [{%s p.Model.String() %}]</h3>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete history [{%s p.Model.TitleString() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
+    <h3>{%= components.SVGIcon(`history`, ps) %} Edit History [{%s p.Model.TitleString() %}]</h3>
     {%- endif -%}
     <form action="{%s util.Choose(p.IsNew, uhistory.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %}" class="mt" method="post">
       <table class="mt expanded">

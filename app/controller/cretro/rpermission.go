@@ -86,7 +86,7 @@ func RetroPermissionCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created RetroPermission")
 		}
-		msg := fmt.Sprintf("RetroPermission [%s] created", ret.String())
+		msg := fmt.Sprintf("RetroPermission [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -119,7 +119,7 @@ func RetroPermissionEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update RetroPermission [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("RetroPermission [%s] updated", frm.String())
+		msg := fmt.Sprintf("RetroPermission [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -134,7 +134,7 @@ func RetroPermissionDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("RetroPermission [%s] deleted", ret.String())
+		msg := fmt.Sprintf("RetroPermission [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/retro/permission", ps)
 	})
 }

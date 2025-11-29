@@ -121,11 +121,15 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *umember.StandupMember, sta
 //line views/vstandup/vumember/Table.html:27
 	qw422016.N().S(`
     </td>
-    <td><strong>`)
+    <td><a href="`)
+//line views/vstandup/vumember/Table.html:29
+	qw422016.E().S(model.WebPath(paths...))
+//line views/vstandup/vumember/Table.html:29
+	qw422016.N().S(`"><strong>`)
 //line views/vstandup/vumember/Table.html:29
 	view.StreamString(qw422016, model.Name)
 //line views/vstandup/vumember/Table.html:29
-	qw422016.N().S(`</strong></td>
+	qw422016.N().S(`</strong></a></td>
     <td><a href="`)
 //line views/vstandup/vumember/Table.html:30
 	qw422016.E().S(model.Picture)
@@ -137,7 +141,7 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *umember.StandupMember, sta
 	qw422016.N().S(`</a></td>
     <td>`)
 //line views/vstandup/vumember/Table.html:31
-	qw422016.E().S(model.Role.String())
+	qw422016.E().S(model.Role.NameSafe())
 //line views/vstandup/vumember/Table.html:31
 	qw422016.N().S(`</td>
     <td>`)

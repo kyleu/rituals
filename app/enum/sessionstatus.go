@@ -108,6 +108,12 @@ func (s SessionStatuses) Strings() []string {
 	})
 }
 
+func (s SessionStatuses) NamesSafe() []string {
+	return lo.Map(s, func(x SessionStatus, _ int) string {
+		return x.NameSafe()
+	})
+}
+
 func (s SessionStatuses) Help() string {
 	return "Available session status options: [" + util.StringJoin(s.Strings(), ", ") + "]"
 }

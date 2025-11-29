@@ -86,7 +86,7 @@ func EstimatePermissionCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created EstimatePermission")
 		}
-		msg := fmt.Sprintf("EstimatePermission [%s] created", ret.String())
+		msg := fmt.Sprintf("EstimatePermission [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -119,7 +119,7 @@ func EstimatePermissionEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update EstimatePermission [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("EstimatePermission [%s] updated", frm.String())
+		msg := fmt.Sprintf("EstimatePermission [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -134,7 +134,7 @@ func EstimatePermissionDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete permission [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("EstimatePermission [%s] deleted", ret.String())
+		msg := fmt.Sprintf("EstimatePermission [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/estimate/permission", ps)
 	})
 }

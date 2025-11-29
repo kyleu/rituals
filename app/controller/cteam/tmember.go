@@ -101,7 +101,7 @@ func TeamMemberCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created TeamMember")
 		}
-		msg := fmt.Sprintf("TeamMember [%s] created", ret.String())
+		msg := fmt.Sprintf("TeamMember [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -133,7 +133,7 @@ func TeamMemberEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update TeamMember [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("TeamMember [%s] updated", frm.String())
+		msg := fmt.Sprintf("TeamMember [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -148,7 +148,7 @@ func TeamMemberDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("TeamMember [%s] deleted", ret.String())
+		msg := fmt.Sprintf("TeamMember [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/team/member", ps)
 	})
 }

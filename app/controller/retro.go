@@ -148,7 +148,7 @@ func RetroCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Retro")
 		}
-		msg := fmt.Sprintf("Retro [%s] created", ret.String())
+		msg := fmt.Sprintf("Retro [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -179,7 +179,7 @@ func RetroEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Retro [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Retro [%s] updated", frm.String())
+		msg := fmt.Sprintf("Retro [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -194,7 +194,7 @@ func RetroDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete retro [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Retro [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Retro [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/retro", ps)
 	})
 }

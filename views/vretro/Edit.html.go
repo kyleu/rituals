@@ -62,7 +62,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/Edit.html:25
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete retro [`)
 //line views/vretro/Edit.html:25
-		qw422016.E().S(p.Model.String())
+		qw422016.E().S(p.Model.TitleString())
 //line views/vretro/Edit.html:25
 		qw422016.N().S(`]?"><button>`)
 //line views/vretro/Edit.html:25
@@ -75,7 +75,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vretro/Edit.html:26
 		qw422016.N().S(` Edit Retro [`)
 //line views/vretro/Edit.html:26
-		qw422016.E().S(p.Model.String())
+		qw422016.E().S(p.Model.TitleString())
 //line views/vretro/Edit.html:26
 		qw422016.N().S(`]</h3>
 `)
@@ -115,7 +115,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vretro/Edit.html:35
-	edit.StreamSelectTable(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help())
+	edit.StreamSelectTable(qw422016, "status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.NamesSafe(), 5, enum.AllSessionStatuses.Help())
 //line views/vretro/Edit.html:35
 	qw422016.N().S(`
           `)

@@ -159,7 +159,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created User")
 		}
-		msg := fmt.Sprintf("User [%s] created", ret.String())
+		msg := fmt.Sprintf("User [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -190,7 +190,7 @@ func UserEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update User [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("User [%s] updated", frm.String())
+		msg := fmt.Sprintf("User [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -205,7 +205,7 @@ func UserDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete user [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("User [%s] deleted", ret.String())
+		msg := fmt.Sprintf("User [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/user", ps)
 	})
 }

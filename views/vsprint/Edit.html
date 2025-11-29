@@ -22,8 +22,8 @@
     <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>{%= components.SVGIcon(`sprint`, ps) %} New Sprint</h3>
     {%- else -%}
-    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete sprint [{%s p.Model.String() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
-    <h3>{%= components.SVGIcon(`sprint`, ps) %} Edit Sprint [{%s p.Model.String() %}]</h3>
+    <div class="right"><a class="link-confirm" href="{%s p.Model.WebPath(p.Paths...) %}/delete" data-message="Are you sure you wish to delete sprint [{%s p.Model.TitleString() %}]?"><button>{%= components.SVGButton("times", ps) %} Delete</button></a></div>
+    <h3>{%= components.SVGIcon(`sprint`, ps) %} Edit Sprint [{%s p.Model.TitleString() %}]</h3>
     {%- endif -%}
     <form action="{%s util.Choose(p.IsNew, sprint.Route(p.Paths...) + `/_new`, p.Model.WebPath(p.Paths...) + `/edit`) %}" class="mt" method="post">
       <table class="mt expanded">
@@ -32,7 +32,7 @@
           {%= edit.StringTable("slug", "", "Slug", p.Model.Slug, 5, "String text") %}
           {%= edit.StringTable("title", "", "Title", p.Model.Title, 5, "String text") %}
           {%= edit.StringTable("icon", "", "Icon", p.Model.Icon, 5, "String text") %}
-          {%= edit.SelectTable("status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.Strings(), 5, enum.AllSessionStatuses.Help()) %}
+          {%= edit.SelectTable("status", "", "Status", p.Model.Status.Key, enum.AllSessionStatuses.Keys(), enum.AllSessionStatuses.NamesSafe(), 5, enum.AllSessionStatuses.Help()) %}
           {%= edit.UUIDTable("teamID", "input-teamID", "Team ID", p.Model.TeamID, 5, "UUID in format (00000000-0000-0000-0000-000000000000) (optional)") %}
           {%= edit.TimestampDayTable("startDate", "", "Start Date", p.Model.StartDate, 5, "Calendar date (optional)") %}
           {%= edit.TimestampDayTable("endDate", "", "End Date", p.Model.EndDate, 5, "Calendar date (optional)") %}

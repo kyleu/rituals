@@ -138,7 +138,7 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	qw422016.N().S(`">Svc</th>
           <td>`)
 //line views/vaction/Detail.html:44
-	qw422016.E().S(p.Model.Svc.String())
+	qw422016.E().S(p.Model.Svc.NameSafe())
 //line views/vaction/Detail.html:44
 	qw422016.N().S(`</td>
         </tr>

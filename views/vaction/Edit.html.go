@@ -62,7 +62,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vaction/Edit.html:25
 		qw422016.N().S(`/delete" data-message="Are you sure you wish to delete action [`)
 //line views/vaction/Edit.html:25
-		qw422016.E().S(p.Model.String())
+		qw422016.E().S(p.Model.TitleString())
 //line views/vaction/Edit.html:25
 		qw422016.N().S(`]?"><button>`)
 //line views/vaction/Edit.html:25
@@ -75,7 +75,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vaction/Edit.html:26
 		qw422016.N().S(` Edit Action [`)
 //line views/vaction/Edit.html:26
-		qw422016.E().S(p.Model.String())
+		qw422016.E().S(p.Model.TitleString())
 //line views/vaction/Edit.html:26
 		qw422016.N().S(`]</h3>
 `)
@@ -100,7 +100,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.N().S(`
           `)
 //line views/vaction/Edit.html:32
-	edit.StreamSelectTable(qw422016, "svc", "", "Svc", p.Model.Svc.Key, enum.AllModelServices.Keys(), enum.AllModelServices.Strings(), 5, enum.AllModelServices.Help())
+	edit.StreamSelectTable(qw422016, "svc", "", "Svc", p.Model.Svc.Key, enum.AllModelServices.Keys(), enum.AllModelServices.NamesSafe(), 5, enum.AllModelServices.Help())
 //line views/vaction/Edit.html:32
 	qw422016.N().S(`
           `)

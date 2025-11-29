@@ -45,7 +45,7 @@ func StreamTableRow(qw422016 *qt422016.Writer, model *comment.Comment, usersByUs
 	qw422016.N().S(`</a></td>
     <td>`)
 //line views/vcomment/Table.html:15
-	qw422016.E().S(model.Svc.String())
+	qw422016.E().S(model.Svc.NameSafe())
 //line views/vcomment/Table.html:15
 	qw422016.N().S(`</td>
     <td>`)

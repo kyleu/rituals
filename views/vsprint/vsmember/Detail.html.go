@@ -244,7 +244,7 @@ func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState
 	qw422016.N().S(`">Role</th>
           <td>`)
 //line views/vsprint/vsmember/Detail.html:70
-	qw422016.E().S(p.Model.Role.String())
+	qw422016.E().S(p.Model.Role.NameSafe())
 //line views/vsprint/vsmember/Detail.html:70
 	qw422016.N().S(`</td>
         </tr>

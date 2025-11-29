@@ -101,7 +101,7 @@ func RetroMemberCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created RetroMember")
 		}
-		msg := fmt.Sprintf("RetroMember [%s] created", ret.String())
+		msg := fmt.Sprintf("RetroMember [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -133,7 +133,7 @@ func RetroMemberEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update RetroMember [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("RetroMember [%s] updated", frm.String())
+		msg := fmt.Sprintf("RetroMember [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -148,7 +148,7 @@ func RetroMemberDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete member [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("RetroMember [%s] deleted", ret.String())
+		msg := fmt.Sprintf("RetroMember [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/admin/db/retro/member", ps)
 	})
 }

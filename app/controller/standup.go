@@ -149,7 +149,7 @@ func StandupCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Standup")
 		}
-		msg := fmt.Sprintf("Standup [%s] created", ret.String())
+		msg := fmt.Sprintf("Standup [%s] created", ret.TitleString())
 		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -180,7 +180,7 @@ func StandupEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Standup [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Standup [%s] updated", frm.String())
+		msg := fmt.Sprintf("Standup [%s] updated", frm.TitleString())
 		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -195,7 +195,7 @@ func StandupDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete standup [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Standup [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Standup [%s] deleted", ret.TitleString())
 		return FlashAndRedir(true, msg, "/admin/db/standup", ps)
 	})
 }

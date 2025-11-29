@@ -108,6 +108,12 @@ func (m MemberStatuses) Strings() []string {
 	})
 }
 
+func (m MemberStatuses) NamesSafe() []string {
+	return lo.Map(m, func(x MemberStatus, _ int) string {
+		return x.NameSafe()
+	})
+}
+
 func (m MemberStatuses) Help() string {
 	return "Available member status options: [" + util.StringJoin(m.Strings(), ", ") + "]"
 }

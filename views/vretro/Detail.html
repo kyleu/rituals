@@ -71,7 +71,7 @@
         </tr>
         <tr>
           <th class="shrink" title="{%s enum.AllSessionStatuses.Help() %}">Status</th>
-          <td>{%s p.Model.Status.String() %}</td>
+          <td>{%s p.Model.Status.NameSafe() %}</td>
         </tr>
         <tr>
           <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000) (optional)">Team ID</th>
