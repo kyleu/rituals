@@ -90,6 +90,12 @@ func (r RetroMembers) GetByUserIDs(userIDs ...uuid.UUID) RetroMembers {
 	})
 }
 
+func (r RetroMembers) ToMap() map[*PK]*RetroMember {
+	return lo.SliceToMap(r, func(xx *RetroMember) (*PK, *RetroMember) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (r RetroMembers) ToMaps() []util.ValueMap {
 	return lo.Map(r, func(xx *RetroMember, _ int) util.ValueMap {
 		return xx.ToMap()

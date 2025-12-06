@@ -119,6 +119,12 @@ func (s SprintPermissions) GetByValues(values ...string) SprintPermissions {
 	})
 }
 
+func (s SprintPermissions) ToMap() map[*PK]*SprintPermission {
+	return lo.SliceToMap(s, func(xx *SprintPermission) (*PK, *SprintPermission) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (s SprintPermissions) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *SprintPermission, _ int) util.ValueMap {
 		return xx.ToMap()

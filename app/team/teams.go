@@ -92,6 +92,12 @@ func (t Teams) GetByStatuses(statuses ...enum.SessionStatus) Teams {
 	})
 }
 
+func (t Teams) ToMap() map[uuid.UUID]*Team {
+	return lo.SliceToMap(t, func(xx *Team) (uuid.UUID, *Team) {
+		return xx.ID, xx
+	})
+}
+
 func (t Teams) ToMaps() []util.ValueMap {
 	return lo.Map(t, func(xx *Team, _ int) util.ValueMap {
 		return xx.ToMap()

@@ -45,6 +45,9 @@ func NewEstimatePermission(estimateID uuid.UUID, key string, value string) *Esti
 }
 
 func (e *EstimatePermission) Clone() *EstimatePermission {
+	if e == nil {
+		return nil
+	}
 	return &EstimatePermission{EstimateID: e.EstimateID, Key: e.Key, Value: e.Value, Access: e.Access, Created: e.Created}
 }
 

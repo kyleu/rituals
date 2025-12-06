@@ -37,6 +37,9 @@ func NewReport(id uuid.UUID) *Report {
 }
 
 func (r *Report) Clone() *Report {
+	if r == nil {
+		return nil
+	}
 	return &Report{
 		ID: r.ID, StandupID: r.StandupID, Day: r.Day, UserID: r.UserID, Content: r.Content, HTML: r.HTML, Created: r.Created,
 		Updated: r.Updated,

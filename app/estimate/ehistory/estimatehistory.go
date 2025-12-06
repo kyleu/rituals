@@ -33,6 +33,9 @@ func NewEstimateHistory(slug string) *EstimateHistory {
 }
 
 func (e *EstimateHistory) Clone() *EstimateHistory {
+	if e == nil {
+		return nil
+	}
 	return &EstimateHistory{Slug: e.Slug, EstimateID: e.EstimateID, EstimateName: e.EstimateName, Created: e.Created}
 }
 

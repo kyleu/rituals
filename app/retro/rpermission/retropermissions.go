@@ -119,6 +119,12 @@ func (r RetroPermissions) GetByValues(values ...string) RetroPermissions {
 	})
 }
 
+func (r RetroPermissions) ToMap() map[*PK]*RetroPermission {
+	return lo.SliceToMap(r, func(xx *RetroPermission) (*PK, *RetroPermission) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (r RetroPermissions) ToMaps() []util.ValueMap {
 	return lo.Map(r, func(xx *RetroPermission, _ int) util.ValueMap {
 		return xx.ToMap()

@@ -45,6 +45,9 @@ func NewSprintPermission(sprintID uuid.UUID, key string, value string) *SprintPe
 }
 
 func (s *SprintPermission) Clone() *SprintPermission {
+	if s == nil {
+		return nil
+	}
 	return &SprintPermission{SprintID: s.SprintID, Key: s.Key, Value: s.Value, Access: s.Access, Created: s.Created}
 }
 

@@ -47,6 +47,9 @@ func NewSprintMember(sprintID uuid.UUID, userID uuid.UUID) *SprintMember {
 }
 
 func (s *SprintMember) Clone() *SprintMember {
+	if s == nil {
+		return nil
+	}
 	return &SprintMember{
 		SprintID: s.SprintID, UserID: s.UserID, Name: s.Name, Picture: s.Picture, Role: s.Role, Created: s.Created,
 		Updated: s.Updated,

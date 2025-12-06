@@ -34,6 +34,9 @@ func NewUser(id uuid.UUID) *User {
 }
 
 func (u *User) Clone() *User {
+	if u == nil {
+		return nil
+	}
 	return &User{ID: u.ID, Name: u.Name, Picture: u.Picture, Created: u.Created, Updated: u.Updated}
 }
 

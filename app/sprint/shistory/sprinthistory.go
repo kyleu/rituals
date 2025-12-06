@@ -33,6 +33,9 @@ func NewSprintHistory(slug string) *SprintHistory {
 }
 
 func (s *SprintHistory) Clone() *SprintHistory {
+	if s == nil {
+		return nil
+	}
 	return &SprintHistory{Slug: s.Slug, SprintID: s.SprintID, SprintName: s.SprintName, Created: s.Created}
 }
 

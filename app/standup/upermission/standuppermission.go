@@ -45,6 +45,9 @@ func NewStandupPermission(standupID uuid.UUID, key string, value string) *Standu
 }
 
 func (s *StandupPermission) Clone() *StandupPermission {
+	if s == nil {
+		return nil
+	}
 	return &StandupPermission{StandupID: s.StandupID, Key: s.Key, Value: s.Value, Access: s.Access, Created: s.Created}
 }
 

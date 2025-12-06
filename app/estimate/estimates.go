@@ -128,6 +128,12 @@ func (e Estimates) GetBySprintIDs(sprintIDs ...*uuid.UUID) Estimates {
 	})
 }
 
+func (e Estimates) ToMap() map[uuid.UUID]*Estimate {
+	return lo.SliceToMap(e, func(xx *Estimate) (uuid.UUID, *Estimate) {
+		return xx.ID, xx
+	})
+}
+
 func (e Estimates) ToMaps() []util.ValueMap {
 	return lo.Map(e, func(xx *Estimate, _ int) util.ValueMap {
 		return xx.ToMap()

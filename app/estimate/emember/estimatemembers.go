@@ -90,6 +90,12 @@ func (e EstimateMembers) GetByUserIDs(userIDs ...uuid.UUID) EstimateMembers {
 	})
 }
 
+func (e EstimateMembers) ToMap() map[*PK]*EstimateMember {
+	return lo.SliceToMap(e, func(xx *EstimateMember) (*PK, *EstimateMember) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (e EstimateMembers) ToMaps() []util.ValueMap {
 	return lo.Map(e, func(xx *EstimateMember, _ int) util.ValueMap {
 		return xx.ToMap()

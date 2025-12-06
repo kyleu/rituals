@@ -73,6 +73,12 @@ func (r RetroHistories) GetByRetroIDs(retroIDs ...uuid.UUID) RetroHistories {
 	})
 }
 
+func (r RetroHistories) ToMap() map[string]*RetroHistory {
+	return lo.SliceToMap(r, func(xx *RetroHistory) (string, *RetroHistory) {
+		return xx.Slug, xx
+	})
+}
+
 func (r RetroHistories) ToMaps() []util.ValueMap {
 	return lo.Map(r, func(xx *RetroHistory, _ int) util.ValueMap {
 		return xx.ToMap()

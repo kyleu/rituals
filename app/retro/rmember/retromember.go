@@ -47,6 +47,9 @@ func NewRetroMember(retroID uuid.UUID, userID uuid.UUID) *RetroMember {
 }
 
 func (r *RetroMember) Clone() *RetroMember {
+	if r == nil {
+		return nil
+	}
 	return &RetroMember{
 		RetroID: r.RetroID, UserID: r.UserID, Name: r.Name, Picture: r.Picture, Role: r.Role, Created: r.Created,
 		Updated: r.Updated,

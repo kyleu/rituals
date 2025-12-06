@@ -91,6 +91,12 @@ func (s Stories) GetByUserIDs(userIDs ...uuid.UUID) Stories {
 	})
 }
 
+func (s Stories) ToMap() map[uuid.UUID]*Story {
+	return lo.SliceToMap(s, func(xx *Story) (uuid.UUID, *Story) {
+		return xx.ID, xx
+	})
+}
+
 func (s Stories) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *Story, _ int) util.ValueMap {
 		return xx.ToMap()

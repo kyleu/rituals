@@ -73,6 +73,12 @@ func (t TeamHistories) GetByTeamIDs(teamIDs ...uuid.UUID) TeamHistories {
 	})
 }
 
+func (t TeamHistories) ToMap() map[string]*TeamHistory {
+	return lo.SliceToMap(t, func(xx *TeamHistory) (string, *TeamHistory) {
+		return xx.Slug, xx
+	})
+}
+
 func (t TeamHistories) ToMaps() []util.ValueMap {
 	return lo.Map(t, func(xx *TeamHistory, _ int) util.ValueMap {
 		return xx.ToMap()

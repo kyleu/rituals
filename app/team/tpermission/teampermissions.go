@@ -119,6 +119,12 @@ func (t TeamPermissions) GetByValues(values ...string) TeamPermissions {
 	})
 }
 
+func (t TeamPermissions) ToMap() map[*PK]*TeamPermission {
+	return lo.SliceToMap(t, func(xx *TeamPermission) (*PK, *TeamPermission) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (t TeamPermissions) ToMaps() []util.ValueMap {
 	return lo.Map(t, func(xx *TeamPermission, _ int) util.ValueMap {
 		return xx.ToMap()

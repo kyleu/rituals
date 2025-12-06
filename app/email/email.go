@@ -38,6 +38,9 @@ func NewEmail(id uuid.UUID) *Email {
 }
 
 func (e *Email) Clone() *Email {
+	if e == nil {
+		return nil
+	}
 	return &Email{
 		ID: e.ID, Recipients: util.ArrayCopy(e.Recipients), Subject: e.Subject, Data: e.Data.Clone(), Plain: e.Plain,
 		HTML: e.HTML, UserID: e.UserID, Status: e.Status, Created: e.Created,

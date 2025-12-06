@@ -119,6 +119,12 @@ func (s StandupPermissions) GetByValues(values ...string) StandupPermissions {
 	})
 }
 
+func (s StandupPermissions) ToMap() map[*PK]*StandupPermission {
+	return lo.SliceToMap(s, func(xx *StandupPermission) (*PK, *StandupPermission) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (s StandupPermissions) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *StandupPermission, _ int) util.ValueMap {
 		return xx.ToMap()

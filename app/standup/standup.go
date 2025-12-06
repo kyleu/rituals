@@ -39,6 +39,9 @@ func NewStandup(id uuid.UUID) *Standup {
 }
 
 func (s *Standup) Clone() *Standup {
+	if s == nil {
+		return nil
+	}
 	return &Standup{
 		ID: s.ID, Slug: s.Slug, Title: s.Title, Icon: s.Icon, Status: s.Status, TeamID: s.TeamID, SprintID: s.SprintID,
 		Created: s.Created, Updated: s.Updated,

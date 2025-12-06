@@ -90,6 +90,12 @@ func (s SprintMembers) GetByUserIDs(userIDs ...uuid.UUID) SprintMembers {
 	})
 }
 
+func (s SprintMembers) ToMap() map[*PK]*SprintMember {
+	return lo.SliceToMap(s, func(xx *SprintMember) (*PK, *SprintMember) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (s SprintMembers) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *SprintMember, _ int) util.ValueMap {
 		return xx.ToMap()

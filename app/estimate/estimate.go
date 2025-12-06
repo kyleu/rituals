@@ -40,6 +40,9 @@ func NewEstimate(id uuid.UUID) *Estimate {
 }
 
 func (e *Estimate) Clone() *Estimate {
+	if e == nil {
+		return nil
+	}
 	return &Estimate{
 		ID: e.ID, Slug: e.Slug, Title: e.Title, Icon: e.Icon, Status: e.Status, TeamID: e.TeamID, SprintID: e.SprintID,
 		Choices: util.ArrayCopy(e.Choices), Created: e.Created, Updated: e.Updated,

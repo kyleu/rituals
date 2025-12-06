@@ -73,6 +73,12 @@ func (e EstimateHistories) GetByEstimateIDs(estimateIDs ...uuid.UUID) EstimateHi
 	})
 }
 
+func (e EstimateHistories) ToMap() map[string]*EstimateHistory {
+	return lo.SliceToMap(e, func(xx *EstimateHistory) (string, *EstimateHistory) {
+		return xx.Slug, xx
+	})
+}
+
 func (e EstimateHistories) ToMaps() []util.ValueMap {
 	return lo.Map(e, func(xx *EstimateHistory, _ int) util.ValueMap {
 		return xx.ToMap()

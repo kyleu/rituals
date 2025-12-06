@@ -73,6 +73,12 @@ func (e Emails) GetByUserIDs(userIDs ...uuid.UUID) Emails {
 	})
 }
 
+func (e Emails) ToMap() map[uuid.UUID]*Email {
+	return lo.SliceToMap(e, func(xx *Email) (uuid.UUID, *Email) {
+		return xx.ID, xx
+	})
+}
+
 func (e Emails) ToMaps() []util.ValueMap {
 	return lo.Map(e, func(xx *Email, _ int) util.ValueMap {
 		return xx.ToMap()

@@ -91,6 +91,12 @@ func (r Reports) GetByUserIDs(userIDs ...uuid.UUID) Reports {
 	})
 }
 
+func (r Reports) ToMap() map[uuid.UUID]*Report {
+	return lo.SliceToMap(r, func(xx *Report) (uuid.UUID, *Report) {
+		return xx.ID, xx
+	})
+}
+
 func (r Reports) ToMaps() []util.ValueMap {
 	return lo.Map(r, func(xx *Report, _ int) util.ValueMap {
 		return xx.ToMap()

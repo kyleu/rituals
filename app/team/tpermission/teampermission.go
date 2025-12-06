@@ -45,6 +45,9 @@ func NewTeamPermission(teamID uuid.UUID, key string, value string) *TeamPermissi
 }
 
 func (t *TeamPermission) Clone() *TeamPermission {
+	if t == nil {
+		return nil
+	}
 	return &TeamPermission{TeamID: t.TeamID, Key: t.Key, Value: t.Value, Access: t.Access, Created: t.Created}
 }
 

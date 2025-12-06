@@ -37,6 +37,9 @@ func NewComment(id uuid.UUID) *Comment {
 }
 
 func (c *Comment) Clone() *Comment {
+	if c == nil {
+		return nil
+	}
 	return &Comment{
 		ID: c.ID, Svc: c.Svc, ModelID: c.ModelID, UserID: c.UserID, Content: c.Content, HTML: c.HTML, Created: c.Created,
 	}

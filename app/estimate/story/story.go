@@ -40,6 +40,9 @@ func NewStory(id uuid.UUID) *Story {
 }
 
 func (s *Story) Clone() *Story {
+	if s == nil {
+		return nil
+	}
 	return &Story{
 		ID: s.ID, EstimateID: s.EstimateID, Idx: s.Idx, UserID: s.UserID, Title: s.Title, Status: s.Status,
 		FinalVote: s.FinalVote, Created: s.Created, Updated: s.Updated,

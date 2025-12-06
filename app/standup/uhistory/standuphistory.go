@@ -33,6 +33,9 @@ func NewStandupHistory(slug string) *StandupHistory {
 }
 
 func (s *StandupHistory) Clone() *StandupHistory {
+	if s == nil {
+		return nil
+	}
 	return &StandupHistory{Slug: s.Slug, StandupID: s.StandupID, StandupName: s.StandupName, Created: s.Created}
 }
 

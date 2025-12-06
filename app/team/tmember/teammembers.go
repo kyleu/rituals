@@ -90,6 +90,12 @@ func (t TeamMembers) GetByUserIDs(userIDs ...uuid.UUID) TeamMembers {
 	})
 }
 
+func (t TeamMembers) ToMap() map[*PK]*TeamMember {
+	return lo.SliceToMap(t, func(xx *TeamMember) (*PK, *TeamMember) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (t TeamMembers) ToMaps() []util.ValueMap {
 	return lo.Map(t, func(xx *TeamMember, _ int) util.ValueMap {
 		return xx.ToMap()

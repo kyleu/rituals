@@ -40,6 +40,9 @@ func NewRetro(id uuid.UUID) *Retro {
 }
 
 func (r *Retro) Clone() *Retro {
+	if r == nil {
+		return nil
+	}
 	return &Retro{
 		ID: r.ID, Slug: r.Slug, Title: r.Title, Icon: r.Icon, Status: r.Status, TeamID: r.TeamID, SprintID: r.SprintID,
 		Categories: util.ArrayCopy(r.Categories), Created: r.Created, Updated: r.Updated,

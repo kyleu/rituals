@@ -47,6 +47,9 @@ func NewStandupMember(standupID uuid.UUID, userID uuid.UUID) *StandupMember {
 }
 
 func (s *StandupMember) Clone() *StandupMember {
+	if s == nil {
+		return nil
+	}
 	return &StandupMember{
 		StandupID: s.StandupID, UserID: s.UserID, Name: s.Name, Picture: s.Picture, Role: s.Role, Created: s.Created,
 		Updated: s.Updated,

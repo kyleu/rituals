@@ -128,6 +128,12 @@ func (s Standups) GetBySprintIDs(sprintIDs ...*uuid.UUID) Standups {
 	})
 }
 
+func (s Standups) ToMap() map[uuid.UUID]*Standup {
+	return lo.SliceToMap(s, func(xx *Standup) (uuid.UUID, *Standup) {
+		return xx.ID, xx
+	})
+}
+
 func (s Standups) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *Standup, _ int) util.ValueMap {
 		return xx.ToMap()

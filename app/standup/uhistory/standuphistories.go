@@ -73,6 +73,12 @@ func (s StandupHistories) GetByStandupIDs(standupIDs ...uuid.UUID) StandupHistor
 	})
 }
 
+func (s StandupHistories) ToMap() map[string]*StandupHistory {
+	return lo.SliceToMap(s, func(xx *StandupHistory) (string, *StandupHistory) {
+		return xx.Slug, xx
+	})
+}
+
 func (s StandupHistories) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *StandupHistory, _ int) util.ValueMap {
 		return xx.ToMap()

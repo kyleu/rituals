@@ -47,6 +47,9 @@ func NewEstimateMember(estimateID uuid.UUID, userID uuid.UUID) *EstimateMember {
 }
 
 func (e *EstimateMember) Clone() *EstimateMember {
+	if e == nil {
+		return nil
+	}
 	return &EstimateMember{
 		EstimateID: e.EstimateID, UserID: e.UserID, Name: e.Name, Picture: e.Picture, Role: e.Role, Created: e.Created,
 		Updated: e.Updated,

@@ -47,6 +47,9 @@ func NewTeamMember(teamID uuid.UUID, userID uuid.UUID) *TeamMember {
 }
 
 func (t *TeamMember) Clone() *TeamMember {
+	if t == nil {
+		return nil
+	}
 	return &TeamMember{
 		TeamID: t.TeamID, UserID: t.UserID, Name: t.Name, Picture: t.Picture, Role: t.Role, Created: t.Created,
 		Updated: t.Updated,

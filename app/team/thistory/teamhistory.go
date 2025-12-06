@@ -33,6 +33,9 @@ func NewTeamHistory(slug string) *TeamHistory {
 }
 
 func (t *TeamHistory) Clone() *TeamHistory {
+	if t == nil {
+		return nil
+	}
 	return &TeamHistory{Slug: t.Slug, TeamID: t.TeamID, TeamName: t.TeamName, Created: t.Created}
 }
 

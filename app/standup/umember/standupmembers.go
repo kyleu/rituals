@@ -90,6 +90,12 @@ func (s StandupMembers) GetByUserIDs(userIDs ...uuid.UUID) StandupMembers {
 	})
 }
 
+func (s StandupMembers) ToMap() map[*PK]*StandupMember {
+	return lo.SliceToMap(s, func(xx *StandupMember) (*PK, *StandupMember) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (s StandupMembers) ToMaps() []util.ValueMap {
 	return lo.Map(s, func(xx *StandupMember, _ int) util.ValueMap {
 		return xx.ToMap()

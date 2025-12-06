@@ -37,6 +37,9 @@ func NewTeam(id uuid.UUID) *Team {
 }
 
 func (t *Team) Clone() *Team {
+	if t == nil {
+		return nil
+	}
 	return &Team{
 		ID: t.ID, Slug: t.Slug, Title: t.Title, Icon: t.Icon, Status: t.Status, Created: t.Created, Updated: t.Updated,
 	}

@@ -90,6 +90,12 @@ func (v Votes) GetByUserIDs(userIDs ...uuid.UUID) Votes {
 	})
 }
 
+func (v Votes) ToMap() map[*PK]*Vote {
+	return lo.SliceToMap(v, func(xx *Vote) (*PK, *Vote) {
+		return xx.ToPK(), xx
+	})
+}
+
 func (v Votes) ToMaps() []util.ValueMap {
 	return lo.Map(v, func(xx *Vote, _ int) util.ValueMap {
 		return xx.ToMap()
