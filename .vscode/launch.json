@@ -1,0 +1,47 @@
+{
+  "configurations": [
+    {
+      "mode": "local",
+      "name": "Attach to rituals.dev",
+      "processId": "rituals",
+      "request": "attach",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/views",
+          "to": "views"
+        }
+      ],
+      "type": "go"
+    },
+    {
+      "mode": "auto",
+      "name": "Start rituals.dev",
+      "program": "rituals.dev",
+      "request": "launch",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/views",
+          "to": "views"
+        }
+      ],
+      "type": "go"
+    },
+    {
+      "args": [
+        "upgrade"
+      ],
+      "mode": "auto",
+      "name": "Start rituals.dev",
+      "program": "rituals.dev",
+      "request": "launch",
+      "substitutePath": [
+        {
+          "from": "${workspaceFolder}/views",
+          "to": "views"
+        }
+      ],
+      "type": "go"
+    }
+  ],
+  "version": "0.2.0"
+}
