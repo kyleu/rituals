@@ -1,8 +1,6 @@
 package umember
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (s *StandupMember) PublicWebPath(uslug string) string {
 	if uslug == "" {

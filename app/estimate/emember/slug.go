@@ -1,8 +1,6 @@
 package emember
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (e *EstimateMember) PublicWebPath(eslug string) string {
 	if eslug == "" {

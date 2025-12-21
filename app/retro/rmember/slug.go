@@ -1,8 +1,6 @@
 package rmember
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (r *RetroMember) PublicWebPath(rslug string) string {
 	if rslug == "" {

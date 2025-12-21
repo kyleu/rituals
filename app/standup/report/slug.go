@@ -1,8 +1,6 @@
 package report
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (r *Report) PublicWebPath(uslug string) string {
 	if uslug == "" {

@@ -1,8 +1,6 @@
 package tmember
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (t *TeamMember) PublicWebPath(tslug string) string {
 	if tslug == "" {

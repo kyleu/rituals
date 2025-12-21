@@ -1,8 +1,6 @@
 package smember
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (s *SprintMember) PublicWebPath(sslug string) string {
 	if sslug == "" {

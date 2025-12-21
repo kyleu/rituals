@@ -1,8 +1,6 @@
 package cmenu
 
-import (
-	"github.com/kyleu/rituals/app/lib/menu"
-)
+import "github.com/kyleu/rituals/app/lib/menu"
 
 type Breadcrumbs []string
 

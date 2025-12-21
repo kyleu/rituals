@@ -1,8 +1,6 @@
 package story
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func (s *Story) PublicWebPath(eslug string) string {
 	if eslug == "" {

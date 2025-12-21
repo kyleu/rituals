@@ -1,8 +1,6 @@
 package auth
 
-import (
-	"github.com/kyleu/rituals/app/util"
-)
+import "github.com/kyleu/rituals/app/util"
 
 type Service struct {
 	baseURL   string
