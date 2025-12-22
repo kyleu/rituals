@@ -26,7 +26,7 @@ var (
 )
 
 //line views/vauth/Form.html:8
-func StreamSigninTable(qw422016 *qt422016.Writer, prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) {
+func StreamSigninTable(qw422016 *qt422016.Writer, as *app.State, prvs auth.Providers, referrer string, ps *cutil.PageState) {
 //line views/vauth/Form.html:8
 	qw422016.N().S(`
 `)
@@ -141,22 +141,22 @@ func StreamSigninTable(qw422016 *qt422016.Writer, prvs auth.Providers, referrer 
 }
 
 //line views/vauth/Form.html:39
-func WriteSigninTable(qq422016 qtio422016.Writer, prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) {
+func WriteSigninTable(qq422016 qtio422016.Writer, as *app.State, prvs auth.Providers, referrer string, ps *cutil.PageState) {
 //line views/vauth/Form.html:39
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vauth/Form.html:39
-	StreamSigninTable(qw422016, prvs, referrer, as, ps)
+	StreamSigninTable(qw422016, as, prvs, referrer, ps)
 //line views/vauth/Form.html:39
 	qt422016.ReleaseWriter(qw422016)
 //line views/vauth/Form.html:39
 }
 
 //line views/vauth/Form.html:39
-func SigninTable(prvs auth.Providers, referrer string, as *app.State, ps *cutil.PageState) string {
+func SigninTable(as *app.State, prvs auth.Providers, referrer string, ps *cutil.PageState) string {
 //line views/vauth/Form.html:39
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vauth/Form.html:39
-	WriteSigninTable(qb422016, prvs, referrer, as, ps)
+	WriteSigninTable(qb422016, as, prvs, referrer, ps)
 //line views/vauth/Form.html:39
 	qs422016 := string(qb422016.B)
 //line views/vauth/Form.html:39

@@ -24,7 +24,7 @@ var (
 )
 
 //line views/vauth/Permissions.html:6
-func StreamPermissions(qw422016 *qt422016.Writer, perms user.Permissions, as *app.State) {
+func StreamPermissions(qw422016 *qt422016.Writer, as *app.State, perms user.Permissions) {
 //line views/vauth/Permissions.html:6
 	qw422016.N().S(`
 `)
@@ -79,22 +79,22 @@ func StreamPermissions(qw422016 *qt422016.Writer, perms user.Permissions, as *ap
 }
 
 //line views/vauth/Permissions.html:32
-func WritePermissions(qq422016 qtio422016.Writer, perms user.Permissions, as *app.State) {
+func WritePermissions(qq422016 qtio422016.Writer, as *app.State, perms user.Permissions) {
 //line views/vauth/Permissions.html:32
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vauth/Permissions.html:32
-	StreamPermissions(qw422016, perms, as)
+	StreamPermissions(qw422016, as, perms)
 //line views/vauth/Permissions.html:32
 	qt422016.ReleaseWriter(qw422016)
 //line views/vauth/Permissions.html:32
 }
 
 //line views/vauth/Permissions.html:32
-func Permissions(perms user.Permissions, as *app.State) string {
+func Permissions(as *app.State, perms user.Permissions) string {
 //line views/vauth/Permissions.html:32
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vauth/Permissions.html:32
-	WritePermissions(qb422016, perms, as)
+	WritePermissions(qb422016, as, perms)
 //line views/vauth/Permissions.html:32
 	qs422016 := string(qb422016.B)
 //line views/vauth/Permissions.html:32

@@ -118,7 +118,7 @@ func (p *Error) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 	qw422016.N().S(`
   `)
 //line views/verror/Error.html:38
-	StreamDetail(qw422016, p.Err, as, ps)
+	StreamDetail(qw422016, as, p.Err, ps)
 //line views/verror/Error.html:38
 	qw422016.N().S(`
 `)
@@ -152,7 +152,7 @@ func (p *Error) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/verror/Error.html:41
-func StreamDetail(qw422016 *qt422016.Writer, ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) {
+func StreamDetail(qw422016 *qt422016.Writer, as *app.State, ed *util.ErrorDetail, ps *cutil.PageState) {
 //line views/verror/Error.html:41
 	qw422016.N().S(`
   <div class="card">
@@ -205,22 +205,22 @@ func StreamDetail(qw422016 *qt422016.Writer, ed *util.ErrorDetail, as *app.State
 }
 
 //line views/verror/Error.html:53
-func WriteDetail(qq422016 qtio422016.Writer, ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) {
+func WriteDetail(qq422016 qtio422016.Writer, as *app.State, ed *util.ErrorDetail, ps *cutil.PageState) {
 //line views/verror/Error.html:53
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/verror/Error.html:53
-	StreamDetail(qw422016, ed, as, ps)
+	StreamDetail(qw422016, as, ed, ps)
 //line views/verror/Error.html:53
 	qt422016.ReleaseWriter(qw422016)
 //line views/verror/Error.html:53
 }
 
 //line views/verror/Error.html:53
-func Detail(ed *util.ErrorDetail, as *app.State, ps *cutil.PageState) string {
+func Detail(as *app.State, ed *util.ErrorDetail, ps *cutil.PageState) string {
 //line views/verror/Error.html:53
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/verror/Error.html:53
-	WriteDetail(qb422016, ed, as, ps)
+	WriteDetail(qb422016, as, ed, ps)
 //line views/verror/Error.html:53
 	qs422016 := string(qb422016.B)
 //line views/verror/Error.html:53

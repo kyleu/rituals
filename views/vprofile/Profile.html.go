@@ -46,7 +46,7 @@ func (p *Profile) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 	qw422016.N().S(`
   `)
 //line views/vprofile/Profile.html:23
-	vauth.StreamSigninTable(qw422016, p.Providers, p.Referrer, as, ps)
+	vauth.StreamSigninTable(qw422016, as, p.Providers, p.Referrer, ps)
 //line views/vprofile/Profile.html:23
 	qw422016.N().S(`
   <form action="" method="post">

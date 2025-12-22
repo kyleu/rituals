@@ -58,7 +58,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = fe.Estimate.TitleString()
 		if fe.Registered {
-			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, as, ps.Authed, ps.Admin, ps.Profile, ps.Params, ps.Logger)
 		}
 		ps.Data = fe
 		if err != nil {

@@ -47,7 +47,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = fu.Standup.TitleString()
 		if fu.Registered {
-			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, as, ps.Authed, ps.Admin, ps.Profile, ps.Params, ps.Logger)
 		}
 		ps.Data = fu
 		return controller.Render(r, as, &vwstandup.StandupWorkspace{FullStandup: fu, Teams: ws.Teams, Sprints: ws.Sprints}, ps, "standups", fu.Standup.ID.String())

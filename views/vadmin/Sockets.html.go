@@ -266,7 +266,7 @@ func (p *Channel) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil
 //line views/vadmin/Sockets.html:102
 		qw422016.N().S(`  `)
 //line views/vadmin/Sockets.html:103
-		StreamConnectionCard(qw422016, m, as, ps)
+		StreamConnectionCard(qw422016, as, m, ps)
 //line views/vadmin/Sockets.html:103
 		qw422016.N().S(`
 `)
@@ -313,7 +313,7 @@ func (p *Connection) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 	qw422016.N().S(`
   `)
 //line views/vadmin/Sockets.html:113
-	StreamConnectionCard(qw422016, p.Connection, as, ps)
+	StreamConnectionCard(qw422016, as, p.Connection, ps)
 //line views/vadmin/Sockets.html:113
 	qw422016.N().S(`
   <div class="card">
@@ -383,7 +383,7 @@ func (p *Connection) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vadmin/Sockets.html:132
-func StreamConnectionCard(qw422016 *qt422016.Writer, c *websocket.Connection, as *app.State, ps *cutil.PageState) {
+func StreamConnectionCard(qw422016 *qt422016.Writer, as *app.State, c *websocket.Connection, ps *cutil.PageState) {
 //line views/vadmin/Sockets.html:132
 	qw422016.N().S(`
   <div class="card">
@@ -510,22 +510,22 @@ func StreamConnectionCard(qw422016 *qt422016.Writer, c *websocket.Connection, as
 }
 
 //line views/vadmin/Sockets.html:182
-func WriteConnectionCard(qq422016 qtio422016.Writer, c *websocket.Connection, as *app.State, ps *cutil.PageState) {
+func WriteConnectionCard(qq422016 qtio422016.Writer, as *app.State, c *websocket.Connection, ps *cutil.PageState) {
 //line views/vadmin/Sockets.html:182
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vadmin/Sockets.html:182
-	StreamConnectionCard(qw422016, c, as, ps)
+	StreamConnectionCard(qw422016, as, c, ps)
 //line views/vadmin/Sockets.html:182
 	qt422016.ReleaseWriter(qw422016)
 //line views/vadmin/Sockets.html:182
 }
 
 //line views/vadmin/Sockets.html:182
-func ConnectionCard(c *websocket.Connection, as *app.State, ps *cutil.PageState) string {
+func ConnectionCard(as *app.State, c *websocket.Connection, ps *cutil.PageState) string {
 //line views/vadmin/Sockets.html:182
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vadmin/Sockets.html:182
-	WriteConnectionCard(qb422016, c, as, ps)
+	WriteConnectionCard(qb422016, as, c, ps)
 //line views/vadmin/Sockets.html:182
 	qs422016 := string(qb422016.B)
 //line views/vadmin/Sockets.html:182

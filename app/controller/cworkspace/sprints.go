@@ -44,7 +44,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = fs.Sprint.TitleString()
 		if fs.Registered {
-			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, as, ps.Authed, ps.Admin, ps.Profile, ps.Params, ps.Logger)
 		}
 		ps.Data = fs
 		return controller.Render(r, as, &vwsprint.SprintWorkspace{FullSprint: fs, Teams: ws.Teams}, ps, "sprints", fs.Sprint.ID.String())

@@ -218,7 +218,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 
   `)
 //line views/vadmin/Settings.html:67
-	vauth.StreamPermissions(qw422016, p.Perms, as)
+	vauth.StreamPermissions(qw422016, as, p.Perms)
 //line views/vadmin/Settings.html:67
 	qw422016.N().S(`
 `)

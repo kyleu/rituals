@@ -37,7 +37,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = ft.Team.TitleString()
 		if ft.Registered {
-			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, as, ps.Authed, ps.Admin, ps.Profile, ps.Params, ps.Logger)
 		}
 		ps.Data = ft
 		return controller.Render(r, as, &vwteam.TeamWorkspace{FullTeam: ft}, ps, "teams", ft.Team.ID.String())

@@ -130,7 +130,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vdatabase/Detail.html:47
 		qw422016.N().S(`  `)
 //line views/vdatabase/Detail.html:48
-		streamrecentStatements(qw422016, p.Recent, p.Svc, as, ps)
+		streamrecentStatements(qw422016, as, p.Recent, p.Svc, ps)
 //line views/vdatabase/Detail.html:48
 		qw422016.N().S(`
 `)
@@ -139,7 +139,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vdatabase/Detail.html:49
 		qw422016.N().S(`  `)
 //line views/vdatabase/Detail.html:50
-		streamtableSizes(qw422016, p.Svc.Key, p.Sizes, as, ps)
+		streamtableSizes(qw422016, as, p.Svc.Key, p.Sizes, ps)
 //line views/vdatabase/Detail.html:50
 		qw422016.N().S(`
 `)
@@ -148,7 +148,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vdatabase/Detail.html:51
 		qw422016.N().S(`  `)
 //line views/vdatabase/Detail.html:52
-		streamsqlEditor(qw422016, p.SQL, p.Svc, p.Commit, p.Columns, p.Results, p.Timing, as, ps)
+		streamsqlEditor(qw422016, as, p.SQL, p.Svc, p.Commit, p.Columns, p.Results, p.Timing, ps)
 //line views/vdatabase/Detail.html:52
 		qw422016.N().S(`
 `)
@@ -184,7 +184,7 @@ func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
 }
 
 //line views/vdatabase/Detail.html:56
-func streamrecentStatements(qw422016 *qt422016.Writer, recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) {
+func streamrecentStatements(qw422016 *qt422016.Writer, as *app.State, recent database.DebugStatements, svc *database.Service, ps *cutil.PageState) {
 //line views/vdatabase/Detail.html:56
 	qw422016.N().S(`
   <div class="card">
@@ -294,22 +294,22 @@ func streamrecentStatements(qw422016 *qt422016.Writer, recent database.DebugStat
 }
 
 //line views/vdatabase/Detail.html:102
-func writerecentStatements(qq422016 qtio422016.Writer, recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) {
+func writerecentStatements(qq422016 qtio422016.Writer, as *app.State, recent database.DebugStatements, svc *database.Service, ps *cutil.PageState) {
 //line views/vdatabase/Detail.html:102
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vdatabase/Detail.html:102
-	streamrecentStatements(qw422016, recent, svc, as, ps)
+	streamrecentStatements(qw422016, as, recent, svc, ps)
 //line views/vdatabase/Detail.html:102
 	qt422016.ReleaseWriter(qw422016)
 //line views/vdatabase/Detail.html:102
 }
 
 //line views/vdatabase/Detail.html:102
-func recentStatements(recent database.DebugStatements, svc *database.Service, as *app.State, ps *cutil.PageState) string {
+func recentStatements(as *app.State, recent database.DebugStatements, svc *database.Service, ps *cutil.PageState) string {
 //line views/vdatabase/Detail.html:102
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vdatabase/Detail.html:102
-	writerecentStatements(qb422016, recent, svc, as, ps)
+	writerecentStatements(qb422016, as, recent, svc, ps)
 //line views/vdatabase/Detail.html:102
 	qs422016 := string(qb422016.B)
 //line views/vdatabase/Detail.html:102
@@ -320,7 +320,7 @@ func recentStatements(recent database.DebugStatements, svc *database.Service, as
 }
 
 //line views/vdatabase/Detail.html:104
-func streamtableSizes(qw422016 *qt422016.Writer, key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) {
+func streamtableSizes(qw422016 *qt422016.Writer, as *app.State, key string, sizes database.TableSizes, ps *cutil.PageState) {
 //line views/vdatabase/Detail.html:104
 	qw422016.N().S(`
   <div class="card">
@@ -392,22 +392,22 @@ func streamtableSizes(qw422016 *qt422016.Writer, key string, sizes database.Tabl
 }
 
 //line views/vdatabase/Detail.html:131
-func writetableSizes(qq422016 qtio422016.Writer, key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) {
+func writetableSizes(qq422016 qtio422016.Writer, as *app.State, key string, sizes database.TableSizes, ps *cutil.PageState) {
 //line views/vdatabase/Detail.html:131
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vdatabase/Detail.html:131
-	streamtableSizes(qw422016, key, sizes, as, ps)
+	streamtableSizes(qw422016, as, key, sizes, ps)
 //line views/vdatabase/Detail.html:131
 	qt422016.ReleaseWriter(qw422016)
 //line views/vdatabase/Detail.html:131
 }
 
 //line views/vdatabase/Detail.html:131
-func tableSizes(key string, sizes database.TableSizes, as *app.State, ps *cutil.PageState) string {
+func tableSizes(as *app.State, key string, sizes database.TableSizes, ps *cutil.PageState) string {
 //line views/vdatabase/Detail.html:131
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vdatabase/Detail.html:131
-	writetableSizes(qb422016, key, sizes, as, ps)
+	writetableSizes(qb422016, as, key, sizes, ps)
 //line views/vdatabase/Detail.html:131
 	qs422016 := string(qb422016.B)
 //line views/vdatabase/Detail.html:131
@@ -418,7 +418,7 @@ func tableSizes(key string, sizes database.TableSizes, as *app.State, ps *cutil.
 }
 
 //line views/vdatabase/Detail.html:133
-func streamsqlEditor(qw422016 *qt422016.Writer, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) {
+func streamsqlEditor(qw422016 *qt422016.Writer, as *app.State, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, ps *cutil.PageState) {
 //line views/vdatabase/Detail.html:133
 	qw422016.N().S(`
   <div class="card">
@@ -543,22 +543,22 @@ func streamsqlEditor(qw422016 *qt422016.Writer, sql string, svc *database.Servic
 }
 
 //line views/vdatabase/Detail.html:183
-func writesqlEditor(qq422016 qtio422016.Writer, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) {
+func writesqlEditor(qq422016 qtio422016.Writer, as *app.State, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, ps *cutil.PageState) {
 //line views/vdatabase/Detail.html:183
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vdatabase/Detail.html:183
-	streamsqlEditor(qw422016, sql, svc, commit, columns, results, timing, as, ps)
+	streamsqlEditor(qw422016, as, sql, svc, commit, columns, results, timing, ps)
 //line views/vdatabase/Detail.html:183
 	qt422016.ReleaseWriter(qw422016)
 //line views/vdatabase/Detail.html:183
 }
 
 //line views/vdatabase/Detail.html:183
-func sqlEditor(sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, as *app.State, ps *cutil.PageState) string {
+func sqlEditor(as *app.State, sql string, svc *database.Service, commit bool, columns []string, results [][]any, timing int, ps *cutil.PageState) string {
 //line views/vdatabase/Detail.html:183
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vdatabase/Detail.html:183
-	writesqlEditor(qb422016, sql, svc, commit, columns, results, timing, as, ps)
+	writesqlEditor(qb422016, as, sql, svc, commit, columns, results, timing, ps)
 //line views/vdatabase/Detail.html:183
 	qs422016 := string(qb422016.B)
 //line views/vdatabase/Detail.html:183

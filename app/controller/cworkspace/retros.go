@@ -49,7 +49,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.Title = fr.Retro.TitleString()
 		if fr.Registered {
-			ps.Menu, _, err = cmenu.MenuFor(ps.Context, ps.Authed, ps.Admin, ps.Profile, ps.Params, as, ps.Logger)
+			ps.Menu, _, err = cmenu.MenuFor(ps.Context, as, ps.Authed, ps.Admin, ps.Profile, ps.Params, ps.Logger)
 		}
 		ps.Data = fr
 		v := &vwretro.RetroWorkspace{FullRetro: fr, Teams: ws.Teams, Sprints: ws.Sprints}
