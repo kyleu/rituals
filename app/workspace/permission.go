@@ -19,7 +19,7 @@ func loadPermissionsForm(frm util.ValueMap) util.Permissions {
 			case util.KeySprint:
 				ret = append(ret, &util.Permission{Key: util.KeySprint, Value: "true"})
 			default:
-				l, r := util.StringSplit(k, '-', true)
+				l, r := util.StringCut(k, '-', true)
 				curr := lo.FindOrElse(ret, nil, func(x *util.Permission) bool {
 					return x.Key == l
 				})

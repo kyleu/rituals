@@ -19,7 +19,7 @@ func (s *Service) SocketHandler(
 	ctx context.Context, _ *websocket.Service, conn *websocket.Connection, svc string, cmd string, param []byte, logger util.Logger,
 ) error {
 	logger.Infof("processing [%s] message of type [%s]", svc, cmd)
-	svc, idStr := util.StringSplit(svc, ':', true)
+	svc, idStr := util.StringCut(svc, ':', true)
 	id := util.UUIDFromString(idStr)
 	if id == nil {
 		return errors.Errorf("invalid ID [%s]", idStr)
@@ -64,7 +64,7 @@ func (s *Service) SocketHandler(
 func (s *Service) SocketClose(_ *websocket.Service, conn *websocket.Connection, logger util.Logger) error {
 	param := util.ValueMap{"userID": conn.Profile.ID, "connected": false}
 	for _, ch := range conn.Channels {
-		svc, modelIDStr := util.StringSplit(ch, ':', true)
+		svc, modelIDStr := util.StringCut(ch, ':', true)
 		if modelIDStr == "" {
 			continue
 		}
