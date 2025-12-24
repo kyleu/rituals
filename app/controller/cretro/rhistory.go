@@ -53,7 +53,7 @@ func RetroHistoryDetail(w http.ResponseWriter, r *http.Request) {
 func RetroHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rhistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rhistory.RetroHistory{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = rhistory.RandomRetroHistory()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {

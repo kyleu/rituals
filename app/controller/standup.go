@@ -20,7 +20,7 @@ import (
 
 func StandupList(w http.ResponseWriter, r *http.Request) {
 	Act("standup.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
 		prms := ps.Params.Sanitized("standup", ps.Logger)
 		var ret standup.Standups
 		var err error
@@ -113,7 +113,7 @@ func StandupDetail(w http.ResponseWriter, r *http.Request) {
 func StandupCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("standup.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &standup.Standup{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = standup.RandomStandup()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {

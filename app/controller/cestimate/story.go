@@ -19,7 +19,7 @@ import (
 
 func StoryList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("story.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
 		prms := ps.Params.Sanitized("story", ps.Logger)
 		var ret story.Stories
 		var err error
@@ -87,7 +87,7 @@ func StoryDetail(w http.ResponseWriter, r *http.Request) {
 func StoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("story.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &story.Story{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = story.RandomStory()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {

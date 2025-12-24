@@ -20,7 +20,7 @@ import (
 
 func EstimateList(w http.ResponseWriter, r *http.Request) {
 	Act("estimate.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
 		prms := ps.Params.Sanitized("estimate", ps.Logger)
 		var ret estimate.Estimates
 		var err error
@@ -113,7 +113,7 @@ func EstimateDetail(w http.ResponseWriter, r *http.Request) {
 func EstimateCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("estimate.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &estimate.Estimate{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = estimate.RandomEstimate()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {

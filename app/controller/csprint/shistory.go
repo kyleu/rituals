@@ -53,7 +53,7 @@ func SprintHistoryDetail(w http.ResponseWriter, r *http.Request) {
 func SprintHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("shistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &shistory.SprintHistory{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = shistory.RandomSprintHistory()
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {

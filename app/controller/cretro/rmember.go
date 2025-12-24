@@ -65,7 +65,7 @@ func RetroMemberDetail(w http.ResponseWriter, r *http.Request) {
 func RetroMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rmember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rmember.RetroMember{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = rmember.RandomRetroMember()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {

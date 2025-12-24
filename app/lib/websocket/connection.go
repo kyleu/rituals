@@ -36,6 +36,7 @@ func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts
 		Profile:  profile,
 		Accounts: accounts,
 		Svc:      svc,
+		Channels: []string{},
 		Started:  util.TimeCurrent(),
 		Stats:    NewStats(),
 		handler:  handler,

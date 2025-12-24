@@ -16,7 +16,7 @@ import (
 
 func TeamList(w http.ResponseWriter, r *http.Request) {
 	Act("team.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
 		prms := ps.Params.Sanitized("team", ps.Logger)
 		var ret team.Teams
 		var err error
@@ -101,7 +101,7 @@ func TeamDetail(w http.ResponseWriter, r *http.Request) {
 func TeamCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("team.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &team.Team{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = team.RandomTeam()
 		}
 		ps.SetTitleAndData("Create [Team]", ret)

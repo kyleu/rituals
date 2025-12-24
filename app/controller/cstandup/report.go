@@ -65,7 +65,7 @@ func ReportDetail(w http.ResponseWriter, r *http.Request) {
 func ReportCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("report.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &report.Report{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = report.RandomReport()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {

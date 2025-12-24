@@ -65,7 +65,7 @@ func TeamMemberDetail(w http.ResponseWriter, r *http.Request) {
 func TeamMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("tmember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tmember.TeamMember{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = tmember.RandomTeamMember()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {

@@ -52,7 +52,7 @@ func EmailDetail(w http.ResponseWriter, r *http.Request) {
 func EmailCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("email.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &email.Email{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = email.RandomEmail()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
