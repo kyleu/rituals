@@ -40,6 +40,9 @@ func UserFromMap(m util.ValueMap, setPK bool) (*User, util.ValueMap, error) {
 
 //nolint:lll
 func (u *User) ToOrderedMap() *util.OrderedMap[any] {
+	if u == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "id", V: u.ID}, {K: "name", V: u.Name}, {K: "picture", V: u.Picture}, {K: "created", V: u.Created}, {K: "updated", V: u.Updated}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

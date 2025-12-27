@@ -46,6 +46,9 @@ func StandupPermissionFromMap(m util.ValueMap, setPK bool) (*StandupPermission, 
 
 //nolint:lll
 func (s *StandupPermission) ToOrderedMap() *util.OrderedMap[any] {
+	if s == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "standupID", V: s.StandupID}, {K: "key", V: s.Key}, {K: "value", V: s.Value}, {K: "access", V: s.Access}, {K: "created", V: s.Created}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

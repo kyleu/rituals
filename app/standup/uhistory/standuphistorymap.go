@@ -39,6 +39,9 @@ func StandupHistoryFromMap(m util.ValueMap, setPK bool) (*StandupHistory, util.V
 }
 
 func (s *StandupHistory) ToOrderedMap() *util.OrderedMap[any] {
+	if s == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "slug", V: s.Slug}, {K: "standupID", V: s.StandupID}, {K: "standupName", V: s.StandupName}, {K: "created", V: s.Created}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

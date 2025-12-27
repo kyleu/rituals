@@ -69,6 +69,9 @@ func StoryFromMap(m util.ValueMap, setPK bool) (*Story, util.ValueMap, error) {
 
 //nolint:lll
 func (s *Story) ToOrderedMap() *util.OrderedMap[any] {
+	if s == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "id", V: s.ID}, {K: "estimateID", V: s.EstimateID}, {K: "idx", V: s.Idx}, {K: "userID", V: s.UserID}, {K: "title", V: s.Title}, {K: "status", V: s.Status}, {K: "finalVote", V: s.FinalVote}, {K: "created", V: s.Created}, {K: "updated", V: s.Updated}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

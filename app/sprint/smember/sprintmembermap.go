@@ -60,6 +60,9 @@ func SprintMemberFromMap(m util.ValueMap, setPK bool) (*SprintMember, util.Value
 
 //nolint:lll
 func (s *SprintMember) ToOrderedMap() *util.OrderedMap[any] {
+	if s == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "sprintID", V: s.SprintID}, {K: "userID", V: s.UserID}, {K: "name", V: s.Name}, {K: "picture", V: s.Picture}, {K: "role", V: s.Role}, {K: "created", V: s.Created}, {K: "updated", V: s.Updated}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

@@ -46,6 +46,9 @@ func SprintPermissionFromMap(m util.ValueMap, setPK bool) (*SprintPermission, ut
 
 //nolint:lll
 func (s *SprintPermission) ToOrderedMap() *util.OrderedMap[any] {
+	if s == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "sprintID", V: s.SprintID}, {K: "key", V: s.Key}, {K: "value", V: s.Value}, {K: "access", V: s.Access}, {K: "created", V: s.Created}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

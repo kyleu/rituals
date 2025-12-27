@@ -46,6 +46,9 @@ func TeamPermissionFromMap(m util.ValueMap, setPK bool) (*TeamPermission, util.V
 
 //nolint:lll
 func (t *TeamPermission) ToOrderedMap() *util.OrderedMap[any] {
+	if t == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "teamID", V: t.TeamID}, {K: "key", V: t.Key}, {K: "value", V: t.Value}, {K: "access", V: t.Access}, {K: "created", V: t.Created}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

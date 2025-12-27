@@ -61,6 +61,9 @@ func RetroFromMap(m util.ValueMap, setPK bool) (*Retro, util.ValueMap, error) {
 
 //nolint:lll
 func (r *Retro) ToOrderedMap() *util.OrderedMap[any] {
+	if r == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "id", V: r.ID}, {K: "slug", V: r.Slug}, {K: "title", V: r.Title}, {K: "icon", V: r.Icon}, {K: "status", V: r.Status}, {K: "teamID", V: r.TeamID}, {K: "sprintID", V: r.SprintID}, {K: "categories", V: r.Categories}, {K: "created", V: r.Created}, {K: "updated", V: r.Updated}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

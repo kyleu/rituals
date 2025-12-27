@@ -46,6 +46,9 @@ func EstimatePermissionFromMap(m util.ValueMap, setPK bool) (*EstimatePermission
 
 //nolint:lll
 func (e *EstimatePermission) ToOrderedMap() *util.OrderedMap[any] {
+	if e == nil {
+		return nil
+	}
 	pairs := util.OrderedPairs[any]{{K: "estimateID", V: e.EstimateID}, {K: "key", V: e.Key}, {K: "value", V: e.Value}, {K: "access", V: e.Access}, {K: "created", V: e.Created}}
 	return util.NewOrderedMap(false, 4, pairs...)
 }

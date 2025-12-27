@@ -16,7 +16,7 @@
     {
       "mode": "auto",
       "name": "Start rituals.dev",
-      "program": "rituals.dev",
+      "program": "main.go",
       "request": "launch",
       "substitutePath": [
         {
@@ -31,8 +31,8 @@
         "upgrade"
       ],
       "mode": "auto",
-      "name": "Start rituals.dev",
-      "program": "rituals.dev",
+      "name": "Upgrade rituals.dev",
+      "program": "main.go",
       "request": "launch",
       "substitutePath": [
         {
