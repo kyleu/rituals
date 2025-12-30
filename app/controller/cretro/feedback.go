@@ -65,7 +65,7 @@ func FeedbackDetail(w http.ResponseWriter, r *http.Request) {
 func FeedbackCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("feedback.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &feedback.Feedback{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = feedback.RandomFeedback()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {

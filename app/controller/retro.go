@@ -20,7 +20,7 @@ import (
 
 func RetroList(w http.ResponseWriter, r *http.Request) {
 	Act("retro.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
+		q := strings.TrimSpace(cutil.QueryStringString(ps.URI, "q"))
 		prms := ps.Params.Sanitized("retro", ps.Logger)
 		var ret retro.Retros
 		var err error
@@ -112,7 +112,7 @@ func RetroDetail(w http.ResponseWriter, r *http.Request) {
 func RetroCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("retro.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &retro.Retro{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = retro.RandomRetro()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {

@@ -53,7 +53,7 @@ func TeamPermissionDetail(w http.ResponseWriter, r *http.Request) {
 func TeamPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("tpermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &tpermission.TeamPermission{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = tpermission.RandomTeamPermission()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {

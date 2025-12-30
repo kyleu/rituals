@@ -54,7 +54,7 @@ func StandupHistoryDetail(w http.ResponseWriter, r *http.Request) {
 func StandupHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("uhistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &uhistory.StandupHistory{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = uhistory.RandomStandupHistory()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {

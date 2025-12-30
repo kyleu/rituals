@@ -52,7 +52,7 @@ func CommentDetail(w http.ResponseWriter, r *http.Request) {
 func CommentCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("comment.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &comment.Comment{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = comment.RandomComment()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {

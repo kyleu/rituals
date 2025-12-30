@@ -54,7 +54,7 @@ func EstimateHistoryDetail(w http.ResponseWriter, r *http.Request) {
 func EstimateHistoryCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("ehistory.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &ehistory.EstimateHistory{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = ehistory.RandomEstimateHistory()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {

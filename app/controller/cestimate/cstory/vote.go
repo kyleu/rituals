@@ -65,7 +65,7 @@ func VoteDetail(w http.ResponseWriter, r *http.Request) {
 func VoteCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("vote.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &vote.Vote{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = vote.RandomVote()
 			randomStory, err := as.Services.Story.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStory != nil {

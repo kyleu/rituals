@@ -54,7 +54,7 @@ func StandupPermissionDetail(w http.ResponseWriter, r *http.Request) {
 func StandupPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("upermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &upermission.StandupPermission{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = upermission.RandomStandupPermission()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {

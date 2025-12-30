@@ -19,7 +19,7 @@ import (
 
 func SprintList(w http.ResponseWriter, r *http.Request) {
 	Act("sprint.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
+		q := strings.TrimSpace(cutil.QueryStringString(ps.URI, "q"))
 		prms := ps.Params.Sanitized("sprint", ps.Logger)
 		var ret sprint.Sprints
 		var err error
@@ -111,7 +111,7 @@ func SprintDetail(w http.ResponseWriter, r *http.Request) {
 func SprintCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("sprint.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &sprint.Sprint{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = sprint.RandomSprint()
 			randomTeam, err := as.Services.Team.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomTeam != nil {

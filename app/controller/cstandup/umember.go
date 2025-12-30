@@ -65,7 +65,7 @@ func StandupMemberDetail(w http.ResponseWriter, r *http.Request) {
 func StandupMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("umember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &umember.StandupMember{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = umember.RandomStandupMember()
 			randomStandup, err := as.Services.Standup.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomStandup != nil {

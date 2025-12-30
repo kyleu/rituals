@@ -54,7 +54,7 @@ func RetroPermissionDetail(w http.ResponseWriter, r *http.Request) {
 func RetroPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("rpermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &rpermission.RetroPermission{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = rpermission.RandomRetroPermission()
 			randomRetro, err := as.Services.Retro.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomRetro != nil {

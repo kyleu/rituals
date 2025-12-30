@@ -16,7 +16,7 @@ import (
 
 func UserList(w http.ResponseWriter, r *http.Request) {
 	Act("user.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
+		q := strings.TrimSpace(cutil.QueryStringString(ps.URI, "q"))
 		prms := ps.Params.Sanitized("user", ps.Logger)
 		var ret user.Users
 		var err error
@@ -131,7 +131,7 @@ func UserDetail(w http.ResponseWriter, r *http.Request) {
 func UserCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("user.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &user.User{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = user.RandomUser()
 		}
 		ps.SetTitleAndData("Create [User]", ret)

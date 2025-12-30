@@ -65,7 +65,7 @@ func EstimateMemberDetail(w http.ResponseWriter, r *http.Request) {
 func EstimateMemberCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("emember.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &emember.EstimateMember{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = emember.RandomEstimateMember()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {

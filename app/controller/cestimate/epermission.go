@@ -54,7 +54,7 @@ func EstimatePermissionDetail(w http.ResponseWriter, r *http.Request) {
 func EstimatePermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("epermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &epermission.EstimatePermission{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = epermission.RandomEstimatePermission()
 			randomEstimate, err := as.Services.Estimate.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomEstimate != nil {

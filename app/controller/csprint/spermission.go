@@ -54,7 +54,7 @@ func SprintPermissionDetail(w http.ResponseWriter, r *http.Request) {
 func SprintPermissionCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("spermission.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &spermission.SprintPermission{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = spermission.RandomSprintPermission()
 			randomSprint, err := as.Services.Sprint.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomSprint != nil {

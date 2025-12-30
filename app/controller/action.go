@@ -52,7 +52,7 @@ func ActionDetail(w http.ResponseWriter, r *http.Request) {
 func ActionCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("action.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &action.Action{}
-		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
+		if cutil.QueryStringString(ps.URI, "prototype") == util.KeyRandom {
 			ret = action.RandomAction()
 			randomUser, err := as.Services.User.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomUser != nil {
