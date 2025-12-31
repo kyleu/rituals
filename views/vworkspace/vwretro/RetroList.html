@@ -28,13 +28,13 @@
 
 {% func (p *RetroList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(`retro`, ps) %}{%s util.StringPlural(len(p.Retros), "Retro") %}</h3>
+    <h3>{%= components.SVGIcon(`retro`, ps) %} {%s util.StringPlural(len(p.Retros), "Retro") %}</h3>
     <em>{%s util.KeyRetroDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, r := range p.Retros -%}
         <tr>
-          <td><a href="{%s r.PublicWebPath() %}">{%= components.SVGRef(r.IconSafe(), 16, 16, "icon", ps) %}{%s r.TitleString() %}</a></td>
+          <td><a href="{%s r.PublicWebPath() %}">{%= components.SVGRef(r.IconSafe(), 16, 16, "icon", ps) %} {%s r.TitleString() %}</a></td>
           <td class="text-align-right">{%= view.Timestamp(&r.Created) %}</td>
         </tr>
         {%- endfor -%}

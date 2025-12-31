@@ -28,13 +28,13 @@
 
 {% func (p *StandupList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(util.KeyStandup, ps) %}{%s util.StringPlural(len(p.Standups), "Standup") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeyStandup, ps) %} {%s util.StringPlural(len(p.Standups), "Standup") %}</h3>
     <em>{%s util.KeyStandupDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, u := range p.Standups -%}
         <tr>
-          <td><a href="{%s u.PublicWebPath() %}">{%= components.SVGRef(u.IconSafe(), 16, 16, "icon", ps) %}{%s u.TitleString() %}</a></td>
+          <td><a href="{%s u.PublicWebPath() %}">{%= components.SVGRef(u.IconSafe(), 16, 16, "icon", ps) %} {%s u.TitleString() %}</a></td>
           <td class="text-align-right">{%= view.Timestamp(&u.Created) %}</td>
         </tr>
         {%- endfor -%}

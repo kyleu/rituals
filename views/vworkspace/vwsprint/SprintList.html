@@ -26,13 +26,13 @@
 
 {% func (p *SprintList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(util.KeySprint, ps) %}{%s util.StringPlural(len(p.Sprints), "Sprint") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeySprint, ps) %} {%s util.StringPlural(len(p.Sprints), "Sprint") %}</h3>
     <em>{%s util.KeySprintDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, s := range p.Sprints -%}
         <tr>
-          <td><a href="{%s s.PublicWebPath() %}">{%= components.SVGRef(s.IconSafe(), 16, 16, "icon", ps) %}{%s s.TitleString() %}</a></td>
+          <td><a href="{%s s.PublicWebPath() %}">{%= components.SVGRef(s.IconSafe(), 16, 16, "icon", ps) %} {%s s.TitleString() %}</a></td>
           <td class="text-align-right">{%= view.Timestamp(&s.Created) %}</td>
         </tr>
         {%- endfor -%}

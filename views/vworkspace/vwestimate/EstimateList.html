@@ -28,13 +28,13 @@
 
 {% func (p *EstimateList) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%= components.SVGIcon(util.KeyEstimate, ps) %}{%s util.StringPlural(len(p.Estimates), "Estimate") %}</h3>
+    <h3>{%= components.SVGIcon(util.KeyEstimate, ps) %} {%s util.StringPlural(len(p.Estimates), "Estimate") %}</h3>
     <em>{%s util.KeyEstimateDesc %}</em>
     <table class="mt expanded">
       <tbody>
         {%- for _, e := range p.Estimates -%}
         <tr>
-          <td><a href="{%s e.PublicWebPath() %}">{%= components.SVGRef(e.IconSafe(), 16, 16, "icon", ps) %}{%s e.TitleString() %}</a></td>
+          <td><a href="{%s e.PublicWebPath() %}">{%= components.SVGRef(e.IconSafe(), 16, 16, "icon", ps) %} {%s e.TitleString() %}</a></td>
           <td class="text-align-right">{%= view.Timestamp(&e.Created) %}</td>
         </tr>
         {%- endfor -%}
