@@ -56,6 +56,8 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 //line views/vworkspace/vwstandup/StandupList.html:31
 	components.StreamSVGIcon(qw422016, util.KeyStandup, ps)
 //line views/vworkspace/vwstandup/StandupList.html:31
+	qw422016.N().S(` `)
+//line views/vworkspace/vwstandup/StandupList.html:31
 	qw422016.E().S(util.StringPlural(len(p.Standups), "Standup"))
 //line views/vworkspace/vwstandup/StandupList.html:31
 	qw422016.N().S(`</h3>
@@ -78,6 +80,8 @@ func (p *StandupList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *c
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwstandup/StandupList.html:37
 		components.StreamSVGRef(qw422016, u.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwstandup/StandupList.html:37
+		qw422016.N().S(` `)
 //line views/vworkspace/vwstandup/StandupList.html:37
 		qw422016.E().S(u.TitleString())
 //line views/vworkspace/vwstandup/StandupList.html:37

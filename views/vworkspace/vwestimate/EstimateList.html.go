@@ -56,6 +56,8 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 //line views/vworkspace/vwestimate/EstimateList.html:31
 	components.StreamSVGIcon(qw422016, util.KeyEstimate, ps)
 //line views/vworkspace/vwestimate/EstimateList.html:31
+	qw422016.N().S(` `)
+//line views/vworkspace/vwestimate/EstimateList.html:31
 	qw422016.E().S(util.StringPlural(len(p.Estimates), "Estimate"))
 //line views/vworkspace/vwestimate/EstimateList.html:31
 	qw422016.N().S(`</h3>
@@ -78,6 +80,8 @@ func (p *EstimateList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwestimate/EstimateList.html:37
 		components.StreamSVGRef(qw422016, e.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwestimate/EstimateList.html:37
+		qw422016.N().S(` `)
 //line views/vworkspace/vwestimate/EstimateList.html:37
 		qw422016.E().S(e.TitleString())
 //line views/vworkspace/vwestimate/EstimateList.html:37

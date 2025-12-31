@@ -54,6 +54,8 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 //line views/vworkspace/vwsprint/SprintList.html:29
 	components.StreamSVGIcon(qw422016, util.KeySprint, ps)
 //line views/vworkspace/vwsprint/SprintList.html:29
+	qw422016.N().S(` `)
+//line views/vworkspace/vwsprint/SprintList.html:29
 	qw422016.E().S(util.StringPlural(len(p.Sprints), "Sprint"))
 //line views/vworkspace/vwsprint/SprintList.html:29
 	qw422016.N().S(`</h3>
@@ -76,6 +78,8 @@ func (p *SprintList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cu
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwsprint/SprintList.html:35
 		components.StreamSVGRef(qw422016, s.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwsprint/SprintList.html:35
+		qw422016.N().S(` `)
 //line views/vworkspace/vwsprint/SprintList.html:35
 		qw422016.E().S(s.TitleString())
 //line views/vworkspace/vwsprint/SprintList.html:35

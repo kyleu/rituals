@@ -56,6 +56,8 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 //line views/vworkspace/vwretro/RetroList.html:31
 	components.StreamSVGIcon(qw422016, `retro`, ps)
 //line views/vworkspace/vwretro/RetroList.html:31
+	qw422016.N().S(` `)
+//line views/vworkspace/vwretro/RetroList.html:31
 	qw422016.E().S(util.StringPlural(len(p.Retros), "Retro"))
 //line views/vworkspace/vwretro/RetroList.html:31
 	qw422016.N().S(`</h3>
@@ -78,6 +80,8 @@ func (p *RetroList) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cut
 		qw422016.N().S(`">`)
 //line views/vworkspace/vwretro/RetroList.html:37
 		components.StreamSVGRef(qw422016, r.IconSafe(), 16, 16, "icon", ps)
+//line views/vworkspace/vwretro/RetroList.html:37
+		qw422016.N().S(` `)
 //line views/vworkspace/vwretro/RetroList.html:37
 		qw422016.E().S(r.TitleString())
 //line views/vworkspace/vwretro/RetroList.html:37
