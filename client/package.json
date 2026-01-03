@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "type": "module",
   "description": "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives.",
   "repository": {
