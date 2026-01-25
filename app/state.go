@@ -71,7 +71,7 @@ func NewState(ctx context.Context, debug bool, bi *BuildInfo, f filesystem.FileL
 	}, nil
 }
 
-func (s State) Close(ctx context.Context, logger util.Logger) error {
+func (s *State) Close(ctx context.Context, logger util.Logger) error {
 	defer func() { _ = telemetry.Close(ctx) }()
 	if err := s.DB.Close(); err != nil {
 		logger.Errorf("error closing database: %+v", err)
@@ -79,8 +79,8 @@ func (s State) Close(ctx context.Context, logger util.Logger) error {
 	return s.Services.Close(ctx, logger)
 }
 
-func (s State) User(ctx context.Context, id uuid.UUID, logger util.Logger) (*user.User, error) {
-	if s.Services == nil || s.Services.User == nil {
+func (s *State) User(ctx context.Context, id uuid.UUID, logger util.Logger) (*user.User, error) {
+	if s == nil || s.Services == nil || s.Services.User == nil {
 		return nil, nil
 	}
 	return s.Services.User.Get(ctx, nil, id, logger)
@@ -92,7 +92,7 @@ func Bootstrap(ctx context.Context, bi *BuildInfo, cfgDir string, port uint16, d
 		return nil, err
 	}
 
-	telemetryDisabled := util.GetEnvBool("disable_telemetry", false)
+	telemetryDisabled := util.GetEnvBoolAny(false, "disable_telemetry", "telemetry_disabled")
 	st, err := NewState(ctx, debug, bi, fs, !telemetryDisabled, port, logger)
 	if err != nil {
 		return nil, err
