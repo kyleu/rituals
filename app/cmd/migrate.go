@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 
-	"github.com/muesli/coral"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 
 	"github.com/kyleu/rituals/app/lib/database"
 	"github.com/kyleu/rituals/app/lib/database/migrate"
@@ -12,8 +12,8 @@ import (
 	"github.com/kyleu/rituals/queries/migrations"
 )
 
-func migrateCmd() *coral.Command {
-	f := func(*coral.Command, []string) error { return runMigrations(rootCtx) }
+func migrateCmd() *cobra.Command {
+	f := func(*cobra.Command, []string) error { return runMigrations(rootCtx) }
 	ret := newCmd("migrate", "Runs database migrations and exits", f)
 	return ret
 }
