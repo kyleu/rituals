@@ -173,17 +173,6 @@ builds:
       - "386"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
-  - id: "windows-arm"
-    goos:
-      - "windows"
-    goarch:
-      - "arm"
-    goarm:
-      - "5"
-      - "6"
-      - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
-
   - id: "dragonfly"
     goos:
       - "dragonfly"
