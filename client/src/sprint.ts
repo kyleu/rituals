@@ -13,7 +13,7 @@ import {
 } from "./workspace";
 import { initPermissions, loadPermsForm, Permission, permissionsTeamToggle, permissionsUpdate } from "./permission";
 
-export type Sprint = {
+export interface Sprint {
   id: string;
   slug: string;
   title: string;
@@ -22,7 +22,7 @@ export type Sprint = {
   icon: string;
   status: string;
   teamID: string;
-};
+}
 
 export function initSprint() {
   configFocus("sprint");

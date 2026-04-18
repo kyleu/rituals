@@ -9,7 +9,7 @@ import { applyCalcs, type Vote, type VoteResults } from "./vote";
 import { estimateChoices } from "./estimate";
 import { memberList, username } from "./member";
 
-export type Story = {
+export interface Story {
   id: string;
   idx: number;
   estimateID: string;
@@ -19,13 +19,13 @@ export type Story = {
   userID: string;
   updated: string;
   created: string;
-};
+}
 
-export type StoryStatusResult = {
+export interface StoryStatusResult {
   story: Story;
   votes?: Vote[];
   results?: VoteResults;
-};
+}
 
 function onEditSubmit(frm: HTMLElement) {
   const btn = req(".story-delete-button", frm);

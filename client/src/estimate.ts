@@ -16,7 +16,7 @@ import { onVote, Vote } from "./vote";
 import type { MemberMessage } from "./member";
 import { memberItem } from "./stories";
 
-export type Estimate = {
+export interface Estimate {
   id: string;
   slug: string;
   title: string;
@@ -25,7 +25,7 @@ export type Estimate = {
   status: string;
   teamID: string;
   sprintID: string;
-};
+}
 
 export function initEstimate() {
   configFocus("estimate");

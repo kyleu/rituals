@@ -6,13 +6,13 @@ import { initCommentsModal } from "./comment";
 import { flashCreate } from "./flash";
 import { focusDelay } from "./util";
 
-export type Report = {
+export interface Report {
   id: string;
   day: string;
   userID: string;
   content: string;
   html?: string;
-};
+}
 
 function initEditModal(modal: HTMLElement) {
   const frm = req("form", modal);

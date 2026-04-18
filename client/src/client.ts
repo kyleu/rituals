@@ -9,7 +9,7 @@ import { linkInit } from "./link";
 import { menuInit } from "./menu";
 import { modalInit } from "./modal";
 import { modeInit } from "./mode";
-import { SocketMessage, socketInit } from "./socket";
+import { socketInit } from "./socket";
 import { tagsInit } from "./tags";
 import { themeInit } from "./theme";
 import { timeInit } from "./time";
@@ -32,8 +32,7 @@ declare global {
       tags: (el: HTMLElement) => void;
       Socket: unknown;
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    audit: (s: string, ...args: any) => void;
+    audit: (s: string, ...args: unknown[]) => void;
     JSX: (tag: string, attrs: Record<string, unknown>, ...args: Node[]) => HTMLElement;
   }
 }

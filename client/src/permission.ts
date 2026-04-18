@@ -1,9 +1,9 @@
 import { els, req } from "./dom";
 
-export type Permission = {
+export interface Permission {
   key: string;
   value: string;
-};
+}
 
 export function permissionsUpdate(perms: Permission[]) {
   console.log("TODO: permissionsUpdate", perms);
@@ -18,8 +18,7 @@ export function permissionsSprintToggle(set: boolean) {
 }
 
 export function loadPermsForm(frm: HTMLFormElement) {
-  type StrMap = { [key: string]: string };
-  const ret: StrMap = {};
+  const ret: Record<string, string> = {};
   for (const el of els<HTMLInputElement>(".perm-option", frm)) {
     if (el.checked) {
       ret[el.name] = el.value;

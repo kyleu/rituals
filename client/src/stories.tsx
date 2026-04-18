@@ -3,6 +3,8 @@ import { snippetCommentsModal, snippetCommentsModalLink } from "./comments";
 import type { Story } from "./story";
 import { svg } from "./util";
 
+void JSX;
+
 export function snippetStory(s: Story, memberName: string): HTMLElement {
   return (
     <tr class="story-row" id={"story-row-" + s.id} data-idx="s.Idx">
@@ -17,7 +19,9 @@ export function snippetStory(s: Story, memberName: string): HTMLElement {
         </a>
       </td>
       <td class="story-status">{s.status}</td>
-      <td class="story-final-vote">{!Object.hasOwn(s, "finalVote") || s.finalVote === "" ? "-" : s.finalVote}</td>
+      <td class="story-final-vote">
+        {!Object.prototype.hasOwnProperty.call(s, "finalVote") || s.finalVote === "" ? "-" : s.finalVote}
+      </td>
       <td>
         {snippetCommentsModalLink("story", s.id)}
         {snippetCommentsModal("story", s.id, s.title)}

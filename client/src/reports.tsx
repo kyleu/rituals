@@ -4,6 +4,8 @@ import { username } from "./member";
 import { snippetCommentsModal, snippetCommentsModalLink } from "./comments";
 import { expandCollapse } from "./util";
 
+void JSX;
+
 export function snippetReportContainer(day: string) {
   return (
     <li id={"report-group-" + day}>

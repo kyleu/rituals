@@ -4,13 +4,13 @@ import { memberList } from "./member";
 import { snippetVote } from "./votes";
 import { send } from "./app";
 
-export type Vote = {
+export interface Vote {
   storyID: string;
   userID: string;
   choice: string;
-};
+}
 
-export type VoteResults = {
+export interface VoteResults {
   floats: number[];
   count: number;
   min: number;
@@ -21,7 +21,7 @@ export type VoteResults = {
   median: number;
   mode: number[];
   modeString: string;
-};
+}
 
 export function onVote(v: Vote) {
   els("#modal-story-" + v.storyID + " .story-members .member").forEach((m) => {

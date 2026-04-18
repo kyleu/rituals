@@ -1,7 +1,8 @@
 import { initComments } from "./comment";
 import { handle } from "./handle";
 import { initMembers } from "./member";
-import { Message, Socket } from "./socket";
+import { Socket } from "./socket";
+import type { Message } from "./socket";
 import { initEstimate } from "./estimate";
 import { initTeam } from "./team";
 import { initSprint } from "./sprint";
@@ -26,8 +27,8 @@ function recv(m: Message) {
   handle(svc, m);
 }
 
-function err(e: unknown) {
-  console.log(`[socket error]: ${e}`);
+function err(source: string, e: string) {
+  console.log(`[${source} error]: ${e}`);
 }
 
 export function initWorkspace(t: string, idStr: string) {

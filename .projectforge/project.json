@@ -79,7 +79,6 @@
   },
   "build": {
     "x86": true,
-    "windowsARM": true,
     "linuxARM": true,
     "linuxMIPS": true,
     "linuxOdd": true,

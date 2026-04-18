@@ -3,23 +3,23 @@ import { snippetCommentsModal, snippetCommentsModalLink } from "./comments";
 import { initCommentsModal } from "./comment";
 import { focusDelay, svgRef } from "./util";
 
-export type ChildAdd = {
+export interface ChildAdd {
   type: string;
   id: string;
   title: string;
   path: string;
   icon: string;
-};
+}
 
-export type ChildUpdate = {
+export interface ChildUpdate {
   type: string;
   model: { id: string; title: string; icon: string };
-};
+}
 
-export type ChildRemove = {
+export interface ChildRemove {
   type: string;
   id: string;
-};
+}
 
 export function getSelectName(key: string, panel: HTMLElement, id: string | null) {
   if (id) {

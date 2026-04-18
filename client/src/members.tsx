@@ -1,6 +1,8 @@
 import { JSX } from "./jsx";
 import { svg, svgRef } from "./util";
 
+void JSX;
+
 export function memberPictureFor(picture: string, size: number, cls: string) {
   if (!picture) {
     return svgRef("profile", size, cls);

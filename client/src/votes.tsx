@@ -2,6 +2,8 @@ import { JSX } from "./jsx";
 import type { Vote } from "./vote";
 import type { Member } from "./member";
 
+void JSX;
+
 export function snippetVote(storyID: string, m: Member, v: Vote | undefined): HTMLElement {
   if (!v) {
     return (

@@ -12,7 +12,7 @@ import {
   permissionsUpdate
 } from "./permission";
 
-export type Standup = {
+export interface Standup {
   id: string;
   slug: string;
   title: string;
@@ -20,7 +20,7 @@ export type Standup = {
   status: string;
   teamID: string;
   sprintID: string;
-};
+}
 
 export function initStandup() {
   configFocus("standup");

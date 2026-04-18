@@ -3,11 +3,11 @@ import { send } from "./app";
 import { memberPictureFor, snippetMember, snippetMemberModalEdit, snippetMemberModalView } from "./members.jsx";
 import { focusDelay, svgRef } from "./util";
 
-export type Member = {
+export interface Member {
   id: string;
   name: string;
   role: string;
-};
+}
 
 export function getSelfID() {
   return req("#self-id").innerText;
@@ -120,12 +120,12 @@ function wireMemberForms() {
   }
 }
 
-export type MemberMessage = {
+export interface MemberMessage {
   userID: string;
   name: string;
   role: string;
   picture?: string;
-};
+}
 
 export function memberUpdate(param: MemberMessage) {
   els(".member-" + param.userID + "-name").forEach((x) => {

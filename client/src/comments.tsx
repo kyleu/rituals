@@ -3,16 +3,18 @@ import { Comment, initCommentsLink } from "./comment";
 import { relativeTime, utc } from "./time";
 import { svg } from "./util";
 
+void JSX;
+
 export function snippetComment(c: Comment, un: string) {
   const li = <li></li>;
 
   const d = utc(new Date());
   const timeSpan = (
-    <span class="nowrap reltime" data-time={d}>
+    <span class="nowrap reltime" data-timestamp={d}>
       just now
     </span>
   );
-  relativeTime(d, timeSpan);
+  relativeTime(timeSpan);
 
   const time = <div class="right"></div>;
   time.appendChild(timeSpan);

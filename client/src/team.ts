@@ -13,13 +13,13 @@ import {
 } from "./workspace";
 import { loadPermsForm, Permission, permissionsUpdate } from "./permission";
 
-export type Team = {
+export interface Team {
   id: string;
   slug: string;
   title: string;
   icon: string;
   status: string;
-};
+}
 
 export function initTeam() {
   configFocus("team");

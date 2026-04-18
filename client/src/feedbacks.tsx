@@ -4,6 +4,8 @@ import { username } from "./member";
 import { snippetCommentsModal, snippetCommentsModalLink } from "./comments";
 import { els } from "./dom";
 
+void JSX;
+
 export function snippetFeedbackContainer(cat: string) {
   return (
     <div id={"category-" + cat} data-category={cat} class="category">

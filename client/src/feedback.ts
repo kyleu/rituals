@@ -11,14 +11,14 @@ import { flashCreate } from "./flash";
 import { focusDelay } from "./util";
 import { getSelfID } from "./member";
 
-export type Feedback = {
+export interface Feedback {
   id: string;
   category: string;
   idx: number;
   userID: string;
   content: string;
   html?: string;
-};
+}
 
 function initAddModal(feedbackAddModal: HTMLElement) {
   const feedbackAddForm = req("form", feedbackAddModal);

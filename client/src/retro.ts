@@ -13,7 +13,7 @@ import {
   permissionsUpdate
 } from "./permission";
 
-export type Retro = {
+export interface Retro {
   id: string;
   slug: string;
   title: string;
@@ -22,7 +22,7 @@ export type Retro = {
   status: string;
   teamID: string;
   sprintID: string;
-};
+}
 
 export function initRetro() {
   configFocus("retro");
