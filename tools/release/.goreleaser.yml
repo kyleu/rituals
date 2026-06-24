@@ -4,12 +4,12 @@ version: 2
 project_name: rituals
 
 archives:
-  - format: zip
+  - formats: ["zip"]
     wrap_in_directory: "false"
     files:
       - none*
 
-brews:
+homebrew_casks:
   -
     repository:
       owner: "kyleu"
@@ -17,12 +17,13 @@ brews:
     commit_author:
       name: "Kyle U"
       email: "rituals.dev@kyleu.com"
-    directory: Formula
+    directory: Casks
     homepage: "https://rituals.dev"
     description: "This app, rituals.dev, allows you to collaborate with your team to manage your work. It provides teams, sprints, estimate sessions, standup meetings, and retrospectives."
     license: "MIT"
     skip_upload: "false"
-    install: "bin.install \"rituals\""
+    binaries:
+      - "rituals"
 
 changelog:
   disable: true
@@ -33,16 +34,22 @@ checksum:
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 
-dockers:
+dockers_v2:
   -
-    image_templates:
-      - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}"
-      - "ghcr.io/kyleu/rituals:latest"
+    id: release
+    images:
+      - "ghcr.io/kyleu/rituals"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}"
+      - "latest"
     dockerfile: ./tools/release/Dockerfile.release
   -
-    image_templates:
-      - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}-debug"
-      - "ghcr.io/kyleu/rituals:latest-debug"
+    id: debug
+    images:
+      - "ghcr.io/kyleu/rituals"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}-debug"
+      - "latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"

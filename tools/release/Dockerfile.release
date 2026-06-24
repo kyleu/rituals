@@ -17,4 +17,6 @@ WORKDIR /
 
 ENTRYPOINT ["/rituals", "-a", "0.0.0.0"]
 
-COPY rituals /
+ARG TARGETPLATFORM
+
+COPY $TARGETPLATFORM/rituals /
