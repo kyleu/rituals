@@ -34,28 +34,16 @@ checksum:
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 
-dockers_v2:
+dockers:
   -
-    id: release
-    images:
-      - "ghcr.io/kyleu/rituals"
-    tags:
-      - "{{ trimprefix .Tag \"v\" }}"
-      - "latest"
-    sbom: false
-    flags:
-      - "--provenance=false"
+    image_templates:
+      - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}"
+      - "ghcr.io/kyleu/rituals:latest"
     dockerfile: ./tools/release/Dockerfile.release
   -
-    id: debug
-    images:
-      - "ghcr.io/kyleu/rituals"
-    tags:
-      - "{{ trimprefix .Tag \"v\" }}-debug"
-      - "latest-debug"
-    sbom: false
-    flags:
-      - "--provenance=false"
+    image_templates:
+      - "ghcr.io/kyleu/rituals:{{ trimprefix .Tag \"v\" }}-debug"
+      - "ghcr.io/kyleu/rituals:latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"
