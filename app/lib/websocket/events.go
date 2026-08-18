@@ -13,8 +13,8 @@ import (
 	"github.com/kyleu/rituals/app/util"
 )
 
-func (s *Service) Register(u *dbuser.User, profile *user.Profile, accts user.Accounts, c *websocket.Conn, h Handler, logger util.Logger) (*Connection, error) {
-	conn := NewConnection("system", u, profile, accts, c, h)
+func (s *Service) Register(connID *uuid.UUID, u *dbuser.User, profile *user.Profile, accts user.Accounts, c *websocket.Conn, h Handler, logger util.Logger) (*Connection, error) {
+	conn := NewConnection(connID, "system", u, profile, accts, c, h)
 	s.connectionsMu.Lock()
 	defer s.connectionsMu.Unlock()
 	s.connections[conn.ID] = conn

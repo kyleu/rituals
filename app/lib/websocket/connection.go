@@ -29,9 +29,12 @@ type Connection struct {
 	mu       sync.Mutex
 }
 
-func NewConnection(svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn, handler Handler) *Connection {
+func NewConnection(connID *uuid.UUID, svc string, usr *dbuser.User, profile *user.Profile, accounts user.Accounts, socket *websocket.Conn, handler Handler) *Connection {
+	if connID == nil {
+		connID = util.UUIDP()
+	}
 	return &Connection{
-		ID:       util.UUID(),
+		ID:       *connID,
 		User:     usr,
 		Profile:  profile,
 		Accounts: accounts,
